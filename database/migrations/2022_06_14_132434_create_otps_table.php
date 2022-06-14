@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCountriesTable extends Migration
+class CreateOtpsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateCountriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('otps', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->string('name')->unique();
-            $table->string('nationality');
+            $table->unsignedBigInteger('taxpayer_id');
+            $table->string('code', 20);
+            $table->dateTime('expires_at');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateCountriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('otps');
     }
 }

@@ -41,7 +41,7 @@ a:focus {
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: #996567;
+    background: #97363a;
     color: #fff;
     transition: all 0.3s;
 }
@@ -52,7 +52,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 10px;
-    background: #996567;
+    background: #97363a;
 }
 
 #sidebar ul.components {
@@ -96,7 +96,7 @@ a[data-toggle="collapse"] {
 #sidebar ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #996567;
+    background: #97363a;
 }
 
 #sidebar .profile {
@@ -108,7 +108,6 @@ a[data-toggle="collapse"] {
     max-width: 250px;
     color: white;
     padding: 8px;
-    border-radius: 8px;
 }
 
 /* ---------------------------------------------------
