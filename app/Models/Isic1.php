@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IsicLevel2 extends Model
+class Isic1 extends Model
 {
     use HasFactory;
 }

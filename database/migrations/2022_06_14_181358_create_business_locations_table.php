@@ -15,7 +15,7 @@ class CreateBusinessLocationsTable extends Migration
     {
         Schema::create('business_locations', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('business_id');
+            $table->unsignedBigInteger('business_id');
             $table->double('latitude');
             $table->double('longitude');
             $table->enum('nature_of_premises',['OWNED','RENTED']);

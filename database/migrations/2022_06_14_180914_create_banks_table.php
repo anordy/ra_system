@@ -16,7 +16,6 @@ class CreateBanksTable extends Migration
         Schema::create('banks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('display_name');
             $table->timestamps();
         });
     }

@@ -15,13 +15,13 @@ class CreateBusinessOwnersTable extends Migration
     {
         Schema::create('business_owners', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('taxpayer_id');
-            $table->bigInteger('business_id');
+            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('business_id');
             $table->string('position');
             $table->boolean('is_responsible_person')->default(0);
             $table->timestamps();
 
-            $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
+            $table->foreign('tax_payer_id')->references('id')->on('tax_payers');
             $table->foreign('business_id')->references('id')->on('businesses');
         });
     }

@@ -15,10 +15,10 @@ class CreateBusinessBankAccsTable extends Migration
     {
         Schema::create('business_bank_accs', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('business_id');
-            $table->bigInteger('bank_id');
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('bank_id');
             $table->string('acc_no');
-            $table->enum('acc_type',['TYPE1','TYPE2','TYPE3']);
+            $table->string('acc_type');
             $table->string('branch');
             $table->enum('currency',['TZS','USD']);
             $table->timestamps();

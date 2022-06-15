@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateIsicLevel1sTable extends Migration
+class CreateIsic1sTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateIsicLevel1sTable extends Migration
      */
     public function up()
     {
-        Schema::create('isic_level1s', function (Blueprint $table) {
+        Schema::create('isic1s', function (Blueprint $table) {
             $table->id();
             $table->string('code');
             $table->string('description');
@@ -28,6 +28,6 @@ class CreateIsicLevel1sTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('isic_level1s');
+        Schema::dropIfExists('isic1s');
     }
 }

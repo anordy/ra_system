@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBusinessTypesTable extends Migration
+class CreateIsic4sTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateBusinessTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('business_types', function (Blueprint $table) {
+        Schema::create('isic4s', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('display_name');
+            $table->string('code');
+            $table->string('description');
+            $table->unsignedBigInteger('isic3_id');
             $table->timestamps();
+
+            $table->foreign('isic3_id')->references('id')->on('isic3s');
         });
     }
 
@@ -28,6 +31,6 @@ class CreateBusinessTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('business_types');
+        Schema::dropIfExists('isic4s');
     }
 }

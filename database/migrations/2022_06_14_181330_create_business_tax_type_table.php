@@ -15,8 +15,8 @@ class CreateBusinessTaxTypeTable extends Migration
     {
         Schema::create('business_tax_type', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('business_id');
-            $table->bigInteger('tax_type_id');
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('tax_type_id');
             $table->enum('currency',['TZS','USD']);
 
             $table->foreign('business_id')->references('id')->on('businesses');

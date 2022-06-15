@@ -15,9 +15,9 @@ class CreateBusinessTurnoversTable extends Migration
     {
         Schema::create('business_turnovers', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('business_id');
-            $table->integer('next_12_months');
-            $table->integer('last_12_months');
+            $table->unsignedBigInteger('business_id');
+            $table->decimal('next_12_months',15,2);
+            $table->decimal('last_12_months',15,2);
             $table->timestamps();
 
             $table->foreign('business_id')->references('id')->on('businesses');

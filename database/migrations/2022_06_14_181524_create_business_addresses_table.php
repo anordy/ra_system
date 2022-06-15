@@ -15,14 +15,14 @@ class CreateBusinessAddressesTable extends Migration
     {
         Schema::create('business_addresses', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('business_id');
+            $table->unsignedBigInteger('business_id');
             $table->string('po_box');
-            $table->integer('house_no');
+            $table->string('house_no');
             $table->string('street');
-            $table->bigInteger('ward_id');
-            $table->string('phone_no');
+            $table->unsignedBigInteger('ward_id');
+            $table->string('phone_no')->unique();
             $table->string('alt_phone_no')->nullable();
-            $table->string('email');
+            $table->string('email')->unique();
             $table->timestamps();
 
             $table->foreign('business_id')->references('id')->on('businesses');
