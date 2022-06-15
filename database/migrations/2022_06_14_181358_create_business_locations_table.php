@@ -18,7 +18,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->double('latitude');
             $table->double('longitude');
-            $table->enum('nature_of_premises',['OWNED','RENTED']);
+            $table->enum('nature_of_premises',['Owned','Rented']);
             $table->string('street');
             $table->string('owner_name')->nullable();
             $table->string('owner_phone_no')->nullable();

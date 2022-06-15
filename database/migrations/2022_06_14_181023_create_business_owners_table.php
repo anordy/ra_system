@@ -15,7 +15,7 @@ class CreateBusinessOwnersTable extends Migration
     {
         Schema::create('business_owners', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('tax_payer_id');
             $table->unsignedBigInteger('business_id');
             $table->string('position');
             $table->boolean('is_responsible_person')->default(0);
