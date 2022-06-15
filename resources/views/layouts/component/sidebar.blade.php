@@ -46,7 +46,7 @@
     <div class="profile d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center justify-content-between">
             <div>
-                <i class="far fa-2x fa-user"></i>
+                <i class="far fa-2x fa-user-circle"></i>
             </div>
             <div class="pl-2">
                 <div>First Name Last Name</div>
