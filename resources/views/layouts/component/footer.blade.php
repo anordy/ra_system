@@ -4,6 +4,7 @@
     <script src="{{ asset('plugins/fontawesome/js/fontawesome.min.js') }}"></script>
     <script src="{{ asset('plugins/fontawesome/js/solid.min.js') }}"></script>
     <script src="{{ asset('plugins/fontawesome/js/regular.js') }}"></script>
+    <script src="{{ asset('js/alpine.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 
 

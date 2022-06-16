@@ -1,45 +1,25 @@
 <nav id="sidebar">
     <div class="sidebar-header text-center">
-        <h3><i class="fas fa-money-check"></i> ZITMAS</h3>
+        <h3><i class="fas fa-money-check"></i> ZTMS</h3>
     </div>
 
     <ul class="list-unstyled components">
-        <li class="active">
-            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
+        <li class="{{ request()->is('dashboard') ? 'active' : '' }}">
+            <a href="{{ route('home') }}">Dashboard</a>
+        </li>
+        <li class="{{ request()->is('users*') ? 'active' : '' }}">
+            <a href="{{ route('users.index') }}">Users</a>
+        </li>
+        <li class="{{ request()->is('settings*') ? 'active' : '' }}">
+            <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
+            <ul class="collapse list-unstyled" id="settings">
                 <li>
-                    <a href="#">Home 1</a>
+                    <a href="#">Roles</a>
                 </li>
                 <li>
-                    <a href="#">Home 2</a>
-                </li>
-                <li>
-                    <a href="#">Home 3</a>
+                    <a href="#">Countries</a>
                 </li>
             </ul>
-        </li>
-        <li>
-            <a href="#">About</a>
-        </li>
-        <li>
-            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-            <ul class="collapse list-unstyled" id="pageSubmenu">
-                <li>
-                    <a href="#">Page 1</a>
-                </li>
-                <li>
-                    <a href="#">Page 2</a>
-                </li>
-                <li>
-                    <a href="#">Page 3</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">Portfolio</a>
-        </li>
-        <li>
-            <a href="#">Contact</a>
         </li>
     </ul>
 
