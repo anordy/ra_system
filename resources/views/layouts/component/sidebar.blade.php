@@ -49,13 +49,20 @@
                 <i class="far fa-2x fa-user-circle"></i>
             </div>
             <div class="pl-2">
-                <div>First Name Last Name</div>
+                <div>{{ auth()->user()->fullname() }}</div>
                 <div>Role</div>
             </div>
         </div>
-        
+
         <div class="pr-1">
-            <i class="fas fa-sign-out-alt"></i>
+            <a class="text-white" href="{{ route('logout') }}"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="fa fa-sign-out-alt"></i>
+            </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
         </div>
     </div>
 </nav>

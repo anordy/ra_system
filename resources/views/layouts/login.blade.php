@@ -12,6 +12,7 @@
 <style>
     body {
         background-image: url("{{ URL::to('/images/background.jpg') }}");
+        background-size: cover;
         height: 100vh;
         background-color: rgba(0, 0, 0, 0.1);
         font-size: 12px;
