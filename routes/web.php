@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TaxPayers\RegistrationsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,7 @@ Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/dashboard', [DashboardController::class, 'index']);
+
+Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
+    Route::resource('registrations', RegistrationsController::class);
+});

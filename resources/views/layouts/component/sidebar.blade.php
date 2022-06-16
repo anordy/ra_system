@@ -4,7 +4,7 @@
     </div>
 
     <ul class="list-unstyled components">
-        <li class="active">
+        <li class="{{ request()->is('/dashboard') ? 'active' : '' }}">
             <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
             <ul class="collapse list-unstyled" id="homeSubmenu">
                 <li>
@@ -15,6 +15,17 @@
                 </li>
                 <li>
                     <a href="#">Home 3</a>
+                </li>
+            </ul>
+        </li>
+        <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
+            <a href="#taxpayersMenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers</a>
+            <ul class="collapse list-unstyled {{ request()->is('taxpayers*') ? 'show' : '' }}" id="taxpayersMenu">
+                <li class="{{ request()->is('taxpayers') ? 'active' : '' }}">
+                    <a href="#">Taxpayers</a>
+                </li>
+                <li class="{{ request()->is('taxpayers/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('taxpayers.registrations.index') }}">Registrations</a>
                 </li>
             </ul>
         </li>
