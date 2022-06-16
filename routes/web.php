@@ -24,4 +24,5 @@ Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
     Route::resource('registrations', RegistrationsController::class);
+    Route::get('enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
 });

@@ -139,3 +139,12 @@ a[data-toggle="collapse"] {
         display: none;
     }
 }
+
+/* ---------------------------------------------------
+    LIVEWIRE DATATABLES
+----------------------------------------------------- */
+/* Fix columns selection button */
+#columnSelect-table {
+    min-width: 150px;
+    background: #f2f2f2;
+}

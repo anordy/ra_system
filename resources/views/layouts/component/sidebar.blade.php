@@ -1,6 +1,6 @@
 <nav id="sidebar">
-    <div class="sidebar-header text-center">
-        <h3><i class="fas fa-money-check"></i> ZITMAS</h3>
+    <div class="sidebar-header text-center pb-0">
+        <h3 class="mt-2"><i class="bi bi-card-heading"></i> ZITMAS</h3>
     </div>
 
     <ul class="list-unstyled components">
@@ -25,7 +25,7 @@
                     <a href="#">Taxpayers</a>
                 </li>
                 <li class="{{ request()->is('taxpayers/registrations*') ? 'active' : '' }}">
-                    <a href="{{ route('taxpayers.registrations.index') }}">Registrations</a>
+                    <a href="{{ route('taxpayers.registrations.index') }}">KYC</a>
                 </li>
             </ul>
         </li>

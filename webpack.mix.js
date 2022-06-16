@@ -13,3 +13,6 @@ const mix = require('laravel-mix');
 mix.options({ manifest: false });
 
 mix.browserSync('localhost:8001');
+
+mix.js('resources/js/alpine.js', 'public/plugins/alpine/alpine.js')
+    .postCss('resources/css/bootstrap-icons.css', 'public/plugins/bootstrap-icons/bootstrap-icons.css');
