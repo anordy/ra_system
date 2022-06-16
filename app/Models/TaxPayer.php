@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TaxPayer extends Model
 {
     use HasFactory, SoftDeletes;
+
+    public function otp()
+    {
+        return $this->morphOne(UserOtp::class, 'user');
+    }
 }

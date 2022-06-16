@@ -3,10 +3,8 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class TwoFactorAuth extends Mailable
 {
@@ -33,7 +31,7 @@ class TwoFactorAuth extends Mailable
     public function build()
     {
         return $this->markdown('emails.two_factor_auth',[
-            'url' => 'https://192.231.237.29:8888/zpc/public'
+            'url' => 'https://192.231.237.29:8888/zrb_admin/public'
         ]);
     }
 }
