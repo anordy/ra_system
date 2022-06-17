@@ -14,6 +14,7 @@
 use App\Http\Controllers\CaptchaControlle;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -30,4 +31,8 @@ Route::get('captcha', [CaptchaControlle::class, 'reload'])->name('captcha.reload
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
     Route::resource('/users', UserController::class);
+
+    Route::prefix('settings')->name('settings.')->group(function(){
+        Route::resource('/roles', RoleController::class);
+    });
 });

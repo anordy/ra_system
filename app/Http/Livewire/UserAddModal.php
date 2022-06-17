@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -78,7 +79,9 @@ class UserAddModal extends Component
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
-            
+            Log::error($e);
+
+            $this->alert('error', 'Something went wrong');
         }
     }
 
