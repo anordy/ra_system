@@ -39,7 +39,7 @@
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="">Gender </label>
-                            <select class="form-control" wire:model="gender">
+                            <select class="form-control" wire:model.lazy="gender">
                                 <option value="" disabled selected>Choose option</option>
                                 <option value="M">Male</option>
                                 <option value="F">Female</option>
@@ -60,7 +60,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                       
+
                     </div>
 
 

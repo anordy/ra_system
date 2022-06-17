@@ -24,9 +24,7 @@ class UserEditModal extends Component
     public $gender = '';
     public $email;
     public $role = '';
-    public $password;
-    public $password_confirmation;
-    public $passwordStrength = 0;
+    public $user;
 
 
     protected function rules()
@@ -34,7 +32,7 @@ class UserEditModal extends Component
         return [
             'fname' => 'required|min:2',
             'lname' => 'required|min:2',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|unique:users,email,'.$this->user->id.',id',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
@@ -50,16 +48,15 @@ class UserEditModal extends Component
     {
         $this->validate();
         try {
-            User::create([
+            $this->user->update([
                 'fname' => $this->fname,
                 'lname' => $this->lname,
                 'role_id' => $this->role,
                 'gender' => $this->gender,
                 'email' => $this->email,
                 'phone' => $this->phone,
-                'password' => Hash::make($this->password),
             ]);
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
         }
     }
@@ -68,11 +65,12 @@ class UserEditModal extends Component
     {
         $this->roles = Role::all();
         $user = User::find($id);
+        $this->user = $user;
         $this->fname = $user->fname;
         $this->lname = $user->lname;
         $this->phone = $user->phone;
         $this->email = $user->email;
-        $this->gender = $user->gender;
+        $this->gender = $user->gender ?? '';
         $this->role = $user->role_id;
     }
 

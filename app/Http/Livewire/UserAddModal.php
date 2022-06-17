@@ -82,6 +82,8 @@ class UserAddModal extends Component
         }
     }
 
+ 
+
     public function mount()
     {
         $this->roles = Role::all();
