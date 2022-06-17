@@ -9,4 +9,33 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TaxPayer extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'reference_no',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'email',
+        'mobile',
+        'alt_mobile',
+        'location',
+        'physical_address',
+        'street',
+        'is_citizen',
+        'id_type',
+        'id_number',
+        'work_permit',
+        'residence_permit',
+        'country_id',
+        'biometric_verified_at',
+        'password'
+    ];
+
+    public function country(){
+        return $this->belongsTo(Country::class);
+    }
+
+    public function identification(){
+        return $this->belongsTo(IDType::class, 'id_type');
+    }
 }

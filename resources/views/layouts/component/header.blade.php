@@ -8,8 +8,29 @@
 <link href="{{ asset('plugins/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet" />
 <link rel="stylesheet" href="{{ URL::to('css/style.css') }}">
+<link rel="icon" href="{{ asset('favicon.ico') }}" />
+
 @livewireStyles()
 
 <style>
     [x-cloak] { display: none !important; }
+
+    .tabs .tab-item {
+        border: none;
+        background: none;
+        padding-bottom: 5px;
+        padding-right: 0;
+        padding-left: 0;
+        margin-right: 22px;
+    }
+    .tabs .tab-item:hover {
+        color: #97363a;
+    }
+    .tabs .tab-item:focus, .tabs .tab-item:focus-visible {
+        outline: none;
+    }
+    .tabs .tab-item.active {
+        border-bottom: 3px solid #97363a;
+        font-weight: bold;
+    }
 </style>

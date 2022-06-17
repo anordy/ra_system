@@ -2,8 +2,8 @@
 
 namespace App\Traits\Taxpayer;
 
-use App\Traits\ApiNIDA;
-use App\Traits\ImmigrationApi;
+use App\Models\TaxPayer;
+use Carbon\Carbon;
 
 trait KYCTrait {
 
@@ -17,7 +17,11 @@ trait KYCTrait {
                 return false;
             }
 
+            // Check these values
+
             // Update user Details
+            $kyc->authorities_verified_at = Carbon::now()->toDateTimeString();
+            $kyc->save();
 
             return $response;
         } else if ($kyc->identification->name === 'PASSPORT'){
@@ -27,11 +31,16 @@ trait KYCTrait {
                 return false;
             }
 
-            // Update user Details
+            // Check returned values
+
+            // Update user details
+            $kyc->authorities_verified_at = Carbon::now()->toDateTimeString();
+            $kyc->save();
 
             return $response;
         } else {
             return false;
         }
     }
+
 }

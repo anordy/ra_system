@@ -22,7 +22,7 @@
             <a href="#taxpayersMenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers</a>
             <ul class="collapse list-unstyled {{ request()->is('taxpayers*') ? 'show' : '' }}" id="taxpayersMenu">
                 <li class="{{ request()->is('taxpayers') ? 'active' : '' }}">
-                    <a href="#">Taxpayers</a>
+                    <a href="{{ route('taxpayers.index') }}">Taxpayers</a>
                 </li>
                 <li class="{{ request()->is('taxpayers/registrations*') ? 'active' : '' }}">
                     <a href="{{ route('taxpayers.registrations.index') }}">KYC</a>
