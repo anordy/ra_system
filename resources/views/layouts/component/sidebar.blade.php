@@ -16,8 +16,8 @@
                 <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
                     <a href="{{ route('settings.roles.index') }}">Roles</a>
                 </li>
-                <li>
-                    <a href="#">Countries</a>
+                <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.country.index') }}">Countries</a>
                 </li>
             </ul>
         </li>
