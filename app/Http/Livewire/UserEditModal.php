@@ -6,12 +6,13 @@ use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use ZxcvbnPhp\Zxcvbn;
 
-class UserAddModal extends Component
+class UserEditModal extends Component
 {
 
     use LivewireAlert;
@@ -36,7 +37,6 @@ class UserAddModal extends Component
             'email' => 'required|email|unique:users',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
-            'password' => ['required', 'confirmed', 'min:10', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
         ];
     }
@@ -46,27 +46,10 @@ class UserAddModal extends Component
         'lname' => 'last name',
     ];
 
-    public function updatedPassword($password)
-    {
-        $zxcvbn = new Zxcvbn();
-        $weak = $zxcvbn->passwordStrength($password);
-        if ($weak['score'] == 4) {
-            $this->passwordStrength = 100;
-        } elseif ($weak['score'] == 3) {
-            $this->passwordStrength = 70;
-        } elseif ($weak['score'] == 2) {
-            $this->passwordStrength = 50;
-        } elseif ($weak['score'] == 1) {
-            $this->passwordStrength = 30;
-        } else {
-            $this->passwordStrength = 0;
-        }
-    }
-
     public function submit()
     {
         $this->validate();
-        try{
+        try {
             User::create([
                 'fname' => $this->fname,
                 'lname' => $this->lname,
@@ -77,18 +60,24 @@ class UserAddModal extends Component
                 'password' => Hash::make($this->password),
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
-            
+        } catch (Exception $e) {
         }
     }
 
-    public function mount()
+    public function mount($id)
     {
         $this->roles = Role::all();
+        $user = User::find($id);
+        $this->fname = $user->fname;
+        $this->lname = $user->lname;
+        $this->phone = $user->phone;
+        $this->email = $user->email;
+        $this->gender = $user->gender;
+        $this->role = $user->role_id;
     }
 
     public function render()
     {
-        return view('livewire.user-add-modal');
+        return view('livewire.user-edit-modal');
     }
 }

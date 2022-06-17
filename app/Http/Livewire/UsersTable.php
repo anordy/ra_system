@@ -35,10 +35,14 @@ class UsersTable extends DataTableComponent
             Column::make('Last Name', 'lname')
                 ->sortable()
                 ->searchable(),
-            Column::make('Phone', 'phone')
+            Column::make('Gender', 'gender')
+                ->format(function ($value) {
+                    if ($value == 'M') return 'Male';
+                    elseif ($value == 'F') return 'Female';
+                })
                 ->sortable()
                 ->searchable(),
-            Column::make('Role', 'role_id')
+            Column::make('Phone', 'phone')
                 ->sortable()
                 ->searchable(),
             Column::make('E-mail', 'email')
@@ -46,9 +50,12 @@ class UsersTable extends DataTableComponent
                 ->searchable(),
             Column::make('Verified', 'email_verified_at')
                 ->sortable(),
+            Column::make('Role', 'role.name')
+                ->sortable()
+                ->searchable(),
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-add-modal')"><i class="fa fa-edit"></i> </button>
+                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                     <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                 HTML)
                 ->html(true),

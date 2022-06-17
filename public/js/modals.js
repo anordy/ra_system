@@ -1,7 +1,6 @@
-
 let modalsElement = document.getElementById('laravel-livewire-modals');
 
-modalsElement.addEventListener('hidden.bs.modal', () => {
+$(modalsElement).on('hidden.bs.modal', event => {
     Livewire.emit('resetModal');
 });
 

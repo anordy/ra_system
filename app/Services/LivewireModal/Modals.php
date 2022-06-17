@@ -2,6 +2,7 @@
 
 namespace App\Services\LivewireModal;
 
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Modals extends Component
@@ -20,7 +21,6 @@ class Modals extends Component
     {
         $this->alias = $alias;
         $this->params = $params;
-
         $this->emit('showBootstrapModal');
     }
 

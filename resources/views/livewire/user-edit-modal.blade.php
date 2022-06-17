@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Add User</h5>
+                <h5 class="modal-title text-uppercase">Edit User</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="">Gender </label>
-                            <select class="form-control" wire:model.lazy="gender">
+                            <select class="form-control" wire:model="gender">
                                 <option value="" disabled selected>Choose option</option>
                                 <option value="M">Male</option>
                                 <option value="F">Female</option>
@@ -60,20 +60,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="form-group col-lg-6">
-                            <label class="control-label">Password</label>
-                            <input type="password" class="form-control" wire:model="password" id="password">
-                            <div class="progress" style="height: 8px !important;">
-                                <div class="progress-bar  progress-bar-animated bg-success" role="progressbar" aria-valuenow="{{ $passwordStrength }}" style="width: {{ $passwordStrength }}%;" aria-valuemin="0" aria-valuemax="4"></div>
-                              </div>
-                            @error('password')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label class="control-label">Comfirm Password</label>
-                            <input type="password" class="form-control" wire:model="password_confirmation" id="password_confirmation">
-                        </div>
+                       
                     </div>
 
 

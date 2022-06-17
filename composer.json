@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "ext-curl": "*",
         "ext-openssl": "*",
+        "bjeavons/zxcvbn-php": "^1.3",
         "eddytim/auditlog": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
