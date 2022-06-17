@@ -22,6 +22,9 @@
                 <li class="{{ request()->is('settings/region*') ? 'active' : '' }}">
                     <a href="{{ route('settings.region.index') }}">Region</a>
                 </li>
+                <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.district.index') }}">District</a>
+                </li>
             </ul>
         </li>
     </ul>

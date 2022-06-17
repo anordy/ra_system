@@ -14,6 +14,7 @@
 use App\Http\Controllers\CaptchaControlle;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\RoleController;
@@ -38,5 +39,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/roles', RoleController::class);
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
+        Route::resource('/district', DistrictController::class);
     });
 });
