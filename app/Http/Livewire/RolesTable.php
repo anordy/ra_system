@@ -46,7 +46,7 @@ class RolesTable extends DataTableComponent
                 ->searchable(),
             Column::make('Configure Permission', 'id')
                 ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fas fa-cog"></i> </button>
+                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$value)"><i class="fas fa-cog"></i> </button>
                 HTML)
                 ->html(true),
             Column::make('Action', 'id')
