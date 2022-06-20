@@ -5,12 +5,10 @@ namespace App\Http\Livewire;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\SysModule;
-use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use ZxcvbnPhp\Zxcvbn;
 
 class RoleAssignPermissionModal extends Component
 {

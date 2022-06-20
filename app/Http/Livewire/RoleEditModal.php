@@ -3,12 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Role;
-use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use ZxcvbnPhp\Zxcvbn;
 
 class RoleEditModal extends Component
 {
@@ -29,7 +27,7 @@ class RoleEditModal extends Component
     {
         $this->validate();
         try {
-            $this->user->update([
+            $this->role->update([
                 'name' => $this->name,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());

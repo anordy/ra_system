@@ -4,12 +4,9 @@ namespace App\Http\Livewire;
 
 use App\Models\Country;
 use Exception;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\Password;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use ZxcvbnPhp\Zxcvbn;
 
 class CountryAddModal extends Component
 {
