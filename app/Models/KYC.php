@@ -11,4 +11,12 @@ class KYC extends Model
     protected $table = 'kycs';
 
     use HasFactory, SoftDeletes;
+
+    public function country(){
+        return $this->belongsTo(Country::class);
+    }
+
+    public function identification(){
+        return $this->belongsTo(IDType::class, 'id_type');
+    }
 }

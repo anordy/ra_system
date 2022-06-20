@@ -1,14 +1,36 @@
 <nav id="sidebar">
-    <div class="sidebar-header text-center">
-        <h3><i class="fas fa-money-check"></i> ZTMS</h3>
+    <div class="sidebar-header text-center pb-0">
+        <h3 class="mt-2"><i class="bi bi-card-heading"></i> ZITMAS</h3>
     </div>
 
     <ul class="list-unstyled components">
-        <li class="{{ request()->is('dashboard') ? 'active' : '' }}">
-            <a href="{{ route('home') }}">Dashboard</a>
+        <li class="{{ request()->is('/dashboard') ? 'active' : '' }}">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+                <li>
+                    <a href="#">Home 1</a>
+                </li>
+                <li>
+                    <a href="#">Home 2</a>
+                </li>
+                <li>
+                    <a href="#">Home 3</a>
+                </li>
+            </ul>
         </li>
-        <li class="{{ request()->is('users*') ? 'active' : '' }}">
-            <a href="{{ route('users.index') }}">Users</a>
+        <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
+            <a href="#taxpayersMenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers</a>
+            <ul class="collapse list-unstyled {{ request()->is('taxpayers*') ? 'show' : '' }}" id="taxpayersMenu">
+                <li class="{{ request()->is('taxpayers') ? 'active' : '' }}">
+                    <a href="{{ route('taxpayers.index') }}">Taxpayers</a>
+                </li>
+                <li class="{{ request()->is('taxpayers/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('taxpayers.registrations.index') }}">KYC</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">About</a>
         </li>
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
