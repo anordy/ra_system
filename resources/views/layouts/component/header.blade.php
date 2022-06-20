@@ -18,23 +18,4 @@
     }
 
     [x-cloak] { display: none !important; }
-
-    .tabs .tab-item {
-        border: none;
-        background: none;
-        padding-bottom: 5px;
-        padding-right: 0;
-        padding-left: 0;
-        margin-right: 22px;
-    }
-    .tabs .tab-item:hover {
-        color: #97363a;
-    }
-    .tabs .tab-item:focus, .tabs .tab-item:focus-visible {
-        outline: none;
-    }
-    .tabs .tab-item.active {
-        border-bottom: 3px solid #97363a;
-        font-weight: bold;
-    }
 </style>

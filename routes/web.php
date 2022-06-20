@@ -31,7 +31,7 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
-    Route::resource('registrations', RegistrationsController::class);
+    Route::resource('registrations', RegistrationsController::class); // KYC
     Route::get('enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
     Route::get('verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
 });
