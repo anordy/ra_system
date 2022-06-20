@@ -17,6 +17,9 @@
                     </h5>
 
                     <div class="card-body">
+                        @if ($errors->any())
+                            {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                        @endif
                         <form method="POST" action="{{ route('login') }}" novalidate>
                             @csrf
                             <div class="">
@@ -24,7 +27,8 @@
                                 <div class="form-group">
                                     <label class="form-label" for="email">Email</label>
                                     <input type="text" class="form-control  @error('email') is-invalid @enderror"
-                                        name="email" value="{{ old('email') }}" required autocomplete="email" autofocus />
+                                        name="email" value="{{ old('email') }}" required autocomplete="email"
+                                        autofocus />
                                     <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">
                                         @error('email')
                                             {{ $message }}
