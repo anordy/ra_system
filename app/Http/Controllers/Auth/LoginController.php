@@ -69,7 +69,6 @@ class LoginController extends Controller
                 session()->put("user_id", encrypt($user->id));
                 session()->put("email", encrypt($request->get('email')));
                 session()->put("password", encrypt($request->get('password')));
-
                 return redirect()->route('twoFactorAuth.index');
             }
 

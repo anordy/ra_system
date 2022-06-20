@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\District;
 use App\Models\Region;
 
 use Exception;
@@ -14,13 +15,16 @@ class DistrictEditModal extends Component
 
     use LivewireAlert;
     public $name;
-    public $region;
+    public $region_id;
+    public $regions;
+    public $district;
 
 
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:regions,name,'.$this->region->id.',id',
+            'region_id' => 'required|exists:regions,id',
+            'name' => 'required|min:2|unique:regions,name,' . $this->district->id . ',id',
         ];
     }
 
@@ -28,8 +32,9 @@ class DistrictEditModal extends Component
     {
         $this->validate();
         try {
-            $this->region->update([
+            $this->district->update([
                 'name' => $this->name,
+                'region_id' => $this->region_id,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -40,13 +45,17 @@ class DistrictEditModal extends Component
 
     public function mount($id)
     {
-        $data = Region::find($id);
-        $this->region = $data;
+
+        $this->regions = Region::all();
+
+        $data = District::find($id);
+        $this->district = $data;
         $this->name = $data->name;
+        $this->region_id = $data->region_id;
     }
 
     public function render()
     {
-        return view('livewire.region-edit-modal');
+        return view('livewire.district-edit-modal');
     }
 }

@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
 @section('title')
-    
+Districts
 @endsection
 
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h5 class="text-uppercase">Districs Management</h5>
+            <h5 class="text-uppercase">Districts Management</h5>
             <div class="card-tools">
                 <button class="btn btn-info btn-sm"
                     onclick="Livewire.emit('showModal', 'district-add-modal')"><i

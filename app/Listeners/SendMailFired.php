@@ -28,8 +28,11 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        $token = UserOtp::find($event->tokenId);
-        SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
+        if($event->service == 'otp'){
+            $token = UserOtp::find($event->tokenId);
+            SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
+        }
+       
        
     }
 }

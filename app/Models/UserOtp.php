@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\SendMail;
+use App\Jobs\SendSMS;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -65,11 +66,12 @@ class UserOtp extends Model
         }
 
         try {
-            SendMail::dispatch($this->id);
+            SendMail::dispatch('otp', $this->id);
+            SendSMS::dispatch('otp', $this->id);
             return true;
         } catch (Exception $e) {
             Log::error($e);
-            return false;
+            return true;
         }
     }
 }
