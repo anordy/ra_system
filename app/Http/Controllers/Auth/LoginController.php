@@ -55,7 +55,8 @@ class LoginController extends Controller
             if ($user->otp == null) {
                 $token = UserOtp::create([
                     'user_id' => $user->id,
-                    'user_type' => get_class($user)
+                    'user_type' => get_class($user),
+                    'used' => false
                 ]);
             } else {
                 $token = $user->otp;

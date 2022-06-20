@@ -30,6 +30,9 @@
             </ul>
         </li>
         <li>
+            <a href="/audits">Audit Trail</a>
+        </li>
+        <li>
             <a href="#">About</a>
         </li>
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">

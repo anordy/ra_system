@@ -52,4 +52,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
     });
+
+    Route::get('/audits', [AuditController::class, 'index'])->name('Audit');
+
 });

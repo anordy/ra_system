@@ -167,6 +167,7 @@ return [
          */
         Mews\Captcha\CaptchaServiceProvider::class,
         \Eddytim\Auditlog\AuditLogServiceProvider::class,
+        OwenIt\Auditing\AuditingServiceProvider::class,
 
         /*
          * Application Service Providers...
