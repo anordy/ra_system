@@ -3,14 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Role;
-use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\Password;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use ZxcvbnPhp\Zxcvbn;
 
 class RoleAddModal extends Component
 {
@@ -23,7 +19,7 @@ class RoleAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:users',
+            'name' => 'required|min:2|unique:roles',
         ];
     }
 

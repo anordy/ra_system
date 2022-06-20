@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Events\SendMail;
-use App\Jobs\SendSMS;
+use App\Events\SendSms;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -65,9 +65,13 @@ class UserOtp extends Model
             $this->code = $this->generateCode();
         }
 
+        if(config('app.env') == 'local'){
+            return true;
+        }
+
         try {
-            SendMail::dispatch('otp', $this->id);
-            SendSMS::dispatch('otp', $this->id);
+            event(new SendSms('otp', $this->id));
+            event(new SendMail('otp', $this->id));
             return true;
         } catch (Exception $e) {
             Log::error($e);
