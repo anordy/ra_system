@@ -4,7 +4,6 @@
 <head>
     @include('layouts.component.header')
 
-    @livewireStyles()
 
 </head>
 
@@ -15,6 +14,8 @@
         <div id="content">
            @include('layouts.component.top-nav')
             <div class="container-fluid">
+                @include('layouts.component.messages')
+
                 @yield('content')
             </div>
         </div>

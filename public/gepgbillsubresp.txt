@@ -1,6 +1,0 @@
-{
-    "payerMobile": "255717447079",
-    "paymentReference": "901460425448",
-    "amount": 1000,
-    "transactionRef": "FA10769849365039",
-}
