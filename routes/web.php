@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaControlle;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
@@ -34,6 +35,10 @@ Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
     Route::resource('registrations', RegistrationsController::class); // KYC
     Route::get('enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
     Route::get('verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
+});
+
+Route::prefix('businesses')->as('businesses.')->group(function (){
+    Route::resource('registrations', RegistrationController::class); 
 });
 
 Route::resource('taxpayers', TaxpayersController::class);

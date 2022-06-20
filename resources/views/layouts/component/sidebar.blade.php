@@ -29,6 +29,19 @@
                 </li>
             </ul>
         </li>
+
+        <li class="{{ request()->is('business*') ? 'active' : '' }}">
+            <a href="#businessMenu" data-toggle="collapse" aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
+            <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
+                {{-- <li class="{{ request()->is('business') ? 'active' : '' }}">
+                    <a href="{{ route('taxpayers.index') }}">Taxpayers</a>
+                </li> --}}
+                <li class="{{ request()->is('businesses/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('businesses.registrations.index') }}">Registrations</a>
+                </li>
+            </ul>
+        </li>
+
         <li>
             <a href="#">About</a>
         </li>
@@ -57,7 +70,7 @@
                 <i class="far fa-2x fa-user-circle"></i>
             </div>
             <div class="pl-2">
-                <div>{{ auth()->user()->fullname() }}</div>
+                {{-- <div>{{ auth()->user()->fullname() }}</div> --}}
                 <div>Role</div>
             </div>
         </div>
