@@ -20,10 +20,10 @@ class CreateKYCSTable extends Migration
             $table->unsignedBigInteger('id_type');
             $table->string('id_number');
 
-            $table->string('first_name')->unique();
-            $table->string('middle_name')->unique();
-            $table->string('last_name')->unique();
-            $table->string('physical_address')->unique();
+            $table->string('first_name');
+            $table->string('middle_name');
+            $table->string('last_name');
+            $table->string('physical_address');
             $table->string('street');
             $table->string('email')->unique();
             $table->string('mobile')->unique();
@@ -39,6 +39,13 @@ class CreateKYCSTable extends Migration
 
             $table->foreign('id_type')->references('id')->on('id_types');
             $table->foreign('country_id')->references('id')->on('countries');
+
+            // Flags
+            // Information verified from NIDA/Immigration
+            $table->dateTime('authorities_verified_at')->nullable();
+
+            // Biometric Enrolled
+            $table->dateTime('biometric_verified_at')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

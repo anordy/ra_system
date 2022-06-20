@@ -20,10 +20,12 @@ class CreateTaxPayersTable extends Migration
             $table->unsignedBigInteger('id_type');
             $table->string('id_number');
 
-            $table->string('first_name')->unique();
-            $table->string('middle_name')->unique();
-            $table->string('last_name')->unique();
+            $table->string('first_name');
+            $table->string('middle_name');
+            $table->string('last_name');
             $table->text('physical_address');
+            $table->string('street');
+
             $table->string('email')->unique();
             $table->string('mobile')->unique();
             $table->string('alt_mobile');
