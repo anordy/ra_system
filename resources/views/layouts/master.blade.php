@@ -3,6 +3,8 @@
 
 <head>
     @include('layouts.component.header')
+
+
 </head>
 
 <body>
@@ -19,7 +21,7 @@
         </div>
     </div>
 
-
+    @livewireScripts()
     @include('layouts.component.footer')
 </body>
 
