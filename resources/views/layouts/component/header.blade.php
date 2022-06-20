@@ -2,16 +2,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<title>@yield('title')</title>
+<title>{{ config('app.name', 'ZRB') }} | @yield('title')</title>
 
 <link href="{{ asset('plugins/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet" />
-<link href="{{ asset('css/style.css') }}" rel="stylesheet" />
-<link href="{{ asset('favicon.ico') }}" rel="icon" />
-
+<link href="{{ asset('plugins/sweetalert/sweetalert2.min.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ URL::to('css/style.css') }}">
+<link rel="icon" href="{{ asset('favicon.ico') }}" />
 @livewireStyles()
 
 <style>
+    .swal2-container {
+        z-index: 20000 !important;
+    }
+
     [x-cloak] { display: none !important; }
 </style>

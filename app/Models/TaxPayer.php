@@ -38,4 +38,9 @@ class TaxPayer extends Model
     public function identification(){
         return $this->belongsTo(IDType::class, 'id_type');
     }
+    
+    public function otp()
+    {
+        return $this->morphOne(UserOtp::class, 'user');
+    }
 }
