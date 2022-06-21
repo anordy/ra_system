@@ -2,7 +2,7 @@
 body {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
-    font-size: 0.9em !important;
+    font-size: 0.8em !important;
 }
 
 a,
@@ -139,3 +139,66 @@ a[data-toggle="collapse"] {
         display: none;
     }
 }
+
+
+/* Fix columns selection button */
+#columnSelect-table {
+    min-width: 150px;
+    background: #f2f2f2;
+}
+
+/* ---------------------------------------------------
+    CARD TOOLD
+----------------------------------------------------- */
+
+.card-tools {
+    display: block;
+    float: none;
+    margin-top: 0;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 0;
+    text-align: right;
+}
+.card-tools a {
+    cursor: pointer;
+    margin-left: 5px;
+    color: #c4c4c4 !important;
+}
+.card-tools a.btn-primary {
+    color: #fff !important;
+}
+.card-tools .dropdown-menu > li > a {
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #676a6c !important;
+}
+.card .card-tools.open > .dropdown-menu {
+    left: auto;
+    right: 0;
+}
+.card-tools .dropdown-toggle::after {
+    display: none;
+}
+
+/* ---------------------------------------------------
+LIVEWIRE TABS
+----------------------------------------------------- */
+.tabs .tab-item {
+    border: none;
+    background: none;
+    padding-bottom: 5px;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 22px;
+}
+.tabs .tab-item:hover {
+    color: #97363a;
+}
+.tabs .tab-item:focus, .tabs .tab-item:focus-visible {
+    outline: none;
+}
+.tabs .tab-item.active {
+    border-bottom: 3px solid #97363a;
+    font-weight: bold;

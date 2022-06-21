@@ -15,12 +15,12 @@ class CreateBiometricsTable extends Migration
     {
         Schema::create('biometrics', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tax_payer_id');
+            $table->unsignedBigInteger('taxpayer_id');
             $table->enum('hand', ['left', 'right']);
             $table->enum('finger', ['thumb', 'index', 'middle', 'ring', 'little']);
             $table->text('image');
 
-            $table->foreign('tax_payer_id')->references('id')->on('tax_payers');
+            $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
             $table->softDeletes();
             $table->timestamps();
         });

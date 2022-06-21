@@ -3,85 +3,84 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\UserOtp;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use \Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    protected $maxAttempts = 3; // Default is 5
-    protected $decayMinutes = 2; // Default is 1
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-//    protected $redirectTo = RouteServiceProvider::HOME;
-
-    protected function redirectTo()
-    {
-        return '/two-factor-auth-view';
-    }
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout', 'reloadCaptcha');
+        $this->middleware('guest', ['except' => ['logout']]);
     }
 
+    public function redirectTo(){
+        return redirect()->route('home');
+    }
 
-    /**
-     * Show the application's login form.
-     *
-     * @return \Illuminate\View\View
-     */
     public function showLoginForm()
     {
         return view('login');
     }
 
-    /**
-     * Get the login username to be used by the controller.
-     *
-     * @return string
-     */
-    public function username()
-    {
-        return 'username';
-    }
-
     protected function validateLogin(Request $request)
     {
-        $this->validate($request, [
-            $this->username() => 'required',
+        $request->validate([
+            'email' => 'required',
             'password' => 'required',
             'captcha' => 'required|captcha'
-        ],
-            [
-            'captcha.required' => 'Captcha Required',
-            'captcha.captcha' => 'Invalid Captcha',
-    ]
-        );
+        ]);
     }
 
 
-    public function reloadCaptcha() {
-        
+    public function login(Request $request)
+    {
+
+        $this->validateLogin($request);
+        if (
+            method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)
+        ) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+
+        if ($user = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
+
+            if ($user->otp == null) {
+                $token = UserOtp::create([
+                    'user_id' => $user->id,
+                    'user_type' => get_class($user)
+                ]);
+            } else {
+                $token = $user->otp;
+                $token->code = $token->generateCode();
+                $token->save();
+            }
+
+
+            if ($token->sendCode()) {
+                session()->put("token_id", encrypt($token->id));
+                session()->put("user_id", encrypt($user->id));
+                session()->put("email", encrypt($request->get('email')));
+                session()->put("password", encrypt($request->get('password')));
+                return redirect()->route('twoFactorAuth.index');
+            }
+
+
+            $token->delete();
+            return redirect('/login')->withErrors([
+                "Unable to send verification code"
+            ]);
+        }
+
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
     }
 }

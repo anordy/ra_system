@@ -1,63 +1,92 @@
 @extends('layouts.login')
 @section('content')
-    {{-- Login starts here --}}
-    <section class="vh-100 gradient-custom" id="loginBox">
-        <div class="container h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                    <div class="card bg-dark-transparent text-white" style="border-radius: 1rem;">
-                        <div class="card-body text-center">
-                            <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
-                                @csrf
-                                <div class="mt-md-4 pb-1">
-                                    <h2 class="fw-bold mb-3 text-uppercase">Login</h2>
-                                    @if(count($errors) > 0 )
-                                        <div class="pt-1 pb-0 alert alert-danger alert-dismissible fade show" role="alert" id="login-alert">
-                                            <p>{{ $errors->first() }}</p>
-                                        </div>
-                                        <br />
-                                    @endif
+    <div class="middle-box ">
 
-                                    <div class="form-outline form-white mb-4">
-                                        <input type="text" id="typeUsername"
-                                               class="form-control form-control-lg @error('username') is-invalid @enderror"
-                                               name="username" value="{{ old('username') }}" required
-                                               autocomplete="username" autofocus/>
-                                        <label class="form-label" for="typeUsername">Username</label>
-                                    </div>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-12">
 
-                                    <div class="form-outline form-white mb-4">
-                                        <input type="password" id="typePasswordX" class="form-control  form-control-lg" name="password"
-                                               required autocomplete="current-password"/>
-                                        <label class="form-label" for="typePasswordX">Password</label>
-                                    </div>
+                <div class="card rounded">
+                    <div class="d-flex justify-content-center pb-2">
+                        <img alt="image" class="rounded" width="160px" height="160px"
+                            src="{{ asset('images/logo.png') }}" />
+                    </div>
+                </div>
+                <div class="card rounded">
+                    <h5 class="card-header bg-white text-uppercase">
+                        ZRB Login
+                    </h5>
 
-                                    <div class="form-outline form-white mb-4">
-                                        <input type="text" id="captcha"
-                                               class="form-control @error('captcha') is-invalid @enderror"
-                                               name="captcha" value="{{ old('captcha') }}" required
-                                               autocomplete="captcha" autofocus/>
-                                        <label class="form-label" for="captcha">Captcha</label>
-                                        <div class="invalid-feedback"
-                                             style="white-space: nowrap;overflow: scroll">@error('captcha') {{ $message }} @enderror</div>
-                                    </div>
+                    <div class="card-body">
+                        @if ($errors->any())
+                            {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                        @endif
+                        <form method="POST" action="{{ route('login') }}" novalidate>
+                            @csrf
+                            <div class="">
 
-                                    <p class="small text-start"><a class="text-white-50" href="{{ url('password/reset') }}">Forgot password?</a>
-                                    </p>
-                                    <div class="form-outline form-white mb-4 captcha">
-                                        <span>{!! captcha_img('flat') !!}</span>
-                                        <button type="button" class="btn btn-success reload" id="reload">
-                                            <i class='bx bx-refresh' style="font-size: 24px;"></i>
-                                        </button>
+                                <div class="form-group">
+                                    <label class="form-label" for="email">Email</label>
+                                    <input type="text" class="form-control  @error('email') is-invalid @enderror"
+                                        name="email" value="{{ old('email') }}" required autocomplete="email"
+                                        autofocus />
+                                    <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">
+                                        @error('email')
+                                            {{ $message }}
+                                        @enderror
                                     </div>
-                                    <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
                                 </div>
-                            </form>
-                        </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="typePasswordX">Password</label>
+                                    <input type="password" class="form-control" name="password" required
+                                        autocomplete="current-password" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="captcha">Captcha</label>
+                                    <input type="text" id="captcha"
+                                        class="form-control @error('captcha') is-invalid @enderror" name="captcha"
+                                        value="{{ old('captcha') }}" required autocomplete="captcha" autofocus />
+                                    <div class="invalid-feedback" style="white-space: nowrap;overflow: scroll">
+                                        @error('captcha')
+                                            {{ $message }}
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <span id="captcha-label">{!! captcha_img('flat') !!}</span>
+                                    <button type="button" class="btn btn-outline-success" onclick="captchaReload()">
+                                        <i class='fas fa-redo'></i>
+                                    </button>
+                                </div>
+                                <button class="btn btn-info px-5" type="submit">Login</button>
+                                <p class="small text-start mt-3"><a href="{{ url('password/reset') }}">Forgot
+                                        password?</a>
+                                </p>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+            <div class="col-12 text-center small mt-4">
+                Copyright ZRB © 2022 - {{ date('Y') }}
+            </div>
         </div>
-    </section>
-    {{-- Login ends here --}}
+    </div>
+@endsection
+
+
+@section('scripts')
+    <script>
+        function captchaReload() {
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('captcha.reload') }}',
+                success: function(data) {
+                    $("#captcha-label").html(data.captcha);
+                }
+            });
+        }
+    </script>
 @endsection
