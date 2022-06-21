@@ -32,8 +32,8 @@ class CreateTaxpayersTable extends Migration
 
             $table->enum('location', ['Unguja', 'Pemba']);
 
-            $table->string('work_permit');
-            $table->string('residence_permit');
+            $table->string('work_permit')->nullable();
+            $table->string('residence_permit')->nullable();
 
             $table->boolean('is_citizen');
             $table->unsignedBigInteger('country_id')->unique();
