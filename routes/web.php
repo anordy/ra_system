@@ -16,7 +16,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TaxPayers\RegistrationsController;
+use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\RoleController;

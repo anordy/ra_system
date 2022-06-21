@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Taxpayers;
 
 use App\Models\KYC;
-use App\Models\TaxPayer;
+use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -13,7 +13,7 @@ class TaxpayersTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxPayer::query()->with('country')->select('first_name', 'middle_name', 'last_name', 'tax_payers.id');
+        return Taxpayer::query()->with('country')->select('first_name', 'middle_name', 'last_name', 'tax_payers.id');
     }
 
     public function columns(): array

@@ -2,7 +2,7 @@
 
 namespace App\Traits\Taxpayer;
 
-use App\Models\TaxPayer;
+use App\Models\Taxpayer;
 use Carbon\Carbon;
 
 trait KYCTrait {
