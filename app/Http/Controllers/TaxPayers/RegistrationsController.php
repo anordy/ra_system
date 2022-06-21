@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\TaxPayers;
+namespace App\Http\Controllers\Taxpayers;
 
 use App\Http\Controllers\Controller;
 use App\Models\KYC;
-use App\Models\TaxPayer;
+use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
 use Carbon\Carbon;
 use Illuminate\Hashing\HashManager;
@@ -46,7 +46,7 @@ class RegistrationsController extends Controller
 
         // Send email for OTP
 
-        $taxpayer = TaxPayer::create($data);
+        $taxpayer = Taxpayer::create($data);
 
         $taxpayer ? $kyc->delete() : session()->flash('error', "Couldnt verify user.");
         return redirect()->route('taxpayers.registrations.index');

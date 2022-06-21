@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaxPayersTable extends Migration
+class CreateTaxpayersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTaxPayersTable extends Migration
      */
     public function up()
     {
-        Schema::create('tax_payers', function (Blueprint $table) {
+        Schema::create('taxpayers', function (Blueprint $table) {
             $table->id();
             $table->string('reference_no')->unique();
 
@@ -57,6 +57,6 @@ class CreateTaxPayersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tax_payers');
+        Schema::dropIfExists('taxpayers');
     }
 }

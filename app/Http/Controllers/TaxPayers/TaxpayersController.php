@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Taxpayers;
 
 use App\Http\Controllers\Controller;
-use App\Models\TaxPayer;
+use App\Models\Taxpayer;
 use Illuminate\Http\Request;
 
 class TaxpayersController extends Controller
@@ -13,7 +13,7 @@ class TaxpayersController extends Controller
     }
 
     public function show($taxPayerId){
-        $taxPayer = TaxPayer::findOrFail($taxPayerId);
+        $taxPayer = Taxpayer::findOrFail($taxPayerId);
 
         return view('taxpayers.show', compact('taxPayer'));
     }
