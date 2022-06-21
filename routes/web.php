@@ -11,7 +11,7 @@
 |
 */
 
-use App\Http\Controllers\CaptchaControlle;
+use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
@@ -40,7 +40,7 @@ Route::resource('taxpayers', TaxpayersController::class);
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
 Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
-Route::get('captcha', [CaptchaControlle::class, 'reload'])->name('captcha.reload');
+Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
