@@ -38,6 +38,9 @@
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
             <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
+                <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.users.index') }}">Users</a>
+                </li>
                 <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
                     <a href="{{ route('settings.roles.index') }}">Roles</a>
                 </li>

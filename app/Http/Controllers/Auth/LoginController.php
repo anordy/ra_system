@@ -52,6 +52,12 @@ class LoginController extends Controller
 
         if ($user = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
 
+            if ($user->status == 0) {
+                return redirect()->back()->withErrors([
+                    "Your account is deactivated, Kindly check with your admin"
+                ]);
+            }
+
             if ($user->otp == null) {
                 $token = UserOtp::create([
                     'user_id' => $user->id,
