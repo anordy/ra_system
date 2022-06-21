@@ -50,7 +50,7 @@ class RegistrationsTable extends DataTableComponent
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML
                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'business.registration-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <!-- <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button> -->
+                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                 HTML)
                 ->html(true),
         ];
@@ -79,7 +79,7 @@ class RegistrationsTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            Country::find($data->id)->delete();
+            Business::find($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
