@@ -75,7 +75,7 @@ class UserOtp extends Model
             return true;
         } catch (Exception $e) {
             Log::error($e);
-            return true;
+            return false;
         }
     }
 }

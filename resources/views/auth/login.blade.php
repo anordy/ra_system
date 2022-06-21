@@ -61,15 +61,15 @@
                                     </button>
                                 </div>
                                 <button class="btn btn-info px-5" type="submit">Login</button>
-                                <p class="small text-start mt-3"><a href="{{ url('password/reset') }}">Forgot
-                                        password?</a>
+                                <p class=" text-start mt-3"><a href="{{ url('password/reset') }}">Forgot
+                                        password ?</a>
                                 </p>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-12 text-center small mt-4">
+            <div class="col-12 text-center p-2 card mb-5">
                 Copyright ZRB © 2022 - {{ date('Y') }}
             </div>
         </div>

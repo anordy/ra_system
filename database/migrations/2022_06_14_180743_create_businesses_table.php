@@ -16,7 +16,7 @@ class CreateBusinessesTable extends Migration
         Schema::create('businesses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('business_type_id');
+            $table->unsignedBigInteger('business_category_id');
             $table->integer('tin');
             $table->text('business_activities');
             $table->date('date_of_commencing');
@@ -28,7 +28,7 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('isic4_id');
             $table->timestamps();
 
-            $table->foreign('business_type_id')->references('id')->on('business_types');
+            $table->foreign('business_category_id')->references('id')->on('business_categories');
             $table->foreign('isic4_id')->references('id')->on('isic4s');
         });
     }
