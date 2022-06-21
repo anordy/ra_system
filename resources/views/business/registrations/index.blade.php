@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Registered Businesses
+    Business
 @endsection
 
 @section('content')
