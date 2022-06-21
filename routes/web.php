@@ -37,10 +37,6 @@ Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
     Route::get('verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
 });
 
-Route::prefix('businesses')->as('businesses.')->group(function (){
-    Route::resource('registrations', RegistrationController::class); 
-});
-
 Route::resource('taxpayers', TaxpayersController::class);
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
@@ -56,5 +52,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
+    });
+
+    Route::prefix('business')->as('business.')->group(function (){
+        Route::resource('registrations', RegistrationController::class); 
     });
 });
