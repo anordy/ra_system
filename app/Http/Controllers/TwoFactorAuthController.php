@@ -62,8 +62,7 @@ class TwoFactorAuthController extends Controller
             session()->remove('email');
             session()->remove('password');
 
-
-            if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            if (Auth::guard()->attempt(['email' => $email, 'password' => $password, 'status' => 1])) {
                 $request->session()->regenerate();
                 session()->put('user_2fa', auth()->id());
                 return redirect()->route('home');

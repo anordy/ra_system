@@ -11,20 +11,21 @@
 |
 */
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuditController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\CountryController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
-use App\Http\Controllers\RegionController;
-use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TwoFactorAuthController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
@@ -45,14 +46,16 @@ Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reloa
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
-    Route::resource('/users', UserController::class);
 
     Route::prefix('settings')->name('settings.')->group(function(){
+        Route::resource('/users', UserController::class);
         Route::resource('/roles', RoleController::class);
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
     });
+
+    Route::get('/audits', [AuditController::class, 'index'])->name('audit');
 
     Route::prefix('business')->as('business.')->group(function (){
         Route::resource('registrations', RegistrationController::class); 
