@@ -7,6 +7,7 @@
     <title>ZRB | Login</title>
     <link href="{{ asset('plugins/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugins/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugins/sweetalert/sweetalert2.min.css') }}" rel="stylesheet" />
 </head>
 
 <style>
@@ -36,7 +37,7 @@
     <script src="{{ asset('plugins/fontawesome/js/fontawesome.min.js') }}"></script>
     <script src="{{ asset('plugins/fontawesome/js/solid.min.js') }}"></script>
     <script src="{{ asset('plugins/fontawesome/js/regular.js') }}"></script>
-
+    <script src="{{ asset('plugins/sweetalert/sweetalert2.min.js') }}"></script>
     @yield('scripts')
 </body>
 
