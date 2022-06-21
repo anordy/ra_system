@@ -13,7 +13,7 @@ class TaxpayersTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Taxpayer::query()->with('country')->select('first_name', 'middle_name', 'last_name', 'tax_payers.id');
+        return Taxpayer::query()->with('country')->select('first_name', 'middle_name', 'last_name', 'taxpayers.id');
     }
 
     public function columns(): array
