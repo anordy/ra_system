@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TaxType extends Model
+class BusinessActivity extends Model
 {
     use HasFactory, SoftDeletes;
 }
