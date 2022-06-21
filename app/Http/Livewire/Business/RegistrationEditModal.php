@@ -4,10 +4,11 @@ namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class RegistrationEditModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert; 
     public $name;
     public $tin;
 
@@ -24,7 +25,7 @@ class RegistrationEditModal extends Component
     {
         $this->validate();
         try {
-            $this->user->update([
+            $this->business->update([
                 'name' => $this->name,
                 'tin' => $this->tin,
             ]);

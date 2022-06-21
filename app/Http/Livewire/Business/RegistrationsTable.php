@@ -49,7 +49,7 @@ class RegistrationsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML
-                    <!-- <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'country-edit-modal',$value)"><i class="fa fa-edit"></i> </button> -->
+                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'business.registration-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                     <!-- <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button> -->
                 HTML)
                 ->html(true),

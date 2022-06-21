@@ -20,8 +20,8 @@ class RegistrationAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:businesses',
-            'tin' => 'required|min:2|unique:businesses',
+            'name' => 'required|unique:businesses',
+            'tin' => 'required|unique:businesses',
         ];
     }
 
@@ -31,13 +31,12 @@ class RegistrationAddModal extends Component
         $this->validate();
         try{
             Business::create([
-                'name' => $this->code,
-                'tin' => $this->name,
+                'name' => $this->name,
+                'tin' => $this->tin,
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             Log::error($e);
-
             $this->alert('error', 'Something went wrong');
         }
     }

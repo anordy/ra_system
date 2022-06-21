@@ -11,6 +11,18 @@
                     <div class="form-group col-lg-12">
                         <label class="control-label">Name</label>
                         <input type="text" class="form-control" wire:model.lazy="name" id="name">
+                        @error('name')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row pr-3 pl-3">
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">TIN</label>
+                        <input type="text" class="form-control" wire:model.lazy="tin" id="tin">
+                        @error('tin')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>
