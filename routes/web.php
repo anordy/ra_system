@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
@@ -51,5 +52,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
+    });
+
+    Route::prefix('business')->as('business.')->group(function (){
+        Route::resource('registrations', RegistrationController::class); 
     });
 });
