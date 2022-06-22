@@ -64,16 +64,26 @@ class UsersTable extends DataTableComponent
                     HTML;
                     } else {
                         return <<< HTML
-                        <button class="btn btn-success btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
+                        <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
                     HTML;
                     }
                 })
                 ->html(true),
             Column::make('Action', 'id')
-                ->format(fn ($value, $row) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
+                ->format(function ($value, $row) {
+                    if ($value == auth()->user()->id) {
+                        return <<< HTML
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                    HTML;
+                    } else {
+                        return <<< HTML
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>
+                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                    HTML;
+                    }
+                })
                 ->html(true),
         ];
     }

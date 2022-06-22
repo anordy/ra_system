@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserOtp;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use \Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -50,8 +51,8 @@ class LoginController extends Controller
         }
 
 
-        if ($user = app('auth')->getProvider()->retrieveByCredentials($request->only('email', 'password'))) {
-
+        if (Auth::once($request->only('email', 'password'), false, false)) {
+            $user = auth()->user();
             if ($user->status == 0) {
                 return redirect()->back()->withErrors([
                     "Your account is deactivated, Kindly check with your admin"
