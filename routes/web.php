@@ -36,7 +36,6 @@ use App\Http\Controllers\TwoFactorAuthController;
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
     Route::resource('registrations', RegistrationsController::class); // KYC

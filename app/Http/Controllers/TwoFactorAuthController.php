@@ -64,7 +64,7 @@ class TwoFactorAuthController extends Controller
 
             if (Auth::guard()->attempt(['email' => $email, 'password' => $password, 'status' => 1])) {
                 $request->session()->regenerate();
-                session()->put('user_2fa', auth()->id());
+                session()->put('user_2fa', encrypt(config('app.key')));
                 return redirect()->route('home');
             }
             return redirect()->back()->withErrors(['error' => 'These credentials do not match our records.']);
