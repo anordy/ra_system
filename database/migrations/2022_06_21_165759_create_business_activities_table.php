@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaxTypesTable extends Migration
+class CreateBusinessActivitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTaxTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tax_types', function (Blueprint $table) {
+        Schema::create('business_activities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->softDeletes();
@@ -28,6 +28,6 @@ class CreateTaxTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tax_types');
+        Schema::dropIfExists('business_activities');
     }
 }

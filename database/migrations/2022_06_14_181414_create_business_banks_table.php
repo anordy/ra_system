@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBusinessBankAccsTable extends Migration
+class CreateBusinessBanksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateBusinessBankAccsTable extends Migration
      */
     public function up()
     {
-        Schema::create('business_bank_accs', function (Blueprint $table) {
+        Schema::create('business_banks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('bank_id');
             $table->string('acc_no');
             $table->string('acc_type');
             $table->string('branch');
-            $table->enum('currency',['TZS','USD']);
+            $table->unsignedBigInteger('currency_id');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('business_id')->references('id')->on('businesses');
@@ -35,6 +36,6 @@ class CreateBusinessBankAccsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('business_bank_accs');
+        Schema::dropIfExists('business_banks');
     }
 }
