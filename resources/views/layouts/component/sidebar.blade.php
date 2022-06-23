@@ -38,12 +38,16 @@
                 </li>
             </ul>
         </li>
-
-        <li>
-            <a href="/audits">Audit Trail</a>
-        </li>
-        <li>
-            <a href="#">About</a>
+        <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
+            <a href="#withholdingAgentsMenu" data-toggle="collapse" aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}" class="dropdown-toggle">Withholding Agents</a>
+            <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}" id="withholdingAgentsMenu">
+                <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
+                    <a href="{{ route('withholdingAgents.register') }}">Registration</a>
+                </li>
+                <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
+                    <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
+                </li>
+            </ul>
         </li>
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
@@ -83,8 +87,14 @@
                 </li>
                 <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
                     <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
+            </ul>
+        </li>
+        <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
+            <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
+                <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
+                    <a href="{{ route('system.audits.index') }}">Audit Trail</a>
                 </li>
-
             </ul>
         </li>
     </ul>
