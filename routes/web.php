@@ -17,6 +17,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuditController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\BusinessCategoryController;
@@ -58,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
+        Route::resource('/banks', BankController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
         Route::resource('/taxtypes', TaxTypeController::class);
         Route::resource('/isic1', ISIC1Controller::class);
