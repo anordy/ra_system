@@ -13,36 +13,32 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuditController;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\RegionController;
-use App\Http\Controllers\Business\RegistrationController;
-use App\Http\Controllers\BusinessCategoryController;
-use App\Http\Controllers\CaptchaController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
-use App\Http\Controllers\Taxpayers\RegistrationsController;
-use App\Http\Controllers\Taxpayers\TaxpayersController;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\TaxTypeController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TwoFactorAuthController;
+use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\WithholdingAgentController;
+use App\Http\Controllers\Taxpayers\TaxpayersController;
+use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\Taxpayers\RegistrationsController;
+
 
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
-
-Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
-    Route::resource('registrations', RegistrationsController::class); // KYC
-    Route::get('enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
-    Route::get('verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
-});
 
 Route::resource('taxpayers', TaxpayersController::class);
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
@@ -68,7 +64,21 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
     });
 
-    Route::get('/audits', [AuditController::class, 'index'])->name('audit');
+    Route::prefix('system')->name('system.')->group(function (){
+        Route::resource('audits', AuditController::class); 
+    });
+
+    Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
+        Route::resource('registrations', RegistrationsController::class); // KYC
+        Route::get('enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
+        Route::get('verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
+    });
+
+    Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function (){
+        Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register'); 
+        Route::get('list', [WithholdingAgentController::class, 'index'])->name('list'); 
+    });
+
 
     Route::prefix('business')->as('business.')->group(function (){
         Route::resource('registrations', RegistrationController::class); 
