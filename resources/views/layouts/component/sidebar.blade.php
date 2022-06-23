@@ -67,6 +67,26 @@
                 <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
                     <a href="{{ route('settings.district.index') }}">District</a>
                 </li>
+                <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.banks.index') }}">Banks</a>
+                </li>
+                <li class="{{ request()->is('settings/business-categories*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.business-categories.index') }}">Business categories</a>
+                </li>
+                <li class="{{ request()->is('settings/taxtypes*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.taxtypes.index') }}">Tax Types</a>
+                </li>
+                <li class="{{ request()->is('settings/isic1*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.isic1.index') }}">ISIC Level 1</a>
+                </li>
+                <li class="{{ request()->is('settings/isic2*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.isic2.index') }}">ISIC Level 2</a>
+                </li>
+                <li class="{{ request()->is('settings/isic3*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.isic3.index') }}">ISIC Level 3</a>
+                </li>
+                <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
             </ul>
         </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
