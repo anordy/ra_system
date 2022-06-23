@@ -34,6 +34,13 @@ class CreateBusinessesTable extends Migration
             $table->string('goods_and_services_types');
             $table->string('goods_and_services_example');
 
+
+            // Contact person
+            $table->unsignedBigInteger('contact_person_id')->nullable();
+
+            // Tax Filling Person
+            $table->unsignedBigInteger('tax_filling_person_id')->nullable();
+
             $table->dateTime('date_of_receipt')->nullable();
             $table->dateTime('effective_reg_date')->nullable();
             $table->dateTime('reg_date')->nullable();

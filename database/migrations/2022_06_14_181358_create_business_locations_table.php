@@ -16,14 +16,20 @@ class CreateBusinessLocationsTable extends Migration
         Schema::create('business_locations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('district_id');
+            $table->unsignedBigInteger('ward_id');
             $table->double('latitude');
             $table->double('longitude');
             $table->enum('nature_of_premises',['Owned','Rented']);
             $table->string('street');
+            $table->string('physical_address');
+            $table->string('house_no');
             $table->string('owner_name')->nullable();
             $table->string('owner_phone_no')->nullable();
             $table->integer('meter_no');
-            $table->boolean('is_headquarter')->default(0);
+            $table->boolean('is_headquarter')->default(false);
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('business_id')->references('id')->on('businesses');
