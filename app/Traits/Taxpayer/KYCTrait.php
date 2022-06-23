@@ -7,15 +7,9 @@ use Carbon\Carbon;
 
 trait KYCTrait {
 
-    use ApiNIDA, ImmigrationApi;
-
     public function updateUser($kyc){
         if ($kyc->identification->name === 'NIDA'){
-            $response = $this->getNidaDetails($kyc->id_number);
-
-            if (!$response){
-                return false;
-            }
+            // API Call
 
             // Check these values
 
@@ -23,13 +17,9 @@ trait KYCTrait {
             $kyc->authorities_verified_at = Carbon::now()->toDateTimeString();
             $kyc->save();
 
-            return $response;
+            return $kyc;
         } else if ($kyc->identification->name === 'PASSPORT'){
-            $response = $this->getImmigrationDetails($kyc->id_number);
-
-            if (!$response){
-                return false;
-            }
+            // API Call
 
             // Check returned values
 
@@ -37,7 +27,7 @@ trait KYCTrait {
             $kyc->authorities_verified_at = Carbon::now()->toDateTimeString();
             $kyc->save();
 
-            return $response;
+            return $kyc;
         } else {
             return false;
         }
