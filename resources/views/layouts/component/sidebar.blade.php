@@ -38,12 +38,16 @@
                 </li>
             </ul>
         </li>
-
-        <li>
-            <a href="/audits">Audit Trail</a>
-        </li>
-        <li>
-            <a href="#">About</a>
+        <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
+            <a href="#withholdingAgentsMenu" data-toggle="collapse" aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}" class="dropdown-toggle">Withholding Agents</a>
+            <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}" id="withholdingAgentsMenu">
+                <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
+                    <a href="{{ route('withholdingAgents.register') }}">Registration</a>
+                </li>
+                <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
+                    <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
+                </li>
+            </ul>
         </li>
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
@@ -63,28 +67,14 @@
                 <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
                     <a href="{{ route('settings.district.index') }}">District</a>
                 </li>
-                <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.banks.index') }}">Banks</a>
+            </ul>
+        </li>
+        <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
+            <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
+                <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
+                    <a href="{{ route('system.audits.index') }}">Audit Trail</a>
                 </li>
-                <li class="{{ request()->is('settings/business-categories*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.business-categories.index') }}">Business categories</a>
-                </li>
-                <li class="{{ request()->is('settings/taxtypes*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.taxtypes.index') }}">Tax Types</a>
-                </li>
-                <li class="{{ request()->is('settings/isic1*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.isic1.index') }}">ISIC Level 1</a>
-                </li>
-                <li class="{{ request()->is('settings/isic2*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.isic2.index') }}">ISIC Level 2</a>
-                </li>
-                <li class="{{ request()->is('settings/isic3*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.isic3.index') }}">ISIC Level 3</a>
-                </li>
-                <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
-                </li>
-
             </ul>
         </li>
     </ul>
