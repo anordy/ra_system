@@ -50,8 +50,6 @@ class CreateBusinessesTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('business_category_id')->references('id')->on('business_categories');
-            $table->foreign('isic4_id')->references('id')->on('isic4s');
         });
     }
 

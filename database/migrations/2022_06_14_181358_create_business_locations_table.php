@@ -22,7 +22,6 @@ class CreateBusinessLocationsTable extends Migration
             $table->double('latitude');
             $table->double('longitude');
             $table->enum('nature_of_possession',['Owned','Rented']);
-            $table->unsignedBigInteger('ward_id');
             $table->string('street');
             $table->string('physical_address');
             $table->string('house_no');

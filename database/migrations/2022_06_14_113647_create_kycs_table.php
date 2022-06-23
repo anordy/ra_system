@@ -21,13 +21,13 @@ class CreateKYCSTable extends Migration
             $table->string('id_number');
 
             $table->string('first_name');
-            $table->string('middle_name');
+            $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('physical_address');
             $table->string('street');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->string('mobile')->unique();
-            $table->string('alt_mobile');
+            $table->string('alt_mobile')->nullable();
 
             $table->enum('location', ['Unguja', 'Pemba']);
 
@@ -35,7 +35,7 @@ class CreateKYCSTable extends Migration
             $table->string('residence_permit')->nullable(); // nullable
 
             $table->boolean('is_citizen');
-            $table->unsignedBigInteger('country_id')->unique();
+            $table->unsignedBigInteger('country_id');
 
             $table->foreign('id_type')->references('id')->on('id_types');
             $table->foreign('country_id')->references('id')->on('countries');
