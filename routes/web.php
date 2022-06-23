@@ -40,7 +40,6 @@ Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::resource('taxpayers', TaxpayersController::class);
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
 Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
@@ -68,17 +67,18 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('audits', AuditController::class); 
     });
 
+
     Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
-        Route::resource('registrations', RegistrationsController::class); // KYC
-        Route::get('enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
-        Route::get('verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
+        Route::resource('/registrations', RegistrationsController::class); // KYC
+        Route::get('/enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
+        Route::get('/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
     });
+    Route::resource('taxpayers', TaxpayersController::class);
 
     Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function (){
-        Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register'); 
-        Route::get('list', [WithholdingAgentController::class, 'index'])->name('list'); 
+        Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
+        Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
     });
-
 
     Route::prefix('business')->as('business.')->group(function (){
         Route::resource('registrations', RegistrationController::class); 
