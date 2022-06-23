@@ -18,6 +18,15 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(BankSeeder::class);
+        $this->call(BusinessActivitiesSeeder::class);
+        $this->call(CountriesTableSeeder::class);
+        $this->call(CurrenciesTableSeeder::class);
+        $this->call(IDTypesTableSeeder::class);
+        $this->call(BanksTableSeeder::class);
+        $this->call(SysModuleSeeder::class);
+        $this->call(TaxTypesSeeder::class);
+        $this->call(TaxpayersTableSeeder::class);
+        $this->call(BusinessCategoriesSeeder::class);
+        $this->call(PoliticalDistributionSeeder::class);
     }
 }
