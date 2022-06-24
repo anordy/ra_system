@@ -99,7 +99,7 @@ class WithholdingAgentRegistration extends Component
 
             WithholdingAgent::create($payload);
             $this->flash('success', 'Record added successfully');
-            return redirect()->to('/withholding-agents');
+            return redirect()->to('/withholdingAgents/list');
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
