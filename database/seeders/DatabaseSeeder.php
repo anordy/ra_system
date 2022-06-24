@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TaxpayersTableSeeder::class);
         $this->call(BusinessCategoriesSeeder::class);
         $this->call(PoliticalDistributionSeeder::class);
+        $this->call(WithholdingAgentSeeder::class);
     }
 }
