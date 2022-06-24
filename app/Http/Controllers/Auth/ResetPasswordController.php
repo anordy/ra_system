@@ -35,7 +35,7 @@ class ResetPasswordController extends Controller
         $user->setRememberToken(Str::random(60));
         $user->save();
         event(new PasswordReset($user));
-        return redirect()->route('login')->with('success', 'Your Password has been reset! Please login with your new password');
+        return redirect('/')->with('success', 'Your Password has been reset! Please login with your new password');
     }
 
     /**
