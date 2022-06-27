@@ -33,9 +33,9 @@ class EnrollFingerprint extends Component
     public function verifyUser(){
         if ($this->userVerified === false){
             $this->verifyingUser = true;
-//            sleep(5);
 
             $response = $this->updateUser($this->kyc);
+            
             $this->verifyingUser = false;
 
             if (!$response){

@@ -2,31 +2,31 @@
 
 namespace Database\Seeders;
 
-use App\Models\BusinessType;
+use App\Models\BusinessCategory;
 use Illuminate\Database\Seeder;
 
-class BusinessTypesTableSeeder extends Seeder
+class BusinessCategoriesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        BusinessType::create([
+        BusinessCategory::create([
             'short_name' => 'sole-proprietor',
             'name' => 'Sole Proprietor'
         ]);
 
-        BusinessType::create([
+        BusinessCategory::create([
             'short_name' => 'partnership',
             'name' => 'Partnership'
         ]);
 
-        BusinessType::create([
+        BusinessCategory::create([
             'short_name' => 'company',
             'name' => 'Company'
+        ]);
+
+        BusinessCategory::create([
+            'short_name' => 'ngo',
+            'name' => 'NGO'
         ]);
     }
 }

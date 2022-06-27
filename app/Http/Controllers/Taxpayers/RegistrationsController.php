@@ -44,7 +44,7 @@ class RegistrationsController extends Controller
         $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at'])->toArray();
         $data['password'] = Hash::make(rand(0, 999999));
 
-        // Send email for OTP
+        // Send email and password for OTP
 
         $taxpayer = Taxpayer::create($data);
 

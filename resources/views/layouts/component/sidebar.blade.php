@@ -1,6 +1,6 @@
 <nav id="sidebar">
     <div class="sidebar-header text-center pb-0">
-        <h3 class="mt-2"><i class="bi bi-card-heading"></i> ZITMAS</h3>
+        <h3 class="mt-2"><i class="bi bi-list"></i> ZITMAS</h3>
     </div>
 
     <ul class="list-unstyled components">
@@ -66,6 +66,9 @@
                 </li>
                 <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
                     <a href="{{ route('settings.district.index') }}">District</a>
+                </li>
+                <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.ward.index') }}">Ward</a>
                 </li>
                 <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
                     <a href="{{ route('settings.banks.index') }}">Banks</a>

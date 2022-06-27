@@ -15,7 +15,7 @@ class CreateBusinessesTable extends Migration
     {
         Schema::create('businesses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('business_type_id'); // Sole / Partner / Company
+            $table->unsignedBigInteger('business_category_id'); // Sole / Partner / Company
             $table->unsignedBigInteger('business_activities_type_id'); // Wholesale or Retail
             $table->unsignedBigInteger('currency_id'); // Wholesale or Retail
 
@@ -38,7 +38,7 @@ class CreateBusinessesTable extends Migration
             // Contact person
             $table->unsignedBigInteger('contact_person_id')->nullable();
 
-            // Tax Filling Person
+            // Tax Filling Person TODO: Remove
             $table->unsignedBigInteger('tax_filling_person_id')->nullable();
 
             $table->dateTime('date_of_receipt')->nullable();
@@ -46,7 +46,9 @@ class CreateBusinessesTable extends Migration
             $table->dateTime('reg_date')->nullable();
             $table->string('z_no')->nullable();
             $table->integer('vrn_no')->nullable();
+
             $table->unsignedBigInteger('isic4_id')->nullable();
+            $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
