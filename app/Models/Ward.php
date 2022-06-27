@@ -11,4 +11,8 @@ class Ward extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['district_id', 'name'];
+
+    public function district() {
+        return $this->belongsTo(District::class, 'district_id');
+    }
 }

@@ -100,7 +100,7 @@ a[data-toggle="collapse"] {
 }
 
 #sidebar .profile {
-    position: absolute; 
+    position: fixed; 
     bottom: 0px; 
     width: inherit;
     background-color: #c76c6c;

@@ -35,7 +35,7 @@ use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
-
+use App\Http\Controllers\WardController;
 
 Auth::routes();
 
@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
+        Route::resource('/ward', WardController::class);
         Route::resource('/banks', BankController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
         Route::resource('/taxtypes', TaxTypeController::class);
