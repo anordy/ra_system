@@ -43,4 +43,8 @@ class Taxpayer extends Model
     {
         return $this->morphOne(UserOtp::class, 'user');
     }
+
+    public function fullname(){
+        return $this->first_name. ' '. $this->last_name;
+    }
 }

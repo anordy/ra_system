@@ -20,8 +20,8 @@ class CreateTaxAgentTrainingExperiencesTable extends Migration
 	        $table->date('to');
 	        $table->string('position_held');
 	        $table->text('description');
-	        $table->unsignedBigInteger('taxpayer_id');
-	        $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
+	        $table->unsignedBigInteger('tax_agent_id');
+	        $table->foreign('tax_agent_id')->references('id')->on('tax_agents');
             $table->timestamps();
         });
     }
