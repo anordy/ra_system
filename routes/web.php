@@ -34,6 +34,7 @@ use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\TaxAgents\TaxAgentController;
 
 
 Auth::routes();
@@ -83,4 +84,12 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('business')->as('business.')->group(function (){
         Route::resource('registrations', RegistrationController::class); 
     });
+
+
+	Route::name('taxagents.')->prefix('taxagents')->group(function (){
+		Route::get('requests', [TaxAgentController::class, 'index'])->name('requests');
+		Route::get('active', [TaxAgentController::class, 'activeAgents'])->name('active');
+		Route::get('renew', [TaxAgentController::class, 'renewal'])->name('renew');
+
+	});
 });

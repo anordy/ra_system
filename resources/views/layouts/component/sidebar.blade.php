@@ -30,6 +30,21 @@
             </ul>
         </li>
 
+        <li  class="{{ request()->is('taxagents*') ? 'active':'' }}">
+            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Tax Agents</a>
+            <ul class="collapse list-unstyled" id="taxagentSubmenu">
+                <li class="{{ request()->is('taxagents/apply*') ? 'active': '' }}">
+                    <a href="{{ route('taxagents.requests') }}">Registration Requests</a>
+                </li>
+                <li>
+                    <a href="{{route('taxagents.active')}}">Active Taxagents</a>
+                </li>
+                <li>
+                    <a href="{{route('taxagents.renew')}}">Renewal Requests</a>
+                </li>
+            </ul>
+        </li>
+
         <li class="{{ request()->is('business*') ? 'active' : '' }}">
             <a href="#businessMenu" data-toggle="collapse" aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
             <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
