@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Events\SendMail;
+use App\Events\SendSms;
 
 class WithholdingAgent extends Model
 {
@@ -30,6 +32,26 @@ class WithholdingAgent extends Model
 
     public function region() {
         return $this->belongsTo(Region::class, 'region_id');
+    }
+
+    public function sendSuccessfulRegistrationNotification()
+    {
+        if (!$this->taxpayer) {
+            throw new \Exception("No Taxpayer found.");
+        }
+
+        if(config('app.env') == 'local'){
+            return true;
+        }
+
+        try {
+            event(new SendMail('withholding_agent_registration', $this->id));
+            event(new SendSms('withholding_agent_registration', $this->id));
+            return true;
+        } catch (Exception $e) {
+            Log::error($e);
+            return false;
+        }
     }
 
 }

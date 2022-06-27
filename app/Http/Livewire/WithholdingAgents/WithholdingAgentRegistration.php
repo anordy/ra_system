@@ -4,7 +4,6 @@ namespace App\Http\Livewire\WithholdingAgents;
 
 
 use Exception;
-use App\Models\User;
 use App\Models\Ward;
 use App\Models\Region;
 use Livewire\Component;
@@ -97,9 +96,12 @@ class WithholdingAgentRegistration extends Component
                 'ward_id' => $this->ward_id,
             ];
 
-            WithholdingAgent::create($payload);
-            $this->flash('success', 'Record added successfully');
-            return redirect()->to('/withholdingAgents/list');
+            $agent = WithholdingAgent::create($payload);
+            if ($agent->sendSuccessfulRegistrationNotification()) {
+                $this->flash('success', 'Record added successfully');
+                return redirect()->to('/withholdingAgents/list');
+            }
+         
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
