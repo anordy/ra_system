@@ -23,5 +23,10 @@ class BusinessCategoriesSeeder extends Seeder
             'short_name' => 'company',
             'name' => 'Company'
         ]);
+
+        BusinessCategory::create([
+            'short_name' => 'ngo',
+            'name' => 'NGO'
+        ]);
     }
 }
