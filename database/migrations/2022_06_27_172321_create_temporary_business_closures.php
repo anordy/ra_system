@@ -18,7 +18,11 @@ class CreateTemporaryBusinessClosures extends Migration
             $table->dateTime('closing_date');
             $table->dateTime('opening_date');
             $table->string('reason');
+            $table->boolean('is_extended')->default(false);
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('approved_by');
+            $table->dateTime('approved_on');
+            $table->unsignedBigInteger('is_approved')->default(false);
             $table->timestamps();
         });
     }

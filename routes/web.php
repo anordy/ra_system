@@ -17,6 +17,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WardController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
@@ -26,16 +27,16 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\TaxTypeController;
+use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\WithholdingAgentController;
+use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
-use App\Http\Controllers\TaxAgents\TaxAgentController;
-use App\Http\Controllers\WardController;
 
 Auth::routes();
 
@@ -83,7 +84,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('business')->as('business.')->group(function (){
-        Route::resource('registrations', RegistrationController::class); 
+        Route::resource('registrations', RegistrationController::class);
+        Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
+        Route::get('/closure/{closure}/approve', [BusinessController::class, 'approveClosure'])->name('approve-closure');
     });
 
 
