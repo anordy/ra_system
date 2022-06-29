@@ -6,11 +6,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Registered Businesses</h5>
-            <div class="card-tools">
-                
-            </div>
+        <div class="card-header text-uppercase font-weight-bold">
+            Registered Businesses
         </div>
 
         <div class="card-body">
