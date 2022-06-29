@@ -31,16 +31,19 @@
         </li>
 
         <li  class="{{ request()->is('taxagents*') ? 'active':'' }}">
-            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Tax Agents</a>
-            <ul class="collapse list-unstyled" id="taxagentSubmenu">
-                <li class="{{ request()->is('taxagents/apply*') ? 'active': '' }}">
+            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Agents</a>
+            <ul class="collapse list-unstyled {{ request()->is('taxagents*') ? 'show' : '' }}" id="taxagentSubmenu">
+                <li class="{{ request()->is('taxagents/requests') ? 'active': '' }}">
                     <a href="{{ route('taxagents.requests') }}">Registration Requests</a>
                 </li>
-                <li>
+                <li class="{{ request()->is('taxagents/active*') ? 'active': '' }}">
                     <a href="{{route('taxagents.active')}}">Active Taxagents</a>
                 </li>
-                <li>
+                <li class="{{ request()->is('taxagents/renew*') ? 'active': '' }}">
                     <a href="{{route('taxagents.renew')}}">Renewal Requests</a>
+                </li>
+                <li class="{{ request()->is('taxagents/fee*') ? 'active': '' }}">
+                    <a href="{{route('taxagents.fee')}}">Fee Configuration</a>
                 </li>
             </ul>
         </li>

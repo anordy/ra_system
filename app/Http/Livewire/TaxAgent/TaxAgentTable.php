@@ -18,7 +18,6 @@ class TaxAgentTable extends DataTableComponent
 	];
 //	protected $model = TaxAgent::class;
 
-
 	public function builder(): Builder
 	{
 		return TaxAgent::where('is_verified', 0);
