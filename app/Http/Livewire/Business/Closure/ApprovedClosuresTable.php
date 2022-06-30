@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class ClosureTable extends DataTableComponent
+class ApprovedClosuresTable extends DataTableComponent
 {
 
 
@@ -21,7 +21,7 @@ class ClosureTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TemporaryBusinessClosure::query()->orderBy('temporary_business_closures.opening_date', 'DESC');
+        return TemporaryBusinessClosure::query()->where('is_approved', 1)->orderBy('temporary_business_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
@@ -65,20 +65,7 @@ class ClosureTable extends DataTableComponent
                     HTML;
                     } else {
                         return <<< HTML
-                        <span class="badge badge-success py-1 px-2">Approved</span>
-                    HTML; 
-                    }
-                })
-                ->html(true),
-            Column::make('Action', 'id')
-                ->format(function ($value, $row) {
-                    if ($row->is_approved == 0) {
-                        return <<< HTML
-                        <button class="btn btn-outline-info btn-sm" wire:click="approve($value)">Approve</button>
-                    HTML;
-                    } else {
-                        return <<< HTML
-                        <button class="btn btn-outline-success btn-sm" disabled>Approved</button>
+                        <span class="badge badge-success py-1 px-2">Approved & Confirmed</span>
                     HTML; 
                     }
                 })
