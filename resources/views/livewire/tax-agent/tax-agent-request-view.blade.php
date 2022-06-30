@@ -83,81 +83,63 @@
 
                     <div class="col-md-12">
                         <h6 class="text-center">Professional</h6>
-                        <table class="table table-bordered">
+                        <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Plot No.</th>
-                                <th>TIN No.</th>
-                                <th>Block</th>
-                                <th>Town</th>
-                                <th>Region</th>
-                                <th>Reference No</th>
-                                <th>Status</th>
+                                <th>No:</th>
+                                <th>Institution</th>
+                                <th>Registration No.</th>
+                                <th>Passed Section</th>
+                                <th>Date passed</th>
+                                <th>Remarks</th>
                             </tr>
                             </thead>
+
                             <tbody>
-                            @foreach($agents as $index=> $agent)
+                            @foreach($professionals as $index=> $proo)
                                 <tr>
                                     <td>{{$index + 1}}</td>
-                                    <td>{{$agent->tin_no}}</td>
-                                    <td>{{$agent->plot_no}}</td>
-                                    <td>{{$agent->block}}</td>
-                                    <td>{{$agent->town}}</td>
-                                    <td>{{$agent->region}}</td>
-                                    <td>{{$agent->ref_no}}</td>
-                                    <td>
-                                        @if($agent->is_verified == 0)
-                                            <p>Not Verified</p>
-                                        @else
-                                            <p>Verified</p>
-                                        @endif
-                                    </td>
-
+                                    <td>{{$proo->body_name}}</td>
+                                    <td>{{$proo->reg_no}}</td>
+                                    <td>{{$proo->passed_sections}}</td>
+                                    <td>{{$proo->date_passed}}</td>
+                                    <td>{{$proo->remarks}}</td>
                                 </tr>
                             @endforeach
 
                             </tbody>
+
                         </table>
                     </div>
 
                     <div class="col-md-12">
                         <h6 class="text-center">Trainings</h6>
-                        <table class="table table-bordered">
+                        <table class="table table-striped table-bordered">
                             <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Plot No.</th>
-                                <th>TIN No.</th>
-                                <th>Block</th>
-                                <th>Town</th>
-                                <th>Region</th>
-                                <th>Reference No</th>
-                                <th>Status</th>
+                                <th>No:</th>
+                                <th>Institution</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Position Held</th>
+                                <th>Description</th>
                             </tr>
                             </thead>
+
                             <tbody>
-                            @foreach($agents as $index=> $agent)
+                            @foreach($trainings as $index => $row)
                                 <tr>
                                     <td>{{$index + 1}}</td>
-                                    <td>{{$agent->tin_no}}</td>
-                                    <td>{{$agent->plot_no}}</td>
-                                    <td>{{$agent->block}}</td>
-                                    <td>{{$agent->town}}</td>
-                                    <td>{{$agent->region}}</td>
-                                    <td>{{$agent->ref_no}}</td>
-                                    <td>
-                                        @if($agent->is_verified == 0)
-                                            <p>Not Verified</p>
-                                        @else
-                                            <p>Verified</p>
-                                        @endif
-                                    </td>
-
+                                    <td>{{$row->org_name}}</td>
+                                    <td>{{$row->from}}</td>
+                                    <td>{{$row->to}}</td>
+                                    <td>{{$row->position_held}}</td>
+                                    <td>{{$row->description}}</td>
                                 </tr>
                             @endforeach
 
                             </tbody>
+
                         </table>
                     </div>
                 </div>
