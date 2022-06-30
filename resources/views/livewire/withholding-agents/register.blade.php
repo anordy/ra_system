@@ -7,7 +7,7 @@
                 <div class="row mx-4 mt-2">
                     <div class="col-md-4 form-group">
                         <label for="tin">Tax Identification No. (TIN)</label>
-                        <input type="text" wire:model.lazy="tin"
+                        <input type="text" wire:model.lazy="tin" required
                             class="form-control {{ $errors->has('tin') ? 'is-invalid' : '' }}">
                         @error('tin')
                             <div class="invalid-feedback">
@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label>Region</label>
-                        <select wire:model="region_id" class="form-control">
+                        <select wire:model="region_id" class="form-control {{ $errors->has('region_id') ? 'is-invalid' : '' }}">
                             <option></option>
                             @foreach ($regions as $region)
                                 <option value="{{ $region->id }}">{{ $region->name }}</option>
@@ -82,7 +82,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label>District</label>
-                        <select wire:model="district_id" class="form-control">
+                        <select wire:model="district_id" class="form-control {{ $errors->has('district_id') ? 'is-invalid' : '' }}">
                             <option></option>
                             @foreach ($districts as $district)
                                 <option value="{{ $district->id }}">{{ $district->name }}</option>
@@ -96,7 +96,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label>Ward</label>
-                        <select wire:model="ward_id" class="form-control">
+                        <select wire:model="ward_id" class="form-control {{ $errors->has('ward_id') ? 'is-invalid' : '' }}">
                             <option></option>
                             @foreach ($wards as $ward)
                                 <option value="{{ $ward->id }}">{{ $ward->name }}</option>
@@ -126,7 +126,7 @@
                 <div class="row mx-4 mt-2">
                 <div class="col-md-4 form-group">
                     <label>Responsible Person Name</label>
-                    <select wire:model="responsible_person_id" class="form-control">
+                    <select wire:model="responsible_person_id" class="form-control {{ $errors->has('responsible_person_id') ? 'is-invalid' : '' }}">
                         <option></option>
                         @foreach ($responsible_persons as $responsible_person)
                             <option value="{{ $responsible_person->id }}">

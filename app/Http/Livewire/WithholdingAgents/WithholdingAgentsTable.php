@@ -4,6 +4,7 @@ namespace App\Http\Livewire\WithholdingAgents;
 
 use id;
 use Exception;
+use Carbon\Carbon;
 use App\Models\WithholdingAgent;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -54,8 +55,10 @@ class WithholdingAgentsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Verified On', 'created_at')
+                ->format(function($value, $row) { return Carbon::create($row->created_at)->toFormattedDateString(); })
                 ->sortable(),
             Column::make('Commencing Date', 'date_of_commencing')
+                ->format(function($value, $row) { return Carbon::create($row->date_of_commencing)->toFormattedDateString(); })
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML
