@@ -42,9 +42,9 @@
                 <li class="{{ request()->is('taxagents/active*') ? 'active': '' }}">
                     <a href="{{route('taxagents.active')}}">Active Taxagents</a>
                 </li>
-                <li class="{{ request()->is('taxagents/renew*') ? 'active': '' }}">
-                    <a href="{{route('taxagents.renew')}}">Renewal Requests</a>
-                </li>
+{{--                <li class="{{ request()->is('taxagents/renew*') ? 'active': '' }}">--}}
+{{--                    <a href="{{route('taxagents.renew')}}">Renewal Requests</a>--}}
+{{--                </li>--}}
                 <li class="{{ request()->is('taxagents/fee*') ? 'active': '' }}">
                     <a href="{{route('taxagents.fee')}}">Fee Configuration</a>
                 </li>

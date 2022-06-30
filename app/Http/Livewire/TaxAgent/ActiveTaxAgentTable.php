@@ -44,12 +44,7 @@ class ActiveTaxAgentTable extends DataTableComponent
 		    ->sortable()
 		    ,
 	      Column::make('Action', 'id')
-		    ->label(function ($row) {
-			    return <<< HTML
-                        <button data-toggle="tooltip" data-placement="right" title="View" class="btn btn-info btn-sm" wire:click="view($row->id)"><i class="fa fa-eye"></i></button>
-                    HTML;
-		    })
-		    ->html(true),
+	        ->view('taxagents.includes.actions')
 	    ];
     }
 
