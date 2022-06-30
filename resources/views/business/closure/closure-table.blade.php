@@ -5,15 +5,27 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Business Closures</h5>
+    <nav class="nav nav-tabs mb-3">
+        <a href="#tab1" class="nav-item nav-link font-weight-bold active">Pending Closures</a>
+        <a href="#tab2" class="nav-item nav-link font-weight-bold">Approved Closures</a>
+    </nav>
+  
+    <div class="tab-content">
+      <div id="tab1" class="tab-pane fade active show">
+        @livewire('business.closure.pending-closures-table')
         </div>
-
-        <div class="card-body">
-            @livewire('business.closure.closure-table')
-        </div>
+      <div id="tab2" class="tab-pane fade">
+        @livewire('business.closure.approved-closures-table')
+       </div>
     </div>
 @endsection
 
-
+@section('scripts')
+<script>
+    $(document).ready(function(){
+      $(".nav-tabs a").click(function(){
+        $(this).tab('show');
+      });
+    });
+    </script>
+@endsection
