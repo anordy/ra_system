@@ -54,6 +54,9 @@
                 <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
                     <a href="{{ route('business.registrations.index') }}">Registrations</a>
                 </li>
+                <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
+                    <a href="{{ route('business.closure') }}">Business Closures</a>
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
