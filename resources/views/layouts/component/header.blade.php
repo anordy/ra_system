@@ -10,6 +10,7 @@
 <link href="{{ asset('plugins/sweetalert/sweetalert2.min.css') }}" rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <link rel="icon" href="{{ asset('favicon.ico') }}" />
+
 @livewireStyles()
 
 <style>
@@ -18,4 +19,24 @@
     }
 
     [x-cloak] { display: none !important; }
+</style>
+
+<style>
+    .notification {
+  margin-right: 20px;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: #97363a;
+  color: white;
+}
 </style>

@@ -8,7 +8,7 @@
             <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
             <ul class="collapse list-unstyled" id="homeSubmenu">
                 <li>
-                    <a href="#">Home 1</a>
+                    <a href="{{ route('home') }}">Home 1</a>
                 </li>
                 <li>
                     <a href="#">Home 2</a>
@@ -17,6 +17,9 @@
                     <a href="#">Home 3</a>
                 </li>
             </ul>
+        </li>
+        <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
+            <a href="{{ route('notifications') }}" class="dropdown-toggle">Notifications <span class="badge badge-light"> <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span></a>
         </li>
         <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
             <a href="#taxpayersMenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers</a>
