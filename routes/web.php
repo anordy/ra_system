@@ -36,6 +36,7 @@ use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 
 Auth::routes();
@@ -49,6 +50,7 @@ Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reloa
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
+    Route::get('/notifications', [NotificationController::class,'index'])->name('notifications');
 
     Route::prefix('settings')->name('settings.')->group(function(){
         Route::resource('/users', UserController::class);
