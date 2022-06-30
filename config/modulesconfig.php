@@ -4,6 +4,7 @@ return [
     //SMS APIs
     'smstestapi' => 'https://uat.ubx.co.tz:8888/ESBConnector/public/api/connector/process/sms',
     'smsliveapi' => '',
+    'smsheader' => 'UmojaMobile',
 
     //BoT Exchange Rates
     'botexapi' => 'https://www.bot.go.tz/services/api/exrates',

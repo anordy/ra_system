@@ -37,7 +37,7 @@ class SendSMS implements ShouldQueue
     public function handle()
     {
         $sms_controller = new SMSController;
-        $source = 'ZanMalipo';
+        $source = config('modulesconfig.smsheader');
         $sms_controller->sendSMS($this->phone_number, $source, $this->message);
     }
 }
