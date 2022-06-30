@@ -23,12 +23,5 @@
 @endsection
 
 @section('scripts')
-    <script>
-        $(document).ready(function () {
-            $('#category').on('change', function()
-            {
-                alert(this.value);
-            });
-        })
-    </script>
+
 @endsection

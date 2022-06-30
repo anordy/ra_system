@@ -10,20 +10,26 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\TaxAgentFee;
 
 class TaxAgentFeeModal extends Component
 {
 	use LivewireAlert;
 
-	public $category, $duration, $amount, $no_of_days, $no_of_months, $no_of_years;
+	public $category, $duration, $amount, $no_of_days;
 
 	public function submit()
 	{
 		$validate = $this->validate([
 		  'category'=>'required',
 			'amount'=>'required|numeric',
-//			'duration'=>'required'
-		]);
+			'duration'=>'required',
+			'no_of_days'=>'required'
+		],
+		[
+		  'no_of_days.required'=>'This field is required'
+		]
+		);
 
 		DB::beginTransaction();
 		try {
@@ -31,24 +37,14 @@ class TaxAgentFeeModal extends Component
 
 			if ($fee == null)
 			{
-				$result = new TaPaymentConfiguration();
-				$result->category = $this->category;
-				$result->duration = $this->duration;
-				if (!empty($this->no_of_days))
-				{
-					$result->no_of_days = $this->no_of_days;
-				}
-				if (!empty($this->no_of_months))
-				{
-					$result->no_of_days = $this->no_of_months;
-				}
-				if (!empty($this->no_of_years))
-				{
-					$result->no_of_days = $this->no_of_years;
-				}
-				$result->amount = $this->amount;
-				$result->created_by = Auth::id();
-				$result->save();
+				TaxAgentFee::saveFee($this->category, $this->duration, $this->no_of_days, $this->amount, Auth::id());
+//				$result = new TaPaymentConfiguration();
+//				$result->category = $this->category;
+//				$result->duration = $this->duration;
+//				$result->no_of_days = $this->no_of_days;
+//				$result->amount = $this->amount;
+//				$result->created_by = Auth::id();
+//				$result->save();
 			}
 
 			else
@@ -61,24 +57,7 @@ class TaxAgentFeeModal extends Component
 				$cr = $fee->created_by;
 				TaPaymentConfiguration::where('category', $this->category)->delete();
 
-				$result = new TaPaymentConfiguration();
-				$result->category = $this->category;
-				$result->duration = $this->duration;
-				if (!empty($this->no_of_days))
-				{
-					$result->no_of_days = $this->no_of_days;
-				}
-				if (!empty($this->no_of_months))
-				{
-					$result->no_of_days = $this->no_of_months;
-				}
-				if (!empty($this->no_of_years))
-				{
-					$result->no_of_days = $this->no_of_years;
-				}
-				$result->amount = $this->amount;
-				$result->created_by = Auth::id();
-				$result->save();
+				TaxAgentFee::saveFee($this->category, $this->duration, $this->no_of_days, $this->amount, Auth::id());
 
 				$hist = new TaPaymentConfigurationHistory();
 				$hist->tapc_id = $id;

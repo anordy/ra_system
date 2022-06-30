@@ -37,46 +37,10 @@
                         </div>
                         @endif
 
-                        @if($duration == 'daily')
-                        <div class="form-group col-lg-6">
-                            <label class="control-label">Number of days</label>
-                            <select wire:model="no_of_days" class="form-control">
-                                <option value="">select days</option>
-                                <option value="1 day">1 day</option>
-                                @for($i=2; $i<=31; $i++)
-                                    <option value="{{$i}} days">{{$i}} days</option>
-                                @endfor
-                            </select>
-                                @error('no_of_days')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                        </div>
-
-                        @elseif($duration == 'monthly')
+                        @if($duration)
                             <div class="form-group col-lg-6">
-                                <label class="control-label">Number of months</label>
-                                <select wire:model="no_of_months" class="form-control">
-                                    <option value="">select months</option>
-                                    <option value="1 month">1 month</option>
-                                    @for($i=2; $i<=12; $i++)
-                                        <option value="{{$i}} months">{{$i}} months</option>
-                                    @endfor
-                                </select>
-                                @error('no_of_months')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        @elseif($duration == 'yearly')
-                            <div class="form-group col-lg-6">
-                                <label class="control-label">Number of years</label>
-                                <select wire:model="no_of_years" class="form-control">
-                                    <option value="">select years</option>
-                                    <option value="1 year">1 year</option>
-                                    @for($i=2; $i<=5; $i++)
-                                        <option value="{{$i}} years">{{$i}} years</option>
-                                    @endfor
-                                    <option value="more than five years">more than five years</option>
-                                </select>
+                                <label class="control-label">No of days/months/years</label>
+                                <input placeholder="e.g 10" type="text" class="form-control" wire:model.lazy="no_of_days" id="no_of_days">
                                 @error('no_of_days')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
