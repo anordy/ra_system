@@ -50,4 +50,12 @@ class Business extends Model
     public function consultantRequest(){
         return $this->hasOne(BusinessConsultantRequest::class);
     }
+
+    public function temporaryBusinessClosures(){
+        return $this->hasMany(TemporaryBusinessClosure::class);
+    }
+
+    public function openBusiness(){
+        return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
+    }
 }

@@ -21,4 +21,9 @@ class TaxAgentController extends Controller
 	{
 		return view('taxagents.renewalRequests');
 	}
+
+	public function fee()
+	{
+		return view('taxagents.fee-config');
+	}
 }
