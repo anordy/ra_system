@@ -38,13 +38,7 @@ class TaxAgentFeeModal extends Component
 			if ($fee == null)
 			{
 				TaxAgentFee::saveFee($this->category, $this->duration, $this->no_of_days, $this->amount, Auth::id());
-//				$result = new TaPaymentConfiguration();
-//				$result->category = $this->category;
-//				$result->duration = $this->duration;
-//				$result->no_of_days = $this->no_of_days;
-//				$result->amount = $this->amount;
-//				$result->created_by = Auth::id();
-//				$result->save();
+
 			}
 
 			else
