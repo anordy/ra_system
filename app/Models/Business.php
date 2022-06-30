@@ -15,6 +15,10 @@ class Business extends Model
         'date_of_commencing' => 'datetime'
     ];
 
+    public function partners(){
+        return $this->hasMany(BusinessPartner::class);
+    }
+
     public function category(){
         return $this->belongsTo(BusinessCategory::class);
     }

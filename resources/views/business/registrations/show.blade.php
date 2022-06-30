@@ -3,7 +3,28 @@
 @section('title', 'Business Registration Details')
 
 @section('content')
-    <div class="card mt-3">
+    <div class="card mt-3 border-0 shadow-sm">
+        <div class="card-header font-weight-bold text-white {{ $business->verified_at ? 'bg-success' : 'bg-info' }}">
+            Business Application Status
+        </div>
+        <div class="card-body pb-0">
+            <div class="row my-2">
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Business Name</span>
+                    <p class="my-1">{{ $business->name }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body pb-0">
+            <div class="row my-2">
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Business Category</span>
+                    <p class="my-1">{{ $business->category->name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-3 shadow-sm">
         <div class="card-header font-weight-bold">
             Business Information
         </div>
@@ -151,6 +172,28 @@
                 </div>
             </div>
         </div>
+    @endif
+
+    @if($partners = $business->partners)
+        <h6 class="my-3">Business Partners</h6>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Reference No.</th>
+                <th>Mobile</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($partners as $partner)
+                <tr class="col-md-4 mb-3">
+                    <td class="font-weight-bold text-uppercase">{{ $partner->taxpayer->full_name }}</td>
+                    <td class="my-1">{{ $partner->taxpayer->reference_no }}</td>
+                    <td class="my-1">{{ $partner->taxpayer->mobile }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
     @endif
 
     <div class="card mt-3">
