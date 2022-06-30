@@ -12,7 +12,7 @@ class TemporaryBusinessClosure extends Model
     protected $guarded = [];
 
     public function business() {
-        return $this->belongsTo(business::class, 'business_id');
+        return $this->belongsTo(Business::class, 'business_id');
     }
 
     public function user() {
