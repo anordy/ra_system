@@ -4,7 +4,11 @@ namespace App\Http\Livewire;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\DatabaseNotification;
+use App\Notifications\NewUserNotification;
 use Exception;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
@@ -67,8 +71,8 @@ class UserAddModal extends Component
     public function submit()
     {
         $this->validate();
-        try{
-            User::create([
+        try {
+            $user = User::create([
                 'fname' => $this->fname,
                 'lname' => $this->lname,
                 'role_id' => $this->role,
@@ -77,15 +81,30 @@ class UserAddModal extends Component
                 'phone' => $this->phone,
                 'password' => Hash::make($this->password),
             ]);
+
+            $adminRole = Role::where('name', 'Administrator')->first();
+            $admins = User::where('role_id', $adminRole->id)->get();
+
+            foreach ($admins as $admin) {
+                $admin->notify(new DatabaseNotification(
+                    $message = 'New User creaated',
+                    $type = 'info',
+                    $messageLong = 'New user ' . $user->fullname() . ' created successfully by ' . Auth::user()->fullname(),
+                    $href = route('settings.users.index'),
+                    $hrefText = 'View'
+                ));
+            }
+
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
+        } catch (Exception $e) {
+            dd($e);
             Log::error($e);
 
             $this->alert('error', 'Something went wrong');
         }
     }
 
- 
+
 
     public function mount()
     {
