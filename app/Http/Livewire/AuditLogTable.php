@@ -21,10 +21,6 @@ class AuditLogTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'class' => 'table-bordered table-sm',
-        ]);
 
         $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
@@ -56,10 +52,6 @@ class AuditLogTable extends DataTableComponent
             Column::make('IP Address', 'ip_address')
                 ->sortable()
                 ->searchable(),
-            Column::make('User Agent', 'user_agent')
-                ->sortable()
-                ->searchable()
-                ->format(fn($value, $row, Column $column) => preg_split('[\;]', $row->user_agent)[0]),
             Column::make('Time', 'created_at')
                 ->sortable()
                 ->searchable()
