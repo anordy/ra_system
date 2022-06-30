@@ -19,8 +19,8 @@
                 <div class="dropdown-divider"></div>
                 @endforeach
             @else
-                <button class="dropdown-item" type="button">
-                    <span style="">You have no new notification</span> <br>
+                <button class="dropdown-item" type="button" disabled>
+                    <span >You have no new notification</span> <br>
                 </button>
             @endif
 
