@@ -6,6 +6,7 @@ use App\Models\UserOtp;
 use App\Events\SendMail;
 use App\Models\WithholdingAgent;
 use App\Jobs\SendWithholdingAgentRegistrationEmail;
+use App\Jobs\SendOTPEmail;
 
 class SendMailFired
 {

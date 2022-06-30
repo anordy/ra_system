@@ -59,13 +59,13 @@ class ClosureTable extends DataTableComponent
                 ->sortable(),
             Column::make('Status', 'id')
                 ->format(function ($value, $row) {
-                    if ($row->is_extended == 0) {
+                    if ($row->is_approved == 0) {
                         return <<< HTML
-                        <span class="badge badge-warning py-1 px-2">Not Extended</span>
+                        <span class="badge badge-danger py-1 px-2">Not Approved</span>
                     HTML;
                     } else {
                         return <<< HTML
-                        <span class="badge badge-danger py-1 px-2">Extended</span>
+                        <span class="badge badge-success py-1 px-2">Approved</span>
                     HTML; 
                     }
                 })
