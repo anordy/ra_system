@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\TaPaymentConfiguration;
+use App\Models\TaPaymentConfigurationHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -25,28 +26,71 @@ class TaxAgentFeeModal extends Component
 		]);
 
 		DB::beginTransaction();
-
-
-//		dd($this->no_of_years);
 		try {
-			$result = new TaPaymentConfiguration();
-			$result->category = $this->category;
-			$result->duration = $this->duration;
-			if (!empty($this->no_of_days))
+			$fee = TaPaymentConfiguration::where('category', '=', $this->category)->first();
+
+			if ($fee == null)
 			{
-				$result->no_of_days = $this->no_of_days;
+				$result = new TaPaymentConfiguration();
+				$result->category = $this->category;
+				$result->duration = $this->duration;
+				if (!empty($this->no_of_days))
+				{
+					$result->no_of_days = $this->no_of_days;
+				}
+				if (!empty($this->no_of_months))
+				{
+					$result->no_of_days = $this->no_of_months;
+				}
+				if (!empty($this->no_of_years))
+				{
+					$result->no_of_days = $this->no_of_years;
+				}
+				$result->amount = $this->amount;
+				$result->created_by = Auth::id();
+				$result->save();
 			}
-			if (!empty($this->no_of_months))
+
+			else
 			{
-				$result->no_of_days = $this->no_of_months;
+				$cat = $fee->category;
+				$id = $fee->id;
+				$du = $fee->duration;
+				$no = $fee->no_of_days;
+				$am = $fee->amount;
+				$cr = $fee->created_by;
+				TaPaymentConfiguration::where('category', $this->category)->delete();
+
+				$result = new TaPaymentConfiguration();
+				$result->category = $this->category;
+				$result->duration = $this->duration;
+				if (!empty($this->no_of_days))
+				{
+					$result->no_of_days = $this->no_of_days;
+				}
+				if (!empty($this->no_of_months))
+				{
+					$result->no_of_days = $this->no_of_months;
+				}
+				if (!empty($this->no_of_years))
+				{
+					$result->no_of_days = $this->no_of_years;
+				}
+				$result->amount = $this->amount;
+				$result->created_by = Auth::id();
+				$result->save();
+
+				$hist = new TaPaymentConfigurationHistory();
+				$hist->tapc_id = $id;
+				$hist->category = $cat;
+				$hist->duration = $du;
+				$hist->no_of_days = $no;
+				$hist->amount = $am;
+				$hist->created_by = $cr;
+				$hist->save();
+
 			}
-			if (!empty($this->no_of_years))
-			{
-				$result->no_of_days = $this->no_of_years;
-			}
-			$result->amount = $this->amount;
-			$result->created_by = Auth::id();
-			$result->save();
+
 			DB::commit();
 			$this->flash('success', 'Saved successfully', [], redirect()->back()->getTargetUrl());
 

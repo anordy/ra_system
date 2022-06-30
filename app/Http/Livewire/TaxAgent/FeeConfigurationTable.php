@@ -26,11 +26,11 @@ class FeeConfigurationTable extends DataTableComponent
             Column::make("Category", "category")
                 ->sortable(),
             Column::make("duration", "duration")
-                ->sortable(),
+              ->view('taxagents.includes.duration'),
 	        Column::make('Amount', 'amount')
 	          ->sortable(),
             Column::make("No of days/months/years", "no_of_days")
-                ->sortable(),
+              ->view('taxagents.includes.no_of_days'),
         ];
     }
 }
