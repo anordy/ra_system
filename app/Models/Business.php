@@ -15,6 +15,10 @@ class Business extends Model
         'date_of_commencing' => 'datetime'
     ];
 
+    public function partners(){
+        return $this->hasMany(BusinessPartner::class);
+    }
+
     public function category(){
         return $this->belongsTo(BusinessCategory::class);
     }
@@ -45,5 +49,13 @@ class Business extends Model
 
     public function consultantRequest(){
         return $this->hasOne(BusinessConsultantRequest::class);
+    }
+
+    public function temporaryBusinessClosures(){
+        return $this->hasMany(TemporaryBusinessClosure::class);
+    }
+
+    public function openBusiness(){
+        return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
     }
 }
