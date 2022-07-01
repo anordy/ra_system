@@ -19,6 +19,7 @@ class AuditViewModal extends Component
     public $created_at;
     public $fname;
     public $lname;
+    public $tags;
 
     public function mount($id)
     {
@@ -29,6 +30,8 @@ class AuditViewModal extends Component
             $this->new_values = $audit->new_values;
             $this->event = $audit->event;
             $this->created_at = $audit->created_at;
+            $this->tags = $audit->tags;
+            // dd(json_decode($this->old_values)->name);
             // $this->fname = $audit->fname;
             // $this->lname = $audit->lname;
         } catch (Exception $e) {

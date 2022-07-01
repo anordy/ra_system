@@ -8,10 +8,11 @@ use App\Models\User;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Traits\AuditTrait;
 
 class UsersTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, AuditTrait;
 
     protected $model = User::class;
     public function configure(): void
@@ -130,9 +131,11 @@ class UsersTable extends DataTableComponent
             if ($user->status == 1) {
                 $user->status = 0;
                 $user->save();
+                $this->triggerAudit(User::class, 'updated', 'deactivated', $user->id, $user->fname);
             } else {
                 $user->status = 1;
                 $user->save();
+                $this->triggerAudit(User::class, 'updated', 'activated', $user->id, $user->fname);
             }
         } catch (Exception $e) {
             report($e);
