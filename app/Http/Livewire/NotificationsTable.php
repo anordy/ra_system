@@ -92,7 +92,6 @@ class NotificationsTable extends DataTableComponent
         return redirect()->to($notification['data']->href);
     }
 
-
     public function delete($id)
     {
         $this->alert('warning', 'Are you sure you want to delete ?', [
