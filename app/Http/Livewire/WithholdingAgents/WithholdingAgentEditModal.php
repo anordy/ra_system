@@ -105,7 +105,6 @@ class WithholdingAgentEditModal extends Component
                 'mobile' => $this->mobile,
                 'address' => $this->address,
                 'responsible_person_id' => $this->responsible_person_id,
-                'officer_id' => auth()->user()->id,
                 'title' => $this->title,
                 'position' => $this->position,
                 'date_of_commencing' => $this->date_of_commencing,
