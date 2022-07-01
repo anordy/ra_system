@@ -8,20 +8,17 @@ use App\Models\User;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Traits\AuditTrait;
 
 class UsersTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, AuditTrait;
 
     protected $model = User::class;
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects(['status']);
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'class' => 'table-bordered table-sm',
-        ]);
     }
 
     protected $listeners = [
@@ -51,18 +48,19 @@ class UsersTable extends DataTableComponent
             Column::make('E-mail', 'email')
                 ->sortable()
                 ->searchable(),
-            Column::make('Verified', 'email_verified_at')
-                ->sortable(),
             Column::make('Role', 'role.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Status', 'id')
-                ->label(function ($row) {
-                    if ($row->status == 1) {
+                ->format(function ($value, $row) {
+                    if ( $value == auth()->user()->id) {
+
+                    }  else if ($row->status == 1) {
                         return <<< HTML
                         <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock-open"></i> </button>
                     HTML;
-                    } else {
+                    }
+                     else {
                         return <<< HTML
                         <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
                     HTML;
@@ -74,7 +72,7 @@ class UsersTable extends DataTableComponent
                     if ($value == auth()->user()->id) {
                         return <<< HTML
                         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>
                     HTML;
                     } else {
                         return <<< HTML
@@ -133,9 +131,11 @@ class UsersTable extends DataTableComponent
             if ($user->status == 1) {
                 $user->status = 0;
                 $user->save();
+                $this->triggerAudit(User::class, 'updated', 'deactivated', $user->id, $user->fname);
             } else {
                 $user->status = 1;
                 $user->save();
+                $this->triggerAudit(User::class, 'updated', 'activated', $user->id, $user->fname);
             }
         } catch (Exception $e) {
             report($e);

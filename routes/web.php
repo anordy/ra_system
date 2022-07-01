@@ -95,6 +95,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::name('taxagents.')->prefix('taxagents')->group(function (){
 		Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
 		Route::get('/active', [TaxAgentController::class, 'activeAgents'])->name('active');
+		Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
 		Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
 		Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
 

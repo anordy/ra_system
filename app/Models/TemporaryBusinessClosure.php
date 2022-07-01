@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class TemporaryBusinessClosure extends Model
+class TemporaryBusinessClosure extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
     public function business() {
-        return $this->belongsTo(business::class, 'business_id');
+        return $this->belongsTo(Business::class, 'business_id');
     }
 
     public function user() {

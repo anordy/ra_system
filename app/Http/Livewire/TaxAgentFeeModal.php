@@ -20,17 +20,28 @@ class TaxAgentFeeModal extends Component
 
 	public function submit()
 	{
-		$validate = $this->validate([
-		  'category'=>'required',
-			'amount'=>'required|numeric',
-			'duration'=>'required',
-			'no_of_days'=>'required'
-		],
-		[
-		  'no_of_days.required'=>'This field is required'
-		]
-		);
+		if ($this->category == 'first fee')
+		{
+			$validate = $this->validate([
+			  'category'=>'required',
+			  'amount'=>'required|numeric',
+			]
+			);
+		}
 
+		else
+		{
+			$validate = $this->validate([
+			  'category'=>'required',
+			  'amount'=>'required|numeric',
+			  'duration'=>'required',
+			  'no_of_days'=>'required'
+			],
+			  [
+				'no_of_days.required'=>'This field is required'
+			  ]
+			);
+		}
 		DB::beginTransaction();
 		try {
 			$fee = TaPaymentConfiguration::where('category', '=', $this->category)->first();
@@ -72,6 +83,7 @@ class TaxAgentFeeModal extends Component
 		catch (\Throwable $exception)
 		{
 			Log::error($exception);
+
 			$this->flash('warning', 'Internal server error', [], redirect()->back()->getTargetUrl());
 
 		}

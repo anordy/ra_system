@@ -11,7 +11,7 @@
                 @foreach ($unreadNotifications as $row)
                 <button class="dropdown-item" type="button" style="white-space: normal;">
                     <small style="">{{ $row->data['messageLong']}}</small> <br>
-                    <a class="btn btn-link m-0 p-0" href="{{ $row->data['href'] }}" wire:click="viewNotification({{ $row->id }})">
+                    <a class="btn btn-link p-0 m-0" href="{{ $row->data['href'] }}" wire:click="viewNotification({{ $row }})">
                         <small>{{$row->data['hrefText']}} </small> 
                     </a>
                     <small class="text-muted float-right">{{ $row->created_at->diffForHumans() }}</small>
@@ -19,8 +19,8 @@
                 <div class="dropdown-divider"></div>
                 @endforeach
             @else
-                <button class="dropdown-item" type="button">
-                    <span style="">You have no new notification</span> <br>
+                <button class="dropdown-item" type="button" disabled>
+                    <span >You have no new notification</span> <br>
                 </button>
             @endif
 

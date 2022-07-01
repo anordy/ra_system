@@ -28,15 +28,15 @@ class ApproveClosure extends Component
     }
 
 
-    public function approve()
+    public function approve($status)
     {
         try{
             $this->temporary_business_closure->update([
                 'approved_by' => auth()->user()->id,
-                'approved_on' => date('Y-m-d H:i:s'),
-                'is_approved' => true
+                'approved_on' => $status == 'approved' ? date('Y-m-d H:i:s') : null,
+                'status' => $status
             ]);
-           $this->flash('success', 'Business Approved successfully');
+           $this->flash('success', 'Business '. $status . ' successfully');
             return redirect()->to('/business/closure');
         }catch(Exception $e){
             Log::error($e);

@@ -20,10 +20,11 @@ class CreateTemporaryBusinessClosures extends Migration
             $table->string('reason');
             $table->boolean('is_extended')->default(false);
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('approved_by');
-            $table->dateTime('approved_on');
-            $table->unsignedBigInteger('is_approved')->default(false);
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->dateTime('approved_on')->nullable();
+            $table->enum('status', ['pending', 'approved', 'rejected']);
             $table->timestamps();
+            $table->foreign('business_id')->references('id')->on('businesses');
         });
     }
 

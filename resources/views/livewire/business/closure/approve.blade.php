@@ -35,8 +35,9 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12 d-flex justify-content-center">
-                        <a href="../" class="btn btn-danger mr-2">Cancel</a>
-                        <button wire:click="approve" class="btn btn-primary">Approve</button>
+                        <a href="{{ route('business.closure') }}" class="btn btn-danger mr-2">Cancel</a>
+                        <button wire:click="approve('rejected')" class="btn btn-primary mr-2">Reject</button>
+                        <button wire:click="approve('approved')" class="btn btn-success mr-2">Approve</button>
                     </div>
                 </div>
             </div>

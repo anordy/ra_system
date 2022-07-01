@@ -79,7 +79,7 @@ class UserAddModal extends Component
                 'gender' => $this->gender,
                 'email' => $this->email,
                 'phone' => $this->phone,
-                'password' => Hash::make($this->password),
+                //'password' => Hash::make($this->password),
             ]);
 
             $adminRole = Role::where('name', 'Administrator')->first();
