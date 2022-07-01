@@ -19,7 +19,11 @@
             </ul>
         </li>
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
-            <a href="{{ route('notifications') }}" class="dropdown-toggle">Notifications <span class="badge badge-light"> <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span></a>
+            <a href="{{ route('notifications') }}" class="dropdown-toggle">Notifications 
+                @if(auth()->user()->unreadNotifications->count() > 0)
+                    <span class="badge badge-light"> <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                @endif
+            </a>
         </li>
         <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
             <a href="#taxpayersMenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers</a>

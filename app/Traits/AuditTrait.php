@@ -1,38 +1,33 @@
 <?php
 
+namespace App\Traits;
 
 use Exception;
 use Carbon\Carbon;
 use App\Models\Audit;
-use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 
-class AuditService 
+trait AuditTrait
 {
-    use Queueable;
 
     /**
-     * Create a new audit instance.
+     * Trigger audit.
      *
-     * @return void
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
-     * Pass modal class.
-     *
-     * @param  mixed  $modal_class ie. User::class, Business::class
+     * @param  $modal_class ie. User::class, Business::class
+     * @param  $event ie. created, updated, deleted
+     * @param  $tags ie. Password
+     * @param  $auditable_id ie. 1 id of the operated process
+     * 
      * @return array
      */
-    public function trigger($modal_class)
+    public function triggerAudit($modal_class, $event, $tags, $auditable_id, $user_name)
     {
         $data = [
-            'auditable_id' => auth()->user()->id,
+            'auditable_id' => $auditable_id,
             'auditable_type' => $modal_class,
-            'event'      => "logged in",
+            'event' => $event,
+            'tags' => $tags,
+            'new_values' => $user_name,
             'url'        => request()->fullUrl(),
             'ip_address' => request()->getClientIp(),
             'user_agent' => request()->userAgent(),
