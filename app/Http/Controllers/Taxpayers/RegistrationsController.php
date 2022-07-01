@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Taxpayers;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Http\Controllers\Controller;
 use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
 use Carbon\Carbon;
-use Illuminate\Hashing\HashManager;
 use Illuminate\Support\Facades\Hash;
 
 class RegistrationsController extends Controller
@@ -42,13 +43,19 @@ class RegistrationsController extends Controller
         $kyc->save();
 
         $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at'])->toArray();
-        $data['password'] = Hash::make('password');
-
-        // Send email and password for OTP
+        $password = rand(0, 999999);
+        $data['password'] = Hash::make($password);
 
         $taxpayer = Taxpayer::create($data);
 
-        $taxpayer ? $kyc->delete() : session()->flash('error', "Couldnt verify user.");
+        // Send email and password for OTP
+        event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+        if ($taxpayer->email){
+            event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+        }
+
+        $taxpayer ? $kyc->delete() : session()->flash('error', "Couldn't verify user.");
+
         return redirect()->route('taxpayers.registrations.index');
     }
 }

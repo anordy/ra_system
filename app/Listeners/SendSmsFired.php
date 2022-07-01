@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Jobs\Taxpayer\SendRegistrationSMS;
+use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\WithholdingAgent;
@@ -37,6 +39,10 @@ class SendSmsFired
             /** TokenId is withholding agent id id */
             $withholding_agent = WithholdingAgent::find($event->tokenId);
             SendWithholdingAgentRegistrationSMS::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->institution_name, $withholding_agent->taxpayer->mobile);
+        } else if ($event->service === 'taxpayer-registration'){
+            // Token ID is $taxpayerId
+            $taxpayer = Taxpayer::find($event->tokenId);
+            SendRegistrationSMS::dispatch($taxpayer->mobile, $taxpayer->reference_no, $event->extra['code']);
         }
     }
 }
