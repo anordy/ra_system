@@ -45,6 +45,7 @@ class ActiveTaxAgentTable extends DataTableComponent
 		    ,
 	      Column::make('Action', 'id')
 	        ->view('taxagents.includes.actions')
+	        ->html(true)
 	    ];
     }
 
