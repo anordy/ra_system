@@ -17,10 +17,10 @@ class CreateBusinessBanksTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('bank_id');
-            $table->string('acc_no');
-            $table->string('acc_type');
-            $table->string('branch');
+            $table->unsignedBigInteger('account_type_id');
             $table->unsignedBigInteger('currency_id');
+            $table->string('acc_no');
+            $table->string('branch');
             $table->softDeletes();
             $table->timestamps();
 
