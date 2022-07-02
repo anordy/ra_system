@@ -225,18 +225,18 @@
                         <span class="font-weight-bold text-uppercase">Consultant Mobile No.</span>
                         <p class="my-1">{{ $consultant->taxpayer->mobile }}</p>
                     </div>
-                @elseif($consultant = $business->consultants->last())
+                @elseif($consultant = $business->consultants()->latest()->first())
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Name</span>
-                        <p class="my-1">{{ $consultant->full_name }}</p>
+                        <p class="my-1">{{ $consultant->taxpayer->first_name }} {{ $consultant->taxpayer->last_name }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Ref No.</span>
-                        <p class="my-1">{{ $consultant->reference_no }}</p>
+                        <p class="my-1">{{ $consultant->taxpayer->taxAgent->reference_no }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Mobile No.</span>
-                        <p class="my-1">{{ $consultant->mobile }}</p>
+                        <p class="my-1">{{ $consultant->taxpayer->mobile }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Status</span>
