@@ -36,10 +36,11 @@ class CreateTaxpayersTable extends Migration
             $table->string('residence_permit')->nullable();
 
             $table->boolean('is_citizen');
-            $table->unsignedBigInteger('country_id')->unique();
+            $table->unsignedBigInteger('country_id');
 
             $table->string('password')->nullable();
             $table->dateTime('biometric_verified_at');
+            $table->dateTime('authorities_verified_at');
             $table->dateTime('email_verified_at')->nullable();
             $table->rememberToken();
             $table->softDeletes();

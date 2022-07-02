@@ -6,27 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateBusinessConsultantsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('business_consultants', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('business_id');
-            $table->unsignedInteger('taxpayer_id');
-            $table->boolean('is_active');
-            $table->timestamps();
+	        $table->id();
+	        $table->unsignedInteger('business_id');
+	        $table->unsignedInteger('taxpayer_id');
+	        $table->dateTime('reviewed_at')->nullable();
+	        $table->enum('status', ['pending', 'approved', 'rejected', 'removed'])->default('pending');
+			$table->dateTime('removed_at')->nullable();
+	        $table->text('remarks')->nullable();
+	        $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('business_consultants');

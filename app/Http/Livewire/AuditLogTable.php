@@ -21,11 +21,7 @@ class AuditLogTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'class' => 'table-bordered table-sm',
-        ]);
-
+        $this->setAdditionalSelects(['auditable_type', 'tags', 'new_values']);
         $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
                 return [
@@ -52,14 +48,16 @@ class AuditLogTable extends DataTableComponent
             Column::make('Operation', 'auditable_type')
                 ->sortable()
                 ->searchable()
-                ->format(fn($value, $row, Column $column) =>  $row->event . ' ' .preg_split('[\\\]', $row->auditable_type)[2]),
+                ->format(function($value, $row) {
+                    if ($row->tags != null) {
+                        return $row->tags . ' ' .preg_split('[\\\]', $row->auditable_type)[2] . ' '. $row->new_values; 
+                    } else {
+                        return $row->event . ' ' .preg_split('[\\\]', $row->auditable_type)[2]; 
+                    }
+                }),
             Column::make('IP Address', 'ip_address')
                 ->sortable()
                 ->searchable(),
-            Column::make('User Agent', 'user_agent')
-                ->sortable()
-                ->searchable()
-                ->format(fn($value, $row, Column $column) => preg_split('[\;]', $row->user_agent)[0]),
             Column::make('Time', 'created_at')
                 ->sortable()
                 ->searchable()

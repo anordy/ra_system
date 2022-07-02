@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Events\SendMail;
 use App\Events\SendSms;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class WithholdingAgent extends Model
+class WithholdingAgent extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 

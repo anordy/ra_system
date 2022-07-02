@@ -14,13 +14,13 @@ class CurrenciesTableSeeder extends Seeder
      */
     public function run()
     {
-        Currency::create([
+        Currency::updateOrCreate([
             'iso' => 'TZS',
             'name' => 'Tanzanian Shillings',
             'symbol' => 'Sh'
         ]);
 
-        Currency::create([
+        Currency::updateOrCreate([
             'iso' => 'USD',
             'name' => 'United States Dollar',
             'symbol' => '$'

@@ -4,19 +4,15 @@
     </div>
 
     <ul class="list-unstyled components">
-        <li class="{{ request()->is('/dashboard') ? 'active' : '' }}">
-            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
-                <li>
-                    <a href="#">Home 1</a>
-                </li>
-                <li>
-                    <a href="#">Home 2</a>
-                </li>
-                <li>
-                    <a href="#">Home 3</a>
-                </li>
-            </ul>
+        <li class="{{ request()->is('home*') ? 'active' : '' }}">
+            <a href="{{ route('home') }}">Home</a>
+        </li>
+        <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
+            <a href="{{ route('notifications') }}">Notifications 
+                @if(auth()->user()->unreadNotifications->count() > 0)
+                    <span class="badge badge-light"> <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                @endif
+            </a>
         </li>
         <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
             <a href="#taxpayersMenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers</a>
@@ -31,16 +27,19 @@
         </li>
 
         <li  class="{{ request()->is('taxagents*') ? 'active':'' }}">
-            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Tax Agents</a>
-            <ul class="collapse list-unstyled" id="taxagentSubmenu">
-                <li class="{{ request()->is('taxagents/apply*') ? 'active': '' }}">
+            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Agents</a>
+            <ul class="collapse list-unstyled {{ request()->is('taxagents*') ? 'show' : '' }}" id="taxagentSubmenu">
+                <li class="{{ request()->is('taxagents/requests') ? 'active': '' }}">
                     <a href="{{ route('taxagents.requests') }}">Registration Requests</a>
                 </li>
-                <li>
+                <li class="{{ request()->is('taxagents/active*') ? 'active': '' }}">
                     <a href="{{route('taxagents.active')}}">Active Taxagents</a>
                 </li>
-                <li>
-                    <a href="{{route('taxagents.renew')}}">Renewal Requests</a>
+{{--                <li class="{{ request()->is('taxagents/renew*') ? 'active': '' }}">--}}
+{{--                    <a href="{{route('taxagents.renew')}}">Renewal Requests</a>--}}
+{{--                </li>--}}
+                <li class="{{ request()->is('taxagents/fee*') ? 'active': '' }}">
+                    <a href="{{route('taxagents.fee')}}">Fee Configuration</a>
                 </li>
             </ul>
         </li>
@@ -50,6 +49,9 @@
             <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
                 <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
                     <a href="{{ route('business.registrations.index') }}">Registrations</a>
+                </li>
+                <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
+                    <a href="{{ route('business.closure') }}">Business Closures</a>
                 </li>
             </ul>
         </li>

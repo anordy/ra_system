@@ -13,10 +13,10 @@ class BusinessBank extends Model
     protected $fillable = [
         'business_id',
         'bank_id',
-        'acc_no',
-        'acc_type',
-        'branch',
+        'account_type_id',
         'currency_id',
+        'acc_no',
+        'branch',
     ];
 
     public function business(){
@@ -29,5 +29,9 @@ class BusinessBank extends Model
 
     public function bank(){
         return $this->belongsTo(Bank::class);
+    }
+
+    public function accountType(){
+        return $this->belongsTo(AccountType::class);
     }
 }

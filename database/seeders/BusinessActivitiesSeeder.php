@@ -14,7 +14,7 @@ class BusinessActivitiesSeeder extends Seeder
      */
     public function run()
     {
-        BusinessActivity::create(['name' => 'Wholesale']);
-        BusinessActivity::create(['name' => 'Retailer']);
+        BusinessActivity::updateOrCreate(['name' => 'Wholesale']);
+        BusinessActivity::updateOrCreate(['name' => 'Retailer']);
     }
 }

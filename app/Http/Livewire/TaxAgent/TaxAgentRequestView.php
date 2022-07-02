@@ -17,8 +17,9 @@ class TaxAgentRequestView extends Component
 		$this->value = $val;
 		$this->agents[] = TaxAgent::find($this->value);
 		$this->academics= (object)TaxAgent::find($this->value)->academics;
-		$this->professionals[] = (object)TaxAgent::find($this->value)->professionals;
-		$this->trainings[] = (object)TaxAgent::find($this->value)->trainings;
+		$this->professionals = (object)TaxAgent::find($this->value)->professionals;
+//		dd($this->professionals->reg_no);
+		$this->trainings = (object)TaxAgent::find($this->value)->trainings;
 //		dd($this->academics->school_name);
 	}
 

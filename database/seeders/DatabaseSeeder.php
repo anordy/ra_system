@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(BusinessActivitiesSeeder::class);
         $this->call(CountriesTableSeeder::class);
+        $this->call(RegionSeeder::class);
+        $this->call(DistrictSeeder::class);
+        $this->call(WardSeeder::class);
         $this->call(CurrenciesTableSeeder::class);
         $this->call(IDTypesTableSeeder::class);
         $this->call(BanksTableSeeder::class);
@@ -27,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TaxTypesSeeder::class);
         $this->call(TaxpayersTableSeeder::class);
         $this->call(BusinessCategoriesSeeder::class);
-        $this->call(PoliticalDistributionSeeder::class);
         $this->call(WithholdingAgentSeeder::class);
+        $this->call(AccountTypesSeeder::class);
     }
 }

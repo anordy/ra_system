@@ -12,10 +12,13 @@ class SendMail
 
     public $tokenId;
     public $service;
-    public function __construct($service, $tokenId)
+    public $extra;
+
+    public function __construct($service, $tokenId, $extra = [])
     {
         $this->service = $service;
         $this->tokenId = $tokenId;
+        $this->extra = $extra;
     }
 
     /**

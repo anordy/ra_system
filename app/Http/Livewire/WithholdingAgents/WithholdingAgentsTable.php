@@ -4,7 +4,9 @@ namespace App\Http\Livewire\WithholdingAgents;
 
 use id;
 use Exception;
+use Carbon\Carbon;
 use App\Models\WithholdingAgent;
+use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -13,15 +15,19 @@ class WithholdingAgentsTable extends DataTableComponent
 {
     use LivewireAlert;
 
-    protected $model = WithholdingAgent::class;
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['officer_id']);
+        $this->setAdditionalSelects(['officer_id', 'responsible_person_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class' => 'table-sm',
         ]);
+    }
+
+    public function builder(): Builder
+    {
+        return WithholdingAgent::query()->orderBy('withholding_agents.created_at', 'DESC');
     }
 
     protected $listeners = [
@@ -37,7 +43,10 @@ class WithholdingAgentsTable extends DataTableComponent
             Column::make('Institution Name', 'institution_name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Place', 'institution_place')
+            Column::make('Responsible Person', 'responsible_person_id')
+                ->label(function($row) {
+                    return "{$row->taxpayer->first_name} {$row->taxpayer->last_name}";
+                })
                 ->sortable()
                 ->searchable(),
             Column::make('E-mail', 'email')
@@ -48,14 +57,16 @@ class WithholdingAgentsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Approved By', 'officer_id')
             ->label(function($row) {
-                return '<span>'.$row->user->fname. ' ' .$row->user->lname.'</span>';
+                return "{$row->user->fname} {$row->user->lname}";
             })
             ->html(true)
                 ->sortable()
                 ->searchable(),
             Column::make('Verified On', 'created_at')
+                ->format(function($value, $row) { return Carbon::create($row->created_at)->toFormattedDateString(); })
                 ->sortable(),
             Column::make('Commencing Date', 'date_of_commencing')
+                ->format(function($value, $row) { return Carbon::create($row->date_of_commencing)->toFormattedDateString(); })
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML

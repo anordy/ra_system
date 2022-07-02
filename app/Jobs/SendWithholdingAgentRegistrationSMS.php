@@ -38,7 +38,7 @@ class SendWithholdingAgentRegistrationSMS implements ShouldQueue
     {
         $sms_controller = new SMSController;
         $send_to = $this->phone_number;
-        $source = 'UmojaMobile';
+        $source = config('modulesconfig.smsheader');
         $message = 'Hello '. $this->full_name .', You are successful registered as a Withholding Agent for '. $this->institution_name . '. Kindly login with your reference number to view the information.';
         $sms_controller->sendSMS($send_to, $source, $message);
     }

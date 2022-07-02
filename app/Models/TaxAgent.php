@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class TaxAgent extends Model
+class TaxAgent extends Model implements Auditable
 {
-    use HasFactory;
+    use Notifiable, HasFactory, \OwenIt\Auditing\Auditable;
 
 	protected $table = 'tax_agents';
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBusinessConsultantRequestsTable extends Migration
+class CreateBusinessPartnersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateBusinessConsultantRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('business_consultant_requests', function (Blueprint $table) {
+        Schema::create('business_partners', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('business_id');
             $table->unsignedInteger('taxpayer_id');
-            $table->dateTime('reviewed_at')->nullable();
-            $table->boolean('is_accepted')->nullable();
-            $table->text('remarks')->nullable();
+            $table->double('shares')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateBusinessConsultantRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('business_consultant_requests');
+        Schema::dropIfExists('business_partners');
     }
 }

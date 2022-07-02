@@ -18,6 +18,7 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('business_category_id'); // Sole / Partner / Company
             $table->unsignedBigInteger('business_activities_type_id'); // Wholesale or Retail
             $table->unsignedBigInteger('currency_id'); // Wholesale or Retail
+            $table->unsignedBigInteger('taxpayer_id'); // Main owner
 
             $table->string('name');
             $table->string('tin');
@@ -36,10 +37,10 @@ class CreateBusinessesTable extends Migration
 
 
             // Contact person
-            $table->unsignedBigInteger('contact_person_id')->nullable();
+            $table->unsignedBigInteger('responsible_person_id')->nullable();
 
             // Tax Filling Person TODO: Remove
-            $table->unsignedBigInteger('tax_filling_person_id')->nullable();
+            $table->boolean('is_own_consultant')->default(true);
 
             $table->dateTime('date_of_receipt')->nullable();
             $table->dateTime('effective_reg_date')->nullable();
