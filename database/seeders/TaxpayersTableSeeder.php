@@ -16,7 +16,7 @@ class TaxpayersTableSeeder extends Seeder
      */
     public function run()
     {
-        Taxpayer::create([
+        Taxpayer::updateOrCreate([
             'reference_no' => '556677',
             'first_name' => 'John',
             'middle_name' => 'Tim',

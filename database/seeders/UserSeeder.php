@@ -28,5 +28,17 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true
         ]);
+
+        User::updateOrCreate([
+            'fname' => "Kedmon",
+            'lname' => "Joseph",
+            'email' => "jkedmon95@gmail.com",
+            'phone' => '0675580888',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 1,
+            'status' => true
+        ]);
     }
 }

@@ -16,7 +16,7 @@ class WithholdingAgentSeeder extends Seeder
     public function run()
     {
         //
-        WithholdingAgent::create([
+        WithholdingAgent::updateOrCreate([
             'tin' => 434543960,
             'address' => 'PO BOX 345 Ilala, Dar es salaam',
             'wa_number' => 123456789,

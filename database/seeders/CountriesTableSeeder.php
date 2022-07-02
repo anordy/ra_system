@@ -14,16 +14,22 @@ class CountriesTableSeeder extends Seeder
      */
     public function run()
     {
-        Country::create([
+        Country::updateOrcreate([
             'name' => 'Tanzania',
             'nationality' => 'Tanzanian',
             'code' => 'TZ'
         ]);
 
-        Country::create([
+        Country::updateOrCreate([
             'name' => 'Kenya',
             'nationality' => 'Kenyan',
             'code' => 'KE'
+        ]);
+
+        Country::updateOrCreate([
+            'name' => 'Uganda',
+            'nationality' => 'Ugandan',
+            'code' => 'UG'
         ]);
     }
 }

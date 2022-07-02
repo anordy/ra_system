@@ -16,16 +16,16 @@ class PoliticalDistributionSeeder extends Seeder
      */
     public function run()
     {
-        Region::create([
+        Region::updateOrCreate([
             'name' => 'Dar es Salaam'
         ]);
 
-        District::create([
+        District::updateOrCreate([
             'name' => 'Kinondoni',
             'region_id' => 1
         ]);
 
-        Ward::create([
+        Ward::updateOrCreate([
             'district_id' => 1,
             'name' => 'Kinondoni'
         ]);

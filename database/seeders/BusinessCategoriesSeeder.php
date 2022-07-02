@@ -9,12 +9,12 @@ class BusinessCategoriesSeeder extends Seeder
 {
     public function run()
     {
-        BusinessCategory::create([
+        BusinessCategory::updateOrCreate([
             'short_name' => 'sole-proprietor',
             'name' => 'Sole Proprietor'
         ]);
 
-        BusinessCategory::create([
+        BusinessCategory::updateOrCreate([
             'short_name' => 'partnership',
             'name' => 'Partnership'
         ]);
@@ -24,7 +24,7 @@ class BusinessCategoriesSeeder extends Seeder
             'name' => 'Company'
         ]);
 
-        BusinessCategory::create([
+        BusinessCategory::updateOrCreate([
             'short_name' => 'ngo',
             'name' => 'NGO'
         ]);

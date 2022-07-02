@@ -14,23 +14,23 @@ class AccountTypesSeeder extends Seeder
      */
     public function run()
     {
-        AccountType::create([
+        AccountType::updateOrCreate([
             'short_name' => 'current',
             'name' => 'Current Account'
         ]);
-        AccountType::create([
+        AccountType::updateOrCreate([
             'short_name' => 'savings',
             'name' => 'Current Account'
         ]);
-        AccountType::create([
+        AccountType::updateOrCreate([
             'short_name' => 'salary',
             'name' => 'Current Account'
         ]);
-        AccountType::create([
+        AccountType::updateOrCreate([
             'short_name' => 'fixed-deposit',
             'name' => 'Current Account'
         ]);
-        AccountType::create([
+        AccountType::updateOrCreate([
             'short_name' => 'recurring-deposit',
             'name' => 'Current Account'
         ]);
