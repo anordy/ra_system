@@ -166,26 +166,32 @@
         </div>
     @endif
 
-    @if($partners = $business->partners)
-        <h6 class="my-3">Business Partners</h6>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Reference No.</th>
-                <th>Mobile</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($partners as $partner)
-                <tr class="col-md-4 mb-3">
-                    <td class="font-weight-bold text-uppercase">{{ $partner->taxpayer->full_name }}</td>
-                    <td class="my-1">{{ $partner->taxpayer->reference_no }}</td>
-                    <td class="my-1">{{ $partner->taxpayer->mobile }}</td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+    @if($business->partners->count())
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header font-weight-bold">
+                Business Partners
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Reference No.</th>
+                        <th>Mobile</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($business->partners as $partner)
+                        <tr class="col-md-4 mb-3">
+                            <td class="font-weight-bold text-uppercase">{{ $partner->taxpayer->full_name }}</td>
+                            <td class="my-1">{{ $partner->taxpayer->reference_no }}</td>
+                            <td class="my-1">{{ $partner->taxpayer->mobile }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     @endif
 
     <div class="card mt-3">
@@ -194,7 +200,19 @@
         </div>
         <div class="card-body pb-0">
             <div class="row my-0">
-                @if($consultant = $business->consultant)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Responsible Person Name</span>
+                    <p class="my-1">{{ $business->responsiblePerson->full_name }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Responsible Person Ref No.</span>
+                    <p class="my-1">{{ $business->responsiblePerson->reference_no }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Responsible Person Mobile No.</span>
+                    <p class="my-1">{{ $business->responsiblePerson->mobile }}</p>
+                </div>
+                @if($business->is_own_consultant)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Name</span>
                         <p class="my-1">{{ $consultant->taxpayer->full_name }}</p>
@@ -204,30 +222,46 @@
                         <p class="my-1">{{ $consultant->taxpayer->reference_no }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Consultant Status</span>
-                        <p class="my-1 text-success font-weight-bold">
-                            <i class="bi bi-check-circle-fill mr-1"></i>
-                            Approved by Tax Agent
-                        </p>
+                        <span class="font-weight-bold text-uppercase">Consultant Mobile No.</span>
+                        <p class="my-1">{{ $consultant->taxpayer->mobile }}</p>
                     </div>
-                @else
-                    @if($request = $business->consultantRequest)
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Consultant Name</span>
-                            <p class="my-1">{{ $request->taxpayer->full_name }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Consultant Ref No.</span>
-                            <p class="my-1">{{ $request->taxpayer->reference_no }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Consultant Status</span>
-                            <p class="my-1 text-danger font-weight-bold">
+                @elseif($consultant = $business->consultants->last())
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Consultant Name</span>
+                        <p class="my-1">{{ $consultant->full_name }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Consultant Ref No.</span>
+                        <p class="my-1">{{ $consultant->reference_no }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Consultant Mobile No.</span>
+                        <p class="my-1">{{ $consultant->mobile }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Consultant Status</span>
+                        @if($consultant->status === 'pending')
+                            <p class="my-1 text-info font-weight-bold">
                                 <i class="bi bi-x-circle-fill mr-1"></i>
                                 Waiting Approval From Tax Agent
                             </p>
-                        </div>
-                    @endif
+                        @elseif($consultant->status === 'approved')
+                            <p class="my-1 text-success font-weight-bold">
+                                <i class="bi bi-x-circle-fill mr-1"></i>
+                                Approved
+                            </p>
+                        @elseif($consultant->status === 'rejected')
+                            <p class="my-1 text-danger font-weight-bold">
+                                <i class="bi bi-x-circle-fill mr-1"></i>
+                                Rejected
+                            </p>
+                        @elseif($consultant->status === 'removed')
+                            <p class="my-1 text-danger font-weight-bold">
+                                <i class="bi bi-x-circle-fill mr-1"></i>
+                                Removed. Please assign new tax agent.
+                            </p>
+                        @endif
+                    </div>
                 @endif
             </div>
         </div>

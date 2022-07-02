@@ -44,12 +44,8 @@ class Business extends Model implements Auditable
         return $this->hasOne(BusinessBank::class);
     }
 
-    public function consultant(){
-        return $this->hasOne(BusinessConsultant::class);
-    }
-
-    public function consultantRequest(){
-        return $this->hasOne(BusinessConsultantRequest::class);
+    public function consultants(){
+        return $this->hasMany(BusinessConsultant::class);
     }
 
     public function temporaryBusinessClosures(){

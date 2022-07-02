@@ -37,10 +37,10 @@ class CreateBusinessesTable extends Migration
 
 
             // Contact person
-            $table->unsignedBigInteger('contact_person_id')->nullable();
+            $table->unsignedBigInteger('responsible_person_id')->nullable();
 
             // Tax Filling Person TODO: Remove
-            $table->unsignedBigInteger('tax_filling_person_id')->nullable();
+            $table->boolean('is_own_consultant')->default(true);
 
             $table->dateTime('date_of_receipt')->nullable();
             $table->dateTime('effective_reg_date')->nullable();

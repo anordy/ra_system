@@ -20,19 +20,19 @@ class AccountTypesSeeder extends Seeder
         ]);
         AccountType::create([
             'short_name' => 'savings',
-            'name' => 'Current Account'
+            'name' => 'Savings Account'
         ]);
         AccountType::create([
             'short_name' => 'salary',
-            'name' => 'Current Account'
+            'name' => 'Salary Account'
         ]);
         AccountType::create([
             'short_name' => 'fixed-deposit',
-            'name' => 'Current Account'
+            'name' => 'Fixed Deposit Account'
         ]);
         AccountType::create([
             'short_name' => 'recurring-deposit',
-            'name' => 'Current Account'
+            'name' => 'Reccuring Deposit Account'
         ]);
     }
 }
