@@ -89,7 +89,6 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('business')->as('business.')->group(function (){
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
-        Route::get('/closure/{closure}/approve', [BusinessController::class, 'approveClosure'])->name('approve-closure');
     });
 
 

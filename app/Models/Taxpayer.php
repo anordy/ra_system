@@ -6,31 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Notifications\Notifiable;
 
 class Taxpayer extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
+    use Notifiable, HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
-    protected $fillable = [
-        'reference_no',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'email',
-        'mobile',
-        'alt_mobile',
-        'location',
-        'physical_address',
-        'street',
-        'is_citizen',
-        'id_type',
-        'id_number',
-        'work_permit',
-        'residence_permit',
-        'country_id',
-        'biometric_verified_at',
-        'password'
-    ];
+    protected $guarded = [];
 
     public function country(){
         return $this->belongsTo(Country::class);
@@ -47,5 +29,9 @@ class Taxpayer extends Model implements Auditable
 
     public function fullname(){
         return $this->first_name. ' '. $this->last_name;
+    }
+
+    public function taxAgent(){
+        return $this->hasOne(TaxAgent::class);
     }
 }

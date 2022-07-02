@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TaxTypesSeeder::class);
         $this->call(TaxpayersTableSeeder::class);
         $this->call(BusinessCategoriesSeeder::class);
-        $this->call(PoliticalDistributionSeeder::class);
         $this->call(WithholdingAgentSeeder::class);
+        $this->call(AccountTypesSeeder::class);
     }
 }
