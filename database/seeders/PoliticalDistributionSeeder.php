@@ -16,18 +16,23 @@ class PoliticalDistributionSeeder extends Seeder
      */
     public function run()
     {
-        Region::create([
-            'name' => 'Dar es Salaam'
+        $unguja = Region::create([
+            'name' => 'Unguja'
         ]);
 
-        District::create([
-            'name' => 'Kinondoni',
-            'region_id' => 1
+        $ka = District::create([
+            'name' => 'Kaskazini A',
+            'region_id' => $unguja->id
         ]);
 
         Ward::create([
-            'district_id' => 1,
-            'name' => 'Kinondoni'
+            'district_id' => $ka->id,
+            'name' => 'Bandamaji'
+        ]);
+
+        Ward::create([
+            'district_id' => $ka->id,
+            'name' => 'Nungwi'
         ]);
     }
 }
