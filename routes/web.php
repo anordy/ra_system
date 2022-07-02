@@ -36,10 +36,12 @@ use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\WardController;
+use App\Http\Controllers\WorkflowerTestController;
 
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/workflow', [WorkflowerTestController::class, 'index']);
 
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');

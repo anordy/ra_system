@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Business extends Model
 {
-    use HasFactory;
+    use HasFactory, WorkflowTrait;
 
     protected $guarded = [];
 
@@ -46,4 +47,6 @@ class Business extends Model
     public function consultantRequest(){
         return $this->hasOne(BusinessConsultantRequest::class);
     }
+
+  
 }
