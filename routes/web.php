@@ -50,6 +50,7 @@ Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reloa
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
+
     Route::get('/notifications', [NotificationController::class,'index'])->name('notifications');
 
     Route::prefix('settings')->name('settings.')->group(function(){

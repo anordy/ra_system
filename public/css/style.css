@@ -215,6 +215,9 @@ LIVEWIRE TABS
     font-weight: bold;
 }
 
+/* ---------------------------------------------------
+    NOTIFICATIONS STYLES
+----------------------------------------------------- */
 .notification {
     margin-right: 20px;
     text-decoration: none;
