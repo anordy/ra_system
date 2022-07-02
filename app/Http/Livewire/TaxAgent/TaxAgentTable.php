@@ -93,7 +93,7 @@ class TaxAgentTable extends DataTableComponent
 			  $message = 'Tax agent approved',
 			  $type = 'info',
 			  $messageLong = 'Your application has been approved successfully',
-			  $href = route('settings.users.index'),
+			  $href = route('taxagent.apply'),
 			  $hrefText = 'View'
 			));
 
