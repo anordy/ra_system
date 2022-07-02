@@ -20,6 +20,10 @@ class TemporaryBusinessClosure extends Model implements Auditable
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    public function rejected() {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
+
     public function scopeOpen($query)
     {
         return $query->where('opening_date', '<=', date('Y-m-d'));

@@ -16,7 +16,7 @@ class RejectedClosuresTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended', 'status', 'approved_by']);
+        $this->setAdditionalSelects(['is_extended', 'status', 'rejected_by']);
     }
 
     public function builder(): Builder
@@ -44,9 +44,9 @@ class RejectedClosuresTable extends DataTableComponent
                 ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
                 ->sortable()
                 ->searchable(),
-            Column::make('Rejected By', 'approved_by')
+            Column::make('Rejected By', 'rejected_by')
                 ->label(function($row) {
-                        return '<span>'.$row->user->fname. ' ' .$row->user->lname.'</span>';
+                        return '<span>'.$row->rejected->fname. ' ' .$row->rejected->lname.'</span>';
                 })
                 ->sortable()
                 ->searchable()
