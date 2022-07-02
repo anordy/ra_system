@@ -16,6 +16,10 @@ class Business extends Model implements Auditable
         'date_of_commencing' => 'datetime'
     ];
 
+    public function taxpayer(){
+        return $this->belongsTo(Taxpayer::class);
+    }
+
     public function partners(){
         return $this->hasMany(BusinessPartner::class);
     }
@@ -46,6 +50,10 @@ class Business extends Model implements Auditable
 
     public function consultants(){
         return $this->hasMany(BusinessConsultant::class);
+    }
+
+    public function responsiblePerson(){
+        return $this->belongsTo(Taxpayer::class, 'responsible_person_id');
     }
 
     public function temporaryBusinessClosures(){
