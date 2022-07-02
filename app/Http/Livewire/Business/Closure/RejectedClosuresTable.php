@@ -9,19 +9,19 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class ApprovedClosuresTable extends DataTableComponent
+class RejectedClosuresTable extends DataTableComponent
 {
 
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended', 'status', 'approved_by']);
+        $this->setAdditionalSelects(['is_extended', 'status', 'rejected_by']);
     }
 
     public function builder(): Builder
     {
-        return TemporaryBusinessClosure::query()->where('status', 'approved')->orderBy('temporary_business_closures.opening_date', 'DESC');
+        return TemporaryBusinessClosure::query()->where('status', 'rejected')->orderBy('temporary_business_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
@@ -44,25 +44,23 @@ class ApprovedClosuresTable extends DataTableComponent
                 ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
                 ->sortable()
                 ->searchable(),
-            Column::make('Approved By', 'approved_by')
+            Column::make('Rejected By', 'rejected_by')
                 ->label(function($row) {
-                        return '<span>'.$row->user->fname. ' ' .$row->user->lname.'</span>';
+                        return '<span>'.$row->rejected->fname. ' ' .$row->rejected->lname.'</span>';
                 })
                 ->sortable()
                 ->searchable()
                 ->html(true),
+            Column::make('Reason', 'reason')
+                ->sortable(),
             Column::make('Status', 'status')
                 ->format(function ($value, $row) {
                         return <<< HTML
-                        <span class="badge badge-success py-1 px-2">Approved & Confirmed</span>
-                    HTML; 
+                        <span class="badge badge-danger py-1 px-2">Rejected</span>
+                    HTML;
                 })
                 ->html(true),
         ];
     }
 
-    public function approve($id)
-    {
-        return redirect()->to('/business/closure/' . $id . '/approve');
-    }
 }

@@ -4,22 +4,11 @@
     </div>
 
     <ul class="list-unstyled components">
-        <li class="{{ request()->is('/dashboard') ? 'active' : '' }}">
-            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
-                <li>
-                    <a href="{{ route('home') }}">Home 1</a>
-                </li>
-                <li>
-                    <a href="#">Home 2</a>
-                </li>
-                <li>
-                    <a href="#">Home 3</a>
-                </li>
-            </ul>
+        <li class="{{ request()->is('home*') ? 'active' : '' }}">
+            <a href="{{ route('home') }}">Home</a>
         </li>
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
-            <a href="{{ route('notifications') }}" class="dropdown-toggle">Notifications 
+            <a href="{{ route('notifications') }}">Notifications 
                 @if(auth()->user()->unreadNotifications->count() > 0)
                     <span class="badge badge-light"> <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
                 @endif

@@ -3,8 +3,7 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
-use Livewire\Component;
-use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -14,7 +13,10 @@ class RegistrationsTable extends DataTableComponent
     
     use LivewireAlert;
 
-    protected $model = Business::class;
+    public function builder(): Builder
+    {
+        return Business::orderBy('created_at', 'desc');
+    }
 
     public function configure(): void
     {

@@ -15,14 +15,6 @@
                 </div>
             </div>
         </div>
-        <div class="card-body pb-0">
-            <div class="row my-2">
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Business Category</span>
-                    <p class="my-1">{{ $business->category->name }}</p>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="card mt-3 shadow-sm">
         <div class="card-header font-weight-bold">
@@ -254,7 +246,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Account Type</span>
-                        <p class="my-1">{{ $bank->acc_type }}</p>
+                        <p class="my-1">{{ $bank->accountType->name }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Currency</span>
