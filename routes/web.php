@@ -50,6 +50,7 @@ Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reloa
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
+
     Route::get('/notifications', [NotificationController::class,'index'])->name('notifications');
 
     Route::prefix('settings')->name('settings.')->group(function(){
@@ -88,7 +89,6 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('business')->as('business.')->group(function (){
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
-        Route::get('/closure/{closure}/approve', [BusinessController::class, 'approveClosure'])->name('approve-closure');
     });
 
 

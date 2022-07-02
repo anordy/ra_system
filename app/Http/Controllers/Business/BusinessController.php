@@ -11,8 +11,4 @@ class BusinessController extends Controller
         return view('business.closure.closure-table');
     }
 
-    public function approveClosure(){
-        return view('business.closure.approve');
-    }
-
 }

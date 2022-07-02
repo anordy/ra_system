@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Notification;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ class NotificationsTable extends DataTableComponent
     {
         return Notification::query()
             ->where('notifiable_id', auth()->id())->latest()
+            ->where('notifiable_type',User::class)
             ->select();
     }
 

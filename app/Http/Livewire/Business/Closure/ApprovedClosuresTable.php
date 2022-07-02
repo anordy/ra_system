@@ -46,17 +46,11 @@ class ApprovedClosuresTable extends DataTableComponent
                 ->searchable(),
             Column::make('Approved By', 'approved_by')
                 ->label(function($row) {
-                    if ($row->is_approved == 1) {
                         return '<span>'.$row->user->fname. ' ' .$row->user->lname.'</span>';
-                    } else {
-                        return 'N/A';
-                    }
                 })
                 ->sortable()
                 ->searchable()
                 ->html(true),
-            Column::make('Reason', 'reason')
-                ->sortable(),
             Column::make('Status', 'status')
                 ->format(function ($value, $row) {
                         return <<< HTML
