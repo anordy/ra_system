@@ -28,12 +28,15 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Reference No</span>
-                    <p class="my-1">{{ $agent->ref_no }}</p>
+                    <p class="my-1">{{ $agent->reference_no }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span  class="font-weight-bold text-uppercase">Status</span>
                     @if($agent->is_verified == 1)
                         <p style="font-weight: 900; color: #319e0a; font-size: 85%">Approved</p>
+
+                    @else
+                        <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Pending</p>
                     @endif
                 </div>
 
