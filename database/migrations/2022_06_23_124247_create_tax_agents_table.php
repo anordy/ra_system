@@ -20,7 +20,7 @@ class CreateTaxAgentsTable extends Migration
 			$table->string('block');
 			$table->string('town');
 			$table->string('region');
-			$table->string('ref_no', '35');
+			$table->string('reference_no', '35');
 			$table->boolean('is_verified')->default(false);
 			$table->unsignedBigInteger('taxpayer_id');
 //			$table->foreign('taxpayer_id')->references('id')->on('taxpayers');

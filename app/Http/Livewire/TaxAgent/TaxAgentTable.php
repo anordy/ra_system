@@ -2,7 +2,10 @@
 
 namespace App\Http\Livewire\TaxAgent;
 
+use App\Models\Taxpayer;
+use App\Notifications\DatabaseNotification;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -84,6 +87,16 @@ class TaxAgentTable extends DataTableComponent
 			$agent = TaxAgent::find($data->id);
 			$agent->is_verified = 1;
 			$agent->save();
+
+			$taxpayer = Taxpayer::find($agent->taxpayer_id);
+			$taxpayer->notify(new DatabaseNotification(
+			  $message = 'Tax agent approved',
+			  $type = 'info',
+			  $messageLong = 'Your application has been approved successfully',
+			  $href = route('settings.users.index'),
+			  $hrefText = 'View'
+			));
+
 			$this->flash('success', 'Request approved successfully', [], redirect()->back()->getTargetUrl());
 
 		} catch (Exception $e) {
