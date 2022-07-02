@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class PendingClosuresTable extends DataTableComponent
+class RejectedClosuresTable extends DataTableComponent
 {
 
 
@@ -21,7 +21,7 @@ class PendingClosuresTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TemporaryBusinessClosure::query()->where('status', 'pending')->orderBy('temporary_business_closures.opening_date', 'DESC');
+        return TemporaryBusinessClosure::query()->where('status', 'rejected')->orderBy('temporary_business_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
@@ -44,29 +44,23 @@ class PendingClosuresTable extends DataTableComponent
                 ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
                 ->sortable()
                 ->searchable(),
+            Column::make('Rejected By', 'approved_by')
+                ->label(function($row) {
+                        return '<span>'.$row->user->fname. ' ' .$row->user->lname.'</span>';
+                })
+                ->sortable()
+                ->searchable()
+                ->html(true),
             Column::make('Reason', 'reason')
                 ->sortable(),
             Column::make('Status', 'status')
                 ->format(function ($value, $row) {
                         return <<< HTML
-                        <span class="badge badge-warning py-1 px-2">Pending</span>
+                        <span class="badge badge-danger py-1 px-2">Rejected</span>
                     HTML;
-                })
-                ->html(true),
-            Column::make('Action', 'id')
-                ->format(function ($value, $row) {
-                    if ($row->is_approved == 0) {
-                        return <<< HTML
-                        <button class="btn btn-info btn-sm" wire:click="approve($value)">Approve</button>
-                    HTML;
-                    }
                 })
                 ->html(true),
         ];
     }
 
-    public function approve($id)
-    {
-        return redirect()->to('/business/closure/' . $id . '/approve');
-    }
 }

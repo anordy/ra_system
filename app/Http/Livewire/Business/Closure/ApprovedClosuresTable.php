@@ -16,12 +16,12 @@ class ApprovedClosuresTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended', 'is_approved', 'approved_by']);
+        $this->setAdditionalSelects(['is_extended', 'status', 'approved_by']);
     }
 
     public function builder(): Builder
     {
-        return TemporaryBusinessClosure::query()->where('is_approved', 1)->orderBy('temporary_business_closures.opening_date', 'DESC');
+        return TemporaryBusinessClosure::query()->where('status', 'approved')->orderBy('temporary_business_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
@@ -57,17 +57,11 @@ class ApprovedClosuresTable extends DataTableComponent
                 ->html(true),
             Column::make('Reason', 'reason')
                 ->sortable(),
-            Column::make('Status', 'id')
+            Column::make('Status', 'status')
                 ->format(function ($value, $row) {
-                    if ($row->is_approved == 0) {
-                        return <<< HTML
-                        <span class="badge badge-danger py-1 px-2">Not Approved</span>
-                    HTML;
-                    } else {
                         return <<< HTML
                         <span class="badge badge-success py-1 px-2">Approved & Confirmed</span>
                     HTML; 
-                    }
                 })
                 ->html(true),
         ];
