@@ -35,6 +35,7 @@ class TaxpayersTableSeeder extends Seeder
             'residence_permit' => 'sample',
             'country_id' => 1,
             'biometric_verified_at' => Carbon::now()->toDateTimeString(),
+            'authorities_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make('password'),
         ]);
 
@@ -56,6 +57,7 @@ class TaxpayersTableSeeder extends Seeder
             'residence_permit' => 'sample',
             'country_id' => 1,
             'biometric_verified_at' => Carbon::now()->toDateTimeString(),
+            'authorities_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make('password'),
         ]);
 
