@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Business extends Model implements Auditable
 {
@@ -62,5 +63,9 @@ class Business extends Model implements Auditable
 
     public function openBusiness(){
         return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
+    }
+
+    public function businessStatus(){
+        return $this->hasOne(BusinessStatus::class);
     }
 }
