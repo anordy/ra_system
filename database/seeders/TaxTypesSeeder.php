@@ -14,18 +14,18 @@ class TaxTypesSeeder extends Seeder
      */
     public function run()
     {
-        TaxType::create(['name' => 'VAT']);
-        TaxType::create(['name' => 'Hotel Levy']);
-        TaxType::create(['name' => 'Restaurant Levy']);
-        TaxType::create(['name' => 'Tour Operation Levy']);
-        TaxType::create(['name' => 'Land Lease']);
-        TaxType::create(['name' => 'Public Services']);
-        TaxType::create(['name' => 'Excercise Duty']);
-        TaxType::create(['name' => 'Petroleum Levy']);
-        TaxType::create(['name' => 'Airport Service Charge']);
-        TaxType::create(['name' => 'Airport Safety Fee']);
-        TaxType::create(['name' => 'Sea Port Service Charge']);
-        TaxType::create(['name' => 'Sea Port Transport Charges']);
-        TaxType::create(['name' => 'Tax Consultant Licences']);
+        TaxType::updateOrCreate(['name' => 'VAT']);
+        TaxType::updateOrCreate(['name' => 'Hotel Levy']);
+        TaxType::updateOrCreate(['name' => 'Restaurant Levy']);
+        TaxType::updateOrCreate(['name' => 'Tour Operation Levy']);
+        TaxType::updateOrCreate(['name' => 'Land Lease']);
+        TaxType::updateOrCreate(['name' => 'Public Services']);
+        TaxType::updateOrCreate(['name' => 'Excercise Duty']);
+        TaxType::updateOrCreate(['name' => 'Petroleum Levy']);
+        TaxType::updateOrCreate(['name' => 'Airport Service Charge']);
+        TaxType::updateOrCreate(['name' => 'Airport Safety Fee']);
+        TaxType::updateOrCreate(['name' => 'Sea Port Service Charge']);
+        TaxType::updateOrCreate(['name' => 'Sea Port Transport Charges']);
+        TaxType::updateOrCreate(['name' => 'Tax Consultant Licences']);
     }
 }

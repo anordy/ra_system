@@ -3,19 +3,6 @@
 @section('title', 'Business Registration Details')
 
 @section('content')
-    <div class="card mt-3 border-0 shadow-sm">
-        <div class="card-header font-weight-bold text-white {{ $business->verified_at ? 'bg-success' : 'bg-info' }}">
-            Business Application Status
-        </div>
-        <div class="card-body pb-0">
-            <div class="row my-2">
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Business Name</span>
-                    <p class="my-1">{{ $business->name }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="card mt-3 shadow-sm">
         <div class="card-header font-weight-bold">
             Business Information
@@ -202,7 +189,7 @@
             <div class="row my-0">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Responsible Person Name</span>
-                    <p class="my-1">{{ $business->responsiblePerson->full_name }}</p>
+                    <p class="my-1">{{ $business->responsiblePerson->first_name }} {{ $business->responsiblePerson->last_name }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Responsible Person Ref No.</span>
@@ -215,15 +202,15 @@
                 @if($business->is_own_consultant)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Name</span>
-                        <p class="my-1">{{ $consultant->taxpayer->full_name }}</p>
+                        <p class="my-1">{{ $business->taxpayer->first_name }} {{ $business->taxpayer->last_name }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Ref No.</span>
-                        <p class="my-1">{{ $consultant->taxpayer->reference_no }}</p>
+                        <p class="my-1">{{ $business->taxpayer->reference_no }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Consultant Mobile No.</span>
-                        <p class="my-1">{{ $consultant->taxpayer->mobile }}</p>
+                        <p class="my-1">{{ $business->taxpayer->mobile }}</p>
                     </div>
                 @elseif($consultant = $business->consultants()->latest()->first())
                     <div class="col-md-4 mb-3">

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Business extends Model implements Auditable
 {
@@ -15,6 +16,10 @@ class Business extends Model implements Auditable
     protected $casts = [
         'date_of_commencing' => 'datetime'
     ];
+
+    public function taxpayer(){
+        return $this->belongsTo(Taxpayer::class);
+    }
 
     public function partners(){
         return $this->hasMany(BusinessPartner::class);
@@ -48,11 +53,19 @@ class Business extends Model implements Auditable
         return $this->hasMany(BusinessConsultant::class);
     }
 
+    public function responsiblePerson(){
+        return $this->belongsTo(Taxpayer::class, 'responsible_person_id');
+    }
+
     public function temporaryBusinessClosures(){
         return $this->hasMany(TemporaryBusinessClosure::class);
     }
 
     public function openBusiness(){
         return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
+    }
+
+    public function businessStatus(){
+        return $this->hasOne(BusinessStatus::class);
     }
 }

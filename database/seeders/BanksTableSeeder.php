@@ -14,13 +14,13 @@ class BanksTableSeeder extends Seeder
      */
     public function run()
     {
-        Bank::create(['name' => 'CRDB']);
-        Bank::create(['name' => 'NMB']);
-        Bank::create(['name' => 'PBZ']);
-        Bank::create(['name' => 'EXIM Bank']);
-        Bank::create(['name' => 'UBA']);
-        Bank::create(['name' => 'Azania Bank']);
-        Bank::create(['name' => 'DTB']);
-        Bank::create(['name' => 'Equity Bank']);
+        Bank::updateOrCreate(['name' => 'CRDB']);
+        Bank::updateOrCreate(['name' => 'NMB']);
+        Bank::updateOrCreate(['name' => 'PBZ']);
+        Bank::updateOrCreate(['name' => 'EXIM Bank']);
+        Bank::updateOrCreate(['name' => 'UBA']);
+        Bank::updateOrCreate(['name' => 'Azania Bank']);
+        Bank::updateOrCreate(['name' => 'DTB']);
+        Bank::updateOrCreate(['name' => 'Equity Bank']);
     }
 }

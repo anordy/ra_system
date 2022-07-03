@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Business\Closure;
 
 use id;
 use Carbon\Carbon;
+use App\Models\BusinessStatus;
 use App\Models\TemporaryBusinessClosure;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -103,6 +104,10 @@ class PendingClosuresTable extends DataTableComponent
                     'approved_on' => date('Y-m-d H:i:s'),
                     'status' => $data->status
                 ]);
+                BusinessStatus::updateOrCreate(
+                    ['business_id' => $temporary_business_closure->business_id],
+                    ['status' => 'closed']
+                );
                 $this->flash('success', 'Business '. $data->status . ' successfully', [], redirect()->back()->getTargetUrl());
             } else if ($data->status == 'rejected') {
                 $temporary_business_closure->update([
@@ -110,6 +115,10 @@ class PendingClosuresTable extends DataTableComponent
                     'rejected_on' => date('Y-m-d H:i:s'),
                     'status' => $data->status
                 ]);
+                BusinessStatus::updateOrCreate(
+                    ['business_id' => $temporary_business_closure->business_id,],
+                    ['status' => 'open']
+                );
                 $this->flash('success', 'Business '. $data->status . ' successfully', [], redirect()->back()->getTargetUrl());
             }
         } catch (Exception $e) {
