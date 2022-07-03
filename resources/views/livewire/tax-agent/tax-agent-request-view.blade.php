@@ -35,7 +35,7 @@
                                 <td>{{$agent->ref_no}}</td>
                                 <td>
                                 @if($agent->is_verified == 0)
-                                    <p><span class="badge badge-danger">Not Verified</span></p>
+                                    <p><span class="badge badge-danger">Not Approved</span></p>
                                 @else
                                     <p>Verified</p>
                                 @endif

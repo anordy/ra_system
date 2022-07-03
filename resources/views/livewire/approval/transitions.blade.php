@@ -3,15 +3,15 @@
     <div class="row my-2">
         <div class="col-md-4 ">
             <span class="font-weight-bold text-uppercase">Transition Name</span>
-            <p class="my-1">{{ $transition->getName() ?? null }}</p>
+            <p class="my-1">{{ strtoupper(str_replace('_', ' ',$transition->getName())) ?? null }}</p>
         </div>
         <div class="col-md-4 ">
             <span class="font-weight-bold text-uppercase">From</span>
-            <p class="my-1">{{ $transition->getFroms()[0] ?? null }}</p>
+            <p class="my-1">{{ str_replace('_', ' ',$transition->getFroms()[0]) ?? null }}</p>
         </div>
         <div class="col-md-4 ">
             <span class="font-weight-bold text-uppercase">To</span>
-            <p class="my-1">{{ $transition->getTos()[0] ?? null }}</p>
+            <p class="my-1">{{ str_replace('_', ' ',$transition->getTos()[0]) ?? null }}</p>
         </div>
     </div>
 </div>

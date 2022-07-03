@@ -10,7 +10,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class ActiveTaxAgentTable extends DataTableComponent
 {
-//    protected $model = TaxAgent::class;
+	//    protected $model = TaxAgent::class;
 
 	public function builder(): Builder
 	{
@@ -18,36 +18,35 @@ class ActiveTaxAgentTable extends DataTableComponent
 	}
 
 	public function configure(): void
-    {
-        $this->setPrimaryKey('id');
+	{
+		$this->setPrimaryKey('id');
 
-	    $this->setTableWrapperAttributes([
-	      'default' => true,
-	      'class' => 'table-bordered table-sm',
-	    ]);
-    }
+		$this->setTableWrapperAttributes([
+			'default' => true,
+			'class' => 'table-bordered table-sm',
+		]);
+	}
 
-    public function columns(): array
-    {
-	    return [
-	      Column::make("TIN No", "tin_no")
-		    ->sortable(),
-	      Column::make("Plot No.", "plot_no")
-		    ->sortable(),
-	      Column::make("Block", "block")
-		    ->sortable(),
-	      Column::make("Town", "town")
-		    ->sortable(),
-	      Column::make("Region", "region")
-		    ->sortable(),
-	      BooleanColumn::make('Status', 'is_verified')
-		    ->sortable()
-		    ,
-	      Column::make('Action', 'id')
-	        ->view('taxagents.includes.actions')
-	        ->html(true)
-	    ];
-    }
-
-
+	public function columns(): array
+	{
+		return [
+			Column::make("Z_Number", "reference_no")
+				->sortable(),
+			Column::make("TIN No", "tin_no")
+				->sortable(),
+			Column::make("Plot No.", "plot_no")
+				->sortable(),
+			Column::make("Block", "block")
+				->sortable(),
+			Column::make("Town", "town")
+				->sortable(),
+			Column::make("Region", "region")
+				->sortable(),
+			BooleanColumn::make('Status', 'is_verified')
+				->sortable(),
+			Column::make('Action', 'id')
+				->view('taxagents.includes.actions')
+				->html(true)
+		];
+	}
 }
