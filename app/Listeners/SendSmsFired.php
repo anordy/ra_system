@@ -3,7 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Jobs\SendTaxAgentApprovalSMS;
 use App\Jobs\Taxpayer\SendRegistrationSMS;
+use App\Models\TaxAgent;
 use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
@@ -44,5 +46,12 @@ class SendSmsFired
             $taxpayer = Taxpayer::find($event->tokenId);
             SendRegistrationSMS::dispatch($taxpayer->mobile, $taxpayer->reference_no, $event->extra['code']);
         }
+
+		else if ($event->service == 'tax-agent-registration-approval')
+		{
+			$taxpayer = Taxpayer::find($event->tokenId);
+			$taxagent = $taxpayer->taxagent->is_verified;
+			SendTaxAgentApprovalSMS::dispatch($taxpayer);
+		}
     }
 }
