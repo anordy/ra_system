@@ -8,19 +8,25 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class RegistrationsTable extends DataTableComponent
+class RegistrationsApprovalTable extends DataTableComponent
 {
     
     use LivewireAlert;
 
     public function builder(): Builder
     {
-        return Business::where('verified_at', '!=', null)->orderBy('created_at', 'desc');
+        return Business::query()
+            ->with('pinstances')
+            ->orderBy('created_at', 'desc');
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
     public function columns(): array
@@ -39,7 +45,7 @@ class RegistrationsTable extends DataTableComponent
             Column::make('Status', 'verified_at')
                 ->view('business.registrations.includes.status'),
             Column::make('Action', 'id')
-                ->view('business.registrations.includes.actions')
+                ->view('business.registrations.includes.approval')
         ];
     }
 

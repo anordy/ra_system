@@ -1,34 +1,11 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace App\Services\Workflow\MarkingStore;
 
 use App\Services\Workflow\Exception\LogicException;
 use App\Services\Workflow\Marking;
 
-use function PHPUnit\Framework\isEmpty;
 
-/**
- * MethodMarkingStore stores the marking with a subject's method.
- *
- * This store deals with a "single state" or "multiple state" Marking.
- *
- * "single state" Marking means a subject can be in one and only one state at
- * the same time. Use it with state machine.
- *
- * "multiple state" Marking means a subject can be in many states at the same
- * time. Use it with workflow.
- *
- * @author Grégoire Pineau <lyrixx@lyrixx.info>
- */
 final class MethodMarkingStore implements MarkingStoreInterface
 {
     private $singleState;

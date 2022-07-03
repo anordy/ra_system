@@ -38,6 +38,10 @@ class User extends Authenticatable
         return $this->fname . ' '. $this->lname;
     }
 
+    public function getFullNameAttribute(){
+        return "{$this->fname} {$this->lname}";
+    }
+
     public function is_role(array $roles)
     {
         if (in_array($this->role->id, $roles))

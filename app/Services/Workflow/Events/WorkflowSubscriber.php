@@ -67,6 +67,8 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'operator_type' => $place['operator_type'],
                     'operators' => json_encode($place['operators']),
                     'approved_on' => Carbon::now()->toDateTimeString(),
+                    'user_id' => $user->id,
+                    'user_type' => get_class($user)
                 ]);
 
                 DB::transaction(function () use ($task, $subject) {

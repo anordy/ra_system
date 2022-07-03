@@ -53,7 +53,7 @@ class WorkflowerTestController extends Controller
                     ],
                 ],
                 'transitions'   => [
-                    'submitted' => [
+                    'application_submitted' => [
                         'condition' => '',
                         'from' => 'draft',
                         'to'   => 'registration_officer',
@@ -92,7 +92,7 @@ class WorkflowerTestController extends Controller
         $workflow = $registry->get($post);
 
 
-        $workflow->apply($post, 'application_corrected');
+        $workflow->apply($post, 'submitted');
         $post->save();
     }
 }
