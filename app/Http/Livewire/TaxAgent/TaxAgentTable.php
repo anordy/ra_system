@@ -2,10 +2,14 @@
 
 namespace App\Http\Livewire\TaxAgent;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Taxpayer;
 use App\Notifications\DatabaseNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -23,7 +27,7 @@ class TaxAgentTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-		return TaxAgent::where('is_verified', 0);
+		return TaxAgent::query();
 	}
 
 	public function configure(): void
@@ -43,22 +47,17 @@ class TaxAgentTable extends DataTableComponent
         return [
             Column::make("TIN No", "tin_no")
                 ->sortable(),
-            Column::make("Plot No.", "plot_no")
-                ->sortable(),
-            Column::make("Block", "block")
-                ->sortable(),
           Column::make("Town", "town")
 	        ->sortable(),
           Column::make("Region", "region")
 	        ->sortable(),
 	        Column::make("Created At", "created_at")
 	          ->sortable(),
+	        Column::make('Status', 'is_verified')
+          ->view('taxagents.includes.status'),
           Column::make('Action', 'id')
-	        ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'tax-agent.tax-agent-request-view',$value)"><i class="fa fa-eye"></i> </button>
-                    <button class="btn btn-success btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> </button>
-                HTML)
-	        ->html(true),
+	        ->view('taxagents.includes.actionReq')
+
         ];
     }
 
@@ -80,8 +79,27 @@ class TaxAgentTable extends DataTableComponent
 		]);
 	}
 
+	public function reject($id)
+	{
+		$this->alert('warning', 'Are you sure you want to approve this request ?', [
+		  'position' => 'center',
+		  'toast' => false,
+		  'showConfirmButton' => true,
+		  'confirmButtonText' => 'Reject',
+		  'onConfirmed' => 'confirmed',
+		  'showCancelButton' => true,
+		  'cancelButtonText' => 'Cancel',
+		  'timer' => null,
+		  'data' => [
+			'id' => $id
+		  ],
+
+		]);
+	}
+
 	public function toggleStatus($value)
 	{
+		DB::beginTransaction();
 		try {
 			$data = (object) $value['data'];
 			$agent = TaxAgent::find($data->id);
@@ -97,14 +115,50 @@ class TaxAgentTable extends DataTableComponent
 			  $hrefText = 'View'
 			));
 
+			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
+			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
+
+			DB::commit();
 			$this->flash('success', 'Request approved successfully', [], redirect()->back()->getTargetUrl());
 
 		} catch (Exception $e) {
+			DB::rollBack();
+			Log::error($e);
 			report($e);
-			$this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+			$this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
 		}
 	}
 
 
+	public function confirmed($value)
+	{
+		DB::beginTransaction();
+		try {
+			$data = (object) $value['data'];
+			$agent = TaxAgent::find($data->id);
+			$agent->is_verified = 2;
+			$agent->save();
+
+			$taxpayer = Taxpayer::find($agent->taxpayer_id);
+			$taxpayer->notify(new DatabaseNotification(
+			  $message = 'Tax agent rejected',
+			  $type = 'info',
+			  $messageLong = 'Your application has been rejected',
+			  $href = '/taxagent/apply',
+			  $hrefText = 'View'
+			));
+
+			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
+			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
+			DB::commit();
+			$this->flash('success', 'Request rejected successfully', [], redirect()->back()->getTargetUrl());
+
+		} catch (Exception $e) {
+			DB::rollBack();
+			Log::error($e);
+			report($e);
+			$this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+		}
+	}
 
 }
