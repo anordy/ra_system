@@ -13,9 +13,9 @@ trait WorkflowProcesssingTrait
     public $flow;
     public $subject;
 
-    public function registerWorkflow($modelName, $subject)
+    public function registerWorkflow($modelName, $modelId)
     {
-        $this->subject = $this->modelName::find($this->modelId);
+        $this->subject = $modelName::find($modelId);
         $workflow = Workflow::where('supports', $modelName)->first();
 
         $this->flow = [
@@ -30,11 +30,11 @@ trait WorkflowProcesssingTrait
         ];
     }
 
-    public function doTransition($transition, $status)
+    public function doTransition($transition, $context)
     {
         $registry = new WorkflowRegistry($this->flow, new WorkflowSubscriber());
         $workflow = $registry->get($this->subject);
-        $workflow->apply($this->subject, $transition);
+        $workflow->apply($this->subject, $transition, $context);
         $this->subject->save();
     }
 

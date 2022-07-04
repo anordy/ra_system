@@ -2,6 +2,8 @@
 
 namespace App\Services\Workflow\Events;
 
+use App\Models\Role;
+use App\Models\User;
 use App\Models\WorkflowTask;
 use App\Services\Workflow\Event\Event;
 use App\Services\Workflow\Event\GuardEvent;
@@ -21,6 +23,37 @@ class WorkflowSubscriber implements EventSubscriberInterface
     }
     public function guardEvent(GuardEvent $event)
     {
+        // $user = auth()->user();
+        // $marking = $event->getMarking()->getPlaces();
+        // $place = $marking[key($marking)];
+        // $owner = $place['owner'];
+        // $operator_type = $place['operator_type'];
+        // $operators = $place['operators'];
+        // $status = $place['status'];
+
+        // if ($status != 1) {
+        //     $event->setBlocked(true);
+        // }
+
+        // if ($owner == 'taxpayer') {
+        //     $event->setBlocked(true);
+        // }
+
+        // if ($operator_type == "role") {
+        //     $role = Role::find($user->role->id);
+        //     if ($role == null) {
+        //         $event->setBlocked(true);
+        //     }
+        //     if (!in_array($user->role->id, $operators)) {
+        //         $event->setBlocked(true);
+        //     }
+        // } elseif ($operator_type == 'user') {
+        //     if (!in_array($user->id, $operators)) {
+        //         $event->setBlocked(true);
+        //     }
+        // } else {
+        //     $event->setBlocked(true);
+        // }
     }
 
     public function leaveEvent(Event $event)
@@ -55,9 +88,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
         $marking = $event->getMarking();
         $places = $marking->getPlaces();
         $transition = $event->getTransition();
+        $context = $event->getContext();
 
         try {
-
             foreach ($places as $key => $place) {
                 $task =  new WorkflowTask([
                     'workflow_id' => 1,
@@ -68,7 +101,8 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'operators' => json_encode($place['operators']),
                     'approved_on' => Carbon::now()->toDateTimeString(),
                     'user_id' => $user->id,
-                    'user_type' => get_class($user)
+                    'user_type' => get_class($user),
+                    'remarks' => $context['comment']
                 ]);
 
                 DB::transaction(function () use ($task, $subject) {

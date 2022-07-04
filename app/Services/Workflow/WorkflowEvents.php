@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace App\Services\Workflow;
 
 use App\Services\Workflow\Event\AnnounceEvent;
@@ -19,10 +10,7 @@ use App\Services\Workflow\Event\GuardEvent;
 use App\Services\Workflow\Event\LeaveEvent;
 use App\Services\Workflow\Event\TransitionEvent;
 
-/**
- * To learn more about how workflow events work, check the documentation
- * entry at {@link https://symfony.com/doc/current/workflow/usage.html#using-events}.
- */
+
 final class WorkflowEvents
 {
     /**

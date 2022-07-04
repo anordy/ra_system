@@ -16,7 +16,7 @@ class ApprovalProcessing extends Component
     use WorkflowProcesssingTrait, LivewireAlert;
     public $modelId;
     public $modelName;
-    public $comment;
+    public $comments;
     public $isiic_i;
     public $isiic_ii;
     public $isiic_iii;
@@ -63,7 +63,7 @@ class ApprovalProcessing extends Component
     public function approve($transtion)
     {
         try {
-            $this->doTransition($transtion, 'approve');
+            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             dd($e);
         }
@@ -73,11 +73,10 @@ class ApprovalProcessing extends Component
     public function reject($transtion)
     {
         try {
-            $this->doTransition($transtion, 'reject');
+            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             dd($e);
         }
-
         $this->flash('success', 'Rejected successfully',[], redirect()->back()->getTargetUrl());
     }
 
