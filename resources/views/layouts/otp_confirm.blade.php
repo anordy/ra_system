@@ -5,7 +5,7 @@
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-md-12">
 
-                <div class="card rounded">
+                <div class="card rounded mb-2">
                     <div class="d-flex justify-content-center pb-2">
                         <img alt="image" class="rounded" width="160px" height="160px"
                             src="{{ asset('images/logo.png') }}" />
@@ -48,7 +48,7 @@
                                     <a href="#" class="text-decoration-none ms-3"> Resend Code</a>
                                 </div>
                                 <div class="mt-3">
-                                    <a href="#" class="text-decoration-none ms-3"> Login</a>
+                                    <a href="{{ route('login') }}" class="text-decoration-none ms-3"> Login</a>
                                 </div>
                                 <div class="mt-2"></div>
                             </div>

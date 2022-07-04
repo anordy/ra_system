@@ -13,10 +13,6 @@ class Business extends Model implements Auditable
 
     protected $guarded = [];
 
-    protected $casts = [
-        'date_of_commencing' => 'datetime'
-    ];
-
     public function taxpayer(){
         return $this->belongsTo(Taxpayer::class);
     }
