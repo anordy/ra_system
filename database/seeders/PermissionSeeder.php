@@ -16,6 +16,10 @@ class PermissionSeeder extends Seeder
     {
         $data = [
             ['name' => 'roles_add', 'sys_module_id' => 1],
+            ['name' => 'withholding_agents_add', 'sys_module_id' => 2],
+            ['name' => 'withholding_agents_edit', 'sys_module_id' => 2],
+            ['name' => 'withholding_agents_view', 'sys_module_id' => 2],
+            ['name' => 'withholding_agents_disable', 'sys_module_id' => 2],
         ];
         foreach ($data as $row) {
             Permission::updateOrCreate($row);
