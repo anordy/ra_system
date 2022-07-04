@@ -98,8 +98,7 @@ class WithholdingAgentRegistration extends Component
 
             $agent = WithholdingAgent::create($payload);
             if ($agent->sendSuccessfulRegistrationNotification()) {
-                $this->flash('success', 'Record added successfully');
-                return redirect()->to('/withholdingAgents/list');
+                return redirect()->to('/withholdingAgents/list')->with('success', "A notification for successful registration of a withholding agent for {$this->institution_name} has been sent to the responsible person.");
             }
          
         } catch (Exception $e) {

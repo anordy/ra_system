@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase text-center">Viewing tax agent details needed for approval</h5>
+                <h5 class="modal-title text-uppercase text-center">Tax agent details </h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                             class="fa fa-times-circle"></i></button>
             </div>
@@ -32,12 +32,15 @@
                                 <td>{{$agent->block}}</td>
                                 <td>{{$agent->town}}</td>
                                 <td>{{$agent->region}}</td>
-                                <td>{{$agent->ref_no}}</td>
+                                <td>{{$agent->reference_no}}</td>
                                 <td>
                                 @if($agent->is_verified == 0)
-                                    <p><span class="badge badge-danger">Not Verified</span></p>
+                                    <p><span class="badge badge-danger p-2">Pending</span></p>
+
+                                    @elseif($agent->is_verified == 2)
+                                        <p><span class="badge badge-danger p-2">Rejected</span></p>
                                 @else
-                                    <p>Verified</p>
+                                    <p><span class="badge badge-success p-2">Verified</span></p>
                                 @endif
                                 </td>
 

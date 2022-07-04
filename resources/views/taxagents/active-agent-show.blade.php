@@ -1,8 +1,12 @@
 @extends('layouts.master')
 
-@section('title', 'Tax Agent Registration Details')
+@section('title', 'Tax Agent ')
 
 @section('content')
+    <div class="d-flex justify-content-between">
+        <h6>Registration Details</h6>
+        <a class="btn btn-info" href="{{route('taxagents.active')}}">Back</a>
+    </div>
     <div class="card mt-3">
         <div class="card-body">
             <div class="row my-2">
@@ -35,6 +39,8 @@
                     @if($agent->is_verified == 1)
                         <p style="font-weight: 900; color: #319e0a; font-size: 85%">Approved</p>
 
+                    @elseif($agent->is_verified == 2)
+                        <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Rejected</p>
                     @else
                         <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Pending</p>
                     @endif

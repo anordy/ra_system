@@ -22,8 +22,8 @@ class CreateTaxAgentsTable extends Migration
 			$table->string('region');
 			$table->string('reference_no', '35');
 			$table->boolean('is_verified')->default(false);
+			$table->boolean('is_paid')->default(false);
 			$table->unsignedBigInteger('taxpayer_id');
-//			$table->foreign('taxpayer_id')->references('id')->on('taxpayers');
             $table->timestamps();
         });
     }
