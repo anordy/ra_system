@@ -9,6 +9,9 @@ class UserController extends Controller
 {
     public function index()
     {
+        if (!auth()->user()->can('roles_add')) {
+            \abort(503, 'You do not have permission');
+        }
         return view('users.index');
     }
 

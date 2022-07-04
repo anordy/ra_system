@@ -69,12 +69,7 @@ class WithholdingAgentsTable extends DataTableComponent
                 ->format(function($value, $row) { return Carbon::create($row->date_of_commencing)->toFormattedDateString(); })
                 ->sortable(),
             Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'withholding-agents.withholding-agent-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'withholding-agents.withholding-agent-view-modal',$value)"><i class="fa fa-eye"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
-                ->html(true),
+                ->view('withholding-agent.actions'),
         ];
     }
 
