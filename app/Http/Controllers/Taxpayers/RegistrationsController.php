@@ -7,6 +7,7 @@ use App\Events\SendSms;
 use App\Http\Controllers\Controller;
 use App\Models\KYC;
 use App\Models\Taxpayer;
+use App\Notifications\DatabaseNotification;
 use App\Traits\Taxpayer\KYCTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -21,6 +22,7 @@ class RegistrationsController extends Controller
 
     public function show($kycId){
         $kyc = KYC::findOrFail($kycId);
+    
         return view('taxpayers.registrations.show', compact('kyc'));
     }
 
@@ -47,6 +49,14 @@ class RegistrationsController extends Controller
         $data['password'] = Hash::make($password);
 
         $taxpayer = Taxpayer::create($data);
+
+        //notify the taxpayer
+        $taxpayer->notify(new DatabaseNotification( 
+            $subject = 'ZRB ENROLLMENT',
+            $message = 'Your have been enrolled as Taxpayer successfully',
+            $href = config('app.client_url').route('home',null,false),
+            $hrefText = 'view'
+        ));
 
         // Send email and password for OTP
         event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
