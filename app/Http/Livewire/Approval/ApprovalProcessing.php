@@ -66,9 +66,9 @@ class ApprovalProcessing extends Component
         if ($this->checkTransition('registration_officer_review')) {
             $this->subject->isic4_id = $this->isiic_iv;
         }
-        if($this->checkTransition('director_of_trai_review')){
+        if ($this->checkTransition('director_of_trai_review')) {
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
-            #TODO Generate Z_Number
+            $this->z_no = 'ZBR_' . rand(1, 1000000);
         }
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
