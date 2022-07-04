@@ -35,12 +35,12 @@ class SendTaxAgentApprovalSMS implements ShouldQueue
 	    $sms_controller = new SMSController;
 		if ($this->taxpayer->taxagent->is_verified== 1)
 		{
-			$message = "Your application as tax agent has been approved successfully now wait for the control number to pay for the service ";
+			$message = "Your application as tax agent has been approved successfully use this control number 99306474554 to pay for the service ";
 		}
 
 		else
 		{
-			$message = "Your application as tax agent has been approved rejected please apply again ";
+			$message = "Your application as tax agent has been rejected please apply again ";
 
 		}
 	    $source = config('modulesconfig.smsheader');
