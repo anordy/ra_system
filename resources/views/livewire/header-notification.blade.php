@@ -10,7 +10,7 @@
             @if($hasUnreadNotifications)
                 @foreach ($unreadNotifications as $row)
                 <button class="dropdown-item" type="button" style="white-space: normal;">
-                    <small style="">{{ $row->data['messageLong']}}</small> <br>
+                    <small style="">{{ $row->data['message']}}</small> <br>
                     <a class="btn btn-link p-0 m-0" href="{{ $row->data['href'] }}" wire:click="viewNotification({{ $row }})">
                         <small>{{$row->data['hrefText']}} </small> 
                     </a>
