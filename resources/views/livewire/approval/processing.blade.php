@@ -19,19 +19,18 @@
     </div>
     @if ($this->checkTransition('registration_officer_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Reject &
-                Return to Applicant</button>
-            <button type="button" class="btn btn-primary" wire:click="approve('registration_officer_review')">Approve &
-                Forward Registration Manager</button>
+            <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled Incorrect
+                return to Applicant</button>
+            <button type="button" class="btn btn-primary" wire:click="approve('registration_officer_review')">Approve & Forward</button>
         </div>
     @elseif ($this->checkTransition('registration_manager_review'))
         <div class="modal-footer p-2 m-0">
             <button type="button" class="btn btn-danger" wire:click="reject('registration_officer_review')">Reject</button>
-            <button type="button" class="btn btn-primary" wire:click="approve('registration_manager_review')">Approve & Forward to Director of TRAI</button>
+            <button type="button" class="btn btn-primary" wire:click="approve('registration_manager_review')">Approve & Forward</button>
         </div>
     @elseif ($this->checkTransition('director_of_trai_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('registration_officer_review')">Reject</button>
+            <button type="button" class="btn btn-danger" wire:click="reject('registration_manager_review')">Reject & Back To</button>
             <button type="button" class="btn btn-primary" wire:click="approve('director_of_trai_review')">Approve & Complete</button>
         </div>
     @endif

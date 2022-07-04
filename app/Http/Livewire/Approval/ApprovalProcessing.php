@@ -7,6 +7,7 @@ use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
 use Exception;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -62,12 +63,19 @@ class ApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+        if ($this->checkTransition('registration_officer_review')) {
+            $this->subject->isic4_id = $this->isiic_iv;
+        }
+        if($this->checkTransition('director_of_trai_review')){
+            $this->subject->verified_at = Carbon::now()->toDateTimeString();
+            #TODO Generate Z_Number
+        }
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             dd($e);
         }
-        $this->flash('success', 'Approved successfully',[], redirect()->back()->getTargetUrl());
+        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function reject($transtion)
@@ -77,7 +85,7 @@ class ApprovalProcessing extends Component
         } catch (Exception $e) {
             dd($e);
         }
-        $this->flash('success', 'Rejected successfully',[], redirect()->back()->getTargetUrl());
+        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 

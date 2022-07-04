@@ -1,12 +1,4 @@
-<div class="col-md-6 mb-3">
-    <div class="form-group">
-        <label for="exampleFormControlTextarea1">Is application field in correctly</label>
-        <select class="form-control" id="exampleFormControlSelect1">
-            <option>Yes</option>
-            <option>No</option>
-        </select>
-    </div>
-</div>
+
 <div class="col-md-6 ">
     <div class="form-group">
         <label for="exampleFormControlTextarea1">Select ISIIC I</label>

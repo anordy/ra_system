@@ -23,37 +23,37 @@ class WorkflowSubscriber implements EventSubscriberInterface
     }
     public function guardEvent(GuardEvent $event)
     {
-        // $user = auth()->user();
-        // $marking = $event->getMarking()->getPlaces();
-        // $place = $marking[key($marking)];
-        // $owner = $place['owner'];
-        // $operator_type = $place['operator_type'];
-        // $operators = $place['operators'];
-        // $status = $place['status'];
+        $user = auth()->user();
+        $marking = $event->getMarking()->getPlaces();
+        $place = $marking[key($marking)];
+        $owner = $place['owner'];
+        $operator_type = $place['operator_type'];
+        $operators = $place['operators'];
+        $status = $place['status'];
 
-        // if ($status != 1) {
-        //     $event->setBlocked(true);
-        // }
+        if ($status != 1) {
+            $event->setBlocked(true);
+        }
 
-        // if ($owner == 'taxpayer') {
-        //     $event->setBlocked(true);
-        // }
+        if ($owner == 'taxpayer') {
+            $event->setBlocked(true);
+        }
 
-        // if ($operator_type == "role") {
-        //     $role = Role::find($user->role->id);
-        //     if ($role == null) {
-        //         $event->setBlocked(true);
-        //     }
-        //     if (!in_array($user->role->id, $operators)) {
-        //         $event->setBlocked(true);
-        //     }
-        // } elseif ($operator_type == 'user') {
-        //     if (!in_array($user->id, $operators)) {
-        //         $event->setBlocked(true);
-        //     }
-        // } else {
-        //     $event->setBlocked(true);
-        // }
+        if ($operator_type == "role") {
+            $role = Role::find($user->role->id);
+            if ($role == null) {
+                $event->setBlocked(true);
+            }
+            if (!in_array($user->role->id, $operators)) {
+                $event->setBlocked(true);
+            }
+        } elseif ($operator_type == 'user') {
+            if (!in_array($user->id, $operators)) {
+                $event->setBlocked(true);
+            }
+        } else {
+            $event->setBlocked(true);
+        }
     }
 
     public function leaveEvent(Event $event)
@@ -102,6 +102,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'approved_on' => Carbon::now()->toDateTimeString(),
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
+                    'status' => 'running',
                     'remarks' => $context['comment']
                 ]);
 

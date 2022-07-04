@@ -17,6 +17,7 @@ class RegistrationsApprovalTable extends DataTableComponent
     {
         return Business::query()
             ->with('pinstances')
+            ->where('verified_at', null)
             ->orderBy('created_at', 'desc');
     }
 
