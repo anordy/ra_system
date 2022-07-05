@@ -21,7 +21,7 @@ class AuditLogTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['auditable_type', 'tags', 'new_values']);
+        $this->setAdditionalSelects(['auditable_type', 'tags', 'new_values', 'auditable_id']);
         $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
                 return [
@@ -38,23 +38,13 @@ class AuditLogTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('User', 'user_id')
+            Column::make('Log', 'user_id')
                 ->sortable()
                 ->searchable()
-                ->format(fn($value, $row, Column $column) => $row->user->fname . ' ' . $row->user->lname),
+                ->format(fn($value, $row, Column $column) => $row->user->fname . ' ' . $row->user->lname . ' ' .$row->event . ' '. preg_split('[\\\]', $row->auditable_type)[2] ." ".$row->auditable_type::find($row->auditable_id)->name ?? ''),
             Column::make('Action', 'event')
                 ->sortable()
                 ->searchable(),
-            Column::make('Operation', 'auditable_type')
-                ->sortable()
-                ->searchable()
-                ->format(function($value, $row) {
-                    if ($row->tags != null) {
-                        return $row->tags . ' ' .preg_split('[\\\]', $row->auditable_type)[2] . ' '. $row->new_values; 
-                    } else {
-                        return $row->event . ' ' .preg_split('[\\\]', $row->auditable_type)[2]; 
-                    }
-                }),
             Column::make('IP Address', 'ip_address')
                 ->sortable()
                 ->searchable(),

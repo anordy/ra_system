@@ -20,14 +20,15 @@ trait AuditTrait
      * 
      * @return array
      */
-    public function triggerAudit($modal_class, $event, $tags, $auditable_id, $user_name)
+    public function triggerAudit($modal_class, $event, $tag, $auditable_id, $old_values, $new_values)
     {
         $data = [
             'auditable_id' => $auditable_id,
             'auditable_type' => $modal_class,
             'event' => $event,
-            'tags' => $tags,
-            'new_values' => $user_name,
+            'tags' => $tag,
+            'old_values' => json_encode($old_values),
+            'new_values' => json_encode($new_values),
             'url'        => request()->fullUrl(),
             'ip_address' => request()->getClientIp(),
             'user_agent' => request()->userAgent(),
