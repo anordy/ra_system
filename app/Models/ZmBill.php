@@ -22,4 +22,10 @@ class ZmBill extends Model
     public function paid_amount(){
         return $this->zm_bill_payments()->sum('paid_amount');
     }
+
+	public function user()
+	{
+		return $this->morphTo();
+	}
+
 }

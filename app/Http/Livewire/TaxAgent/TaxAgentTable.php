@@ -4,8 +4,12 @@ namespace App\Http\Livewire\TaxAgent;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Models\TaPaymentConfiguration;
 use App\Models\Taxpayer;
+use App\Models\User;
+use App\Models\ZmBill;
 use App\Notifications\DatabaseNotification;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +18,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\TaxAgent;
+use App\Payment\SaveBill;
 
 class TaxAgentTable extends DataTableComponent
 {
@@ -115,6 +120,26 @@ class TaxAgentTable extends DataTableComponent
 			  $hrefText = 'View'
 			));
 
+
+			$fee = TaPaymentConfiguration::where('category', 'first fee')->first();
+			$amount = $fee->amount;
+			$date = Carbon::now()->addMonth();
+
+//			SaveBill::savingBill($agent->taxpayer_id, $amount, $currency, $rate, $eq_amount, $control_no, $date, $name, $phone, $email, $description, $payment_option, $status, $zan_status);
+			$bill = new ZmBill();
+			$bill->amount = $amount;
+			$bill->currency = 'TZS';
+			$bill->exchange_rate = 0;
+			$bill->equivalent_amount = 0;
+			$bill->expire_on = $date;
+			$bill->payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+			$bill->payer_phone_number = $taxpayer->mobile;
+			$bill->payer_email = $taxpayer->email;
+			$bill->description = 'popww n';
+			$bill->payment_option = 1;
+			$bill->user_type = get_class($user);
+			$bill->user_id = $user->id;
+
 			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
 			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
 
@@ -138,6 +163,7 @@ class TaxAgentTable extends DataTableComponent
 			$agent = TaxAgent::find($data->id);
 			$agent->is_verified = 2;
 			$agent->save();
+
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
