@@ -57,7 +57,7 @@ class ZmCore
         $createdby_type = null,
         $bill_items
     ): ZmBill {
-        DB::transaction();
+        DB::beginTransaction();
         try {
             $bill_amount = 0;
             foreach ($bill_items as $item) {
@@ -71,7 +71,6 @@ class ZmCore
                 }
             }
             $equivalent_amount = $bill_amount * $exchange_rate;
-
 
             $zm_bill = new ZmBill([
                 'amount' => $bill_amount,

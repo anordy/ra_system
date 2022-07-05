@@ -16,7 +16,7 @@ class ZmBill extends Model
     }
 
     public function bill_payments(){
-        return $this->hasMany(ZmBillPayment::class, 'zm_bill_id');
+        return $this->hasMany(ZmPayment::class, 'zm_bill_id');
     }
 
     public function paid_amount(){
