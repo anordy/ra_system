@@ -51,38 +51,44 @@ class NotificationsTable extends DataTableComponent
 
         return [
             Column::make('Time', 'created_at')
-                ->sortable()
-                ->searchable()
-                ->format(
-                    fn ($value, $row, Column $column) => $row->created_at->diffForHumans()
-                ),
-            Column::make('Message', 'data')
-                ->sortable()
-                ->searchable()
-                ->format(
-                    fn ($value, $row, Column $column) => $row['data']->messageLong
-                ),
-            Column::make('Status', 'read_at')
-                ->format(function ($value, $row) {
-                    if (isset($value)) {
-                        return <<< HTML
-                        <span class="badge badge-success">Read</span>
-                    HTML;
-                    } else {
-                        return <<< HTML
-                        <span class="badge badge-warning">Unread</span>
-                    HTML;
-                    }
-                })
-                ->html(true),
-            Column::make('Action', 'id')
-                ->format(
-                    fn ($value) => <<< HTML
-                <button class="btn btn-info btn-link btn-sm" title="" wire:click="read($value)"><i class="fa fa-eye"></i> </button>
-                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-            HTML
-                )
-                ->html(true),
+            ->sortable()
+            ->searchable()
+            ->format(
+                fn ($value, $row, Column $column) => $row->created_at->diffForHumans()
+            ),
+        Column::make('Subject', 'data')
+        ->sortable()
+        ->searchable()
+        ->format(
+            fn ($value, $row, Column $column) => $row['data']->subject
+        ),
+        Column::make('Message', 'data')
+            ->sortable()
+            ->searchable()
+            ->format(
+                fn ($value, $row, Column $column) => $row['data']->message
+            ),
+        Column::make('Status', 'read_at')
+            ->format(function ($value, $row) {
+                if (isset($value)) {
+                    return <<< HTML
+                    <span class="badge badge-success">Read</span>
+                HTML;
+                } else {
+                    return <<< HTML
+                    <span class="badge badge-warning">Unread</span>
+                HTML;
+                }
+            })
+            ->html(true),
+        Column::make('Action', 'id')
+            ->format(
+                fn ($value) => <<< HTML
+            <button class="btn btn-info btn-link btn-sm" title="" wire:click="read($value)"><i class="fa fa-eye"></i> </button>
+            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+        HTML
+            )
+            ->html(true),
         ];
     }
 

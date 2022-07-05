@@ -16,6 +16,7 @@ class SysModuleSeeder extends Seeder
     {
         $data = [
             ['name' => 'Configurations'],
+            ['name' => 'WithholdingAgents'],
         ];
         foreach ($data as $row) {
             SysModule::updateOrCreate($row);

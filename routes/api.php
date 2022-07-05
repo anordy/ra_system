@@ -11,3 +11,9 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+use App\Http\Controllers\v1\ZanMalipoController;
+use Illuminate\Support\Facades\Route;
+
+Route::post('gepg/callback', [ZanMalipoController::class, 'controlNumberCallback']);
+Route::post('gepg/payment', [ZanMalipoController::class, 'paymentCallback']);

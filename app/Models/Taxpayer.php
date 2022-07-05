@@ -40,4 +40,8 @@ class Taxpayer extends Model implements Auditable
         return $this->hasOne(TaxAgent::class);
     }
     
+
+	public function bill(){
+		return $this->morphMany(ZmBill::class, 'user');
+	}
 }

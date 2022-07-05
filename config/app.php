@@ -56,6 +56,8 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'client_url' => env('CLIENT_APP_URL','http://localhost:8001'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -177,6 +179,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\PermissionServiceProvider::class
 
 
     ],
