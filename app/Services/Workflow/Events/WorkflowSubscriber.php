@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Authorization\ExpressionLanguage;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class WorkflowSubscriber implements EventSubscriberInterface
 {
@@ -94,6 +94,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             foreach ($places as $key => $place) {
                 $task =  new WorkflowTask([
                     'workflow_id' => 1,
+                    'name' => $transition->getName(),
                     'from_place' => $transition->getFroms()[0],
                     'to_place' => $key,
                     'owner' => $place['owner'],

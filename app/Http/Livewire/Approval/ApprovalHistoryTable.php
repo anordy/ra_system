@@ -45,6 +45,7 @@ class ApprovalHistoryTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('Name', 'name'),
             Column::make('From', 'from_place'),
             Column::make('To', 'to_place'),
             Column::make('Comment', 'remarks'),

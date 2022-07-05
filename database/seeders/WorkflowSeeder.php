@@ -54,7 +54,6 @@ class WorkflowSeeder extends Seeder
                 'operators' => []
             ],
         ];
-
         $transitions = [
             'application_submitted' => [
                 'from' => 'apply',
@@ -81,9 +80,19 @@ class WorkflowSeeder extends Seeder
                 'to'   => 'director_of_trai',
                 'condition' => '',
             ],
+            'registration_manager_reject' => [
+                'from' => 'registration_manager',
+                'to'   => 'registration_officer',
+                'condition' => '',
+            ],
             'director_of_trai_review' => [
                 'from' => 'director_of_trai',
                 'to'   => 'completed',
+                'condition' => '',
+            ],
+            'director_of_trai_reject' => [
+                'from' => 'director_of_trai',
+                'to'   => 'registration_manager',
                 'condition' => '',
             ]
         ];

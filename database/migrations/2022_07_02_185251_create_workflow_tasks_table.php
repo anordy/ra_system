@@ -19,6 +19,7 @@ class CreateWorkflowTasksTable extends Migration
             $table->string('pinstance_type');
             $table->unsignedBigInteger('pinstance_id');
             $table->unsignedBigInteger('workflow_id');
+            $table->string('name');
             $table->string('from_place');
             $table->string('to_place');
             $table->enum('owner', ['staff', 'system', 'taxpayer']);

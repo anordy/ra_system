@@ -25,12 +25,12 @@
         </div>
     @elseif ($this->checkTransition('registration_manager_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('registration_officer_review')">Reject</button>
+            <button type="button" class="btn btn-danger" wire:click="reject('registration_manager_reject')">Reject & Return</button>
             <button type="button" class="btn btn-primary" wire:click="approve('registration_manager_review')">Approve & Forward</button>
         </div>
     @elseif ($this->checkTransition('director_of_trai_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('registration_manager_review')">Reject & Back To</button>
+            <button type="button" class="btn btn-danger" wire:click="reject('director_of_trai_reject')">Reject & Return</button>
             <button type="button" class="btn btn-primary" wire:click="approve('director_of_trai_review')">Approve & Complete</button>
         </div>
     @endif
