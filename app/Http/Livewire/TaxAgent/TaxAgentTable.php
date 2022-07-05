@@ -9,6 +9,7 @@ use App\Models\Taxpayer;
 use App\Models\User;
 use App\Models\ZmBill;
 use App\Notifications\DatabaseNotification;
+use App\Services\ZanMalipo\ZmCore;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,6 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\TaxAgent;
-use App\Payment\SaveBill;
 
 class TaxAgentTable extends DataTableComponent
 {
@@ -109,7 +109,7 @@ class TaxAgentTable extends DataTableComponent
 			$data = (object) $value['data'];
 			$agent = TaxAgent::find($data->id);
 			$agent->is_verified = 1;
-			$agent->save();
+//			$agent->save();
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
@@ -120,25 +120,49 @@ class TaxAgentTable extends DataTableComponent
 			  $hrefText = 'View'
 			));
 
-
 			$fee = TaPaymentConfiguration::where('category', 'first fee')->first();
 			$amount = $fee->amount;
-			$date = Carbon::now()->addMonth();
+			$expire_date = Carbon::now()->addMonth()->toDateTimeString();
+			$billitems = [
+			  [
+			    'billable_id' => $taxpayer->id,
+			    'billable_type' => get_class($taxpayer),
+			    'fee_id' => $fee->id,
+			    'fee_type' => get_class($fee),
+			    'use_item_ref_on_pay' => 'N',
+			    'amount' => $amount,
+			    'currency' => 'TZS',
+			    'gfs_code' => 'ZCSS'
+			  ]
+			];
+			$payer_type = get_class($taxpayer);
+			$payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+			$payer_email = $taxpayer->email;
+			$payer_phone = $taxpayer->mobile;
+			$description = 'First fee payment for taxpayer';
+			$payment_option = ZmCore::PAYMENT_OPTION_FULL;
+			$currency = 'TZS';
+			$createdby_type = get_class(User::find(Auth::id()));
+			$exchange_rate = 0;
+			$createdby_id = Auth::id();
+			$payer_id = $taxpayer->id;
 
-//			SaveBill::savingBill($agent->taxpayer_id, $amount, $currency, $rate, $eq_amount, $control_no, $date, $name, $phone, $email, $description, $payment_option, $status, $zan_status);
-			$bill = new ZmBill();
-			$bill->amount = $amount;
-			$bill->currency = 'TZS';
-			$bill->exchange_rate = 0;
-			$bill->equivalent_amount = 0;
-			$bill->expire_on = $date;
-			$bill->payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-			$bill->payer_phone_number = $taxpayer->mobile;
-			$bill->payer_email = $taxpayer->email;
-			$bill->description = 'popww n';
-			$bill->payment_option = 1;
-			$bill->user_type = get_class($user);
-			$bill->user_id = $user->id;
+			try {
+				$zmBill = ZmCore::createBill($payer_id, $payer_type,$payer_name, $payer_email, $payer_phone, $expire_date,
+				  $description, $payment_option, $currency,
+				  $exchange_rate, $createdby_id, $createdby_type, $billitems);
+
+				ZmCore::sendBill($zmBill->id);
+				$this->alert('success', 'saved successfully');
+
+			}
+
+			catch (\Throwable $exception)
+			{
+				Log::error($exception);
+				$this->alert('error', 'something went wrong');
+			}
+
 
 			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
 			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
