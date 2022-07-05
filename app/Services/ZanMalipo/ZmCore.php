@@ -6,6 +6,7 @@ namespace App\Services\ZanMalipo;
 use App\Models\ZmBill;
 use App\Models\ZmBillItem;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\ArrayToXml\ArrayToXml;
@@ -18,93 +19,102 @@ class ZmCore
     const PAYMENT_OPTION_EXACT = 3;
 
 
-    public static function getBill($bill_id)
+    public static function getBill($billId)
     {
-        return ZmBill::query()->find($bill_id);
-    }
-    /**
-     * @throws \DOMException
-     * @throws \Exception
-     */
-    public static function createAndSendBill(
-        $payer_id,
-        $payer_name,
-        $payer_email,
-        $phone_number,
-        $expire_date,
-        $bill_desc,
-        $bill_items,
-        $payment_option,
-        $currency = 'TZS',
-        $generated_by = 'ZPC',
-        $approved_by = 'ZPC'
-    ): ZmResponse {
-        $zm_bill = self::createBill($payer_id, $payer_name, $payer_email, $phone_number, $expire_date, $bill_desc, $bill_items, $payment_option, $currency);
-
-        return  self::sendBill($zm_bill, $generated_by, $approved_by);
+        return ZmBill::query()->find($billId);
     }
 
     /**
      *
      * Create bill (without posting to ZM)
-     * @param $expire_date
      * @param $payer_id
+     * @param $payer_type
      * @param $payer_name
-     * @param $phone_number
      * @param $payer_email
-     * @param $bill_desc
+     * @param $payer_phone_number
+     * @param $expire_date
+     * @param $payment_description
+     * @param $payment_option
+     * @param $currency
+     * @param $exchange_rate
+     * @param $createdby_id
+     * @param $createdby_type
      * @param $bill_items
      * @return array
      */
     public static function createBill(
         $payer_id,
+        $payer_type,
         $payer_name,
         $payer_email,
-        $phone_number,
+        $payer_phone_number,
         $expire_date,
-        $bill_desc,
-        $bill_items,
+        $payment_description,
         $payment_option,
-        $currency = 'TZS'
+        $currency = 'TZS',
+        $exchange_rate,
+        $createdby_id = null,
+        $createdby_type = null,
+        $bill_items
     ): ZmBill {
-        $bill_amount = 0;
-        foreach ($bill_items as $item) {
-            if (!isset($item['item_amount']) || !isset($item['gfs_code'])) {
-                throw new \Exception('Bill item must contain item_amount and gfs_code');
+        DB::transaction();
+        try {
+            $bill_amount = 0;
+            foreach ($bill_items as $item) {
+                if (!isset($item['amount']) || !isset($item['gfs_code'])) {
+                    throw new \Exception('Bill item must contain item_amount and gfs_code');
+                }
+                if ($item['currency'] != 'TZS') {
+                    $bill_amount = $exchange_rate * $item['amount'];
+                } else {
+                    $bill_amount += $item['amount'];
+                }
             }
-            $bill_amount += $item['item_amount'];
-        }
+            $equivalent_amount = $bill_amount * $exchange_rate;
 
-        $zm_bill = new ZmBill([
-            'bill_amount' => $bill_amount,
-            'misc_amount' => 0,
-            'equivalent_amount' => $bill_amount,
-            'expire_date' => $expire_date,
-            'payer_id' => $payer_id,
-            'payer_name' => $payer_name,
-            'payer_phone_number' => $phone_number,
-            'payer_email' => $payer_email,
-            'currency' => $currency,
-            'description' => $bill_desc,
-            'payment_option' => $payment_option,
-            'status' => 'PENDING',
-            'bill_gen_date' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
-        $zm_bill->save();
 
-        foreach ($bill_items as $item) {
-            $zm_item = new ZmBillItem([
-                'bill_id' => $zm_bill->id,
-                'use_item_ref_on_pay' => 'N',
-                'item_amount' => $item['item_amount'],
-                'item_eqv_amount' => $item['item_amount'],
-                'item_misc_amount' => '0',
-                'gfs_code' => $item['gfs_code']
+            $zm_bill = new ZmBill([
+                'amount' => $bill_amount,
+                'exchange_rate' => $exchange_rate,
+                'equivalent_amount' => $equivalent_amount,
+                'expire_date' => $expire_date,
+                'payer_id' => $payer_id,
+                'payer_type' => $payer_type,
+                'payer_name' => $payer_name,
+                'payer_phone_number' => $payer_phone_number,
+                'payer_email' => $payer_email,
+                'currency' => $currency,
+                'description' => $payment_description,
+                'payment_option' => $payment_option,
+                'status' => 'pending',
+                'createdby_id' => $createdby_id,
+                'createdby_type' => $createdby_type,
             ]);
-            $zm_item->save();
+            $zm_bill->save();
+
+            foreach ($bill_items as $item) {
+                $zm_item = new ZmBillItem([
+                    'zm_bill_id' => $zm_bill->id,
+                    'billable_id' => $item['billable_id'],
+                    'billable_type' => $item['billable_type'],
+                    'fee_id' => $item['fee_id'],
+                    'fee_type' => $item['fee_type'],
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $item['amount'],
+                    'currency' => $item['currency'],
+                    'exchange_rate' => $exchange_rate,
+                    'equivalent_amount' => $exchange_rate * $item['amount'],
+                    'gfs_code' => $item['gfs_code']
+                ]);
+                $zm_item->save();
+            }
+            DB::commit();
+            return $zm_bill;
+        } catch (Exception $e) {
+            DB::rollBack();
+            report($e);
+            throw new Exception($e);
         }
-        return $zm_bill;
     }
 
 
@@ -115,7 +125,7 @@ class ZmCore
      * @return ZmResponse
      * @throws \DOMException
      */
-    public static function sendBill($bill, $generated_by = 'ZPC', $approved_by = 'ZPC'): ZmResponse
+    public static function sendBill($bill, $generated_by = 'ZRB', $approved_by = 'ZRB'): ZmResponse
     {
         if (is_numeric($bill)) {
             $zm_bill = ZmBill::query()->find($bill);
@@ -133,24 +143,23 @@ class ZmCore
 
         $xml_trx_info = $xml->createElement("BillTrxInf");
 
-        $payer = DB::select('CALL sp_get_customer_service_application(?)', [$zm_bill->customer_service_applications_id])[0];
         $xml->addChildrenToNode([
             'BillId' => $zm_bill->id,
             'SubSpCode' => config('modulesconfig.zm_subspcode'),
             'SpSysId' =>  config('modulesconfig.zm_spsysid'),
-            'BillAmt' => $zm_bill->amount_tzs,
+            'BillAmt' => $zm_bill->amount,
             'MiscAmt' => 0,
-            'BillExprDt' => Carbon::createFromFormat('Y-m-d H:i:s', $zm_bill->expiring_datetime)->format('Y-m-d\TH:i:s'),
-            'PyrId' => $payer->id,
-            'PyrName' => $payer->payer_full_name,
+            'BillExprDt' => Carbon::createFromFormat('Y-m-d H:i:s', $zm_bill->expire_date)->format('Y-m-d\TH:i:s'),
+            'PyrId' => $zm_bill->payer_id,
+            'PyrName' => $zm_bill->payer_name,
             'BillDesc' => $zm_bill->description,
             'BillGenDt' => Carbon::now()->format('Y-m-d\TH:i:s'),
             'BillGenBy' => $generated_by,
             'BillApprBy' => $approved_by,
-            'PyrCellNum' => self::formatPhone($payer->payer_phone_number),
-            'PyrEmail' => $payer->payer_email_address,
-            'Ccy' => 'TZS',
-            'BillEqvAmt' => $zm_bill->amount_tzs,
+            'PyrCellNum' => self::formatPhone($zm_bill->payer_phone_number),
+            'PyrEmail' => $zm_bill->payer_email,
+            'Ccy' => $zm_bill->currency,
+            'BillEqvAmt' => $zm_bill->amount,
             'RemFlag' => 'true',
             'BillPayOpt' => $zm_bill->payment_option,
         ], $xml_trx_info);
@@ -165,10 +174,10 @@ class ZmCore
             $bill_item = [
                 'BillItemRef' => $zm_item->id,
                 'UseItemRefOnPay' => 'N',
-                'BillItemAmt' => $zm_item->item_amount,
-                'BillItemEqvAmt' => $zm_item->item_amount,
+                'BillItemAmt' => $zm_item->amount,
+                'BillItemEqvAmt' => $zm_item->amount,
                 'BillItemMiscAmt' => 0,
-                'GfsCode' => $zm_item->service_code
+                'GfsCode' => $zm_item->gfs_code
             ];
 
             $xml_bill = $xml->createElement('BillItem');
@@ -186,9 +195,9 @@ class ZmCore
         $zm_bill->trx_sts_code = $status_code;
 
         if ($status_code == 7101) {
-            $zm_bill->zm_posting_status = 'PENDING';
+            $zm_bill->zm_status = 'pending';
         } else {
-            $zm_bill->zm_posting_status = 'FAILED';
+            $zm_bill->zm_status = 'failed';
         }
         $zm_bill->save();
 
@@ -270,7 +279,7 @@ class ZmCore
         $status_code = self::getStatusCode($response, 'gepgBillCanclResp', 'BillCanclTrxDt', 'TrxStsCode');
         if ($status_code == ZmResponse::ZM_BILL_CANCELLED) {
             $bill = ZmBill::query()->find($bill_id);
-            if (!$bill->update(['bill_status_code' => 'CN001', 'cancellation_reason' => $reason])) {
+            if (!$bill->update(['status' => 'cancelled', 'cancellation_reason' => $reason])) {
                 $status_code = ZmResponse::FAILED_DB_UPDATE_ERROR;
             } else {
                 $status_code = ZmResponse::SUCCESS;
