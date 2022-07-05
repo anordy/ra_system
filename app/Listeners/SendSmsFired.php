@@ -50,7 +50,6 @@ class SendSmsFired
 		else if ($event->service == 'tax-agent-registration-approval')
 		{
 			$taxpayer = Taxpayer::find($event->tokenId);
-			$taxagent = $taxpayer->taxagent->is_verified;
 			SendTaxAgentApprovalSMS::dispatch($taxpayer);
 		}
     }

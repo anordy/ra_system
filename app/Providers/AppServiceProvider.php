@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use Livewire\Livewire;
 use App\Services\LivewireModal\Modals;
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+
     }
 
     /**

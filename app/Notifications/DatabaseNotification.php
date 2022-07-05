@@ -10,25 +10,22 @@ use Illuminate\Notifications\Notification;
 class DatabaseNotification extends Notification
 {
     use Queueable;
-
-    public $type; // info / success / warning / error
-    public $message;
-    public $messageLong; // optional
-    public $href; // optional
-    public $hrefText; // optional
+    public $subject; //subject of the message
+    public $message; //message
+    public $href;    // url
+    public $hrefText; //url text eg. read more, view 
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($message,$type = 'info',$messageLong = null,$href = null,$hrefText = null)
+    public function __construct($subject=null,$message,$href,$hrefText)
     {
-        $this->message = $message;
-        $this->type = $type;
-        $this->messageLong = $messageLong;
-        $this->href = $href;
-        $this->hrefText = $hrefText;
+        $this->subject = $subject;    //the subject
+        $this->message = $message;    //your notification message
+        $this->href = $href;          //url
+        $this->hrefText = $hrefText;  //url text eg. read more, view 
     }
 
     /**
@@ -65,10 +62,9 @@ class DatabaseNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->message,
-            'type' => $this->type,
-            'messageLong' => $this->messageLong,
-            'href' => $this->href,
+            'subject'  => $this->subject,
+            'message'  => $this->message,
+            'href'     => $this->href,
             'hrefText' => $this->hrefText,
         ];
     }

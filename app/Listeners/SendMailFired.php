@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\SendTaxAgentApprovalEmail;
 use App\Jobs\Taxpayer\SendRegistrationMail;
 use App\Models\Taxpayer;
 use App\Models\UserOtp;
@@ -41,6 +42,16 @@ class SendMailFired
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
             SendRegistrationMail::dispatch($taxpayer, $event->extra['code']);
+        }
+
+        else if ($event->service == 'tax-agent-registration-approval')
+        {
+
+	        $taxpayer = Taxpayer::find($event->tokenId);
+			$fullname = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+			$email = $taxpayer->email;
+	        $status = $taxpayer->taxagent->is_verified;
+	        SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status);
         }
     }
 }

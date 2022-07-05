@@ -55,26 +55,34 @@
                 </li>
             </ul>
         </li>
+        @can('withholding_agents_view')
         <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
             <a href="#withholdingAgentsMenu" data-toggle="collapse" aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}" class="dropdown-toggle">Withholding Agents</a>
             <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}" id="withholdingAgentsMenu">
+                @can('withholding_agents_add')
                 <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
                     <a href="{{ route('withholdingAgents.register') }}">Registration</a>
                 </li>
+                @endcan
                 <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
                     <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
                 </li>
             </ul>
         </li>
+        @endcan
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
             <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
+                @can('roles_add')
                 <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
                     <a href="{{ route('settings.users.index') }}">Users</a>
                 </li>
+                @endcan
+                @can('roles_add')
                 <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
                     <a href="{{ route('settings.roles.index') }}">Roles</a>
                 </li>
+                @endcan
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.country.index') }}">Countries</a>
                 </li>
