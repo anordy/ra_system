@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Jobs\SendSMS;
-use App\Models\ZmBillPayment;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
@@ -43,18 +42,14 @@ class ZanMalipoController extends Controller
                 return $this->ackResp('gepgBillSubRespAck', '7303');
             }
 
-            $trx_status_code =  ZmCore::extractStatusCode($xml['gepgBillSubResp']['BillTrxInf']['TrxStsCode']);
+            $zan_trx_sts_code =  ZmCore::extractStatusCode($xml['gepgBillSubResp']['BillTrxInf']['TrxStsCode']);
             $bill = ZmCore::getBill($xml['gepgBillSubResp']['BillTrxInf']['BillId']);
-            if ($trx_status_code == 7101 || $trx_status_code == 7226) {
+            if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
-                $payers = DB::select('CALL sp_get_customer_service_application(?)', [$bill->customer_service_applications_id]);
-
-                if (count($payers) > 0) {
-                    $message = "Your control number for ZPC is {$bill->control_number}. Please pay TZS {$bill->amount_tzs} before {$bill->expiring_datetime}.";
-                    SendSMS::dispatch(ZmCore::formatPhone($payers[0]->payer_phone_number), $message);
-                }
+                    $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
+                    SendSMS::dispatch(ZmCore::formatPhone($bill->payer_phone_number), $message);
             } else {
-                $bill->update(['trx_sts_code' => $trx_status_code]);
+                $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
             }
 
 
@@ -65,37 +60,7 @@ class ZanMalipoController extends Controller
         }
     }
 
-    private function sendToOther($content, $url)
-    {
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => '',
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $content,
-            CURLOPT_HTTPHEADER => array(
-                "Content-Type: application/xml",
-                "Accept: application/xml"
-            ),
-        ));
-        try {
-            $response = curl_exec($curl);
-            if ($curl) $err = curl_error($curl);
-            curl_close($curl);
-            Log::info("ARDHI ERR: ========== " . $err);
-            Log::info("ARDHI RES: ========== " . $response);
-        } catch (\Throwable $ex) {
-            Log::info("ARDHI EXC: ========== " . $ex->getMessage() . "\n");
-            if ($curl) {
-                $err = curl_error($curl);
-                curl_close($curl);
-                Log::info("Curl ARDHI EXC: ========== " . $err . "\n");
-            }
-        }
-    }
+
 
     function paymentCallback(Request $request)
     {
@@ -115,7 +80,7 @@ class ZanMalipoController extends Controller
 
             $bill = ZmCore::getBill($tx_info['BillId']);
             ZmPayment::query()->insert([
-                'bill_id' => $tx_info['BillId'],
+                'zm_bill_id' => $tx_info['BillId'],
                 'trx_id' => $tx_info['TrxId'],
                 'sp_code' => $tx_info['SpCode'],
                 'pay_ref_id' => $tx_info['PayRefId'],
