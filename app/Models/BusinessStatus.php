@@ -10,6 +10,11 @@ class BusinessStatus extends Model
 {
     use HasFactory;
 
+    public const DRAFT = 'draft';
+    public const PENDING = 'pending';
+    public const APPROVED = 'approved';
+    public const CORRECTION = 'correction';
+
     protected $guarded = [];
 
     public function business() {
