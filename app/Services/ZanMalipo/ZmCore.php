@@ -192,12 +192,12 @@ class ZmCore
         $response = self::signrequest($xml->toXML(), config('modulesconfig.zm_create_bill'));
         $status_code = self::getStatusCode($response);
 
-        $zm_bill->trx_sts_code = $status_code;
+        $zm_bill->zan_trx_sts_code = $status_code;
 
         if ($status_code == 7101) {
-            $zm_bill->zm_status = 'pending';
+            $zm_bill->zan_status = 'pending';
         } else {
-            $zm_bill->zm_status = 'failed';
+            $zm_bill->zan_status = 'failed';
         }
         $zm_bill->save();
 
