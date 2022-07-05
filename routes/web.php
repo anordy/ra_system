@@ -19,6 +19,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\AuditController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
@@ -49,6 +50,8 @@ Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('t
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
 Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
 Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
+Route::get('password/change/{user}', [ChangePasswordController::class, 'index'])->name('password.change');
+Route::post('password/save-changed', [ChangePasswordController::class, 'updatePassword'])->name('password.save-changed');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
