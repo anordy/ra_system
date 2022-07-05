@@ -8,6 +8,7 @@ use App\Models\UserOtp;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use \Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class LoginController extends Controller
 {
@@ -61,7 +62,16 @@ class LoginController extends Controller
                 ]);
             }
 
-            if ($user->otp == null) {
+            if ($user->is_first_login == true ) {
+                $id = Crypt::encrypt($user->id);
+                session()->forget("token_id");
+                session()->forget("user_id");
+                session()->forget("email");
+                session()->forget("password");
+                return redirect()->route('password.change',$id);
+            }
+
+            if ($user->otp == null && $user->is_first_login == false) {
                 $token = UserOtp::create([
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
