@@ -20,7 +20,7 @@ class CreateZmBillsTable extends Migration
             $table->enum('currency', ['TZS', 'USD']);
             $table->decimal('exchange_rate');
             $table->decimal('equivalent_amount');
-            $table->string('control_number');
+            $table->string('control_number')->nullable();
             $table->date('expire_on');
             $table->unsignedBigInteger('user_id');
             $table->string('user_type');
@@ -30,7 +30,7 @@ class CreateZmBillsTable extends Migration
             $table->string('description');
             $table->integer('payment_option');
             $table->enum('status',['pending', 'paid', 'partially' , 'failed']);
-            $table->string('zan_status');
+            $table->string('zan_status')->nullable();
             $table->timestamps();
         });
     }
