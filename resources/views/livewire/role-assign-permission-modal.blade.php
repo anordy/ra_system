@@ -29,14 +29,14 @@
                                                         <div class="col-md-4 col-sm-6">
                                                             <label>
                                                                 <input type="checkbox" value="{{ $permission->id }}"  wire:model="selectedPermissions">
-                                                                {{ $permission->name }}
+                                                                {{  str_replace("_"," ",$permission->name) }}
                                                             </label>
                                                         </div>
                                                     @else
                                                         <div class="col-md-4 col-sm-6">
                                                             <label>
                                                                 <input type="checkbox" value="{{ $permission->id }}" wire:model="selectedPermissions">
-                                                                {{ $permission->name }}
+                                                                {{  str_replace("_"," ",$permission->name) }}
                                                             </label>
                                                         </div>
                                                     @endif

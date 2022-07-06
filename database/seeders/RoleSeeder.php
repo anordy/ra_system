@@ -18,6 +18,10 @@ class RoleSeeder extends Seeder
 
         $data = [
             ['name' => 'Administrator'],
+            ['name' => 'Registration Officer'],
+            ['name' => 'Registration Manager'],
+            ['name' => 'Directory Of TRAI'],
+            ['name' => 'Commissioner'],
         ];
         foreach ($data as $row) {
             Role::updateOrCreate($row);

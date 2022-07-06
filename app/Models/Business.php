@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\WorkflowTrait;
 use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -9,9 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Business extends Model implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, WorkflowTrait;
+    use \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'date_of_commencing' => 'datetime'
+    ];
 
     public function taxpayer(){
         return $this->belongsTo(Taxpayer::class);
@@ -61,6 +67,7 @@ class Business extends Model implements Auditable
         return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
     }
 
+  
     public function businessStatus(){
         return $this->hasOne(BusinessStatus::class);
     }

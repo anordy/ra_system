@@ -131,11 +131,11 @@ class UsersTable extends DataTableComponent
             if ($user->status == 1) {
                 $user->status = 0;
                 $user->save();
-                $this->triggerAudit(User::class, 'updated', 'deactivated', $user->id, $user->fname);
+                $this->triggerAudit(User::class, 'deactivated', 'deactivate_user', $user->id, ['status' => 1], ['status' => 0]);
             } else {
                 $user->status = 1;
                 $user->save();
-                $this->triggerAudit(User::class, 'updated', 'activated', $user->id, $user->fname);
+                $this->triggerAudit(User::class, 'activated', 'activate_user', $user->id, ['status' => 0], ['status' => 1]);
             }
         } catch (Exception $e) {
             report($e);

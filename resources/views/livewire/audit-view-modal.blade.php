@@ -1,5 +1,5 @@
 <div>
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase">View Changes</h5>
@@ -11,10 +11,7 @@
                     <h6 class="text-uppercase">{{ $event }} at: {{ $created_at }}</h5>
                 @endif
 
-                @if($event == 'updated' || $event == 'created' || $event == 'deleted')
-                    @if($tags == 'activated' || $tags == 'deactivated')
-                        <p>User {{ $new_values }} was {{ $tags }} at {{ $created_at }}</p>
-                    @else
+                @if($event == 'updated' || $event == 'created' || $event == 'deleted' || $event == 'deactivated' || $event == 'activated')
                     <div class="row">
                         <div class="col">
                             <h6 class="text-uppercase">Old Values</h6>
@@ -29,7 +26,6 @@
                             @endforeach
                         </div>
                     </div>           
-                    @endif
                 @endif
             </div>
             <div class="modal-footer">
