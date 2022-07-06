@@ -47,6 +47,7 @@ class CreateBusinessesTable extends Migration
             // Not sure
             $table->dateTime('reg_date')->nullable();
             $table->string('z_no')->nullable();
+            $table->string('marking')->nullable();
 
             // TODO: Remove use approval instead
             $table->timestamp('verified_at')->nullable();
