@@ -16,9 +16,7 @@ class CreateTaxAgentHistoryTable extends Migration
         Schema::create('tax_agent_history', function (Blueprint $table) {
             $table->id();
 			$table->unsignedBigInteger('tax_agent_id');
-			$table->dateTime('tax_agent_id');
-			$table->dateTime('app_expire_date');
-			$table->enum('app_status', ['first', 'renew']);
+			$table->enum('status', ['first', 'renew']);
             $table->timestamps();
         });
     }
