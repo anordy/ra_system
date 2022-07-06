@@ -12,6 +12,7 @@ class BankEditModal extends Component
 {
 
     use LivewireAlert;
+
     public $name;
     public $bank;
 

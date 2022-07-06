@@ -2,8 +2,11 @@
 
 namespace App\Listeners;
 
+use App\Jobs\Business\SendBusinessApprovedMail;
+use App\Jobs\Business\SendBusinessCorrectionMail;
 use App\Jobs\SendTaxAgentApprovalEmail;
 use App\Jobs\Taxpayer\SendRegistrationMail;
+use App\Models\Business;
 use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Events\SendMail;
@@ -42,11 +45,16 @@ class SendMailFired
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
             SendRegistrationMail::dispatch($taxpayer, $event->extra['code']);
+        } else if ($event->service === 'business-registration-approved'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessApprovedMail::dispatch($business, $business->taxpayer);
+        } else if ($event->service === 'business-registration-correction'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessCorrectionMail::dispatch($business, $business->taxpayer);
         }
-
-        else if ($event->service == 'tax-agent-registration-approval')
-        {
-
+        else if ($event->service == 'tax-agent-registration-approval') {
 	        $taxpayer = Taxpayer::find($event->tokenId);
 			$fullname = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
 			$email = $taxpayer->email;

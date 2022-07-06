@@ -19,8 +19,6 @@ class CreateBusinessTaxTypeTable extends Migration
             $table->unsignedBigInteger('tax_type_id');
             $table->enum('currency',['TZS','USD']);
 
-            $table->foreign('business_id')->references('id')->on('businesses');
-            $table->foreign('tax_type_id')->references('id')->on('tax_types');
             $table->timestamps();
         });
     }
