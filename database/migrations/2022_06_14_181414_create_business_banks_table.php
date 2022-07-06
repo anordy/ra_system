@@ -23,9 +23,6 @@ class CreateBusinessBanksTable extends Migration
             $table->string('branch');
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('business_id')->references('id')->on('businesses');
-            $table->foreign('bank_id')->references('id')->on('banks');
         });
     }
 

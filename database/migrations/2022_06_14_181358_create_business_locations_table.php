@@ -31,8 +31,6 @@ class CreateBusinessLocationsTable extends Migration
             $table->boolean('is_headquarter')->default(false);
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('ward_id')->references('id')->on('wards');
         });
     }
 

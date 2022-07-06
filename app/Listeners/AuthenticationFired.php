@@ -6,8 +6,6 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Audit;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class AuthenticationFired
 {
@@ -27,7 +25,6 @@ class AuthenticationFired
     public function handleUserLogin($event) {
         $data = [
             'auditable_id' => auth()->user()->id,
-            'auditable_type' => "App\Model\User",
             'event'      => "logged in",
             'url'        => request()->fullUrl(),
             'ip_address' => request()->getClientIp(),
@@ -35,6 +32,8 @@ class AuthenticationFired
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'user_id'    => auth()->user()->id,
+            'user_type' => "App\Models\User",
+            'auditable_type' => "App\Models\User",
         ];
 
 
@@ -51,7 +50,6 @@ class AuthenticationFired
     public function handleUserLogout($event) {
         $data = [
             'auditable_id' => auth()->user()->id,
-            'auditable_type' => "App\Model\User",
             'event'      => "logged out",
             'url'        => request()->fullUrl(),
             'ip_address' => request()->getClientIp(),
@@ -59,6 +57,8 @@ class AuthenticationFired
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             'user_id'    => auth()->user()->id,
+            'user_type' => "App\Models\User",
+            'auditable_type' => "App\Models\User",
         ];
 
 
