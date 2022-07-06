@@ -17,6 +17,7 @@ class CreateZmPaymentsTable extends Migration
             $table->id();
             $table->string('zm_bill_id');
             $table->string('trx_id');
+            $table->string('sp_code');
             $table->string('pay_ref_id');
             $table->string('control_number');
             $table->string('bill_amount');

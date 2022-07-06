@@ -18,13 +18,15 @@ class CreateZmBillItemsTable extends Migration
             $table->unsignedBigInteger('zm_bill_id');
             $table->unsignedBigInteger('billable_id');
             $table->string('billable_type');
-            $table->unsignedBigInteger('fee_id');
-            $table->string('fee_type');
+            $table->unsignedBigInteger('fee_id')->nullable();
+            $table->string('fee_type')->nullable();
             $table->decimal('amount');
             $table->decimal('exchange_rate');
             $table->decimal('equivalent_amount');
             $table->enum('currency', ['TZS', 'USD']);
             $table->boolean('paid')->default(false);
+            $table->char('use_item_ref_on_pay')->default('N');
+            $table->string('gfs_code');
             $table->timestamps();
         });
     }

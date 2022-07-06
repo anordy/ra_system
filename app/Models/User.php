@@ -37,4 +37,6 @@ class User extends Authenticatable
         return $this->fname . ' '. $this->lname;
     }
 
+
+
 }

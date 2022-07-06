@@ -11,15 +11,21 @@ class ZmBill extends Model
 
     protected $guarded = [];
 
-    public function zm_bill_items(){
-        return $this->hasMany(ZmBill::class, 'bill_id');
+    public function bill_items(){
+        return $this->hasMany(ZmBillItem::class, 'zm_bill_id');
     }
 
-    public function zm_bill_payments(){
-        return $this->hasMany(ZmBillPayment::class, 'bill_id');
+    public function bill_payments(){
+        return $this->hasMany(ZmPayment::class, 'zm_bill_id');
     }
 
     public function paid_amount(){
         return $this->zm_bill_payments()->sum('paid_amount');
     }
+
+	public function user()
+	{
+		return $this->morphTo();
+	}
+
 }

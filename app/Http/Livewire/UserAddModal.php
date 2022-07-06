@@ -41,7 +41,7 @@ class UserAddModal extends Component
             'email' => 'required|email|unique:users,email',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
-            'password' => ['required', 'confirmed', 'min:10', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
+            // 'password' => ['required', 'confirmed', 'min:10', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
         ];
     }
@@ -79,7 +79,7 @@ class UserAddModal extends Component
                 'gender' => $this->gender,
                 'email' => $this->email,
                 'phone' => $this->phone,
-                //'password' => Hash::make($this->password),
+                'password' => Hash::make($this->password),
             ]);
 
             $adminRole = Role::where('name', 'Administrator')->first();
@@ -87,9 +87,8 @@ class UserAddModal extends Component
 
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
-                    $message = 'New User creaated',
-                    $type = 'info',
-                    $messageLong = 'New user ' . $user->fullname() . ' created successfully by ' . Auth::user()->fullname(),
+                    $subject = 'User creaated',
+                    $message = 'New user ' . $user->fullname() . ' created successfully by ' . Auth::user()->fullname(),
                     $href = route('settings.users.index'),
                     $hrefText = 'View'
                 ));
