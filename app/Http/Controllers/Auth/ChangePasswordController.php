@@ -10,23 +10,26 @@ use Illuminate\Support\Facades\Hash;
 
 class ChangePasswordController extends Controller
 {
-    public function index($id){
-        return view('auth.passwords.change',['id'=>Crypt::encrypt($id)]);
+    public function index($id)
+    {
+        return view('auth.passwords.change', ['id' => Crypt::encrypt($id)]);
     }
 
-    public function updatePassword(Request $request){
-        
+    public function updatePassword(Request $request)
+    {
+
         $request->validate([
             'password' => 'required|confirmed|min:8',
             'password_confirmation' => 'required',
-        ],[
-            'password_confirmation.confirmed'=>'password and password confimation must match'
+        ], [
+            'password_confirmation.confirmed' => 'password and password confimation must match'
         ]);
 
-        $user = User::find(Crypt::decrypt($request->user_id));
+        $user = User::find(decrypt(decrypt($request->user_id)));
+
         $user->is_first_login = false;
         $user->password = Hash::make($request->password);
         $user->save();
-        return redirect()->route('login')->with('success','Your password changed successfully, Now you can login with the new password you provided');
+        return redirect()->route('login')->with('success', 'Your password changed successfully, Now you can login with the new password you provided');
     }
 }

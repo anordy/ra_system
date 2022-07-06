@@ -32,5 +32,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BusinessCategoriesSeeder::class);
         $this->call(WithholdingAgentSeeder::class);
         $this->call(AccountTypesSeeder::class);
+        $this->call(WorkflowSeeder::class);
     }
 }
