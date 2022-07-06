@@ -1,7 +1,7 @@
 @component('mail::message')
 # Greetings {{ $full_name }},
 
-You have been registered into ZPC System. Please use credentials below to Log into the system.<br>
+You have been registered into ZRB System. Please use credentials below to Log into the system.<br>
 
 @component('mail::panel')
 username: {{ $username }}<br>

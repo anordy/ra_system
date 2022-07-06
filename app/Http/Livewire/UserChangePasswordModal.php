@@ -51,11 +51,13 @@ class UserChangePasswordModal extends Component
         try {
             $this->user->update([
                 'password' => Hash::make($this->password),
+                'is_first_login' => true,
             ]);
+
             $this->flash('success', 'Password updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-
+            
             $this->alert('error', 'Something went wrong');
         }
     }

@@ -65,9 +65,6 @@ class UserOtp extends Model
             $this->code = $this->generateCode();
         }
 
-        if(config('app.env') == 'local'){
-            return true;
-        }
 
         try {
             event(new SendSms('otp', $this->id));

@@ -15,7 +15,7 @@ class RegistrationsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Business::orderBy('created_at', 'desc');
+        return Business::where('verified_at', '!=', null)->orderBy('created_at', 'desc');
     }
 
     public function configure(): void

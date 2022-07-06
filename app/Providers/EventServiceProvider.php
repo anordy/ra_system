@@ -32,7 +32,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         SendWithholdingAgentRegistrationEmail::class => [
             SendMailFired::class
-        ]
+        ],
     ];
 
     protected $subscribe = [

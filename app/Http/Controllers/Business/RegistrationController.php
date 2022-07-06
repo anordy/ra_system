@@ -15,5 +15,11 @@ class RegistrationController extends Controller
     public function show($businessId){
         $business = Business::findOrFail($businessId);
         return view('business.registrations.show', compact('business'));
+    }   
+    
+    
+    public function approval($businessId){
+        $business = Business::findOrFail($businessId);
+        return view('business.registrations.approval', compact('business'));
     }
 }

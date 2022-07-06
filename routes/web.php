@@ -19,6 +19,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\AuditController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
@@ -38,15 +39,19 @@ use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\WorkflowerTestController;
 
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/workflow', [WorkflowerTestController::class, 'index']);
 
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
 Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
 Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
+Route::get('password/change/{user}', [ChangePasswordController::class, 'index'])->name('password.change');
+Route::post('password/save-changed', [ChangePasswordController::class, 'updatePassword'])->name('password.save-changed');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
@@ -87,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('business')->as('business.')->group(function (){
+        Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
     });
