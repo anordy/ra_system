@@ -109,7 +109,8 @@ class TaxAgentTable extends DataTableComponent
 			$data = (object) $value['data'];
 			$agent = TaxAgent::find($data->id);
 			$agent->is_verified = 1;
-//			$agent->save();
+			$agent->ref_no = "ZRB10".rand(0, 9999);
+			$agent->save();
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
@@ -132,14 +133,14 @@ class TaxAgentTable extends DataTableComponent
 			    'use_item_ref_on_pay' => 'N',
 			    'amount' => $amount,
 			    'currency' => 'TZS',
-			    'gfs_code' => 'ZCSS'
+			    'gfs_code' => '116101'
 			  ]
 			];
 			$payer_type = get_class($taxpayer);
 			$payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
 			$payer_email = $taxpayer->email;
 			$payer_phone = $taxpayer->mobile;
-			$description = 'First fee payment for taxpayer';
+			$description = 'Tax agent registration fee';
 			$payment_option = ZmCore::PAYMENT_OPTION_FULL;
 			$currency = 'TZS';
 			$createdby_type = get_class(User::find(Auth::id()));
@@ -164,8 +165,8 @@ class TaxAgentTable extends DataTableComponent
 			}
 
 
-			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
-			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
+//			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
+//			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
 
 			DB::commit();
 			$this->flash('success', 'Request approved successfully', [], redirect()->back()->getTargetUrl());

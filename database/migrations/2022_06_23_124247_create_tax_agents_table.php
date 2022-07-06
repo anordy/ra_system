@@ -20,9 +20,12 @@ class CreateTaxAgentsTable extends Migration
 			$table->string('block');
 			$table->string('town');
 			$table->string('region');
-			$table->string('reference_no', '35');
+			$table->string('reference_no', '35')->nullable();
 			$table->boolean('is_verified')->default(false);
 			$table->boolean('is_paid')->default(false);
+			$table->enum('is_first_application', [1,0])->default(1);
+	        $table->dateTime('app_first_date')->nullable();
+	        $table->dateTime('app_expire_date')->nullable();
 			$table->unsignedBigInteger('taxpayer_id');
             $table->timestamps();
         });
