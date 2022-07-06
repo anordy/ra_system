@@ -36,6 +36,8 @@ class SendBusinessCorrectionMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->taxpayer->email)->send(new BusinessApproved($this->business, $this->taxpayer));
+        if ($this->taxpayer->email){
+            Mail::to($this->taxpayer->email)->send(new BusinessApproved($this->business, $this->taxpayer));
+        }
     }
 }
