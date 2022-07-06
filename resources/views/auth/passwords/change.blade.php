@@ -10,8 +10,7 @@
                 <div class="card-body">
                     <div class="py-3">
 
-                        <h6 class="text-info text-center">Welcome to ZRB, Since this is your first login you need to set new password for security
-                            purposes</h6>
+                        <h6 class="text-info text-center">Welcome to ZRB, Since this is your first login you need to set new password for security purposes</h6>
                     </div>
 
                     <form method="POST" action="{{ route('password.save-changed') }}">
@@ -32,14 +31,15 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="form-group row">
                                 <label for="password_confirmation" class="col-md-4 col-form-label text-md-right">Confirm
                                     Password</label>
-    
+
                                 <div class="col-md-6">
                                     <input type="password" name="password_confirmation" id="password_confirmation"
-                                    x-model="password_confirm" class="form-control @error('password_confirmation') is-invalid @enderror">
+                                        x-model="password_confirm"
+                                        class="form-control @error('password_confirmation') is-invalid @enderror">
                                     @error('password_confirmation')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -47,36 +47,43 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="form-group row">
                                 <div class="offset-sm-4 p-3">
                                     <div class="p-2">
                                         <strong :class="password.length >= 8 ? 'text-success':'text-danger'">
-                                            <i class=" pr-2" :class="password.length >=8 ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i> 
+                                            <i class=" pr-2"
+                                                :class="password.length >=8 ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span>At least 8 characters required</span>
                                         </strong>
                                     </div>
                                     <div class="p-2">
                                         <strong :class="password.match(/[A-Z]/) ? 'text-success':'text-danger'">
-                                            <i class=" pr-2" :class="password.match(/[A-Z]+/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i> 
+                                            <i class=" pr-2"
+                                                :class="password.match(/[A-Z]+/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span> Must contain Uppercase</span>
                                         </strong>
                                     </div>
                                     <div class="p-2">
                                         <strong :class="password.match(/[0-9]/) ? 'text-success':'text-danger'">
-                                            <i class=" pr-2" :class="password.match(/[0-9]+/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i> 
+                                            <i class=" pr-2"
+                                                :class="password.match(/[0-9]+/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span> Must contain a number</span>
                                         </strong>
                                     </div>
                                     <div class="p-2">
-                                        <strong :class="password.match(/[!@$%^&*(),.?:{}|<>]/) ? 'text-success':'text-danger'">
-                                            <i class=" pr-2" :class="password.match(/[!@$%^&*(),.?:{}|<>]/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i> 
+                                        <strong
+                                            :class="password.match(/[!@$%^&*(),.?:{}|<>]/) ? 'text-success':'text-danger'">
+                                            <i class=" pr-2"
+                                                :class="password.match(/[!@$%^&*(),.?:{}|<>]/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span> Must contain Special character</span>
                                         </strong>
                                     </div>
                                     <div class="p-2">
-                                        <strong :class="password.length>=8 && password == password_confirm ? 'text-success':'text-danger'">
-                                            <i class=" pr-2" :class="password.length >= 8 && password == password_confirm ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i> 
+                                        <strong
+                                            :class="password.length>=8 && password == password_confirm ? 'text-success':'text-danger'">
+                                            <i class=" pr-2"
+                                                :class="password.length >= 8 && password == password_confirm ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span> Passwords must match</span>
                                         </strong>
                                     </div>
@@ -85,7 +92,9 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" :disabled="!(password.length>=8 && password == password_confirm && password.match(/[!@$%^&*(),.?:{}|<>]/) && password.match(/[A-Z]+/)) && password.match(/[0-9]/)" class="btn btn-primary">
+                                    <button type="submit"
+                                        :disabled="!(password.length>=8 && password == password_confirm && password.match(/[!@$%^&*(),.?:{}|<>]/) && password.match(/[A-Z]+/)) && password.match(/[0-9]/)"
+                                        class="btn btn-primary">
                                         {{ __('Submit') }}
                                     </button>
                                 </div>
