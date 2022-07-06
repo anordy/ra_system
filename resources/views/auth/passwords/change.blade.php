@@ -63,6 +63,12 @@
                                         </strong>
                                     </div>
                                     <div class="p-2">
+                                        <strong :class="password.match(/[0-9]/) ? 'text-success':'text-danger'">
+                                            <i class=" pr-2" :class="password.match(/[0-9]+/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i> 
+                                            <span> Must contain a number</span>
+                                        </strong>
+                                    </div>
+                                    <div class="p-2">
                                         <strong :class="password.match(/[!@$%^&*(),.?:{}|<>]/) ? 'text-success':'text-danger'">
                                             <i class=" pr-2" :class="password.match(/[!@$%^&*(),.?:{}|<>]/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i> 
                                             <span> Must contain Special character</span>
@@ -79,7 +85,7 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" :disabled="!(password.length>=8 && password == password_confirm && password.match(/[!@$%^&*(),.?:{}|<>]/) && password.match(/[A-Z]+/))" class="btn btn-primary">
+                                    <button type="submit" :disabled="!(password.length>=8 && password == password_confirm && password.match(/[!@$%^&*(),.?:{}|<>]/) && password.match(/[A-Z]+/)) && password.match(/[0-9]/)" class="btn btn-primary">
                                         {{ __('Submit') }}
                                     </button>
                                 </div>
