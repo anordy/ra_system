@@ -38,6 +38,7 @@
     <script src="{{ asset('plugins/fontawesome/js/solid.min.js') }}"></script>
     <script src="{{ asset('plugins/fontawesome/js/regular.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('js/alpine.min.js') }}"></script>
     @yield('scripts')
 </body>
 

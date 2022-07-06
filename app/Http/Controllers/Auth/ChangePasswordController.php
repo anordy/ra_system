@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 class ChangePasswordController extends Controller
 {
     public function index($id){
-        return view('auth.passwords.change',['id'=>Crypt::encrypt($id)]);
+        return view('auth.passwords.change',['id'=>$id]);
     }
 
     public function updatePassword(Request $request){
