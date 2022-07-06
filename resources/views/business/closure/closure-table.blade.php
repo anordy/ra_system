@@ -10,7 +10,9 @@
             Businesses Closures
         </div>
         <div class="card-body mt-0 p-2">
-            <nav class="nav nav-tabs mt-0 border-top-0">
+            @livewire('business.closure.pending-closures-table')
+
+            {{-- <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
                 <a href="#tab2" class="nav-item nav-link font-weight-bold">Approved Business</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Business</a>
@@ -25,7 +27,7 @@
                 <div id="tab3" class="tab-pane fade">
                     @livewire('business.closure.rejected-closures-table')
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 @endsection

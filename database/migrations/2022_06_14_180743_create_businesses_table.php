@@ -36,7 +36,9 @@ class CreateBusinessesTable extends Migration
             $table->string('post_estimated_turnover');
             $table->string('goods_and_services_types');
             $table->string('goods_and_services_example');
-
+            $table->string('marking')->nullable();
+            $table->unsignedBigInteger('is_temp_closed')->default(false);
+            $table->unsignedBigInteger('is_deregistered')->default(false);
 
             // Contact person
             $table->unsignedBigInteger('responsible_person_id')->nullable();
