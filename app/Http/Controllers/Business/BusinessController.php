@@ -13,6 +13,10 @@ class BusinessController extends Controller
         return view('business.closure.closure-table');
     }
 
+    public function deregistrations(){
+        return view('business.deregister.deregistration-table');
+    }
+
     public function approve(){
         $businessId = 1;
         event(new SendSms('business-registration-approved', $businessId));

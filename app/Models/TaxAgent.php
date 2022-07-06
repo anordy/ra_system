@@ -27,4 +27,9 @@ class TaxAgent extends Model implements Auditable
 	{
 		return $this->hasMany('App\Models\TaxAgentTrainingExperience');
 	}
+
+	public function requests()
+	{
+		return $this->hasMany(RenewTaxAgentRequest::class);
+	}
 }

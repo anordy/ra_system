@@ -36,7 +36,9 @@ class CreateBusinessesTable extends Migration
             $table->string('post_estimated_turnover');
             $table->string('goods_and_services_types');
             $table->string('goods_and_services_example');
-
+            $table->string('marking')->nullable();
+            $table->unsignedBigInteger('is_temp_closed')->default(false);
+            $table->unsignedBigInteger('is_deregistered')->default(false);
 
             // Contact person
             $table->unsignedBigInteger('responsible_person_id')->nullable();
@@ -47,6 +49,7 @@ class CreateBusinessesTable extends Migration
             // Not sure
             $table->dateTime('reg_date')->nullable();
             $table->string('z_no')->nullable();
+            $table->string('marking')->nullable();
 
             // TODO: Remove use approval instead
             $table->timestamp('verified_at')->nullable();
