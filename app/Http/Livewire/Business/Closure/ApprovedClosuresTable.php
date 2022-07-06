@@ -2,26 +2,32 @@
 
 namespace App\Http\Livewire\Business\Closure;
 
-use id;
+use Exception;
 use Carbon\Carbon;
-use App\Models\TemporaryBusinessClosure;
+use App\Models\BusinessTempClosure;
 use Illuminate\Database\Eloquent\Builder;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ApprovedClosuresTable extends DataTableComponent
 {
+    use LivewireAlert;
 
+
+    protected $listeners = [
+        'confirmed',
+    ];
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended', 'status', 'approved_by']);
+        $this->setAdditionalSelects(['is_extended']);
     }
 
     public function builder(): Builder
     {
-        return TemporaryBusinessClosure::query()->where('status', 'approved')->orderBy('temporary_business_closures.opening_date', 'DESC');
+        return BusinessTempClosure::query()->orderBy('business_temp_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
@@ -44,25 +50,9 @@ class ApprovedClosuresTable extends DataTableComponent
                 ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
                 ->sortable()
                 ->searchable(),
-            Column::make('Approved By', 'approved_by')
-                ->label(function($row) {
-                        return '<span>'.$row->user->fname. ' ' .$row->user->lname.'</span>';
-                })
+            Column::make('Closure Reason', 'reason')
                 ->sortable()
-                ->searchable()
-                ->html(true),
-            Column::make('Status', 'status')
-                ->format(function ($value, $row) {
-                        return <<< HTML
-                        <span class="badge badge-success py-1 px-2">Approved & Confirmed</span>
-                    HTML; 
-                })
-                ->html(true),
         ];
     }
 
-    public function approve($id)
-    {
-        return redirect()->to('/business/closure/' . $id . '/approve');
-    }
 }

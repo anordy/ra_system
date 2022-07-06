@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBusinessStatusesTable extends Migration
+class BusinessDeregestrations extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateBusinessStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('business_statuses', function (Blueprint $table) {
+        Schema::create('business_deregistrations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('business_id')->unique();
-            $table->enum('status', ['open','closed']);
-            $table->timestamps();
-
+            $table->unsignedBigInteger('business_id');
+            $table->timestamp('deregistration_date');
+            $table->string('reason');
+            $table->unsignedBigInteger('submitted_by');
             $table->foreign('business_id')->references('id')->on('businesses');
-
+            $table->timestamps();
         });
     }
 
@@ -31,6 +31,6 @@ class CreateBusinessStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('business_statuses');
+        Schema::dropIfExists('business_deregistrations');
     }
 }

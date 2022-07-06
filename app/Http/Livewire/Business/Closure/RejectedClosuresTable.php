@@ -2,26 +2,26 @@
 
 namespace App\Http\Livewire\Business\Closure;
 
-use id;
+use Exception;
 use Carbon\Carbon;
-use App\Models\TemporaryBusinessClosure;
+use App\Models\BusinessTempClosure;
 use Illuminate\Database\Eloquent\Builder;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class RejectedClosuresTable extends DataTableComponent
 {
 
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended', 'status', 'rejected_by']);
+        $this->setAdditionalSelects(['is_extended']);
     }
 
     public function builder(): Builder
     {
-        return TemporaryBusinessClosure::query()->where('status', 'rejected')->orderBy('temporary_business_closures.opening_date', 'DESC');
+        return BusinessTempClosure::query()->orderBy('business_temp_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
@@ -44,19 +44,13 @@ class RejectedClosuresTable extends DataTableComponent
                 ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
                 ->sortable()
                 ->searchable(),
-            Column::make('Rejected By', 'rejected_by')
-                ->label(function($row) {
-                        return '<span>'.$row->rejected->fname. ' ' .$row->rejected->lname.'</span>';
-                })
-                ->sortable()
-                ->searchable()
-                ->html(true),
-            Column::make('Reason', 'reason')
+            Column::make('Closure Reason', 'reason')
                 ->sortable(),
-            Column::make('Status', 'status')
+            Column::make('Action', 'id')
                 ->format(function ($value, $row) {
                         return <<< HTML
-                        <span class="badge badge-danger py-1 px-2">Rejected</span>
+                        <button class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve" wire:click="changeStatus($value, 'approved')"><i class="fa fa-check"></i> </button>
+                        <button class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Reject" wire:click="changeStatus($value, 'rejected')"><i class="fa fa-times"></i> </button>
                     HTML;
                 })
                 ->html(true),
