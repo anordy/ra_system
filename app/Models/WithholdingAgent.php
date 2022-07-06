@@ -41,10 +41,6 @@ class WithholdingAgent extends Model implements Auditable
             throw new \Exception("No Taxpayer found.");
         }
 
-        if(config('app.env') == 'local'){
-            return true;
-        }
-
         try {
             event(new SendMail('withholding_agent_registration', $this->id));
             event(new SendSms('withholding_agent_registration', $this->id));

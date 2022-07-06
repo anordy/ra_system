@@ -34,6 +34,9 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
+        if(config('app.env') == 'local'){
+            return true;
+        }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());

@@ -12,8 +12,6 @@ use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\WithholdingAgent;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Jobs\SendWithholdingAgentRegistrationSMS;
 
 class SendSmsFired
@@ -36,6 +34,9 @@ class SendSmsFired
      */
     public function handle(SendSms $event)
     {
+        if(config('app.env') == 'local'){
+            return true;
+        }
         if ($event->service == 'otp') {
             $token = UserOtp::find($event->tokenId);
             SendOTPSMS::dispatch($token->code, $token->user->fullname(), $token->user->phone);

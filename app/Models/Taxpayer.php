@@ -31,9 +31,15 @@ class Taxpayer extends Model implements Auditable
         return $this->first_name. ' '. $this->last_name;
     }
 
+    public function getFullNameAttribute(){
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+
     public function taxAgent(){
         return $this->hasOne(TaxAgent::class);
     }
+    
 
 	public function bill(){
 		return $this->morphMany(ZmBill::class, 'user');
