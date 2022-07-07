@@ -55,7 +55,7 @@ class RegistrationsController extends Controller
         $taxpayer->notify(new DatabaseNotification( 
             $subject = 'ZRB ENROLLMENT',
             $message = 'Your have been enrolled as Taxpayer successfully',
-            $href = config('app.client_url').route('home',null,false),
+            $href = 'home',
             $hrefText = 'view'
         ));
 

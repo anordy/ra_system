@@ -111,10 +111,10 @@ class TaxAgentTable extends DataTableComponent
 			$agent->save();
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
-			 $taxpayer->notify(new DatabaseNotification( 
+			$taxpayer->notify(new DatabaseNotification( 
 				$subject = 'TAX-AGENT APPROVAL',
 				$message = 'Your application has been approved',
-				$href = "route('taxagent.apply')",
+				$href = 'taxagent.apply',
 				$hrefText = 'view'
 			));
 
@@ -188,7 +188,7 @@ class TaxAgentTable extends DataTableComponent
 			 $taxpayer->notify(new DatabaseNotification( 
 				$subject = 'TAX-AGENT REJECTED',
 				$message = 'Your application has been rejected',
-				$href = "route('taxagent.apply')",
+				$href = 'taxagent.apply',
 				$hrefText = 'view'
 			));
 
