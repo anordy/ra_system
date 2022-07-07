@@ -35,12 +35,13 @@
                     <span class="font-weight-bold text-uppercase">Reason for Closure</span>
                     <p class="my-1">{{ $temp_closure->reason }}</p>
                 </div>
-                <div class="text-center mt-4">
-                    <a href="{{ route('business.closure') }}" class="btn btn-secondary" data-dismiss="modal">Close</a>
-                    <button type="button" class="btn btn-danger" wire:click='reject'>Reject Closure</button>
-                    <button type="button" class="btn btn-success" wire:click='confirm'>Approve & Confirm
-                        Closure</button>
-                </div>
+           
+            </div>
+            <div class="modal-footer mt-4">
+                <a href="{{ route('business.closure') }}" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                <button type="button" class="btn btn-danger" wire:click='reject'>Reject Closure</button>
+                <button type="button" class="btn btn-success" wire:click='confirm'>Approve & Confirm
+                    Closure</button>
             </div>
         </div>
 
