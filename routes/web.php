@@ -96,6 +96,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
         Route::get('/closure/{id}', [BusinessController::class, 'viewClosure'])->name('viewClosure');
+        Route::get('/deregistration/{id}', [BusinessController::class, 'viewDeregistration'])->name('viewDeregistration');
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
 
     });
