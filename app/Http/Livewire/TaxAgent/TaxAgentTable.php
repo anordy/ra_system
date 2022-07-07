@@ -113,11 +113,11 @@ class TaxAgentTable extends DataTableComponent
 			$agent->save();
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
-			$taxpayer->notify(new DatabaseNotification(
-			  $subject = 'Tax agent approval',
-                    $message = 'Your application has been approved successfully',
-                    $href = config('app.client_url').'/taxagent/apply',
-                    $hrefText = 'View'
+			 $taxpayer->notify(new DatabaseNotification( 
+				$subject = 'TAX-AGENT APPROVAL',
+				$message = 'Your application has been approved',
+				$href = "route('taxagent.apply')",
+				$hrefText = 'view'
 			));
 
 			$fee = TaPaymentConfiguration::where('category', 'first fee')->first();
@@ -185,13 +185,13 @@ class TaxAgentTable extends DataTableComponent
 			$agent->status = 'rejected';
 			$agent->save();
 
-			$taxpayer = Taxpayer::find($agent->taxpayer_id);
-			$taxpayer->notify(new DatabaseNotification(
-			  $message = 'Tax agent rejected',
-			  $type = 'info',
-			  $messageLong = 'Your application has been rejected',
-			  $href = 'http://127.0.0.1:2020/taxagent/apply',
-			  $hrefText = 'View'
+			 //notify the taxpayer
+			 $taxpayer = Taxpayer::find($agent->taxpayer_id);
+			 $taxpayer->notify(new DatabaseNotification( 
+				$subject = 'TAX-AGENT REJECTED',
+				$message = 'Your application has been rejected',
+				$href = "route('taxagent.apply')",
+				$hrefText = 'view'
 			));
 
 			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
