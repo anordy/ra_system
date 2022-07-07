@@ -1,14 +1,13 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="container">
     <div class="row">
         <div class="col-md-4 col-xl-3">
             <div class="card bg-c-blue order-card">
                 <div class="card-block">
                     <h6 class="m-b-20">Staff</h6>
                     <h2 class="text-right"><i class="bi bi-person-badge f-left"></i><span>{{ \App\Models\User::count() }}</span></h2>
-                    <p class="mb-0">Administrators<span class="f-right">351</span></p>
+                    <p class="mb-0"><a href="{{ route('settings.users.index') }}">click here to view more</a></p>
                 </div>
             </div>
         </div>
@@ -18,7 +17,7 @@
                 <div class="card-block">
                     <h6 class="m-b-20">Taxpayers</h6>
                     <h2 class="text-right"><i class="bi bi-person-check-fill f-left"></i><span>{{ \App\Models\Taxpayer::count() }}</span></h2>
-                    <p class="mb-0">KYC<span class="f-right">{{ \App\Models\KYC::count() }}</span></p>
+                    <p class="mb-0"><a href="{{ route('taxpayers.index') }}">click here to view more</a></p>
                 </div>
             </div>
         </div>
@@ -28,7 +27,7 @@
                 <div class="card-block">
                     <h6 class="m-b-20">Registered Businesses</h6>
                     <h2 class="text-right"><i class="bi bi-building f-left"></i><span>{{ \App\Models\Business::approved()->count() }}</span></h2>
-                    <p class="mb-0">Pending Approval<span class="f-right">351</span></p>
+                    <p class="mb-0"><a href="{{ route('business.registrations.index') }}">click here to view more</a></p>
                 </div>
             </div>
         </div>
@@ -38,10 +37,9 @@
                 <div class="card-block">
                     <h6 class="m-b-20">Tax Agents</h6>
                     <h2 class="text-right"><i class="bi bi-credit-card f-left"></i><span>{{ \App\Models\TaxAgent::count() }}</span></h2>
-                    <p class="mb-0">Pending Agents<span class="f-right">{{ \App\Models\TaxAgent::pending()->count() }}</span></p>
+                    <p class="mb-0"><a href="{{ route('taxagents.active') }}">click here to view more</a></p>
                 </div>
             </div>
         </div>
 	</div>
-</div>
 @endsection
