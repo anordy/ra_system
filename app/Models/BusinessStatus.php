@@ -14,6 +14,9 @@ class BusinessStatus extends Model
     public const PENDING = 'pending';
     public const APPROVED = 'approved';
     public const CORRECTION = 'correction';
+    public const TEMP_CLOSED = 'temp_closed';
+    public const DEREGISTERED = 'deregistered';
+    public const REJECTED = 'rejected';
 
     protected $guarded = [];
 

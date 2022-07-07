@@ -1,21 +1,19 @@
 @extends('layouts.master')
 
 @section('title')
-    Business Closures
+    Temporary Business Closures
 @endsection
 
 @section('content')
     <div class="card p-0 m-0">
         <div class="card-header text-uppercase font-weight-bold">
-            Businesses Closures
+            Temporary Businesses Closures
         </div>
         <div class="card-body mt-0 p-2">
-            @livewire('business.closure.pending-closures-table')
-
-            {{-- <nav class="nav nav-tabs mt-0 border-top-0">
+            <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
-                <a href="#tab2" class="nav-item nav-link font-weight-bold">Approved Business</a>
-                <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Business</a>
+                <a href="#tab2" class="nav-item nav-link font-weight-bold">Confirmed Closures</a>
+                <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Closures</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show">
@@ -27,7 +25,7 @@
                 <div id="tab3" class="tab-pane fade">
                     @livewire('business.closure.rejected-closures-table')
                 </div>
-            </div> --}}
+            </div>
         </div>
     </div>
 @endsection

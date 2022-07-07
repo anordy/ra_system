@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Business\Closure;
 
+use App\Models\BusinessStatus;
 use Exception;
 use Carbon\Carbon;
 use App\Models\BusinessTempClosure;
@@ -27,7 +28,7 @@ class ApprovedClosuresTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessTempClosure::query()->orderBy('business_temp_closures.opening_date', 'DESC');
+        return BusinessTempClosure::query()->where('business_temp_closures.status', BusinessStatus::APPROVED)->orderBy('business_temp_closures.opening_date', 'DESC');
     }
 
     public function columns(): array

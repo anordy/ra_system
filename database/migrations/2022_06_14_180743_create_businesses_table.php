@@ -18,7 +18,7 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('business_category_id'); // Sole / Partner / Company / NGO
             $table->unsignedBigInteger('taxpayer_id'); // Main owner
             $table->string('bpra_no')->nullable();
-            $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed'])->default('draft');
+            $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed', 'temp_closed', 'deregistered'])->default('draft');
             $table->unsignedBigInteger('business_activities_type_id'); // Wholesale or Retail
             $table->unsignedBigInteger('currency_id');
 
@@ -37,8 +37,6 @@ class CreateBusinessesTable extends Migration
             $table->string('goods_and_services_types');
             $table->string('goods_and_services_example');
             $table->string('marking')->nullable();
-            $table->unsignedBigInteger('is_temp_closed')->default(false);
-            $table->unsignedBigInteger('is_deregistered')->default(false);
 
             // Contact person
             $table->unsignedBigInteger('responsible_person_id')->nullable();

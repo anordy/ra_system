@@ -20,6 +20,10 @@ class BusinessTempClosure extends Model implements Auditable
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    public function taxpayer() {
+        return $this->belongsTo(Taxpayer::class, 'submitted_by');
+    }
+
     public function rejected() {
         return $this->belongsTo(User::class, 'rejected_by');
     }

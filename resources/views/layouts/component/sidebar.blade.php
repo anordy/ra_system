@@ -54,7 +54,7 @@
                     <a href="{{ route('business.deregistrations') }}">De-registrations</a>
                 </li>
                 <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
-                    <a href="{{ route('business.closure') }}">Business Closures</a>
+                    <a href="{{ route('business.closure') }}">Temporary Closures</a>
                 </li>
             </ul>
         </li>

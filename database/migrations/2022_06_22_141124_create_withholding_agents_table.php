@@ -24,7 +24,7 @@ class CreateWithholdingAgentsTable extends Migration
             $table->string('mobile')->unique();
             $table->string('position');
 
-            $table->date('date_of_commencing');
+            $table->timestamp('date_of_commencing');
             $table->string('title');
 
             $table->unsignedBigInteger('ward_id');
@@ -32,7 +32,7 @@ class CreateWithholdingAgentsTable extends Migration
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('responsible_person_id');
             $table->unsignedBigInteger('officer_id');
-
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
             $table->softDeletes();
 
