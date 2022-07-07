@@ -80,7 +80,6 @@ class TaxAgentTable extends DataTableComponent
 		  'data' => [
 			'id' => $id
 		  ],
-
 		]);
 	}
 
@@ -98,7 +97,6 @@ class TaxAgentTable extends DataTableComponent
 		  'data' => [
 			'id' => $id
 		  ],
-
 		]);
 	}
 
