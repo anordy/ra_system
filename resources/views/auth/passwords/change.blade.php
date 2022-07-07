@@ -49,43 +49,43 @@
                             </div>
 
                             <div class="form-group row">
-                                <div class="offset-sm-4 p-3">
-                                    <div class="p-2">
-                                        <strong x-bind:class="password.length >= 8 ? 'text-success':'text-danger'">
+                                <div class="offset-sm-4 px-3">
+                                    <div class="m-0">
+                                        <span x-bind:class="password.length >= 8 ? 'text-success':'text-danger'">
                                             <i class=" pr-2"
                                                 x-bind:class="password.length >=8 ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span>At least 8 characters required</span>
-                                        </strong>
+                                        </span>
                                     </div>
-                                    <div class="p-2">
-                                        <strong x-bind:class="password.match(/[A-Z]/) ? 'text-success':'text-danger'">
+                                    <div class="m-0">
+                                        <span x-bind:class="password.match(/[A-Z]/) ? 'text-success':'text-danger'">
                                             <i class=" pr-2"
                                                 x-bind:class="password.match(/[A-Z]+/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span> Must contain Uppercase</span>
-                                        </strong>
+                                        </span>
                                     </div>
-                                    <div class="p-2">
-                                        <strong :class="password.match(/[0-9]/) ? 'text-success':'text-danger'">
+                                    <div class="m-0">
+                                        <span :class="password.match(/[0-9]/) ? 'text-success':'text-danger'">
                                             <i class=" pr-2"
                                                 x-bind:class="password.match(/[0-9]+/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span> Must contain a number</span>
-                                        </strong>
+                                        </span>
                                     </div>
-                                    <div class="p-2">
-                                        <strong
+                                    <div class="m-0">
+                                        <span
                                             x-bind:class="password.match(/[!@#$%^&*(),.?:{}|<>]/) ? 'text-success':'text-danger'">
                                             <i class=" pr-2"
                                                 x-bind:class="password.match(/[!@$%^&*(),.?:{}|<>]/) ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span> Must contain Special character</span>
                                         </strong>
                                     </div>
-                                    <div class="p-2">
-                                        <strong
+                                    <div class="m-0">
+                                        <span
                                             x-bind:class="password.length>=8 && password == password_confirm ? 'text-success':'text-danger'">
                                             <i class=" pr-2"
                                                 x-bind:class="password.length >= 8 && password == password_confirm ? 'bi bi-check-circle-fill':'bi bi-x-circle-fill'"></i>
                                             <span> Passwords must match</span>
-                                        </strong>
+                                        </span>
                                     </div>
                                 </div>
                             </div>

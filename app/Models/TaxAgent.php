@@ -32,4 +32,13 @@ class TaxAgent extends Model implements Auditable
 	{
 		return $this->hasMany(RenewTaxAgentRequest::class);
 	}
+
+	// Scopes
+	public function scopeApproved($query){
+		return $query->where('status', TaxAgentStatus::APPROVED);
+	}
+
+	public function scopePending($query){
+		return $query->where('status', TaxAgentStatus::PENDING);
+	}
 }

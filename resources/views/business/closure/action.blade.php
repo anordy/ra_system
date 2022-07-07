@@ -1,0 +1,1 @@
+<a href="{{ route('business.viewClosure', $row->id)  }}" class="btn btn-info btn-sm" onclick="">View </a>
