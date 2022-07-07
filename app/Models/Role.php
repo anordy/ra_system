@@ -11,7 +11,7 @@ class Role extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
-        'name'
+        'name', 'report_to'
     ];
     protected $touches = ['permissions'];
 
