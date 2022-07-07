@@ -55,9 +55,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
-
-    'client_url' => env('CLIENT_APP_URL','http://localhost:8001'),
-
+    
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

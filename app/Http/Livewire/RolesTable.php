@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Role;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -21,17 +22,15 @@ class RolesTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-        $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex) {
+        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
-              return [
-                'style' => 'width: 20%;',
-              ];
+                return [
+                    'style' => 'width: 20%;',
+                ];
             }
-        
+
             return [];
-          });
-
-
+        });
     }
 
     protected $listeners = [
@@ -41,12 +40,17 @@ class RolesTable extends DataTableComponent
     public function columns(): array
     {
         return [
+           
             Column::make('Name', 'name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Report', 'reportTo')
+                ->label(fn ($row) => $row->reportTo)
                 ->sortable()
                 ->searchable(),
             Column::make('Configure Permission', 'id')
                 ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$value)"><i class="fas fa-cog"></i> </button>
+                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$value)"><i class="fas fa-cog"></i></button>
                 HTML)
                 ->html(true),
             Column::make('Action', 'id')
@@ -56,6 +60,17 @@ class RolesTable extends DataTableComponent
                 HTML)
                 ->html(true),
         ];
+    }
+
+
+    public function builder(): Builder
+    {
+
+
+        $query = Role::query()
+            ->leftJoin('roles as reports', 'reports.report_to', '=', 'roles.id')
+            ->select('roles.*', 'reports.name as reportTo');
+        return $query;
     }
 
 

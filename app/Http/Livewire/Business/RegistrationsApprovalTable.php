@@ -41,7 +41,7 @@ class RegistrationsApprovalTable extends DataTableComponent
             Column::make('Buss. Reg. No.', 'reg_no'),
             Column::make('Mobile', 'mobile'),
             Column::make('Date of Commencing', 'date_of_commencing')
-                ->format(function($value){
+                ->format(function($value,$row){
                     return $value->toFormattedDateString();
                 }),
             Column::make('Status', 'verified_at')

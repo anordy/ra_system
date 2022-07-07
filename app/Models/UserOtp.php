@@ -37,6 +37,10 @@ class UserOtp extends Model
         $max = $min * 10 - 1;
         $code = mt_rand($min, $max);
 
+        if(config('app.env') == 'local'){
+            return '123456';
+        }
+
         return $code;
     }
 

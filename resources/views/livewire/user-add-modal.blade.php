@@ -73,19 +73,19 @@
                                 id="password_confirmation" x-model="password_confirm">
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12 my-0">
                             <small x-bind:class="password.length >=8 ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.length >=8 ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Password must contain At least 8 characters</small>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12 my-0">
                             <small x-bind:class="password.match(/[A-Z]/) ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.match(/[A-Z]/) ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Password must contain uppercase</small>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12 my-0">
                             <small x-bind:class="password.match(/[!@$#%^&*(),.?:{}|<>]/) ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.match(/[!@$#%^&*(),.?:{}|<>]/) ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Password must contain special character</small>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12 my-0">
                             <small x-bind:class="password.match(/[0-9]/) ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.match(/[0-9]/) ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Password must contain Number</small>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12 my-0">
                             <small x-bind:class="password.length >=8 && password==password_confirm ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.length >=8 & password==password_confirm ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Passwords must match</small>
                         </div>
                     </div>
