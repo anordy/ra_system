@@ -15,8 +15,8 @@ class CreateBusinessTempClosures extends Migration
     {
         Schema::create('business_temp_closures', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('closing_date');
-            $table->timestamp('opening_date');
+            $table->dateTime('closing_date');
+            $table->dateTime('opening_date');
             $table->string('reason');
             $table->boolean('is_extended')->default(false);
             $table->boolean('show_extension')->default(false);
