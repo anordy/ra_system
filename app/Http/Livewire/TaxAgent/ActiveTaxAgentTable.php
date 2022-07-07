@@ -14,7 +14,7 @@ class ActiveTaxAgentTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-		return TaxAgent::where('is_verified', 1);
+		return TaxAgent::where('status', 'approved');
 	}
 
 	public function configure(): void
@@ -42,7 +42,7 @@ class ActiveTaxAgentTable extends DataTableComponent
 				->sortable(),
 			Column::make("Region", "region")
 				->sortable(),
-			BooleanColumn::make('Status', 'is_verified')
+			BooleanColumn::make('Status', 'status')
 				->sortable(),
 			Column::make('Action', 'id')
 				->view('taxagents.includes.actions')

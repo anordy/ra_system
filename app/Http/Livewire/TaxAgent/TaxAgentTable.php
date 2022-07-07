@@ -58,7 +58,7 @@ class TaxAgentTable extends DataTableComponent
 	        ->sortable(),
 	        Column::make("Created At", "created_at")
 	          ->sortable(),
-	        Column::make('Status', 'is_verified')
+	        Column::make('Status', 'status')
           ->view('taxagents.includes.status'),
           Column::make('Action', 'id')
 	        ->view('taxagents.includes.actionReq')
@@ -108,17 +108,16 @@ class TaxAgentTable extends DataTableComponent
 		try {
 			$data = (object) $value['data'];
 			$agent = TaxAgent::find($data->id);
-			$agent->is_verified = 1;
-			$agent->ref_no = "ZRB10".rand(0, 9999);
+			$agent->status = 'approved';
+			$agent->reference_no = "ZRB10".rand(0, 9999);
 			$agent->save();
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
-			  $message = 'Tax agent approved',
-			  $type = 'info',
-			  $messageLong = 'Your application has been approved successfully',
-			  $href = '/taxagent/apply',
-			  $hrefText = 'View'
+			  $subject = 'Tax agent approval',
+                    $message = 'Your application has been approved successfully',
+                    $href = config('app.client_url').'/taxagent/apply',
+                    $hrefText = 'View'
 			));
 
 			$fee = TaPaymentConfiguration::where('category', 'first fee')->first();
@@ -152,10 +151,8 @@ class TaxAgentTable extends DataTableComponent
 				$zmBill = ZmCore::createBill($payer_id, $payer_type,$payer_name, $payer_email, $payer_phone, $expire_date,
 				  $description, $payment_option, $currency,
 				  $exchange_rate, $createdby_id, $createdby_type, $billitems);
-
 				ZmCore::sendBill($zmBill->id);
 				$this->alert('success', 'saved successfully');
-
 			}
 
 			catch (\Throwable $exception)
@@ -163,7 +160,6 @@ class TaxAgentTable extends DataTableComponent
 				Log::error($exception);
 				$this->alert('error', 'something went wrong');
 			}
-
 
 //			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
 //			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
@@ -186,16 +182,15 @@ class TaxAgentTable extends DataTableComponent
 		try {
 			$data = (object) $value['data'];
 			$agent = TaxAgent::find($data->id);
-			$agent->is_verified = 2;
+			$agent->status = 'rejected';
 			$agent->save();
-
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
 			  $message = 'Tax agent rejected',
 			  $type = 'info',
 			  $messageLong = 'Your application has been rejected',
-			  $href = '/taxagent/apply',
+			  $href = 'http://127.0.0.1:2020/taxagent/apply',
 			  $hrefText = 'View'
 			));
 
