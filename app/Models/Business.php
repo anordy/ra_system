@@ -71,4 +71,13 @@ class Business extends Model implements Auditable
     public function businessStatus(){
         return $this->hasOne(BusinessStatus::class);
     }
+
+    // Scopes
+    public function scopeApproved($query){
+        $query->where('status', BusinessStatus::APPROVED);
+    }
+
+    public function scopeClosed($query){
+        $query->where('status', BusinessStatus::TEMP_CLOSED);
+    }
 }
