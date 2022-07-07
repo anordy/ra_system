@@ -12,7 +12,7 @@ class ChangePasswordController extends Controller
 {
     public function index($id)
     {
-        return view('auth.passwords.change', ['id' => Crypt::encrypt($id)]);
+        return view('auth.passwords.change', ['id' => $id]);
     }
 
     public function updatePassword(Request $request)
@@ -25,7 +25,7 @@ class ChangePasswordController extends Controller
             'password_confirmation.confirmed' => 'password and password confimation must match'
         ]);
 
-        $user = User::find(decrypt(decrypt($request->user_id)));
+        $user = User::find(Crypt::decrypt(Crypt::decrypt($request->user_id)));
 
         $user->is_first_login = false;
         $user->password = Hash::make($request->password);

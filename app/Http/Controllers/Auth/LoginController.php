@@ -63,7 +63,7 @@ class LoginController extends Controller
             }
 
             if ($user->is_first_login == true ) {
-                $id = Crypt::encrypt($user->id);
+                $id = Crypt::encrypt(Crypt::encrypt($user->id));
                 session()->forget("token_id");
                 session()->forget("user_id");
                 session()->forget("email");
