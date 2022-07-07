@@ -9,15 +9,20 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Role extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
-    
+
     protected $fillable = [
-         'name'
+        'name', 'report_to'
     ];
     protected $touches = ['permissions'];
 
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function reportTo()
+    {
+        return $this->belongsTo(Role::class, 'report_to');
     }
 
     public function permissions()
