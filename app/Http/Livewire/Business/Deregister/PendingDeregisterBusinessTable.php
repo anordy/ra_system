@@ -3,12 +3,13 @@
 namespace App\Http\Livewire\Business\Deregister;
 
 use App\Models\BusinessDeregistration;
+use App\Models\BusinessStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class DeregisterBusinessTable extends DataTableComponent
+class PendingDeregisterBusinessTable extends DataTableComponent
 {
 
 
@@ -20,7 +21,7 @@ class DeregisterBusinessTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessDeregistration::orderBy('business_deregistrations.created_at', 'DESC');
+        return BusinessDeregistration::where('business_deregistrations.status', BusinessStatus::PENDING)->orderBy('business_deregistrations.created_at', 'DESC');
     }
 
     public function columns(): array
@@ -40,7 +41,14 @@ class DeregisterBusinessTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Reason', 'reason')
-                ->sortable()
+                ->sortable(),
+            Column::make('Action', 'id')
+                ->format(function ($value, $row) {
+                        return <<< HTML
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'business.deregister.deregister-confirm-modal',$value)">Confirm </button>
+                    HTML;
+                })
+                ->html(true),
         ];
     }
 
