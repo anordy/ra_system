@@ -89,7 +89,7 @@ class UserAddModal extends Component
                 $admin->notify(new DatabaseNotification(
                     $subject = 'User creaated',
                     $message = 'New user ' . $user->fullname() . ' created successfully by ' . Auth::user()->fname.' '.Auth::user()->lname,
-                    $href = route('settings.users.index'),
+                    $href = 'settings.users.index',
                     $hrefText = 'View'
                 ));
             }
