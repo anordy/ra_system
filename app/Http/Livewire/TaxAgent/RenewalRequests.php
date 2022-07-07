@@ -44,7 +44,7 @@ class RenewalRequests extends DataTableComponent
 
 	public function builder(): Builder
 	{
-		return RenewTaxAgentRequest::where('renew_tax_agent_requests.status', 'pending');
+		return RenewTaxAgentRequest::where('renew_tax_agent_requests.status', 'pending')->where('renew_tax_agent_requests.status','!=', 'drafting');
 	}
 
 	public function columns(): array
