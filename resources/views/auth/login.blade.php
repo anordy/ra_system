@@ -41,11 +41,19 @@
                                     autocomplete="current-password" />
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label class="form-label" for="captcha">Captcha</label>
+                                <div class="d-flex">
+                                    <span id="captcha_label">{!! captcha_img('flat') !!}</span>
+                                    <button style="flex: 1" type="button" class="btn btn-outline-success ml-2" onclick="captchaReload()">
+                                        <i class='bi bi-arrow-clockwise mr-1'></i>
+                                        Reload
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <input type="text" id="captcha"
-                                    class="form-control @error('captcha') is-invalid @enderror" name="captcha"
-                                    value="{{ old('captcha') }}" required autocomplete="captcha" autofocus />
+                                       class="form-control @error('captcha') is-invalid @enderror" name="captcha" required autofocus />
                                 <div class="invalid-feedback">
                                     @error('captcha')
                                     {{ $message }}
@@ -53,12 +61,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <span id="captcha-label">{!! captcha_img('flat') !!}</span>
-                                <button type="button" class="btn btn-outline-success" onclick="captchaReload()">
-                                    <i class='fas fa-redo'></i>
-                                </button>
-                            </div>
                             <button class="btn btn-info px-5" type="submit">Login</button>
                             <p class="mt-3 float-right"><a href="{{ url('password/reset') }}">Forgot
                                     password ?</a>
