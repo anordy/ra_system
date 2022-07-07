@@ -5,10 +5,14 @@
 @section('content')
     <div class="d-flex justify-content-between">
         <h6>Registration Details</h6>
-        <a class="btn btn-info" href="{{route('taxagents.active')}}">Back</a>
+        <a class="btn btn-info" href="{{route('taxagents.requests')}}">Back</a>
     </div>
+
     <div class="card mt-3">
         <div class="card-body">
+            @if($agent->status == 'pending')
+            <livewire:tax-agent.actions :taxagent=$agent></livewire:tax-agent.actions>
+            @endif
             <div class="row my-2">
                 <div class="col-md-2 mb-2">
                     <span class="font-weight-bold text-uppercase">TIN No</span>

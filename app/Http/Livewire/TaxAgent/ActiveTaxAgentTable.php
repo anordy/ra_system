@@ -30,7 +30,7 @@ class ActiveTaxAgentTable extends DataTableComponent
 	public function columns(): array
 	{
 		return [
-			Column::make("Z_Number", "reference_no")
+			Column::make("Reference No", "reference_no")
 				->sortable(),
 			Column::make("TIN No", "tin_no")
 				->sortable(),
