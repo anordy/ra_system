@@ -13,13 +13,15 @@ class RoleEditModal extends Component
 
     use LivewireAlert;
     public $name;
-    public $role;
+    public $report_to = null;
+    public $roles;
 
 
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:roles,name,'.$this->role->id.',id',
+            'name' => 'required|unique:roles,name,' . $this->role->id . ',id',
+            'report_to' => 'nullable|unique:roles',
         ];
     }
 
@@ -29,6 +31,7 @@ class RoleEditModal extends Component
         try {
             $this->role->update([
                 'name' => $this->name,
+                'report_to' => $this->report_to == 'null' ? null : $this->report_to
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -42,6 +45,9 @@ class RoleEditModal extends Component
         $data = Role::find($id);
         $this->role = $data;
         $this->name = $data->name;
+        $this->report_to = $data->report_to;
+
+        $this->roles = Role::all();
     }
 
     public function render()

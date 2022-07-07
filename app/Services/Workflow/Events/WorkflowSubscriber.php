@@ -23,12 +23,20 @@ class WorkflowSubscriber implements EventSubscriberInterface
     }
     public function guardEvent(GuardEvent $event)
     {
+        $subject = $event->getSubject();
+        $task = $subject->pinstancesActive;
         $user = auth()->user();
         $marking = $event->getMarking()->getPlaces();
         $place = $marking[key($marking)];
         $owner = $place['owner'];
-        $operator_type = $place['operator_type'];
-        $operators = $place['operators'];
+
+        if ($task) {
+            $operator_type = $task->operator_type;
+            $operators = json_decode($task->operators, true);
+        } else {
+            $operator_type = $place["operator_type"];
+            $operators = $place['operators'];
+        }
         $status = $place['status'];
 
         if ($status != 1) {
@@ -90,6 +98,10 @@ class WorkflowSubscriber implements EventSubscriberInterface
         $transition = $event->getTransition();
         $context = $event->getContext();
 
+        $task = $subject->pinstancesActive;
+        $task->status = 'completed';
+        $task->save();
+
         try {
             foreach ($places as $key => $place) {
                 $task =  new WorkflowTask([
@@ -103,7 +115,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'approved_on' => Carbon::now()->toDateTimeString(),
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
-                    'status' => 'running',
+                    'status' => $key == 'completed' ? 'completed' : 'running',
                     'remarks' => $context['comment']
                 ]);
 

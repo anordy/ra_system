@@ -30,7 +30,7 @@ class ISIC1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
                 if ($validator->fails()) {
                     throw new Exception('Correct the excel');
                 }
-                ISIC1::create([
+                ISIC1::updateOrCreate([
                     'code' => $row['code'],
                     'description' => $row['description'],
                 ]);
@@ -51,7 +51,6 @@ class ISIC1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
     {
         return [
             'code.required' => 'Code is required',
-            'code.unique' => 'The code has already been taken',
             'description.required' => 'Description is required',
         ];
     }
@@ -62,7 +61,7 @@ class ISIC1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
     public function rules(): array
     {
         return  [
-            'code' => 'required|unique:isic1s,code',
+            'code' => 'required',
             'description' => 'required',
         ];
     }

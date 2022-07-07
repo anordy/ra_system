@@ -13,6 +13,14 @@ class BusinessController extends Controller
         return view('business.closure.closure-table');
     }
 
+    public function viewClosure(){
+        return view('business.closure.view');
+    }
+
+    public function viewDeregistration(){
+        return view('business.deregister.view');
+    }
+
     public function deregistrations(){
         return view('business.deregister.deregistration-table');
     }
