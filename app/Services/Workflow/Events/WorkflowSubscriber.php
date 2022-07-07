@@ -29,8 +29,14 @@ class WorkflowSubscriber implements EventSubscriberInterface
         $marking = $event->getMarking()->getPlaces();
         $place = $marking[key($marking)];
         $owner = $place['owner'];
-        $operator_type = $task->operator_type;
-        $operators = json_decode($task->operators, true);
+
+        if ($task) {
+            $operator_type = $task->operator_type;
+            $operators = json_decode($task->operators, true);
+        } else {
+            $operator_type = $place["operator_type"];
+            $operators = $place['operators'];
+        }
         $status = $place['status'];
 
         if ($status != 1) {
@@ -109,7 +115,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'approved_on' => Carbon::now()->toDateTimeString(),
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
-                    'status' => $key=='completed' ? 'completed': 'running',
+                    'status' => $key == 'completed' ? 'completed' : 'running',
                     'remarks' => $context['comment']
                 ]);
 
