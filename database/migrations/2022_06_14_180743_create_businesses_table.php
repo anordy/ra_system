@@ -22,6 +22,7 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('business_activities_type_id'); // Wholesale or Retail
             $table->unsignedBigInteger('currency_id');
 
+
             $table->string('name');
             $table->string('tin');
             $table->string('reg_no');
@@ -48,11 +49,15 @@ class CreateBusinessesTable extends Migration
             $table->string('z_no')->nullable();
             $table->string('marking')->nullable();
 
+            $table->unsignedBigInteger('isiic_i')->nullable();
+            $table->unsignedBigInteger('isiic_ii')->nullable();
+            $table->unsignedBigInteger('isiic_iii')->nullable();
+            $table->unsignedBigInteger('isiic_iv')->nullable();
+
             // TODO: Remove use approval instead
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
-
         });
     }
 
