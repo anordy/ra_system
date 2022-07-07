@@ -44,7 +44,7 @@ class RenewalRequests extends DataTableComponent
 
 	public function builder(): Builder
 	{
-		return RenewTaxAgentRequest::where('status', 'pending');
+		return RenewTaxAgentRequest::where('renew_tax_agent_requests.status', 'pending');
 	}
 
 	public function columns(): array
@@ -62,12 +62,7 @@ class RenewalRequests extends DataTableComponent
 		  ->view('taxagents.includes.renewal_status'),
 		  Column::make('Action', 'id')
 		  ->view('taxagents.includes.renewal_actions')
-//			->label(function ($row) {
-//				return <<< HTML
-//                        <button data-toggle="tooltip" data-placement="right" title="View" class="btn btn-info btn-sm" wire:click="view($row->id)"><i class="fa fa-eye"></i></button>
-//                    HTML;
-//			})
-//			->html(true),
+
 		];
 	}
 
