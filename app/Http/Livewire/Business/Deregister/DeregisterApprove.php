@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Http\Livewire\Business\Closure;
+namespace App\Http\Livewire\Business\Deregister;
 
 use Exception;
 use Livewire\Component;
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use Illuminate\Support\Facades\DB;
-use App\Models\BusinessTempClosure;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
+use App\Models\BusinessDeregistration;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class ClosureConfirmModal extends Component
+class DeregisterApprove extends Component
 {
 
     use LivewireAlert;
 
-    public $temp_closure;
+    public $deregister;
     public $business_id;
     public $business;
 
@@ -28,25 +29,25 @@ class ClosureConfirmModal extends Component
         ];
     }
 
-    public function mount($id)
+    public function mount()
     {
-        $this->temp_closure = BusinessTempClosure::find($id);
-        $this->business = Business::find($this->temp_closure->business_id);
+        $this->deregister = BusinessDeregistration::find((int) Route::current()->parameter('id'));
+        $this->business = Business::find($this->deregister->business_id);
     }
 
 
-    public function confirm()
+    public function approve()
     {
 		DB::beginTransaction();
         try{
-            $this->temp_closure->update([
+            $this->deregister->update([
                     'approved_by' => auth()->user()->id,
                     'approved_on' => date('Y-m-d H:i:s'),
                     'status' => BusinessStatus::APPROVED
             ]);
-            $this->business->update(['status' => BusinessStatus::TEMP_CLOSED]);
+            $this->business->update(['status' => BusinessStatus::DEREGISTERED]);
             DB::commit();
-            $this->flash('success', 'Closure confirmed', [], redirect()->back()->getTargetUrl());
+            $this->flash('success', 'De-registration approved', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             DB::rollBack();
             Log::error($e);
@@ -58,13 +59,13 @@ class ClosureConfirmModal extends Component
     {
 		DB::beginTransaction();
         try{
-            $this->temp_closure->update([
+            $this->deregister->update([
                     'rejected_by' => auth()->user()->id,
                     'rejected_on' => date('Y-m-d H:i:s'),
                     'status' => BusinessStatus::REJECTED
             ]);
             DB::commit();
-            $this->flash('success', 'Closure rejected', [], redirect()->back()->getTargetUrl());
+            $this->flash('success', 'De-registeration rejected', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             DB::rollBack();
             Log::error($e);
@@ -74,6 +75,6 @@ class ClosureConfirmModal extends Component
 
     public function render()
     {
-        return view('livewire.business.closure.closure-confirm-modal');
+        return view('livewire.business.deregister.deregister-approve');
     }
 }

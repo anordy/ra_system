@@ -43,12 +43,8 @@ class PendingDeregisterBusinessTable extends DataTableComponent
             Column::make('Reason', 'reason')
                 ->sortable(),
             Column::make('Action', 'id')
-                ->format(function ($value, $row) {
-                        return <<< HTML
-                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'business.deregister.deregister-confirm-modal',$value)">Confirm </button>
-                    HTML;
-                })
-                ->html(true),
+                ->view('business.deregister.action'),
+
         ];
     }
 
