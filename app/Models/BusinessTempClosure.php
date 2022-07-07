@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class TemporaryBusinessClosure extends Model implements Auditable
+class BusinessTempClosure extends Model implements Auditable
 {
     use HasFactory, \OwenIt\Auditing\Auditable;
 
@@ -18,6 +18,10 @@ class TemporaryBusinessClosure extends Model implements Auditable
 
     public function user() {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function taxpayer() {
+        return $this->belongsTo(Taxpayer::class, 'submitted_by');
     }
 
     public function rejected() {

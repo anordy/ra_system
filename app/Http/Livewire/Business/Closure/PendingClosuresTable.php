@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire\Business\Closure;
 
-use id;
-use Carbon\Carbon;
 use App\Models\BusinessStatus;
-use App\Models\TemporaryBusinessClosure;
+use Exception;
+use Carbon\Carbon;
+use App\Models\BusinessTempClosure;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -23,12 +23,12 @@ class PendingClosuresTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended', 'status', 'approved_by']);
+        $this->setAdditionalSelects(['is_extended', 'business_temp_closures.status']);
     }
 
     public function builder(): Builder
     {
-        return TemporaryBusinessClosure::query()->where('status', 'pending')->orderBy('temporary_business_closures.opening_date', 'DESC');
+        return BusinessTempClosure::query()->where('business_temp_closures.status', BusinessStatus::PENDING)->orderBy('business_temp_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
@@ -51,80 +51,31 @@ class PendingClosuresTable extends DataTableComponent
                 ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
                 ->sortable()
                 ->searchable(),
+            Column::make('Is Extended', 'is_extended')
+                ->format(function($value, $row) { 
+                    if ($row->is_extended == false) {
+                        return <<< HTML
+                        <span class="badge badge-info py-1 px-2">No</span>
+                    HTML;
+                    } else {
+                        return <<< HTML
+                        <span class="badge badge-success py-1 px-2">Yes</span>
+                    HTML;
+                    }
+                 })
+                ->sortable()
+                ->searchable()
+                ->html(true), 
             Column::make('Closure Reason', 'reason')
                 ->sortable(),
-            Column::make('Status', 'status')
-                ->format(function ($value, $row) {
-                        return <<< HTML
-                        <span class="badge badge-warning py-1 px-2">Pending</span>
-                    HTML;
-                })
-                ->html(true),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
                         return <<< HTML
-                        <button class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve" wire:click="changeStatus($value, 'approved')"><i class="fa fa-check"></i> </button>
-                        <button class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Reject" wire:click="changeStatus($value, 'rejected')"><i class="fa fa-times"></i> </button>
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'business.closure.closure-confirm-modal',$value)">Confirm </button>
                     HTML;
                 })
                 ->html(true),
         ];
-    }
-
-    
-    public function changeStatus($id, $status)
-    {
-        $status_text = $status == 'approved' ? 'Approve' : 'Reject';
-        $this->alert('warning', 'Are you sure you want to '. $status_text .' ?', [
-            'position' => 'center',
-            'toast' => false,
-            'showConfirmButton' => true,
-            'confirmButtonText' => $status_text,
-            'onConfirmed' => 'confirmed',
-            'showCancelButton' => true,
-            'cancelButtonText' => 'Cancel',
-            'timer' => null,
-            'data' => [
-                'id' => $id,
-                'status' => $status
-            ],
-
-        ]);
-    }
-
-
-    public function confirmed($value)
-    {
-        try {
-            $data = (object) $value['data'];
-            $temporary_business_closure = TemporaryBusinessClosure::find($data->id);
-            if ($data->status == 'approved') {
-                $temporary_business_closure->update([
-                    'approved_by' => auth()->user()->id,
-                    'approved_on' => date('Y-m-d H:i:s'),
-                    'status' => $data->status
-                ]);
-                BusinessStatus::updateOrCreate(
-                    ['business_id' => $temporary_business_closure->business_id],
-                    ['status' => 'closed']
-                );
-                $this->flash('success', 'Business '. $data->status . ' successfully', [], redirect()->back()->getTargetUrl());
-            } else if ($data->status == 'rejected') {
-                $temporary_business_closure->update([
-                    'rejected_by' => auth()->user()->id,
-                    'rejected_on' => date('Y-m-d H:i:s'),
-                    'status' => $data->status
-                ]);
-                BusinessStatus::updateOrCreate(
-                    ['business_id' => $temporary_business_closure->business_id,],
-                    ['status' => 'open']
-                );
-                $this->flash('success', 'Business '. $data->status . ' successfully', [], redirect()->back()->getTargetUrl());
-            }
-        } catch (Exception $e) {
-            report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
-        }
     }
 
 }

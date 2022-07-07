@@ -6,7 +6,7 @@ namespace App\Http\Controllers\v1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Jobs\SendSMS;
+use App\Jobs\SendZanMalipoSMS;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
@@ -47,7 +47,7 @@ class ZanMalipoController extends Controller
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                     $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
-                    SendSMS::dispatch(ZmCore::formatPhone($bill->payer_phone_number), $message);
+                    SendZanMalipoSMS::dispatch(ZmCore::formatPhone($bill->payer_phone_number), $message);
             } else {
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
             }

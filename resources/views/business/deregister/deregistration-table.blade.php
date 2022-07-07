@@ -1,29 +1,27 @@
 @extends('layouts.master')
 
-@section('title')
-    Temporary Business Closures
-@endsection
+@section('title','Business De-registrations History')
 
 @section('content')
-    <div class="card p-0 m-0">
-        <div class="card-header text-uppercase font-weight-bold">
-            Temporary Businesses Closures
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="text-uppercase">Business De-registrations</h5>
         </div>
-        <div class="card-body mt-0 p-2">
+        <div class="card-body">
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
-                <a href="#tab2" class="nav-item nav-link font-weight-bold">Confirmed Closures</a>
-                <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Closures</a>
+                <a href="#tab2" class="nav-item nav-link font-weight-bold">Approved De-registrations</a>
+                <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected De-registrations</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show">
-                    @livewire('business.closure.pending-closures-table')
+                    @livewire('business.deregister.pending-deregister-business-table')
                 </div>
                 <div id="tab2" class="tab-pane fade">
-                    @livewire('business.closure.approved-closures-table')
+                    @livewire('business.deregister.approved-deregister-business-table')
                 </div>
                 <div id="tab3" class="tab-pane fade">
-                    @livewire('business.closure.rejected-closures-table')
+                    @livewire('business.deregister.rejected-deregister-business-table')
                 </div>
             </div>
         </div>

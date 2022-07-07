@@ -95,6 +95,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
+        Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
+
     });
 
 
