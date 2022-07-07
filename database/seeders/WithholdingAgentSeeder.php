@@ -34,7 +34,7 @@ class WithholdingAgentSeeder extends Seeder
             'date_of_commencing' => Carbon::now()->toDateTimeString(),
         ]);
 
-        WithholdingAgent::create([
+        WithholdingAgent::updateOrCreate([
             'tin' => 545049506,
             'address' => 'PO BOX 139 Posta, Dar es salaam',
             'wa_number' => 2345678901,
