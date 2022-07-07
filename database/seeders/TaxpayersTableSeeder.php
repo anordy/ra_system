@@ -45,7 +45,7 @@ class TaxpayersTableSeeder extends Seeder
             'middle_name' => 'Middle',
             'last_name' => 'Doe',
             'email' => 'v.meshack@live.co.uk',
-            'mobile' => '0700000000',
+            'mobile' => '0700000001',
             'alt_mobile' => '0754555555',
             'location' => 'Unguja',
             'physical_address' => 'P.O.Box 887, Unguja, Zanzibar.',

@@ -18,8 +18,10 @@ class RoleSeeder extends Seeder
 
         $data = [
             ['name' => 'Administrator'],
-            ['name' => 'Registration Officer'],
             ['name' => 'Registration Manager'],
+            ['name' => 'Registration Officer', 'report_to' => 2],
+            ['name' => 'Compliance Manager'],
+            ['name' => 'Compliance Officer', 'report_to' => 4],
             ['name' => 'Directory Of TRAI'],
             ['name' => 'Commissioner'],
         ];
@@ -30,6 +32,5 @@ class RoleSeeder extends Seeder
         $role = Role::where('name', 'Administrator')->first();
         $permissions = Permission::all();
         $role->permissions()->sync($permissions);
-
     }
 }

@@ -13,13 +13,15 @@ class RoleEditModal extends Component
 
     use LivewireAlert;
     public $name;
-    public $role;
+    public $report_to = null;
+    public $roles;
 
 
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:roles,name,'.$this->role->id.',id',
+            'name' => 'required|unique:roles,name,'.$this->role->id.',id',
+            'report_to' => 'nullable|unique:roles',
         ];
     }
 

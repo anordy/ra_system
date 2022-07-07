@@ -15,6 +15,18 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="form-group col-lg-12">
+                        <label class="">Reports To</label>
+                        <select class="form-control" wire:model.lazy="report_to">
+                            <option value="null" disabled selected>Choose option</option>
+                            @foreach ($roles as $row)
+                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('report_to')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
