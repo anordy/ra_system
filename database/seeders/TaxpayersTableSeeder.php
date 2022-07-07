@@ -68,7 +68,7 @@ class TaxpayersTableSeeder extends Seeder
             'town' => 'Unguja',
             'region' => 'Unguja',
             'reference_no' => 'ZRB909090',
-            'is_verified' => true,
+            'status' => 'drafting',
             'taxpayer_id' => $taxpayer->id
         ]);
     }

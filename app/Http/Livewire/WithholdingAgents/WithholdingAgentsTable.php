@@ -62,9 +62,6 @@ class WithholdingAgentsTable extends DataTableComponent
             ->html(true)
                 ->sortable()
                 ->searchable(),
-            Column::make('Verified On', 'created_at')
-                ->format(function($value, $row) { return Carbon::create($row->created_at)->toFormattedDateString(); })
-                ->sortable(),
             Column::make('Commencing Date', 'date_of_commencing')
                 ->format(function($value, $row) { return Carbon::create($row->date_of_commencing)->toFormattedDateString(); })
                 ->sortable(),

@@ -41,7 +41,7 @@ class UserAddModal extends Component
             'email' => 'required|email|unique:users,email',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
-            // 'password' => ['required', 'confirmed', 'min:10', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', 'confirmed', 'min:8', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
         ];
     }
@@ -88,7 +88,7 @@ class UserAddModal extends Component
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
                     $subject = 'User creaated',
-                    $message = 'New user ' . $user->fullname() . ' created successfully by ' . Auth::user()->fullname(),
+                    $message = 'New user ' . $user->fullname() . ' created successfully by ' . Auth::user()->fname.' '.Auth::user()->lname,
                     $href = route('settings.users.index'),
                     $hrefText = 'View'
                 ));

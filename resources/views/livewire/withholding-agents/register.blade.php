@@ -7,7 +7,7 @@
                 <div class="row mx-4 mt-2">
                     <div class="col-md-4 form-group">
                         <label for="tin">Tax Identification No. (TIN)</label>
-                        <input type="text" wire:model.lazy="tin" required
+                        <input type="text" maxlength="9" wire:model.lazy="tin" required
                             class="form-control {{ $errors->has('tin') ? 'is-invalid' : '' }}">
                         @error('tin')
                             <div class="invalid-feedback">
@@ -141,8 +141,17 @@
                 </div>
                 <div class="col-md-4 form-group">
                     <label for="title">Title</label>
-                    <input type="text" wire:model.lazy="title" name="title" id="title"
-                        class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}">
+                    <select wire:model="title" class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}">
+                        <option></option>
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Sir">Sir</option>
+                        <option value="Madam">Madam</option>
+                        <option value="Dr">Dr</option>
+                        <option value="Prof">Prof</option>
+                        <option value="Hon">Hon</option>
+                        <option value="Other">Other</option>
+                    </select>
                     @error('title')
                         <div class="invalid-feedback">
                             {{ $errors->first('title') }}
@@ -164,7 +173,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col-md-12 d-flex justify-content-center">
-                    <a href="/withholding-agents" class="btn btn-danger mr-2">Cancel</a>
+                    <a href="{{ route('withholdingAgents.list') }}" class="btn btn-danger mr-2">Cancel</a>
                     <button wire:click="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>

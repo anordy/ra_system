@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Exception;
+use App\Events\SendSms;
+use App\Events\SendMail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Events\SendMail;
-use App\Events\SendSms;
-use OwenIt\Auditing\Contracts\Auditable;
 
 class WithholdingAgent extends Model implements Auditable
 {
