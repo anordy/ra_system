@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
+use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -13,9 +14,21 @@ class RegistrationsTable extends DataTableComponent
     
     use LivewireAlert;
 
+    public $rejected = false;
+    public $pending = false;
+    public $approved = false;
+
     public function builder(): Builder
     {
-        return Business::where('verified_at', '!=', null)->orderBy('created_at', 'desc');
+        if ($this->rejected){
+            return Business::where('status', BusinessStatus::REJECTED)->orderBy('created_at', 'desc');
+        }
+
+        if ($this->pending){
+            return Business::where('status', BusinessStatus::PENDING)->orderBy('created_at', 'desc');
+        }
+
+        return Business::where('status', '!=', BusinessStatus::DRAFT)->orderBy('created_at', 'desc');
     }
 
     public function configure(): void
