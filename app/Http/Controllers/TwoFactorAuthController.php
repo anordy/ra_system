@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserOtp;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class TwoFactorAuthController extends Controller
@@ -75,8 +77,21 @@ class TwoFactorAuthController extends Controller
 
     public function resend()
     {
+        $tokenId = decrypt(session()->get('token_id'));
+        $userId = decrypt(session()->get('user_id'));
 
+        if ($tokenId == null && $userId == null) {
+            return redirect()->route('login')->withErrors(['error' => 'Please login again']);
+        }
 
-        return back()->with('success', 'We sent you code on your email.');
+        $token = UserOtp::find($tokenId);
+        $token->code = $token->generateCode();
+        $token->updated_at = Carbon::now()->toDateTimeString();
+        $token->save();
+        $token->sendCode();
+        
+        Session::flash('success', 'Token resend successfully. Check your email/sms');
+
+        return back();
     }
 }

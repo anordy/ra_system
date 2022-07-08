@@ -87,8 +87,8 @@ class UserAddModal extends Component
 
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
-                    $subject = 'New User created',
-                    $message = 'New user ' . $user->fullname() . ' created successfully by ' .auth()->id()==$admin->id ? 'you' : auth()->user()->fname.'' .auth()->user()->lname,
+                    $subject = 'New '.Role::find($this->role)->name. ' created',
+                    $message = 'New '.Role::find($this->role)->name.' ' .$user->fullname() . ' created by ' .auth()->user()->fname.' '.auth()->user()->lname,
                     $href = 'settings.users.index',
                     $hrefText = 'View'
                 ));
