@@ -98,9 +98,13 @@ class WorkflowSubscriber implements EventSubscriberInterface
         $transition = $event->getTransition();
         $context = $event->getContext();
 
+
         $task = $subject->pinstancesActive;
-        $task->status = 'completed';
-        $task->save();
+        if ($task) {
+            $task->status = 'completed';
+            $task->save();
+        }
+
 
         try {
             foreach ($places as $key => $place) {

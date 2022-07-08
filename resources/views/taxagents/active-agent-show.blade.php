@@ -10,36 +10,36 @@
     <div class="card mt-3">
         <div class="card-body">
             <div class="row my-2">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-2">
                     <span class="font-weight-bold text-uppercase">TIN No</span>
                     <p class="my-1">{{ $agent->tin_no }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-2">
                     <span class="font-weight-bold text-uppercase">Plot No</span>
                     <p class="my-1">{{ $agent->plot_no }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-2">
                     <span class="font-weight-bold text-uppercase">Block</span>
                     <p class="my-1">{{ $agent->block }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-2">
                     <span class="font-weight-bold text-uppercase">Town</span>
                     <p class="my-1">{{ $agent->town }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-2">
                     <span class="font-weight-bold text-uppercase">Region</span>
                     <p class="my-1">{{ $agent->region }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-2">
                     <span class="font-weight-bold text-uppercase">Reference No</span>
                     <p class="my-1">{{ $agent->reference_no }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-2 mb-2">
                     <span  class="font-weight-bold text-uppercase">Status</span>
-                    @if($agent->is_verified == 1)
-                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Approved</p>
+                    @if($agent->status == 'approved')
+                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Verified</p>
 
-                    @elseif($agent->is_verified == 2)
+                    @elseif($agent->status == 'rejected')
                         <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Rejected</p>
                     @else
                         <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Pending</p>
@@ -64,7 +64,7 @@
 
                     <tbody>
 
-                    @foreach($education as $index=> $academicRecord)
+                    @foreach($agent->academics as $index=> $academicRecord)
                         <tr>
                             <td>{{$index + 1}}</td>
                             <td>{{$academicRecord->school_name}}</td>
@@ -95,7 +95,7 @@
                     </thead>
 
                     <tbody>
-                    @foreach($prof as $index=> $agentProfessional)
+                    @foreach($agent->professionals as $index=> $agentProfessional)
                         <tr>
                             <td>{{$index + 1}}</td>
                             <td>{{$agentProfessional->body_name}}</td>
@@ -127,7 +127,7 @@
                     </thead>
 
                     <tbody>
-                    @foreach($tra as $index => $agentTraining)
+                    @foreach($agent->trainings as $index => $agentTraining)
                         <tr>
                             <td>{{$index + 1}}</td>
                             <td>{{$agentTraining->org_name}}</td>
