@@ -9,4 +9,11 @@ class ZmBillItem extends Model
 {
     use HasFactory;
 	protected $guarded = [];
+
+    protected $with = ['payment'];
+
+    public function payment()
+    {
+        return $this->belongsTo(ZmBill::class, 'zm_bill_id');
+    }
 }
