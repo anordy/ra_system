@@ -36,12 +36,12 @@ class WorkflowBusinessClosureSeeder extends Seeder
             'compliance_manager' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => []
+                'operators' => [1,2,3]
             ],
             'compliance_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => []
+                'operators' => [1,2,3]
             ],
             'completed' => [
                 'owner' => 'staff',

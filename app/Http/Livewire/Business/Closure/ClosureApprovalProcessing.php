@@ -5,7 +5,10 @@ namespace App\Http\Livewire\Business\Closure;
 use Exception;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Events\SendSms;
 use Livewire\Component;
+use App\Events\SendMail;
+use App\Models\Business;
 use App\Models\BusinessStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -37,6 +40,12 @@ class ClosureApprovalProcessing extends Component
             if ($this->checkTransition('compliance_officer_review')) {
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::APPROVED;
+                $business = Business::find($this->subject->business_id);
+                $business->update([
+                    'status' => BusinessStatus::TEMP_CLOSED
+                ]);
+                event(new SendSms('business-closure-approval', $this->subject->business_id));
+                event(new SendMail('business-closure-approval', $this->subject->business_id));
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
