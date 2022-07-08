@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserOtp;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -84,6 +85,9 @@ class TwoFactorAuthController extends Controller
         }
 
         $token = UserOtp::find($tokenId);
+        $token->code = $token->generateCode();
+        $token->updated_at = Carbon::now()->toDateTimeString();
+        $token->save();
         $token->sendCode();
         
         Session::flash('success', 'Token resend successfully. Check your email/sms');
