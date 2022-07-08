@@ -18,16 +18,15 @@ class SendBusinessClosureApprovedMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business, $taxpayer;
+    private $business;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business, Taxpayer $taxpayer)
+    public function __construct(Business $business)
     {
         $this->business = $business;
-        $this->$taxpayer = $taxpayer;
     }
 
     /**
@@ -37,8 +36,8 @@ class SendBusinessClosureApprovedMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->taxpayer->email){
-            Mail::to($this->taxpayer->email)->send(new BusinessClosureApproved($this->business, $this->taxpayer));
+        if ($this->business->taxpayer->email){
+            Mail::to($this->business->taxpayer->email)->send(new BusinessClosureApproved($this->business, $this->business->taxpayer));
         }
     }
 }
