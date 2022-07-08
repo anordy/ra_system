@@ -42,7 +42,7 @@ class DeregisterApprovalProcessing extends Component
                 $business->update([
                     'status' => BusinessStatus::DEREGISTERED
                 ]);
-                // event(new SendSms('business-deregister-approval', $this->subject->business_id));
+                event(new SendSms('business-deregister-approval', $this->subject->business_id));
                 event(new SendMail('business-deregister-approval', $this->subject->business_id));
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
