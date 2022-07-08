@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
+use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -17,7 +18,7 @@ class RegistrationsApprovalTable extends DataTableComponent
     {
         return Business::query()
             ->with('pinstances')
-            ->where('verified_at', null)
+            ->where('status', BusinessStatus::PENDING)
             ->orderBy('created_at', 'desc');
     }
 

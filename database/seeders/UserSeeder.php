@@ -26,7 +26,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'role_id' => 1,
-            'status' => true
+            'status' => true,
+            'is_first_login' => false
         ]);
 
         User::updateOrCreate([
@@ -74,7 +75,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'role_id' => 1,
-            'status' => true
+            'status' => true,
+            'is_first_login' => false
         ]);
 
         User::updateOrCreate([

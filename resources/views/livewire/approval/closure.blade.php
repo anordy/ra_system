@@ -15,6 +15,23 @@
                     <textarea class="form-control" wire:model='comments' rows="3"></textarea>
                 </div>
             </div>
+            @if ($this->checkTransition('compliance_manager_review'))
+                <div class="col-md-6 mb-3">
+                    <label>Assign Officer</label>
+                    <select wire:model="officer_id"
+                        class="form-control {{ $errors->has('officer_id') ? 'is-invalid' : '' }}">
+                        <option></option>
+                        @foreach ($officers as $officer)
+                            <option value="{{ $officer->id }}">{{ $officer->fullname }}</option>
+                        @endforeach
+                    </select>
+                    @error('officer_id')
+                        <div class="invalid-feedback">
+                            {{ $errors->first('officer_id') }}
+                        </div>
+                    @enderror
+                </div>
+            @endif
         </div>
     </div>
     @if ($this->checkTransition('compliance_manager_review'))
@@ -25,8 +42,10 @@
         </div>
     @elseif ($this->checkTransition('compliance_officer_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('compliance_officer_review')">Reject &
-                Return</button>
+            <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled Incorrect
+                return to Applicant</button>
+            <button type="button" class="btn btn-primary" wire:click="approve('compliance_officer_review')">Approve &
+                Confirm</button>
         </div>
     @endif
 

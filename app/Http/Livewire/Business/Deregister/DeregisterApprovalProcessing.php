@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Business\Closure;
+namespace App\Http\Livewire\Business\Deregister;
 
 use Exception;
 use Carbon\Carbon;
@@ -10,13 +10,12 @@ use App\Models\BusinessStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class ClosureApprovalProcessing extends Component
+class DeregisterApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
-    public $officer_id;
 
 
     public $officers = [];
@@ -27,14 +26,13 @@ class ClosureApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
-        $this->officers = User::all()->where('role_id', 5);
     }
 
 
     public function approve($transtion)
     {
         try {
-            if ($this->checkTransition('compliance_officer_review')) {
+            if ($this->checkTransition('commissioner_review')) {
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::APPROVED;
             }
@@ -48,14 +46,12 @@ class ClosureApprovalProcessing extends Component
     public function reject($transtion)
     {
         try {
-            if ($this->checkTransition('compliance_officer_reject')) {
-                $this->subject->rejected_on = Carbon::now()->toDateTimeString();
-                $this->subject->status = BusinessStatus::REJECTED;
+            if ($this->checkTransition('audit_manager_review')) {
+                $this->subject->status = BusinessStatus::CORRECTION;
             } else if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
             }
-            
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             dd($e);
@@ -66,6 +62,6 @@ class ClosureApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.closure');
+        return view('livewire.approval.deregister');
     }
 }
