@@ -9,12 +9,14 @@ use App\Models\TaxAgentAcademicQualification;
 use App\Models\TaxAgentProfessionals;
 use App\Models\TaxAgentTrainingExperience;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TaxAgentController extends Controller
 {
 
 	public function index(){
-		$fee = TaPaymentConfiguration::all();
+		$fee = DB::table('ta_payment_configurations')->select('category')
+		  ->get();
 		return view('taxagents.index',compact('fee'));
 	}
 

@@ -3,6 +3,7 @@
 @section('title', 'TaxAgents')
 
 @section('content')
+
     @if($fee == null)
     <div class=" alert alert-danger">
         <div class="d-flex justify-content-start  align-items-center">
