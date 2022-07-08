@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TaxAgents;
 
 use App\Http\Controllers\Controller;
+use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
 use App\Models\TaxAgentAcademicQualification;
 use App\Models\TaxAgentProfessionals;
@@ -13,7 +14,8 @@ class TaxAgentController extends Controller
 {
 
 	public function index(){
-		return view('taxagents.index');
+		$fee = TaPaymentConfiguration::all();
+		return view('taxagents.index',compact('fee'));
 	}
 
 	public function activeAgents()
