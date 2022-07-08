@@ -1,7 +1,7 @@
 @extends('layouts.login')
 @section('content')
 <div class="middle-box ">
-    @include('layouts.component.messages')
+
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-12">
 
@@ -17,6 +17,12 @@
                 </h5>
 
                 <div class="card-body">
+                    @if (session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
+
                     @if ($errors->any())
                     {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
                     @endif
