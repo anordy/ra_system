@@ -22,9 +22,16 @@ class ApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
-    public $officer_id;
+    public $isiic_i;
+    public $isiic_ii;
+    public $isiic_iii;
+    public $isiic_iv;
 
-    public $officers = [];
+
+    public $isiiciList = [];
+    public $isiiciiList = [];
+    public $isiiciiiList = [];
+    public $isiicivList = [];
 
 
     public function mount($modelName, $modelId)
@@ -62,7 +69,7 @@ class ApprovalProcessing extends Component
     public function approve($transtion)
     {
         if ($this->checkTransition('registration_officer_review')) {
-            $this->subject->isic4_id = $this->isiic_iv;
+            $this->subject->isic4_id = $this->isiic_iv ?? null;
         }
    
         if ($this->checkTransition('director_of_trai_review')) {

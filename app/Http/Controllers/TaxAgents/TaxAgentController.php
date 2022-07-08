@@ -24,11 +24,13 @@ class TaxAgentController extends Controller
 	public function showActiveAgent($id)
 	{
 		$agent = TaxAgent::findOrfail($id);
-		$t_id = $agent->id;
-		$education = TaxAgentAcademicQualification::query()->where('tax_agent_id', $t_id)->get();
-		$prof = TaxAgentProfessionals::query()->where('tax_agent_id', $t_id)->get();
-		$tra = TaxAgentTrainingExperience::query()->where('tax_agent_id', $t_id)->get();
-		return view('taxagents.active-agent-show', compact('agent', 'education', 'prof', 'tra'));
+		return view('taxagents.active-agent-show', compact('agent'));
+	}
+
+	public function showAgentRequest($id)
+	{
+		$agent = TaxAgent::findOrfail($id);
+		return view('taxagents.request-agent-show', compact('agent'));
 	}
 
 	public function renewal()

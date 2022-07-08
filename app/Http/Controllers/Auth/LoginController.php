@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserOtp;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use \Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,6 +81,7 @@ class LoginController extends Controller
             } else {
                 $token = $user->otp;
                 $token->code = $token->generateCode();
+                $token->updated_at = Carbon::now()->toDateTimeString();
                 $token->save();
             }
 

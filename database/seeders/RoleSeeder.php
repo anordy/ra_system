@@ -24,6 +24,7 @@ class RoleSeeder extends Seeder
             ['name' => 'Compliance Officer', 'report_to' => 4],
             ['name' => 'Directory Of TRAI'],
             ['name' => 'Commissioner'],
+            ['name' => 'Audit Manager']
         ];
         foreach ($data as $row) {
             Role::updateOrCreate($row);

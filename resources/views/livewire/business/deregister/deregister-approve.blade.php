@@ -22,11 +22,6 @@
                 <p class="my-1">{{ $deregister->reason }}</p>
             </div>
         </div>
-        <div class="modal-footer mt-4">
-            <a href="{{ route('business.deregistrations') }}" class="btn btn-secondary" data-dismiss="modal">Close</a>
-            <button type="button" class="btn btn-danger" wire:click='reject'>Reject De-registration</button>
-            <button type="button" class="btn btn-success" wire:click='confirm'>Approve & Confirm
-                Deregistration</button>
-        </div>
+        @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' =>$deregister->id])
     </div>
 </div>

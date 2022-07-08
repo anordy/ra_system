@@ -11,7 +11,7 @@
                 @foreach ($unreadNotifications as $row)
                 <button class="dropdown-item" type="button" style="white-space: normal;">
                     <small style="">{{ $row->data['message']}}</small> <br>
-                    <a class="btn btn-link p-0 m-0" href="{{ $row->data['href'] }}" wire:click="viewNotification({{ $row }})">
+                    <a class="btn btn-link p-0 m-0" href="{{ route($row->data['href']) }}" wire:click="viewNotification({{ $row }})">
                         <small>{{$row->data['hrefText']}} </small> 
                     </a>
                     <small class="text-muted float-right">{{ $row->created_at->diffForHumans() }}</small>

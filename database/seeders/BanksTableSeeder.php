@@ -14,9 +14,9 @@ class BanksTableSeeder extends Seeder
      */
     public function run()
     {
+        Bank::updateOrCreate(['name' => 'PBZ']);
         Bank::updateOrCreate(['name' => 'CRDB']);
         Bank::updateOrCreate(['name' => 'NMB']);
-        Bank::updateOrCreate(['name' => 'PBZ']);
         Bank::updateOrCreate(['name' => 'EXIM Bank']);
         Bank::updateOrCreate(['name' => 'UBA']);
         Bank::updateOrCreate(['name' => 'Azania Bank']);

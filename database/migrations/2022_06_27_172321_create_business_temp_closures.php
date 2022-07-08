@@ -20,12 +20,13 @@ class CreateBusinessTempClosures extends Migration
             $table->string('reason');
             $table->boolean('is_extended')->default(false);
             $table->boolean('show_extension')->default(false);
-			$table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+			$table->enum('status', ['pending', 'approved', 'rejected', 'correction'])->default('pending');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('submitted_by');
             $table->unsignedBigInteger('rejected_by')->nullable();
             $table->timestamp('rejected_on')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
+            $table->string('marking')->nullable();
             $table->timestamp('approved_on')->nullable();
             $table->timestamps();
             $table->foreign('business_id')->references('id')->on('businesses');

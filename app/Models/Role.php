@@ -62,4 +62,5 @@ class Role extends Model implements Auditable
         $this->permissions()->detach();
         return $this->givePermissionTo($permissions);
     }
+
 }
