@@ -17,8 +17,9 @@ class BusinessDeregestrations extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->timestamp('deregistration_date');
-			$table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+			$table->enum('status', ['pending', 'approved', 'rejected', 'correction'])->default('pending');
             $table->string('reason');
+            $table->string('marking');
             $table->unsignedBigInteger('submitted_by');
             $table->unsignedBigInteger('rejected_by')->nullable();
             $table->timestamp('rejected_on')->nullable();

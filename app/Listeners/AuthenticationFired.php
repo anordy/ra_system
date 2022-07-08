@@ -25,7 +25,7 @@ class AuthenticationFired
     public function handleUserLogin($event) {
         $data = [
             'auditable_id' => auth()->user()->id,
-            'event'      => "logged in",
+            'event'      => Audit::LOGGED_IN,
             'url'        => request()->fullUrl(),
             'ip_address' => request()->getClientIp(),
             'user_agent' => request()->userAgent(),
@@ -50,7 +50,7 @@ class AuthenticationFired
     public function handleUserLogout($event) {
         $data = [
             'auditable_id' => auth()->user()->id,
-            'event'      => "logged out",
+            'event'      => Audit::LOGGED_OUT,
             'url'        => request()->fullUrl(),
             'ip_address' => request()->getClientIp(),
             'user_agent' => request()->userAgent(),
