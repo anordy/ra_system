@@ -62,7 +62,7 @@
                             </div>
 
                             <button class="btn btn-info px-5" type="submit">Login</button>
-                            <p class="mt-3 float-right"><a href="{{ url('password/reset') }}">Forgot
+                            <p class="text-primary mt-1 float-right"><a style="text-decoration: none" href="{{ url('password/reset') }}">Forgot
                                     password ?</a>
                             </p>
                         </div>
