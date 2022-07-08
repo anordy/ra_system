@@ -69,7 +69,10 @@ class ApprovalProcessing extends Component
     public function approve($transtion)
     {
         if ($this->checkTransition('registration_officer_review')) {
-            $this->subject->isic4_id = $this->isiic_iv ?? null;
+            $this->subject->isiic_i = $this->isiic_i ?? null;
+            $this->subject->isiic_ii = $this->isiic_ii ?? null;
+            $this->subject->isiic_iii = $this->isiic_iii ?? null;
+            $this->subject->isiic_iv = $this->isiic_iv ?? null;
         }
    
         if ($this->checkTransition('director_of_trai_review')) {

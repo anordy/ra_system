@@ -20,7 +20,7 @@ class CreateBusinessTempClosures extends Migration
             $table->string('reason');
             $table->boolean('is_extended')->default(false);
             $table->boolean('show_extension')->default(false);
-			$table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+			$table->enum('status', ['pending', 'approved', 'rejected', 'correction'])->default('pending');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('submitted_by');
             $table->unsignedBigInteger('rejected_by')->nullable();

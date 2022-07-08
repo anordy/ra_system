@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Audit;
 use id;
 use Exception;
 use App\Models\User;
@@ -131,11 +132,11 @@ class UsersTable extends DataTableComponent
             if ($user->status == 1) {
                 $user->status = 0;
                 $user->save();
-                $this->triggerAudit(User::class, 'deactivated', 'deactivate_user', $user->id, ['status' => 1], ['status' => 0]);
+                $this->triggerAudit(User::class, Audit::DEACTIVATED, 'deactivate_user', $user->id, ['status' => 1], ['status' => 0]);
             } else {
                 $user->status = 1;
                 $user->save();
-                $this->triggerAudit(User::class, 'activated', 'activate_user', $user->id, ['status' => 0], ['status' => 1]);
+                $this->triggerAudit(User::class, Audit::ACTIVATED, 'activate_user', $user->id, ['status' => 0], ['status' => 1]);
             }
         } catch (Exception $e) {
             report($e);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Audit;
 use Exception;
 use App\Models\Role;
 use Livewire\Component;
@@ -35,7 +36,7 @@ class RoleAssignPermissionModal extends Component
             if (isset($this->selectedPermissions)) {
                 $this->role->refreshPermissions($this->selectedPermissions);
                 $new_permissions = $this->permissions->whereIn('id', $this->selectedPermissions)->pluck('name');
-                $this->triggerAudit(Role::class, 'updated', 'roles', $this->role->id, $this->role->permissions->pluck('name'), $new_permissions);
+                $this->triggerAudit(Role::class, Audit::UPDATED, 'roles', $this->role->id, $this->role->permissions->pluck('name'), $new_permissions);
             } else {
                 $this->role->permissions()->detach();
             }
