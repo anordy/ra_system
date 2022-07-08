@@ -31,17 +31,17 @@ class WorkflowBusinessDeregistrationSeeder extends Seeder
             'correct_application' => [
                 'owner' => 'taxpayer',
                 'operator_type' => 'user',
-                'operators' => []
+                'operators' => [1,2,3]
             ],
             'audit_manager' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => []
+                'operators' => [1,2,3]
             ],
             'commissioner' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => []
+                'operators' => [1,2,3]
             ],
             'completed' => [
                 'owner' => 'staff',

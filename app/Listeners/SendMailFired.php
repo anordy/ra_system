@@ -10,6 +10,10 @@ use App\Models\Business;
 use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Events\SendMail;
+use App\Jobs\Business\SendBusinessClosureApprovedMail;
+use App\Jobs\Business\SendBusinessClosureCorrectionMail;
+use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
+use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
 use App\Models\WithholdingAgent;
 use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\SendOTPEmail;
@@ -63,6 +67,22 @@ class SendMailFired
 			$email = $taxpayer->email;
 	        $status = $taxpayer->taxagent->is_verified;
 	        SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status);
+        } else if ($event->service === 'business-closure-approval'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessClosureApprovedMail::dispatch($business, $business->taxpayer);
+        } else if ($event->service === 'business-closure-correction'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessClosureCorrectionMail::dispatch($business, $business->taxpayer);
+        } else if ($event->service === 'business-deregister-approval'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessDeregisterApprovedMail::dispatch($business);
+        } else if ($event->service === 'business-deregister-correction'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessDeregisterCorrectionMail::dispatch($business, $business->taxpayer);
         }
     }
 }

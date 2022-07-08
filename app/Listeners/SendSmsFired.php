@@ -4,6 +4,10 @@ namespace App\Listeners;
 
 use App\Events\SendSms;
 use App\Jobs\Business\SendBusinessApprovedSMS;
+use App\Jobs\Business\SendBusinessClosureApprovedSMS;
+use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
+use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
+use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
 use App\Jobs\SendTaxAgentApprovalSMS;
 use App\Jobs\Taxpayer\SendRegistrationSMS;
 use App\Models\Business;
@@ -60,6 +64,22 @@ class SendSmsFired
 		else if ($event->service == 'tax-agent-registration-approval') {
 			$taxpayer = Taxpayer::find($event->tokenId);
 			SendTaxAgentApprovalSMS::dispatch($taxpayer);
-		}
+		} else if ($event->service === 'business-closure-approval'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessClosureApprovedSMS::dispatch($business, $business->taxpayer);
+        } else if ($event->service === 'business-closure-correction'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessClosureCorrectionSMS::dispatch($business, $business->taxpayer);
+        } else if ($event->service === 'business-deregister-approval'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessDeregisterApprovedSMS::dispatch($business, $business->taxpayer);
+        } else if ($event->service === 'business-deregister-correction'){
+            // Token ID is $businessId
+            $business = Business::find($event->tokenId);
+            SendBusinessDeregisterCorrectionSMS::dispatch($business, $business->taxpayer);
+        }
     }
 }
