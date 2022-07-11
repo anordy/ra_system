@@ -47,7 +47,7 @@ class Actions extends Component
 
 	public function reject($id)
 	{
-		$this->alert('warning', 'Are you sure you want to approve this request ?', [
+		$this->alert('warning', 'Are you sure you want to reject this request ?', [
 			'position' => 'center',
 			'toast' => false,
 			'showConfirmButton' => true,

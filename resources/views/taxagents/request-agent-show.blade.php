@@ -41,12 +41,16 @@
                     </div>
                     <div class="col-md-2 mb-2">
                         <span class="font-weight-bold text-uppercase">Reference No</span>
+                        @if($agent->status == \App\Models\TaxAgentStatus::APPROVED)
                         <p class="my-1">{{ $agent->reference_no }}</p>
+                        @else
+                        <p>Null</p>
+                        @endif
                     </div>
                     <div class="col-md-2 mb-2">
                         <span class="font-weight-bold text-uppercase">Status</span>
                         @if ($agent->status == 'approved')
-                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Verified</p>
+                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Approved</p>
                         @elseif($agent->status == 'rejected')
                             <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Rejected</p>
                         @else
