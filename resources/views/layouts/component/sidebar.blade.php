@@ -47,9 +47,11 @@
         <li class="{{ request()->is('business*') ? 'active' : '' }}">
             <a href="#businessMenu" data-toggle="collapse" aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
             <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
-                <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
-                    <a href="{{ route('business.registrations.index') }}">Registrations</a>
-                </li>
+                @can('business_registrations_view')
+                    <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
+                        <a href="{{ route('business.registrations.index') }}">Registrations</a>
+                    </li>
+                @endcan
                 <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
                     <a href="{{ route('business.deregistrations') }}">De-registrations</a>
                 </li>
