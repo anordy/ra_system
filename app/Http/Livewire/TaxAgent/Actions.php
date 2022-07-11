@@ -47,7 +47,7 @@ class Actions extends Component
 
 	public function reject($id)
 	{
-		$this->alert('warning', 'Are you sure you want to approve this request ?', [
+		$this->alert('warning', 'Are you sure you want to reject this request ?', [
 			'position' => 'center',
 			'toast' => false,
 			'showConfirmButton' => true,
@@ -70,6 +70,8 @@ class Actions extends Component
 			$agent = TaxAgent::find($data->id);
 			$agent->status = 'approved';
 			$agent->reference_no = "ZRB10" . rand(0, 9999);
+			$agent->app_first_date = Carbon::now();
+			$agent->app_expire_date = Carbon::now()->addMonth()->toDateTimeString();
 			$agent->save();
 
 			$taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);
@@ -85,8 +87,8 @@ class Actions extends Component
 			$expire_date = Carbon::now()->addMonth()->toDateTimeString();
 			$billitems = [
 				[
-					'billable_id' => $taxpayer->id,
-					'billable_type' => get_class($taxpayer),
+					'billable_id' => $agent->id,
+					'billable_type' => get_class($agent),
 					'fee_id' => $fee->id,
 					'fee_type' => get_class($fee),
 					'use_item_ref_on_pay' => 'N',

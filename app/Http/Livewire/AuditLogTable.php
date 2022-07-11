@@ -41,7 +41,7 @@ class AuditLogTable extends DataTableComponent
             Column::make('Log', 'user_id')
                 ->sortable()
                 ->searchable()
-                ->format(fn($value, $row, Column $column) => $row->user->fullname(). ' ' .$row->event . ' '. preg_split('[\\\]', $row->auditable_type)[2] ." ".$row->auditable_type::find($row->auditable_id)->name ?? ''),
+                ->format(fn($value, $row, Column $column) => $row->user->fullname(). ' ' .$row->event . ' '. preg_split('[\\\]', $row->auditable_type)[2]),
             Column::make('Action', 'event')
                 ->sortable()
                 ->searchable(),

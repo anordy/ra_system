@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\TaxAgents;
 
 use App\Http\Controllers\Controller;
+use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
 use App\Models\TaxAgentAcademicQualification;
 use App\Models\TaxAgentProfessionals;
 use App\Models\TaxAgentTrainingExperience;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TaxAgentController extends Controller
 {
 
 	public function index(){
-		return view('taxagents.index');
+		$fee = DB::table('ta_payment_configurations')->select('category')
+		  ->get();
+		return view('taxagents.index',compact('fee'));
 	}
 
 	public function activeAgents()
