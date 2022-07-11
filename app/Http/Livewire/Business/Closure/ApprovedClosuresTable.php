@@ -52,7 +52,9 @@ class ApprovedClosuresTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Closure Reason', 'reason')
-                ->sortable()
+                ->sortable(),
+            Column::make('Action', 'id')
+                ->view('business.closure.action'),
         ];
     }
 
