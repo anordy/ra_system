@@ -19,7 +19,7 @@ class BusinessDeregestrations extends Migration
             $table->timestamp('deregistration_date');
 			$table->enum('status', ['pending', 'approved', 'rejected', 'correction'])->default('pending');
             $table->string('reason');
-            $table->string('marking');
+            $table->string('marking')->nullable();
             $table->unsignedBigInteger('submitted_by');
             $table->unsignedBigInteger('rejected_by')->nullable();
             $table->timestamp('rejected_on')->nullable();
