@@ -36,17 +36,17 @@ class WorkflowSeeder extends Seeder
             'registration_officer' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => []
+                'operators' => [1, 3]
             ],
             'registration_manager' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => []
+                'operators' => [1, 2]
             ],
             'director_of_trai' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => []
+                'operators' => [1, 6]
             ],
             'completed' => [
                 'owner' => 'staff',
