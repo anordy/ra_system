@@ -4,7 +4,7 @@
             <h5 class="text-uppercase">View Withholding Agent</h5>
         </div>
         <div class="modal-body mx-4">
-            <div class="card border-0">
+            <div class="border-0">
                 <h5 class="card-title text-uppercase">Main Details</h5>
                 <div class="row">
                     <div class="col-3">
@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <div class="card mt-4 border-0">
+            <div class="mt-4 border-0">
                 <h5 class="card-title text-uppercase">Responsible Person Details</h5>
                 <div class="row">
                     <div class="col-3">
