@@ -28,7 +28,7 @@ class Business extends Model implements Auditable
     }
 
     public function category(){
-        return $this->belongsTo(BusinessCategory::class);
+        return $this->belongsTo(BusinessCategory::class, 'business_category_id');
     }
 
     public function currency(){
