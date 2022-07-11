@@ -14,7 +14,7 @@ class TaxAgentTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-		return TaxAgent::query()->where('status', '=', 'pending');
+		return TaxAgent::query()->where('status', '=', 'pending')->where('is_verified', '=', 1);
 	}
 
 	public function configure(): void
