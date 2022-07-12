@@ -50,6 +50,9 @@
                         <a href="{{ route('business.registrations.index') }}">Registrations</a>
                     </li>
                 @endcan
+                <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
+                    <a href="{{ route('business.branches.index') }}">Branch Registrations</a>
+                </li>
                 <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
                     <a href="{{ route('business.deregistrations') }}">De-registrations</a>
                 </li>
