@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
 
         Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
+        Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
     });
 
 	Route::name('taxagents.')->prefix('taxagents')->group(function (){
@@ -115,6 +116,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
 		Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
 		Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
+		Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
 
 	});
 });

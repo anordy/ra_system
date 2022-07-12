@@ -72,7 +72,7 @@ class Actions extends Component
 			$agent->status = TaxAgentStatus::APPROVED;
 			$agent->reference_no = "ZRB10" . rand(0, 9999);
 			$agent->app_first_date = Carbon::now();
-			$agent->app_expire_date = Carbon::now()->addMonth()->toDateTimeString();
+			$agent->app_expire_date = Carbon::now()->addYear()->toDateTimeString();
 			$agent->save();
 
 			$taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);

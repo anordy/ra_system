@@ -20,7 +20,7 @@ class TaxAgentFeeModal extends Component
 
 	public function submit()
 	{
-		if ($this->category == 'first fee')
+		if ($this->category == 'registration fee')
 		{
 			$validate = $this->validate([
 			  'category'=>'required',

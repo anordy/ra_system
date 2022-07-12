@@ -17,7 +17,7 @@ class TaxAgentController extends Controller
 
 	public function index(){
 		$fee = DB::table('ta_payment_configurations')
-		  ->where('category', '=', 'first fee')->first();
+		  ->where('category', '=', 'registration fee')->first();
 		return view('taxagents.index',compact('fee'));
 	}
 
@@ -38,6 +38,13 @@ class TaxAgentController extends Controller
 		$id = Crypt::decrypt($id);
 		$agent = TaxAgent::findOrfail($id);
 		return view('taxagents.request-agent-show', compact('agent'));
+	}
+
+	public function showVerificationAgentRequest($id)
+	{
+		$id = Crypt::decrypt($id);
+		$agent = TaxAgent::findOrfail($id);
+		return view('taxagents.verification-request-agent-show', compact('agent'));
 	}
 
 	public function renewal()
