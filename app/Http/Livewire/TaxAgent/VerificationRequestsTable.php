@@ -58,11 +58,7 @@ class VerificationRequestsTable extends DataTableComponent
 		  Column::make('Status', 'status')
 			->view('taxagents.includes.status'),
 		  Column::make('Action', 'id')
-		    ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="reject($value)"><i class="bi bi-x-circle"></i> </button>
-                HTML)
-		    ->html(true),
+		    ->view('taxagents.includes.verAction')
 		];
 	}
 
