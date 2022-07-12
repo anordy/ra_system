@@ -34,15 +34,25 @@
                     <span class="font-weight-bold text-uppercase">Reference No</span>
                     <p class="my-1">{{ $agent->reference_no }}</p>
                 </div>
-                <div class="col-md-2 mb-2">
-                    <span  class="font-weight-bold text-uppercase">Status</span>
-                    @if($agent->status == 'approved')
-                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Approved</p>
 
-                    @elseif($agent->status == 'rejected')
+                <div class="col-md-2 mb-2">
+                    <span  class="font-weight-bold text-uppercase">Application Status</span>
+                    @if($agent->status == \App\Models\TaxAgentStatus::APPROVED)
+                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Approved</p>
+                    @elseif($agent->status == \App\Models\TaxAgentStatus::REJECTED)
                         <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Rejected</p>
+                    @elseif($agent->status == \App\Models\TaxAgentStatus::VERIFIED)
+                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Verified</p>
                     @else
                         <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Pending</p>
+                    @endif
+                </div>
+                <div class="col-md-2 mb-2">
+                    <span  class="font-weight-bold text-uppercase">Application Payment</span>
+                    @if($agent->bill->payment->status == 'paid')
+                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Paid</p>
+                    @else
+                        <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Not Paid</p>
                     @endif
                 </div>
 

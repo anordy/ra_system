@@ -4,14 +4,14 @@
 
 @section('content')
 
-    @if($fee == null)
+    @if(empty($fee))
         <div class=" alert alert-danger">
             <div class="d-flex justify-content-start  align-items-center">
                 <div>
                     <i style="font-size: 30px;" class="bi bi-x-circle mr-1"></i>
                 </div>
                 <div>
-                    Please kindly add configuration fee before approving any request
+                    Please kindly add registration fee before approving any request
                 </div>
             </div>
         </div>
