@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
 
         Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
+        Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
     });
 
 	Route::name('taxagents.')->prefix('taxagents')->group(function (){

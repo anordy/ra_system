@@ -15,6 +15,7 @@ class CreateBusinessLocationsTable extends Migration
     {
         Schema::create('business_locations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('region_id');
             $table->unsignedBigInteger('district_id');
@@ -28,6 +29,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->string('owner_name')->nullable();
             $table->string('owner_phone_no')->nullable();
             $table->string('meter_no');
+            $table->string('marking')->nullable();
             $table->boolean('is_headquarter')->default(false);
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'rejected'])->default('pending');
             $table->softDeletes();
