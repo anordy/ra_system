@@ -150,7 +150,7 @@ class VerificationRequestsTable extends DataTableComponent
 				  $createdby_type,
 				  $billitems
 				);
-				if (config('app.env') == 'local') {
+				if (config('app.env') != 'local') {
 					ZmCore::sendBill($zmBill->id);
 				}
 				$this->alert('success', 'saved successfully');
