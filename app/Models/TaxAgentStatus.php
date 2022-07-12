@@ -14,4 +14,5 @@ class TaxAgentStatus extends Model
     public const APPROVED = 'approved';
     public const REJECTED = 'rejected';
     public const COMPLETED = 'completed';
+	public const VERIFIED = 'verified';
 }
