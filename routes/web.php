@@ -117,8 +117,4 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
 
 	});
-
-    Route::prefix('return/excise-duty')->as('return.excise-duty.')->group(function(){
-        Route::get('/mno',[ExciseDutyController::class,'mno'])->name('mno');
-    });
 });
