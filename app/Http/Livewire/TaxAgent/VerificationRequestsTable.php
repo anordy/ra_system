@@ -107,7 +107,7 @@ class VerificationRequestsTable extends DataTableComponent
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 
-			$fee = TaPaymentConfiguration::where('category', 'first fee')->first();
+			$fee = TaPaymentConfiguration::where('category', 'registration fee')->first();
 			$amount = $fee->amount;
 			$expire_date = Carbon::now()->addMonth()->toDateTimeString();
 			$billitems = [
