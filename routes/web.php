@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Business\BranchController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -99,8 +100,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/deregistration/{id}', [BusinessController::class, 'viewDeregistration'])->name('viewDeregistration');
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
 
+        Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
     });
-
 
 	Route::name('taxagents.')->prefix('taxagents')->group(function (){
 		Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
