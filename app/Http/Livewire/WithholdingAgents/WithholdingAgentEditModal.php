@@ -4,6 +4,7 @@ namespace App\Http\Livewire\WithholdingAgents;
 
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Ward;
 use App\Models\Region;
@@ -75,7 +76,7 @@ class WithholdingAgentEditModal extends Component
         $this->ward_id = $this->withholding_agent->ward_id;
         $this->title = $this->withholding_agent->title;
         $this->position = $this->withholding_agent->position;
-        $this->date_of_commencing = $this->withholding_agent->date_of_commencing;
+        $this->date_of_commencing = Carbon::create($this->withholding_agent->date_of_commencing)->format('Y-m-d');
     }
 
     public function updated($propertyName)
