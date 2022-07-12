@@ -36,7 +36,7 @@
             <div class="card bg-c-pink order-card">
                 <div class="card-block">
                     <h6 class="m-b-20">Tax Agents</h6>
-                    <h2 class="text-right"><i class="bi bi-credit-card f-left"></i><span>{{ \App\Models\TaxAgent::count() }}</span></h2>
+                    <h2 class="text-right"><i class="bi bi-credit-card f-left"></i><span>{{ \App\Models\TaxAgent::approved()->count() }}</span></h2>
                     <p class="mb-0"><a href="{{ route('taxagents.active') }}">click here to view more</a></p>
                 </div>
             </div>

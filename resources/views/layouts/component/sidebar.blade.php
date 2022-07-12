@@ -50,6 +50,9 @@
                         <a href="{{ route('business.registrations.index') }}">Registrations</a>
                     </li>
                 @endcan
+                <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
+                    <a href="{{ route('business.branches.index') }}">Branch Registrations</a>
+                </li>
                 <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
                     <a href="{{ route('business.deregistrations') }}">De-registrations</a>
                 </li>
@@ -73,6 +76,16 @@
             </ul>
         </li>
         @endcan
+        
+        {{-- <li class="{{ request()->is('return.excise-duty*') ? 'active' : '' }}">
+            <a href="#exciseDutyMenu" data-toggle="collapse" aria-expanded="{{ request()->is('return.excise-duty*') ? 'true' : 'false' }}" class="dropdown-toggle">Excise Duty Return</a>
+            <ul class="collapse list-unstyled {{ request()->is('excise-duty-return*') ? 'show' : '' }}" id="exciseDutyMenu">
+                <li class="{{ request()->is('return/excise-duty/mno*') ? 'active' : '' }}">
+                    <a href="{{ route('return.excise-duty.mno') }}" >MNO</a>
+                </li>
+            </ul>
+        </li> --}}
+
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
             <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">

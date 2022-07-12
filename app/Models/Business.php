@@ -47,6 +47,14 @@ class Business extends Model implements Auditable
         return $this->hasOne(BusinessLocation::class);
     }
 
+    public function headquarter(){
+        return $this->hasOne(BusinessLocation::class)->where('is_headquarter', true);
+    }
+
+    public function branches(){
+        return $this->hasMany(BusinessLocation::class)->where('is_headquarter', false);
+    }
+
     public function bank(){
         return $this->hasOne(BusinessBank::class);
     }

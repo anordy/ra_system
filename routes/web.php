@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Business\BranchController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -38,10 +39,15 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ExciseDutyController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowerTestController;
 
 Auth::routes();
+
+Route::get('/oy',function(){
+    return view('auth.passwords.reset');
+});
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/workflow', [WorkflowerTestController::class, 'index']);
@@ -99,8 +105,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/deregistration/{id}', [BusinessController::class, 'viewDeregistration'])->name('viewDeregistration');
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
 
+        Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
     });
-
 
 	Route::name('taxagents.')->prefix('taxagents')->group(function (){
 		Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
