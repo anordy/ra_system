@@ -39,10 +39,15 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ExciseDutyController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowerTestController;
 
 Auth::routes();
+
+Route::get('/oy',function(){
+    return view('auth.passwords.reset');
+});
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/workflow', [WorkflowerTestController::class, 'index']);
@@ -111,6 +116,7 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
 		Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
 		Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
+		Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
 
 	});
 });

@@ -13,7 +13,7 @@
                             <label class="control-label">Category</label>
                             <select wire:model.lazy="category" name="category" id="category" class="form-control">
                                 <option  value="">select category</option>
-                                <option value="first fee">first fee</option>
+                                <option value="registration fee">Registration fee</option>
                                 <option value="renewal fee">renewal fee</option>
 
                             </select>
