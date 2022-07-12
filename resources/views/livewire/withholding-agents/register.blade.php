@@ -2,8 +2,9 @@
 
     <div class="card-body">
         <div class="pt-1">
-            <div class="card border-0">
+            <div class="border-0">
                 <h5 class="card-title text-uppercase mx-4">Main Details</h5>
+                <hr>
                 <div class="row mx-4 mt-2">
                     <div class="col-md-4 form-group">
                         <label for="tin">Tax Identification No. (TIN)</label>
@@ -121,8 +122,9 @@
                 </div>
             </div>
            
-            <div class="card mt-4 border-0">
+            <div class="mt-4 border-0">
                 <h5 class="card-title text-uppercase mx-4">Responsible Person Details</h5>
+                <hr>
                 <div class="row mx-4 mt-2">
                 <div class="col-md-4 form-group">
                     <label>Responsible Person Name</label>

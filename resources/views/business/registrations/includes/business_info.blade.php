@@ -1,16 +1,73 @@
-<div class="card shadow-sm">
-    <div class="card-header font-weight-bold">
-        Business Information
-    </div>
-    <div class="card-body pb-0">
-        <div class="row my-2">
+<ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Business Information</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab" aria-controls="location" aria-selected="false">Location</a>
+    </li>
+    @if($business->partners->count())
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="partners-tab" data-toggle="tab" href="#partners" role="tab" aria-controls="partners" aria-selected="false">Partners</a>
+        </li>
+    @endif
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Responsible Person</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank" aria-selected="false">Bank Account</a>
+    </li>
+    @if($business->hotel)
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab" aria-controls="hotel" aria-selected="false">Hotel Information</a>
+        </li>
+    @endif
+</ul>
+<div class="tab-content bg-white border shadow-sm" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row m-2 pt-3">
             <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Tax Identification No. (TIN)</span>
-                <p class="my-1">{{ $business->tin }}</p>
+                <span class="font-weight-bold text-uppercase">Business Status</span>
+                <p class="my-1">
+                    @if($business->status === \App\Models\BusinessStatus::APPROVED)
+                        <span class="font-weight-bold text-success">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            Verified
+                        </span>
+                    @elseif($business->status === \App\Models\BusinessStatus::REJECTED)
+                        <span class="font-weight-bold text-danger">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            Rejected
+                        </span>
+                    @elseif($business->status === \App\Models\BusinessStatus::CORRECTION)
+                        <span class="font-weight-bold text-warning">
+                            <i class="bi bi-pen-fill mr-1"></i>
+                            Requires Correction
+                        </span>
+                    @else
+                        <span class="font-weight-bold text-info">
+                            <i class="bi bi-clock-history mr-1"></i>
+                            Waiting Approval
+                        </span>
+                    @endif
+                </p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Business Name</span>
-                <p class="my-1">{{ "{$business->name} {$business->middle_name} {$business->last_name}" }}</p>
+                <p class="my-1">{{ $business->name }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">Business Category</span>
+                <p class="my-1">{{ $business->category->name }}</p>
+            </div>
+            @if($business->business_type === \App\Models\BusinessType::HOTEL)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Business Type</span>
+                    <p class="my-1">Hotel</p>
+                </div>
+            @endif
+            <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">Tax Identification No. (TIN)</span>
+                <p class="my-1">{{ $business->tin }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
@@ -24,13 +81,13 @@
                 <span class="font-weight-bold text-uppercase">Mobile</span>
                 <p class="my-1">{{ $business->mobile }}</p>
             </div>
-            @if($business->alt_mobile)
+            @if ($business->alt_mobile)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Alternative Mobile No.</span>
                     <p class="my-1">{{ $business->alt_mobile }}</p>
                 </div>
             @endif
-            @if($business->email_address)
+            @if ($business->email_address)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Email Address</span>
                     <p class="my-1">{{ $business->email }}</p>
@@ -42,7 +99,7 @@
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Physical Address</span>
-                <p class="my-1">{{ $business->physcal_address }}</p>
+                <p class="my-1">{{ $business->physical_address }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
@@ -75,33 +132,27 @@
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Tax Types</span>
                 <p class="my-1">
-                    @foreach($business->taxTypes as $type)
+                    @foreach ($business->taxTypes as $type)
                         {{ $type->name }};
                     @endforeach
                 </p>
             </div>
         </div>
     </div>
-</div>
-
-@if($location = $business->location)
-    <div class="card mt-3">
-        <div class="card-header font-weight-bold">
-            Business Location
-        </div>
-        <div class="card-body pb-0">
-            <div class="row my-2">
+    @if ($location = $business->location)
+        <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">
+            <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Nature of Premises</span>
                     <p class="my-1">{{ $location->nature_of_possession }}</p>
                 </div>
-                @if($location->owner_name)
+                @if ($location->owner_name)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Owner's Name</span>
                         <p class="my-1">{{ $location->owner_name }}</p>
                     </div>
                 @endif
-                @if($location->owner_mobile)
+                @if ($location->owner_mobile)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Owner's Mobile</span>
                         <p class="my-1">{{ $location->owner_mobile }}</p>
@@ -125,11 +176,11 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Street</span>
-                    <p class="my-1">{{ $location->place_of_business }}</p>
+                    <p class="my-1">{{ $location->street }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
-                    <p class="my-1">{{ $location->physcal_address }}</p>
+                    <p class="my-1">{{ $location->physical_address }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">House No.</span>
@@ -145,46 +196,39 @@
                 </div>
             </div>
         </div>
-    </div>
-@endif
+    @endif
 
-@if($business->partners->count())
-    <div class="card border-0 shadow-sm mt-3">
-        <div class="card-header font-weight-bold">
-            Business Partners
-        </div>
-        <div class="card-body">
-            <table class="table table-sm">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Reference No.</th>
-                    <th>Mobile</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($business->partners as $partner)
-                    <tr class="col-md-4 mb-3">
-                        <td class="font-weight-bold text-uppercase">{{ $partner->taxpayer->full_name }}</td>
-                        <td class="my-1">{{ $partner->taxpayer->reference_no }}</td>
-                        <td class="my-1">{{ $partner->taxpayer->mobile }}</td>
+    @if ($business->partners->count())
+        <div class="tab-pane fade" id="partners" role="tabpanel" aria-labelledby="partners-tab">
+            <div class="row m-2 pt-3">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Reference No.</th>
+                        <th>Mobile</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach ($business->partners as $partner)
+                        <tr class="col-md-4 mb-3">
+                            <td class="font-weight-bold text-uppercase">{{ $partner->taxpayer->full_name }}</td>
+                            <td class="my-1">{{ $partner->taxpayer->reference_no }}</td>
+                            <td class="my-1">{{ $partner->taxpayer->mobile }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-@endif
+    @endif
 
-<div class="card mt-3">
-    <div class="card-header font-weight-bold">
-        Business Responsible Person & Tax Agent
-    </div>
-    <div class="card-body pb-0">
-        <div class="row my-0">
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="row m-2 pt-3">
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Responsible Person Name</span>
-                <p class="my-1">{{ $business->responsiblePerson->first_name }} {{ $business->responsiblePerson->last_name }}</p>
+                <p class="my-1">{{ $business->responsiblePerson->first_name }}
+                    {{ $business->responsiblePerson->last_name }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Responsible Person Ref No.</span>
@@ -194,9 +238,9 @@
                 <span class="font-weight-bold text-uppercase">Responsible Person Mobile No.</span>
                 <p class="my-1">{{ $business->responsiblePerson->mobile }}</p>
             </div>
-            @if($business->is_own_consultant)
+            @if ($business->is_own_consultant)
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Consultant Name</span>
+                    <span class="font-weight-bold text-uppercase">Consultant Details</span>
                     <p class="my-1">{{ $business->taxpayer->first_name }} {{ $business->taxpayer->last_name }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -210,7 +254,8 @@
             @elseif($consultant = $business->consultants()->latest()->first())
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Consultant Name</span>
-                    <p class="my-1">{{ $consultant->taxpayer->first_name }} {{ $consultant->taxpayer->last_name }}</p>
+                    <p class="my-1">{{ $consultant->taxpayer->first_name }}
+                        {{ $consultant->taxpayer->last_name }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Consultant Ref No.</span>
@@ -222,14 +267,14 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Consultant Status</span>
-                    @if($consultant->status === 'pending')
+                    @if ($consultant->status === 'pending')
                         <p class="my-1 text-info font-weight-bold">
-                            <i class="bi bi-x-circle-fill mr-1"></i>
+                            <i class="bi bi-clock-history mr-1"></i>
                             Waiting Approval From Tax Agent
                         </p>
                     @elseif($consultant->status === 'approved')
                         <p class="my-1 text-success font-weight-bold">
-                            <i class="bi bi-x-circle-fill mr-1"></i>
+                            <i class="bi bi-check-circle mr-1"></i>
                             Approved
                         </p>
                     @elseif($consultant->status === 'rejected')
@@ -239,7 +284,7 @@
                         </p>
                     @elseif($consultant->status === 'removed')
                         <p class="my-1 text-danger font-weight-bold">
-                            <i class="bi bi-x-circle-fill mr-1"></i>
+                            <i class="bi bi-trash-fill mr-1"></i>
                             Removed. Please assign new tax agent.
                         </p>
                     @endif
@@ -247,15 +292,10 @@
             @endif
         </div>
     </div>
-</div>
 
-@if($bank = $business->bank)
-    <div class="card my-3 ">
-        <div class="card-header font-weight-bold">
-            Business Bank Account Information
-        </div>
-        <div class="card-body pb-0">
-            <div class="row my-2">
+    @if ($bank = $business->bank)
+        <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
+            <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Account No.</span>
                     <p class="my-1">{{ $bank->acc_no }}</p>
@@ -278,5 +318,52 @@
                 </div>
             </div>
         </div>
-    </div>
-@endif
+    @endif
+
+    @if ($hotel = $business->hotel)
+        <div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="hotel-tab">
+            <div class="row m-2 pt-3">
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Company Name</span>
+                    <p class="my-1">{{ $hotel->company_name }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Management Company</span>
+                    <p class="my-1">{{ $hotel->management_company }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Hotel Location</span>
+                    <p class="my-1">{{ $hotel->hotel_location }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Number of Rooms</span>
+                    <p class="my-1">{{ $hotel->number_of_rooms }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Number of Single Rooms</span>
+                    <p class="my-1">{{ $hotel->number_of_single_rooms }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Number of Double Rooms</span>
+                    <p class="my-1">{{ $hotel->number_of_double_rooms }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Number of Other Rooms</span>
+                    <p class="my-1">{{ $hotel->number_of_other_rooms }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Hotel Capacity</span>
+                    <p class="my-1">{{ $hotel->hotel_capacity }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Average Charging Rate (Per night per person for bed and breakfast)</span>
+                    <p class="my-1">{{ $hotel->average_rate }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Other Services</span>
+                    <p class="my-1">{{ $hotel->other_services }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>

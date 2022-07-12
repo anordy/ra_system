@@ -41,7 +41,9 @@ class ApprovedDeregisterBusinessTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Reason', 'reason')
-                ->sortable()
+                ->sortable(),
+            Column::make('Action', 'id')
+                ->view('business.deregister.action'),
         ];
     }
 

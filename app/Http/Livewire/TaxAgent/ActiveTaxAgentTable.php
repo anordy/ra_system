@@ -42,8 +42,8 @@ class ActiveTaxAgentTable extends DataTableComponent
 				->sortable(),
 			Column::make("Region", "region")
 				->sortable(),
-			BooleanColumn::make('Status', 'status')
-				->sortable(),
+		  Column::make('Status', 'status')
+			->view('taxagents.includes.status'),
 			Column::make('Action', 'id')
 				->view('taxagents.includes.actions')
 				->html(true)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\TaxAgent;
 
+use App\Models\TaxAgentStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -14,7 +15,7 @@ class TaxAgentTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-		return TaxAgent::query()->where('status', '=', 'pending');
+		return TaxAgent::query()->where('status', '=', TaxAgentStatus::VERIFIED);
 	}
 
 	public function configure(): void

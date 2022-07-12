@@ -27,7 +27,7 @@ class SendBusinessApprovedMail implements ShouldQueue
     public function __construct(Business $business, Taxpayer $taxpayer)
     {
         $this->business = $business;
-        $this->$taxpayer = $taxpayer;
+        $this->taxpayer = $taxpayer;
     }
 
     /**

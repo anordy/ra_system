@@ -42,7 +42,7 @@ class TaxAgent extends Model implements Auditable
 		return $query->where('status', TaxAgentStatus::PENDING);
 	}
 
-	public function payment()
+	public function bill()
     {
         return $this->hasOne(ZmBillItem::class, 'billable_id')->where('billable_type', get_class($this));
     }
