@@ -14,7 +14,9 @@ class BranchesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessLocation::where('status', BranchStatus::PENDING)->orWhere('status', BranchStatus::REJECTED);
+        return BusinessLocation::where('business_locations.status', BranchStatus::PENDING)
+            ->orWhere('business_locations.status', BranchStatus::REJECTED)
+            ->with('business');
     }
 
     public function configure(): void
@@ -25,14 +27,14 @@ class BranchesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")
+            Column::make("Business Name", "business.name")
                 ->sortable(),
-            Column::make('Status'),
-            Column::make('Action', 'status'),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
+            Column::make("Location", "Street")
+                ->searchable(),
+            Column::make("Physical Address", "physical_address")
+                ->searchable(),
+            Column::make('Status', 'id')->view('business.branches.includes.status'),
+            Column::make('Action', 'id')->view('business.branches.includes.actions'),
         ];
     }
 }
