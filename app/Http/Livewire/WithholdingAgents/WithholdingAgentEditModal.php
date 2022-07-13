@@ -70,12 +70,9 @@ class WithholdingAgentEditModal extends Component
         $this->email = $this->withholding_agent->email;
         $this->mobile = $this->withholding_agent->mobile;
         $this->address = $this->withholding_agent->address;
-        $this->responsible_person_id = $this->withholding_agent->responsible_person_id;
         $this->region_id = $this->withholding_agent->region_id;
         $this->district_id = $this->withholding_agent->district_id;
         $this->ward_id = $this->withholding_agent->ward_id;
-        $this->title = $this->withholding_agent->title;
-        $this->position = $this->withholding_agent->position;
         $this->date_of_commencing = Carbon::create($this->withholding_agent->date_of_commencing)->format('Y-m-d');
     }
 
@@ -105,9 +102,6 @@ class WithholdingAgentEditModal extends Component
                 'email' => $this->email,
                 'mobile' => $this->mobile,
                 'address' => $this->address,
-                'responsible_person_id' => $this->responsible_person_id,
-                'title' => $this->title,
-                'position' => $this->position,
                 'date_of_commencing' => $this->date_of_commencing,
                 'region_id' => $this->region_id,
                 'district_id' => $this->district_id,
