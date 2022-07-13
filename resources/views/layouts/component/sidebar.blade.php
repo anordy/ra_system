@@ -73,15 +73,6 @@
             </ul>
         </li>
         @endcan
-        
-        {{-- <li class="{{ request()->is('return.excise-duty*') ? 'active' : '' }}">
-            <a href="#exciseDutyMenu" data-toggle="collapse" aria-expanded="{{ request()->is('return.excise-duty*') ? 'true' : 'false' }}" class="dropdown-toggle">Excise Duty Return</a>
-            <ul class="collapse list-unstyled {{ request()->is('excise-duty-return*') ? 'show' : '' }}" id="exciseDutyMenu">
-                <li class="{{ request()->is('return/excise-duty/mno*') ? 'active' : '' }}">
-                    <a href="{{ route('return.excise-duty.mno') }}" >MNO</a>
-                </li>
-            </ul>
-        </li> --}}
 
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>

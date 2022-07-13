@@ -124,7 +124,7 @@ class RenewalRequests extends DataTableComponent
 			  $message = 'Tax agent renew request',
 			  $type = 'info',
 			  $messageLong = 'Your your request has been processed successfully',
-			  $href = '/taxagent/apply',
+			  $href = 'taxagent.apply',
 			  $hrefText = 'View'
 			));
 

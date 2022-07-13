@@ -22,7 +22,7 @@ class CreateZmBillsTable extends Migration
             $table->decimal('exchange_rate');
             $table->decimal('equivalent_amount')->default(0);
             $table->string('control_number')->nullable();
-            $table->date('expire_date');
+            $table->dateTime('expire_date');
             $table->unsignedBigInteger('payer_id');
             $table->string('payer_type');
             $table->string('payer_name');
