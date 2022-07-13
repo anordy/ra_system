@@ -12,11 +12,6 @@
         </div>
 
         <div class="card-body">
-            <div class="d-flex justify-content-end p-2">
-                @if ($agent->status == 'verified' && $agent->bill->payment->status == \App\Models\PaymentStatus::PAID)
-                    <livewire:tax-agent.actions :taxagent=$agent></livewire:tax-agent.actions>
-                @endif
-            </div>
             <div class="card p-2">
                 <div class="row my-2">
                     <div class="col-md-2 mb-2">
@@ -60,23 +55,21 @@
                         @endif
                     </div>
 
-                    <div class="col-md-2 mb-2">
-                        <span class="font-weight-bold text-uppercase">Application Payment</span>
+{{--                    <div class="col-md-2 mb-2">--}}
+{{--                        <span class="font-weight-bold text-uppercase">Application Payment</span>--}}
 
-                        @if ($agent->bill->payment->status == \App\Models\PaymentStatus::PAID)
-                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Paid</p>
-                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PENDING)
-                            <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Not Paid</p>
-                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PARTIALLY)
-                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Partially Paid</p>
-                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::CANCELLED)
-                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Cancelled</p>
-                        @else
-                            <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Failed</p>
-                        @endif
-                    </div>
-
-
+{{--                        @if ($agent->bill->payment->status == \App\Models\PaymentStatus::PAID)--}}
+{{--                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Paid</p>--}}
+{{--                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PENDING)--}}
+{{--                            <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Not Paid</p>--}}
+{{--                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PARTIALLY)--}}
+{{--                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Partially Paid</p>--}}
+{{--                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::CANCELLED)--}}
+{{--                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Cancelled</p>--}}
+{{--                        @else--}}
+{{--                            <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Failed</p>--}}
+{{--                        @endif--}}
+{{--                    </div>--}}
 
                 </div>
             </div>

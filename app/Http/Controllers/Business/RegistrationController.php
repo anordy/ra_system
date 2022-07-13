@@ -13,7 +13,7 @@ class RegistrationController extends Controller
     }
 
     public function show($businessId){
-        $business = Business::findOrFail($businessId);
+        $business = Business::findOrFail(decrypt($businessId));
         return view('business.registrations.show', compact('business'));
     }   
     

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Workflow;
 use Illuminate\Database\Seeder;
 
-class WorkflowSeeder extends Seeder
+class BusinessBranchWorkflow extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,14 +14,14 @@ class WorkflowSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'business_registration';
+        $name = 'business_branch_registration';
         $type = 'workflow';
         $marking_store = [
             'type'      => 'multiple_state',
             'property'  => ['marking']
         ];
         $initial_marking = 'apply';
-        $supports =  ['App\Models\Business'];
+        $supports =  ['App\Models\BusinessLocation'];
         $places =  [
             'apply' => [
                 'owner' => 'taxpayer',
@@ -98,8 +98,8 @@ class WorkflowSeeder extends Seeder
         ];
 
         Workflow::updateOrCreate([
-            'code' => 'BUSSINESS_REGISTRATION',
-            'summary' => 'Bussiness Registraiton Workflow',
+            'code' => 'BUSSINESS_BRANCH_REGISTRATION',
+            'summary' => 'Bussiness Branch Registration Workflow',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,

@@ -28,7 +28,7 @@ class Business extends Model implements Auditable
     }
 
     public function category(){
-        return $this->belongsTo(BusinessCategory::class);
+        return $this->belongsTo(BusinessCategory::class, 'business_category_id');
     }
 
     public function currency(){
@@ -45,6 +45,14 @@ class Business extends Model implements Auditable
 
     public function location(){
         return $this->hasOne(BusinessLocation::class);
+    }
+
+    public function headquarter(){
+        return $this->hasOne(BusinessLocation::class)->where('is_headquarter', true);
+    }
+
+    public function branches(){
+        return $this->hasMany(BusinessLocation::class)->where('is_headquarter', false);
     }
 
     public function bank(){

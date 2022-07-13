@@ -84,8 +84,8 @@ class NotificationsTable extends DataTableComponent
         Column::make('Action', 'id')
             ->format(
                 fn ($value) => <<< HTML
-            <button class="btn btn-info btn-link btn-sm" title="" wire:click="read($value)"><i class="fa fa-eye"></i> </button>
-            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+            <button class="btn btn-info btn-sm" title="View" wire:click="read($value)"><i class="fa fa-eye"></i> </button>
+            <button class="btn btn-danger btn-sm" title="Delete" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
         HTML
             )
             ->html(true),
