@@ -39,6 +39,7 @@ use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
 
 Auth::routes();
@@ -76,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('system')->name('system.')->group(function (){
         Route::resource('audits', AuditController::class); 
+        Route::resource('workflow', WorkflowController::class); 
     });
 
 
