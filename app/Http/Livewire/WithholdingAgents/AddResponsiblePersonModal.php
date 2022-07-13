@@ -32,7 +32,8 @@ class AddResponsiblePersonModal extends Component
     public function mount($id)
     {   
         $this->withholding_agent_id = $id;
-        $this->responsible_persons = Taxpayer::select('id', 'first_name', 'middle_name', 'last_name')->get();
+        $waasigned = WaResponsiblePerson::distinct()->pluck('responsible_person_id');
+        $this->responsible_persons = Taxpayer::whereNotIn('id', $waasigned)->get();
     }
 
     public function submit()
