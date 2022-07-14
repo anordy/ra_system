@@ -11,12 +11,25 @@ use App\Models\BusinessLocation;
 class BranchesTable extends DataTableComponent
 {
     protected $model = BusinessLocation::class;
+    public $status;
+
+    public function mount($status)
+    {
+        $this->status = $status;
+    }
 
     public function builder(): Builder
     {
-        return BusinessLocation::where('business_locations.status', BranchStatus::PENDING)
-            ->orWhere('business_locations.status', BranchStatus::REJECTED)
-            ->with('business');
+        if ($this->status == BranchStatus::PENDING) {
+            return BusinessLocation::where('business_locations.status', BranchStatus::PENDING)
+                ->with('business');
+        } else if ($this->status == BranchStatus::APPROVED) {
+            return BusinessLocation::where('business_locations.status', BranchStatus::APPROVED)
+                ->with('business');
+        } else if ($this->status == BranchStatus::REJECTED) {
+            return BusinessLocation::where('business_locations.status', BranchStatus::REJECTED)
+                ->with('business');
+        }
     }
 
     public function configure(): void
@@ -33,7 +46,7 @@ class BranchesTable extends DataTableComponent
                 ->searchable(),
             Column::make("Physical Address", "physical_address")
                 ->searchable(),
-            Column::make('Status', 'id')->view('business.branches.includes.status'),
+            Column::make('Status', 'status')->view('business.branches.includes.status'),
             Column::make('Action', 'id')->view('business.branches.includes.actions'),
         ];
     }
