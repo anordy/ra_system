@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Tax Agent ')
+@section('title', 'Tax Consultants')
 
 @section('content')
     <div class="d-flex justify-content-between">

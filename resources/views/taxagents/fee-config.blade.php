@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    TaxAgents
+    Tax Consultants
 @endsection
 
 @section('content')
