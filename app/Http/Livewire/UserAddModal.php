@@ -4,7 +4,11 @@ namespace App\Http\Livewire;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\DatabaseNotification;
+use App\Notifications\NewUserNotification;
 use Exception;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
@@ -34,10 +38,10 @@ class UserAddModal extends Component
         return [
             'fname' => 'required|min:2',
             'lname' => 'required|min:2',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
-            'password' => ['required', 'confirmed', 'min:10', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', 'confirmed', 'min:8', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
         ];
     }
@@ -67,8 +71,8 @@ class UserAddModal extends Component
     public function submit()
     {
         $this->validate();
-        try{
-            User::create([
+        try {
+            $user = User::create([
                 'fname' => $this->fname,
                 'lname' => $this->lname,
                 'role_id' => $this->role,
@@ -77,15 +81,29 @@ class UserAddModal extends Component
                 'phone' => $this->phone,
                 'password' => Hash::make($this->password),
             ]);
+
+            $adminRole = Role::where('name', 'Administrator')->first();
+            $admins = User::where('role_id', $adminRole->id)->get();
+
+            foreach ($admins as $admin) {
+                $admin->notify(new DatabaseNotification(
+                    $subject = 'New '.Role::find($this->role)->name. ' created',
+                    $message = 'New '.Role::find($this->role)->name.' ' .$user->fullname() . ' created by ' .auth()->user()->fname.' '.auth()->user()->lname,
+                    $href = 'settings.users.index',
+                    $hrefText = 'View'
+                ));
+            }
+
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
+        } catch (Exception $e) {
+            dd($e);
             Log::error($e);
 
             $this->alert('error', 'Something went wrong');
         }
     }
 
- 
+
 
     public function mount()
     {

@@ -15,7 +15,9 @@ class CreateBusinesscategoriesTable extends Migration
     {
         Schema::create('business_categories', function (Blueprint $table) {
             $table->id();
+            $table->string('short_name');
             $table->string('name');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

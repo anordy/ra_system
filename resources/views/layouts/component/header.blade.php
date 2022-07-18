@@ -6,10 +6,13 @@
 
 <link href="{{ asset('plugins/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <link href="{{ asset('plugins/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/sweetalert/sweetalert2.min.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ URL::to('css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <link rel="icon" href="{{ asset('favicon.ico') }}" />
+
 @livewireStyles()
 
 <style>
@@ -19,3 +22,5 @@
 
     [x-cloak] { display: none !important; }
 </style>
+
+@yield('css')

@@ -14,7 +14,7 @@ class IDTypesTableSeeder extends Seeder
      */
     public function run()
     {
-        IDType::create(['name' => 'NIDA']);
-        IDType::create(['name' => 'PASSPORT']);
+        IDType::updateOrCreate(['name' => 'NIDA']);
+        IDType::updateOrCreate(['name' => 'PASSPORT']);
     }
 }

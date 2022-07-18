@@ -1,5 +1,5 @@
 <div>
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase">Assign Permissions</h5>
@@ -29,14 +29,14 @@
                                                         <div class="col-md-4 col-sm-6">
                                                             <label>
                                                                 <input type="checkbox" value="{{ $permission->id }}"  wire:model="selectedPermissions">
-                                                                {{ $permission->name }}
+                                                                {{  str_replace("_"," ",$permission->name) }}
                                                             </label>
                                                         </div>
                                                     @else
                                                         <div class="col-md-4 col-sm-6">
                                                             <label>
                                                                 <input type="checkbox" value="{{ $permission->id }}" wire:model="selectedPermissions">
-                                                                {{ $permission->name }}
+                                                                {{  str_replace("_"," ",$permission->name) }}
                                                             </label>
                                                         </div>
                                                     @endif

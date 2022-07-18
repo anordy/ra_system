@@ -14,12 +14,20 @@ class RoleAddModal extends Component
     use LivewireAlert;
 
     public $name;
+    public $report_to = null;
+    public $roles;
+
+    public function mount()
+    {
+        $this->roles = Role::all();
+    }
 
 
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:roles',
+            'name' => 'required|unique:roles',
+            'report_to' => 'nullable|unique:roles',
         ];
     }
 
@@ -30,6 +38,7 @@ class RoleAddModal extends Component
         try{
             Role::create([
                 'name' => $this->name,
+                'report_to' => $this->report_to,
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){

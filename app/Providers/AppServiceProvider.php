@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\Services\LivewireModal\Modals;
-use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
+use App\Services\LivewireModal\Modals;
+use App\View\Components\Select2;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+
     }
 
     /**
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Livewire::component('modals', Modals::class);
+        Livewire::component('select2', Select2::class);
     }
 }

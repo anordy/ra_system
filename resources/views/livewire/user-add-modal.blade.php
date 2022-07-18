@@ -1,6 +1,6 @@
 <div>
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" x-data="{password:'',password_confirm:''}">
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase">Add User</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
@@ -13,28 +13,28 @@
                             <label class="control-label">First Name</label>
                             <input type="text" class="form-control" wire:model.lazy="fname" id="fnname">
                             @error('fname')
-                                <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Last Name</label>
                             <input type="text" class="form-control" wire:model.lazy="lname" id="lame">
                             @error('lname')
-                                <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Email</label>
                             <input type="email" class="form-control" wire:model.lazy="email" id="email">
                             @error('email')
-                                <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Phone Number</label>
                             <input type="phone" class="form-control" wire:model.lazy="phone" id="phone">
                             @error('phone')
-                                <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
@@ -45,7 +45,7 @@
                                 <option value="F">Female</option>
                             </select>
                             @error('gender')
-                                <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
@@ -53,35 +53,47 @@
                             <select class="form-control" wire:model.lazy="role">
                                 <option value="" disabled selected>Choose option</option>
                                 @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
                                 @endforeach
                             </select>
                             @error('role')
-                                <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Password</label>
-                            <input type="password" class="form-control" wire:model="password" id="password">
-                            <div class="progress" style="height: 8px !important;">
-                                <div class="progress-bar  progress-bar-animated bg-success" role="progressbar" aria-valuenow="{{ $passwordStrength }}" style="width: {{ $passwordStrength }}%;" aria-valuemin="0" aria-valuemax="4"></div>
-                              </div>
+                            <input type="password" class="form-control" wire:model="password" id="password" x-model="password">
                             @error('password')
-                                <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Comfirm Password</label>
-                            <input type="password" class="form-control" wire:model="password_confirmation" id="password_confirmation">
+                            <input type="password" class="form-control" wire:model="password_confirmation"
+                                id="password_confirmation" x-model="password_confirm">
+                        </div>
+
+                        <div class="form-group col-md-12 my-0">
+                            <small x-bind:class="password.length >=8 ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.length >=8 ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Password must contain At least 8 characters</small>
+                        </div>
+                        <div class="form-group col-md-12 my-0">
+                            <small x-bind:class="password.match(/[A-Z]/) ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.match(/[A-Z]/) ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Password must contain uppercase</small>
+                        </div>
+                        <div class="form-group col-md-12 my-0">
+                            <small x-bind:class="password.match(/[!@$#%^&*(),.?:{}|<>]/) ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.match(/[!@$#%^&*(),.?:{}|<>]/) ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Password must contain special character</small>
+                        </div>
+                        <div class="form-group col-md-12 my-0">
+                            <small x-bind:class="password.match(/[0-9]/) ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.match(/[0-9]/) ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Password must contain Number</small>
+                        </div>
+                        <div class="form-group col-md-12 my-0">
+                            <small x-bind:class="password.length >=8 && password==password_confirm ? 'text-success':'text-danger'"><i class="pr-2 bi" x-bind:class="password.length >=8 & password==password_confirm ? 'bi-check-circle-fill':'bi-x-circle-fill'"></i>Passwords must match</small>
                         </div>
                     </div>
-
-
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" wire:click='submit'>Save changes</button>
+                <button type="button" class="btn btn-primary" x-bind:disabled="!(password.length >=8 && password.match(/[A-Z]/) && password.match(/[!@$#%^&*(),.?:{}|<>]/) && password.match(/[0-9]/) && password==password_confirm)" wire:click='submit'>Save changes</button>
             </div>
         </div>
     </div>

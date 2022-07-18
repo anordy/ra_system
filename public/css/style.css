@@ -1,6 +1,7 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     background: #fafafa;
     font-size: 0.8em !important;
 }
@@ -100,8 +101,8 @@ a[data-toggle="collapse"] {
 }
 
 #sidebar .profile {
-    position: absolute; 
-    bottom: 0px; 
+    position: fixed;
+    bottom: 0px;
     width: inherit;
     background-color: #c76c6c;
     min-width: 250px;
@@ -132,14 +133,15 @@ a[data-toggle="collapse"] {
     #sidebar {
         margin-left: -250px;
     }
+
     #sidebar.active {
         margin-left: 0;
     }
+
     #sidebarCollapse span {
         display: none;
     }
 }
-
 
 /* Fix columns selection button */
 #columnSelect-table {
@@ -161,23 +163,28 @@ a[data-toggle="collapse"] {
     padding: 0;
     text-align: right;
 }
+
 .card-tools a {
     cursor: pointer;
     margin-left: 5px;
     color: #c4c4c4 !important;
 }
+
 .card-tools a.btn-primary {
     color: #fff !important;
 }
-.card-tools .dropdown-menu > li > a {
+
+.card-tools .dropdown-menu>li>a {
     padding: 4px 10px;
     font-size: 12px;
     color: #676a6c !important;
 }
-.card .card-tools.open > .dropdown-menu {
+
+.card .card-tools.open>.dropdown-menu {
     left: auto;
     right: 0;
 }
+
 .card-tools .dropdown-toggle::after {
     display: none;
 }
@@ -193,12 +200,122 @@ LIVEWIRE TABS
     padding-left: 0;
     margin-right: 22px;
 }
+
 .tabs .tab-item:hover {
     color: #97363a;
 }
-.tabs .tab-item:focus, .tabs .tab-item:focus-visible {
+
+.tabs .tab-item:focus,
+.tabs .tab-item:focus-visible {
     outline: none;
 }
+
 .tabs .tab-item.active {
     border-bottom: 3px solid #97363a;
     font-weight: bold;
+}
+
+/* ---------------------------------------------------
+    NOTIFICATIONS STYLES
+----------------------------------------------------- */
+.notification {
+    margin-right: 20px;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+.notification .badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: #97363a;
+    color: white;
+}
+
+/* ---------------------------------------------------
+    DASHBOARD CARDS STYLES
+----------------------------------------------------- */
+
+.order-card {
+    color: #fff;
+}
+
+.bg-c-blue {
+    background: linear-gradient(45deg,#f27474,#97363a);
+}
+
+.bg-c-green {
+    background: linear-gradient(45deg,#f27474,#97363a);
+}
+
+.bg-c-yellow {
+    background: linear-gradient(45deg,#f27474,#97363a);
+}
+
+.bg-c-pink {
+    background: linear-gradient(45deg,#f27474,#97363a);
+}
+
+
+.card {
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    border: none;
+    margin-bottom: 30px;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.card .card-block {
+    padding: 25px;
+}
+
+.order-card i {
+    font-size: 26px;
+}
+
+.f-left {
+    float: left;
+}
+
+.f-right {
+    float: right;
+}
+
+.form-control {
+    font-size: .99em;
+    border-radius: 0;
+    transition: 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    box-shadow: unset;
+    border-color: #996567;
+}
+
+.bg-secondary {
+    background-color: #f7f7f7 !important;
+}
+
+.btn, input, select {
+    border-radius: 0 !important;
+}
+
+.btn {
+    font-size: .9em
+}
+
+
+/* Nav bar customization */
+.nav-tabs .nav-link {
+    border-radius: 0 !important;
+}
+
+.nav-link {
+    padding: 0.5rem 2rem;
+}

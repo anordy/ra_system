@@ -3,8 +3,8 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
-use Livewire\Component;
-use Exception;
+use App\Models\BusinessStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -14,29 +14,27 @@ class RegistrationsTable extends DataTableComponent
     
     use LivewireAlert;
 
-    protected $model = Business::class;
+    public $rejected = false;
+    public $pending = false;
+    public $approved = false;
+
+    public function builder(): Builder
+    {
+        if ($this->rejected){
+            return Business::where('status', BusinessStatus::REJECTED)->orderBy('created_at', 'desc');
+        }
+
+        if ($this->pending){
+            return Business::where('status', BusinessStatus::PENDING)->orderBy('created_at', 'desc');
+        }
+
+        return Business::where('status', '!=', BusinessStatus::DRAFT)->orderBy('created_at', 'desc');
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'class' => 'table-bordered table-sm',
-        ]);
-
-        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
-            if ($column->isField('id')) {
-                return [
-                    'style' => 'width: 20%;',
-                ];
-            }
-
-            return [];
-        });
     }
-
-    protected $listeners = [
-        'confirmed'
-    ];
 
     public function columns(): array
     {
@@ -44,46 +42,18 @@ class RegistrationsTable extends DataTableComponent
             Column::make('Business Name', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tin', 'tin')
-                ->sortable()
-                ->searchable(),
+            Column::make('TIN', 'tin'),
+            Column::make('Buss. Reg. No.', 'reg_no'),
+            Column::make('Mobile', 'mobile'),
+            Column::make('Date of Commencing', 'date_of_commencing')
+                ->format(function($value){
+                    return $value->toFormattedDateString();
+                }),
+            Column::make('Status', 'verified_at')
+                ->view('business.registrations.includes.status'),
             Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'business.registration-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
-                ->html(true),
+                ->view('business.registrations.includes.actions')
         ];
     }
 
-
-    public function delete($id)
-    {
-        $this->alert('warning', 'Are you sure you want to delete ?', [
-            'position' => 'center',
-            'toast' => false,
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Delete',
-            'onConfirmed' => 'confirmed',
-            'showCancelButton' => true,
-            'cancelButtonText' => 'Cancel',
-            'timer' => null,
-            'data' => [
-                'id' => $id
-            ],
-
-        ]);
-    }
-
-    public function confirmed($value)
-    {
-        try {
-            $data = (object) $value['data'];
-            Business::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
-        } catch (Exception $e) {
-            report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
-        }
-    }
 }

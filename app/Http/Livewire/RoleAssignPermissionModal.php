@@ -2,22 +2,25 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\SysModule;
+use App\Models\Audit;
 use Exception;
+use App\Models\Role;
+use Livewire\Component;
+use App\Models\SysModule;
+use App\Models\Permission;
+use App\Traits\AuditTrait;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
 
 class RoleAssignPermissionModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, AuditTrait;
     public $modules;
     public $role;
     public $permissions;
     public $selectedPermissions =[];
+    public $permission_id;
 
 
     protected function rules()
@@ -29,10 +32,11 @@ class RoleAssignPermissionModal extends Component
 
     public function submit()
     {
- 
         try {
             if (isset($this->selectedPermissions)) {
                 $this->role->refreshPermissions($this->selectedPermissions);
+                $new_permissions = $this->permissions->whereIn('id', $this->selectedPermissions)->pluck('name');
+                $this->triggerAudit(Role::class, Audit::UPDATED, 'roles', $this->role->id, $this->role->permissions->pluck('name'), $new_permissions);
             } else {
                 $this->role->permissions()->detach();
             }
@@ -46,7 +50,7 @@ class RoleAssignPermissionModal extends Component
     public function mount($id)
     {
         $this->role = Role::find($id);
-        $this->selectedPermissions = $this->role->permissions->pluck('id');
+        $this->selectedPermissions = $this->role->permissions->pluck('id')->toArray();
         $this->modules = SysModule::all();
         $this->permissions = Permission::all();
     }

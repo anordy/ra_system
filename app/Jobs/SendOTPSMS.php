@@ -40,8 +40,8 @@ class SendOTPSMS implements ShouldQueue
     {
         $sms_controller = new SMSController;
         $send_to = $this->phone_number;
-        $source = 'UmojaMobile';
-        $customer_message = 'Tumia code ' . $this->code . ' kwa ajili ya uthibitisho ya mfumo wa malipo ya bandari';
+        $source = config('modulesconfig.smsheader');
+        $customer_message = 'Tumia code ' . $this->code . ' kwa ajili ya uthibitisho kuingia katika akaunti yako ya ZRB.';
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

@@ -21,25 +21,27 @@ class CreateTaxpayersTable extends Migration
             $table->string('id_number');
 
             $table->string('first_name');
-            $table->string('middle_name');
+            $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->text('physical_address');
             $table->string('street');
 
             $table->string('email')->unique();
             $table->string('mobile')->unique();
-            $table->string('alt_mobile');
+            $table->string('alt_mobile')->nullable();
 
             $table->enum('location', ['Unguja', 'Pemba']);
 
-            $table->string('work_permit');
-            $table->string('residence_permit');
+            $table->string('work_permit')->nullable();
+            $table->string('residence_permit')->nullable();
 
             $table->boolean('is_citizen');
-            $table->unsignedBigInteger('country_id')->unique();
+            $table->boolean('is_first_login')->default(true);
+            $table->unsignedBigInteger('country_id');
 
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->dateTime('biometric_verified_at');
+            $table->dateTime('authorities_verified_at');
             $table->dateTime('email_verified_at')->nullable();
             $table->rememberToken();
             $table->softDeletes();

@@ -4,8 +4,11 @@ namespace App\Providers;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Events\SendWithholdingAgentRegistrationEmail;
 use App\Listeners\SendMailFired;
+use App\Listeners\SendNewBusinessRegisteredNotification;
 use App\Listeners\SendSmsFired;
+use App\Notifications\NewUserNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -26,10 +29,14 @@ class EventServiceProvider extends ServiceProvider
         ],
         SendSms::class => [
             SendSmsFired::class,
-        ]
+        ],
+        SendWithholdingAgentRegistrationEmail::class => [
+            SendMailFired::class
+        ],
     ];
 
     protected $subscribe = [
+        'App\Listeners\AuthenticationFired',
     ];
 
     /**
