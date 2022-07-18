@@ -18,11 +18,6 @@ class WithholdingAgentsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['officer_id', 'responsible_person_id']);
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'class' => 'table-sm',
-        ]);
     }
 
     public function builder(): Builder
@@ -43,41 +38,43 @@ class WithholdingAgentsTable extends DataTableComponent
             Column::make('Institution Name', 'institution_name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Responsible Person', 'responsible_person_id')
-                ->label(function($row) {
-                    return "{$row->taxpayer->first_name} {$row->taxpayer->last_name}";
-                })
-                ->sortable()
-                ->searchable(),
             Column::make('E-mail', 'email')
                 ->sortable()
                 ->searchable(),
             Column::make('Mobile', 'mobile')
                 ->sortable()
                 ->searchable(),
-            Column::make('Approved By', 'officer_id')
-            ->label(function($row) {
-                return "{$row->user->fname} {$row->user->lname}";
-            })
-            ->html(true)
-                ->sortable()
-                ->searchable(),
             Column::make('Commencing Date', 'date_of_commencing')
                 ->format(function($value, $row) { return Carbon::create($row->date_of_commencing)->toFormattedDateString(); })
                 ->sortable(),
+            Column::make('Status', 'status')
+                ->format(function ($value, $row) {
+                        if ($row->status == 'active') {
+                                return <<< HTML
+                                    <span class="badge badge-success">Active</span>
+                            HTML;
+                        } else if ($row->status == 'inactive') {
+                            return <<< HTML
+                            <span class="badge badge-danger">Inactive</span>
+                            HTML; 
+                        }
+                })
+                ->html(true),
             Column::make('Action', 'id')
                 ->view('withholding-agent.actions'),
         ];
     }
 
 
-    public function delete($id)
+    public function changeStatus($id)
     {
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $withholding_agent = WithholdingAgent::find($id);
+        $status = $withholding_agent->status == 'active' ? 'Deactivate' : 'Activate';
+        $this->alert('warning', "Are you sure you want to {$status} ?", [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
-            'confirmButtonText' => 'Delete',
+            'confirmButtonText' => $status,
             'onConfirmed' => 'confirmed',
             'showCancelButton' => true,
             'cancelButtonText' => 'Cancel',
@@ -94,8 +91,17 @@ class WithholdingAgentsTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            WithholdingAgent::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $withholding_agent = WithholdingAgent::find($data->id);
+            if ($withholding_agent->status == 'active') {
+                $withholding_agent->update([
+                    'status' => 'inactive'
+                ]);
+            } else if ($withholding_agent->status == 'inactive') {
+                $withholding_agent->update([
+                    'status' => 'active'
+                ]);
+            }
+            $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
             $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);

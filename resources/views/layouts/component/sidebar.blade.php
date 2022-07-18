@@ -51,7 +51,7 @@
                     </li>
                 @endcan
                 <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
-                    <a href="{{ route('business.branches.index') }}">Branch Registrations</a>
+                    <a href="{{ route('business.branches.index') }}">Branches</a>
                 </li>
                 <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
                     <a href="{{ route('business.deregistrations') }}">De-registrations</a>
@@ -130,8 +130,12 @@
                 <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
                     <a href="{{ route('system.audits.index') }}">Audit Trail</a>
                 </li>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
+                </li>
             </ul>
-        </li>
+        </li> 
+
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">
