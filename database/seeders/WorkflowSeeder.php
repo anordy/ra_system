@@ -60,6 +60,11 @@ class WorkflowSeeder extends Seeder
                 'to'   => 'registration_officer',
                 'condition' => '',
             ],
+            'application_updated' => [
+                'from' => 'apply',
+                'to'   => 'registration_officer',
+                'condition' => '',
+            ],
             'registration_officer_review' => [
                 'from' => 'registration_officer',
                 'to'   => 'registration_manager',

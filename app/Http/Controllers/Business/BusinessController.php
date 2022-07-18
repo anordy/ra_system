@@ -25,6 +25,15 @@ class BusinessController extends Controller
         return view('business.deregister.deregistration-table');
     }
 
+    public function updatesRequests(){
+        return view('business.updates.requests');
+    }
+
+    public function showRequest($businessId){
+        // $old_value = 
+        return view('business.updates.show');
+    }
+
     public function approve(){
         $businessId = 1;
         event(new SendSms('business-registration-approved', $businessId));
