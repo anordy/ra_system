@@ -130,8 +130,12 @@
                 <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
                     <a href="{{ route('system.audits.index') }}">Audit Trail</a>
                 </li>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
+                </li>
             </ul>
-        </li>
+        </li> 
+
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">
