@@ -110,7 +110,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
 
         Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
-        Route::get('/updates/{business}', [BusinessController::class, 'showRequest'])->name('showRequest');
+        Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
     });
 
 	Route::name('taxagents.')->prefix('taxagents')->group(function (){

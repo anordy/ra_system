@@ -19,6 +19,7 @@ class CreateBusinessUpdatesTable extends Migration
             $table->unsignedBigInteger('taxpayer_id');
             $table->longText('old_values')->nullable();
             $table->longText('new_values');
+            $table->enum('status', ['pending', 'approved', 'correction', 'rejected'])->default('pending');
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
             $table->timestamps();

@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    @livewire('business.updates.show-changes', ['businessId' => $businessId])
+    @livewire('business.updates.show-changes', ['updateId' => $updateId])
 @endsection

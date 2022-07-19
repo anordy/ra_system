@@ -30,8 +30,8 @@ class BusinessController extends Controller
         return view('business.updates.requests');
     }
 
-    public function showRequest($businessId){
-        return view('business.updates.show', ['businessId' => $businessId]);
+    public function showRequest($id){
+        return view('business.updates.show', ['updateId' => $id]);
     }
 
     public function approve(){
