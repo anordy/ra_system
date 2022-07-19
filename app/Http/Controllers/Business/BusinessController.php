@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Business;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Http\Controllers\Controller;
+use App\Models\BusinessUpdate;
 
 class BusinessController extends Controller
 {
@@ -30,8 +31,7 @@ class BusinessController extends Controller
     }
 
     public function showRequest($businessId){
-        // $old_value = 
-        return view('business.updates.show');
+        return view('business.updates.show', ['businessId' => $businessId]);
     }
 
     public function approve(){
