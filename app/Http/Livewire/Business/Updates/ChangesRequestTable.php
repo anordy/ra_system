@@ -20,15 +20,30 @@ class ChangesRequestTable extends DataTableComponent
     protected $listeners = [
         'confirmed',
     ];
+    public $status;
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        // $this->setAdditionalSelects(['is_extended']);
+    }
+
+    public function mount($status)
+    {
+        $this->status = $status;
     }
 
     public function builder(): Builder
     {
+        if ($this->status == BusinessStatus::PENDING) {
+            return BusinessUpdate::where('business_updates.status', BusinessStatus::PENDING)
+                ->with('business');
+        } else if ($this->status == BusinessStatus::APPROVED) {
+            return BusinessUpdate::where('business_updates.status', BusinessStatus::APPROVED)
+                ->with('business');
+        } else if ($this->status == BusinessStatus::REJECTED) {
+            return BusinessUpdate::where('business_updates.status', BusinessStatus::REJECTED)
+                ->with('business');
+        }
         return BusinessUpdate::query();
     }
 

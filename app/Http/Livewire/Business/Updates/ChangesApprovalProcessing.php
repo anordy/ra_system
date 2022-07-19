@@ -23,6 +23,7 @@ class ChangesApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $business_update_data;
+    public $business_id;
 
 
     public function mount($modelName, $modelId, $businessUpdate)
@@ -30,6 +31,7 @@ class ChangesApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->business_update_data = $businessUpdate;
+        $this->business_id = $businessUpdate->business_id;
         $this->registerWorkflow($modelName, $modelId);
     }
 
