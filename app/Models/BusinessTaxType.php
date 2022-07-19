@@ -10,4 +10,8 @@ class BusinessTaxType extends Model
     use HasFactory;
 
     protected $table = 'business_tax_type';
+
+    public function taxTypeChanges(){
+        return $this->hasMany(BusinessTaxTypeChange::class);
+    }
 }

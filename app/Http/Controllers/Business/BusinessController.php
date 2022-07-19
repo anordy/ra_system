@@ -17,6 +17,14 @@ class BusinessController extends Controller
         return view('business.closure.view');
     }
 
+    public function taxTypeRequests(){
+        return view('business.taxtypes.index');
+    }
+
+    public function viewTaxTypeRequests(){
+        return view('business.taxtypes.show');
+    }
+
     public function viewDeregistration(){
         return view('business.deregister.view');
     }

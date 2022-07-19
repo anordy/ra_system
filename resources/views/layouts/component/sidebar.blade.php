@@ -59,6 +59,9 @@
                 <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
                     <a href="{{ route('business.closure') }}">Temporary Closures</a>
                 </li>
+                <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
+                    <a href="{{ route('business.taxTypeRequests') }}">Change of Tax-type requests</a>
+                </li>
             </ul>
         </li>
         @can('withholding_agents_view')

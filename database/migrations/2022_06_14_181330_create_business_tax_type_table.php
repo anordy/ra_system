@@ -17,6 +17,7 @@ class CreateBusinessTaxTypeTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('tax_type_id');
+			$table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->enum('currency',['TZS','USD']);
             $table->timestamps();
         });
