@@ -71,24 +71,8 @@
 
         </div>
 
-        {{-- <div class="col md-2">
-            Status <br>
-
-            <div class="mb-2">
-                <h6>Business Information</h6>
-                @foreach ($old_values->business_information as $key => $value)
-                    <strong>{{ str_replace('_', ' ', $key) }}</strong> : {{ $value->name ?? $value }}<br>
-                @endforeach
-            </div>
-        </div> --}}
-
-
-
     </div>
 
-    <div class="row">
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" wire:click='approve'>Approve changes</button>
-        </div>
-    </div>
+    @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => $business_update->id, 'businessUpdate' => $business_update])
+
 </div>

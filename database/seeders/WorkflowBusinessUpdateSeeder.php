@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Workflow;
 use Illuminate\Database\Seeder;
 
-class WorkflowSeeder extends Seeder
+class WorkflowBusinessUpdateSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,14 +14,14 @@ class WorkflowSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'business_registration';
+        $name = 'business_update';
         $type = 'workflow';
         $marking_store = [
             'type'      => 'multiple_state',
             'property'  => ['marking']
         ];
         $initial_marking = 'apply';
-        $supports =  ['App\Models\Business'];
+        $supports =  ['App\Models\BusinessUpdate'];
         $places =  [
             'apply' => [
                 'owner' => 'taxpayer',
@@ -43,11 +43,6 @@ class WorkflowSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'director_of_trai' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 6]
-            ],
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -55,7 +50,7 @@ class WorkflowSeeder extends Seeder
             ],
         ];
         $transitions = [
-            'application_submitted' => [
+            'application_updated' => [
                 'from' => 'apply',
                 'to'   => 'registration_officer',
                 'condition' => '',
@@ -77,7 +72,7 @@ class WorkflowSeeder extends Seeder
             ],
             'registration_manager_review' => [
                 'from' => 'registration_manager',
-                'to'   => 'director_of_trai',
+                'to'   => 'completed',
                 'condition' => '',
             ],
             'registration_manager_reject' => [
@@ -85,21 +80,11 @@ class WorkflowSeeder extends Seeder
                 'to'   => 'registration_officer',
                 'condition' => '',
             ],
-            'director_of_trai_review' => [
-                'from' => 'director_of_trai',
-                'to'   => 'completed',
-                'condition' => '',
-            ],
-            'director_of_trai_reject' => [
-                'from' => 'director_of_trai',
-                'to'   => 'registration_manager',
-                'condition' => '',
-            ]
         ];
 
         Workflow::updateOrCreate([
-            'code' => 'BUSSINESS_REGISTRATION',
-            'summary' => 'Bussiness Registraiton Workflow',
+            'code' => 'BUSINESS_UPDATE',
+            'summary' => 'Business Update Workflow',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,

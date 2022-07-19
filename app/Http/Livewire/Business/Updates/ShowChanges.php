@@ -58,42 +58,6 @@ class ShowChanges extends Component
         }
     }
 
-    public function approve()
-    {
-
-        DB::beginTransaction();
-        try {
-            $new_values = json_decode($this->business_update->new_values, true);
-
-            $business_information_data = $new_values['business_information'];
-            $business_location_data = $new_values['business_location'];
-            $business_bank_data = $new_values['business_bank'];
-
-            /** Update business information */
-            $business = Business::findOrFail($this->business_id);
-            $business->update($business_information_data);
-
-            /** Update business location */
-            $business_location = BusinessLocation::where('business_id', $this->business_id)->where('is_headquarter', true)->firstOrFail();
-            $business_location->update($business_location_data);
-
-            /** Update business bank information */
-            $business_bank = BusinessBank::where('business_id', $this->business_id)->firstOrFail();
-            $business_bank->update($business_bank_data);
-
-            // On workflow transition change update BusinessUpdates status
-
-            DB::commit();
-            $this->redirect(route('business.updatesRequests'));
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-            $this->alert('error', 'Something went wrong');
-        }
-    }
-
-
-
     public function render()
     {
         return view('livewire.business.updates.show', ['new_values' => $this->new_values, 'old_values' => $this->old_values]);

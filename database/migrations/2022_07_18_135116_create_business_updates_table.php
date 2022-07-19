@@ -17,6 +17,7 @@ class CreateBusinessUpdatesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('taxpayer_id');
+            $table->string('marking')->nullable();
             $table->longText('old_values')->nullable();
             $table->longText('new_values');
             $table->enum('status', ['pending', 'approved', 'correction', 'rejected'])->default('pending');
