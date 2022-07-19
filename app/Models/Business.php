@@ -71,6 +71,10 @@ class Business extends Model implements Auditable
         return $this->hasMany(TemporaryBusinessClosure::class);
     }
 
+    public function taxTypeChanges(){
+        return $this->hasMany(BusinessTaxTypeChange::class);
+    }
+
     public function openBusiness(){
         return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
     }

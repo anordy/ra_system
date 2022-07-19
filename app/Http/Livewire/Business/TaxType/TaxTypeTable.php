@@ -21,11 +21,11 @@ class TaxTypeTable extends DataTableComponent
     public function builder(): Builder
     {
         if ($this->status == BranchStatus::PENDING) {
-            return BusinessTaxTypeChange::where('status', BranchStatus::PENDING);
+            return BusinessTaxTypeChange::where('business_tax_type_changes.status', BranchStatus::PENDING);
         } else if ($this->status == BranchStatus::APPROVED) {
-            return BusinessTaxTypeChange::where('status', BranchStatus::APPROVED);
+            return BusinessTaxTypeChange::where('business_tax_type_changes.status', BranchStatus::APPROVED);
         } else if ($this->status == BranchStatus::REJECTED) {
-            return BusinessTaxTypeChange::where('status', BranchStatus::REJECTED);
+            return BusinessTaxTypeChange::where('business_tax_type_changes.status', BranchStatus::REJECTED);
         }
     }
 
@@ -37,14 +37,10 @@ class TaxTypeTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            // Column::make("Business Name", "business.name")
-            //     ->sortable(),
-            // Column::make("Location", "Street")
-            //     ->searchable(),
-            // Column::make("Physical Address", "physical_address")
-            //     ->searchable(),
-            Column::make('Status', 'status')->view('business.branches.includes.status'),
-            Column::make('Action', 'id')->view('business.branches.includes.actions'),
+            Column::make("Business Name", "business.name")
+                ->sortable(),
+            Column::make('Status', 'status')->view('business.taxtypes.includes.status'),
+            Column::make('Action', 'id')->view('business.taxtypes.includes.actions'),
         ];
     }
 }

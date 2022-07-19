@@ -11,7 +11,4 @@ class BusinessTaxType extends Model
 
     protected $table = 'business_tax_type';
 
-    public function taxTypeChanges(){
-        return $this->hasMany(BusinessTaxTypeChange::class);
-    }
 }

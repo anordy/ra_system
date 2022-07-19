@@ -12,7 +12,7 @@ class BusinessTaxTypeChange extends Model
 
     protected $guarded = [];
 
-    public function taxType() {
-        return $this->belongsTo(BusinessTaxType::class, 'business_tax_type_id');
+    public function business() {
+        return $this->belongsTo(Business::class, 'business_id');
     }
 }

@@ -108,7 +108,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/deregistration/{id}', [BusinessController::class, 'viewDeregistration'])->name('viewDeregistration');
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
         Route::get('/change-taxtype', [BusinessController::class, 'taxTypeRequests'])->name('taxTypeRequests');
-        Route::get('/change-taxtype/{id}', [BusinessController::class, 'viewTaxTypeRequests'])->name('viewTaxTypeRequests');
+        Route::get('/change-taxtype/{id}', [BusinessController::class, 'viewTaxTypeRequest'])->name('viewTaxTypeRequest');
 
         Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
         Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
