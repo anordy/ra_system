@@ -58,25 +58,6 @@
                 </li>
             </ul>
         </li>
-        <li class="{{ request()->is('business*') ? 'active' : '' }}">
-            <a href="#businessMenu" data-toggle="collapse" aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
-            <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
-                @can('business_registrations_view')
-                    <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
-                        <a href="{{ route('business.registrations.index') }}">Registrations</a>
-                    </li>
-                @endcan
-                <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
-                    <a href="{{ route('business.branches.index') }}">Branches</a>
-                </li>
-                <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
-                    <a href="{{ route('business.deregistrations') }}">De-registrations</a>
-                </li>
-                <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
-                    <a href="{{ route('business.closure') }}">Temporary Closures</a>
-                </li>
-            </ul>
-        </li>
         @can('withholding_agents_view')
         <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
             <a href="#withholdingAgentsMenu" data-toggle="collapse" aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}" class="dropdown-toggle">Withholding Agents</a>
