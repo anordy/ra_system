@@ -5,79 +5,357 @@
     </nav>
     <div class="tab-content px-2 card pt-3 pb-2">
         <div id="tab1" class="tab-pane fade active show">
-            @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => $business_update->id, 'businessUpdate' => $business_update])
-            <div class="row mx-4">
-                <div class="col md-5">
-                    Old Values <br>
 
-                    <div class="mb-2">
-                        <h6>Business Information</h6>
-                        @foreach ($old_values->business_information as $key => $value)
-                            <strong>{{ str_replace('_', ' ', $key) }}</strong> : {{ $value->name ?? $value }}<br>
-                        @endforeach
-                    </div>
-
-                    <div class="mb-2">
-                        <h6>Business Location</h6>
-                        @foreach ($old_values->business_location as $key => $value)
-                            <strong>{{ str_replace('_', ' ', $key) }}</strong> : {{ $value->name ?? $value }} <br>
-                        @endforeach
-                    </div>
-
-                    <div class="mb-2">
-                        <h6>Business Bank</h6>
-                        @foreach ($old_values->business_bank as $key => $value)
-                            <strong>{{ str_replace('_', ' ', $key) }}</strong> : {{ $value->name ?? $value }} <br>
-                        @endforeach
-                    </div>
-
-                </div>
-
-                <div class="col md-5">
-                    New Values <br>
-
-                    <div class="mb-2">
-                        <h6>Business Information</h6>
-                        @foreach ($new_values->business_information as $key => $value)
-                            <strong>{{ str_replace('_', ' ', $key) }}</strong> :
-                            @if ($key == 'business_activities_type_id' || $key == 'currency_id')
-                                {{ $this->getNameById($key, $value) }}
+            <div class="container">
+                <table class="table table-striped table-sm">
+                    <label class="font-weight-bold text-uppercase">Business Information</label>
+                    <thead>
+                        <th>Property</th>
+                        <th>Old Value</th>
+                        <th>New Value</th>
+                        <th>Status</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Business Name</th>
+                            <td>{{ $old_values->business_information->name }}</td>
+                            <td>{{ $new_values->business_information->name }}</td>
+                            @if ($old_values->business_information->name == $new_values->business_information->name)
+                                <td class="table-primary">Unchanged</td>
                             @else
-                                {{ $value->name ?? $value }}
+                                <td class="table-success">Changed</td>
                             @endif
-                            <br>
-                        @endforeach
-                    </div>
-
-                    <div class="mb-2">
-                        <h6>Business Location</h6>
-                        @foreach ($new_values->business_location as $key => $value)
-                            <strong>{{ str_replace('_', ' ', $key) }}</strong> :
-                            @if ($key == 'region_id' || $key == 'district_id' || $key == 'ward_id')
-                                {{ $this->getNameById($key, $value) }}
+                        </tr>
+                        {{-- <tr>
+                            <th>TIN</th>
+                            <td>{{ $old_values->business_information->tin }}</td>
+                            <td>{{ $new_values->business_information->tin }}</td>
+                        </tr> --}}
+                        <tr>
+                            <th>Reg No</th>
+                            <td>{{ $old_values->business_information->reg_no }}</td>
+                            <td>{{ $new_values->business_information->reg_no }}</td>
+                            @if ($old_values->business_information->reg_no == $new_values->business_information->reg_no)
+                                <td class="table-primary">Unchanged</td>
                             @else
-                                {{ $value->name ?? $value }}
+                                <td class="table-success">Changed</td>
                             @endif
-                            <br>
-                        @endforeach
-                    </div>
-
-                    <div class="mb-2">
-                        <h6>Business Bank</h6>
-                        @foreach ($new_values->business_bank as $key => $value)
-                            <strong>{{ str_replace('_', ' ', $key) }}</strong> :
-                            @if ($key == 'bank_id' || $key == 'account_type_id' || $key == 'currency_id')
-                                {{ $this->getNameById($key, $value) }}
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ $old_values->business_information->email }}</td>
+                            <td>{{ $new_values->business_information->email }}</td>
+                            @if ($old_values->business_information->email == $new_values->business_information->email)
+                                <td class="table-primary">Unchanged</td>
                             @else
-                                {{ $value->name ?? $value }}
+                                <td class="table-success">Changed</td>
                             @endif
-                            <br>
-                        @endforeach
-                    </div>
+                        </tr>
+                        <tr>
+                            <th>Mobile</th>
+                            <td>{{ $old_values->business_information->mobile }}</td>
+                            <td>{{ $new_values->business_information->mobile }}</td>
+                            @if ($old_values->business_information->mobile == $new_values->business_information->mobile)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Alternative Mobile</th>
+                            <td>{{ $old_values->business_information->alt_mobile }}</td>
+                            <td>{{ $new_values->business_information->alt_mobile }}</td>
+                            @if ($old_values->business_information->alt_mobile == $new_values->business_information->alt_mobile)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Business Activities</th>
+                            <td>{{ $old_values->business_information->business_activities_type_id->name }}</td>
+                            <td>{{ $this->getNameById('business_activities_type_id', $new_values->business_information->business_activities_type_id) }}
+                            </td>
+                            @if ($old_values->business_information->business_activities_type_id->name ==
+                                $this->getNameById('business_activities_type_id', $new_values->business_information->business_activities_type_id))
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Currency</th>
+                            <td>{{ $old_values->business_information->currency_id->name }}</td>
+                            <td>{{ $this->getNameById('currency_id', $new_values->business_information->currency_id) }}
+                            </td>
+                            @if ($old_values->business_information->currency_id->name ==
+                                $this->getNameById('currency_id', $new_values->business_information->currency_id))
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Owner Designation</th>
+                            <td>{{ $old_values->business_information->owner_designation }}</td>
+                            <td>{{ $new_values->business_information->owner_designation }}</td>
+                            @if ($old_values->business_information->owner_designation == $new_values->business_information->owner_designation)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Place of Business</th>
+                            <td>{{ $old_values->business_information->place_of_business }}</td>
+                            <td>{{ $new_values->business_information->place_of_business }}</td>
+                            @if ($old_values->business_information->place_of_business == $new_values->business_information->place_of_business)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Physical Address</th>
+                            <td>{{ $old_values->business_information->physical_address }}</td>
+                            <td>{{ $new_values->business_information->physical_address }}</td>
+                            @if ($old_values->business_information->physical_address == $new_values->business_information->physical_address)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        {{-- <tr>
+                            <th>Date of Commencing</th>
+                            <td>{{ $old_values->business_information->date_of_commencing }}</td>
+                            <td>{{ $new_values->business_information->date_of_commencing }}</td>
+                        </tr>
+                        <tr>
+                            <th>Pre Estimated Turnover</th>
+                            <td>{{ $old_values->business_information->pre_estimated_turnover }}</td>
+                            <td>{{ $new_values->business_information->pre_estimated_turnover }}</td>
+                        </tr>
+                        <tr>
+                            <th>Post Estimated Turnover</th>
+                            <td>{{ $old_values->business_information->post_estimated_turnover }}</td>
+                            <td>{{ $new_values->business_information->post_estimated_turnover }}</td>
+                        </tr>
+                        <tr>
+                            <th>Goods and Services Types</th>
+                            <td>{{ $old_values->business_information->goods_and_services_types }}</td>
+                            <td>{{ $new_values->business_information->goods_and_services_types }}</td>
+                        </tr>
+                        <tr>
+                            <th>Goods and Services Examples</th>
+                            <td>{{ $old_values->business_information->goods_and_services_example }}</td>
+                            <td>{{ $new_values->business_information->goods_and_services_example }}</td>
+                        </tr> --}}
 
-                </div>
+                    </tbody>
+                </table>
+                <br>
+                <table class="table table-striped table-sm">
+                    <label class="font-weight-bold text-uppercase">Business Location</label>
+                    <thead>
+                        <th>Property</th>
+                        <th>Old Value</th>
+                        <th>New Value</th>
+                        <th>Status</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Nature of Possession</th>
+                            <td>{{ $old_values->business_location->nature_of_possession }}</td>
+                            <td>{{ $new_values->business_location->nature_of_possession }}</td>
+                            @if ($old_values->business_location->nature_of_possession == $new_values->business_location->nature_of_possession)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Owner's Name</th>
+                            <td>{{ $old_values->business_location->owner_name }}</td>
+                            <td>{{ $new_values->business_location->owner_name }}</td>
+                            @if ($old_values->business_location->owner_name == $new_values->business_location->owner_name)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Owners Phone No</th>
+                            <td>{{ $old_values->business_location->owner_phone_no }}</td>
+                            <td>{{ $new_values->business_location->owner_phone_no }}</td>
+                            @if ($old_values->business_location->owner_phone_no == $new_values->business_location->owner_phone_no)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Physical Address</th>
+                            <td>{{ $old_values->business_location->physical_address }}</td>
+                            <td>{{ $new_values->business_location->physical_address }}</td>
+                            @if ($old_values->business_location->physical_address == $new_values->business_location->physical_address)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Street</th>
+                            <td>{{ $old_values->business_location->street }}</td>
+                            <td>{{ $new_values->business_location->street }}</td>
+                            @if ($old_values->business_location->street == $new_values->business_location->street)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>House No</th>
+                            <td>{{ $old_values->business_location->house_no }}</td>
+                            <td>{{ $new_values->business_location->house_no }}</td>
+                            @if ($old_values->business_location->house_no == $new_values->business_location->house_no)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Meter No</th>
+                            <td>{{ $old_values->business_location->meter_no }}</td>
+                            <td>{{ $new_values->business_location->meter_no }}</td>
+                            @if ($old_values->business_location->meter_no == $new_values->business_location->meter_no)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Latitude</th>
+                            <td>{{ $old_values->business_location->latitude }}</td>
+                            <td>{{ $new_values->business_location->latitude }}</td>
+                            @if ($old_values->business_location->latitude == $new_values->business_location->latitude)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Longitude</th>
+                            <td>{{ $old_values->business_location->longitude }}</td>
+                            <td>{{ $new_values->business_location->longitude }}</td>
+                            @if ($old_values->business_location->longitude == $new_values->business_location->longitude)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Region</th>
+                            <td>{{ $old_values->business_location->region_id->name }}</td>
+                            <td>{{ $this->getNameById('region_id', $new_values->business_location->region_id) }}</td>
+                            @if ($old_values->business_location->region_id->name == $this->getNameById('region_id', $new_values->business_location->region_id))
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>District</th>
+                            <td>{{ $old_values->business_location->district_id->name }}</td>
+                            <td>{{ $this->getNameById('district_id', $new_values->business_location->district_id) }}
+                            </td>
+                            @if ($old_values->business_location->district_id->name == $this->getNameById('district_id', $new_values->business_location->district_id))
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Ward</th>
+                            <td>{{ $old_values->business_location->ward_id->name }}</td>
+                            <td>{{ $this->getNameById('ward_id', $new_values->business_location->ward_id) }}</td>
+                            @if ($old_values->business_location->ward_id->name == $this->getNameById('ward_id', $new_values->business_location->ward_id))
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+
+                    </tbody>
+                </table>
+                <br>
+                <table class="table table-striped table-sm">
+                    <label class="font-weight-bold text-uppercase">Business Location</label>
+                    <thead>
+                        <th>Property</th>
+                        <th>Old Value</th>
+                        <th>New Value</th>
+                        <th>Status</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Account No</th>
+                            <td>{{ $old_values->business_bank->acc_no }}</td>
+                            <td>{{ $new_values->business_bank->acc_no }}</td>
+                            @if ($old_values->business_bank->acc_no == $new_values->business_bank->acc_no)
+                            <td class="table-primary">Unchanged</td>
+                        @else
+                            <td class="table-success">Changed</td>
+                        @endif
+                            
+                        </tr>
+                        <tr>
+                            <th>Branch</th>
+                            <td>{{ $old_values->business_bank->branch }}</td>
+                            <td>{{ $new_values->business_bank->branch }}</td>
+                            @if ($old_values->business_bank->branch == $new_values->business_bank->branch)
+                            <td class="table-primary">Unchanged</td>
+                        @else
+                            <td class="table-success">Changed</td>
+                        @endif
+                        </tr>
+                        <tr>
+                            <th>Bank Name</th>
+                            <td>{{ $old_values->business_bank->bank_id->name }}</td>
+                            <td>{{ $this->getNameById('bank_id', $new_values->business_bank->bank_id) }}</td>
+                            @if ($old_values->business_bank->bank_id->name == $this->getNameById('bank_id', $new_values->business_bank->bank_id))
+                            <td class="table-primary">Unchanged</td>
+                        @else
+                            <td class="table-success">Changed</td>
+                        @endif
+                        </tr>
+                        <tr>
+                            <th>Account Type</th>
+                            <td>{{ $old_values->business_bank->account_type_id->name }}</td>
+                            <td>{{ $this->getNameById('account_type_id', $new_values->business_bank->account_type_id) }}
+                            </td>
+                            @if ($old_values->business_bank->account_type_id->name == $this->getNameById('account_type_id', $new_values->business_bank->account_type_id))
+                            <td class="table-primary">Unchanged</td>
+                        @else
+                            <td class="table-success">Changed</td>
+                        @endif
+                        </tr>
+                        <tr>
+                            <th>Currency</th>
+                            <td>{{ $old_values->business_bank->currency_id->name }}</td>
+                            <td>{{ $this->getNameById('currency_id', $new_values->business_bank->currency_id) }}</td>
+                            @if ($old_values->business_bank->currency_id->name == $this->getNameById('currency_id', $new_values->business_bank->currency_id))
+                            <td class="table-primary">Unchanged</td>
+                        @else
+                            <td class="table-success">Changed</td>
+                        @endif
+                        </tr>
+
+                    </tbody>
+                </table>
+
 
             </div>
+            @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => $business_update->id, 'businessUpdate' => $business_update])
         </div>
         <div id="tab2" class="tab-pane fade">
             <livewire:approval.approval-history-table modelName='App\Models\BusinessUpdate'
