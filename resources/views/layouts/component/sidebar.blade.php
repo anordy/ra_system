@@ -25,6 +25,22 @@
                 </li>
             </ul>
         </li>
+        <li class="{{ request()->is('business*') ? 'active' : '' }}">
+            <a href="#businessMenu" data-toggle="collapse" aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
+            <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
+                @can('business_registrations_view')
+                    <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
+                        <a href="{{ route('business.registrations.index') }}">Registrations</a>
+                    </li>
+                @endcan
+                <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
+                    <a href="{{ route('business.deregistrations') }}">De-registrations</a>
+                </li>
+                <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
+                    <a href="{{ route('business.closure') }}">Temporary Closures</a>
+                </li>
+            </ul>
+        </li>
         <li  class="{{ request()->is('taxagents*') ? 'active':'' }}">
             <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Agents</a>
             <ul class="collapse list-unstyled {{ request()->is('taxagents*') ? 'show' : '' }}" id="taxagentSubmenu">
@@ -39,22 +55,6 @@
                 </li>
                 <li class="{{ request()->is('taxagents/fee*') ? 'active': '' }}">
                     <a href="{{route('taxagents.fee')}}">Fee Configuration</a>
-                </li>
-            </ul>
-        </li>
-        <li class="{{ request()->is('business*') ? 'active' : '' }}">
-            <a href="#businessMenu" data-toggle="collapse" aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
-            <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
-                @can('business_registrations_view')
-                    <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
-                        <a href="{{ route('business.registrations.index') }}">Registrations</a>
-                    </li>
-                @endcan
-                <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
-                    <a href="{{ route('business.deregistrations') }}">De-registrations</a>
-                </li>
-                <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
-                    <a href="{{ route('business.closure') }}">Temporary Closures</a>
                 </li>
             </ul>
         </li>
@@ -119,6 +119,10 @@
                 </li>
                 <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
                     <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
+                </li>
+                <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.business-files.index') }}">Business Files</a>
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">

@@ -11,7 +11,7 @@
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Business Information</a>
                 <a href="#tab2" class="nav-item nav-link font-weight-bold">Approval History</a>
             </nav>
-            <div class="tab-content px-2 card pt-3 pb-2">
+            <div class="tab-content px-2 border border-top-0 pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show">
                     <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business->id }}" />
                     @include('business.registrations.includes.business_info')
