@@ -8,6 +8,7 @@ use App\Jobs\Business\SendBusinessClosureApprovedSMS;
 use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
 use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
+use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
 use App\Jobs\SendTaxAgentApprovalSMS;
 use App\Jobs\Taxpayer\SendRegistrationSMS;
 use App\Models\Business;
@@ -80,6 +81,9 @@ class SendSmsFired
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
             SendBusinessDeregisterCorrectionSMS::dispatch($business, $business->taxpayer);
+        }else if ($event->service === 'change-tax-type-approval'){
+            // Token ID is payload data having all notification details
+            SendTaxTypeSMS::dispatch($event->tokenId);
         }
     }
 }
