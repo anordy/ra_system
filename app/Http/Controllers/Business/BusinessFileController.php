@@ -21,7 +21,7 @@ class BusinessFileController extends Controller
 
         // Check who can access the file
         if ($file){
-            return Storage::disk('business')->response($file->location);
+            return Storage::response($file->location);
         }
 
         // If they dont meet requirements, abort

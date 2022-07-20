@@ -33,7 +33,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DistrictSeeder::class);
         $this->call(WardSeeder::class);
         $this->call(SysModuleSeeder::class);
-        $this->call(WithholdingAgentSeeder::class);
         $this->call(BusinessBranchWorkflow::class);
         $this->call(WorkflowBusinessClosureSeeder::class);
         $this->call(WorkflowBusinessDeregistrationSeeder::class);
