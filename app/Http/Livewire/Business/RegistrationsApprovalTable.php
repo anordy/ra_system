@@ -25,10 +25,6 @@ class RegistrationsApprovalTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'class' => 'table-bordered table-sm',
-        ]);
     }
 
     public function columns(): array
@@ -44,7 +40,7 @@ class RegistrationsApprovalTable extends DataTableComponent
                 ->format(function($value,$row){
                     return $value->toFormattedDateString();
                 }),
-            Column::make('Status', 'verified_at')
+            Column::make('Status', 'status')
                 ->view('business.registrations.includes.status'),
             Column::make('Action', 'id')
                 ->view('business.registrations.includes.approval')

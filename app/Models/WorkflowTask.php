@@ -33,4 +33,13 @@ class WorkflowTask extends Model
             }
         }
     }
+    
+
+    public function getOperators(){
+        if ($this->operator_type == 'staff') {
+            
+        } elseif ($this->operator_type == 'role') {
+           
+        }
+    }
 }

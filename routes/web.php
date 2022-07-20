@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\Business\BranchController;
+use App\Http\Controllers\Business\BusinessFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -41,6 +42,7 @@ use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ExciseDutyController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
 
 Auth::routes();
@@ -78,10 +80,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic2', ISIC2Controller::class);
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
+        Route::resource('/business-files', BusinessFileController::class);
     });
 
     Route::prefix('system')->name('system.')->group(function (){
         Route::resource('audits', AuditController::class); 
+        Route::resource('workflow', WorkflowController::class); 
     });
 
 
@@ -105,12 +109,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/closure/{id}', [BusinessController::class, 'viewClosure'])->name('viewClosure');
         Route::get('/deregistration/{id}', [BusinessController::class, 'viewDeregistration'])->name('viewDeregistration');
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
+        Route::get('/change-taxtype', [BusinessController::class, 'taxTypeRequests'])->name('taxTypeRequests');
+        Route::get('/change-taxtype/{id}', [BusinessController::class, 'viewTaxTypeRequest'])->name('viewTaxTypeRequest');
 
         Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
         Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
 
         Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
         Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
+        Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
     });
 
 	Route::name('taxagents.')->prefix('taxagents')->group(function (){
@@ -121,6 +128,5 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
 		Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
 		Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
-
 	});
 });

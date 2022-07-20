@@ -10,4 +10,5 @@ class BusinessTaxType extends Model
     use HasFactory;
 
     protected $table = 'business_tax_type';
+
 }

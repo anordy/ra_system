@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Workflow;
 use Illuminate\Database\Seeder;
 
-class WorkflowSeeder extends Seeder
+class BusinessWorkflowSeeder extends Seeder
 {
     /**
      * Run the database seeds.
