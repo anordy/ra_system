@@ -34,7 +34,7 @@
                                         <span class="font-weight-bold text-uppercase">Tax Type</span>
                                         <p class="my-1">
                                             @foreach (json_decode($taxchange->new_taxtype) as $type)
-                                            {{ $type->tax_type_id }}<br>
+                                            {{ $this->getTaxName($type->tax_type_id) }}<br>
                                         @endforeach
                                         </p>
                                     </div>

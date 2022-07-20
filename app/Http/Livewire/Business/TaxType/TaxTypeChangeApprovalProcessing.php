@@ -9,6 +9,8 @@ use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\BusinessStatus;
+use Illuminate\Support\Facades\DB;
+use App\Models\BusinessTaxTypeChange;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -18,6 +20,7 @@ class TaxTypeChangeApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
+    public $taxchange;
 
 
     public function mount($modelName, $modelId)
@@ -25,18 +28,26 @@ class TaxTypeChangeApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
+        $this->taxchange = BusinessTaxTypeChange::findOrFail($this->modelId);
     }
 
 
     public function approve($transtion)
     {
+        $business = Business::findOrFail($this->taxchange->business_id);
+
         try {
             if ($this->checkTransition('registration_manager_review')) {
-                $this->subject->status = BusinessStatus::APPROVED;
-               
+                $business->taxTypes()->detach();
+                $new_taxtypes = json_decode($this->taxchange->new_taxtype, true);
 
-                // TODO: Handle notifications after final approve
-             
+                DB::table('business_tax_type')->insert($new_taxtypes);
+
+                $this->subject->status = BusinessStatus::APPROVED;
+
+                // TODO: Handle notifications after final approval and 
+                
+                
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
@@ -49,7 +60,7 @@ class TaxTypeChangeApprovalProcessing extends Component
     {
         try {
             if ($this->checkTransition('registration_manager_review')) {
-                $this->subject->status = BusinessStatus::CORRECTION;
+                $this->subject->status = BusinessStatus::REJECTED;
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
