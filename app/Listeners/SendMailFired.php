@@ -14,9 +14,9 @@ use App\Jobs\Business\SendBusinessClosureApprovedMail;
 use App\Jobs\Business\SendBusinessClosureCorrectionMail;
 use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
-use App\Models\WithholdingAgent;
 use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\SendOTPEmail;
+use App\Models\WaResponsiblePerson;
 
 class SendMailFired
 {
@@ -45,9 +45,9 @@ class SendMailFired
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
         } else if ($event->service == 'withholding_agent_registration') {
-            /** TokenId is withholding agent id id */
-            $withholding_agent = WithholdingAgent::find($event->tokenId);
-            SendWithholdingAgentRegistrationEmail::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->institution_name, $withholding_agent->taxpayer->email);
+            /** TokenId is withholding agent history is */
+            $withholding_agent = WaResponsiblePerson::find($event->tokenId);
+            SendWithholdingAgentRegistrationEmail::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->withholdingAgent->institution_name, $withholding_agent->taxpayer->email);
         } else if ($event->service === 'taxpayer-registration'){
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);

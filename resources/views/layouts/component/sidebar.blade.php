@@ -42,19 +42,38 @@
             </ul>
         </li>
         <li  class="{{ request()->is('taxagents*') ? 'active':'' }}">
-            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Agents</a>
+            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Consultants</a>
             <ul class="collapse list-unstyled {{ request()->is('taxagents*') ? 'show' : '' }}" id="taxagentSubmenu">
                 <li class="{{ request()->is('taxagents/requests') ? 'active': '' }}">
                     <a href="{{ route('taxagents.requests') }}">Registration Requests</a>
                 </li>
                 <li class="{{ request()->is('taxagents/active*') ? 'active': '' }}">
-                    <a href="{{route('taxagents.active')}}">Active Taxagents</a>
+                    <a href="{{route('taxagents.active')}}">Active Tax Consultants</a>
                 </li>
                 <li class="{{ request()->is('taxagents/renew*') ? 'active': '' }}">
                     <a href="{{route('taxagents.renew')}}">Renewal Requests</a>
                 </li>
                 <li class="{{ request()->is('taxagents/fee*') ? 'active': '' }}">
                     <a href="{{route('taxagents.fee')}}">Fee Configuration</a>
+                </li>
+            </ul>
+        </li>
+        <li class="{{ request()->is('business*') ? 'active' : '' }}">
+            <a href="#businessMenu" data-toggle="collapse" aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
+            <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
+                @can('business_registrations_view')
+                    <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
+                        <a href="{{ route('business.registrations.index') }}">Registrations</a>
+                    </li>
+                @endcan
+                <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
+                    <a href="{{ route('business.branches.index') }}">Branches</a>
+                </li>
+                <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
+                    <a href="{{ route('business.deregistrations') }}">De-registrations</a>
+                </li>
+                <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
+                    <a href="{{ route('business.closure') }}">Temporary Closures</a>
                 </li>
             </ul>
         </li>
@@ -131,8 +150,12 @@
                 <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
                     <a href="{{ route('system.audits.index') }}">Audit Trail</a>
                 </li>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
+                </li>
             </ul>
-        </li>
+        </li> 
+
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">

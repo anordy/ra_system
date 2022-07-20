@@ -10,7 +10,7 @@
             {{ $location->business->name }} Business Branch
         </div>
         <div class="card-body mt-0 p-2">
-            <livewire:approval.approval-processing modelName='App\Models\BusinessLocation' modelId="{{ $location->id }}" />
+            <livewire:approval.branches-approval-processing modelName='App\Models\BusinessLocation' modelId="{{ $location->id }}" />
 
             <div class="row">
                 <div class="row m-2">
