@@ -39,14 +39,34 @@ class TaxTypeChangeApprovalProcessing extends Component
         try {
             if ($this->checkTransition('registration_manager_review')) {
                 $business->taxTypes()->detach();
+
+                $old_taxtypes = json_decode($this->taxchange->old_taxtype);
                 $new_taxtypes = json_decode($this->taxchange->new_taxtype, true);
 
                 DB::table('business_tax_type')->insert($new_taxtypes);
 
                 $this->subject->status = BusinessStatus::APPROVED;
 
-                // TODO: Handle notifications after final approval and 
-                
+                $old_taxtypes_list = "";
+                $new_taxtypes_list = "";
+
+                foreach ($old_taxtypes as $data) {
+                    $old_taxtypes_list .= "{$data->name}, ";
+                }
+
+                foreach ($business->taxTypes as $type) {
+                    $new_taxtypes_list .= "{$type->name}, ";
+                }
+
+                $notification_payload = [
+                    'old_taxtypes' => $old_taxtypes_list,
+                    'new_taxtypes' => $new_taxtypes_list,
+                    'business' => $business,
+                    'time' => Carbon::now()->format('d-m-Y')
+                ];
+
+                event(new SendMail('change-tax-type-approval', $notification_payload));
+                event(new SendSms('change-tax-type-approval', $notification_payload));
                 
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
