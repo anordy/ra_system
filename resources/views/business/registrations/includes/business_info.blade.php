@@ -22,6 +22,7 @@
         </li>
     @endif
 </ul>
+
 <div class="tab-content bg-white border shadow-sm" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div class="row m-2 pt-3">
@@ -448,4 +449,27 @@
             </div>
         </div>
     @endif
+</div>
+
+<div class="card shadow-sm my-4 rounded-0">
+    <div class="card-header font-weight-bold bg-white">
+        Business Attachments
+    </div>
+    <div class="card-body">
+        <div class="row">
+            @foreach($business->files as $file)
+                <div class="col-md-4">
+                    <a class="file-item"  target="_blank"  href="{{ route('business.file', encrypt($file->id)) }}">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div style="font-weight: 500;" class="ml-1">
+                            {{ $file->type->name }}
+                            @if($file->type->short_name === \App\Models\BusinessFileType::TIN)
+                                - {{ $file->taxpayer->full_name }} (<b>{{ $file->taxpayer->reference_no }}</b>)
+                            @endif
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
 </div>

@@ -79,9 +79,13 @@ class Business extends Model implements Auditable
         return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
     }
 
-  
     public function businessStatus(){
         return $this->hasOne(BusinessStatus::class);
+    }
+
+    // Files Relation
+    public function files(){
+        return $this->hasMany(BusinessFile::class);
     }
 
     // Scopes

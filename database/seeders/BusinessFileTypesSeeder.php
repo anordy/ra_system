@@ -1,0 +1,242 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\BusinessCategory;
+use App\Models\BusinessFileType;
+use App\Models\FileType;
+use Illuminate\Database\Seeder;
+
+class BusinessFileTypesSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'title_deed',
+            'name' => 'Title deed or lease agreement',
+            'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::SOLE,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'tin',
+            'name' => 'TIN Certificate for Registrant',
+            'business_type' => BusinessCategory::SOLE,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'license',
+            'name' => 'Business License',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::SOLE,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'id_card',
+            'name' => 'Identification Card',
+            'description' => 'Identification Card of the business owner.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::SOLE,
+            'is_required' => true
+        ]);
+
+        // Partnership Deed Agreement
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'partnership_deed',
+            'name' => 'Partnership Deed Agreement',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::PARTNERSHIP,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'title_deed',
+            'name' => 'Title deed or lease agreement',
+            'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::PARTNERSHIP,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'tin',
+            'name' => 'TIN Certificate for Registrant',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::PARTNERSHIP,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'business_license',
+            'name' => 'Business License',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::PARTNERSHIP,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'recognition_letter',
+            'name' => 'Recognition Letter',
+            'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::PARTNERSHIP,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'identification_card',
+            'name' => 'Identification Card',
+            'description' => 'Identification Card of the business owner.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::PARTNERSHIP,
+            'is_required' => true
+        ]);
+
+
+        // Company
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'memorandum',
+            'name' => 'Memorandum and Article of Association',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'title_deed',
+            'name' => 'Title deed or lease agreement',
+            'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'tin',
+            'name' => 'TIN Certificate for Registrant',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'certificate_of_compliance',
+            'name' => 'Certificate of incorporation/Compliance',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'recognition_letter',
+            'name' => 'Recognition Letter',
+            'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'id_card',
+            'name' => 'Identification Card',
+            'description' => 'Identification Card of the business owner.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'business_license',
+            'name' => 'Business License',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        // NGO
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'ngo_constitution',
+            'name' => 'NGO Constitution',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::NGO,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'application_letter',
+            'name' => 'Application Letter for Registration',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::NGO,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'title_deed',
+            'name' => 'Title deed or lease agreement',
+            'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::NGO,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'tin',
+            'name' => 'TIN Certificate for the NGO',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::NGO,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'business_license',
+            'name' => 'Business License',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::NGO,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'recognition_letter',
+            'name' => 'Recognition Letter',
+            'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'consolidated_form',
+            'name' => 'BPRA Consolidated Form',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'id_card_1',
+            'name' => 'Identification Card - First Director',
+            'description' => 'First Director Citizen Identity (National ID) card or Zanzibar Resident Identity Card (ZAN ID) or Passport for non Resident',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'id_card_2',
+            'name' => 'Identification Card - Second Director',
+            'description' => 'Second Director Citizen Identity (National ID) card or Zanzibar Resident Identity Card (ZAN ID) or Passport for non Resident',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::COMPANY,
+            'is_required' => true
+        ]);
+    }
+}

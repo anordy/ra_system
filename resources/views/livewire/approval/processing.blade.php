@@ -5,7 +5,7 @@
     <div class="card-body m-0 pb-0">
         @include('livewire.approval.transitions')
 
-        <div class="row mt-2">
+        <div class="row mt-3">
             @if ($this->checkTransition('registration_officer_review'))
                 @include('livewire.approval.registration_officer_review')
             @endif

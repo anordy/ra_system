@@ -4,14 +4,19 @@ namespace App\Http\Livewire\Approval;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Jobs\Business\SendBusinessApprovedSMS;
+use App\Models\Business;
 use App\Models\BusinessStatus;
+use App\Models\Currency;
 use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
+use App\Models\TaxType;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -25,6 +30,7 @@ class ApprovalProcessing extends Component
     public $isiic_ii;
     public $isiic_iii;
     public $isiic_iv;
+    public $taxTypes, $selectedTaxTypes = [];
 
 
     public $isiiciList = [];
@@ -39,6 +45,7 @@ class ApprovalProcessing extends Component
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
         $this->isiiciList = ISIC1::all();
+        $this->taxTypes = TaxType::all();
     }
 
     public function isiiciChange($value)
@@ -72,6 +79,26 @@ class ApprovalProcessing extends Component
             $this->subject->isiic_ii = $this->isiic_ii ?? null;
             $this->subject->isiic_iii = $this->isiic_iii ?? null;
             $this->subject->isiic_iv = $this->isiic_iv ?? null;
+
+            if (count($this->selectedTaxTypes) < 1){
+                $this->addError('selectedTaxTypes', 'Please selected at least one tax type.');
+                return;
+            }
+
+            $currency = Currency::find($this->subject->currency_id);
+
+            $business = Business::find($this->subject->id);
+
+            $business->taxTypes()->detach();
+
+            foreach ($this->selectedTaxTypes as $type) {
+                DB::table('business_tax_type')->insert([
+                    'business_id' => $business->id,
+                    'tax_type_id' => $type,
+                    'currency' => $currency->iso,
+                    'created_at' => Carbon::now()
+                ]);
+            }
         }
    
         if ($this->checkTransition('director_of_trai_review')) {
