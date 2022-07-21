@@ -25,23 +25,6 @@
                 </li>
             </ul>
         </li>
-        <li  class="{{ request()->is('taxagents*') ? 'active':'' }}">
-            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Consultants</a>
-            <ul class="collapse list-unstyled {{ request()->is('taxagents*') ? 'show' : '' }}" id="taxagentSubmenu">
-                <li class="{{ request()->is('taxagents/requests') ? 'active': '' }}">
-                    <a href="{{ route('taxagents.requests') }}">Registration Requests</a>
-                </li>
-                <li class="{{ request()->is('taxagents/active*') ? 'active': '' }}">
-                    <a href="{{route('taxagents.active')}}">Active Tax Consultants</a>
-                </li>
-                <li class="{{ request()->is('taxagents/renew*') ? 'active': '' }}">
-                    <a href="{{route('taxagents.renew')}}">Renewal Requests</a>
-                </li>
-                <li class="{{ request()->is('taxagents/fee*') ? 'active': '' }}">
-                    <a href="{{route('taxagents.fee')}}">Fee Configuration</a>
-                </li>
-            </ul>
-        </li>
         <li class="{{ request()->is('business*') ? 'active' : '' }}">
             <a href="#businessMenu" data-toggle="collapse" aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
             <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
@@ -58,6 +41,28 @@
                 </li>
                 <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
                     <a href="{{ route('business.closure') }}">Temporary Closures</a>
+                </li>
+                @can('change_tax_type_view')
+                    <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
+                        <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
+                    </li>
+                @endcan
+            </ul>
+        </li>
+        <li  class="{{ request()->is('taxagents*') ? 'active':'' }}">
+            <a href="#taxagentSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Consultants</a>
+            <ul class="collapse list-unstyled {{ request()->is('taxagents*') ? 'show' : '' }}" id="taxagentSubmenu">
+                <li class="{{ request()->is('taxagents/requests') ? 'active': '' }}">
+                    <a href="{{ route('taxagents.requests') }}">Registration Requests</a>
+                </li>
+                <li class="{{ request()->is('taxagents/active*') ? 'active': '' }}">
+                    <a href="{{route('taxagents.active')}}">Active Tax Consultants</a>
+                </li>
+                <li class="{{ request()->is('taxagents/renew*') ? 'active': '' }}">
+                    <a href="{{route('taxagents.renew')}}">Renewal Requests</a>
+                </li>
+                <li class="{{ request()->is('taxagents/fee*') ? 'active': '' }}">
+                    <a href="{{route('taxagents.fee')}}">Fee Configuration</a>
                 </li>
             </ul>
         </li>
@@ -122,6 +127,10 @@
                 </li>
                 <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
                     <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
+                </li>
+                <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.business-files.index') }}">Business Files</a>
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">

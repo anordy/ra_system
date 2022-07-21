@@ -1,30 +1,26 @@
 @extends('layouts.master')
 
 @section('title')
-    Business
+    Business Management
 @endsection
 
 @section('content')
     <div class="card p-0 m-0">
-        <div class="card-header text-uppercase font-weight-bold">
+        <div class="card-header text-uppercase font-weight-bold bg-white">
             Registered Businesses
         </div>
         <div class="card-body mt-0 p-2">
             <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#tab2" class="nav-item nav-link font-weight-bold active">All Businesses</a>
-                <a href="#tab1" class="nav-item nav-link font-weight-bold">Pending Approval</a>
-                <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Business</a>
+                <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">All Businesses</a>
+                <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Pending Approval</a>
             </nav>
           
-            <div class="tab-content px-2 card pt-3 pb-2">
-                <div id="tab2" class="tab-pane fade">
+            <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
+                <div id="all-businesses" class="tab-pane fade active show">
                     <livewire:business.registrations-table></livewire:business.registrations-table>
                 </div>
-                <div id="tab1" class="tab-pane fade active show">
+                <div id="pending-approval" class="tab-pane fade">
                     @livewire('business.registrations-approval-table')
-                </div>
-                <div id="tab3" class="tab-pane fade">
-                    <livewire:business.registrations-table rejected="true"></livewire:business.registrations-table>
                 </div>
             </div>
         </div>

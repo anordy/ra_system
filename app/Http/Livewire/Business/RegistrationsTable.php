@@ -49,7 +49,7 @@ class RegistrationsTable extends DataTableComponent
                 ->format(function($value){
                     return $value->toFormattedDateString();
                 }),
-            Column::make('Status', 'verified_at')
+            Column::make('Status', 'status')
                 ->view('business.registrations.includes.status'),
             Column::make('Action', 'id')
                 ->view('business.registrations.includes.actions')

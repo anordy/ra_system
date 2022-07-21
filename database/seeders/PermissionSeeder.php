@@ -23,6 +23,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'withholding_agents_disable', 'sys_module_id' => 2],
 
             ['name' => 'business_registrations_view', 'sys_module_id' => 3],
+
+            ['name' => 'change_tax_type_view', 'sys_module_id' => 4],
         ];
         foreach ($data as $row) {
             Permission::updateOrCreate($row);

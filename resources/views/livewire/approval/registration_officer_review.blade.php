@@ -43,3 +43,18 @@
         </select>
     </div>
 </div>
+<div class="col-md-12">
+    <div class="form-group">
+        <label>Tax Types</label>
+        <select class="form-control @error('selectedTaxTypes') is-invalid @enderror" multiple style="min-height: 200px;" wire:model="selectedTaxTypes">
+            @foreach($taxTypes as $type)
+                <option value="{{ $type->id }}">{{ $type->name }}</option>
+            @endforeach
+        </select>
+        @error('selectedTaxTypes')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+        @enderror
+    </div>
+</div>
