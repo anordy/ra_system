@@ -43,6 +43,8 @@ use App\Http\Controllers\ExciseDutyController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
+use App\Http\Controllers\VatReturn\VatReturnController;
+use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
 
 Auth::routes();
 
@@ -120,6 +122,20 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
 		Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
 		Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
+
+	});
+
+	Route::name('vat-return.')->prefix('vat-return')->group(function (){
+		Route::get('/', [VatReturnController::class, 'index'])->name('index');
+        Route::get('/requests', [VatReturnController::class, 'requests'])->name('requests');
+        Route::get('/requests/show/{id}', [VatReturnController::class, 'show'])->name('requests-show');
+		Route::get('/rates', [VatReturnController::class, 'rates'])->name('rates');
+
+	});
+	Route::name('port-tax-return.')->prefix('port-tax-return')->group(function (){
+		Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
+
+		Route::get('/rates', [PortTaxReturnController::class, 'rates'])->name('rates');
 
 	});
 });

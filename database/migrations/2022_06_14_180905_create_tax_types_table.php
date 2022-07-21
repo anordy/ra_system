@@ -15,6 +15,7 @@ class CreateTaxTypesTable extends Migration
     {
         Schema::create('tax_types', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
             $table->string('name');
             $table->softDeletes();
             $table->timestamps();
