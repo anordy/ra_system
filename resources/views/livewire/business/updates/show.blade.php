@@ -6,6 +6,7 @@
     <div class="tab-content px-2 card pt-3 pb-2">
         <div id="tab1" class="tab-pane fade active show">
 
+            @if ($business_update->type == 'business_information')
             <div class="container">
                 <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">Business Information</label>
@@ -361,6 +362,81 @@
 
 
             </div>
+            @else
+            <div class="container">
+                <table class="table table-striped table-sm">
+                    <label class="font-weight-bold text-uppercase">Responsible Person Changes</label>
+                    <thead>
+                        <th style="width: 30%">Property</th>
+                        <th style="width: 25%">Old Values</th>
+                        <th style="width: 25%">New Values</th>
+                        <th style="width: 20%">Status</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Responsible Person Reference No.</th>
+                            <td>{{ $this->getResponsiblePersonNameById($old_values->responsible_person_id) }}</td>
+                            <td>{{ $this->getResponsiblePersonNameById($new_values->responsible_person_id) }}</td>
+                            @if ($old_values->responsible_person_id == $new_values->responsible_person_id)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Is Own Consultant</th>
+                            <td>{{ $old_values->is_own_consultant == 1 ? 'Yes' : 'No' }}</td>
+                            <td>{{ $new_values->is_own_consultant == 1 ? 'Yes' : 'No' }}</td>
+                            @if ($old_values->is_own_consultant == $new_values->is_own_consultant)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Tax Consultant Reference No.</th>
+                            <td>{{ $old_values->tax_consultant_reference_no ?? 'N/A'}}</td>
+                            <td>{{ $new_values->tax_consultant_reference_no ?? 'N/A' }}</td>
+                            @if ($old_values->tax_consultant_reference_no == $new_values->tax_consultant_reference_no)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <table class="table table-striped table-sm">
+                    <label class="font-weight-bold text-uppercase">Business Partners</label>
+                    <thead>
+                        <th style="width: 30%">Old Values</th>
+                        <th style="width: 50%">New Values</th>
+                        <th style="width: 20%">Status</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @foreach ($old_values->partners as $partner)
+                                    {{ $this->getResponsiblePersonNameByReferenceNo($partner->reference_no) }} <br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($new_values->partners as $partner)
+                                {{ $this->getResponsiblePersonNameByReferenceNo($partner->reference_no) }} <br>
+                            @endforeach
+                            </td>
+                            @if ($old_values->partners == $new_values->partners)
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            @endif
+         
+
             @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => $business_update->id, 'businessUpdate' => $business_update])
         </div>
         <div id="tab2" class="tab-pane fade">

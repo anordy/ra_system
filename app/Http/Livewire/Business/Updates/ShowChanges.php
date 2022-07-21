@@ -15,6 +15,7 @@ use App\Models\BusinessLocation;
 use App\Models\Currency;
 use App\Models\District;
 use App\Models\Region;
+use App\Models\Taxpayer;
 use App\Models\Ward;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -56,6 +57,16 @@ class ShowChanges extends Component
         } else if ($type == 'account_type_id') {
             return AccountType::find($id)->name;
         }
+    }
+
+    public function getResponsiblePersonNameById($id)
+    {
+        return Taxpayer::find($id)->fullname();
+    }
+
+    public function getResponsiblePersonNameByReferenceNo($refNo)
+    {
+        return Taxpayer::where('reference_no', $refNo)->first()->fullname();
     }
 
     public function render()

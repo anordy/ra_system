@@ -9,9 +9,13 @@ use App\Events\SendSms;
 use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
+use App\Models\TaxAgent;
+use App\Models\Taxpayer;
 use App\Models\BusinessBank;
 use App\Models\BusinessStatus;
+use App\Models\BusinessPartner;
 use App\Models\BusinessLocation;
+use App\Models\BusinessConsultant;
 use Illuminate\Support\Facades\Log;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -40,31 +44,72 @@ class ChangesApprovalProcessing extends Component
     {
         try {
             if ($this->checkTransition('registration_manager_review')) {
-                $new_values = json_decode($this->business_update_data->new_values, true);
 
-                $business_information_data = $new_values['business_information'];
-                $business_location_data = $new_values['business_location'];
-                $business_bank_data = $new_values['business_bank'];
-    
-                /** Update business information */
-                $business = Business::findOrFail($this->business_id);
-                $business->update($business_information_data);
-    
-                /** Update business location */
-                $business_location = BusinessLocation::where('business_id', $this->business_id)->where('is_headquarter', true)->firstOrFail();
-                $business_location->update($business_location_data);
-    
-                /** Update business bank information */
-                $business_bank = BusinessBank::where('business_id', $this->business_id)->firstOrFail();
-                $business_bank->update($business_bank_data);
+                if ($this->business_update_data->type == 'business_information') {
+                    $new_values = json_decode($this->business_update_data->new_values, true);
 
-                $this->subject->status = BusinessStatus::APPROVED;
+                    $business_information_data = $new_values['business_information'];
+                    $business_location_data = $new_values['business_location'];
+                    $business_bank_data = $new_values['business_bank'];
 
+                    /** Update business information */
+                    $business = Business::findOrFail($this->business_id);
+                    $business->update($business_information_data);
 
-                /**
-                 * TODO: Send notification to taxpayer after approval
-                 */
-            
+                    /** Update business location */
+                    $business_location = BusinessLocation::where('business_id', $this->business_id)->where('is_headquarter', true)->firstOrFail();
+                    $business_location->update($business_location_data);
+
+                    /** Update business bank information */
+                    $business_bank = BusinessBank::where('business_id', $this->business_id)->firstOrFail();
+                    $business_bank->update($business_bank_data);
+
+                    $this->subject->status = BusinessStatus::APPROVED;
+
+                    // TODO: Send notification to taxpayer
+                    
+
+                } else if ($this->business_update_data->type == 'responsible_person') {
+                    /** Update business information */
+                    $new_values = json_decode($this->business_update_data->new_values, true);
+                    $business = Business::findOrFail($this->business_id);
+                    $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first();
+
+                    $businessPartners = $new_values['partners'];
+
+                    if($new_values['is_own_consultant'] === false) {
+                    $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
+
+                        BusinessConsultant::create([
+                            'business_id' => $business->id,
+                            'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
+                        ]);
+                    } else {
+                        $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
+                    }
+
+                    $business->update([
+                        'is_own_consultant' => $new_values['is_own_consultant'],
+                        'responsible_person_id' => $new_values['responsible_person_id'],
+                    ]);
+
+                    //  Partners
+                    if ($business->business_category_id !== 1) {
+                        $business->partners()->delete();
+
+                        foreach ($businessPartners as $partner) {
+                            $partner = BusinessPartner::create([
+                                'business_id' => $business->id,
+                                'taxpayer_id' => Taxpayer::where('reference_no', $partner['reference_no'])->first()->id
+                            ]);
+                        }
+                    }
+
+                    $this->subject->status = BusinessStatus::APPROVED;
+
+                    // TODO: Send notification to taxpayer
+
+                }
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
@@ -83,7 +128,7 @@ class ChangesApprovalProcessing extends Component
                 // $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
             }
-            
+
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             dd($e);

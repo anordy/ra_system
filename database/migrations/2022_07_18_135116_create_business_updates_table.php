@@ -20,6 +20,7 @@ class CreateBusinessUpdatesTable extends Migration
             $table->string('marking')->nullable();
             $table->longText('old_values')->nullable();
             $table->longText('new_values');
+            $table->enum('type', ['business_information', 'responsible_person'])->default('business_information');
             $table->enum('status', ['pending', 'approved', 'correction', 'rejected'])->default('pending');
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('taxpayer_id')->references('id')->on('taxpayers');

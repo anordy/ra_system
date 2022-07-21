@@ -59,6 +59,12 @@ class ChangesRequestTable extends DataTableComponent
             Column::make('Reg No.', 'business.reg_no')
                 ->sortable()
                 ->searchable(),
+            Column::make('Date', 'created_at')
+                ->format(function($value){
+                    return $value->toFormattedDateString();
+                }),
+            Column::make('Change Type', 'type')
+                ->view('business.updates.type'),
             Column::make('Action', 'id')
                 ->view('business.updates.action'),
         ];
