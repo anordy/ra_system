@@ -10,10 +10,10 @@
                 <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">Business Information</label>
                     <thead>
-                        <th>Property</th>
-                        <th>Old Value</th>
-                        <th>New Value</th>
-                        <th>Status</th>
+                        <th style="width: 20%">Property</th>
+                        <th style="width: 30%">Old Values</th>
+                        <th style="width: 30%">New Values</th>
+                        <th style="width: 20%">Status</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -157,10 +157,10 @@
                 <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">Business Location</label>
                     <thead>
-                        <th>Property</th>
-                        <th>Old Value</th>
-                        <th>New Value</th>
-                        <th>Status</th>
+                        <th style="width: 20%">Property</th>
+                        <th style="width: 30%">Old Values</th>
+                        <th style="width: 30%">New Values</th>
+                        <th style="width: 20%">Status</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -257,7 +257,8 @@
                             <th>Region</th>
                             <td>{{ $old_values->business_location->region_id->name }}</td>
                             <td>{{ $this->getNameById('region_id', $new_values->business_location->region_id) }}</td>
-                            @if ($old_values->business_location->region_id->name == $this->getNameById('region_id', $new_values->business_location->region_id))
+                            @if ($old_values->business_location->region_id->name ==
+                                $this->getNameById('region_id', $new_values->business_location->region_id))
                                 <td class="table-primary">Unchanged</td>
                             @else
                                 <td class="table-success">Changed</td>
@@ -268,7 +269,8 @@
                             <td>{{ $old_values->business_location->district_id->name }}</td>
                             <td>{{ $this->getNameById('district_id', $new_values->business_location->district_id) }}
                             </td>
-                            @if ($old_values->business_location->district_id->name == $this->getNameById('district_id', $new_values->business_location->district_id))
+                            @if ($old_values->business_location->district_id->name ==
+                                $this->getNameById('district_id', $new_values->business_location->district_id))
                                 <td class="table-primary">Unchanged</td>
                             @else
                                 <td class="table-success">Changed</td>
@@ -278,7 +280,8 @@
                             <th>Ward</th>
                             <td>{{ $old_values->business_location->ward_id->name }}</td>
                             <td>{{ $this->getNameById('ward_id', $new_values->business_location->ward_id) }}</td>
-                            @if ($old_values->business_location->ward_id->name == $this->getNameById('ward_id', $new_values->business_location->ward_id))
+                            @if ($old_values->business_location->ward_id->name ==
+                                $this->getNameById('ward_id', $new_values->business_location->ward_id))
                                 <td class="table-primary">Unchanged</td>
                             @else
                                 <td class="table-success">Changed</td>
@@ -291,10 +294,10 @@
                 <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">Business Location</label>
                     <thead>
-                        <th>Property</th>
-                        <th>Old Value</th>
-                        <th>New Value</th>
-                        <th>Status</th>
+                        <th style="width: 20%">Property</th>
+                        <th style="width: 30%">Old Values</th>
+                        <th style="width: 30%">New Values</th>
+                        <th style="width: 20%">Status</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -302,52 +305,55 @@
                             <td>{{ $old_values->business_bank->acc_no }}</td>
                             <td>{{ $new_values->business_bank->acc_no }}</td>
                             @if ($old_values->business_bank->acc_no == $new_values->business_bank->acc_no)
-                            <td class="table-primary">Unchanged</td>
-                        @else
-                            <td class="table-success">Changed</td>
-                        @endif
-                            
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
+
                         </tr>
                         <tr>
                             <th>Branch</th>
                             <td>{{ $old_values->business_bank->branch }}</td>
                             <td>{{ $new_values->business_bank->branch }}</td>
                             @if ($old_values->business_bank->branch == $new_values->business_bank->branch)
-                            <td class="table-primary">Unchanged</td>
-                        @else
-                            <td class="table-success">Changed</td>
-                        @endif
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
                         </tr>
                         <tr>
                             <th>Bank Name</th>
                             <td>{{ $old_values->business_bank->bank_id->name }}</td>
                             <td>{{ $this->getNameById('bank_id', $new_values->business_bank->bank_id) }}</td>
-                            @if ($old_values->business_bank->bank_id->name == $this->getNameById('bank_id', $new_values->business_bank->bank_id))
-                            <td class="table-primary">Unchanged</td>
-                        @else
-                            <td class="table-success">Changed</td>
-                        @endif
+                            @if ($old_values->business_bank->bank_id->name ==
+                                $this->getNameById('bank_id', $new_values->business_bank->bank_id))
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
                         </tr>
                         <tr>
                             <th>Account Type</th>
                             <td>{{ $old_values->business_bank->account_type_id->name }}</td>
                             <td>{{ $this->getNameById('account_type_id', $new_values->business_bank->account_type_id) }}
                             </td>
-                            @if ($old_values->business_bank->account_type_id->name == $this->getNameById('account_type_id', $new_values->business_bank->account_type_id))
-                            <td class="table-primary">Unchanged</td>
-                        @else
-                            <td class="table-success">Changed</td>
-                        @endif
+                            @if ($old_values->business_bank->account_type_id->name ==
+                                $this->getNameById('account_type_id', $new_values->business_bank->account_type_id))
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
                         </tr>
                         <tr>
                             <th>Currency</th>
                             <td>{{ $old_values->business_bank->currency_id->name }}</td>
                             <td>{{ $this->getNameById('currency_id', $new_values->business_bank->currency_id) }}</td>
-                            @if ($old_values->business_bank->currency_id->name == $this->getNameById('currency_id', $new_values->business_bank->currency_id))
-                            <td class="table-primary">Unchanged</td>
-                        @else
-                            <td class="table-success">Changed</td>
-                        @endif
+                            @if ($old_values->business_bank->currency_id->name ==
+                                $this->getNameById('currency_id', $new_values->business_bank->currency_id))
+                                <td class="table-primary">Unchanged</td>
+                            @else
+                                <td class="table-success">Changed</td>
+                            @endif
                         </tr>
 
                     </tbody>
