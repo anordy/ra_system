@@ -9,6 +9,9 @@ return [
     //BoT Exchange Rates
     'botexapi' => 'https://www.bot.go.tz/services/api/exrates',
 
+    //BIO Websocket
+    'bio_websocket' => env('WEBSOCKET_BIO'),
+
     //ZM
     'zm_cancel' => env('ZAN_MALIPO_URL_CANCEL_BILL'),
     'zm_recon' => env('ZAN_MALIPO_URL_RECON'),
