@@ -66,6 +66,6 @@ class EnrollFingerprint extends Component
 
     public function render()
     {
-        return view('livewire.taxpayers.enroll-fingerprint');
+        return view('livewire.taxpayers.enroll-vendor-fingerprint');
     }
 }
