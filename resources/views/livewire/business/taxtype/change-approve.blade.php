@@ -11,38 +11,34 @@
                         </div>
                         <div class="card-body mt-0 p-2">
                 
-                            <div class="row m-2">
-                                <div class="col-md-6">
-                                    <div class="text-uppercase font-weight-bold">
-                                        Previous Tax Types
-                                    </div>
-                
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Tax Type</span>
-                                        <p class="my-1">
-                                            @foreach (json_decode($taxchange->old_taxtype) as $type)
-                                                {{ $type->name }}<br>
-                                            @endforeach
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="text-uppercase font-weight-bold">
-                                        New Tax Types
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Tax Type</span>
-                                        <p class="my-1">
-                                            @foreach (json_decode($taxchange->new_taxtype) as $type)
+                                    <table class="table table-striped table-sm">
+                                        <thead>
+                                            <th style="width: 30%">Old Values</th>
+                                            <th style="width: 50%">New Values</th>
+                                            <th style="width: 20%">Status</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    @foreach (json_decode($taxchange->old_taxtype) as $type)
+                                                    {{ $type->name }}<br>
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    @foreach (json_decode($taxchange->new_taxtype) as $type)
                                             {{ $this->getTaxName($type->tax_type_id) }}<br>
                                         @endforeach
-                                        </p>
-                                    </div>
-                                </div>
-                
-                
+                                                </td>
+                                                @if ($taxchange->old_taxtype == $taxchange->new_taxtype)
+                                                    <td class="table-primary">Unchanged</td>
+                                                @else
+                                                    <td class="table-success">Changed</td>
+                                                @endif
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
                                 <hr style="margin-top: -16px" class="mx-3" />
-                            </div>
                             <livewire:business.tax-type.tax-type-change-approval-processing modelName='App\Models\BusinessTaxTypeChange'
                                 modelId="{{ $taxchange->id }}" />
                 
