@@ -16,12 +16,16 @@ class RegistrationsTable extends DataTableComponent
 
     public $rejected = false;
     public $pending = false;
-    public $approved = false;
+    public $approved = true;
 
     public function builder(): Builder
     {
         if ($this->rejected){
             return Business::where('status', BusinessStatus::REJECTED)->orderBy('created_at', 'desc');
+        }
+
+        if ($this->approved){
+            return Business::where('status', BusinessStatus::APPROVED)->orderBy('created_at', 'desc');
         }
 
         if ($this->pending){
@@ -39,6 +43,9 @@ class RegistrationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('Z Number', 'z_no')
+                ->sortable()
+                ->searchable(),
             Column::make('Business Name', 'name')
                 ->sortable()
                 ->searchable(),
