@@ -2,9 +2,9 @@
 
 return [
     //SMS APIs
-    'smstestapi' => 'https://uat.ubx.co.tz:8888/ESBConnector/public/api/connector/process/sms',
+    'smstestapi' => 'http://172.25.27.66:8784/fasthub/opes/messaging/api',
     'smsliveapi' => '',
-    'smsheader' => 'UmojaMobile',
+    'smsheader' => 'ZanMalipo',
 
     //BoT Exchange Rates
     'botexapi' => 'https://www.bot.go.tz/services/api/exrates',
