@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BusinessPartner extends Model
 {
     use HasFactory;
+
     public function taxpayer(){
         return $this->belongsTo(Taxpayer::class);
     }

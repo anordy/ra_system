@@ -20,6 +20,9 @@ class CreateTaxpayersTable extends Migration
             $table->unsignedBigInteger('id_type');
             $table->string('id_number');
 
+            $table->string('tin')->nullable();
+            $table->string('tin_location')->nullable();
+
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
