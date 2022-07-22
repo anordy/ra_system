@@ -43,6 +43,10 @@ class Business extends Model implements Auditable
         return $this->belongsTo(BusinessActivity::class, 'business_activities_type_id');
     }
 
+    public function hotel(){
+        return $this->hasOne(BusinessHotel::class);
+    }
+    
     public function location(){
         return $this->hasOne(BusinessLocation::class);
     }

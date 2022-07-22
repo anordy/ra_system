@@ -108,15 +108,5 @@
 
 
         });
-
-        function captchaReload() {
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('captcha.reload') }}',
-                success: function(data) {
-                    $("#captcha-label").html(data.captcha);
-                }
-            });
-        }
     </script>
 @endsection
