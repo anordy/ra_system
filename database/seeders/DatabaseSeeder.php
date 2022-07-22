@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CountriesTableSeeder::class);
         $this->call(CurrenciesTableSeeder::class);
         $this->call(IDTypesTableSeeder::class);
+        $this->call(KYCSeeder::class);
         $this->call(TaxpayersTableSeeder::class);
         $this->call(TaxTypesSeeder::class);
         $this->call(RegionSeeder::class);
@@ -37,7 +38,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TaxpayersTableSeeder::class);
         $this->call(BusinessCategoriesSeeder::class);
         $this->call(AccountTypesSeeder::class);
-        $this->call(WorkflowSeeder::class);
         $this->call(BusinessBranchWorkflow::class);
         $this->call(WorkflowBusinessClosureSeeder::class);
         $this->call(WorkflowBusinessDeregistrationSeeder::class);
