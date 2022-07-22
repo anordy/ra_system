@@ -57,7 +57,7 @@ Route::get('/workflow', [WorkflowerTestController::class, 'index']);
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
 Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
-Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
+Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
 Route::get('password/change/{user}', [ChangePasswordController::class, 'index'])->name('password.change');
 Route::post('password/save-changed', [ChangePasswordController::class, 'updatePassword'])->name('password.save-changed');
 

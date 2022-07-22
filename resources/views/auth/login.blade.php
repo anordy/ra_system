@@ -96,7 +96,7 @@
                 type: 'GET',
                 url: '{{ route('captcha.reload') }}',
                 success: function(data) {
-                    $("#captcha-label").html(data.captcha);
+                    $("#captcha_label").html(data.captcha);
                 }
             });
         }
