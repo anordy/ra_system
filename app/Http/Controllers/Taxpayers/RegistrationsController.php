@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Taxpayers;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Http\Controllers\Controller;
+use App\Models\Biometric;
 use App\Models\KYC;
 use App\Models\Taxpayer;
-use App\Notifications\DatabaseNotification;
 use App\Traits\Taxpayer\KYCTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -16,29 +16,41 @@ class RegistrationsController extends Controller
 {
     use KYCTrait;
 
-    public function index(){
+    public function index()
+    {
         return view('taxpayers.registrations.index');
     }
 
-    public function show($kycId){
+    public function show($kycId)
+    {
         $kyc = KYC::findOrFail($kycId);
-    
+
         return view('taxpayers.registrations.show', compact('kyc'));
     }
 
 
-    public function enrollFingerprint($kycId){
+    public function enrollFingerprint($kycId)
+    {
         $kyc = KYC::findOrFail($kycId);
 
         return view('taxpayers.registrations.enroll-fingerprint', compact('kyc'));
     }
 
-    public function verifyUser($kycId){
+    public function verifyUser($kycId)
+    {
         $kyc = KYC::findOrFail($kycId);
 
-        if(!$kyc->authorities_verified_at){
+        $biometrics = Biometric::where('reference_no', $kyc->reference_no)
+            ->get();
+
+        if (count($biometrics) < 10) {
+            session()->flash('error', 'Enroll every finger');
+            return redirect()->back();
+        }
+
+        if (!$kyc->authorities_verified_at) {
             session()->flash('error', 'User not verified by authorities');
-            return redirect()->route('taxpayers.registrations.index');
+            return redirect()->back();
         }
 
         $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
@@ -51,17 +63,9 @@ class RegistrationsController extends Controller
 
         $taxpayer = Taxpayer::create($data);
 
-        //notify the taxpayer
-        $taxpayer->notify(new DatabaseNotification( 
-            $subject = 'ZRB ENROLLMENT',
-            $message = 'Your have been enrolled as Taxpayer successfully',
-            $href = 'home',
-            $hrefText = 'view'
-        ));
-
         // Send email and password for OTP
         event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
-        if ($taxpayer->email){
+        if ($taxpayer->email) {
             event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
         }
 

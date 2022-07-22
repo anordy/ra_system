@@ -33,9 +33,15 @@ class DatabaseSeeder extends Seeder
         $this->call(DistrictSeeder::class);
         $this->call(WardSeeder::class);
         $this->call(SysModuleSeeder::class);
+        $this->call(TaxTypesSeeder::class);
+        $this->call(TaxpayersTableSeeder::class);
+        $this->call(BusinessCategoriesSeeder::class);
+        $this->call(AccountTypesSeeder::class);
+        $this->call(WorkflowSeeder::class);
         $this->call(BusinessBranchWorkflow::class);
         $this->call(WorkflowBusinessClosureSeeder::class);
         $this->call(WorkflowBusinessDeregistrationSeeder::class);
+        $this->call(WorkflowBusinessUpdateSeeder::class);
         $this->call(ISIC1Seeder::class);
         $this->call(ISIC2Seeder::class);
         $this->call(ISIC3Seeder::class);

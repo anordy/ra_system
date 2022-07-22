@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBusinessTaxTypeChangesTable extends Migration
+class CreateBusinessUpdatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,17 @@ class CreateBusinessTaxTypeChangesTable extends Migration
      */
     public function up()
     {
-        Schema::create('business_tax_type_changes', function (Blueprint $table) {
+        Schema::create('business_updates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('taxpayer_id');
-            $table->longText('old_taxtype')->nullable();
-            $table->longText('new_taxtype')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->string('marking')->nullable();
+            $table->longText('old_values')->nullable();
+            $table->longText('new_values');
+            $table->enum('type', ['business_information', 'responsible_person'])->default('business_information');
+            $table->enum('status', ['pending', 'approved', 'correction', 'rejected'])->default('pending');
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
-
             $table->timestamps();
         });
     }
@@ -35,6 +35,6 @@ class CreateBusinessTaxTypeChangesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('business_tax_type_changes');
+        Schema::dropIfExists('business_updates');
     }
 }

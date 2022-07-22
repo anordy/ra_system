@@ -1,0 +1,1 @@
+<a href="{{ route('business.showRequest', encrypt($row->id))  }}" class="btn btn-info btn-sm">View </a>
