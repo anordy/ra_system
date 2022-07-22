@@ -36,11 +36,7 @@ class WorkflowConfigTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(fn ($value) => strtoupper(str_replace('_', ' ', $value))),
-            Column::make('type', 'type')
-                ->sortable()
-                ->searchable(),
             Column::make('Initial Place', 'initial_marking'),
-            Column::make('Supports', 'supports'),
             Column::make('Places', 'places')
                 ->label(function ($row) {
                     $data = collect(json_decode($row->places, true));
