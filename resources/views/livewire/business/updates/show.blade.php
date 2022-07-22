@@ -369,7 +369,7 @@
             @else
             <div class="container">
                 <table class="table table-striped table-sm">
-                    <label class="font-weight-bold text-uppercase">Responsible Person Changes</label>
+                    <label class="font-weight-bold text-uppercase">Consultant / Preparer</label>
                     <thead>
                         <th style="width: 30%">Property</th>
                         <th style="width: 25%">Old Values</th>
@@ -377,7 +377,7 @@
                         <th style="width: 20%">Status</th>
                     </thead>
                     <tbody>
-                        @if ($old_values->responsible_person_id || $new_values->responsible_person_id)
+                        {{-- @if ($old_values->responsible_person_id || $new_values->responsible_person_id)
                         <tr>
                             <th>Responsible Person Reference No.</th>
                             <td>{{ $this->getResponsiblePersonNameById($old_values->responsible_person_id) }}</td>
@@ -388,7 +388,7 @@
                                 <td class="table-success">Changed</td>
                             @endif
                         </tr>
-                        @endif
+                        @endif --}}
                     
                         <tr>
                             <th>Is Own Consultant</th>
@@ -413,7 +413,7 @@
                     </tbody>
                 </table>
                 <br>
-                <table class="table table-striped table-sm">
+                {{-- <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">Business Partners</label>
                     <thead>
                         <th style="width: 30%">Old Values</th>
@@ -439,7 +439,7 @@
                             @endif
                         </tr>
                     </tbody>
-                </table>
+                </table> --}}
             </div>
             @endif
          

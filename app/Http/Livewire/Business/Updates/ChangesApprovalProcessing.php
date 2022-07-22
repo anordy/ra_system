@@ -81,7 +81,7 @@ class ChangesApprovalProcessing extends Component
                     $business = Business::findOrFail($this->business_id);
                     $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first();
 
-                    $businessPartners = $new_values['partners'];
+                    // $businessPartners = $new_values['partners'];
 
                     if($new_values['is_own_consultant'] === false) {
                     $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
@@ -96,20 +96,20 @@ class ChangesApprovalProcessing extends Component
 
                     $business->update([
                         'is_own_consultant' => $new_values['is_own_consultant'],
-                        'responsible_person_id' => $new_values['responsible_person_id'],
+                        // 'responsible_person_id' => $new_values['responsible_person_id'],
                     ]);
 
                     //  Partners
-                    if ($business->business_category_id !== 1) {
-                        $business->partners()->delete();
+                    // if ($business->business_category_id !== 1) {
+                    //     $business->partners()->delete();
 
-                        foreach ($businessPartners as $partner) {
-                            $partner = BusinessPartner::create([
-                                'business_id' => $business->id,
-                                'taxpayer_id' => Taxpayer::where('reference_no', $partner['reference_no'])->first()->id
-                            ]);
-                        }
-                    }
+                    //     foreach ($businessPartners as $partner) {
+                    //         $partner = BusinessPartner::create([
+                    //             'business_id' => $business->id,
+                    //             'taxpayer_id' => Taxpayer::where('reference_no', $partner['reference_no'])->first()->id
+                    //         ]);
+                    //     }
+                    // }
 
                     $this->subject->status = BusinessStatus::APPROVED;
 
@@ -119,8 +119,7 @@ class ChangesApprovalProcessing extends Component
                     ];
                     
                     event(new SendMail('change-business-information', $notification_payload));
-                    dd('Mail sent');
-                    // event(new SendSms('change-business-information', $notification_payload));
+                    event(new SendSms('change-business-information', $notification_payload));
 
                 }
             }
