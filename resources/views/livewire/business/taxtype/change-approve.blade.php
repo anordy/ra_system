@@ -10,6 +10,10 @@
                             Change of Tax Type Request for {{ $taxchange->business->name }}
                         </div>
                         <div class="card-body mt-0 p-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="text-left font-weight-bold text-uppercase"></label>
+                                <label class="text-right text-uppercase">Changed by <strong>{{ $taxchange->taxpayer->full_name }}</strong> <br> on <strong>{{ $taxchange->created_at->toFormattedDateString() }}</strong></label>
+                            </div>
                 
                                     <table class="table table-striped table-sm">
                                         <thead>

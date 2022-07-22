@@ -66,7 +66,13 @@ class ChangesApprovalProcessing extends Component
 
                     $this->subject->status = BusinessStatus::APPROVED;
 
-                    // TODO: Send notification to taxpayer
+                    $notification_payload = [
+                        'business' => $business,
+                        'time' => Carbon::now()->format('d-m-Y')
+                    ];
+                    
+                    event(new SendMail('change-business-information', $notification_payload));
+                    event(new SendSms('change-business-information', $notification_payload));
                     
 
                 } else if ($this->business_update_data->type == 'responsible_person') {
@@ -107,7 +113,14 @@ class ChangesApprovalProcessing extends Component
 
                     $this->subject->status = BusinessStatus::APPROVED;
 
-                    // TODO: Send notification to taxpayer
+                    $notification_payload = [
+                        'business' => $business,
+                        'time' => Carbon::now()->format('d-m-Y')
+                    ];
+                    
+                    event(new SendMail('change-business-information', $notification_payload));
+                    dd('Mail sent');
+                    // event(new SendSms('change-business-information', $notification_payload));
 
                 }
             }

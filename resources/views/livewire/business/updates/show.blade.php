@@ -9,7 +9,11 @@
             @if ($business_update->type == 'business_information')
             <div class="container">
                 <table class="table table-striped table-sm">
-                    <label class="font-weight-bold text-uppercase">Business Information</label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="text-left font-weight-bold text-uppercase">Business Information</label>
+                        <label class="text-right text-uppercase">Changed by <strong>{{ $business_update->taxpayer->full_name }}</strong> <br> on <strong>{{ $business_update->created_at->toFormattedDateString() }}</strong></label>
+                    </div>
+
                     <thead>
                         <th style="width: 20%">Property</th>
                         <th style="width: 30%">Old Values</th>
@@ -373,6 +377,7 @@
                         <th style="width: 20%">Status</th>
                     </thead>
                     <tbody>
+                        @if ($old_values->responsible_person_id || $new_values->responsible_person_id)
                         <tr>
                             <th>Responsible Person Reference No.</th>
                             <td>{{ $this->getResponsiblePersonNameById($old_values->responsible_person_id) }}</td>
@@ -383,6 +388,8 @@
                                 <td class="table-success">Changed</td>
                             @endif
                         </tr>
+                        @endif
+                    
                         <tr>
                             <th>Is Own Consultant</th>
                             <td>{{ $old_values->is_own_consultant == 1 ? 'Yes' : 'No' }}</td>
