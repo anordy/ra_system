@@ -20,6 +20,7 @@ class CreateTaxAgentAcademicQualificationsTable extends Migration
 			$table->date('to');
 			$table->string('examining_body');
 			$table->integer('division_id');
+			$table->text('attachment')->nullable();
 			$table->unsignedBigInteger('tax_agent_id');
 			$table->foreign('tax_agent_id')->references('id')->on('tax_agents');
             $table->timestamps();
