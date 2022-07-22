@@ -15,6 +15,7 @@ use App\Jobs\Business\SendBusinessClosureCorrectionMail;
 use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
 use App\Jobs\Business\Taxtype\SendTaxTypeMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateMail;
 use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\SendOTPEmail;
 use App\Models\WaResponsiblePerson;
@@ -87,6 +88,9 @@ class SendMailFired
         } else if ($event->service === 'change-tax-type-approval'){
             // Token ID is payload data having all notification details
             SendTaxTypeMail::dispatch($event->tokenId);
+        } else if ($event->service === 'change-business-information'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateMail::dispatch($event->tokenId);
         }
     }
 }

@@ -107,7 +107,7 @@ class WithholdingAgentRegistration extends Component
             DB::commit();
 
             event(new SendMail('withholding_agent_registration', $withholding_agent_resp_person->id));
-            event(new SendSms('withholding_agent_registration', $this->id));
+            event(new SendSms('withholding_agent_registration', $withholding_agent_resp_person->id));
 
             return redirect()->to('/withholdingAgents/list')->with('success', "A notification for successful registration of a withholding agent for {$this->institution_name} has been sent to the responsible person.");
          

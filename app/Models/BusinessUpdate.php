@@ -6,7 +6,7 @@ use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BusinessTaxTypeChange extends Model
+class BusinessUpdate extends Model
 {
     use HasFactory, WorkflowTrait;
 
@@ -19,4 +19,5 @@ class BusinessTaxTypeChange extends Model
     public function taxpayer(){
         return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
     }
+
 }

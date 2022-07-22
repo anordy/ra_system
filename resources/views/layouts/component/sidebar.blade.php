@@ -42,6 +42,8 @@
                 <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
                     <a href="{{ route('business.closure') }}">Temporary Closures</a>
                 </li>
+                <li class="{{ request()->is('business/updates*') ? 'active' : '' }}">
+                    <a href="{{ route('business.updatesRequests') }}">Business Updates Requests</a>
                 @can('change_tax_type_view')
                     <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
                         <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
