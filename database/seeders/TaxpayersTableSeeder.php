@@ -40,7 +40,7 @@ class TaxpayersTableSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $taxpayer = Taxpayer::create([
+        $taxpayer = Taxpayer::updateOrCreate([
             'reference_no' => 'ZRB556688',
             'first_name' => 'Jane',
             'middle_name' => 'Middle',
@@ -63,7 +63,7 @@ class TaxpayersTableSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        TaxAgent::create([
+        TaxAgent::updateOrCreate([
             'tin_no' => 123123,
             'plot_no' => 123123,
             'block' => 'Block A',
