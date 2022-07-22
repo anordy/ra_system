@@ -21,8 +21,9 @@ class CreateBiometricsTable extends Migration
             $table->enum('finger', ['thumb', 'index', 'middle', 'ring', 'little']);
             $table->text('template')->nullable();
             $table->text('image')->nullable();
-
+            $table->unsignedBigInteger('approved_by')->nullable();
             $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
+            $table->foreign('approved_by')->references('id')->on('users');
             $table->softDeletes();
             $table->timestamps();
         });
