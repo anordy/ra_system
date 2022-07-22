@@ -7,7 +7,7 @@
             text-align: center;
         }
 
-  
+
 
         img {
             vertical-align: middle;
@@ -16,7 +16,10 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Enroll Finger</h5>
+                <h5 class="modal-title text-uppercase">Enroll {{ $hand }} Hand {{ $finger }} @if ($finger != 'thumb')
+                        Finger
+                    @endif
+                </h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
@@ -65,8 +68,8 @@
                                 display above</small>
                             <br>
                             <br>
-                            <input type="button" class="btn btn-outline-info" value="Click to Enrol Fingerprint" name="B1"
-                                id="EnrollTemplate" />
+                            <input type="button" class="btn btn-outline-info" value="Click to Enrol Fingerprint"
+                                name="B1" id="EnrollTemplate" />
                             <br />
                         </p>
 
