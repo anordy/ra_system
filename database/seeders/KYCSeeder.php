@@ -26,7 +26,8 @@ class KYCSeeder extends Seeder
             'location' => 'Unguja',
             'is_citizen' => true,
             'country_id' => 1,
-            'id_type' => 1
+            'id_type' => 1,
+            'id_number' => '200002204005006000',
 
         ]);
     }
