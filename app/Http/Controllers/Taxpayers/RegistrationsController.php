@@ -61,6 +61,10 @@ class RegistrationsController extends Controller
         $password = substr(str_shuffle($permitted_chars), 0, 8);
         $data['password'] = Hash::make($password);
 
+        if (config('app.env' == 'local')) {
+            $data['password'] = Hash::make('password');
+        }
+
         $taxpayer = Taxpayer::create($data);
 
         // Send email and password for OTP

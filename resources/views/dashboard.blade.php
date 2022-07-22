@@ -19,7 +19,7 @@
                 <div class="card-block">
                     <h6 class="m-b-20">Taxpayers</h6>
                     <h2 class="text-right"><i class="bi bi-person-check-fill f-left"></i><span>{{ \App\Models\Taxpayer::count() }}</span></h2>
-                    <p class="mb-0"><a href="{{ route('taxpayers.index') }}">click here to view more</a></p>
+                    <p class="mb-0"><a href="{{ route('taxpayers.taxpayer.index') }}">click here to view more</a></p>
                 </div>
             </div>
         </div>

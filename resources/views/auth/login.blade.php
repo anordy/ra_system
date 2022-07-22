@@ -34,7 +34,7 @@
                         <div class="">
 
                             <div class="form-group">
-                                <label class="form-label" for="email">Email</label>
+                                <label class="form-label" for="email">Email Address</label>
                                 <input type="text" class="form-control  @error('email') is-invalid @enderror"
                                     name="email" value="{{ old('email') }}" required autocomplete="email" autofocus />
                                 <div class="invalid-feedback">
