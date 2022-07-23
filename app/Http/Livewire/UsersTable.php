@@ -20,6 +20,10 @@ class UsersTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects(['status']);
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
     protected $listeners = [

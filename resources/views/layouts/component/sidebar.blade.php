@@ -1,10 +1,10 @@
 <nav id="sidebar">
     <div class="sidebar-header text-center pb-0">
-        <h3 class="mt-2"><i class="bi bi-list"></i> ZITMAS</h3>
+        <h3 class="mt-2"><i class="bi bi-card-heading mr-2"></i> ZITMAS</h3>
     </div>
 
     <ul class="list-unstyled components">
-        <li class="{{ request()->is('home*') ? 'active' : '' }}">
+        <li class="{{ request()->is('dashboard*') ? 'active' : '' }}">
             <a href="{{ route('home') }}">Home</a>
         </li>
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
@@ -17,8 +17,8 @@
         <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
             <a href="#taxpayersMenu" data-toggle="collapse" aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers</a>
             <ul class="collapse list-unstyled {{ request()->is('taxpayers*') ? 'show' : '' }}" id="taxpayersMenu">
-                <li class="{{ request()->is('taxpayers') ? 'active' : '' }}">
-                    <a href="{{ route('taxpayers.index') }}">Taxpayers</a>
+                <li class="{{ request()->is('taxpayers/taxpayer*') ? 'active' : '' }}">
+                    <a href="{{ route('taxpayers.taxpayer.index') }}">Taxpayers</a>
                 </li>
                 <li class="{{ request()->is('taxpayers/registrations*') ? 'active' : '' }}">
                     <a href="{{ route('taxpayers.registrations.index') }}">KYC</a>

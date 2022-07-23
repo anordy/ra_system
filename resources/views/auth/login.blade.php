@@ -1,19 +1,22 @@
 @extends('layouts.login')
+@section('title')
+    Login
+@endsection
 @section('content')
 <div class="middle-box ">
 
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-md-12">
 
-            <div class="card rounded">
+            <div class="card rounded my-2">
                 <div class="d-flex justify-content-center pb-2">
                     <img alt="image" class="rounded" width="160px" height="160px"
                         src="{{ asset('images/logo.png') }}" />
                 </div>
             </div>
             <div class="card rounded my-2">
-                <h5 class="card-header bg-white text-uppercase text-center">
-                    ZRB Login
+                <h5 class="card-header bg-white text-uppercase">
+                    ZRB Staff Login
                 </h5>
 
                 <div class="card-body">
@@ -31,7 +34,7 @@
                         <div class="">
 
                             <div class="form-group">
-                                <label class="form-label" for="email">Email</label>
+                                <label class="form-label" for="email">Email Address</label>
                                 <input type="text" class="form-control  @error('email') is-invalid @enderror"
                                     name="email" value="{{ old('email') }}" required autocomplete="email" autofocus />
                                 <div class="invalid-feedback">

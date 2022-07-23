@@ -31,6 +31,11 @@ class AuditLogTable extends DataTableComponent
 
             return [];
         });
+
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
 

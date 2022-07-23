@@ -120,12 +120,12 @@ class RenewalRequests extends DataTableComponent
 			$taxagent->save();
 
 			$taxpayer = Taxpayer::find($req->tax_agent->taxpayer_id);
+
 			$taxpayer->notify(new DatabaseNotification(
-			  $message = 'Tax agent renew request',
-			  $type = 'info',
-			  $messageLong = 'Your your request has been processed successfully',
-			  $href = 'taxagent.apply',
-			  $hrefText = 'View'
+				$subject = 'TAX-AGENT RENEWAL REQUEST',
+				$message = 'Your your request has been processed successfully',
+				$href = 'taxagent.apply',
+				$hrefText = 'view'
 			));
 
 			$fee = TaPaymentConfiguration::where('category', 'renewal fee')->first();

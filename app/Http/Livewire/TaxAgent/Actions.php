@@ -44,6 +44,7 @@ class Actions extends Component
 				'id' => $this->taxagent->id
 			],
 		]);
+
 	}
 
 	public function reject($id)

@@ -32,7 +32,7 @@
                     @if($business->status === \App\Models\BusinessStatus::APPROVED)
                         <span class="font-weight-bold text-success">
                             <i class="bi bi-check-circle-fill mr-1"></i>
-                            Verified
+                            Approved
                         </span>
                     @elseif($business->status === \App\Models\BusinessStatus::REJECTED)
                         <span class="font-weight-bold text-danger">
@@ -264,15 +264,27 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Branch Status</span>
                         <p class="my-1 font-weight-bold">
-                            @if($location->status === \App\Models\BranchStatus::APPROVED)
+                            @if ($location->status === \App\Models\BranchStatus::APPROVED)
+                            <span class="font-weight-bold text-success">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
-                            @elseif($location->status === \App\Models\BranchStatus::PENDING)
-                                Pending
-                            @elseif($location->status === \App\Models\BranchStatus::CORRECTION)
-                                Requires Corrections
-                            @elseif($location->status === \App\Models\BranchStatus::REJECTED)
+                            </span>
+                        @elseif($location->status === \App\Models\BranchStatus::CORRECTION)
+                            <span class="font-weight-bold text-warning">
+                                <i class="bi bi-pen-fill mr-1"></i>
+                                Requires Correction
+                            </span>
+                        @elseif($location->status === \App\Models\BranchStatus::REJECTED)
+                            <span class="font-weight-bold text-danger">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
                                 Rejected
-                            @endif
+                            </span>
+                        @else
+                            <span class="font-weight-bold text-info">
+                                <i class="bi bi-clock-history mr-1"></i>
+                                Waiting Approval
+                            </span>
+                        @endif
                         </p>
                     </div>
                 </div>
@@ -470,6 +482,30 @@
                     </a>
                 </div>
             @endforeach
+            @foreach($business->partners as $partner)
+                @if($partner->tin)
+                    <div class="col-md-4">
+                        <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;" class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <a href="#" style="font-weight: 500;" class="ml-1">
+                                TIN Certificate - {{ $partner->taxpayer->full_name }} (<b>{{ $partner->taxpayer->reference_no }}</b>)
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+            @if($business->taxpayer->tin_location)
+                <div class="col-md-4">
+                    <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;" class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <a href="#" style="font-weight: 500;" class="ml-1">
+                            TIN Certificate - {{ $business->taxpayer->full_name }} (<b>{{ $business->taxpayer->reference_no }}</b>)
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>

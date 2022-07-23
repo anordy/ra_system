@@ -59,8 +59,7 @@ class BioEnrollVendorModal extends Component
             ]);
 
             $this->flash('success', 'Bio enrolled successfully', [], redirect()->back()->getTargetUrl());
-        }
-      
+        }  
     }
 
     public function render()
