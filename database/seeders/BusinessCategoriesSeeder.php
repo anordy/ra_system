@@ -19,7 +19,7 @@ class BusinessCategoriesSeeder extends Seeder
             'name' => 'Partnership'
         ]);
 
-        BusinessCategory::create([
+        BusinessCategory::updateOrCreate([
             'short_name' => 'company',
             'name' => 'Company'
         ]);
