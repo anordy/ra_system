@@ -12,7 +12,9 @@ use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
+use App\Models\Taxpayer;
 use App\Models\TaxType;
+use App\Notifications\DatabaseNotification;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -139,6 +141,14 @@ class ApprovalProcessing extends Component
             $this->subject->z_no = 'ZBR_' . rand(1, 1000000);
             event(new SendSms('business-registration-approved', $this->subject->id));
             event(new SendMail('business-registration-approved', $this->subject->id));
+
+            $taxpayer = Taxpayer::find($this->subject->taxpayer_id);
+            $taxpayer->notify(new DatabaseNotification(
+                $subject = 'BUSINESS APPROVAL',
+                $message = 'Your business has been approved',
+                $href = 'business.index',
+                $hrefText = 'View'
+            ));
         }
 
         try {
