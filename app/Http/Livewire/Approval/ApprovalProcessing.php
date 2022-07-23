@@ -49,8 +49,18 @@ class ApprovalProcessing extends Component
         $this->taxTypes = TaxType::all();
 
         $this->isiic_i = $this->subject->isiic_i ?? null;
+
+        if($this->isiic_i){
+            $this->isiiciChange($this->isiic_i);
+        }
         $this->isiic_ii = $this->subject->isiic_ii ?? null;
+        if($this->isiic_ii){
+            $this->isiiciiChange($this->isiic_ii);
+        }
         $this->isiic_iii = $this->subject->isiic_iii ?? null;
+        if($this->isiic_iii){
+            $this->isiiciiiChange($this->isiic_iii);
+        }
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
     }
 
