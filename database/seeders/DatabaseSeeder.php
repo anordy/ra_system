@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowBusinessClosureSeeder::class);
         $this->call(WorkflowBusinessDeregistrationSeeder::class);
         $this->call(WorkflowBusinessUpdateSeeder::class);
+        $this->call(WorkflowBusinessTaxTypeChangeSeeder::class);
         $this->call(ISIC1Seeder::class);
         $this->call(ISIC2Seeder::class);
         $this->call(ISIC3Seeder::class);
