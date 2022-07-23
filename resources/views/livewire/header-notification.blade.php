@@ -24,11 +24,13 @@
                 </button>
             @endif
 
-
-            {{-- <div class="dropdown-divider"></div> --}}
-            {{-- <button class="dropdown-item" type="button">
-                <a class="btn btn-link" href="">View All</a>
-            </button> --}}
+            @if($unreadNotificationsCount > 5)
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" type="button">
+                    <a class="btn btn-link" href="{{ route('notifications') }}">View All</a>
+                </button>
+            @endif
+            
         </div>
     </div>
 </div>

@@ -14,7 +14,7 @@ class HeaderNotification extends Component
     public $unreadNotificationsCount;
 
     public function mount(){
-        $this->unreadNotifications = auth()->user()->unreadNotifications()->latest()->get();
+        $this->unreadNotifications = auth()->user()->unreadNotifications()->latest()->limit(5)->get();
         $this->unreadNotificationsCount = $this->unreadNotifications->count();
         $this->hasUnreadNotifications =  $this->unreadNotificationsCount > 0 ? true: false;
     }
