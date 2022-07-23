@@ -3,26 +3,26 @@
         <div class="card-header font-weight-bold">
             Approval
         </div>
-        <div class="card-body m-0 pb-0">
+        <div class="card-body">
             @include('livewire.approval.transitions')
 
-            <div class="row mt-3">
                 @if ($this->checkTransition('registration_officer_review'))
                     @include('livewire.approval.registration_officer_review')
                 @endif
-                <div class="col-md-12 mb-3">
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">Comments</label>
-                        <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments' rows="3"></textarea>
-
-                        @error('comments')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                <div class="row m">
+                    <div class="col-md-12 mb-3">
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">Comments</label>
+                            <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments' rows="3"></textarea>
+    
+                            @error('comments')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
-            </div>
         </div>
         @if ($this->checkTransition('registration_officer_review'))
             <div class="modal-footer p-2 m-0">
