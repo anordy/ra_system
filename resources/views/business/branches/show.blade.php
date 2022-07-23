@@ -75,7 +75,7 @@
                                     @if ($location->status === \App\Models\BranchStatus::APPROVED)
                                         <span class="font-weight-bold text-success">
                                             <i class="bi bi-check-circle-fill mr-1"></i>
-                                            Verified
+                                            Approved
                                         </span>
                                     @elseif($location->status === \App\Models\BranchStatus::CORRECTION)
                                         <span class="font-weight-bold text-warning">

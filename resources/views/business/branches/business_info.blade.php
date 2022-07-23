@@ -43,7 +43,7 @@
                         @if ($business->status === \App\Models\BusinessStatus::APPROVED)
                             <span class="font-weight-bold text-success">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
-                                Verified
+                                Approved
                             </span>
                         @elseif($business->status === \App\Models\BusinessStatus::REJECTED)
                             <span class="font-weight-bold text-danger">

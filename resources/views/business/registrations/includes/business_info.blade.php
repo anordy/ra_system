@@ -32,7 +32,7 @@
                     @if($business->status === \App\Models\BusinessStatus::APPROVED)
                         <span class="font-weight-bold text-success">
                             <i class="bi bi-check-circle-fill mr-1"></i>
-                            Verified
+                            Approved
                         </span>
                     @elseif($business->status === \App\Models\BusinessStatus::REJECTED)
                         <span class="font-weight-bold text-danger">
@@ -264,15 +264,27 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Branch Status</span>
                         <p class="my-1 font-weight-bold">
-                            @if($location->status === \App\Models\BranchStatus::APPROVED)
+                            @if ($location->status === \App\Models\BranchStatus::APPROVED)
+                            <span class="font-weight-bold text-success">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
-                            @elseif($location->status === \App\Models\BranchStatus::PENDING)
-                                Pending
-                            @elseif($location->status === \App\Models\BranchStatus::CORRECTION)
-                                Requires Corrections
-                            @elseif($location->status === \App\Models\BranchStatus::REJECTED)
+                            </span>
+                        @elseif($location->status === \App\Models\BranchStatus::CORRECTION)
+                            <span class="font-weight-bold text-warning">
+                                <i class="bi bi-pen-fill mr-1"></i>
+                                Requires Correction
+                            </span>
+                        @elseif($location->status === \App\Models\BranchStatus::REJECTED)
+                            <span class="font-weight-bold text-danger">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
                                 Rejected
-                            @endif
+                            </span>
+                        @else
+                            <span class="font-weight-bold text-info">
+                                <i class="bi bi-clock-history mr-1"></i>
+                                Waiting Approval
+                            </span>
+                        @endif
                         </p>
                     </div>
                 </div>
