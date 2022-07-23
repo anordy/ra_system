@@ -153,6 +153,14 @@ class VerificationRequestsTable extends DataTableComponent
 				if (config('app.env') != 'local') {
 					ZmCore::sendBill($zmBill->id);
 				}
+
+                $taxpayer->notify(new DatabaseNotification(
+                    $subject = 'TAX-AGENT VERIFICATION',
+                    $message = 'Your application has been verified',
+                    $href = 'taxagent.apply',
+                    $hrefText = 'view'
+                ));
+
 				$this->alert('success', 'saved successfully');
 			} catch (\Throwable $exception) {
 				Log::error($exception);
