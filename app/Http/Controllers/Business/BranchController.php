@@ -13,7 +13,8 @@ class BranchController extends Controller
     }
 
     public function show($locationId){
-        $location = BusinessLocation::find(decrypt($locationId));
-        return view('business.branches.show', compact('location'));
+        $location = BusinessLocation::with('business')->find(decrypt($locationId));
+        $business = $location->business;
+        return view('business.branches.show', compact('location', 'business'));
     }
 }
