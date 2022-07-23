@@ -22,6 +22,11 @@ class FileTypesTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
 
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
+
         $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('description') || $column->isField('name')) {
                 return [
