@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Business;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\BusinessFile;
+use App\Models\Taxpayer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,17 @@ class BusinessFileController extends Controller
         }
 
         // If they dont meet requirements, abort
+        return abort(404);
+    }
+
+    public function getTinFile($taxpayerId)
+    {
+        $taxpayer = Taxpayer::findOrFail(decrypt($taxpayerId));
+
+        if ($taxpayer->tin_location){
+            return Storage::response($taxpayer->tin_location);
+        }
+
         return abort(404);
     }
 }
