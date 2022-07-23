@@ -62,6 +62,8 @@ class ApprovalProcessing extends Component
             $this->isiiciiiChange($this->isiic_iii);
         }
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
+
+        $this->selectedTaxTypes = $this->subject->taxTypes->pluck('id');
     }
 
     public function isiiciChange($value)
