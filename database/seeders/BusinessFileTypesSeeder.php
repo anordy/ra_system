@@ -26,24 +26,8 @@ class BusinessFileTypesSeeder extends Seeder
         ]);
 
         BusinessFileType::updateOrCreate([
-            'short_name' => 'tin',
-            'name' => 'TIN Certificate for Registrant',
-            'business_type' => BusinessCategory::SOLE,
-            'is_required' => true
-        ]);
-
-        BusinessFileType::updateOrCreate([
             'short_name' => 'license',
             'name' => 'Business License',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::SOLE,
-            'is_required' => true
-        ]);
-
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'id_card',
-            'name' => 'Identification Card',
-            'description' => 'Identification Card of the business owner.',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::SOLE,
             'is_required' => true
@@ -62,14 +46,6 @@ class BusinessFileTypesSeeder extends Seeder
             'short_name' => 'title_deed',
             'name' => 'Title deed or lease agreement',
             'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::PARTNERSHIP,
-            'is_required' => true
-        ]);
-
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'tin',
-            'name' => 'TIN Certificate for Registrant',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::PARTNERSHIP,
             'is_required' => true
@@ -121,14 +97,6 @@ class BusinessFileTypesSeeder extends Seeder
         ]);
 
         BusinessFileType::updateOrCreate([
-            'short_name' => 'tin',
-            'name' => 'TIN Certificate for Registrant',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
-        ]);
-
-        BusinessFileType::updateOrCreate([
             'short_name' => 'certificate_of_compliance',
             'name' => 'Certificate of incorporation/Compliance',
             'file_type' => FileType::PDF,
@@ -140,15 +108,6 @@ class BusinessFileTypesSeeder extends Seeder
             'short_name' => 'recognition_letter',
             'name' => 'Recognition Letter',
             'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
-        ]);
-
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'id_card',
-            'name' => 'Identification Card',
-            'description' => 'Identification Card of the business owner.',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
             'is_required' => true
@@ -216,24 +175,6 @@ class BusinessFileTypesSeeder extends Seeder
         BusinessFileType::updateOrCreate([
             'short_name' => 'consolidated_form',
             'name' => 'BPRA Consolidated Form',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
-        ]);
-
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'id_card_1',
-            'name' => 'Identification Card - First Director',
-            'description' => 'First Director Citizen Identity (National ID) card or Zanzibar Resident Identity Card (ZAN ID) or Passport for non Resident',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
-        ]);
-
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'id_card_2',
-            'name' => 'Identification Card - Second Director',
-            'description' => 'Second Director Citizen Identity (National ID) card or Zanzibar Resident Identity Card (ZAN ID) or Passport for non Resident',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
             'is_required' => true
