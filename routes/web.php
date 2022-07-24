@@ -104,6 +104,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
         Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
         Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
+        Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
+
     });
 
     Route::prefix('business')->as('business.')->group(function () {

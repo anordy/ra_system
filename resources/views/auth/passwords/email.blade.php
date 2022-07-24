@@ -4,8 +4,8 @@ Forgot Password
 @endsection
 @section('content')
     <section class="vh-100 gradient-custom" id="loginBox">
-        <div class="container py-5 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="container py-5">
+            <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-md-8">
                     <div class="card">
                         <h5 class="card-header">{{ __('Reset Password') }}</h5>
