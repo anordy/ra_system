@@ -23,13 +23,12 @@
                             </div>
                         @endif
     
-                        @if ($errors->any())
+                        {{-- @if ($errors->any())
                         {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-                        @endif
+                        @endif --}}
                         <form method="POST" action="{{ route('login') }}" novalidate>
                             @csrf
-                            <div class="">
-    
+                            <div>
                                 <div class="form-group">
                                     <label class="form-label" for="email">Email Address</label>
                                     <input type="text" class="form-control  @error('email') is-invalid @enderror"
@@ -43,8 +42,13 @@
     
                                 <div class="form-group">
                                     <label class="form-label" for="typePasswordX">Password</label>
-                                    <input type="password" class="form-control" name="password" required
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" required
                                         autocomplete="current-password" />
+                                        <div class="invalid-feedback">
+                                            @error('password')
+                                            {{ $message }}
+                                            @enderror
+                                        </div>
                                 </div>
     
                                 <div class="form-group mb-3">
@@ -58,8 +62,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" id="captcha"
-                                           class="form-control @error('captcha') is-invalid @enderror" name="captcha" required autofocus />
+                                    <input type="text" id="captcha" class="form-control @error('captcha') is-invalid @enderror" name="captcha" required autofocus />
                                     <div class="invalid-feedback">
                                         @error('captcha')
                                         {{ $message }}
