@@ -339,3 +339,19 @@ LIVEWIRE TABS
 .file-item:hover {
     background: #863d3c24;
 }
+
+/* ---------------------------------------------------
+    LOGIN PAGE
+----------------------------------------------------- */
+#logo{
+    display: block;
+    position: absolute;
+    top: -60px;
+    width: 120px;
+    height: 120px;
+    padding: 10px;
+    left:35%;
+    border: 1px solid #000;
+    border-radius: 50%;
+    background: #fff;
+}

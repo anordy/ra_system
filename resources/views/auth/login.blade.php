@@ -2,34 +2,21 @@
 @section('title')
     Login
 @endsection
-@section('css')
-    <style>
-        #user{
-            display: block;
-            position: absolute;
-            top: -60px;
-            width: 120px;
-            height: 120px;
-            padding: 10px;
-            border: 2px solid #000;
-            border-radius: 50%;
-            background: #fff;
-        }
-    </style>
-@endsection
+
 @section('content')
 <div class="middle-box ">
 
     <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-md-12">
+        <div class="col-md-12" style="margin-left: 10px;margin-right:10px">
                 <div class="card rounded" style="margin-top: 60px; margin-bottom:10px">
-                    <div class="text-center">
-                        <img src="{{ asset('images/logo.png') }}" id="user" width="120px" height="120px" style="display: block;position: absolute;top: -60px;width: 120px;height: 120px;padding: 10px;left:35%;border: 1px solid #000;border-radius: 50%;background: #fff;">
-                    </div>
-                    <h5 class="card-header bg-white text-uppercase text-center" style="padding-top: 70px;">
-                        ZRB Staff Login
-                    </h5>
                     <div class="card-body">
+                        <div class="text-center">
+                            <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px">
+                        </div>
+                        <h5 class="bg-white text-uppercase text-center" style="padding-top: 70px;padding-bottom: 10px;">
+                            ZRB Staff Login
+                        </h5>
+
                         @if (session()->has('success'))
                             <div class="alert alert-success">
                                 {{ session()->get('success') }}
