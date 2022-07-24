@@ -15,4 +15,9 @@ class TaxAgentAcademicQualification extends Model
 	public function taxAgent() {
 		return $this->belongsTo('App\Models\TaxAgent');
 	}
+
+    public function level()
+    {
+        return $this->belongsTo(EducationLevel::class, 'id');
+    }
 }

@@ -15,7 +15,7 @@ class TaxAgentTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-		return TaxAgent::query()->where('status', '=', TaxAgentStatus::VERIFIED);
+		return TaxAgent::query()->where('status', '=', TaxAgentStatus::VERIFIED)->with('region', 'district');
 	}
 
 	public function configure(): void
@@ -33,10 +33,10 @@ class TaxAgentTable extends DataTableComponent
         return [
             Column::make("TIN No", "tin_no")
                 ->sortable(),
-          Column::make("Town", "town")
-	        ->sortable(),
-          Column::make("Region", "region")
-	        ->sortable(),
+            Column::make("Town", "district.name")
+                ->sortable(),
+            Column::make("Region", "region.name")
+                ->sortable(),
 	        Column::make("Created At", "created_at")
 	          ->sortable(),
 	        Column::make('Status', 'status')

@@ -31,7 +31,7 @@ class Actions extends Component
 
 	public function approve()
 	{
-		$this->alert('warning', 'Are you sure you want to approve this request ?', [
+		$this->alert('success', 'Please add comment below to approve the registration payment request', [
 			'position' => 'center',
 			'toast' => false,
 			'showConfirmButton' => true,
@@ -39,7 +39,10 @@ class Actions extends Component
 			'onConfirmed' => 'toggleStatus',
 			'showCancelButton' => true,
 			'cancelButtonText' => 'Cancel',
-			'timer' => null,
+            'confirmButtonColor' => '#3085d6',
+            'cancelButtonColor' => '#d33',
+            'timer' => null,
+            'input' => 'textarea',
 			'data' => [
 				'id' => $this->taxagent->id
 			],
@@ -47,9 +50,9 @@ class Actions extends Component
 
 	}
 
-	public function reject($id)
+	public function reject()
 	{
-		$this->alert('warning', 'Are you sure you want to reject this request ?', [
+		$this->alert('warning', 'Please add comment below to reject the registration payment request', [
 			'position' => 'center',
 			'toast' => false,
 			'showConfirmButton' => true,
@@ -57,7 +60,10 @@ class Actions extends Component
 			'onConfirmed' => 'confirmed',
 			'showCancelButton' => true,
 			'cancelButtonText' => 'Cancel',
-			'timer' => null,
+            'confirmButtonColor' => '#3085d6',
+            'cancelButtonColor' => '#d33',
+            'timer' => null,
+            'input' => 'textarea',
 			'data' => [
 				'id' => $this->taxagent->id
 			],
@@ -71,9 +77,11 @@ class Actions extends Component
 			$data = (object) $value['data'];
 			$agent = TaxAgent::find($data->id);
 			$agent->status = TaxAgentStatus::APPROVED;
+			$agent->app_true_comment = $value['value'];
 			$agent->reference_no = "ZRB10" . rand(0, 9999);
 			$agent->app_first_date = Carbon::now();
 			$agent->app_expire_date = Carbon::now()->addYear()->toDateTimeString();
+			$agent->approver_id = Auth::id();
 			$agent->save();
 
 			$taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);
@@ -104,9 +112,10 @@ class Actions extends Component
 			$data = (object) $value['data'];
 			$agent = TaxAgent::find($data->id);
 			$agent->status = TaxAgentStatus::REJECTED;
+            $agent->app_reject_comment = $value['value'];
+            $agent->approver_id = Auth::id();
 			$agent->save();
 
-			//notify the taxpayer
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
 				$subject = 'TAX-AGENT REJECTED',

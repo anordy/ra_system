@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\EducationLevelController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -45,6 +46,7 @@ use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
 
+
 Auth::routes();
 
 Route::get('/oy', function () {
@@ -73,6 +75,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
         Route::resource('/ward', WardController::class);
+        Route::resource('/education-level', EducationLevelController::class);
         Route::resource('/banks', BankController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
         Route::resource('/taxtypes', TaxTypeController::class);
@@ -129,4 +132,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
+
+    Route::get('agent-file/{file}/{type}', [BusinessFileController::class, 'getAgentFile'])->name('agent.file');
 });

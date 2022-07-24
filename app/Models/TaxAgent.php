@@ -46,4 +46,14 @@ class TaxAgent extends Model implements Auditable
     {
         return $this->hasOne(ZmBillItem::class, 'billable_id')->where('billable_type', get_class($this));
     }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
 }

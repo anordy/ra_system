@@ -298,6 +298,17 @@ LIVEWIRE TABS
     border-color: #996567;
 }
 
+.swal2-textarea {
+    height: 3.75em !important;
+    padding: .75em !important;
+    box-shadow: unset !important;
+    border-color: #996567 !important;
+}
+
+.swal2-title {
+    font-size: 20px !important;
+}
+
 .bg-secondary {
     background-color: #f7f7f7 !important;
 }

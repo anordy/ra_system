@@ -13,4 +13,9 @@ class Region extends Model implements Auditable
     protected $fillable = [
         'name'
    ];
+
+    public function taxagent()
+    {
+        return $this->hasOne(TaxAgent::class);
+    }
 }
