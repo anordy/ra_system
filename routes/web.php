@@ -118,6 +118,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
         Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
         Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
+        Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
