@@ -76,13 +76,11 @@
                     </div>
                 </div>
             
-                    <div class="card-body text-center text-white">
-                        ©2022
-                        <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Board</a>.
-                        All Rights Reserved.
-                    </div>
-            
-
+                <div class="card-body text-center text-white">
+                    ©2022
+                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Board</a>.
+                    All Rights Reserved.
+                </div>
         </div>
     </div>
 </div>
