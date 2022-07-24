@@ -1,4 +1,4 @@
-<div class="card-body">
+<div>
     <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab" aria-controls="home"
@@ -56,34 +56,55 @@
                 </div>
                 <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">Application Status</span>
-                    @if ($agent->status == \App\Models\TaxAgentStatus::APPROVED)
-                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Approved</p>
-                    @elseif($agent->status == \App\Models\TaxAgentStatus::REJECTED)
-                        <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Rejected</p>
+                    @if($agent->status == \App\Models\TaxAgentStatus::PENDING)
+                        <span class="badge badge-danger py-1 px-2"
+                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                    class="bi bi-clock-history mr-1"></i>Pending</span>
+
+                    @elseif($agent->status == \App\Models\TaxAgentStatus::APPROVED)
+                        <span class="badge badge-success py-1 px-2"
+                              style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                    class="bi bi-check-circle-fill mr-1"></i>Approved</span>
                     @elseif($agent->status == \App\Models\TaxAgentStatus::VERIFIED)
-                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Verified</p>
+                        <span class="badge badge-success py-1 px-2"
+                              style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                    class="bi bi-check-circle-fill mr-1"></i>Verified</span>
                     @else
-                        <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Pending</p>
+                        <span class="badge badge-danger py-1 px-2"
+                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                    class="bi bi-x-circle-fill mr-1"></i>Rejected</span>
                     @endif
+
                 </div>
                 <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">Payment</span>
 
-                    @if(!empty($agent->bill->payment))
-                        @if ($agent->bill->payment->status == \App\Models\PaymentStatus::PAID)
-                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Paid</p>
-                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PENDING)
-                            <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Not Paid</p>
-                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PARTIALLY)
-                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Partially Paid</p>
-                        @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::CANCELLED)
-                            <p style="font-weight: 900; color: #319e0a; font-size: 85%">Cancelled</p>
-                        @else
-                            <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Failed</p>
-                        @endif
+                    <p>@if(!empty($agent->bill->payment))
+                            @if ($agent->bill->payment->status == \App\Models\PaymentStatus::PAID)
+                                <span class="badge badge-success py-1 px-2"
+                                      style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                            class="bi bi-check-circle-fill mr-1"></i>Paid</span>
+                            @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PENDING)
+                                <span class="badge badge-danger py-1 px-2"
+                                      style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                            class="bi bi-clock-history mr-1"></i>Not Paid</span>
+                    <p style="font-weight: 900; color: #cf1c2d; font-size: 85%"></p>
+                    @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PARTIALLY)
+                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Partially Paid</p>
+                    @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::CANCELLED)
+                        <span class="badge badge-danger py-1 px-2"
+                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                    class="bi bi-x-circle-fill mr-1"></i>Canceled</span>
                     @else
-                        <p style="font-weight: 900; color: #cf1c2d; font-size: 85%">Not Paid</p>
+                        <span class="badge badge-danger py-1 px-2"
+                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                    class="bi bi-x-circle-fill mr-1"></i>Failed</span>
                     @endif
+                    @else
+                        <span class="badge badge-danger py-1 px-2"
+                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
+                                    class="bi bi-x-circle-fill mr-1"></i>Not Paid</span>
+                        @endif</p>
 
                 </div>
             </div>

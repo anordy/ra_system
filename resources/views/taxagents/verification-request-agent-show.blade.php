@@ -10,7 +10,27 @@
                 <a class="btn btn-outline-info" href="{{ route('taxagents.requests') }}">Back</a>
             </div>
         </div>
-        @include('taxagents.includes.show')
+        <div class="card-body">
+            @if(empty($fee))
+                <div class=" alert alert-danger">
+                    <div class="d-flex justify-content-start  align-items-center">
+                        <div>
+                            <i style="font-size: 30px;" class="bi bi-x-circle mr-1"></i>
+                        </div>
+                        <div>
+                            Please kindly add registration fee before approving any request
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="d-flex justify-content-end p-2">
+                    <livewire:tax-agent.verify-action :taxagent=$agent></livewire:tax-agent.verify-action>
+                </div>
+            @endif
+                @include('taxagents.includes.show')
+
+        </div>
+
     </div>
 
 @endsection
