@@ -3,9 +3,6 @@
 namespace App\Http\Livewire\Business\Updates;
 
 use App\Models\BusinessStatus;
-use Exception;
-use Carbon\Carbon;
-use App\Models\BusinessTempClosure;
 use App\Models\BusinessUpdate;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -29,6 +26,8 @@ class ChangesRequestTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+        $this->setAdditionalSelects(['business_updates.status']);
+
     }
 
     public function mount($status)
@@ -46,6 +45,9 @@ class ChangesRequestTable extends DataTableComponent
                 ->with('business');
         } else if ($this->status == BusinessStatus::REJECTED) {
             return BusinessUpdate::where('business_updates.status', BusinessStatus::REJECTED)
+                ->with('business');
+        }else if ($this->status == BusinessStatus::CORRECTION) {
+            return BusinessUpdate::where('business_updates.status', BusinessStatus::CORRECTION)
                 ->with('business');
         }
         return BusinessUpdate::query();

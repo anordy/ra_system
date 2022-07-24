@@ -112,6 +112,9 @@
                 <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
                     <a href="{{ route('settings.banks.index') }}">Banks</a>
                 </li>
+                    <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.education-level.index') }}">Education Level</a>
+                    </li>
                 <li class="{{ request()->is('settings/business-categories*') ? 'active' : '' }}">
                     <a href="{{ route('settings.business-categories.index') }}">Business categories</a>
                 </li>
