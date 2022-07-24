@@ -90,7 +90,9 @@
                 </div>
             
                     <div class="card-body text-center text-white">
-                        Copyright ZRB © 2022 - {{ date('Y') }}
+                        ©2022
+                        <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Board</a>.
+                        All Rights Reserved.
                     </div>
             
 
