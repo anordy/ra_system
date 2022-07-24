@@ -7,14 +7,14 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Date;
 use Livewire\Component;
 
-class HeaderNotification extends Component
+class NotificationHeader extends Component
 {
     public $hasUnreadNotifications;
     public $unreadNotifications;
     public $unreadNotificationsCount;
 
     public function mount(){
-        $this->unreadNotifications = auth()->user()->unreadNotifications()->latest()->limit(5)->get();
+        $this->unreadNotifications = auth()->user()->unreadNotifications()->latest()->get();
         $this->unreadNotificationsCount = $this->unreadNotifications->count();
         $this->hasUnreadNotifications =  $this->unreadNotificationsCount > 0 ? true: false;
     }
@@ -34,6 +34,6 @@ class HeaderNotification extends Component
 
     public function render()
     {
-        return view('livewire.header-notification');
+        return view('livewire.notification-header');
     }
 }

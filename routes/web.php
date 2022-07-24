@@ -14,6 +14,7 @@
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -121,6 +122,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
         Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
         Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
+        Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
@@ -133,5 +135,5 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
 
-    Route::get('agent-file/{file}/{type}', [BusinessFileController::class, 'getAgentFile'])->name('agent.file');
+    Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
 });
