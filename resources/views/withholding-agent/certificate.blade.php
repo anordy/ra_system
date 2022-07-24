@@ -11,7 +11,7 @@
             background-size: cover;
             margin: -70px;
         }
-        .taxpayerName {
+        .institutionName {
             position: absolute;
             font-size: 1.5em;
             top: 38%;
@@ -59,8 +59,8 @@
 
 <body>
 
-    <span class="taxpayerName">{{ $wa_responsible_person->taxpayer->full_name ?? '' }}</span>
-    <span class="location">{{ $wa_responsible_person->taxpayer->location ?? '' }}</span>
+    <span class="institutionName">{{ $wa_responsible_person->withholdingAgent->institution_name  ?? '' }}</span>
+    <span class="location">{{ $wa_responsible_person->withholdingAgent->institution_place ?? '' }}</span>
     <span class="witholdingAgentNumber">{{ $wa_responsible_person->withholdingAgent->wa_number ?? '' }}</span>
     <span class="startDate">{{ $wa_responsible_person->created_at->toFormattedDateString() ?? '' }}</span>
     <span class="dateGiven">{{ date('M d, Y') }}</span>
