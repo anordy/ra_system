@@ -29,8 +29,8 @@ class CreateTaxAgentsTable extends Migration
 			$table->enum('status', ['drafting','pending', 'approved', 'rejected', 'completed', 'verified'])->default('drafting');
 			$table->boolean('is_paid')->default(false);
 			$table->enum('is_first_application', [1,0])->default(1);
-			$table->string('has_professional');
-            $table->string('has_training');
+			$table->string('has_professional')->nullable();
+            $table->string('has_training')->nullable();
 	        $table->dateTime('app_first_date')->nullable();
 	        $table->dateTime('app_expire_date')->nullable();
 			$table->unsignedBigInteger('taxpayer_id');

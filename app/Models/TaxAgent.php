@@ -56,4 +56,8 @@ class TaxAgent extends Model implements Auditable
     {
         return $this->belongsTo(District::class);
     }
+
+    public function taxpayer(){
+        return $this->belongsTo(Taxpayer::class);
+    }
 }
