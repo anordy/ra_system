@@ -10,7 +10,9 @@
                 <a class="btn btn-info" href="{{route('taxagents.active')}}">Back</a>
             </div>
         </div>
-        @include('taxagents.includes.show')
+
+        <div class="card-body">
+            @include('taxagents.includes.show')
         </div>
     </div>
 
