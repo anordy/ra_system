@@ -88,13 +88,11 @@
                         </form>
                     </div>
                 </div>
-            <div class="card-rounded">
-                <div class="card">
-                    <div class="card-body text-center">
+            
+                    <div class="card-body text-center text-white">
                         Copyright ZRB © 2022 - {{ date('Y') }}
                     </div>
-                </div>
-            </div>
+            
 
         </div>
     </div>
