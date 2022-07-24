@@ -84,19 +84,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
                 })
                 ->html(true),
             Column::make('Action', 'id')
-                ->format(function ($value, $row) {
-                    if ($row->status == 'active') {
-                        return <<< HTML
-                        <button class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="right" title="Edit" onclick="Livewire.emit('showModal', 'withholding-agents.edit-responsible-person-modal', $row->id)"><i class="fa fa-edit"></i></button>
-                        <button class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="Deactivate" wire:click="changeStatus($row->id)"><i class="fa fa-lock"></i> </button>
-                    HTML;
-                    } else {
-                        return <<< HTML
-                        <button class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="right" title="Activate" wire:click="changeStatus($row->id)"><i class="fa fa-lock-open"></i> </button>
-                    HTML;
-                    }
-                })
-                ->html(true),
+                ->view('withholding-agent.responsible-person.actions')
         ];
     }
 
