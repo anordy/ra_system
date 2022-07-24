@@ -8,7 +8,7 @@
         <div class="dropdown-menu dropdown-menu-right"
             style="width: 340px !important;">
             @if($hasUnreadNotifications)
-                @foreach ($unreadNotifications as $row)
+                @foreach ($unreadNotifications->take(5) as $row)
                 <button class="dropdown-item" type="button" style="white-space: normal;">
                     <small style="">{{ $row->data['message']}}</small> <br>
                     <a class="btn btn-link p-0 m-0" href="{{ route($row->data['href']) }}" wire:click="viewNotification({{ $row }})">
@@ -27,7 +27,7 @@
             @if($unreadNotificationsCount > 5)
                 <div class="dropdown-divider"></div>
                 <button class="dropdown-item" type="button">
-                    <a class="btn btn-link" href="{{ route('notifications') }}">View All</a>
+                    <a class="btn btn-link" href="{{ route('notifications') }}">View All Notifications</a>
                 </button>
             @endif
             
