@@ -59,7 +59,6 @@
 
 <body>
 
-    <p class="watermark">Online Copy</p>
     <span class="taxpayerName">{{ $wa_responsible_person->taxpayer->full_name ?? '' }}</span>
     <span class="location">{{ $wa_responsible_person->taxpayer->location ?? '' }}</span>
     <span class="witholdingAgentNumber">{{ $wa_responsible_person->withholdingAgent->wa_number ?? '' }}</span>
