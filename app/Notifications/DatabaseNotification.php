@@ -38,7 +38,7 @@ class DatabaseNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database', 'mail'];
+        return ['database'];
     }
 
     /**
@@ -61,7 +61,7 @@ class DatabaseNotification extends Notification
                 ->subject($this->subject)
                 ->greeting('Hello! ' . $notifiable->full_name)
                 ->line($this->message)
-                ->action('Kindly click here to approve', url($this->href))
+                ->action('Kindly click here to approve', route($this->href))
                 ->line('Thank you!');
         }
     }
