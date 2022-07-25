@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Taxpayers;
 
-use App\Models\KYC;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -10,6 +9,14 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxpayersTable extends DataTableComponent
 {
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
+    }
 
     public function builder(): Builder
     {
@@ -19,6 +26,7 @@ class TaxpayersTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('Reference No', 'reference_no')->searchable(),
             Column::make('Name', 'first_name')
                 ->sortable()
                 ->searchable(function (Builder $query, $searchTerm){
@@ -38,8 +46,4 @@ class TaxpayersTable extends DataTableComponent
         ];
     }
 
-    public function configure(): void
-    {
-        $this->setPrimaryKey('id');
-    }
 }

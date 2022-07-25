@@ -87,6 +87,9 @@ class Business extends Model implements Auditable
         return $this->hasOne(BusinessStatus::class);
     }
 
+    public function businessUpdate(){
+        return $this->hasOne(BusinessUpdate::class);
+    }
     // Files Relation
     public function files(){
         return $this->hasMany(BusinessFile::class);

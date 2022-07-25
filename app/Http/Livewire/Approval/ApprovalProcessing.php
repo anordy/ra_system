@@ -12,11 +12,14 @@ use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
+use App\Models\Taxpayer;
 use App\Models\TaxType;
+use App\Notifications\DatabaseNotification;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -46,6 +49,23 @@ class ApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $modelId);
         $this->isiiciList = ISIC1::all();
         $this->taxTypes = TaxType::all();
+
+        $this->isiic_i = $this->subject->isiic_i ?? null;
+
+        if($this->isiic_i){
+            $this->isiiciChange($this->isiic_i);
+        }
+        $this->isiic_ii = $this->subject->isiic_ii ?? null;
+        if($this->isiic_ii){
+            $this->isiiciiChange($this->isiic_ii);
+        }
+        $this->isiic_iii = $this->subject->isiic_iii ?? null;
+        if($this->isiic_iii){
+            $this->isiiciiiChange($this->isiic_iii);
+        }
+        $this->isiic_iv = $this->subject->isiic_iv ?? null;
+
+        $this->selectedTaxTypes = $this->subject->taxTypes->pluck('id');
     }
 
     public function isiiciChange($value)
@@ -74,16 +94,26 @@ class ApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+     
+
         if ($this->checkTransition('registration_officer_review')) {
             $this->subject->isiic_i = $this->isiic_i ?? null;
             $this->subject->isiic_ii = $this->isiic_ii ?? null;
             $this->subject->isiic_iii = $this->isiic_iii ?? null;
             $this->subject->isiic_iv = $this->isiic_iv ?? null;
 
-            if (count($this->selectedTaxTypes) < 1){
-                $this->addError('selectedTaxTypes', 'Please selected at least one tax type.');
-                return;
-            }
+            $this->validate([
+                'isiic_i' => 'required',
+                'isiic_ii' => 'required',
+                'isiic_iii' => 'required',
+                'isiic_iv' => 'required',
+                'selectedTaxTypes' => 'required',
+                'comments' => 'required',
+            ], [
+                'selectedTaxTypes.required' => 'Please selected at least one tax type.'
+            ]);
+
+
 
             $currency = Currency::find($this->subject->currency_id);
 
@@ -100,26 +130,43 @@ class ApprovalProcessing extends Component
                 ]);
             }
         }
-   
+
+        $this->validate([
+            'comments' => 'required',
+        ]);
+
         if ($this->checkTransition('director_of_trai_review')) {
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status = BusinessStatus::APPROVED;
             $this->subject->z_no = 'ZBR_' . rand(1, 1000000);
             event(new SendSms('business-registration-approved', $this->subject->id));
             event(new SendMail('business-registration-approved', $this->subject->id));
+
+            $taxpayer = Taxpayer::find($this->subject->taxpayer_id);
+            $taxpayer->notify(new DatabaseNotification(
+                $subject = 'BUSINESS APPROVAL',
+                $message = 'Your business has been approved',
+                $href = 'business.index',
+                $hrefText = 'View'
+            ));
         }
 
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            dd($e);
+           Log::error($e);
+           return;
         }
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function reject($transtion)
     {
+        $this->validate([
+            'comments' => 'required|string',
+        ]);
         try {
+           
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
                 event(new SendSms('business-registration-correction', $this->subject->id));
@@ -127,7 +174,8 @@ class ApprovalProcessing extends Component
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }

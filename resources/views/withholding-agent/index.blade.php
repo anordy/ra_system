@@ -7,7 +7,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h5 class="text-uppercase">Withholding Agents</h5>
+            <div class="text-uppercase font-weight-bold">Withholding Agents</div>
         </div>
 
         <div class="card-body">

@@ -19,7 +19,7 @@ class NotificationsTable extends DataTableComponent
     {
         return Notification::query()
             ->where('notifiable_id', auth()->id())->latest()
-            ->where('notifiable_type',User::class)
+            ->where('notifiable_type',get_class(auth()->user()))
             ->select();
     }
 

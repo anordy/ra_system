@@ -63,15 +63,5 @@ class TaxpayersTableSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        TaxAgent::create([
-            'tin_no' => 123123,
-            'plot_no' => 123123,
-            'block' => 'Block A',
-            'town' => 'Unguja',
-            'region' => 'Unguja',
-            'reference_no' => 'ZRB909090',
-            'status' => 'drafting',
-            'taxpayer_id' => $taxpayer->id
-        ]);
     }
 }

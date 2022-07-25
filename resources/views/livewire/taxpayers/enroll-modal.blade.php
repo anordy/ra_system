@@ -18,6 +18,13 @@
         #console .error {
             color: red;
         }
+
+        .box {
+            width: 256px;
+            height: 360px;
+            border: 1px solid #000;
+            text-align: center;
+        }
     </style>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -28,11 +35,6 @@
             </div>
             <div class="modal-body">
                 <div class="row p-2">
-                    <div class="col-md-12 mb-2">
-                        <div id="console_wrapper" class="p-2 rounded">
-                            <pre id="console"></pre>
-                        </div>
-                    </div>
 
                     <div class="col-md-12 mb-2 d-flex justify-content-end">
                         <input type="submit" class="btn btn-outline-info btn-sm" name="host_connect" id="host_connect"
@@ -55,9 +57,9 @@
 
 
                     <div class="col-md-12 mb-2">
-                        <table width="100%" border="1" cellspacing="0">
+                        <table width="100%" border="1" cellspacing="0" class="p-2">
                             <tr align="center">
-                                <td width="30%">
+                                <td width="30%" class="p-2">
                                     @if ($image)
                                         <img src="data:image/png;base64,{{ $image }}" alt=""
                                             width="256" height="288" id="imgDiv" align="middle" />
@@ -68,17 +70,19 @@
                                     @endif
 
                                 </td>
-                                <td width="25%">
-                                    <input type="button" value="Enrol Template" id="EnrollTemplate"
-                                        class="btn btn-outline-info btn-sm">
+                            </tr>
+
+                            <tr>
+                                <td align="center" class="p-2">
+                                    <input type="text" id="state" value="" readonly style="width: 50%"
+                                        class="form-control text-center" />
                                 </td>
                             </tr>
-                            <tr align="center">
-                                <td width="30%">
-                                    <input name="es" type="text" id="es" value="" readonly
-                                        class="form-control" />
-                                </td>
-                            </tr>
+                            <td align="center" class="p-2">
+                                <input type="button" value="Enrol Template" id="EnrollTemplate"
+                                    class="btn btn-outline-info btn-sm">
+                            </td>
+
                         </table>
                     </div>
 
@@ -107,11 +111,9 @@
 
         // test if the browser supports web sockets
         if ("WebSocket" in window) {
-            debug("Browser supports web sockets!", 'success');
             connect("ws://127.0.0.1:21187/fps");
-            $('#console_send').removeAttr('disabled');
         } else {
-            debug("Browser does not support web sockets", 'error');
+            $('#state').val('Error: Browser not supported!');
         };
 
         // function to send data on the web socket
@@ -119,31 +121,28 @@
             try {
                 ws.send(str);
             } catch (err) {
-                debug(err, 'error');
+                $('#state').val('Error!');
             }
         }
 
-        // connect to the specified host
         function connect(host) {
 
-            debug("Connecting to " + host + " ...");
             try {
-                ws = new WebSocket(host); // create the web socket
+                ws = new WebSocket(host);
             } catch (err) {
-                debug(err, 'error');
+                $('#state').val('Error!');
             }
-            $('#host_connect').attr('disabled', true); // disable the 'reconnect' button
 
             ws.onopen = function() {
-                debug("connected... ", 'success');
+                $('#state').val('Ready!');
             };
 
             ws.onmessage = function(evt) {
                 var obj = eval("(" + evt.data + ")");
-                var status = document.getElementById("es");
+                var status = document.getElementById("state");
                 switch (obj.Workmsg) {
                     case 1:
-                        status.value = "Please Open Device";
+                        status.value = "Please connect the device";
                         break;
                     case 2:
                         status.value = "Place Finger";
@@ -156,23 +155,23 @@
                         break;
                     case 5:
                         if (obj.Restmsg == 1) {
-                            status.value = "Get Template OK";
+                            status.value = "Capture succeeded";
                             if (obj.Data1 != "null") {
                                 var en2 = document.getElementById("e2");
                                 @this.template1 = obj.Data1;
                             }
                         } else {
-                            status.value = "Get Template Fail";
+                            status.value = "Capture Fail";
                         }
                         break;
                     case 6:
                         if (obj.Restmsg == 1) {
-                            status.value = "Enrol Template OK";
+                            status.value = "Enrol succeeded";
                             if (obj.Data1 != "null") {
                                 @this.template = obj.Data1;
                             }
                         } else {
-                            status.value = "Enrol Template Fail";
+                            status.value = "Enrol Fail";
                         }
                         break;
                     case 7:
@@ -195,13 +194,18 @@
                             en4.value = obj.Image;
                         }
                         break;
+                    case 15:
+                        if (obj.retmsg == 1) {
+                            status.value = "Reconnect device succeeded";
+                        } else {
+                            status.value = "Reconnect device fail";
+                        }
+                        break;
                 }
             };
 
             ws.onclose = function() {
-                debug("Socket closed!",
-                    'error'
-                );
+                $('#state').val('Error:Close!');
                 $('#host_connect').attr('disabled', false);
             };
         };
@@ -222,6 +226,9 @@
 
 
         $('#EnrollTemplate').click(function() {
+            @this.image = null;
+            @this.template = null;
+
             EnrollTemplate();
         })
 
@@ -240,7 +247,7 @@
             let cmd = "{\"cmd\":\"enrol\",\"data1\":\"\",\"data2\":\"\"}";
             ws.send(cmd);
         } catch (err) {}
-        document.getElementById("es").value = "Place Finger";
+        document.getElementById("state").value = "Place Finger";
     }
 
     function GetTemplate() {
@@ -248,7 +255,7 @@
             let cmd = "{\"cmd\":\"capture\",\"data1\":\"\",\"data2\":\"\"}";
             ws.send(cmd);
         } catch (err) {}
-        document.getElementById("es").value = "Place Finger";
+        document.getElementById("state").value = "Place Finger";
     }
 
     function MatchTemplate() {

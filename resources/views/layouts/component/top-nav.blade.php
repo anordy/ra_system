@@ -8,7 +8,7 @@
         </div>
 
         <div class="justify-content-end">
-            @livewire('header-notification')
+            @livewire('notification-header')
         </div>
     </div>
 </nav>

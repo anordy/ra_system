@@ -228,8 +228,8 @@ LIVEWIRE TABS
 
 .notification .badge {
     position: absolute;
-    top: -10px;
-    right: -10px;
+    top: -5px;
+    right: -8px;
     padding: 5px 10px;
     border-radius: 50%;
     background: #97363a;
@@ -298,6 +298,17 @@ LIVEWIRE TABS
     border-color: #996567;
 }
 
+.swal2-textarea {
+    height: 3.75em !important;
+    padding: .75em !important;
+    box-shadow: unset !important;
+    border-color: #996567 !important;
+}
+
+.swal2-title {
+    font-size: 20px !important;
+}
+
 .bg-secondary {
     background-color: #f7f7f7 !important;
 }
@@ -338,4 +349,20 @@ LIVEWIRE TABS
 
 .file-item:hover {
     background: #863d3c24;
+}
+
+/* ---------------------------------------------------
+    LOGIN PAGE
+----------------------------------------------------- */
+#logo{
+    display: block;
+    position: absolute;
+    top: -60px;
+    width: 120px;
+    height: 120px;
+    padding: 10px;
+    left:35%;
+    border: 1px solid #7c7c7c;
+    border-radius: 50%;
+    background: #fff;
 }

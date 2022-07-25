@@ -14,18 +14,18 @@ class TaxTypesSeeder extends Seeder
      */
     public function run()
     {
-        TaxType::updateOrCreate(['name' => 'VAT']);
-        TaxType::updateOrCreate(['name' => 'Hotel Levy']);
-        TaxType::updateOrCreate(['name' => 'Restaurant Levy']);
-        TaxType::updateOrCreate(['name' => 'Tour Operation Levy']);
-        TaxType::updateOrCreate(['name' => 'Land Lease']);
-        TaxType::updateOrCreate(['name' => 'Public Services']);
-        TaxType::updateOrCreate(['name' => 'Excercise Duty']);
-        TaxType::updateOrCreate(['name' => 'Petroleum Levy']);
-        TaxType::updateOrCreate(['name' => 'Airport Service Charge']);
-        TaxType::updateOrCreate(['name' => 'Airport Safety Fee']);
-        TaxType::updateOrCreate(['name' => 'Sea Port Service Charge']);
-        TaxType::updateOrCreate(['name' => 'Sea Port Transport Charges']);
-        TaxType::updateOrCreate(['name' => 'Tax Consultant Licences']);
+        TaxType::updateOrCreate(['name' => 'VAT', 'code'=> 'VAT']);
+        TaxType::updateOrCreate(['name' => 'Hotel Levy', 'code'=>'Hotel_Levy']);
+        TaxType::updateOrCreate(['name' => 'Restaurant Levy', 'code'=>'Restaurant_Levy']);
+        TaxType::updateOrCreate(['name' => 'Tour Operation Levy', 'code'=>'Tour_Operation_Levy']);
+        TaxType::updateOrCreate(['name' => 'Land Lease', 'code'=>'Land_Lease']);
+        TaxType::updateOrCreate(['name' => 'Public Services', 'code'=>'Public_Services']);
+        TaxType::updateOrCreate(['name' => 'Excercise Duty', 'code'=>'Excercise_Duty']);
+        TaxType::updateOrCreate(['name' => 'Petroleum Levy', 'code'=>'Petroleum_Levy']);
+        TaxType::updateOrCreate(['name' => 'Airport Service Charge', 'code'=>'Airport_Service_Charge']);
+        TaxType::updateOrCreate(['name' => 'Airport Safety Fee', 'code'=>'Airport_Safety_Fee']);
+        TaxType::updateOrCreate(['name' => 'Sea Port Service Charge', 'code'=>'Sea_Port_Service_Charge']);
+        TaxType::updateOrCreate(['name' => 'Sea Port Transport Charges', 'code'=>'Sea_Port_Transport_Charges']);
+        TaxType::updateOrCreate(['name' => 'Tax Consultant Licences', 'code'=>'Tax_Consultant_Licences']);
     }
 }
