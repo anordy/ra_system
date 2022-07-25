@@ -154,11 +154,11 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 $hrefClient = 'business.index';
                 $hrefAdmin = 'business.updatesRequests';
             } elseif ($placeName == 'BUSINESS_REGISTRATION') {
-                $hrefClient = 'business.registrations.index';
-                $hrefAdmin = 'business.index';
+                $hrefClient = 'business.index';
+                $hrefAdmin = 'business.registrations.index';
             } elseif ($placeName == 'BUSINESS_TAX_TYPE_CHANGE') {
-                $hrefClient = 'business.registrations.index';
-                $hrefAdmin = 'business.index';
+                $hrefClient = 'business.index';
+                $hrefAdmin = 'business.registrations.index';
             } elseif ($placeName == 'BUSINESS_DEREGISTER') {
                 $hrefClient = 'business.deregistrations';
                 $hrefAdmin = 'business.deregistrations';
