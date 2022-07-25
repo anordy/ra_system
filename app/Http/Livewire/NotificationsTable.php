@@ -100,7 +100,11 @@ class NotificationsTable extends DataTableComponent
         $notification = Notification::find($id);
         $notification->read_at = Carbon::now();
         $notification->save();
-        return redirect()->route($notification['data']->href);
+        if($notification['data']->href){
+            return redirect()->route($notification['data']->href);
+        }else{
+            return redirect()->back();
+        }
     }
 
     public function delete($id)
