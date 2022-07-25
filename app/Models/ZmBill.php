@@ -19,8 +19,8 @@ class ZmBill extends Model
         return $this->hasMany(ZmPayment::class, 'zm_bill_id');
     }
 
-    public function paid_amount(){
-        return $this->zm_bill_payments()->sum('paid_amount');
+    public function paidAmount(){
+        return $this->bill_payments->sum('paid_amount');
     }
 
 	public function user()

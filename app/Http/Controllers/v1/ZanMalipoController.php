@@ -87,7 +87,7 @@ class ZanMalipoController extends Controller
                 'control_number' => $tx_info['PayCtrNum'],
                 'bill_amount' => $tx_info['BillAmt'],
                 'paid_amount' => $tx_info['PaidAmt'],
-                'bill_pay_option' => $tx_info['BillPayOpt'],
+                'bill_pay_opt' => $tx_info['BillPayOpt'],
                 'currency' => $tx_info['CCy'],
                 'trx_time' => $tx_info['TrxDtTm'],
                 'usd_pay_channel' => $tx_info['UsdPayChnl'],
@@ -100,7 +100,7 @@ class ZanMalipoController extends Controller
             ]);
 
 
-            if ($bill->paid_amount() >= $bill->bill_amount) {
+            if ($bill->paidAmount() >= $bill->amount) {
                 $bill->status = 'paid';
             } else {
                 $bill->status = 'partially';
