@@ -145,14 +145,35 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
         $places = $placesCurrent[key($placesCurrent)];
 
-        $notificationName = strtoupper(str_replace('_', ' ', $event->getWorkflowName())) .' APPROVAL';
+        $notificationName = strtoupper(str_replace('_', ' ', $event->getWorkflowName())) . ' APPROVAL';
 
+        $placeName = $event->getWorkflowName();
+
+        if ($placeName == 'BUSINESS_UPDATE') {
+            $hrefClient = 'business.index';
+            $hrefAdmin = 'business.updatesRequests';
+        } elseif ($placeName == 'BUSINESS_REGISTRATION') {
+            $hrefClient = 'business.registrations.index';
+            $hrefAdmin = 'business.index';
+        } elseif ($placeName == 'BUSINESS_TAX_TYPE_CHANGE') {
+            $hrefClient = 'business.registrations.index';
+            $hrefAdmin = 'business.index';
+        } elseif ($placeName == 'BUSINESS_DEREGISTER') {
+            $hrefClient = 'business.deregistrations';
+            $hrefAdmin = 'business.deregistrations';
+        } elseif ($placeName == 'BUSINESS_CLOSURE') {
+            $hrefClient = 'business.closures';
+            $hrefAdmin = 'business.closure';
+        } elseif ($placeName == 'BUSINESS_BRANCH_REGISTRATION') {
+            $hrefClient = 'business.branches.index';
+            $hrefAdmin = 'business.branches.index';
+        }
 
         if (key($placesCurrent) == 'completed') {
             $event->getSubject()->taxpayer->notify(new DatabaseNotification(
                 $subject = $notificationName,
                 $message = 'Your request has been approved successfully.',
-                $href = 'business.index',
+                $href = $hrefClient ?? null,
                 $hrefText = 'View',
                 $owner = 'taxpayer'
             ));
@@ -160,13 +181,13 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $event->getSubject()->taxpayer->notify(new DatabaseNotification(
                 $subject = $notificationName,
                 $message = 'Your request has been rejected .',
-                $href = 'business.index',
+                $href = $hrefClient ?? null,
                 $hrefText = 'View',
                 $owner = 'taxpayer',
             ));
         }
-        
-        if($places['owner'] == 'staff'){
+
+        if ($places['owner'] == 'staff') {
             $operators = $places['operators'];
             if ($places['operator_type'] == 'role') {
                 $users = User::whereIn('role_id', $operators)->get();
@@ -174,7 +195,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $u->notify(new DatabaseNotification(
                         $subject = $notificationName,
                         $message = 'You have a business to review',
-                        $href = "business.registrations.index",
+                        $href = $hrefAdmin ?? null,
                         $hrefText = 'view'
                     ));
                 }
