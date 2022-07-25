@@ -30,6 +30,9 @@ class TaxpayersTable extends DataTableComponent
                 ->format(function($value, $row){
                     return "{$row->first_name} {$row->middle_name} {$row->last_name}";
                 }),
+            Column::make('Reference No.', 'reference_no')
+                ->searchable()
+                ->sortable(),
             Column::make('Mobile No', 'mobile'),
             Column::make('Email Address', 'email'),
             Column::make('Nationality', 'country.nationality'),
