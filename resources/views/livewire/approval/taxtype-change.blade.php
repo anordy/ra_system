@@ -16,7 +16,7 @@
     </div>
     @if ($this->checkTransition('registration_manager_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('registration_manager_review')">Reject</button>
+            <button type="button" class="btn btn-danger" wire:click="reject('registration_manager_reject')">Reject</button>
             <button type="button" class="btn btn-primary" wire:click="approve('registration_manager_review')">Approve &
                 Forward to Auditor</button>
         </div>

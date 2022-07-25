@@ -79,7 +79,7 @@ class TaxTypeChangeApprovalProcessing extends Component
     public function reject($transtion)
     {
         try {
-            if ($this->checkTransition('registration_manager_review')) {
+            if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = BusinessStatus::REJECTED;
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
