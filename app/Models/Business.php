@@ -36,7 +36,7 @@ class Business extends Model implements Auditable
     }
 
     public function taxTypes(){
-        return $this->belongsToMany(TaxType::class);
+        return $this->belongsToMany(TaxType::class)->withPivot('currency');
     }
 
     public function activityType(){

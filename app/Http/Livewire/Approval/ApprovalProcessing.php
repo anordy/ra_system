@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Approval;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
-use App\Jobs\Business\SendBusinessApprovedSMS;
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use App\Models\Currency;
@@ -18,6 +17,7 @@ use App\Notifications\DatabaseNotification;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -33,7 +33,8 @@ class ApprovalProcessing extends Component
     public $isiic_ii;
     public $isiic_iii;
     public $isiic_iv;
-    public $taxTypes, $selectedTaxTypes = [];
+    public $taxTypes;
+    public Collection $selectedTaxTypes;
 
 
     public $isiiciList = [];
@@ -52,20 +53,38 @@ class ApprovalProcessing extends Component
 
         $this->isiic_i = $this->subject->isiic_i ?? null;
 
-        if($this->isiic_i){
+        if ($this->isiic_i) {
             $this->isiiciChange($this->isiic_i);
         }
         $this->isiic_ii = $this->subject->isiic_ii ?? null;
-        if($this->isiic_ii){
+        if ($this->isiic_ii) {
             $this->isiiciiChange($this->isiic_ii);
         }
         $this->isiic_iii = $this->subject->isiic_iii ?? null;
-        if($this->isiic_iii){
+        if ($this->isiic_iii) {
             $this->isiiciiiChange($this->isiic_iii);
         }
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
-        $this->selectedTaxTypes = $this->subject->taxTypes->pluck('id');
+        $this->selectedTaxTypes = collect();
+
+        foreach ($this->subject->taxTypes as $value) {
+            $this->selectedTaxTypes->push([
+                'currency' => $value->pivot_currency,
+                'tax_type_id' => $value->id
+            ]);
+        }
+
+        if ($this->selectedTaxTypes->count() < 1) {
+            $this->fill([
+                'selectedTaxTypes' => collect([
+                    [
+                        'tax_type_id' => '',
+                        'currency' => '',
+                    ]
+                ]),
+            ]);
+        }
     }
 
     public function isiiciChange($value)
@@ -92,9 +111,22 @@ class ApprovalProcessing extends Component
         $this->isiic_iv = null;
     }
 
+    public function addTaxtype()
+    {
+        $this->selectedTaxTypes->push([
+            'tax_type_id' => '',
+            'currency' => '',
+        ]);
+    }
+
+    public function removeTaxType($key)
+    {
+        $this->selectedTaxTypes->pull($key);
+    }
+
     public function approve($transtion)
     {
-     
+
 
         if ($this->checkTransition('registration_officer_review')) {
             $this->subject->isiic_i = $this->isiic_i ?? null;
@@ -109,13 +141,14 @@ class ApprovalProcessing extends Component
                 'isiic_iv' => 'required',
                 'selectedTaxTypes' => 'required',
                 'comments' => 'required',
+                'selectedTaxTypes.*.currency' => 'required',
+                'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
             ], [
-                'selectedTaxTypes.required' => 'Please selected at least one tax type.'
+                'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
+                'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
+                'selectedTaxTypes.*.currency.required' => 'Currency is required',
             ]);
 
-
-
-            $currency = Currency::find($this->subject->currency_id);
 
             $business = Business::find($this->subject->id);
 
@@ -124,8 +157,8 @@ class ApprovalProcessing extends Component
             foreach ($this->selectedTaxTypes as $type) {
                 DB::table('business_tax_type')->insert([
                     'business_id' => $business->id,
-                    'tax_type_id' => $type,
-                    'currency' => $currency->iso,
+                    'tax_type_id' => $type['tax_type_id'],
+                    'currency' => $type['currency'],
                     'created_at' => Carbon::now()
                 ]);
             }
@@ -154,8 +187,8 @@ class ApprovalProcessing extends Component
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-           Log::error($e);
-           return;
+            Log::error($e);
+            return;
         }
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
@@ -166,7 +199,7 @@ class ApprovalProcessing extends Component
             'comments' => 'required|string',
         ]);
         try {
-           
+
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
                 event(new SendSms('business-registration-correction', $this->subject->id));
