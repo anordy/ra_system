@@ -70,7 +70,7 @@ class ApprovalProcessing extends Component
 
         foreach ($this->subject->taxTypes as $value) {
             $this->selectedTaxTypes->push([
-                'currency' => $value->pivot_currency,
+                'currency' => $value->pivot->currency ??'',
                 'tax_type_id' => $value->id
             ]);
         }
