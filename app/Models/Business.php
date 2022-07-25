@@ -36,7 +36,7 @@ class Business extends Model implements Auditable
     }
 
     public function taxTypes(){
-        return $this->belongsToMany(TaxType::class);
+        return $this->belongsToMany(TaxType::class)->withPivot('currency');
     }
 
     public function activityType(){
@@ -63,8 +63,27 @@ class Business extends Model implements Auditable
         return $this->hasOne(BusinessBank::class);
     }
 
+    public function isici(){
+        return $this->belongsTo(ISIC1::class, 'isiic_i');
+    }
+
+    public function isicii(){
+        return $this->belongsTo(ISIC2::class, 'isiic_ii');
+    }
+
+    public function isiciii(){
+        return $this->belongsTo(ISIC3::class, 'isiic_iii');
+    }
+
+    public function isiciv(){
+        return $this->belongsTo(ISIC4::class, 'isiic_iv');
+    }
+
     public function consultants(){
-        return $this->hasMany(BusinessConsultant::class);
+        return $this->hasMany(BusinessConsultant::class)
+            ->orderByRaw("FIELD(status, 'approved', 'pending', 'rejected', 'removed')")
+            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc');
     }
 
     public function responsiblePerson(){

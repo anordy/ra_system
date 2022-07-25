@@ -99,21 +99,11 @@ class ZanMalipoController extends Controller
                 'ctr_acc_num' => $tx_info['CtrAccNum']
             ]);
 
-            //            insert into bills daily table
-            DB::select('call sp_insert_daily_bill(?,?,?,?,?)', array(
-                $bill->service_group_code,
-                $tx_info['PaidAmt'],
-                $tx_info['PaidAmt'] / $bill->exchange_rate,
-                $bill->exchange_rate,
-                null
-            ));
 
             if ($bill->paid_amount() >= $bill->bill_amount) {
-                $bill->bill_status_code = 'PA001';
-                $bill->zm_posting_status = 'PAID';
+                $bill->status = 'paid';
             } else {
-                $bill->bill_status_code = 'PT001';
-                $bill->zm_posting_status = 'PARTIAL';
+                $bill->status = 'partially';
             }
 
             $bill->save();

@@ -38,6 +38,11 @@ class WorkflowBusinessTaxTypeChangeSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => []
             ],
+            'rejected' => [
+                'owner' => 'taxpayer',
+                'operator_type' => 'user',
+                'operators' => []
+            ],
         ];
         $transitions = [
             'application_submitted' => [
@@ -47,7 +52,7 @@ class WorkflowBusinessTaxTypeChangeSeeder extends Seeder
             ],
             'registration_manager_reject' => [
                 'from' => 'registration_manager',
-                'to'   => 'completed',
+                'to'   => 'rejected',
                 'condition' => '',
             ],
             'registration_manager_review' => [

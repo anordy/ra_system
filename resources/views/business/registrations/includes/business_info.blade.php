@@ -138,6 +138,30 @@
                     @endforeach
                 </p>
             </div>
+            @if($business->isici)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC I</span>
+                    <p class="my-1">{{ $business->isici->description }}</p>
+                </div>
+            @endif
+            @if($business->isicii)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC II</span>
+                    <p class="my-1">{{ $business->isicii->description }}</p>
+                </div>
+            @endif
+            @if($business->isiciii)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC III</span>
+                    <p class="my-1">{{ $business->isiciii->description }}</p>
+                </div>
+            @endif
+            @if($business->isiciv)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC IV</span>
+                    <p class="my-1">{{ $business->isiciv->description }}</p>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -209,6 +233,10 @@
             </div>
             @foreach($business->branches as $location)
                 <div class="row m-2">
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Branch Name</span>
+                        <p class="my-1">{{ $location->name }}</p>
+                    </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Nature of Premises</span>
                         <p class="my-1">{{ $location->nature_of_possession }}</p>
