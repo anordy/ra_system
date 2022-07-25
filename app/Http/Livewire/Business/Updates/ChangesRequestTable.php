@@ -38,16 +38,16 @@ class ChangesRequestTable extends DataTableComponent
     public function builder(): Builder
     {
         if ($this->status == BusinessStatus::PENDING) {
-            return BusinessUpdate::where('business_updates.status', BusinessStatus::PENDING)
+            return BusinessUpdate::where('business_updates.status', BusinessStatus::PENDING)->orderBy('business_updates.created_at', 'DESC')
                 ->with('business');
         } else if ($this->status == BusinessStatus::APPROVED) {
-            return BusinessUpdate::where('business_updates.status', BusinessStatus::APPROVED)
+            return BusinessUpdate::where('business_updates.status', BusinessStatus::APPROVED)->orderBy('business_updates.created_at', 'DESC')
                 ->with('business');
         } else if ($this->status == BusinessStatus::REJECTED) {
-            return BusinessUpdate::where('business_updates.status', BusinessStatus::REJECTED)
+            return BusinessUpdate::where('business_updates.status', BusinessStatus::REJECTED)->orderBy('business_updates.created_at', 'DESC')
                 ->with('business');
         }else if ($this->status == BusinessStatus::CORRECTION) {
-            return BusinessUpdate::where('business_updates.status', BusinessStatus::CORRECTION)
+            return BusinessUpdate::where('business_updates.status', BusinessStatus::CORRECTION)->orderBy('business_updates.created_at', 'DESC')
                 ->with('business');
         }
         return BusinessUpdate::query();
