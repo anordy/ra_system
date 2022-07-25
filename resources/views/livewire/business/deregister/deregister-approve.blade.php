@@ -28,7 +28,9 @@
                         <p class="my-1">{{ $deregister->reason }}</p>
                     </div>
                 </div>
-                @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' =>$deregister->id])
+                @if ($deregister->status !== 'approved')
+                    @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' =>$deregister->id])
+                @endif
             </div>
         </div>
         <div id="tab2" class="tab-pane fade">
