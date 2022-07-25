@@ -15,9 +15,9 @@
                     <textarea class="form-control" wire:model='comments' rows="3"></textarea>
                 </div>
             </div>
-            @if ($this->checkTransition('compliance_manager_review'))
+            {{-- @if ($this->checkTransition('compliance_manager_review'))
                 <div class="col-md-6 mb-3">
-                    <label>Assign Officer</label>
+                    <label>Assign To Role</label>
                     <select wire:model="officer_id"
                         class="form-control {{ $errors->has('officer_id') ? 'is-invalid' : '' }}">
                         <option></option>
@@ -31,7 +31,7 @@
                         </div>
                     @enderror
                 </div>
-            @endif
+            @endif --}}
         </div>
     </div>
     @if ($this->checkTransition('compliance_manager_review'))
