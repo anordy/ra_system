@@ -42,6 +42,8 @@
                                         </tbody>
                                     </table>
 
+                                    <p><strong>Reason for Changing Tax Types: </strong>{{ $taxchange->reason }}</p>
+                                    <br>
                                 <hr style="margin-top: -16px" class="mx-3" />
                             <livewire:business.tax-type.tax-type-change-approval-processing modelName='App\Models\BusinessTaxTypeChange'
                                 modelId="{{ $taxchange->id }}" />
