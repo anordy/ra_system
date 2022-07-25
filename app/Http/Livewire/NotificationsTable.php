@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Route;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -100,7 +101,7 @@ class NotificationsTable extends DataTableComponent
         $notification = Notification::find($id);
         $notification->read_at = Carbon::now();
         $notification->save();
-        if($notification['data']->href){
+        if(Route::has($notification['data']->href)){
             return redirect()->route($notification['data']->href);
         }else{
             return redirect()->back();

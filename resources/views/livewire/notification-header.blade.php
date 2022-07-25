@@ -8,7 +8,7 @@
         <div class="dropdown-menu dropdown-menu-right" style="width: 340px !important;">
             @if ($hasUnreadNotifications)
                 @foreach ($unreadNotifications->take(5) as $row)
-                    @if ($row->data['href'])
+                    @if (Route::has($row->data['href']))
                         <button class="dropdown-item" type="button" style="white-space: normal;">
                             <small style="">{{ $row->data['message'] }}</small> <br>
                             <a class="btn btn-link p-0 m-0" href="{{ route($row->data['href']) }}"
