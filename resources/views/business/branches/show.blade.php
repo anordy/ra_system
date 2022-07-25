@@ -18,6 +18,10 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Branch Name</span>
+                                <p class="my-1">{{ $location->name }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Nature of Premises</span>
                                 <p class="my-1">{{ $location->nature_of_possession }}</p>
                             </div>
