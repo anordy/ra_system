@@ -145,20 +145,24 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
         $places = $placesCurrent[key($placesCurrent)];
 
+        $notificationName = strtoupper(str_replace('_', ' ', $event->getWorkflowName())) .' APPROVAL';
+
 
         if (key($placesCurrent) == 'completed') {
             $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                $subject = strtoupper(str_replace('_', ' ', $event->getWorkflowName())),
+                $subject = $notificationName,
                 $message = 'Your request has been approved successfully.',
                 $href = 'business.index',
-                $hrefText = 'View'
+                $hrefText = 'View',
+                $owner = 'taxpayer'
             ));
         } elseif (key($placesCurrent) == 'rejected') {
             $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                $subject = strtoupper(str_replace('_', ' ', $event->getWorkflowName())),
+                $subject = $notificationName,
                 $message = 'Your request has been rejected .',
                 $href = 'business.index',
-                $hrefText = 'View'
+                $hrefText = 'View',
+                $owner = 'taxpayer',
             ));
         }
         
@@ -168,7 +172,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 $users = User::whereIn('role_id', $operators)->get();
                 foreach ($users as $u) {
                     $u->notify(new DatabaseNotification(
-                        $subject = strtoupper(str_replace('_', ' ', $event->getWorkflowName())),
+                        $subject = $notificationName,
                         $message = 'You have a business to review',
                         $href = "business.registrations.index",
                         $hrefText = 'view'
