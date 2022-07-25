@@ -119,6 +119,8 @@
                     <th>To</th>
                     <th>Education Level</th>
                     <th>Program</th>
+                    <th>Certificate</th>
+                    <th>Transcript</th>
                 </tr>
                 </thead>
 
@@ -132,6 +134,24 @@
                         <td>{{$academicRecord->to}}</td>
                         <td>{{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}</td>
                         <td>{{$academicRecord->program}}</td>
+                        <td>
+                            <a class="file-item" target="_blank"
+                               href="{{ route('agent.file', [$agent->id, 'academic_certificate']) }}">
+                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <div style="font-weight: 500;" class="ml-1">
+                                    {{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="file-item" target="_blank"
+                               href="{{ route('agent.file', [$agent->id, 'academic_transcript']) }}">
+                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                <div style="font-weight: 500;" class="ml-1">
+                                    {{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}
+                                </div>
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -148,6 +168,7 @@
                     <th>Passed Section</th>
                     <th>Date passed</th>
                     <th>Remarks</th>
+                    <th>Attachment</th>
                 </tr>
                 </thead>
 
@@ -160,6 +181,16 @@
                         <td>{{$agentProfessional->passed_sections}}</td>
                         <td>{{$agentProfessional->date_passed}}</td>
                         <td>{{$agentProfessional->remarks}}</td>
+                        <td>
+                            <a class="file-item" target="_blank"
+                               href="{{ route('agent.file', [$agent->id, 'pro_certificate']) }}">
+                                <i class="bi bi-file-earmark-pdf-fill px-2"
+                                   style="font-size: x-large"></i>
+                                <div style="font-weight: 500;" class="ml-1">
+                                    {{$agentProfessional->body_name}}
+                                </div>
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
 
@@ -177,6 +208,7 @@
                     <th>To</th>
                     <th>Position Held</th>
                     <th>Description</th>
+                    <th>Attachment</th>
                 </tr>
                 </thead>
 
@@ -189,6 +221,16 @@
                         <td>{{$agentTraining->to}}</td>
                         <td>{{$agentTraining->position_held}}</td>
                         <td>{{$agentTraining->description}}</td>
+                        <td>
+                            <a class="file-item" target="_blank"
+                               href="{{ route('agent.file', [$agent->id, 'tra_certificate']) }}">
+                                <i class="bi bi-file-earmark-pdf-fill px-2"
+                                   style="font-size: x-large"></i>
+                                <div style="font-weight: 500;" class="ml-1">
+                                    {{$agentTraining->org_name}}
+                                </div>
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
 
@@ -244,62 +286,6 @@
                         @endif
                     </div>
 
-                    <div class="col-md-12 mt-3">
-                        <p>Education Attachments</p>
-                        <div class="row">
-                            @foreach($agent->academics as $edu)
-                                <div class="col-md-3">
-                                    <a class="file-item" target="_blank"
-                                       href="{{ route('agent.file', [$agent->id, 'academic_certificate']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2"
-                                           style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
-                                            {{\App\Models\EducationLevel::find($edu->education_level_id)->name}}
-                                        </div>
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-12 mt-3">
-                        <p>Professional Attachments</p>
-                        <div class="row">
-                            @foreach($agent->professionals as $pro)
-                                <div class="col-md-3">
-                                    <a class="file-item" target="_blank"
-                                       href="{{ route('agent.file', [$agent->id, 'pro_certificate']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2"
-                                           style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
-                                            {{$pro->body_name}}
-                                        </div>
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-12 mt-3">
-                        <p>Training Attachments</p>
-                        <div class="row">
-                            @foreach($agent->trainings as $tra)
-                                <div class="col-md-3">
-                                    <a class="file-item" target="_blank"
-                                       href="{{ route('agent.file', [$agent->id, 'tra_certificate']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2"
-                                           style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
-                                            {{$tra->org_name}}
-                                        </div>
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-
-                    </div>
                 </div>
             </div>
         </div>

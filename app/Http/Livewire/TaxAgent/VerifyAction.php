@@ -179,6 +179,15 @@ class VerifyAction extends Component
             $agent->verifier_reject_comment = $comment;
             $agent->verifier_id	 = Auth::id();
             $agent->save();
+
+            $taxpayer = Taxpayer::query()->find($agent->taxpayer_id);
+            $taxpayer->notify(new DatabaseNotification(
+                $subject = 'TAX-AGENT VERIFICATION',
+                $message = 'Your application has been rejected please correct and resubmit',
+                $href = 'taxagent.apply',
+                $hrefText = 'view'
+            ));
+
             DB::commit();
             $this->flash('success', 'Request rejected successfully');
             return redirect()->route('taxagents.requests');
