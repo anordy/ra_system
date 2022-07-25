@@ -4,7 +4,9 @@ namespace App\Services\Workflow\Events;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Workflow;
 use App\Models\WorkflowTask;
+use App\Notifications\DatabaseNotification;
 use App\Services\Workflow\Event\Event;
 use App\Services\Workflow\Event\GuardEvent;
 use Carbon\Carbon;
@@ -105,11 +107,12 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $task->save();
         }
 
+        $workflow = Workflow::where('code', $event->getWorkflowName())->first();
 
         try {
             foreach ($places as $key => $place) {
                 $task =  new WorkflowTask([
-                    'workflow_id' => 1,
+                    'workflow_id' => $workflow->id,
                     'name' => $transition->getName(),
                     'from_place' => $transition->getFroms()[0],
                     'to_place' => $key,
@@ -137,8 +140,42 @@ class WorkflowSubscriber implements EventSubscriberInterface
         $user = auth()->user();
         $subject = $event->getSubject();
         $marking = $event->getMarking();
-        $places = $marking->getPlaces();
+        $placesCurrent = $marking->getPlaces();
         $transition = $event->getTransition();
+
+        $places = $placesCurrent[key($placesCurrent)];
+
+
+        if (key($placesCurrent) == 'completed') {
+            $event->getSubject()->taxpayer->notify(new DatabaseNotification(
+                $subject = strtoupper(str_replace('_', ' ', $event->getWorkflowName())),
+                $message = 'Your request has been approved successfully.',
+                $href = 'business.index',
+                $hrefText = 'View'
+            ));
+        } elseif (key($placesCurrent) == 'rejected') {
+            $event->getSubject()->taxpayer->notify(new DatabaseNotification(
+                $subject = strtoupper(str_replace('_', ' ', $event->getWorkflowName())),
+                $message = 'Your request has been rejected .',
+                $href = 'business.index',
+                $hrefText = 'View'
+            ));
+        }
+        
+        if($places['owner'] == 'staff'){
+            $operators = $places['operators'];
+            if ($places['operator_type'] == 'role') {
+                $users = User::whereIn('role_id', $operators)->get();
+                foreach ($users as $u) {
+                    $u->notify(new DatabaseNotification(
+                        $subject = strtoupper(str_replace('_', ' ', $event->getWorkflowName())),
+                        $message = 'You have a business to review',
+                        $href = "business.registrations.index",
+                        $hrefText = 'view'
+                    ));
+                }
+            }
+        }
     }
 
     public static function getSubscribedEvents()
