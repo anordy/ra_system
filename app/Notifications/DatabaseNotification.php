@@ -21,7 +21,7 @@ class DatabaseNotification extends Notification
      *
      * @return void
      */
-    public function __construct($subject = null, $message, $href, $hrefText, $owner)
+    public function __construct($subject = null, $message, $href, $hrefText, $owner=null)
     {
         $this->subject = $subject;    //the subject
         $this->message = $message;    //your notification message
@@ -54,6 +54,7 @@ class DatabaseNotification extends Notification
                 ->subject($this->subject)
                 ->greeting('Hello! ' . $notifiable->full_name)
                 ->line($this->message)
+                ->line('Kindly login to the application to view the details')
                 ->line('Thank you!');
         } else {
             return (new MailMessage)
