@@ -134,6 +134,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
         Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
         Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
+        Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
 

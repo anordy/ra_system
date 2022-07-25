@@ -11,6 +11,7 @@ use App\Models\TaxAgentTrainingExperience;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class TaxAgentController extends Controller
 {
@@ -58,4 +59,16 @@ class TaxAgentController extends Controller
 	{
 		return view('taxagents.fee-config');
 	}
+
+    public function certificate($id){
+        $id = decrypt($id);
+        $taxagent = TaxAgent::with('taxpayer')->find($id);
+//        dd($taxagent->taxpayer);
+        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return $pdf->stream();
+
+    }
 }

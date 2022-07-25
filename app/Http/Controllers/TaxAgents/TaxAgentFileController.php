@@ -35,6 +35,13 @@ class TaxAgentFileController extends Controller
             }
         }
 
+        if ($type == 'academic_transcript') {
+            foreach ($agent->academics as $row)
+            {
+                return Storage::disk('local-admin')->response($row->transcript);
+            }
+        }
+
         if ($type == 'pro_certificate') {
             foreach ($agent->trainings as $row)
             {
