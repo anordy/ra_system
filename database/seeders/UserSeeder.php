@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
         User::updateOrCreate([
             'fname' => "Gozbert",
             'lname' => "Stanslaus",
-            'email' => "gozbeths@gmail.com",
+            'email' => "Gozbert.Stanslaus@ubx.co.tz",
             'phone' => '0766583354',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
@@ -72,7 +72,7 @@ class UserSeeder extends Seeder
         User::updateOrCreate([
             'fname' => "Meshack",
             'lname' => "Victor",
-            'email' => "meshackf1@gmail.com",
+            'email' => "meshack.fungo@ubx.co.tz",
             'phone' => '0753550590',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
