@@ -108,11 +108,11 @@
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months) TZS</span>
-                <p class="my-1">{{ $business->post_estimated_turnover }}</p>
+                <p class="my-1">{{ fmCurrency($business->post_estimated_turnover) }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Estimated Turnover (Last 12 Months) TZS</span>
-                <p class="my-1">{{ $business->pre_estimated_turnover }}</p>
+                <p class="my-1">{{ fmCurrency($business->pre_estimated_turnover) }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Type of Business Activities</span>
