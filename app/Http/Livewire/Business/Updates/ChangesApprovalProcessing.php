@@ -81,17 +81,26 @@ class ChangesApprovalProcessing extends Component
                     $business = Business::findOrFail($this->business_id);
                     $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first();
 
-                    // $businessPartners = $new_values['partners'];
 
                     if($new_values['is_own_consultant'] === false) {
-                    $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
+                        if ($current_business_consultant) {
+                            $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
 
-                        BusinessConsultant::create([
-                            'business_id' => $business->id,
-                            'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
-                        ]);
+                            BusinessConsultant::create([
+                                'business_id' => $business->id,
+                                'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
+                            ]);
+                        } else {
+                            BusinessConsultant::create([
+                                'business_id' => $business->id,
+                                'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
+                            ]);
+                        }
+                 
                     } else {
-                        $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
+                        if ($current_business_consultant) {
+                            $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
+                        }
                     }
 
                     $business->update([

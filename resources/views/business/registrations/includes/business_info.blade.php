@@ -108,11 +108,11 @@
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months) TZS</span>
-                <p class="my-1">{{ $business->post_estimated_turnover }}</p>
+                <p class="my-1">{{ fmCurrency($business->post_estimated_turnover) }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Estimated Turnover (Last 12 Months) TZS</span>
-                <p class="my-1">{{ $business->pre_estimated_turnover }}</p>
+                <p class="my-1">{{ fmCurrency($business->pre_estimated_turnover) }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Type of Business Activities</span>
@@ -138,6 +138,30 @@
                     @endforeach
                 </p>
             </div>
+            @if($business->isici)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC I</span>
+                    <p class="my-1">{{ $business->isici->description }}</p>
+                </div>
+            @endif
+            @if($business->isicii)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC II</span>
+                    <p class="my-1">{{ $business->isicii->description }}</p>
+                </div>
+            @endif
+            @if($business->isiciii)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC III</span>
+                    <p class="my-1">{{ $business->isiciii->description }}</p>
+                </div>
+            @endif
+            @if($business->isiciv)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC IV</span>
+                    <p class="my-1">{{ $business->isiciv->description }}</p>
+                </div>
+            @endif
         </div>
     </div>
 

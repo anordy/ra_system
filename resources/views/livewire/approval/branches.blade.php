@@ -29,7 +29,14 @@
     @elseif ($this->checkTransition('director_of_trai_review'))
         <div class="modal-footer p-2 m-0">
             <button type="button" class="btn btn-danger" wire:click="reject('director_of_trai_reject')">Reject & Return</button>
-            <button type="button" class="btn btn-primary" wire:click="approve('director_of_trai_review')">Approve & Complete</button>
+            <button type="button" class="btn btn-primary" wire:click="approve('director_of_trai_review')" wire:loading.attr="disabled">
+                <div wire:loading wire:target="approve('director_of_trai_review')">
+                    <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                Confirm
+            </button>
         </div>
     @endif
 

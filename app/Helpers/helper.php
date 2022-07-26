@@ -17,3 +17,7 @@ function getOperators($owner, $operator_type, $operators)
 
     return $data;
 }
+
+function fmCurrency($amount){
+    return number_format(floatval($amount), 2);
+}
