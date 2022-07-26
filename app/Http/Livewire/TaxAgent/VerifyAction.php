@@ -138,9 +138,12 @@ class VerifyAction extends Component
                     $this->flash('success', 'Request verified successfully');
                     return redirect()->route('taxagents.requests');
                 }
+
+                session()->flash('success', 'Zan Malipo Service is unavailable, try again later');
                 DB::rollBack();
                 $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
                 redirect()->back()->getTargetUrl();
+
             } else {
                 $agent->status = TaxAgentStatus::VERIFIED;
                 $agent->verifier_true_comment = $comment;
