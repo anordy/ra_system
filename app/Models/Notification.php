@@ -11,9 +11,7 @@ class Notification extends Model
 
     public $timestamps = true;
 
-    protected $fillable = [
-        'data',
-    ];
+    protected $guarded = [];
 
     protected $dates = [
         'created_at',
@@ -24,4 +22,5 @@ class Notification extends Model
     {
         return json_decode($this->attributes['data']);
     }
+    
 }

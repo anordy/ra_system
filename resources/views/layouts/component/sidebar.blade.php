@@ -159,7 +159,7 @@
             </div>
             <div class="pl-2">
                 <div>{{ auth()->user()->fullname() }}</div>
-                <div>Role</div>
+                <div>{{ auth()->user()->role->name ?? '' }}</div>
             </div>
         </div>
 

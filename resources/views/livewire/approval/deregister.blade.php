@@ -27,7 +27,14 @@
     @elseif ($this->checkTransition('commissioner_review'))
         <div class="modal-footer p-2 m-0">
             <button type="button" class="btn btn-danger" wire:click="reject('commissioner_reject')">Reject</button>
-            <button type="button" class="btn btn-success" wire:click="approve('commissioner_review')">Approve & Complete</button>
+            <button type="button" class="btn btn-primary" wire:click="approve('commissioner_review')" wire:loading.attr="disabled">
+                <div wire:loading wire:target="approve('commissioner_review')">
+                    <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                Confirm
+            </button>
         </div>
     @endif
 
