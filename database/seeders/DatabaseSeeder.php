@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\FinancialYear;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -42,6 +43,8 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowBusinessUpdateSeeder::class);
         $this->call(WorkflowBusinessTaxTypeChangeSeeder::class);
         $this->call(EducationLevelSeeder::class);
+        $this->call(FinancialYear::class);
+        $this->call(ReturnMonthsSeeder::class);
         $this->call(ISIC1Seeder::class);
         $this->call(ISIC2Seeder::class);
         $this->call(ISIC3Seeder::class);
