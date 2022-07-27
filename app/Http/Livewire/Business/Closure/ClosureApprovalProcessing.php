@@ -30,7 +30,7 @@ class ClosureApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
-        $this->officers = User::all()->where('role_id', 5);
+        // $this->officers = User::all()->where('role_id', 5);
     }
 
 

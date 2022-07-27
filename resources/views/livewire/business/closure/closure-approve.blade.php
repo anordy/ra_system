@@ -42,7 +42,9 @@
                         </div>
 
                     </div>
-                    @livewire('business.closure.closure-approval-processing', ['modelName' => 'App\Models\BusinessTempClosure', 'modelId' => $temp_closure->id])
+                    @if ($temp_closure->status !== 'approved')
+                        @livewire('business.closure.closure-approval-processing', ['modelName' => 'App\Models\BusinessTempClosure', 'modelId' => $temp_closure->id])
+                    @endif
                 </div>
                 <div id="tab2" class="tab-pane fade">
                     <livewire:approval.approval-history-table modelName='App\Models\BusinessTempClosure' modelId="{{ $temp_closure->id }}" />

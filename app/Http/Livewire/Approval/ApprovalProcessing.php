@@ -175,13 +175,7 @@ class ApprovalProcessing extends Component
             event(new SendSms('business-registration-approved', $this->subject->id));
             event(new SendMail('business-registration-approved', $this->subject->id));
 
-            $taxpayer = Taxpayer::find($this->subject->taxpayer_id);
-            $taxpayer->notify(new DatabaseNotification(
-                $subject = 'BUSINESS APPROVAL',
-                $message = 'Your business has been approved',
-                $href = 'business.index',
-                $hrefText = 'View'
-            ));
+            
         }
 
         try {
