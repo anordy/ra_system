@@ -25,7 +25,7 @@ class RatesModal extends Component
 
 	public function updated($property){
 		if ($property === 'service_code'){
-			$this->categories = VatCategory::where('vat_services_code', $this->service_code)->get();
+			$this->categories = VatCategory::query()->where('vat_service_code', $this->service_code)->get();
 		}
 	}
 
@@ -43,7 +43,7 @@ class RatesModal extends Component
 		DB::beginTransaction();
 
 		try {
-			$check = VatConfigRate::where('vat_category_code', '=', $this->cat_code)->first();
+			$check = VatConfigRate::query()->where('vat_category_code', '=', $this->cat_code)->first();
 
 			if (empty($check))
 			{
@@ -61,7 +61,7 @@ class RatesModal extends Component
 				$exist_vat_category_code = $check->vat_category_code;
 				$exist_created_by = $check->created_by;
 
-				$result = VatConfigRate::find($rate_id);
+				$result = VatConfigRate::query()->find($rate_id);
 				$result->rate = $this->rate;
 				$result->updated_at = now();
 				$result->save();
@@ -83,6 +83,7 @@ class RatesModal extends Component
 		{
 			DB::rollBack();
 			Log::error($exception);
+			dd($exception);
 			$this->flash('warning', 'Internal server error', [], redirect()->back()->getTargetUrl());
 		}
 

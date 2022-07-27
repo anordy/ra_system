@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class VatConfigRateHistory extends Model
 {
     use HasFactory;
-	protected $table = 'vat_config_rate_history';
+	protected $table = 'vat_config_rate_histories';
 	protected $guarded = [];
 }
