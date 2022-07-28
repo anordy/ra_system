@@ -19,20 +19,23 @@ class CreateHotelLevyReturnsTable extends Migration
             $table->unsignedBigInteger('submitted_by');
 
             $table->integer('total_pax')->nullable();
-            $table->float('hotel_supplies')->nullable();
-            $table->float('no_of_bed_nights')->nullable();
-            $table->float('restaurant_supplies')->nullable();
-            $table->float('tour_operation_services')->nullable();
-            $table->float('other_supplies')->nullable();
+            $table->decimal('hotel_supplies')->nullable();
+            $table->decimal('no_of_bed_nights')->nullable();
+            $table->decimal('restaurant_supplies')->nullable();
+            $table->decimal('tour_operation_services')->nullable();
+            $table->decimal('other_supplies')->nullable();
 
-            $table->float('local_purchases')->nullable();
-            $table->float('import_purchases')->nullable();
-            $table->float('infrastructure_tax')->nullable();
-            $table->float('total_levy_amount_due')->nullable();
-            $table->float('rate_of_charge_per_single_room')->nullable();
-            $table->float('rate_of_charge_per_double_room')->nullable();
-            $table->float('rate_of_charge_per_tripple_room')->nullable();
-            $table->float('rate_of_charge_per_other_room')->nullable();
+            $table->decimal('local_purchases')->nullable();
+            $table->decimal('import_purchases')->nullable();
+            $table->decimal('infrastructure_tax')->nullable();
+            $table->decimal('total_levy_amount_due')->nullable();
+            $table->decimal('rate_of_charge_per_single_room')->nullable();
+            $table->decimal('rate_of_charge_per_double_room')->nullable();
+            $table->decimal('rate_of_charge_per_tripple_room')->nullable();
+            $table->decimal('rate_of_charge_per_other_room')->nullable();
+
+            $table->decimal('subtotal');
+            $table->decimal('total');
 
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('submitted_by')->references('id')->on('taxpayers');
