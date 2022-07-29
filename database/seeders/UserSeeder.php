@@ -7,7 +7,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-
 class UserSeeder extends Seeder
 {
     /**
@@ -27,7 +26,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'role_id' => 1,
             'status' => true,
-            'is_first_login' => false
+            'is_first_login' => false,
         ]);
 
         User::updateOrCreate([
@@ -53,7 +52,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'role_id' => 1,
             'status' => true,
-            'is_first_login' => false
+            'is_first_login' => false,
         ]);
 
         User::updateOrCreate([
@@ -66,7 +65,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'role_id' => 1,
             'status' => true,
-            'is_first_login' => false
+            'is_first_login' => false,
         ]);
 
         User::updateOrCreate([
@@ -79,7 +78,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'role_id' => 1,
             'status' => true,
-            'is_first_login' => false
+            'is_first_login' => false,
         ]);
 
         User::updateOrCreate([
@@ -92,7 +91,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'role_id' => 1,
             'status' => true,
-            'is_first_login' => false
+            'is_first_login' => false,
         ]);
 
         User::updateOrCreate([
@@ -105,7 +104,7 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'role_id' => 1,
             'status' => true,
-            'is_first_login' => false
+            'is_first_login' => false,
         ]);
 
         User::updateOrCreate([
@@ -118,7 +117,21 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'role_id' => 1,
             'status' => true,
-            'is_first_login' => false
+            'is_first_login' => false,
         ]);
+
+        User::updateOrCreate([
+            'fname' => "Anord",
+            'lname' => "john",
+            'email' => "Anord.John@ubx.co.tz",
+            'phone' => '0716121689',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 1,
+            'status' => true,
+            'is_first_login' => false,
+        ]);
+
     }
 }
