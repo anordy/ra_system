@@ -2,16 +2,16 @@
 
 namespace App\Http\Livewire\Returns\StampDuty;
 
-use App\Models\Returns\StampDuty\StampDutyService;
+use App\Models\Returns\StampDuty\StampDutyConfig;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class StampDutyServicesTable extends DataTableComponent
+class StampDutyConfigTable extends DataTableComponent
 {
     public function builder(): Builder
     {
-        return StampDutyService::latest();
+        return StampDutyConfig::latest();
     }
 
     public function configure(): void
@@ -24,7 +24,7 @@ class StampDutyServicesTable extends DataTableComponent
         ]);
 
         $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex) {
-            if ($column->isField('description') || $column->isField('name')) {
+            if ($column->isField('Name')) {
                 return [
                     'class' => 'w-25',
                 ];
@@ -42,9 +42,18 @@ class StampDutyServicesTable extends DataTableComponent
                 ->searchable(),
             Column::make("Code", "code")
                 ->searchable(),
-            Column::make("Rate Type", "rate_type")
-                ->searchable(),
-            Column::make("Rate", "rate")
+            Column::make("Row Type", "row_type"),
+            Column::make('Is Value Calculated', 'value_calculated')
+                ->format(function ($value){
+                    return $value ? 'Yes' : 'No';
+                }),
+            Column::make("Column Type", "col_type"),
+            Column::make("Is Rate Applicable ?", "rate_applicable"),
+            Column::make("Rate Type", "rate_type"),
+            Column::make("Currency", "currency"),
+            Column::make("Rate", "rate"),
+            Column::make("Rate (USD)", "rate_usd"),
+            Column::make("Formula", "rate")
                 ->searchable(),
             Column::make('Is Active', 'is_active')
                 ->format(function ($value){
