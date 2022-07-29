@@ -14,66 +14,164 @@ class HotelLevyConfigSeeder extends Seeder
      */
     public function run()
     {
-        HotelLevyConfig::create([
-            'name' => 'Hotel Supplies',
-            'code' => 'HS',
-            'is_rate_in_percentage' => true,
-            'rate_in_percentage' => 12,
-            'financial_year' => 2022
-        ]);
+        $configs = [
+            [
+                'financia_year_id' => 1,
+                'order' => 1,
+                'code' => 'HS',
+                'name' => 'Hotel Supplies',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => true,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'rate' => 12,
+                'rate_usd' => 0,
+                'active' => true,
+                'taxtype_id' => 2
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 2,
+                'code' => 'NOBN',
+                'name' => 'No of Bed Nights',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => true,
+                'rate_type' => 'fixed',
+                'currency' => 'USD',
+                'rate_usd' => 8,
+                'active' => true,
+                'taxtype_id' => 2
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 3,
+                'code' => 'RS',
+                'name' => 'Restaurant Supplies',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => true,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'rate' => 12,
+                'rate_usd' => 0,
+                'active' => true,
+                'taxtype_id' => 3
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 4,
+                'code' => 'TOS',
+                'name' => 'Tour Operation Services',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => true,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'rate' => 12,
+                'rate_usd' => 1,
+                'active' => true,
+                'taxtype_id' => 4
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 5,
+                'code' => 'OS',
+                'name' => 'Other Supplies',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => false,
+                'rate_type' => 'percentage',
+                'rate' => 12,
+                'currency' => 'TZS',
+                'active' => true,
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 6,
+                'code' => 'LP',
+                'name' => 'Local Purchases',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => false,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'active' => true,
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 7,
+                'code' => 'IP',
+                'name' => 'Imports Purchases',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => false,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'active' => true,
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 8,
+                'code' => 'IT',
+                'name' => 'Infrastructure Tax',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => true,
+                'rate_type' => 'fixed',
+                'currency' => 'USD',
+                'rate_usd' => 1,
+                'active' => true,
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 9,
+                'code' => 'TOTAL_HL',
+                'name' => 'Total Levy Amount Due (Hotel Levy)',
+                'row_type' => 'unremovable',
+                'col_type' => 'subtotal',
+                'value_calculated' => true,
+                'formular' => 'HS+NOBN+OS+LP+IP+IT',
+                'active' => true,
+                'taxtype_id' => 2
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 10,
+                'code' => 'TOTAL_RL',
+                'name' => 'Total Levy Amount Due (Restaurant Levy)',
+                'row_type' => 'unremovable',
+                'col_type' => 'subtotal',
+                'value_calculated' => true,
+                'formular' => 'RS+OS+LP+IP',
+                'active' => true,
+                'taxtype_id' => 3
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 11,
+                'code' => 'TOTAL_TOS',
+                'name' => 'Total Levy Amount Due (Tour Operating Levy)',
+                'row_type' => 'unremovable',
+                'col_type' => 'subtotal',
+                'value_calculated' => true,
+                'formular' => 'TOS+OS+LP+IP',
+                'active' => true,
+                'taxtype_id' => 4
+            ],
+        ];
 
-        HotelLevyConfig::create([
-            'name' => 'No of Bed Nights',
-            'code' => 'NOB',
-            'is_rate_in_percentage' => false,
-            'rate_in_amount' => 8,
-            'financial_year' => 2022
-        ]);
-
-        HotelLevyConfig::create([
-            'name' => 'Restaurant Supplies',
-            'code' => 'RS',
-            'is_rate_in_percentage' => true,
-            'rate_in_percentage' => 12,
-            'financial_year' => 2022
-        ]);
-
-        HotelLevyConfig::create([
-            'name' => 'Other Supplies',
-            'code' => 'OS',
-            'is_rate_in_percentage' => true,
-            'rate_in_percentage' => 12,
-            'financial_year' => 2022
-        ]);
-
-        HotelLevyConfig::create([
-            'name' => 'Tour Operation Services',
-            'code' => 'TOS',
-            'is_rate_in_percentage' => true,
-            'rate_in_percentage' => 12,
-            'financial_year' => 2022
-        ]);
-
-        HotelLevyConfig::create([
-            'name' => 'Local Purchases',
-            'code' => 'LP',
-            'is_rate_in_percentage' => false,
-            'financial_year' => 2022
-        ]);
-
-        HotelLevyConfig::create([
-            'name' => 'Imports Purchases',
-            'code' => 'IP',
-            'is_rate_in_percentage' => false,
-            'financial_year' => 2022
-        ]);
-
-        HotelLevyConfig::create([
-            'name' => 'Infrastructure Tax',
-            'code' => 'IT',
-            'is_rate_in_percentage' => false,
-            'rate_in_amount' => 8,
-            'financial_year' => 2022
-        ]);
+        foreach ($configs as $config) {
+            HotelLevyConfig::updateOrCreate($config);
+        }
     }
 }

@@ -15,13 +15,24 @@ class CreateHotelLevyConfigsTable extends Migration
     {
         Schema::create('hotel_levy_configs', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->unsignedBigInteger('financia_year_id');
+            $table->integer('order')->default(0);
             $table->string('code');
-            $table->boolean('is_rate_in_percentage');
-            $table->decimal('rate_in_percentage')->unsigned()->default(0);
-            $table->decimal('rate_in_amount')->unsigned()->default(0);
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->string('financial_year');
+            $table->string('name');
+            $table->unsignedBigInteger('taxtype_id')->nullable();
+            $table->enum('row_type',['dynamic', 'unremovable'])->default('dynamic');
+            $table->boolean('value_calculated')->default(false);
+            $table->enum('col_type',['total', 'subtotal','normal'])->default('normal');
+            $table->boolean('rate_applicable')->default(true);
+            $table->enum('rate_type', ['percentage', 'fixed'])->nullable();
+            $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
+            $table->decimal('rate')->unsigned()->default(0);
+            $table->decimal('rate_usd')->nullable();
+            $table->string('formular')->nullable();
+            $table->boolean('active')->default(false);
+
+            $table->foreign('taxtype_id')->references('id')->on('tax_types');
+
             $table->timestamps();
         });
     }
