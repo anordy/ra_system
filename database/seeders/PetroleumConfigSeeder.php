@@ -86,6 +86,21 @@ class PetroleumConfigSeeder extends Seeder
                 'formular' => 'MSP+GO+IK+JET',
                 'active' => true,
             ],
+            [
+                'financia_year_id' => 1,
+                'order' => 6,
+                'code' => 'JET',
+                'name' => 'Jet A-1',
+                'row_type' => 'dynamic',
+                'value_calculated' => false,
+                'col_type' => 'normal',
+                'rate_applicable' => true,
+                'rate_type' => 'fixed',
+                'currency' => 'USD',
+                'rate' => 0,
+                'rate_usd' => 1,
+                'active' => true,
+            ],
         ];
 
         foreach ($configs as $config) {
