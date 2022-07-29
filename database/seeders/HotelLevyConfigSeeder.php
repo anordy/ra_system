@@ -168,6 +168,56 @@ class HotelLevyConfigSeeder extends Seeder
                 'active' => true,
                 'taxtype_id' => 4
             ],
+            [
+                'financia_year_id' => 1,
+                'order' => 12,
+                'code' => 'TOTAL_PAX',
+                'name' => 'Total Pax',
+                'row_type' => 'unremovable',
+                'col_type' => 'hotel_top',
+                'active' => true,
+                'taxtype_id' => 2
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 13,
+                'code' => 'SINGLE_ROOM',
+                'name' => 'Single',
+                'row_type' => 'unremovable',
+                'col_type' => 'hotel_bottom',
+                'active' => true,
+                'taxtype_id' => 2
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 14,
+                'code' => 'DOUBLE_ROOM',
+                'name' => 'Double',
+                'row_type' => 'unremovable',
+                'col_type' => 'hotel_bottom',
+                'active' => true,
+                'taxtype_id' => 2
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 15,
+                'code' => 'TRIPPLE_ROOM',
+                'name' => 'Tripple',
+                'row_type' => 'unremovable',
+                'col_type' => 'hotel_bottom',
+                'active' => true,
+                'taxtype_id' => 2
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 16,
+                'code' => 'OTHER_ROOM',
+                'name' => 'Other',
+                'row_type' => 'unremovable',
+                'col_type' => 'hotel_bottom',
+                'active' => true,
+                'taxtype_id' => 2
+            ],
         ];
 
         foreach ($configs as $config) {

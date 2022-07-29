@@ -22,7 +22,7 @@ class CreateHotelLevyConfigsTable extends Migration
             $table->unsignedBigInteger('taxtype_id')->nullable();
             $table->enum('row_type',['dynamic', 'unremovable'])->default('dynamic');
             $table->boolean('value_calculated')->default(false);
-            $table->enum('col_type',['total', 'subtotal','normal'])->default('normal');
+            $table->enum('col_type',['total', 'subtotal','normal', 'hotel_top', 'hotel_bottom'])->default('normal');
             $table->boolean('rate_applicable')->default(true);
             $table->enum('rate_type', ['percentage', 'fixed'])->nullable();
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
