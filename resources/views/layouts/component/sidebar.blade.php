@@ -98,6 +98,7 @@
                 </li>
             </ul>
         </li>
+
         @can('withholding_agents_view')
         <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
             <a href="#withholdingAgentsMenu" data-toggle="collapse" aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}" class="dropdown-toggle">Withholding Agents</a>
