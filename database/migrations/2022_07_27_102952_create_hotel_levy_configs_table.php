@@ -21,6 +21,7 @@ class CreateHotelLevyConfigsTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('taxtype_id')->nullable();
             $table->enum('row_type',['dynamic', 'unremovable'])->default('dynamic');
+            $table->enum('heading_type',['supplies', 'purchases'])->nullable();
             $table->boolean('value_calculated')->default(false);
             $table->enum('col_type',['total', 'subtotal','normal', 'hotel_top', 'hotel_bottom'])->default('normal');
             $table->boolean('rate_applicable')->default(true);

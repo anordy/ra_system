@@ -29,7 +29,8 @@ class CreateHotelLevyReturnsTable extends Migration
             $table->integer('no_of_bed_nights')->nullable();
 
 
-
+            // 
+            
 
 
             $table->foreign('business_location_id')->references('id')->on('business_locations');

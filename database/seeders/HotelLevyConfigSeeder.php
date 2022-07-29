@@ -29,7 +29,8 @@ class HotelLevyConfigSeeder extends Seeder
                 'rate' => 12,
                 'rate_usd' => 0,
                 'active' => true,
-                'taxtype_id' => 2
+                'taxtype_id' => 2,
+                'heading_type' => 'supplies'
             ],
             [
                 'financia_year_id' => 1,
@@ -44,7 +45,8 @@ class HotelLevyConfigSeeder extends Seeder
                 'currency' => 'USD',
                 'rate_usd' => 8,
                 'active' => true,
-                'taxtype_id' => 2
+                'taxtype_id' => 2,
+                'heading_type' => 'supplies'
             ],
             [
                 'financia_year_id' => 1,
@@ -60,7 +62,8 @@ class HotelLevyConfigSeeder extends Seeder
                 'rate' => 12,
                 'rate_usd' => 0,
                 'active' => true,
-                'taxtype_id' => 3
+                'taxtype_id' => 3,
+                'heading_type' => 'supplies'
             ],
             [
                 'financia_year_id' => 1,
@@ -76,7 +79,8 @@ class HotelLevyConfigSeeder extends Seeder
                 'rate' => 12,
                 'rate_usd' => 1,
                 'active' => true,
-                'taxtype_id' => 4
+                'taxtype_id' => 4,
+                'heading_type' => 'supplies'
             ],
             [
                 'financia_year_id' => 1,
@@ -86,11 +90,12 @@ class HotelLevyConfigSeeder extends Seeder
                 'row_type' => 'dynamic',
                 'value_calculated' => false,
                 'col_type' => 'normal',
-                'rate_applicable' => false,
+                'rate_applicable' => true,
                 'rate_type' => 'percentage',
                 'rate' => 12,
                 'currency' => 'TZS',
                 'active' => true,
+                'heading_type' => 'supplies'
             ],
             [
                 'financia_year_id' => 1,
@@ -104,6 +109,7 @@ class HotelLevyConfigSeeder extends Seeder
                 'rate_type' => 'percentage',
                 'currency' => 'TZS',
                 'active' => true,
+                'heading_type' => 'purchases'
             ],
             [
                 'financia_year_id' => 1,
@@ -117,6 +123,7 @@ class HotelLevyConfigSeeder extends Seeder
                 'rate_type' => 'percentage',
                 'currency' => 'TZS',
                 'active' => true,
+                'heading_type' => 'purchases'
             ],
             [
                 'financia_year_id' => 1,
@@ -131,92 +138,116 @@ class HotelLevyConfigSeeder extends Seeder
                 'currency' => 'USD',
                 'rate_usd' => 1,
                 'active' => true,
+                'heading_type' => 'purchases',
+                'taxtype_id' => 2,
             ],
             [
                 'financia_year_id' => 1,
                 'order' => 9,
-                'code' => 'TOTAL_HL',
-                'name' => 'Total Levy Amount Due (Hotel Levy)',
+                'code' => 'LW',
+                'name' => 'Less withheld tax',
                 'row_type' => 'unremovable',
-                'col_type' => 'subtotal',
-                'value_calculated' => true,
-                'formular' => 'HS+NOBN+OS+LP+IP+IT',
+                'col_type' => 'normal',
+                'value_calculated' => false,
                 'active' => true,
-                'taxtype_id' => 2
+                'taxtype_id' => 2,
+                'rate_applicable' => false,
+                'heading_type' => 'purchases'
             ],
             [
                 'financia_year_id' => 1,
                 'order' => 10,
-                'code' => 'TOTAL_RL',
-                'name' => 'Total Levy Amount Due (Restaurant Levy)',
+                'code' => 'TOTAL_HL',
+                'name' => 'Total Levy Amount Due (Hotel Levy)',
                 'row_type' => 'unremovable',
-                'col_type' => 'subtotal',
+                'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'RS+OS+LP+IP',
+                'formular' => 'HS+NOBN+OS+LP+IP+LW',
                 'active' => true,
-                'taxtype_id' => 3
+                'taxtype_id' => 2,
+                'rate_applicable' => false,
             ],
             [
                 'financia_year_id' => 1,
                 'order' => 11,
-                'code' => 'TOTAL_TOS',
-                'name' => 'Total Levy Amount Due (Tour Operating Levy)',
+                'code' => 'TOTAL_RL',
+                'name' => 'Total Levy Amount Due (Restaurant Levy)',
                 'row_type' => 'unremovable',
-                'col_type' => 'subtotal',
+                'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'TOS+OS+LP+IP',
+                'formular' => 'RS+OS+LP+IP',
                 'active' => true,
-                'taxtype_id' => 4
+                'taxtype_id' => 3,
+                'rate_applicable' => false,
             ],
+
             [
                 'financia_year_id' => 1,
                 'order' => 12,
+                'code' => 'TOTAL_TOS',
+                'name' => 'Total Levy Amount Due (Tour Operating Levy)',
+                'row_type' => 'unremovable',
+                'col_type' => 'total',
+                'value_calculated' => true,
+                'formular' => 'TOS+OS+LP+IP',
+                'active' => true,
+                'taxtype_id' => 4,
+                'rate_applicable' => false,
+            ],
+            [
+                'financia_year_id' => 1,
+                'order' => 13,
                 'code' => 'TOTAL_PAX',
                 'name' => 'Total Pax',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_top',
                 'active' => true,
-                'taxtype_id' => 2
+                'taxtype_id' => 2,
+                'rate_applicable' => false,
             ],
             [
                 'financia_year_id' => 1,
-                'order' => 13,
+                'order' => 14,
                 'code' => 'SINGLE_ROOM',
                 'name' => 'Single',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
-                'taxtype_id' => 2
+                'taxtype_id' => 2,
+                'rate_applicable' => false,
             ],
             [
                 'financia_year_id' => 1,
-                'order' => 14,
+                'order' => 15,
                 'code' => 'DOUBLE_ROOM',
                 'name' => 'Double',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
-                'taxtype_id' => 2
+                'taxtype_id' => 2,
+                'rate_applicable' => false,
             ],
             [
                 'financia_year_id' => 1,
-                'order' => 15,
+                'order' => 16,
                 'code' => 'TRIPPLE_ROOM',
                 'name' => 'Tripple',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
-                'taxtype_id' => 2
+                'taxtype_id' => 2,
+                'rate_applicable' => false,
             ],
             [
                 'financia_year_id' => 1,
-                'order' => 16,
+                'order' => 17,
                 'code' => 'OTHER_ROOM',
                 'name' => 'Other',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
-                'taxtype_id' => 2
+                'taxtype_id' => 2,
+                'rate_applicable' => false,
             ],
         ];
 
