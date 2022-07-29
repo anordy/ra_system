@@ -120,5 +120,18 @@ class UserSeeder extends Seeder
             'status' => true,
             'is_first_login' => false
         ]);
+
+        User::updateOrCreate([
+            'fname' => "Gerald",
+            'lname' => "Njau",
+            'email' => "markgerald262@gmail.com",
+            'phone' => '0745831971',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 1,
+            'status' => true,
+            'is_first_login' => false
+        ]);
     }
 }
