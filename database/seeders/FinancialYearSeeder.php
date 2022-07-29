@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Returns\FinancialYear;
+use App\Models\FinancialYear;
 use Illuminate\Database\Seeder;
 
 class FinancialYearSeeder extends Seeder
@@ -14,9 +14,11 @@ class FinancialYearSeeder extends Seeder
      */
     public function run()
     {
-        FinancialYear::create([
-            'code' => '2022',
-            'name' => "2021/2022"
-        ]);
+        $years = ['2021','2022'];
+        foreach($years as $year){
+            FinancialYear::query()->updateOrCreate([
+                'name'=>$year
+            ]);
+        }
     }
 }
