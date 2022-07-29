@@ -53,9 +53,9 @@ class StampDutyConfigTable extends DataTableComponent
             Column::make("Currency", "currency"),
             Column::make("Rate", "rate"),
             Column::make("Rate (USD)", "rate_usd"),
-            Column::make("Formula", "rate")
+            Column::make("Formula", "formular")
                 ->searchable(),
-            Column::make('Is Active', 'is_active')
+            Column::make('Is Active', 'active')
                 ->format(function ($value){
                     return $value ? 'Yes' : 'No';
                 }),
