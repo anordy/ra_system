@@ -9,6 +9,7 @@ use App\Models\Taxpayer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class BusinessFileController extends Controller
 {
@@ -38,5 +39,17 @@ class BusinessFileController extends Controller
         }
 
         return abort(404);
+    }
+
+    public function getCertificate($businessId){
+        $id = decrypt($businessId);
+        $business = Business::with('taxpayer')->find($id);
+
+        $pdf = PDF::loadView('business.certificate', compact('business'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return $pdf->stream();
+
     }
 }
