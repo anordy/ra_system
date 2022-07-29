@@ -35,6 +35,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'local-admin' => [
+            'driver' => 'local',
+            'root' => storage_path('./../../zrb_admin/storage/app'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

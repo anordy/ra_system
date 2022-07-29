@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Route;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -18,9 +19,8 @@ class NotificationsTable extends DataTableComponent
     public function builder(): Builder
     {
         return Notification::query()
-            ->where('notifiable_id', auth()->id())->latest()
-            ->where('notifiable_type',User::class)
-            ->select();
+            ->where('notifiable_type', get_class(auth()->user()))
+            ->where('notifiable_id', auth()->id());
     }
 
     public function configure(): void
@@ -30,6 +30,7 @@ class NotificationsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+        $this->setAdditionalSelects(['id as new_id']);
 
         $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
@@ -51,44 +52,47 @@ class NotificationsTable extends DataTableComponent
 
         return [
             Column::make('Time', 'created_at')
-            ->sortable()
-            ->searchable()
-            ->format(
-                fn ($value, $row, Column $column) => $row->created_at->diffForHumans()
-            ),
-        Column::make('Subject', 'data')
-        ->sortable()
-        ->searchable()
-        ->format(
-            fn ($value, $row, Column $column) => $row['data']->subject
-        ),
-        Column::make('Message', 'data')
-            ->sortable()
-            ->searchable()
-            ->format(
-                fn ($value, $row, Column $column) => $row['data']->message
-            ),
-        Column::make('Status', 'read_at')
-            ->format(function ($value, $row) {
-                if (isset($value)) {
-                    return <<< HTML
+                ->sortable()
+                ->searchable()
+                ->format(
+                    fn ($value, $row, Column $column) => $row->created_at->diffForHumans()
+                ),
+            Column::make('Subject', 'data')
+                ->sortable()
+                ->searchable()
+                ->format(
+                    fn ($value, $row, Column $column) => $row['data']->subject
+                ),
+            Column::make('Message', 'data')
+                ->sortable()
+                ->searchable()
+                ->format(
+                    fn ($value, $row, Column $column) => $row['data']->message
+                ),
+            Column::make('Status', 'read_at')
+                ->format(function ($value, $row) {
+                    if (isset($value)) {
+                        return <<< HTML
                     <span class="badge badge-success">Read</span>
                 HTML;
-                } else {
-                    return <<< HTML
+                    } else {
+                        return <<< HTML
                     <span class="badge badge-warning">Unread</span>
                 HTML;
-                }
-            })
-            ->html(true),
-        Column::make('Action', 'id')
-            ->format(
-                fn ($value) => <<< HTML
-            <button class="btn btn-info btn-sm" title="View" wire:click="read($value)"><i class="fa fa-eye"></i> </button>
-            <button class="btn btn-danger btn-sm" title="Delete" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-        HTML
-            )
-            ->html(true),
+                    }
+                })
+                ->html(true),
+            Column::make('Action', 'id')
+                ->label(
+                    function ($row) {
+                        $id = "'{$row->new_id}'";
+                        return <<< HTML
+                            <button class="btn btn-info btn-sm" title="View" wire:click="read($id)"><i class="fa fa-eye"></i></button>
+                            <button class="btn btn-danger btn-sm" title="Delete" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
+                        HTML;
+                    }
+                )
+                ->html(true),
         ];
     }
 
@@ -97,7 +101,11 @@ class NotificationsTable extends DataTableComponent
         $notification = Notification::find($id);
         $notification->read_at = Carbon::now();
         $notification->save();
-        return redirect()->route($notification['data']->href);
+        if(Route::has($notification['data']->href)){
+            return redirect()->route($notification['data']->href);
+        }else{
+            return redirect()->back();
+        }
     }
 
     public function delete($id)

@@ -39,19 +39,21 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'role_id' => 1,
-            'status' => true
+            'status' => true,
+            'is_first_login' => false,
         ]);
 
         User::updateOrCreate([
             'fname' => "Gozbert",
             'lname' => "Stanslaus",
-            'email' => "gozbeths@gmail.com",
+            'email' => "Gozbert.Stanslaus@ubx.co.tz",
             'phone' => '0766583354',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'role_id' => 1,
-            'status' => true
+            'status' => true,
+            'is_first_login' => false
         ]);
 
         User::updateOrCreate([
@@ -63,13 +65,14 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'role_id' => 1,
-            'status' => true
+            'status' => true,
+            'is_first_login' => false
         ]);
 
         User::updateOrCreate([
             'fname' => "Meshack",
             'lname' => "Victor",
-            'email' => "meshackf1@gmail.com",
+            'email' => "meshack.fungo@ubx.co.tz",
             'phone' => '0753550590',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
@@ -88,7 +91,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'role_id' => 1,
-            'status' => true
+            'status' => true,
+            'is_first_login' => false
         ]);
 
         User::updateOrCreate([
@@ -100,7 +104,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'role_id' => 1,
-            'status' => true
+            'status' => true,
+            'is_first_login' => false
         ]);
 
         User::updateOrCreate([
@@ -112,7 +117,8 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'role_id' => 1,
-            'status' => true
+            'status' => true,
+            'is_first_login' => false
         ]);
     }
 }

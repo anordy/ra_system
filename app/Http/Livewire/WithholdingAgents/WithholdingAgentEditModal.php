@@ -48,12 +48,9 @@ class WithholdingAgentEditModal extends Component
         'email' => 'required|email',
         'mobile' => 'required|size:10',
         'address' => 'required',
-        'responsible_person_id' => 'required',
         'region_id' => 'required',
         'district_id' => 'required',
         'ward_id' => 'required',
-        'title' => 'required',
-        'position' => 'required',
         'date_of_commencing' => 'required'
     ];
 
@@ -111,6 +108,7 @@ class WithholdingAgentEditModal extends Component
 
         } catch (Exception $e) {
             Log::error($e);
+            dd($e);
             $this->alert('error', 'Something went wrong');
         }
     }

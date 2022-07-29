@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Date;
 use Livewire\Component;
 
-class HeaderNotification extends Component
+class NotificationHeader extends Component
 {
     public $hasUnreadNotifications;
     public $unreadNotifications;
@@ -34,6 +34,6 @@ class HeaderNotification extends Component
 
     public function render()
     {
-        return view('livewire.header-notification');
+        return view('livewire.notification-header');
     }
 }

@@ -1,8 +1,8 @@
 @extends('layouts.login')
 
 @section('content')
-<div class="container h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
+<div class="container">
+    <div class="row d-flex justify-content-center align-items-center pt-5">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">Change Password</div>
@@ -93,7 +93,7 @@
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit"
-                                        x-bind:disabled="!(password.length>=8 && password == password_confirm && password.match(/[!@$%^&*(),.?:{}|<>]/) && password.match(/[A-Z]+/)) && password.match(/[0-9]/)"
+                                        x-bind:disabled="!(password.length >=8 && password == password_confirm && password.match(/[!@$%^&*(),.?:{}|<>]/) && password.match(/[A-Z]+/)) && password.match(/[0-9]/)"
                                         class="btn btn-primary">
                                         {{ __('Submit') }}
                                     </button>

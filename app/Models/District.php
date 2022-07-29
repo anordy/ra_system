@@ -19,4 +19,9 @@ class District extends Model implements Auditable
    {
         return $this->belongsTo(Region::class);
    }
+
+    public function taxagent()
+    {
+        return $this->hasOne(TaxAgent::class);
+    }
 }

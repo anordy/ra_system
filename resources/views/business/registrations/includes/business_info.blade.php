@@ -22,6 +22,7 @@
         </li>
     @endif
 </ul>
+
 <div class="tab-content bg-white border shadow-sm" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div class="row m-2 pt-3">
@@ -31,7 +32,7 @@
                     @if($business->status === \App\Models\BusinessStatus::APPROVED)
                         <span class="font-weight-bold text-success">
                             <i class="bi bi-check-circle-fill mr-1"></i>
-                            Verified
+                            Approved
                         </span>
                     @elseif($business->status === \App\Models\BusinessStatus::REJECTED)
                         <span class="font-weight-bold text-danger">
@@ -107,11 +108,11 @@
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months) TZS</span>
-                <p class="my-1">{{ $business->post_estimated_turnover }}</p>
+                <p class="my-1">{{ fmCurrency($business->post_estimated_turnover) }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Estimated Turnover (Last 12 Months) TZS</span>
-                <p class="my-1">{{ $business->pre_estimated_turnover }}</p>
+                <p class="my-1">{{ fmCurrency($business->pre_estimated_turnover) }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Type of Business Activities</span>
@@ -137,6 +138,30 @@
                     @endforeach
                 </p>
             </div>
+            @if($business->isici)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC I</span>
+                    <p class="my-1">{{ $business->isici->description }}</p>
+                </div>
+            @endif
+            @if($business->isicii)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC II</span>
+                    <p class="my-1">{{ $business->isicii->description }}</p>
+                </div>
+            @endif
+            @if($business->isiciii)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC III</span>
+                    <p class="my-1">{{ $business->isiciii->description }}</p>
+                </div>
+            @endif
+            @if($business->isiciv)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ISIC IV</span>
+                    <p class="my-1">{{ $business->isiciv->description }}</p>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -209,6 +234,10 @@
             @foreach($business->branches as $location)
                 <div class="row m-2">
                     <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Branch Name</span>
+                        <p class="my-1">{{ $location->name }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Nature of Premises</span>
                         <p class="my-1">{{ $location->nature_of_possession }}</p>
                     </div>
@@ -263,15 +292,27 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Branch Status</span>
                         <p class="my-1 font-weight-bold">
-                            @if($location->status === \App\Models\BranchStatus::APPROVED)
+                            @if ($location->status === \App\Models\BranchStatus::APPROVED)
+                            <span class="font-weight-bold text-success">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
-                            @elseif($location->status === \App\Models\BranchStatus::PENDING)
-                                Pending
-                            @elseif($location->status === \App\Models\BranchStatus::CORRECTION)
-                                Requires Corrections
-                            @elseif($location->status === \App\Models\BranchStatus::REJECTED)
+                            </span>
+                        @elseif($location->status === \App\Models\BranchStatus::CORRECTION)
+                            <span class="font-weight-bold text-warning">
+                                <i class="bi bi-pen-fill mr-1"></i>
+                                Requires Correction
+                            </span>
+                        @elseif($location->status === \App\Models\BranchStatus::REJECTED)
+                            <span class="font-weight-bold text-danger">
+                                <i class="bi bi-check-circle-fill mr-1"></i>
                                 Rejected
-                            @endif
+                            </span>
+                        @else
+                            <span class="font-weight-bold text-info">
+                                <i class="bi bi-clock-history mr-1"></i>
+                                Waiting Approval
+                            </span>
+                        @endif
                         </p>
                     </div>
                 </div>
@@ -448,4 +489,51 @@
             </div>
         </div>
     @endif
+</div>
+
+<div class="card shadow-sm my-4 rounded-0">
+    <div class="card-header font-weight-bold bg-white">
+        Business Attachments
+    </div>
+    <div class="card-body">
+        <div class="row">
+            @foreach($business->files as $file)
+                <div class="col-md-4">
+                    <a class="file-item"  target="_blank"  href="{{ route('business.file', encrypt($file->id)) }}">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div style="font-weight: 500;" class="ml-1">
+                            {{ $file->type->name }}
+                            @if($file->type->short_name === \App\Models\BusinessFileType::TIN)
+                                - {{ $file->taxpayer->full_name }} (<b>{{ $file->taxpayer->reference_no }}</b>)
+                            @endif
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+            @foreach($business->partners as $partner)
+                @if($partner->tin)
+                    <div class="col-md-4">
+                        <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;" class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <a target="_blank" href="{{ route('business.tin.file', encrypt($partner->taxpayer_id)) }}" style="font-weight: 500;" class="ml-1">
+                                TIN Certificate - {{ $partner->taxpayer->full_name }} (<b>{{ $partner->taxpayer->reference_no }}</b>)
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+            @if($business->taxpayer->tin_location)
+                <div class="col-md-4">
+                    <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;" class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <a target="_blank" href="{{ route('business.tin.file', encrypt($business->taxpayer_id)) }}" style="font-weight: 500;" class="ml-1">
+                            TIN Certificate - {{ $business->taxpayer->full_name }} (<b>{{ $business->taxpayer->reference_no }}</b>)
+                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
 </div>

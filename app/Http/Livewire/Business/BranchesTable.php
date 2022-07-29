@@ -35,6 +35,11 @@ class BranchesTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
+        $this->setAdditionalSelects(['is_headquarter']);
     }
 
     public function columns(): array
@@ -42,6 +47,14 @@ class BranchesTable extends DataTableComponent
         return [
             Column::make("Business Name", "business.name")
                 ->sortable(),
+            Column::make("Branch Name", "name")
+                ->format(function ($value, $row) {
+                    if ($row->is_headquarter === 1) {
+                        return "Head Quarters";
+                    } else {
+                        return "{$row->name}";
+                    }
+                })->html(true),
             Column::make("Location", "Street")
                 ->searchable(),
             Column::make("Physical Address", "physical_address")

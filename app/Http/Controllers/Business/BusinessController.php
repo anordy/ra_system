@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Business;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Http\Controllers\Controller;
+use App\Models\BusinessTaxTypeChange;
 
 class BusinessController extends Controller
 {
@@ -17,12 +18,29 @@ class BusinessController extends Controller
         return view('business.closure.view');
     }
 
+    public function taxTypeRequests(){
+        return view('business.taxtypes.index');
+    }
+
+    public function viewTaxTypeRequest($id){
+        $taxchange = BusinessTaxTypeChange::with('business')->find(decrypt($id));
+        return view('business.taxtypes.show', ['taxchange' => $taxchange]);
+    }
+
     public function viewDeregistration(){
         return view('business.deregister.view');
     }
 
     public function deregistrations(){
         return view('business.deregister.deregistration-table');
+    }
+
+    public function updatesRequests(){
+        return view('business.updates.requests');
+    }
+
+    public function showRequest($id){
+        return view('business.updates.show', ['updateId' => $id]);
     }
 
     public function approve(){

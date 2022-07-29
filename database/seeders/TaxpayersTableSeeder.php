@@ -18,7 +18,7 @@ class TaxpayersTableSeeder extends Seeder
     public function run()
     {
         Taxpayer::updateOrCreate([
-            'reference_no' => '556677',
+            'reference_no' => 'ZRB556677',
             'first_name' => 'John',
             'middle_name' => 'Tim',
             'last_name' => 'Doe',
@@ -41,7 +41,7 @@ class TaxpayersTableSeeder extends Seeder
         ]);
 
         $taxpayer = Taxpayer::create([
-            'reference_no' => '556688',
+            'reference_no' => 'ZRB556688',
             'first_name' => 'Jane',
             'middle_name' => 'Middle',
             'last_name' => 'Doe',
@@ -63,15 +63,5 @@ class TaxpayersTableSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        TaxAgent::create([
-            'tin_no' => 123123,
-            'plot_no' => 123123,
-            'block' => 'Block A',
-            'town' => 'Unguja',
-            'region' => 'Unguja',
-            'reference_no' => 'ZRB909090',
-            'status' => 'drafting',
-            'taxpayer_id' => $taxpayer->id
-        ]);
     }
 }

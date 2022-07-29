@@ -12,6 +12,9 @@
 */
 
 use App\Http\Controllers\Business\BranchController;
+use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -39,16 +42,17 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ExciseDutyController;
+use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
 use App\Http\Controllers\VatReturn\VatReturnController;
 use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
 
+
 Auth::routes();
 
-Route::get('/oy',function(){
+Route::get('/oy', function () {
     return view('auth.passwords.reset');
 });
 
@@ -58,22 +62,23 @@ Route::get('/workflow', [WorkflowerTestController::class, 'index']);
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
 Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
-Route::get('captcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
+Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
 Route::get('password/change/{user}', [ChangePasswordController::class, 'index'])->name('password.change');
 Route::post('password/save-changed', [ChangePasswordController::class, 'updatePassword'])->name('password.save-changed');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
-    Route::get('/notifications', [NotificationController::class,'index'])->name('notifications');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
 
-    Route::prefix('settings')->name('settings.')->group(function(){
+    Route::prefix('settings')->name('settings.')->group(function () {
         Route::resource('/users', UserController::class);
         Route::resource('/roles', RoleController::class);
         Route::resource('/country', CountryController::class);
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
         Route::resource('/ward', WardController::class);
+        Route::resource('/education-level', EducationLevelController::class);
         Route::resource('/banks', BankController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
         Route::resource('/taxtypes', TaxTypeController::class);
@@ -81,48 +86,67 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic2', ISIC2Controller::class);
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
+        Route::resource('/business-files', BusinessFileController::class);
     });
 
-    Route::prefix('system')->name('system.')->group(function (){
-        Route::resource('audits', AuditController::class); 
-        Route::resource('workflow', WorkflowController::class); 
+    Route::prefix('system')->name('system.')->group(function () {
+        Route::resource('audits', AuditController::class);
+        Route::resource('workflow', WorkflowController::class);
     });
 
 
-    Route::prefix('taxpayers')->as('taxpayers.')->group(function (){
+    Route::prefix('taxpayers')->as('taxpayers.')->group(function () {
         Route::resource('/registrations', RegistrationsController::class); // KYC
-        Route::get('/enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
-        Route::get('/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
+        Route::get('registrations/enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
+        Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
+        Route::resource('taxpayer', TaxpayersController::class);
     });
     Route::resource('taxpayers', TaxpayersController::class);
 
-    Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function (){
+    Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
         Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
         Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
         Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
+        Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
+
     });
 
-    Route::prefix('business')->as('business.')->group(function (){
+    Route::prefix('business')->as('business.')->group(function () {
         Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
         Route::get('/closure/{id}', [BusinessController::class, 'viewClosure'])->name('viewClosure');
         Route::get('/deregistration/{id}', [BusinessController::class, 'viewDeregistration'])->name('viewDeregistration');
         Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
+        Route::get('/change-taxtype', [BusinessController::class, 'taxTypeRequests'])->name('taxTypeRequests');
+        Route::get('/change-taxtype/{id}', [BusinessController::class, 'viewTaxTypeRequest'])->name('viewTaxTypeRequest');
 
         Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
         Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
+
+        Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
+        Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
+        Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
+        Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
+        Route::get('/business-certificate/{business}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
     });
 
-	Route::name('taxagents.')->prefix('taxagents')->group(function (){
-		Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
-		Route::get('/request-show/{id}', [TaxAgentController::class, 'showAgentRequest'])->name('request-show');
-		Route::get('/active', [TaxAgentController::class, 'activeAgents'])->name('active');
-		Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
-		Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
-		Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
-		Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
+    Route::name('taxagents.')->prefix('taxagents')->group(function () {
+        Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
+        Route::get('/request-show/{id}', [TaxAgentController::class, 'showAgentRequest'])->name('request-show');
+        Route::get('/active', [TaxAgentController::class, 'activeAgents'])->name('active');
+        Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
+        Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
+        Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
+        Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
+        Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
+    });
 
+    Route::name('returns.')->prefix('e-filling')->group(function () {
+        Route::resource('/petroleum', PetroleumReturnController::class);
+    });
+
+    Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
 	});
 
 	Route::name('vat-return.')->prefix('vat-return')->group(function (){
