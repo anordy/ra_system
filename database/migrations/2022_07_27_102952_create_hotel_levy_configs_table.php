@@ -18,8 +18,8 @@ class CreateHotelLevyConfigsTable extends Migration
             $table->string('name');
             $table->string('code');
             $table->boolean('is_rate_in_percentage');
-            $table->float('rate_in_percentage')->nullable();
-            $table->float('rate_in_amount')->nullable();
+            $table->decimal('rate_in_percentage')->unsigned()->default(0);
+            $table->decimal('rate_in_amount')->unsigned()->default(0);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->string('financial_year');
             $table->timestamps();

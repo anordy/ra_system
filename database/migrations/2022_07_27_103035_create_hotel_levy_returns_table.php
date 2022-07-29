@@ -16,29 +16,29 @@ class CreateHotelLevyReturnsTable extends Migration
         Schema::create('hotel_levy_returns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_location_id');
-            $table->unsignedBigInteger('submitted_by');
+            $table->unsignedBigInteger('business_id');
+
+            $table->string('filled_type');
+            $table->unsignedBigInteger('filled_id');
 
             $table->integer('total_pax')->nullable();
-            $table->decimal('hotel_supplies')->nullable();
-            $table->decimal('no_of_bed_nights')->nullable();
-            $table->decimal('restaurant_supplies')->nullable();
-            $table->decimal('tour_operation_services')->nullable();
-            $table->decimal('other_supplies')->nullable();
+            $table->longText('hotel_supplies')->nullable();
+            $table->longText('no_of_bed_nights')->nullable();
+            $table->longText('restaurant_supplies')->nullable();
+            $table->longText('tour_operation_services')->nullable();
+            $table->longText('other_supplies')->nullable();
 
-            $table->decimal('local_purchases')->nullable();
-            $table->decimal('import_purchases')->nullable();
-            $table->decimal('infrastructure_tax')->nullable();
-            $table->decimal('total_levy_amount_due')->nullable();
+            $table->longText('local_purchases')->nullable();
+            $table->longText('import_purchases')->nullable();
+            $table->longText('infrastructure_tax')->nullable();
+            $table->longText('total_levy_amount_due')->nullable();
             $table->decimal('rate_of_charge_per_single_room')->nullable();
             $table->decimal('rate_of_charge_per_double_room')->nullable();
             $table->decimal('rate_of_charge_per_tripple_room')->nullable();
             $table->decimal('rate_of_charge_per_other_room')->nullable();
 
-            $table->decimal('subtotal');
-            $table->decimal('total');
-
             $table->foreign('business_location_id')->references('id')->on('business_locations');
-            $table->foreign('submitted_by')->references('id')->on('taxpayers');
+            $table->foreign('business_id')->references('id')->on('businesses');
             $table->timestamps();
         });
     }
