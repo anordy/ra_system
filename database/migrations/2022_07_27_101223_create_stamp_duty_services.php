@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStampDutyServicesTable extends Migration
+class CreateStampDutyServices extends Migration
 {
     /**
      * Run the migrations.
@@ -15,13 +15,15 @@ class CreateStampDutyServicesTable extends Migration
     {
         Schema::create('stamp_duty_services', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('description');
-            $table->enum('rate_type', ['fixed', 'percent'])->default('fixed');
+            $table->unsignedBigInteger('financial_year_id');
+            $table->unsignedBigInteger('financial_month_id');
+            $table->string('name');
+            $table->string('code');
+            $table->enum('rate_type', ['fixed', 'percent'])->default('percent');
             $table->decimal('rate', 30, 3);
-            $table->decimal('max', 30, 3)->nullable();
-            $table->decimal('min', 30, 3)->nullable();
-            $table->string('liable_to')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->string('status')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

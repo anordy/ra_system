@@ -136,6 +136,9 @@
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.business-files.index') }}">Business Files</a>
                 </li>
+                <li class="{{ request()->is('settings/stamp-duty*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.stamp-duty') }}">Stamp Duty</a>
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
