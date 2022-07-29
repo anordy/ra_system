@@ -43,6 +43,9 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowBusinessTaxTypeChangeSeeder::class);
         $this->call(EducationLevelSeeder::class);
         $this->call(HotelLevyConfigSeeder::class);
+        $this->call(PetroleumConfigSeeder::class);
+        $this->call(FinancialYearSeeder::class);
+        $this->call(ReturnMonthsSeeder::class);
         $this->call(ISIC1Seeder::class);
         $this->call(ISIC2Seeder::class);
         $this->call(ISIC3Seeder::class);

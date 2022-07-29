@@ -27,8 +27,8 @@ class UserEditModal extends Component
     protected function rules()
     {
         return [
-            'fname' => 'required|min:2',
-            'lname' => 'required|min:2',
+            'fname' => 'required|min:2|alpha',
+            'lname' => 'required|min:2|alpha',
             'email' => 'required|unique:users,email,'.$this->user->id.',id',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
