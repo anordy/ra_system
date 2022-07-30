@@ -77,6 +77,7 @@ class StampDutyConfigSeeder extends Seeder
                 'value_calculated' => false,
                 'col_type' => 'normal',
                 'rate_applicable' => false,
+                'is_summable' => false,
                 'active' => true,
             ],
             [
@@ -88,10 +89,8 @@ class StampDutyConfigSeeder extends Seeder
                 'value_calculated' => false,
                 'col_type' => 'normal',
                 'rate_applicable' => false,
-                'rate_type' => 'percentage',
                 'currency' => 'TZS',
-                'rate' => 0.02,
-                'rate_usd' => 0,
+                'is_summable' => false,
                 'active' => true,
             ],
             [
@@ -99,10 +98,11 @@ class StampDutyConfigSeeder extends Seeder
                 'order' => 7,
                 'code' => 'WITHH',
                 'name' => 'Withheld Tax / Kiasi cha kodi kilichozuiliwa',
-                'row_type' => 'withheld',
+                'row_type' => 'dynamic',
                 'value_calculated' => false,
+                'col_type' => 'normal',
                 'rate_applicable' => false,
-                'col_type' => 'withheld',
+                'currency' => 'TZS',
                 'active' => true,
             ],
             [
