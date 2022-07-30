@@ -22,10 +22,8 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['name' => 'Public Services', 'code'=>'Public_Services']);
         TaxType::updateOrCreate(['name' => 'Excise Duty', 'code'=>'Excise_Duty']);
         TaxType::updateOrCreate(['name' => 'Petroleum Levy', 'code'=>'Petroleum_Levy']);
-        TaxType::updateOrCreate(['name' => 'Airport Service Charge', 'code'=>'Airport_Service_Charge']);
-        TaxType::updateOrCreate(['name' => 'Airport Safety Fee', 'code'=>'Airport_Safety_Fee']);
-        TaxType::updateOrCreate(['name' => 'Sea Port Service Charge', 'code'=>'Sea_Port_Service_Charge']);
-        TaxType::updateOrCreate(['name' => 'Sea Port Transport Charges', 'code'=>'Sea_Port_Transport_Charges']);
+        TaxType::updateOrCreate(['name' => 'Airport Service & Safety Fee', 'code'=>'Airport_Service_Safety_fee']);
+        TaxType::updateOrCreate(['name' => 'Sea Port Service & Transport Charge', 'code'=>'Sea_Service_Transport_Charge']);
         TaxType::updateOrCreate(['name' => 'Tax Consultant Licences', 'code'=>'Tax_Consultant_Licences']);
     }
 }

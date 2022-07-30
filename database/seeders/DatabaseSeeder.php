@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EducationLevelSeeder::class);
         $this->call(HotelLevyConfigSeeder::class);
         $this->call(PetroleumConfigSeeder::class);
+        $this->call(PortConfigSeeder::class);
         $this->call(FinancialYearSeeder::class);
         $this->call(ReturnMonthsSeeder::class);
         $this->call(ISIC1Seeder::class);
