@@ -24,6 +24,7 @@ class CreatePortReturnsTable extends Migration
             $table->decimal('infrastructure', 40, 2);
             $table->decimal('infrastructure_znz_znz', 40, 2);
             $table->decimal('infrastructure_znz_tm', 40, 2);
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });
     }

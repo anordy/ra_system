@@ -18,8 +18,9 @@ class CreatePortReturnItemsTable extends Migration
             $table->unsignedBigInteger('port_return_id');
             $table->unsignedBigInteger('port_return_config_id');
             $table->decimal('input_amount', 40, 2);
-            $table->decimal('vat_amount', 40, 2);
+            $table->decimal('port_amount', 40, 2);
             $table->timestamps();
+
         });
     }
 
