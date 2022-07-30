@@ -46,6 +46,8 @@ use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
+use App\Http\Controllers\VatReturn\VatReturnController;
+use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
 
 
 Auth::routes();
@@ -99,6 +101,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
         Route::resource('taxpayer', TaxpayersController::class);
     });
+    Route::resource('taxpayers', TaxpayersController::class);
 
     Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
         Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');

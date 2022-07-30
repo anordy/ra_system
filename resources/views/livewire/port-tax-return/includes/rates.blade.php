@@ -1,0 +1,1 @@
+<p><strong>{{$row->portTaxCategory->rate_sign}}</strong> <span> {{ $row->rate}}</span></p>
