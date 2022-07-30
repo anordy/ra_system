@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Settings\HotelLevyReturns;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Returns\HotelReturnConfig;
+use App\Models\Returns\HotelReturns\HotelReturnConfig;
 
 class HotelLevyConfigTable extends DataTableComponent
 {

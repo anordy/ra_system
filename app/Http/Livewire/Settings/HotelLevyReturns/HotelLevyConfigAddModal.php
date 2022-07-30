@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Settings\HotelLevyReturns;
 
-use App\Models\Returns\HotelReturnConfig;
+use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
