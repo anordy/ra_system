@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\BFOConfig;
+use App\Models\Returns\BFO\BFOConfig;
 use Illuminate\Database\Seeder;
 
 class BFOConfigSeeder extends Seeder

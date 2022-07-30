@@ -22,8 +22,8 @@ class CreateBFOReturnItemsTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->unsignedBigInteger('bfo_return_id')->references('id')->on('bfo_returns');
-            $table->unsignedBigInteger('bfo_config_id')->references('id')->on('bfo_configs');
+            $table->foreign('bfo_return_id')->references('id')->on('bfo_returns');
+            $table->foreign('bfo_config_id')->references('id')->on('bfo_configs');
         });
     }
 

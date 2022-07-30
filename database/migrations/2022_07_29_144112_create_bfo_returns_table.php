@@ -24,11 +24,11 @@ class CreateBFOReturnsTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->unsignedBigInteger('business_id')->references('id')->on('businesses');
-            $table->unsignedBigInteger('location_id')->references('id')->on('locations');
-            $table->unsignedBigInteger('taxpayer_id')->references('id')->on('taxpayers');
-            $table->unsignedBigInteger('financial_year_id')->references('id')->on('financial_years');
-            $table->unsignedBigInteger('return_month_id')->references('id')->on('return_months');
+            $table->foreign('business_id')->references('id')->on('businesses');
+            $table->foreign('location_id')->references('id')->on('business_locations');
+            $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
+            $table->foreign('financial_year_id')->references('id')->on('financial_years');
+            $table->foreign('return_month_id')->references('id')->on('return_months');
         });
     }
 

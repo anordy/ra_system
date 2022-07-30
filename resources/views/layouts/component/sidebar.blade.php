@@ -30,10 +30,10 @@
             <a href="#vat-returnSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('vat-return*') ? 'true' : 'false' }}" class="dropdown-toggle">Vat Return</a>
             <ul class="collapse list-unstyled {{ request()->is('vat-return*') ? 'show' : '' }}" id="vat-returnSubmenu">
                 <li class="{{ request()->is('vat-return/rates') ? 'active': '' }}">
-                    <a href="{{ route('vat-return.rates') }}">Rates Configuration</a>
+                    {{-- <a href="{{ route('vat-return.rates') }}">Rates Configuration</a> --}}
                 </li>
                 <li class="{{ request()->is('vat-return/*') ? 'active': '' }}">
-                    <a href="{{route('vat-return.index')}}">Returns Requests</a>
+                    {{-- <a href="{{route('vat-return.index')}}">Returns Requests</a> --}}
                 </li>
 {{--                <li class="{{ request()->is('vat-return/renew*') ? 'active': '' }}">--}}
 {{--                    <a href="{{route('vat-return.renew')}}">Renewal Requests</a>--}}
@@ -48,7 +48,7 @@
             <a href="#port-tax-returnSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('port-tax-return*') ? 'true' : 'false' }}" class="dropdown-toggle">Port Tax Return</a>
             <ul class="collapse list-unstyled {{ request()->is('port-tax-return*') ? 'show' : '' }}" id="port-tax-returnSubmenu">
                 <li class="{{ request()->is('port-tax-return/rates') ? 'active': '' }}">
-                    <a href="{{ route('port-tax-return.rates') }}">Rates Configuration</a>
+                    {{-- <a href="{{ route('port-tax-return.rates') }}">Rates Configuration</a> --}}
                 </li>
                 {{--                <li class="{{ request()->is('vat-return/active*') ? 'active': '' }}">--}}
                 {{--                    <a href="{{route('vat-return.active')}}">Active Tax Consultants</a>--}}
