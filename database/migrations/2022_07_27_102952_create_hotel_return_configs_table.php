@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHotelLevyConfigsTable extends Migration
+class CreateHotelReturnConfigsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateHotelLevyConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hotel_levy_configs', function (Blueprint $table) {
+        Schema::create('hotel_return_configs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('financia_year_id');
             $table->integer('order')->default(0);
@@ -45,6 +45,6 @@ class CreateHotelLevyConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hotel_levy_configs');
+        Schema::dropIfExists('hotel_return_configs');
     }
 }

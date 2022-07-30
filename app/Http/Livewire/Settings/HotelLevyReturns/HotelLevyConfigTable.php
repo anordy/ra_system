@@ -4,11 +4,11 @@ namespace App\Http\Livewire\Settings\HotelLevyReturns;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\HotelLevyConfig;
+use App\Models\Returns\HotelReturns\HotelReturnConfig;
 
 class HotelLevyConfigTable extends DataTableComponent
 {
-    protected $model = HotelLevyConfig::class;
+    protected $model = HotelReturnConfig::class;
 
     public function mount()
     {
@@ -21,7 +21,7 @@ class HotelLevyConfigTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['rate_in_percentage', 'rate_in_amount']);
+        $this->setAdditionalSelects(['rate', 'rate_usd']);
     }
 
     public function columns(): array
@@ -31,17 +31,17 @@ class HotelLevyConfigTable extends DataTableComponent
                 ->sortable(),
             Column::make("Code", "code")
                 ->searchable(),
-            Column::make("Rate", "is_rate_in_percentage")
+            Column::make("Rate", "rate_type")
                 ->format(function ($value, $row) {
-                    if ($value === 1) {
-                        return $row->rate_in_percentage == null ? 'NULL' : "{$row->rate_in_percentage}%";
+                    if ($value === 'percentage') {
+                        return $row->rate == null ? 'NULL' : "{$row->rate}%";
                     } else {
-                        return "{$row->rate_in_amount} USD";
+                        return "{$row->rate_usd} USD";
                     }
                 })->html(true),
-            Column::make("Status", "status")
+            Column::make("Status", "active")
                 ->searchable(),
-            Column::make("Financial Year", "financial_year")
+            Column::make("Financial Year", "financia_year_id")
                 ->searchable(),
             // Column::make('Status', 'status')->view('business.branches.includes.status'),
             // Column::make('Action', 'id')->view('business.branches.includes.actions'),

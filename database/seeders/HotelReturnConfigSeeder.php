@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\HotelLevyConfig;
+use App\Models\Returns\HotelReturnConfig;
 use Illuminate\Database\Seeder;
 
-class HotelLevyConfigSeeder extends Seeder
+class HotelReturnConfigSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -162,7 +162,7 @@ class HotelLevyConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'HS+NOBN+OS+LP+IP+LW',
+                'formular' => 'HS+NOBN+OS+LP+IP+LW+IT',
                 'active' => true,
                 'taxtype_id' => 2,
                 'rate_applicable' => false,
@@ -209,7 +209,7 @@ class HotelLevyConfigSeeder extends Seeder
                 'financia_year_id' => 1,
                 'order' => 14,
                 'code' => 'SINGLE_ROOM',
-                'name' => 'Single',
+                'name' => 'Charge per Single room',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
@@ -220,7 +220,7 @@ class HotelLevyConfigSeeder extends Seeder
                 'financia_year_id' => 1,
                 'order' => 15,
                 'code' => 'DOUBLE_ROOM',
-                'name' => 'Double',
+                'name' => 'Charge per Double room',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
@@ -231,7 +231,7 @@ class HotelLevyConfigSeeder extends Seeder
                 'financia_year_id' => 1,
                 'order' => 16,
                 'code' => 'TRIPPLE_ROOM',
-                'name' => 'Tripple',
+                'name' => 'Charge per Tripple room',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
@@ -242,7 +242,7 @@ class HotelLevyConfigSeeder extends Seeder
                 'financia_year_id' => 1,
                 'order' => 17,
                 'code' => 'OTHER_ROOM',
-                'name' => 'Other',
+                'name' => 'Charge per Other room',
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
@@ -252,7 +252,7 @@ class HotelLevyConfigSeeder extends Seeder
         ];
 
         foreach ($configs as $config) {
-            HotelLevyConfig::updateOrCreate($config);
+            HotelReturnConfig::updateOrCreate($config);
         }
     }
 }

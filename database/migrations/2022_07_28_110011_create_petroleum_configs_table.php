@@ -21,12 +21,13 @@ class CreatePetroleumConfigsTable extends Migration
             $table->string('name');
             $table->enum('row_type',['dynamic', 'unremovable'])->default('dynamic');
             $table->boolean('value_calculated')->default(false);
-            $table->enum('col_type',['total', 'subtotal','normal'])->default('normal');
+            $table->enum('col_type',['total', 'subtotal', 'normal', 'heading'])->default('normal');
             $table->boolean('rate_applicable')->default(true);
             $table->enum('rate_type', ['percentage', 'fixed'])->nullable();
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->decimal('rate')->unsigned()->default(0);
             $table->decimal('rate_usd')->nullable();
+            $table->string('value_formular')->nullable();
             $table->string('formular')->nullable();
             $table->boolean('active')->default(false);
             $table->timestamps();
