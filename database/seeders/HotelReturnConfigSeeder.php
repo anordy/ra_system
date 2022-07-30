@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Returns\HotelReturnConfig;
+use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use Illuminate\Database\Seeder;
 
 class HotelReturnConfigSeeder extends Seeder
