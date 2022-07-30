@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Settings\HotelLevyReturns;
 
-use App\Models\HotelLevyConfig;
+use App\Models\Returns\HotelReturnConfig;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -43,7 +43,7 @@ class HotelLevyConfigAddModal extends Component
 
         try {
 
-            $hotel_levy_config = HotelLevyConfig::create([
+            $hotel_levy_config = HotelReturnConfig::create([
                 'name' => $this->name,
                 'code' => $this->code,
                 'is_rate_in_percentage' => $this->is_rate_in_percentage,

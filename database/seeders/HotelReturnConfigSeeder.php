@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\HotelLevyConfig;
+use App\Models\Returns\HotelReturnConfig;
 use Illuminate\Database\Seeder;
 
-class HotelLevyConfigSeeder extends Seeder
+class HotelReturnConfigSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -252,7 +252,7 @@ class HotelLevyConfigSeeder extends Seeder
         ];
 
         foreach ($configs as $config) {
-            HotelLevyConfig::updateOrCreate($config);
+            HotelReturnConfig::updateOrCreate($config);
         }
     }
 }

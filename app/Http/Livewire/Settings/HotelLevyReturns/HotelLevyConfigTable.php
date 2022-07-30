@@ -4,11 +4,11 @@ namespace App\Http\Livewire\Settings\HotelLevyReturns;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\HotelLevyConfig;
+use App\Models\Returns\HotelReturnConfig;
 
 class HotelLevyConfigTable extends DataTableComponent
 {
-    protected $model = HotelLevyConfig::class;
+    protected $model = HotelReturnConfig::class;
 
     public function mount()
     {
