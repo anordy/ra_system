@@ -227,7 +227,7 @@ class VatReturnConfigSeeder extends Seeder
                 'vat_service_code'=>'PUR',
                 'row_type' => 'unremovable',
                 'value_calculated' => false,
-                'col_type' => 'normal',
+                'col_type' => 'external',
                 'currency' => 'TZS',
                 'active' => true,
             ],
