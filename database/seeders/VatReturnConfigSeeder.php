@@ -166,6 +166,30 @@ class VatReturnConfigSeeder extends Seeder
             [
                 'financial_year_id' => 1,
                 'order' => 10,
+                'code' => 'SA',
+                'name' => 'Schedule A',
+                'vat_service_code'=>'PUR',
+                'row_type' => 'dynamic',
+                'col_type' => 'exemptedMethodTwo',
+                'value_calculated' => false,
+                'active' => true,
+            ],
+
+            [
+                'financial_year_id' => 1,
+                'order' => 11,
+                'code' => 'SC',
+                'name' => 'Schedule C',
+                'vat_service_code'=>'PUR',
+                'row_type' => 'dynamic',
+                'col_type' => 'exemptedMethodTwo',
+                'value_calculated' => false,
+                'active' => true,
+            ],
+
+            [
+                'financial_year_id' => 1,
+                'order' => 12,
                 'code' => 'SRI',
                 'name' => 'Standard Purchases from  T/Mainland',
                 'vat_service_code'=>'PUR',
@@ -182,7 +206,7 @@ class VatReturnConfigSeeder extends Seeder
 
             [
                 'financial_year_id' => 1,
-                'order' => 11,
+                'order' => 13,
                 'code' => 'TIT',
                 'name' => 'Total Input Tax',
                 'vat_service_code'=>'PUR',
@@ -195,20 +219,20 @@ class VatReturnConfigSeeder extends Seeder
 
             [
                 'financial_year_id' => 1,
-                'order' => 12,
+                'order' => 14,
                 'code' => 'TVPR',
                 'name' => 'Total Vat Payable/Refundable',
                 'vat_service_code'=>'PUR',
                 'row_type' => 'unremovable',
                 'col_type' => 'subtotal',
                 'value_calculated' => true,
-                'formular' => 'SRS-SLP+SRI',
+                'formular' => 'SRS-SLP-SRI',
                 'active' => true,
             ],
 
             [
                 'financial_year_id' => 1,
-                'order' => 13,
+                'order' => 15,
                 'code' => 'VWH',
                 'name' => 'Vat Withheld',
                 'vat_service_code'=>'PUR',
@@ -221,7 +245,7 @@ class VatReturnConfigSeeder extends Seeder
 
             [
                 'financial_year_id' => 1,
-                'order' => 14,
+                'order' => 16,
                 'code' => 'CBF',
                 'name' => 'Vat Credit Brought Forward',
                 'vat_service_code'=>'PUR',
@@ -235,7 +259,7 @@ class VatReturnConfigSeeder extends Seeder
 
             [
                 'financial_year_id' => 1,
-                'order' => 15,
+                'order' => 17,
                 'code' => 'IT',
                 'name' => 'Infrastructure Tax',
                 'vat_service_code'=>'PUR',
@@ -252,14 +276,14 @@ class VatReturnConfigSeeder extends Seeder
 
             [
                 'financial_year_id' => 1,
-                'order' => 16,
+                'order' => 18,
                 'code' => 'VAD',
                 'name' => 'Total Vat Amount Due',
                 'vat_service_code'=>'PUR',
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'SRS-SLP+SRI-VWH',
+                'formular' => 'SRS-SLP-SRI-VWH',
                 'active' => true,
             ],
 
