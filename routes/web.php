@@ -14,6 +14,7 @@
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -42,7 +43,6 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ExciseDutyController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
@@ -86,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
+        Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
     });
 
     Route::prefix('system')->name('system.')->group(function () {

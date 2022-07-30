@@ -11,6 +11,9 @@ class TaxType extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
+    public const STAMP_DUTY = 'stamp-duty';
+    public const LUMPSUM_PAYMENT = 'lumpsum-payment';
+
     protected $fillable = [
         'name'
     ];
