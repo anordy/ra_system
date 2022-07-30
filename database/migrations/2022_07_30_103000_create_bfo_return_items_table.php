@@ -17,13 +17,13 @@ class CreateBFOReturnItemsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('bfo_return_id');
             $table->unsignedBigInteger('bfo_config_id');
-            $table->decimal('input_value', 40,2); 
-            $table->decimal('vat', 40,2);
+            $table->decimal('input_amount', 40,2); 
+            $table->decimal('vat_amount', 40,2);
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('bfo_return_id')->references('id')->on('bfo_returns');
-            $table->foreign('bfo_config_id')->references('id')->on('bfo_configs');
+            // $table->foreign('bfo_return_id')->references('id')->on('bfo_returns');
+            // $table->foreign('bfo_config_id')->references('id')->on('bfo_configs');
         });
     }
 

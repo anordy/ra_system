@@ -19,7 +19,7 @@ class CreateVatReturnItemsTable extends Migration
             $table->unsignedBigInteger('vat_returns_configs_id');
             $table->decimal('input_amount',40,2);
             $table->decimal('vat_amount',40,2);
-            $table->unsignedBigInteger('vat_amount');
+            // $table->unsignedBigInteger('vat_amount');
             $table->timestamps();
         });
     }

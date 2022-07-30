@@ -17,18 +17,18 @@ class CreateBFOReturnsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('return_month_id');
             $table->decimal('total', 40,2);
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('business_id')->references('id')->on('businesses');
-            $table->foreign('location_id')->references('id')->on('business_locations');
-            $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
-            $table->foreign('financial_year_id')->references('id')->on('financial_years');
-            $table->foreign('return_month_id')->references('id')->on('return_months');
+            // $table->foreign('business_id')->references('id')->on('businesses');
+            // $table->foreign('location_id')->references('id')->on('business_locations');
+            // $table->foreign('filed_by_id')->references('id')->on('taxpayers');
+            // $table->foreign('financial_year_id')->references('id')->on('financial_years');
+            // $table->foreign('return_month_id')->references('id')->on('return_months');
         });
     }
 
@@ -39,6 +39,6 @@ class CreateBFOReturnsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('b_f_o_returns');
+        Schema::dropIfExists('bfo_returns');
     }
 }
