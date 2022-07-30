@@ -11,4 +11,8 @@ class HotelLevyConfig extends Model implements Auditable
     use HasFactory, \OwenIt\Auditing\Auditable;
 
     public $guarded = [];
+
+    public function taxtype() {
+        return $this->belongsTo(TaxType::class, 'taxtype_id');
+    }
 }

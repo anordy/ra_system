@@ -20,21 +20,17 @@ class CreateHotelLevyReturnsTable extends Migration
 
             $table->string('filled_type');
             $table->unsignedBigInteger('filled_id');
+            $table->unsignedBigInteger('taxtype_id');
+            $table->unsignedBigInteger('financial_year_id');
 
-            $table->integer('total_pax')->nullable();
-            $table->decimal('rate_of_charge_per_single_room')->nullable();
-            $table->decimal('rate_of_charge_per_double_room')->nullable();
-            $table->decimal('rate_of_charge_per_tripple_room')->nullable();
-            $table->decimal('rate_of_charge_per_other_room')->nullable();
-            $table->integer('no_of_bed_nights')->nullable();
+            $table->int('edited_count')->default(0);
 
-
-            // 
-            
-
+            $table->decimal('total', 40, 12);
+            $table->decimal('infrastructure_tax');
 
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
+            $table->foreign('financial_year_id')->references('id')->on('financial_year');
             $table->timestamps();
         });
     }

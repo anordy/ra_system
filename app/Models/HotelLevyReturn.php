@@ -12,4 +12,20 @@ class HotelLevyReturn extends Model implements Auditable
 
     public $guarded = [];
 
+    public function hotelLevyConfigReturns(){
+        return $this->hasMany(HotelConfigReturn::class, 'return_id');
+    }
+
+    public function business() {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
+
+    public function businessLocation() {
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
+    }
+
+    public function taxpayer() {
+        return $this->belongsTo(User::class, 'filled_id');
+    }
+
 }
