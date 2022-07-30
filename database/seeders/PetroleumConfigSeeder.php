@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\PetroleumConfigHead;
-use App\Models\Returns\PetroleumConfig;
 use Illuminate\Database\Seeder;
 
 class PetroleumConfigSeeder extends Seeder

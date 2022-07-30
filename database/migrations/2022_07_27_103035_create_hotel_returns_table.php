@@ -30,7 +30,6 @@ class CreateHotelReturnsTable extends Migration
 
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
-            $table->foreign('financial_year_id')->references('id')->on('financial_year');
             $table->timestamps();
         });
     }
