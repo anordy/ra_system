@@ -147,19 +147,4 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
-	});
-
-	Route::name('vat-return.')->prefix('vat-return')->group(function (){
-		Route::get('/', [VatReturnController::class, 'index'])->name('index');
-        Route::get('/requests', [VatReturnController::class, 'requests'])->name('requests');
-        Route::get('/requests/show/{id}', [VatReturnController::class, 'show'])->name('requests-show');
-		Route::get('/rates', [VatReturnController::class, 'rates'])->name('rates');
-
-	});
-	Route::name('port-tax-return.')->prefix('port-tax-return')->group(function (){
-		Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
-
-		Route::get('/rates', [PortTaxReturnController::class, 'rates'])->name('rates');
-
-	});
 });

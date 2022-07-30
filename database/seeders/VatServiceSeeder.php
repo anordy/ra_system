@@ -15,13 +15,13 @@ class VatServiceSeeder extends Seeder
     public function run()
     {
         VatService::query()->updateOrCreate([
-            'name' => 'Supplies of goods & services',
-            'code' => 'VS100'
+            'name' => 'Supplies of Goods & Services',
+            'code' => 'SUP'
         ]);
 
         VatService::query()->updateOrCreate([
-            'name' => 'Supplies of goods & services',
-            'code' => 'VS200'
+            'name' => 'Purchases(Inputs)',
+            'code' => 'PUR'
         ]);
     }
 }

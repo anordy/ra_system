@@ -17,7 +17,7 @@ class VatCategorySeeder extends Seeder
     {
         $supplies = array("Standard rate supplies"=>"SRS", "Zero rated supplies"=>"ZRS", "Exempt supplies"=>"ES", "Special relief"=>"SR");
 
-        $serivices= VatService::query()->where('code', 'VS100')->first();
+        $serivices= VatService::query()->where('code', 'SUP')->first();
         foreach ($supplies as $x=> $name) {
             VatCategory::query()->updateOrCreate([
                 'name' => $x,
@@ -30,7 +30,7 @@ class VatCategorySeeder extends Seeder
             "VAT differed purchases"=>"VDP", "Standard local purchases"=>"SLP", "Standard rated imports"=>"SRI", "Infrastructure tax (Electricity)"=>"ITE",
          "Infrastructure tax (Hotel)"=>"ITH");
 
-        $serivices= VatService::query()->where('code', 'VS200')->first();
+        $serivices= VatService::query()->where('code', 'PUR')->first();
         foreach ($purchases as $x=> $name) {
             VatCategory::query()->updateOrCreate([
                 'name' => $x,

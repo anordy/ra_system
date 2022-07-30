@@ -17,7 +17,6 @@ class CreateTaxTypesTable extends Migration
             $table->id();
             $table->string('code');
             $table->string('name');
-            $table->string('code');
             $table->softDeletes();
             $table->timestamps();
         });
