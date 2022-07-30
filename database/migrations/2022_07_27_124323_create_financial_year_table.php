@@ -13,7 +13,7 @@ class CreateFinancialYearTable extends Migration
      */
     public function up()
     {
-        Schema::create('financial_year', function (Blueprint $table) {
+        Schema::create('financial_years', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateFinancialYearTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('financial_year');
+        Schema::dropIfExists('financial_years');
     }
 }

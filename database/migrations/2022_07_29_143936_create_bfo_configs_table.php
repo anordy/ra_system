@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePetroleumReturnsTable extends Migration
+class CreateBFOConfigsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreatePetroleumReturnsTable extends Migration
      */
     public function up()
     {
-        Schema::create('petroleum_returns', function (Blueprint $table) {
+        Schema::create('bfo_configs', function (Blueprint $table) {
             $table->id();
-            
             $table->unsignedBigInteger('financia_year_id');
             $table->integer('order')->default(0);
             $table->string('code');
@@ -41,6 +40,6 @@ class CreatePetroleumReturnsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('petroleum_returns');
+        Schema::dropIfExists('bfo_configs');
     }
 }
