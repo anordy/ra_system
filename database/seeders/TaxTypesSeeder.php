@@ -27,5 +27,6 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['name' => 'Sea Port Service Charge', 'code'=>'Sea_Port_Service_Charge']);
         TaxType::updateOrCreate(['name' => 'Sea Port Transport Charges', 'code'=>'Sea_Port_Transport_Charges']);
         TaxType::updateOrCreate(['name' => 'Tax Consultant Licences', 'code'=>'Tax_Consultant_Licences']);
+        TaxType::updateOrCreate(['name' => 'Lumpsum Payments', 'code'=>'lumpsum-payment']);
     }
 }

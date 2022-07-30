@@ -175,15 +175,25 @@ class ApprovalProcessing extends Component
                 $this->validate(
                     [
                         'annual_estimate'  => 'required|integer',
+<<<<<<< Updated upstream
                         'quaters'          => 'required|integer|between:1,12',
+=======
+                        'quaters'          => 'required|integer',
+>>>>>>> Stashed changes
                     ],
                     [
                         'annual_estimate.required'  => 'Annual estimation is required',
                         'annual_estimate.integer'   => 'Please enter the valid Annual Estimate',
                         'quaters.required'          => 'Please enter the valid payment Quaters',
+<<<<<<< Updated upstream
                         'quaters.between'           => 'Please enter Quaters between 1 to 12',
                     ]
                 );
+=======
+                    ]
+                );
+
+>>>>>>> Stashed changes
                 DB::table('lump_sum_payments')->insert([
                     'business_id'       => $business->id,
                     'financial_year_id' => 1,
@@ -192,7 +202,11 @@ class ApprovalProcessing extends Component
                     'created_at'        => Carbon::now(),
                 ]);
             }
+<<<<<<< Updated upstream
         
+=======
+
+>>>>>>> Stashed changes
             foreach ($this->selectedTaxTypes as $type) {
                 DB::table('business_tax_type')->insert([
                     'business_id' => $business->id,
