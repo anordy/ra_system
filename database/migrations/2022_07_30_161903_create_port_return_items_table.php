@@ -15,10 +15,10 @@ class CreatePortReturnItemsTable extends Migration
     {
         Schema::create('port_return_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('port_return_id');
-            $table->unsignedBigInteger('port_return_config_id');
-            $table->decimal('input_amount', 40, 2);
-            $table->decimal('port_amount', 40, 2);
+            $table->unsignedBigInteger('return_id');
+            $table->unsignedBigInteger('config_id');
+            $table->decimal('value', 40, 2);
+            $table->decimal('vat', 40, 2);
             $table->timestamps();
 
         });
