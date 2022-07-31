@@ -15,9 +15,12 @@ class CreateBFOReturnsTable extends Migration
     {
         Schema::create('bfo_returns', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('business_location_id');
+            $table->string('filed_type');
             $table->unsignedBigInteger('filed_by_id');
+            $table->string('currency');
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('return_month_id');
             $table->decimal('total', 40,2);

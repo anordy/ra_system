@@ -22,8 +22,8 @@ class CreateMNOReturnItemsTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('mno_return_id')->references('id')->on('mno_returns');
-            $table->foreign('mno_config_id')->references('id')->on('mno_configs');
+            // $table->foreign('mno_return_id')->references('id')->on('mno_returns');
+            // $table->foreign('mno_config_id')->references('id')->on('mno_configs');
         });
     }
 

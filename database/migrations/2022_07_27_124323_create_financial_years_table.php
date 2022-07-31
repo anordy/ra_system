@@ -16,7 +16,7 @@ class CreateFinancialYearsTable extends Migration
         Schema::create('financial_years', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code');
+            // $table->string('code');
             $table->boolean('active')->default(0);
             $table->timestamps();
         });
