@@ -15,21 +15,17 @@ class CreatePetroleumReturnsTable extends Migration
     {
         Schema::create('petroleum_returns', function (Blueprint $table) {
             $table->id();
-            
-            $table->unsignedBigInteger('financia_year_id');
-            $table->integer('order')->default(0);
-            $table->string('code');
-            $table->string('name');
-            $table->enum('row_type',['dynamic', 'unremovable'])->default('dynamic');
-            $table->boolean('value_calculated')->default(false);
-            $table->enum('col_type',['total', 'subtotal','normal'])->default('normal');
-            $table->boolean('rate_applicable')->default(true);
-            $table->enum('rate_type', ['percentage', 'fixed'])->nullable();
-            $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
-            $table->decimal('rate')->unsigned()->default(0);
-            $table->decimal('rate_usd')->nullable();
-            $table->string('formular')->nullable();
-            $table->boolean('active')->default(false);
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_location_id');
+            $table->string('filled_type');
+            $table->unsignedBigInteger('filled_id');
+            $table->unsignedBigInteger('tax_type_id');
+            $table->unsignedBigInteger('financial_year_id');
+            $table->decimal('total')->default(0);
+            $table->decimal('petroleum_levy')->default(0);
+            $table->decimal('infrastructure_tax')->default(0);
+            $table->decimal('rdf_tax')->default(0);
+            $table->decimal('road_lincence_fee')->default(0);
             $table->timestamps();
         });
     }

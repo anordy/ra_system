@@ -15,7 +15,7 @@
                         <td colspan="3">{{ $config['name'] }}</td>
                         <td>
                             @php
-                                echo $this->totalVatCalculate($config['formular']);
+                                echo $this->totalVatCalculate($config['vat_formular']);
                             @endphp
                         </td>
                     </tr>
@@ -23,9 +23,17 @@
                     <tr>
                         <td>{{ $config['name'] }}</td>
                         <td>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" wire:model="configs.{{ $key }}.value">
-                            </div>
+                            @if ($config['value_calculated'])
+                                @php
+                                    echo $this->totalVatCalculate($config['formular']);
+                                @endphp
+                            @else
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control"
+                                        wire:model="configs.{{ $key }}.value">
+                                </div>
+                            @endif
+
                         </td>
                         <td>
                             @if ($config['rate_type'] == 'fixed')
