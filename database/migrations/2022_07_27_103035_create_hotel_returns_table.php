@@ -22,9 +22,7 @@ class CreateHotelReturnsTable extends Migration
             $table->unsignedBigInteger('filled_id');
             $table->unsignedBigInteger('taxtype_id');
             $table->unsignedBigInteger('financial_year_id');
-
             $table->integer('edited_count')->default(0);
-
             $table->decimal('total', 40, 12);
             $table->decimal('infrastructure_tax')->nullable();
 
