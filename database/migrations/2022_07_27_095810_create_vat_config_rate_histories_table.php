@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaxTypesTable extends Migration
+class CreateVatConfigRateHistoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateTaxTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tax_types', function (Blueprint $table) {
+        Schema::create('vat_config_rate_histories', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->string('name');
-            $table->softDeletes();
+            $table->unsignedBigInteger('vat_config_rates_id');
+            $table->string('rate');
+            $table->string('vat_category_code');
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateTaxTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tax_types');
+        Schema::dropIfExists('vat_config_rate_histories');
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Returns\Vat;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FinancialYear extends Model
+class VatReturnConfig extends Model
 {
     use HasFactory;
-    protected $table = 'financial_years';
+    protected $table = 'vat_return_configs';
     protected $guarded = [];
 }

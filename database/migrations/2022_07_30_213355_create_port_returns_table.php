@@ -24,7 +24,6 @@ class CreatePortReturnsTable extends Migration
             $table->integer('edited_count')->default(0);
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
-            $table->foreign('financial_year_id')->references('id')->on('financial_year');
             $table->string('return_month_id');
             $table->decimal('total_vat_payable_tzs', 40, 2);
             $table->decimal('total_vat_payable_usd', 40, 2);
