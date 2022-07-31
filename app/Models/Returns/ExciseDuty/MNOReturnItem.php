@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Models\Returns;
+namespace App\Models\returns\ExciseDuty;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MNOReturn extends Model
+class MNOReturnItem extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $guarded = [];
+    protected $table = 'mno_return_items';
 }

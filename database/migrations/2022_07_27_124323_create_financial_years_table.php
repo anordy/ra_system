@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFinancialYearTable extends Migration
+class CreateFinancialYearsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,6 +16,8 @@ class CreateFinancialYearTable extends Migration
         Schema::create('financial_years', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('code');
+            $table->boolean('active')->default(0);
             $table->timestamps();
         });
     }
