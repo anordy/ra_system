@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\VatReturn\VatReturn;
 use App\Traits\WorkflowTrait;
 use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -121,5 +122,14 @@ class Business extends Model implements Auditable
 
     public function scopeClosed($query){
         $query->where('status', BusinessStatus::TEMP_CLOSED);
+    }
+
+//    public function portTaxReturn()
+//    {
+//        return $this->hasMany(PortTaxReturn::class);
+//    }
+    public function vatReturn()
+    {
+        return $this->hasMany(VatReturn::class);
     }
 }

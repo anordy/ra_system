@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Returns;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PetroleumReturn extends Model
+class FinancialMonth extends Model
 {
     use HasFactory;
 }
