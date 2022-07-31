@@ -42,6 +42,8 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Returns\HotelLevyReturnController;
+use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
@@ -85,6 +87,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
+
+        Route::name('returns.')->prefix('returns')->group(function(){
+            Route::get('/', [ReturnsController::class, 'index'])->name('index');
+            Route::get('hotel',[HotelLevyReturnController::class,'hotel'])->name('hotel');
+        });
     });
 
     Route::prefix('system')->name('system.')->group(function () {

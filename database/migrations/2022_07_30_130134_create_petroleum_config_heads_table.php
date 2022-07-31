@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFinancialYearsTable extends Migration
+class CreatePetroleumConfigHeadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateFinancialYearsTable extends Migration
      */
     public function up()
     {
-        Schema::create('financial_years', function (Blueprint $table) {
+        Schema::create('petroleum_config_heads', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('petroleum_config_id');
             $table->string('name');
+            $table->string('colspan');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateFinancialYearsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('financial_years');
+        Schema::dropIfExists('petroleum_config_heads');
     }
 }

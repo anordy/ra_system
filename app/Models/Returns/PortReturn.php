@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Returns;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FinancialYear extends Model
+class PortReturn extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+
+     protected $guarded = [];
+
+
 }

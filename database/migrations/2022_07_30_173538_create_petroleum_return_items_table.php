@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFinancialYearsTable extends Migration
+class CreatePetroleumReturnItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateFinancialYearsTable extends Migration
      */
     public function up()
     {
-        Schema::create('financial_years', function (Blueprint $table) {
+        Schema::create('petroleum_return_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->unsignedBigInteger('return_id');
+            $table->unsignedBigInteger('config_id');
+            $table->decimal('value');
+            $table->decimal('vat');
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ class CreateFinancialYearsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('financial_years');
+        Schema::dropIfExists('petroleum_return_items');
     }
 }
