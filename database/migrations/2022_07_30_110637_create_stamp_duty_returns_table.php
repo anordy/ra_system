@@ -15,12 +15,13 @@ class CreateStampDutyReturnsTable extends Migration
     {
         Schema::create('stamp_duty_returns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('filed_id');
+            $table->string('filed_type');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('tax_type_id')->nullable();
-            $table->unsignedBigInteger('financial_year_id')->nullable();
             $table->unsignedBigInteger('financial_month_id')->nullable();
+            $table->unsignedBigInteger('financial_year_id')->nullable();
             $table->string('financial_month');
             $table->string('financial_year');
 
