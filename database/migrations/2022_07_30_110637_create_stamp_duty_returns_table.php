@@ -23,6 +23,9 @@ class CreateStampDutyReturnsTable extends Migration
             $table->unsignedBigInteger('financial_month_id')->nullable();
             $table->string('financial_month');
             $table->string('financial_year');
+
+            $table->integer('edited_count')->default(0);
+
             $table->string('tax_type_code');
             $table->decimal('payable_amount', 40,2);
             $table->decimal('withheld_amount', 40,2);

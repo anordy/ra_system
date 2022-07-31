@@ -15,11 +15,10 @@ class CreateStampDutyReturnItemsTable extends Migration
     {
         Schema::create('stamp_duty_return_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('stamp_duty_return_id');
-            $table->unsignedBigInteger('stamp_duty_return_config_id');
-            $table->decimal('input_amount',40,2);
-            $table->decimal('tax_amount',40,2);
-            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('config_id');
+            $table->unsignedBigInteger('return_id');
+            $table->string('value');
+            $table->string('tax');
             $table->softDeletes();
             $table->timestamps();
         });
