@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFinancialYearsTable extends Migration
+class CreateLumpSumPaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateFinancialYearsTable extends Migration
      */
     public function up()
     {
-        Schema::create('financial_years', function (Blueprint $table) {
+        Schema::create('lump_sum_payments', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('E.g 2021/2022, 2022/2023');
-            $table->string('code')->comment('E.g 2021, 2022, 2023');
-            $table->boolean('active')->default(0);
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('financial_year_id');
+            $table->integer('annual_estimate');
+            $table->integer('payment_quarters');
+            $table->string('currency');
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateFinancialYearsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('financial_years');
+        Schema::dropIfExists('lump_sum_payments');
     }
 }
