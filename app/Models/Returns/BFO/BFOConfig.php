@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Returns\BFO;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FinancialYear extends Model
+class BFOConfig extends Model
 {
     use HasFactory;
-    protected $table = 'financial_years';
-    protected $guarded = [];
+
+    protected $table = 'bfo_configs';
 }

@@ -26,5 +26,6 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['name' => 'Airport Service & Safety Fee', 'code'=>'Airport_Service_Safety_fee']);
         TaxType::updateOrCreate(['name' => 'Sea Port Service & Transport Charge', 'code'=>'Sea_Service_Transport_Charge']);
         TaxType::updateOrCreate(['name' => 'Tax Consultant Licences', 'code'=>'Tax_Consultant_Licences']);
+
     }
 }
