@@ -24,8 +24,9 @@ class CreateHotelReturnsTable extends Migration
             $table->unsignedBigInteger('financial_year_id');
 
             $table->integer('edited_count')->default(0);
+            $table->enum('status',['draft', 'submitted'])->default('draft');
 
-            $table->decimal('hotel_infrastructure_tax')->nullable();
+            $table->decimal('hotel_infrastructure_tax', 40, 2)->nullable();
             $table->string('currency');
             $table->string('return_month_id');
             $table->decimal('total_vat_payable', 40, 2)->default(0);
