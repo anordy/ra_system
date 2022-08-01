@@ -14,4 +14,9 @@ class TaxType extends Model implements Auditable
     protected $fillable = [
         'name'
     ];
+
+    public function landLeases()
+    {
+        return $this->hasMany(LandLease::class,'taxpayer_id');
+    }
 }
