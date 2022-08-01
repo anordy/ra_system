@@ -15,8 +15,8 @@ class CreateFinancialYearsTable extends Migration
     {
         Schema::create('financial_years', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            // $table->string('code');
+            $table->string('name')->comment('E.g 2021/2022, 2022/2023');
+            $table->string('code')->comment('E.g 2021, 2022, 2023');
             $table->boolean('active')->default(0);
             $table->timestamps();
         });
