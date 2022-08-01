@@ -14,7 +14,6 @@
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
-use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +50,7 @@ use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
 use App\Http\Controllers\VatReturn\VatReturnController;
 use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
+use App\Http\Controllers\Returns\Petroleum\CertificateQuantityController;
 
 Auth::routes();
 
@@ -148,8 +148,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
 
-    Route::name('returns.')->prefix('e-filling')->group(function () {
-        Route::resource('/petroleum', PetroleumReturnController::class);
+    Route::name('petroleum.')->prefix('petroleum')->group(function () {
+        Route::resource('/filling', PetroleumReturnController::class);
+        Route::resource('/certificateOfQuantity', CertificateQuantityController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
