@@ -15,6 +15,7 @@ class CreateLumpSumReturnsTable extends Migration
     {
         Schema::create('lump_sum_returns', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('filled_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->integer('quarter');
