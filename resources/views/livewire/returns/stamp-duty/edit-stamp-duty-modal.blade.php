@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Add File Type</h5>
+                <h5 class="modal-title text-uppercase">Edit Stamp Duty Service</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                             class="fa fa-times-circle"></i></button>
             </div>
@@ -12,33 +12,54 @@
                         <label class="control-label">Name</label>
                         <input type="text" class="form-control" wire:model.lazy="name">
                         @error('name')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label class="control-label">Description</label>
-                        <textarea type="text" class="form-control" wire:model.lazy="description"></textarea>
-                        @error('description')
-                            <span class="text-danger">{{ $message }}</span>
+                        <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
                         <label class="control-label">Code</label>
-                        <input type="text" class="form-control" wire:model.lazy="short_name">
-                        @error('short_name')
-                            <span class="text-danger">{{ $message }}</span>
+                        <input type="text" class="form-control" wire:model.lazy="code">
+                        @error('code')
+                        <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Business Category</label>
-                        <select wire:model.lazy="business_category" class="form-control">
+                        <label class="control-label">Rate Type</label>
+                        <select wire:model="rate_type">
                             <option></option>
-                            @foreach(\App\Models\BusinessCategory::all() as $category)
-                                <option value="{{ $category->short_name }}">{{ $category->name }}</option>
-                            @endforeach
+                            <option value="fixed">Fixed</option>
+                            <option value="percent"> Percentage</option>
                         </select>
-                        @error('business_category')
-                            <span class="text-danger">{{ $message }}</span>
+                        @error('description')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Rate</label>
+                        <input type="number" class="form-control" wire:model.lazy="rate">
+                        @error('rate')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Is Active</label>
+                        <select wire:model="rate_type">
+                            <option></option>
+                            <option value="fixed">Fixed</option>
+                            <option value="percent"> Percentage</option>
+                        </select>
+                        @error('description')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Financial Year</label>
+                        <select wire:model="financial_year">
+                            <option></option>
+                            <option value="fixed">Fixed</option>
+                            <option value="percent"> Percentage</option>
+                        </select>
+                        @error('description')
+                        <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
@@ -49,7 +70,7 @@
                             <option value="0">No</option>
                         </select>
                         @error('is_required')
-                            <span class="text-danger">{{ $message }}</span>
+                        <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
