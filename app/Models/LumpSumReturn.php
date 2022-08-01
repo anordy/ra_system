@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class LumpSumReturn extends Model
 {
     use HasFactory;
+
+    public function year()
+    {
+        return $this->belongsTo(FinancialYear::class);
+    }
 }

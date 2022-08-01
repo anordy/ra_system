@@ -191,7 +191,6 @@ class ApprovalProcessing extends Component
                     'financial_year_id' => 1,
                     'annual_estimate'   => $this->annual_estimate,
                     'payment_quarters'  => $this->quaters,
-                    'created_at'        => Carbon::now(),
                 ]);
             }
 
