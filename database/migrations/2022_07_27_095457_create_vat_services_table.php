@@ -16,10 +16,12 @@ class CreateVatServicesTable extends Migration
         Schema::create('vat_services', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('business_location_id');
+            $table->unsignedBigInteger('filed_by');
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('return_month_id');
+            $table->unsignedBigInteger('tax_type_id');
+            $table->string('filed_type');
             $table->decimal('total',40,2);
             $table->timestamps();
             $table->softDeletes();

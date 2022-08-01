@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Yajra\DataTables\Html\Editor\Fields\BelongsTo;
 
-class FinancialYear extends Model
+class InterestRate extends Model
 {
     use HasFactory;
 
-    protected $table = 'financial_years';
-
-    protected $guarded = [];
+    protected $guarded =[];
 }
