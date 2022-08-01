@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class FinancialYear extends Model
 {
     use HasFactory;
-    protected $table = 'financial_year';
+    protected $table = 'financial_years';
     protected $guarded = [];
 }

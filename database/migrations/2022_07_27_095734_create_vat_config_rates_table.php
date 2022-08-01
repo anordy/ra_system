@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFinancialYearTable extends Migration
+class CreateVatConfigRatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateFinancialYearTable extends Migration
      */
     public function up()
     {
-        Schema::create('financial_year', function (Blueprint $table) {
+        Schema::create('vat_config_rates', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('vat_category_code');
+            $table->string('rate');
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateFinancialYearTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('financial_year');
+        Schema::dropIfExists('vat_config_rates');
     }
 }

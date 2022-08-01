@@ -43,11 +43,14 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Returns\HotelLevyReturnController;
+use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
-
+use App\Http\Controllers\VatReturn\VatReturnController;
+use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
 
 Auth::routes();
 
@@ -86,7 +89,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
-        Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
+
+        Route::name('returns.')->prefix('returns')->group(function () {
+            Route::get('/', [ReturnsController::class, 'index'])->name('index');
+            Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
+        });
     });
 
     Route::prefix('system')->name('system.')->group(function () {
@@ -94,20 +101,19 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('workflow', WorkflowController::class);
     });
 
-
     Route::prefix('taxpayers')->as('taxpayers.')->group(function () {
         Route::resource('/registrations', RegistrationsController::class); // KYC
         Route::get('registrations/enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
         Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
         Route::resource('taxpayer', TaxpayersController::class);
     });
+    Route::resource('taxpayers', TaxpayersController::class);
 
     Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
         Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
         Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
         Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
         Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
-
     });
 
     Route::prefix('business')->as('business.')->group(function () {
