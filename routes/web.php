@@ -50,7 +50,7 @@ use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
 use App\Http\Controllers\VatReturn\VatReturnController;
 use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
-
+use App\Http\Controllers\Setting\InterestRateController;
 
 Auth::routes();
 
@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
+        Route::resource('/interest-rates',InterestRateController::class);
 
         Route::name('returns.')->prefix('returns')->group(function(){
             Route::get('/', [ReturnsController::class, 'index'])->name('index');

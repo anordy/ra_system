@@ -177,6 +177,9 @@
                 <li class="{{ request()->is('settings/returns*') ? 'active' : '' }}">
                     <a href="{{ route('settings.returns.index') }}">Returns</a>
                 </li>
+                <li class="{{ request()->is('settings/interest-rates*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.interest-rates.index') }}">Interest Rates</a>
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
