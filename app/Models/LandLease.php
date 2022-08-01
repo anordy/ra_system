@@ -28,4 +28,9 @@ class LandLease extends Model
     {
         return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
     }
+
+    public function landLeaseHistories()
+    {
+        return $this->hasMany(LandLeaseHistory::class, 'land_lease_id');
+    }
 }

@@ -138,6 +138,15 @@
                 </li>
             </ul>
         </li>
+
+        <li  class="{{ request()->is('land-lease*') ? 'active':'' }}">
+            <a href="#landLeaseSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('land*') ? 'true' : 'false' }}" class="dropdown-toggle">Land Lease</a>
+            <ul class="collapse list-unstyled {{ request()->is('land-lease/list*') ? 'show' : '' }}" id="landLeaseSubmenu">
+                <li class="{{ request()->is('land-lease/list*') ? 'active': '' }}">
+                    <a href="{{ route('land-lease.list') }}">Land Lease List</a>
+                </li>
+            </ul>
+        </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
             <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
             <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
