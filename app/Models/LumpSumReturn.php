@@ -33,6 +33,6 @@ class LumpSumReturn extends Model
 
     public function financialYear()
     {
-        return $this->belongsTo(FinancialYear::class, 'financial_year_id');
+        return $this->belongsTo(FinancialYear::class, 'financial_year_id', 'id');
     }
 }
