@@ -29,7 +29,7 @@ class CreateHotelReturnsTable extends Migration
             $table->decimal('hotel_infrastructure_tax', 40, 2)->nullable();
             $table->string('currency');
             $table->string('return_month_id');
-            $table->decimal('total_vat_payable', 40, 2)->default(0);
+            $table->decimal('total_amount_due', 40, 2)->default(0);
 
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
