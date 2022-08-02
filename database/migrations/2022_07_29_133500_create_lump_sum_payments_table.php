@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReturnMonthsTable extends Migration
+class CreateLumpSumPaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateReturnMonthsTable extends Migration
      */
     public function up()
     {
-        Schema::create('return_months', function (Blueprint $table) {
+        Schema::create('lump_sum_payments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code');
-            $table->dateTime('due_date');
+            $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('financial_year_id');
+            $table->integer('annual_estimate');
+            $table->integer('payment_quarters');
+            $table->string('currency');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateReturnMonthsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('return_months');
+        Schema::dropIfExists('lump_sum_payments');
     }
 }

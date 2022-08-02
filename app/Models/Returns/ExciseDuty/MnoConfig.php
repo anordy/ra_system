@@ -4,11 +4,12 @@ namespace App\Models\Returns\ExciseDuty;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MNOReturn extends Model
+class MnoConfig extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
 
     protected $guarded = [];
+
+    protected $table = 'mno_configs';
 }

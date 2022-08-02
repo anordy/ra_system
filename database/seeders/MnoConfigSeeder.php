@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Returns\ExciseDuty\MNOConfig;
+use App\Models\Returns\ExciseDuty\MnoConfig;
 use Illuminate\Database\Seeder;
 
-class MNOConfigSeeder extends Seeder
+class MnoConfigSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -142,7 +142,7 @@ class MNOConfigSeeder extends Seeder
         ];
 
         foreach ($configs as $config) {
-            MNOConfig::updateOrCreate($config);
+            MnoConfig::updateOrCreate($config);
         }
     }
 }

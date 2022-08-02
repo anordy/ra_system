@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVatServicesTable extends Migration
+class CreateMnoReturnsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateVatServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('vat_services', function (Blueprint $table) {
+        Schema::create('mno_returns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_location_id');
@@ -26,12 +26,12 @@ class CreateVatServicesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // $table->foreign('business_id')->references('id')->on('businesses');
-            // $table->foreign('location_id')->references('id')->on('business_locations');
-            // $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
-            // $table->foreign('financial_year_id')->references('id')->on('financial_years');
-            // $table->foreign('return_month_id')->references('id')->on('return_months');
-
+            $table->foreign('business_id')->references('id')->on('businesses');
+            $table->foreign('business_location_id')->references('id')->on('business_locations');
+            $table->foreign('filed_by')->references('id')->on('taxpayers');
+            $table->foreign('financial_year_id')->references('id')->on('financial_years');
+            $table->foreign('return_month_id')->references('id')->on('return_months');
+            $table->foreign('tax_type_id')->references('id')->on('tax_types');
         });
     }
 
@@ -42,6 +42,6 @@ class CreateVatServicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vat_services');
+        Schema::dropIfExists('mno_returns');
     }
 }
