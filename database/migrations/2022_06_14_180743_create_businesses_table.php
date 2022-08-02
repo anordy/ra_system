@@ -19,7 +19,7 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('taxpayer_id'); // Main owner
             $table->string('bpra_no')->nullable();
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed', 'temp_closed', 'deregistered'])->default('draft');
-            $table->enum('business_type', ['hotel', 'other'])->default('other');
+            $table->enum('business_type', ['hotel', 'other','electricity'])->default('other');
             $table->unsignedBigInteger('business_activities_type_id'); // Wholesale or Retail
             $table->unsignedBigInteger('currency_id');
 

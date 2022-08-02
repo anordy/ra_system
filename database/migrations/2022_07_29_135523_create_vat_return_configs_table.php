@@ -22,7 +22,7 @@ class CreateVatReturnConfigsTable extends Migration
             $table->string('vat_service_code');
             $table->enum('row_type',['dynamic', 'unremovable'])->default('dynamic');
             $table->boolean('value_calculated')->default(false);
-            $table->enum('col_type',['total', 'subtotal','normal', 'external', 'exemptedMethodTwo'])->default('normal');
+            $table->enum('col_type',['grand_total','total', 'subtotal','normal', 'external', 'exemptedMethodTwo', 'exemptedMethodOne'])->default('normal');
             $table->boolean('rate_applicable')->default(true);
             $table->enum('rate_type', ['percentage', 'fixed'])->nullable();
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');

@@ -14,6 +14,7 @@
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\Returns\ReturnController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -141,6 +142,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
+
+    Route::name('returns.')->prefix('returns')->group(function () {
+        Route::get('/', [ReturnController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [ReturnController::class, 'show'])->name('show');
+
+    });
+
 
     Route::name('returns.')->prefix('e-filling')->group(function () {
         Route::resource('/petroleum', PetroleumReturnController::class);

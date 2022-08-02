@@ -18,16 +18,19 @@ class CreateVatReturnsTable extends Migration
             $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
-            $table->string('return_month');
-            $table->string('financial_year');
+            $table->unsignedBigInteger('return_month_id');
+            $table->string('financial_year_id');
             $table->string('taxtype_code');
+            $table->string('business_type')->nullable();
             $table->decimal('total_input_tax', 40,2);
             $table->decimal('total_vat_payable', 40,2);
             $table->decimal('vat_withheld', 40,2);
-            $table->decimal('infrastructure', 40,2);
+            $table->decimal('infrastructure_tax', 40,2)->nullable();
             $table->decimal('total_vat_amount_due', 40,2);
             $table->string('has_exemption');
-            $table->unsignedBigInteger('created_by');
+            $table->string('method_used')->nullable();
+            $table->unsignedBigInteger('filled_by_id');
+            $table->string('filled_by_type');
             $table->timestamps();
         });
     }

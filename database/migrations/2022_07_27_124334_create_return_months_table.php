@@ -17,6 +17,7 @@ class CreateReturnMonthsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
+            $table->dateTime('start_date');
             $table->dateTime('due_date');
             $table->unsignedBigInteger('financial_year_id');
             $table->timestamps();
