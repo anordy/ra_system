@@ -14,6 +14,8 @@
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\Returns\SettingController;
+use App\Http\Controllers\Setting\InterestRateController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -88,10 +90,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
-        Route::name('returns.')->prefix('returns')->group(function(){
-        Route::resource('/interest-rates', InterestRateController::class);
-
         Route::name('returns.')->prefix('returns')->group(function () {
+            Route::resource('/interest-rates', InterestRateController::class);
             Route::get('/', [ReturnsController::class, 'index'])->name('index');
             Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
         });

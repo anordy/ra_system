@@ -54,5 +54,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ISIC4Seeder::class);
         $this->call(MnoConfigSeeder::class);
         $this->call(InterestRateSeeder::class);
+        $this->call(PenaltyRatesSeeder::class);
     }
 }
