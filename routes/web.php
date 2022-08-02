@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Audit\AuditingController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
@@ -41,7 +42,10 @@ use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\Investigation\InvestigationController;
+use App\Http\Controllers\Verification\VerificationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Relief\ReliefController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
@@ -150,6 +154,22 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
         Route::get('/certificateOfQuantity/certificate/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
+    });
+
+    Route::name('investigations.')->prefix('investigation')->group(function () {
+        Route::resource('/', InvestigationController::class);
+    });
+
+    Route::name('auditings.')->prefix('auditing')->group(function () {
+        Route::resource('/', AuditingController::class);
+    });
+
+    Route::name('reliefs.')->prefix('reliefs')->group(function () {
+        Route::resource('/', ReliefController::class);
+    });
+
+    Route::name('verifications.')->prefix('verification')->group(function () {
+        Route::resource('/', VerificationController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

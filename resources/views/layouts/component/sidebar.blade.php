@@ -78,6 +78,8 @@
             </ul>
         </li>
 
+        
+
         @can('withholding_agents_view')
             <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
                 <a href="#withholdingAgentsMenu" data-toggle="collapse"
@@ -165,6 +167,24 @@
                 </li>
             </ul>
         </li>
+
+        <li class="{{ request()->is('verification*') ? 'active' : '' }}">
+            <a href="{{ route('verifications.index') }}">Verifications</a>
+        </li>
+
+        <li class="{{ request()->is('auditing*') ? 'active' : '' }}">
+            <a href="{{ route('auditings.index') }}">Auditings</a>
+        </li>
+
+        <li class="{{ request()->is('investigation*') ? 'active' : '' }}">
+            <a href="{{ route('investigations.index') }}">Investigations</a>
+        </li>
+
+        <li class="{{ request()->is('reliefs*') ? 'active' : '' }}">
+            <a href="{{ route('reliefs.index') }}">Reliefs</a>
+        </li>
+
+
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
             <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
             <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
