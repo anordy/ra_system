@@ -48,9 +48,7 @@ use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
-use App\Http\Controllers\VatReturn\VatReturnController;
-use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
-use App\Http\Controllers\Returns\Petroleum\CertificateQuantityController;
+use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 
 Auth::routes();
 
@@ -150,7 +148,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
-        Route::resource('/certificateOfQuantity', CertificateQuantityController::class);
+        Route::get('/certificateOfQuantity/certificate/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

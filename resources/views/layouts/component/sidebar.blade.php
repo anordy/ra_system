@@ -18,7 +18,7 @@
         <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
             <a href="#taxpayersMenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}"
-                class="dropdown-toggle">Taxpayers</a>
+                class="dropdown-toggle">Taxpayers Management</a>
             <ul class="collapse list-unstyled {{ request()->is('taxpayers*') ? 'show' : '' }}" id="taxpayersMenu">
                 <li class="{{ request()->is('taxpayers/taxpayer*') ? 'active' : '' }}">
                     <a href="{{ route('taxpayers.taxpayer.index') }}">Taxpayers</a>
@@ -33,7 +33,7 @@
         <li class="{{ request()->is('business*') ? 'active' : '' }}">
             <a href="#businessMenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}"
-                class="dropdown-toggle">Business</a>
+                class="dropdown-toggle">Business Management</a>
             <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
                 @can('business_registrations_view')
                     <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
