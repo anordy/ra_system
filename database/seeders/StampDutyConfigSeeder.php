@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Returns\PetroleumConfig;
 use App\Models\Returns\StampDuty\StampDutyConfig;
 use App\Models\Returns\StampDuty\StampDutyConfigHead;
 use Illuminate\Database\Seeder;

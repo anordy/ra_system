@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Returns\StampDuty\StampDutyReturn;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,20 +19,16 @@ class CreateStampDutyReturnsTable extends Migration
             $table->unsignedBigInteger('filed_id');
             $table->string('filed_type');
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('tax_type_id')->nullable();
+            $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('financial_month_id')->nullable();
             $table->unsignedBigInteger('financial_year_id')->nullable();
-            $table->string('financial_month');
-            $table->string('financial_year');
 
             $table->integer('edited_count')->default(0);
 
-            $table->string('tax_type_code');
-            $table->decimal('payable_amount', 40,2);
-            $table->decimal('withheld_amount', 40,2);
             $table->decimal('total_amount_due', 40,2);
-            $table->boolean('has_exemption');
+            $table->dateTime('submitted_at');
+            $table->dateTime('paid_at');
+            $table->string('status');
             $table->softDeletes();
             $table->timestamps();
         });
