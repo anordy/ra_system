@@ -9,48 +9,46 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
-use App\Http\Controllers\Business\BranchController;
-use App\Http\Controllers\Business\BusinessFileController;
-use App\Http\Controllers\EducationLevelController;
-use App\Http\Controllers\TaxAgents\TaxAgentFileController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\WardController;
+use App\Http\Controllers\Assesment\AssesmentFileController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\Business\BranchController;
+use App\Http\Controllers\Business\BusinessController;
+use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
-use App\Http\Controllers\RegionController;
-use App\Http\Controllers\CaptchaController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\TaxTypeController;
-use App\Http\Controllers\Business\BusinessController;
-use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\TwoFactorAuthController;
-use App\Http\Controllers\BusinessCategoryController;
-use App\Http\Controllers\WithholdingAgentController;
-use App\Http\Controllers\TaxAgents\TaxAgentController;
-use App\Http\Controllers\Taxpayers\TaxpayersController;
-use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
-use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
+use App\Http\Controllers\Returns\ReturnsController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TaxAgents\TaxAgentController;
+use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\Taxpayers\TaxpayersController;
+use App\Http\Controllers\TaxTypeController;
+use App\Http\Controllers\TwoFactorAuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WardController;
+use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
-use App\Http\Controllers\VatReturn\VatReturnController;
-use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
@@ -89,10 +87,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
+        Route::resource('/assesment-files', AssesmentFileController::class);
 
-        Route::name('returns.')->prefix('returns')->group(function(){
+        Route::name('returns.')->prefix('returns')->group(function () {
             Route::get('/', [ReturnsController::class, 'index'])->name('index');
-            Route::get('hotel',[HotelLevyReturnController::class,'hotel'])->name('hotel');
+            Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
         });
     });
 
@@ -100,7 +99,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('audits', AuditController::class);
         Route::resource('workflow', WorkflowController::class);
     });
-
 
     Route::prefix('taxpayers')->as('taxpayers.')->group(function () {
         Route::resource('/registrations', RegistrationsController::class); // KYC
