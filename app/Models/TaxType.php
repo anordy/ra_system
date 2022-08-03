@@ -32,6 +32,11 @@ class TaxType extends Model implements Auditable
         'name',
     ];
 
+    public function landLeases()
+    {
+        return $this->hasMany(LandLease::class,'taxpayer_id');
+    }
+    
     public function vatReturn()
     {
         return $this->hasOne(VatReturn::class, 'taxtype_code', 'code');
