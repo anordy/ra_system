@@ -18,4 +18,9 @@ class Region extends Model implements Auditable
     {
         return $this->hasOne(TaxAgent::class);
     }
+
+    public function landLeases()
+    {
+        $this->hasMany(LandLease::class,'region_id');
+    }
 }

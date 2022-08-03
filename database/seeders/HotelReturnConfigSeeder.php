@@ -217,7 +217,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'HS+NOBN+OS+LP+IP+LW+IT',
+                'formular' => '(HS+NOBN+OS+LP+IP+IT)-LW',
                 'active' => true,
                 'taxtype_id' => 2,
                 'rate_applicable' => false,
