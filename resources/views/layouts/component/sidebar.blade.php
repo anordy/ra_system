@@ -140,11 +140,16 @@
         </li>
 
         <li  class="{{ request()->is('land-lease*') ? 'active':'' }}">
-            <a href="#landLeaseSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('land*') ? 'true' : 'false' }}" class="dropdown-toggle">Land Lease</a>
-            <ul class="collapse list-unstyled {{ request()->is('land-lease/list*') ? 'show' : '' }}" id="landLeaseSubmenu">
+            <a href="#landLeaseSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('land-lease*')  ? 'true' : 'false' }}" class="dropdown-toggle">Land Lease</a>
+            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
+                
                 <li class="{{ request()->is('land-lease/list*') ? 'active': '' }}">
                     <a href="{{ route('land-lease.list') }}">Land Lease List</a>
                 </li>
+                <li class="{{ request()->is('land-lease/generate-report*') ? 'active': '' }}">
+                    <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
+                </li>
+                
             </ul>
         </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">

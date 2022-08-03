@@ -13,6 +13,8 @@ class LandLeaseSeeder extends Seeder
      */
     public function run()
     {
-        //
+        //seeding using factory
+
+
     }
 }

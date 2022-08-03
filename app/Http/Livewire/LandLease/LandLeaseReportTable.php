@@ -4,22 +4,41 @@ namespace App\Http\Livewire\LandLease;
 
 use App\Models\LandLease;
 use App\Models\Taxpayer;
+use Illuminate\Database\Eloquent\Builder;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Illuminate\Database\Eloquent\Builder;
 
-class LandLeaseList extends DataTableComponent
+class LandLeaseReportTable extends DataTableComponent
 {
-    // protected $model = LandLease::class;
+    use LivewireAlert;
 
+    public $dates = [];
 
-    //create builder function
-    public function builder(): builder
+    protected $listeners = ['refreshTable' => 'refreshTable', 'test'];
+
+    public function builder(): Builder
     {
-        return LandLease::where('created_by', auth()->user()->id);
-    }
-    
 
+        $dates = $this->dates;
+
+        if ($dates == []) {
+            return LandLease::query()->orderBy('land_leases.created_at', 'asc');
+        }
+
+        if ($dates['startDate'] == null || $dates['endDate'] == null) {
+            return LandLease::query()->orderBy('land_leases.created_at', 'asc');
+        }
+
+        return LandLease::query()->whereBetween('land_leases.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('land_leases.created_at', 'asc');
+
+    }
+
+    public function refreshTable($dates)
+    {
+        $this->dates = $dates;
+        $this->builder();
+    }
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -27,12 +46,19 @@ class LandLeaseList extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered','taxpayer_id']);
+
+        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered', 'taxpayer_id', 'land_leases.created_at']);
     }
 
     public function columns(): array
     {
         return [
+            Column::make("Register Date", "created_at")
+                ->format(function ($value, $row) {
+                    return date('d/m/Y', strtotime($value));
+                })
+                ->searchable()
+                ->sortable(),
             Column::make("DP Number", "dp_number")
                 ->searchable()
                 ->sortable(),
@@ -54,6 +80,7 @@ class LandLeaseList extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
+
             Column::make("Payment Month", "payment_month")
                 ->searchable()
                 ->sortable(),
@@ -62,12 +89,12 @@ class LandLeaseList extends DataTableComponent
                     return number_format($value);
                 })
                 ->sortable(),
-            // Column::make('Review Shedule', 'review_schedule')
-            //     ->format(function ($value, $row) {
-            //         return $value . ' years';
-            //     })
-            //     ->searchable()
-            //     ->sortable(),
+            Column::make('Review Shedule', 'review_schedule')
+                ->format(function ($value, $row) {
+                    return $value . ' years';
+                })
+                ->searchable()
+                ->sortable(),
             // Column::make("Region", "region.name")
             //     ->searchable()
             //     ->sortable(),
@@ -78,6 +105,16 @@ class LandLeaseList extends DataTableComponent
             //     ->searchable()
             //     ->sortable(),
             Column::make("Applicant Type", "id")->view("land-lease.includes.applicant-status"),
+            Column::make('ZRB No.', 'taxpayer.reference_no')
+                ->format(function ($value, $row) {
+                    if($value == null){
+                        return 'N/A';
+                    }else{
+                        return $value;
+                    }
+                })
+                ->searchable()
+                ->sortable(),
             Column::make("Actions", "id")->view("land-lease.includes.actions"),
         ];
     }
@@ -88,13 +125,4 @@ class LandLeaseList extends DataTableComponent
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
-    public function getMonthLeases()
-    {
-        //get this month leases
-        $month_leases = LandLease::where('created_by', auth()->user()->id)
-            ->whereMonth('commence_date', date('m'))
-            ->whereYear('commence_date', date('Y'))
-            ->get();
-        return $month_leases;
-    }
 }

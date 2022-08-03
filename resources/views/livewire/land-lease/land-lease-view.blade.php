@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-start mb-3">
-    <a href="{{ route('land-lease.list') }}" class="btn btn-info">
+    <a href="{{ url()->previous() }}" class="btn btn-info">
         {{-- back icon --}}
         <i class="fas fa-arrow-left"></i>
         Back
@@ -107,8 +107,12 @@
                 <p class="my-1">{{ $landLease->ward->name }}</p>
             </div>
             <div class="col-md-3 mb-3">
-                <span class="font-weight-bold text-uppercase">Commence Date</span>
+                <span class="font-weight-bold text-uppercase">Lease Commencement Date</span>
                 <p class="my-1">{{ date('d/m/Y', strtotime($landLease->commence_date)) }}</p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <span class="font-weight-bold text-uppercase">Register Date</span>
+                <p class="my-1">{{ date('d/m/Y', strtotime($landLease->created_at)) }}</p>
             </div>
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Payment Month</span>
@@ -125,6 +129,17 @@
             <div class="col-md-3 mb-3">
                 <span class="font-weight-bold text-uppercase">Valid Period Term</span>
                 <p class="my-1">{{ $landLease->valid_period_term }} years</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <a class="file-item" target="_blank"
+                    href="{{ route('land-lease.get.lease.document', ['path' => encrypt($landLease->lease_agreement_path)]) }}">
+                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                    <div style="font-weight: 500;" class="ml-1">
+                        Lease Agreement Document
+                    </div>
+                </a>
             </div>
         </div>
     </div>

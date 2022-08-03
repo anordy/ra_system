@@ -145,5 +145,8 @@ Route::middleware(['auth'])->group(function () {
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');   
     });
 });
