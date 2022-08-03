@@ -78,6 +78,19 @@
             </ul>
         </li>
 
+        <li class="{{ request()->is('returns*') ? 'active' : '' }}">
+            <a href="#returnsSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('returns*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
+                Returns</a>
+            <ul class="collapse list-unstyled {{ request()->is('returns*') ? 'show' : '' }}" id="returnsSubmenu">
+                <li class="{{ request()->is('returns/index') ? 'active' : '' }}">
+                    <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
+                </li>
+            </ul>
+        </li>
+
+        
+
         @can('withholding_agents_view')
             <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
                 <a href="#withholdingAgentsMenu" data-toggle="collapse"
