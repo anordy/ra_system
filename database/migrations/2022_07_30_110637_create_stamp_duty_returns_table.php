@@ -26,8 +26,8 @@ class CreateStampDutyReturnsTable extends Migration
             $table->integer('edited_count')->default(0);
 
             $table->decimal('total_amount_due', 40,2);
-            $table->dateTime('submitted_at');
-            $table->dateTime('paid_at');
+            $table->dateTime('submitted_at')->nullable();
+            $table->dateTime('paid_at')->nullable();
             $table->string('status');
             $table->softDeletes();
             $table->timestamps();
