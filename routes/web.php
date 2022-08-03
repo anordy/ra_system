@@ -15,6 +15,7 @@ use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Returns\ReturnController;
+use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -47,8 +48,6 @@ use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
-use App\Http\Controllers\VatReturn\VatReturnController;
-use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
 
 
 Auth::routes();
@@ -143,15 +142,21 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
 
-    Route::name('returns.')->prefix('returns')->group(function () {
-        Route::get('/', [ReturnController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [ReturnController::class, 'show'])->name('show');
-
-    });
+//    Route::name('returns.')->prefix('returns')->group(function () {
+//        Route::get('/', [ReturnController::class, 'index'])->name('index');
+//        Route::get('/vat-return/show/{id}', [ReturnController::class, 'show'])->name('show');
+//
+//    });
 
 
     Route::name('returns.')->prefix('e-filling')->group(function () {
+        Route::get('/', [ReturnController::class, 'index'])->name('index');
+
         Route::resource('/petroleum', PetroleumReturnController::class);
+
+        Route::name('vat-return.')->prefix('vat-return')->group(function (){
+            Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
+        });
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

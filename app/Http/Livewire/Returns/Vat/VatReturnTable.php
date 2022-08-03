@@ -24,15 +24,12 @@ class VatReturnTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("TIN", "business.tin")
-                ->sortable()
-                ->searchable(),
-            Column::make("Business Name", "business.name")
-                ->sortable()->searchable(),
             Column::make("Taxpayer Name", 'business.taxpayer.first_name')
                 ->format(function($value, $row){
                     return "{$row->first_name} {$row->last_name}";
                 })
+                ->sortable()->searchable(),
+            Column::make("Business Name", "business.name")
                 ->sortable()->searchable(),
             Column::make("Total Input Vat", 'total_input_tax')
                 ->format(function($value, $row){
