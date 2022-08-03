@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-class InvestigationController extends Controller
+class TaxInvestigationController extends Controller
 {
     public function index(Request $request)
     {

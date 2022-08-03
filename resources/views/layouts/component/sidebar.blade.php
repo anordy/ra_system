@@ -181,7 +181,18 @@
         </li>
 
         <li class="{{ request()->is('reliefs*') ? 'active' : '' }}">
-            <a href="{{ route('reliefs.index') }}">Reliefs</a>
+            <a href="#reliefs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reliefs Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('reliefs*') ? 'show' : '' }}" id="reliefs">
+                <li class="{{ request()->is('reliefs/projects*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.projects.index') }}">Projects</a>
+                </li>
+                <li class="{{ request()->is('reliefs/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.registrations.index') }}">Registrations</a>
+                </li>
+                <li class="{{ request()->is('reliefs/applications*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.applications.index') }}">Applications</a>
+                </li>
+            </ul>
         </li>
 
 

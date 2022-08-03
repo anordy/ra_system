@@ -11,7 +11,7 @@
 |
 */
 
-use App\Http\Controllers\Audit\AuditingController;
+use App\Http\Controllers\Audit\TaxAuditController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
@@ -42,10 +42,12 @@ use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
-use App\Http\Controllers\Investigation\InvestigationController;
-use App\Http\Controllers\Verification\VerificationController;
+use App\Http\Controllers\Investigation\TaxInvestigationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefController;
+use App\Http\Controllers\Relief\ReliefProjectController;
+use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
@@ -53,6 +55,7 @@ use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
+use App\Http\Controllers\Verification\TaxVerificationController;
 
 Auth::routes();
 
@@ -152,24 +155,26 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
-        Route::get('/certificateOfQuantity/certificate/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::get('/certificateOfQuantity/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
     });
 
     Route::name('investigations.')->prefix('investigation')->group(function () {
-        Route::resource('/', InvestigationController::class);
+        Route::resource('/', TaxInvestigationController::class);
     });
 
     Route::name('auditings.')->prefix('auditing')->group(function () {
-        Route::resource('/', AuditingController::class);
+        Route::resource('/', TaxAuditController::class);
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
-        Route::resource('/', ReliefController::class);
+        Route::resource('/registrations', ReliefRegistrationController::class);
+        Route::resource('/projects', ReliefProjectController::class);
+        Route::resource('/applications', ReliefApplicationsController::class);
     });
 
     Route::name('verifications.')->prefix('verification')->group(function () {
-        Route::resource('/', VerificationController::class);
+        Route::resource('/', TaxVerificationController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

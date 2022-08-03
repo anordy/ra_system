@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Reliefs')
+@section('title','Reliefs Applications')
 
 @section('content')
     <div class="card">

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInvestigationsTable extends Migration
+class CreateTaxInvestigationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateInvestigationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('investigations', function (Blueprint $table) {
+        Schema::create('tax_investigations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
@@ -22,6 +22,7 @@ class CreateInvestigationsTable extends Migration
             $table->text('scope');
             $table->integer('period_covered');
             $table->dateTime('audit_date_time');
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ class CreateInvestigationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('investigations');
+        Schema::dropIfExists('tax_investigations');
     }
 }
