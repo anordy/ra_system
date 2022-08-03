@@ -28,6 +28,7 @@ class CreateStampDutyConfigsTable extends Migration
             $table->decimal('rate')->unsigned()->default(0);
             $table->decimal('rate_usd')->nullable();
             $table->string('formular')->nullable();
+            $table->boolean('is_summable')->default(true);
             $table->boolean('active')->default(false);
             $table->softDeletes();
             $table->timestamps();
