@@ -16,7 +16,6 @@ class CreatePenaltyRatesTable extends Migration
         Schema::create('penalty_rates', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->dateTime('due_date');
             $table->string('name');
             $table->double('rate');
             $table->unsignedBigInteger('financial_year_id');
