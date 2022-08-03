@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\AllPdfController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
@@ -153,4 +154,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
+
+    Route::prefix('pdf')->name('pdf.')->group(function () {
+        Route::get('all', [AllPdfController::class, 'index'])->name('all');
+        Route::get('demand-notice/{file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
+    });
 });
