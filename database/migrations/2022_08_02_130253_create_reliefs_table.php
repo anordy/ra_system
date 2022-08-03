@@ -19,6 +19,7 @@ class CreateReliefsTable extends Migration
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('project_list_id');
             $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('business_id');
             $table->decimal('rate');
             $table->date('expire');
             $table->enum('status', ['draft', 'approved', 'rejected']);
