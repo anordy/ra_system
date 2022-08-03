@@ -86,18 +86,7 @@
                     <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
                 </li>
                 <li class="{{ request()->is('returns/') ? 'active': '' }}">
-                    <a href="{{ route('returns.index') }}">Filled Return Requests</a>
-                </li>
-            </ul>
-        </li>
-
-
-
-        <li  class="{{ request()->is('returns*') ? 'active':'' }}">
-            <a href="#returnsSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('returns*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Returns</a>
-            <ul class="collapse list-unstyled {{ request()->is('returns*') ? 'show' : '' }}" id="returnsSubmenu">
-                <li class="{{ request()->is('returns/') ? 'active': '' }}">
-                    <a href="{{ route('returns.index') }}">Filled Return Requests</a>
+                    <a href="{{ route('returns.index') }}">Vat Returns</a>
                 </li>
             </ul>
         </li>
