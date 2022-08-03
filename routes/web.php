@@ -16,6 +16,8 @@ use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Returns\ReturnController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
+use App\Http\Controllers\Returns\SettingController;
+use App\Http\Controllers\Setting\InterestRateController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -44,11 +46,13 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Returns\HotelLevyReturnController;
+use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
-
+use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 
 Auth::routes();
 
@@ -87,13 +91,18 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
+        Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
+        Route::name('returns.')->prefix('returns')->group(function () {
+            Route::resource('/interest-rates', InterestRateController::class);
+            Route::get('/', [ReturnsController::class, 'index'])->name('index');
+            Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
+        });
     });
 
     Route::prefix('system')->name('system.')->group(function () {
         Route::resource('audits', AuditController::class);
         Route::resource('workflow', WorkflowController::class);
     });
-
 
     Route::prefix('taxpayers')->as('taxpayers.')->group(function () {
         Route::resource('/registrations', RegistrationsController::class); // KYC
@@ -108,7 +117,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
         Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
         Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
-
     });
 
     Route::prefix('business')->as('business.')->group(function () {
@@ -157,6 +165,12 @@ Route::middleware(['auth'])->group(function () {
         Route::name('vat-return.')->prefix('vat-return')->group(function (){
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
         });
+    });
+    
+    Route::name('petroleum.')->prefix('petroleum')->group(function () {
+        Route::resource('/filling', PetroleumReturnController::class);
+        Route::get('/certificateOfQuantity/certificate/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

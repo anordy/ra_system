@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Models\Returns;
+namespace App\Models\Returns\StampDuty;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PetroleumConfig extends Model
+class StampDutyConfigHead extends Model
 {
     use HasFactory;
-
-    protected $guarded = [];
 }

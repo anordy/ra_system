@@ -20,6 +20,6 @@
     @endif
 @endcan
 
-<a href="{{ route('withholdingAgents.certificate', encrypt($value)) }}" class="btn btn-success btn-sm">
+<a href="{{ route('withholdingAgents.certificate', encrypt($value)) }}" target="_blank" class="btn btn-success btn-sm">
     Certificate of Registration
 </a>

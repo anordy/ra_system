@@ -14,18 +14,19 @@ class TaxTypesSeeder extends Seeder
      */
     public function run()
     {
-        TaxType::updateOrCreate(['name' => 'VAT', 'code' => TaxType::VAT]);
-        TaxType::updateOrCreate(['name' => 'Hotel Levy', 'code' => TaxType::HOTEL]);
-        TaxType::updateOrCreate(['name' => 'Restaurant Levy', 'code' => TaxType::RESTAURANT]);
-        TaxType::updateOrCreate(['name' => 'Tour Operation Levy', 'code' =>TaxType::TOUR]);
-        TaxType::updateOrCreate(['name' => 'Land Lease', 'code' => TaxType::LAND]);
-        TaxType::updateOrCreate(['name' => 'Public Services', 'code' => TaxType::PUBLIC_SERVICE]);
-        TaxType::updateOrCreate(['name' => 'Excise Duty', 'code' => TaxType::EXCISE_DUTY]);
-        TaxType::updateOrCreate(['name' => 'Petroleum Levy', 'code' => TaxType::PETROLEUM]);
-        TaxType::updateOrCreate(['name' => 'Airport Service Charge', 'code' => TaxType::AIRPORT_SERVICE]);
-        TaxType::updateOrCreate(['name' => 'Airport Safety Fee', 'code' => TaxType::AIRPORT_SAFETY]);
-        TaxType::updateOrCreate(['name' => 'Sea Port Service Charge', 'code' => TaxType::SEAPORT_SERVICE]);
-        TaxType::updateOrCreate(['name' => 'Sea Port Transport Charges', 'code' => TaxType::SEAPORT_TRANSPORT]);
-        TaxType::updateOrCreate(['name' => 'Tax Consultant Licences', 'code' => TaxType::TAX_CONSULTANT]);
+        TaxType::updateOrCreate(['name' => 'VAT', 'code'=> 'VAT']);
+        TaxType::updateOrCreate(['name' => 'Hotel Levy', 'code'=>'Hotel_Levy']);
+        TaxType::updateOrCreate(['name' => 'Restaurant Levy', 'code'=>'Restaurant_Levy']);
+        TaxType::updateOrCreate(['name' => 'Tour Operation Levy', 'code'=>'Tour_Operation_Levy']);
+        TaxType::updateOrCreate(['name' => 'Land Lease', 'code'=>'Land_Lease']);
+        TaxType::updateOrCreate(['name' => 'Public Services', 'code'=>'Public_Services']);
+        TaxType::updateOrCreate(['name' => 'Excise Duty MNO', 'code'=>'Excise_Duty_Mno']);
+        TaxType::updateOrCreate(['name' => 'Excise Duty BFO', 'code'=>'Excise_Duty_Bfo']);
+        TaxType::updateOrCreate(['name' => 'Petroleum Levy', 'code'=>'Petroleum_Levy']);
+        TaxType::updateOrCreate(['name' => 'Airport Service & Safety Fee', 'code'=>'Airport_Service_Safety_fee']);
+        TaxType::updateOrCreate(['name' => 'Sea Port Service & Transport Charge', 'code'=>'Sea_Service_Transport_Charge']);
+        TaxType::updateOrCreate(['name' => 'Tax Consultant Licences', 'code'=>'Tax_Consultant_Licences']);
+        TaxType::updateOrCreate(['name' => 'Stamp Duty', 'code' => TaxType::STAMP_DUTY]);
+        TaxType::updateOrCreate(['name' => 'Lumpsum Payments', 'code' => TaxType::LUMPSUM_PAYMENT]);
     }
 }
