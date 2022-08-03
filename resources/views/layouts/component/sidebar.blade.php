@@ -29,7 +29,6 @@
             </ul>
         </li>
 
-
         <li class="{{ request()->is('business*') ? 'active' : '' }}">
             <a href="#businessMenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}"
@@ -86,10 +85,11 @@
                 <li class="{{ request()->is('returns/index') ? 'active' : '' }}">
                     <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
                 </li>
+                <li class="{{ request()->is('returns/') ? 'active': '' }}">
+                    <a href="{{ route('returns.index') }}">Vat Returns</a>
+                </li>
             </ul>
         </li>
-
-        
 
         @can('withholding_agents_view')
             <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
@@ -213,14 +213,14 @@
         <li  class="{{ request()->is('land-lease*') ? 'active':'' }}">
             <a href="#landLeaseSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('land-lease*')  ? 'true' : 'false' }}" class="dropdown-toggle">Land Lease</a>
             <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
-                
+
                 <li class="{{ request()->is('land-lease/list*') ? 'active': '' }}">
                     <a href="{{ route('land-lease.list') }}">Land Lease List</a>
                 </li>
                 <li class="{{ request()->is('land-lease/generate-report*') ? 'active': '' }}">
                     <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
                 </li>
-                
+
             </ul>
         </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
