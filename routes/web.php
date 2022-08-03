@@ -12,6 +12,8 @@
  */
 
 use App\Http\Controllers\Assesment\AssesmentFileController;
+use App\Http\Controllers\Assesments\ObjectionController;
+use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
@@ -134,6 +136,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
         Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
         Route::get('/business-certificate/{business}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
+    });
+
+    // assesments
+    Route::name('assesments.')->prefix('assesments')->group(function () {
+        Route::get('/objection/index', [ObjectionController::class, 'index'])->name('objection.index');
+        Route::get('/objection/show/{objection_id}', [ObjectionController::class, 'show'])->name('objection.show');
+
+        Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
+        Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
