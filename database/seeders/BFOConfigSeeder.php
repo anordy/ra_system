@@ -187,7 +187,7 @@ class BFOConfigSeeder extends Seeder
                 'code' => 'TotalFBO',
                 'name' => 'Total Excise Duty Payable',
                 'row_type' => 'unremovable',
-                'col_type' => 'subtotal',
+                'col_type' => 'total',
                 'value_calculated' => true,
                 'formular' => 'CWC+EMTC+MLPF+MBTC+SPCF+ODFLC+ComR+RSF+PVTS+ASF+FOTHER',
                 'active' => true,
