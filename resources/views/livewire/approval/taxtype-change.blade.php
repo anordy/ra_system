@@ -17,8 +17,12 @@
     @if ($this->checkTransition('registration_manager_review'))
         <div class="modal-footer p-2 m-0">
             <button type="button" class="btn btn-danger" wire:click="reject('registration_manager_reject')">Reject</button>
-            <button type="button" class="btn btn-primary" wire:click="approve('registration_manager_review')">Approve &
-                Forward to Auditor</button>
+            <button class="btn btn-primary" wire:click="approve('registration_manager_review')" wire:loading.attr="disable">
+                <i class="bi bi-arrow-return-right mr-2" wire:loading.remove wire:target="approve('registration_manager_review')"></i>
+                <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
+                    wire:target="approve('registration_manager_review')"></i>
+                Approve
+            </button>
         </div>
     @endif
 

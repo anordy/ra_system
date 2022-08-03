@@ -67,7 +67,6 @@ class TaxTypeChangeApprovalProcessing extends Component
 
                 event(new SendMail('change-tax-type-approval', $notification_payload));
                 event(new SendSms('change-tax-type-approval', $notification_payload));
-                
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {

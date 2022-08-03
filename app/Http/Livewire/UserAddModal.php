@@ -36,8 +36,8 @@ class UserAddModal extends Component
     protected function rules()
     {
         return [
-            'fname' => 'required|min:2',
-            'lname' => 'required|min:2',
+            'fname' => 'required|min:2|alpha',
+            'lname' => 'required|min:2|alpha',
             'email' => 'required|email|unique:users,email',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
