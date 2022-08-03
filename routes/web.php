@@ -49,6 +49,8 @@ use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\LandLease\LandLeaseController;
+
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
@@ -156,6 +158,14 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
+
+    Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');   
+    });
 
     Route::name('returns.')->prefix('returns')->group(function () {
         // Hotel levy returns
