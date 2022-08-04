@@ -12,4 +12,13 @@ class FinancialYear extends Model
     protected $table = 'financial_years';
 
     protected $guarded = [];
+
+    public function months(){
+        return $this->hasMany(FinancialYear::class);
+    }
+
+    public function vat_return()
+    {
+        return $this->hasMany(VatReturn::class, 'financial_year_id', 'id');
+    }
 }

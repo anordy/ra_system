@@ -119,6 +119,7 @@ class VerifyAction extends Component
                 $createdby_type,
                 $billitems
             );
+
             if (config('app.env') != 'local') {
                 $sendBill = ZmCore::sendBill($zmBill->id);
                 if ($sendBill)

@@ -20,14 +20,13 @@ class CreateHotelReturnsTable extends Migration
 
             $table->string('filled_type');
             $table->unsignedBigInteger('filled_id');
-            $table->unsignedBigInteger('taxtype_id');
+            $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
 
             $table->integer('edited_count')->default(0);
-            $table->enum('status',['draft', 'submitted', 'complete'])->default('draft');
+            $table->enum('status',['submitted', 'complete'])->default('submitted');
 
             $table->decimal('hotel_infrastructure_tax', 40, 2)->nullable();
-            $table->string('currency');
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 40, 2)->default(0);
 
