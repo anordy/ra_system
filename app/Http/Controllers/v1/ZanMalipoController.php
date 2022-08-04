@@ -3,6 +3,8 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Models\Returns\ReturnStatus;
+use App\Models\Returns\StampDuty\StampDutyReturn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -38,18 +40,35 @@ class ZanMalipoController extends Controller
             $xml = XmlWrapper::xmlStringToArray($content);
             $arrayToXml = new ArrayToXml($xml['gepgBillSubResp'], 'gepgBillSubResp');
             $signedContent = $arrayToXml->dropXmlDeclaration()->toXml();
+
             if (!ZmSignatureHelper::verifySignature($xml['gepgSignature'], $signedContent)) {
                 return $this->ackResp('gepgBillSubRespAck', '7303');
             }
 
             $zan_trx_sts_code =  ZmCore::extractStatusCode($xml['gepgBillSubResp']['BillTrxInf']['TrxStsCode']);
             $bill = ZmCore::getBill($xml['gepgBillSubResp']['BillTrxInf']['BillId']);
+
+            $r = new \ReflectionClass(StampDutyReturn::class);
+
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                     $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
+
+                    if ($bill->billable_type === $r->name){
+                        $billable = $bill->billable;
+                        $billable->status = ReturnStatus::CN_GENERATED;
+                        $billable->save();
+                    }
+
                     SendZanMalipoSMS::dispatch(ZmCore::formatPhone($bill->payer_phone_number), $message);
             } else {
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
+
+                if ($bill->billable_type === $r->name){
+                    $billable = $bill->billable;
+                    $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+                    $billable->save();
+                }
             }
 
 
