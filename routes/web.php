@@ -42,6 +42,7 @@ use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
+use App\Http\Controllers\Returns\Port\PortReturnController;
 //use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Returns\ReturnController;
 use App\Http\Controllers\Returns\ReturnsController;
@@ -105,127 +106,129 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/assesment-files', AssesmentFileController::class);
-    
+
     });
 
+    Route::name('returns.')->prefix('returns')->group(function () {
+        Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
         Route::name('returns.')->prefix('returns')->group(function () {
-            Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
-            Route::name('returns.')->prefix('returns')->group(function () {
-                Route::resource('/interest-rates', InterestRateController::class);
-                Route::get('/', [ReturnsController::class, 'index'])->name('index');
-                Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
-            });
+            Route::resource('/interest-rates', InterestRateController::class);
+            Route::get('/', [ReturnsController::class, 'index'])->name('index');
+            Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
         });
+    });
 
-        Route::prefix('system')->name('system.')->group(function () {
-            Route::resource('audits', AuditController::class);
-            Route::resource('workflow', WorkflowController::class);
+    Route::prefix('system')->name('system.')->group(function () {
+        Route::resource('audits', AuditController::class);
+        Route::resource('workflow', WorkflowController::class);
+    });
+
+    Route::prefix('taxpayers')->as('taxpayers.')->group(function () {
+        Route::resource('/registrations', RegistrationsController::class); // KYC
+        Route::get('registrations/enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
+        Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
+        Route::resource('taxpayer', TaxpayersController::class);
+    });
+    Route::resource('taxpayers', TaxpayersController::class);
+
+    Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
+        Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
+        Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
+        Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
+        Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
+    });
+
+    Route::prefix('business')->as('business.')->group(function () {
+        Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
+        Route::resource('registrations', RegistrationController::class);
+        Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
+        Route::get('/closure/{id}', [BusinessController::class, 'viewClosure'])->name('viewClosure');
+        Route::get('/deregistration/{id}', [BusinessController::class, 'viewDeregistration'])->name('viewDeregistration');
+        Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
+        Route::get('/change-taxtype', [BusinessController::class, 'taxTypeRequests'])->name('taxTypeRequests');
+        Route::get('/change-taxtype/{id}', [BusinessController::class, 'viewTaxTypeRequest'])->name('viewTaxTypeRequest');
+
+        Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
+        Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
+
+        Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
+        Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
+        Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
+        Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
+        Route::get('/business-certificate/{business}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
+    });
+
+    // assesments
+    Route::name('assesments.')->prefix('assesments')->group(function () {
+        Route::get('/objection/index', [ObjectionController::class, 'index'])->name('objection.index');
+        Route::get('/objection/show/{objection_id}', [ObjectionController::class, 'show'])->name('objection.show');
+
+        Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
+        Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
+        Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
+    });
+
+    Route::name('taxagents.')->prefix('taxagents')->group(function () {
+        Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
+        Route::get('/request-show/{id}', [TaxAgentController::class, 'showAgentRequest'])->name('request-show');
+        Route::get('/active', [TaxAgentController::class, 'activeAgents'])->name('active');
+        Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
+        Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
+        Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
+        Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
+        Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
+    });
+
+    Route::name('returns.')->prefix('e-filling')->group(function () {
+        Route::get('/', [ReturnController::class, 'index'])->name('index');
+
+        Route::resource('/petroleum', PetroleumReturnController::class);
+        Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
+        Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
+
+        Route::name('vat-return.')->prefix('vat-return')->group(function () {
+            Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
         });
+    });
 
-        Route::prefix('taxpayers')->as('taxpayers.')->group(function () {
-            Route::resource('/registrations', RegistrationsController::class); // KYC
-            Route::get('registrations/enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
-            Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
-            Route::resource('taxpayer', TaxpayersController::class);
-        });
-        Route::resource('taxpayers', TaxpayersController::class);
+    Route::name('petroleum.')->prefix('petroleum')->group(function () {
+        Route::resource('/filling', PetroleumReturnController::class);
+        Route::get('/certificateOfQuantity/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
+    });
 
-        Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
-            Route::get('register', [WithholdingAgentController::class, 'registration'])->name('register');
-            Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
-            Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
-            Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
-        });
+    Route::name('investigations.')->prefix('investigation')->group(function () {
+        Route::resource('/', TaxInvestigationController::class);
+    });
 
-        Route::prefix('business')->as('business.')->group(function () {
-            Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
-            Route::resource('registrations', RegistrationController::class);
-            Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
-            Route::get('/closure/{id}', [BusinessController::class, 'viewClosure'])->name('viewClosure');
-            Route::get('/deregistration/{id}', [BusinessController::class, 'viewDeregistration'])->name('viewDeregistration');
-            Route::get('/deregistrations', [BusinessController::class, 'deregistrations'])->name('deregistrations');
-            Route::get('/change-taxtype', [BusinessController::class, 'taxTypeRequests'])->name('taxTypeRequests');
-            Route::get('/change-taxtype/{id}', [BusinessController::class, 'viewTaxTypeRequest'])->name('viewTaxTypeRequest');
+    Route::name('auditings.')->prefix('auditing')->group(function () {
+        Route::resource('/', TaxAuditController::class);
+    });
 
-            Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
-            Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
+    Route::name('reliefs.')->prefix('reliefs')->group(function () {
+        Route::resource('/registrations', ReliefRegistrationController::class);
+        Route::resource('/projects', ReliefProjectController::class);
+        Route::resource('/applications', ReliefApplicationsController::class);
+    });
 
-            Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
-            Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
-            Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
-            Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
-            Route::get('/business-certificate/{business}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
-        });
+    Route::name('verifications.')->prefix('verification')->group(function () {
+        Route::resource('/', TaxVerificationController::class);
+    });
 
-        // assesments
-        Route::name('assesments.')->prefix('assesments')->group(function () {
-            Route::get('/objection/index', [ObjectionController::class, 'index'])->name('objection.index');
-            Route::get('/objection/show/{objection_id}', [ObjectionController::class, 'show'])->name('objection.show');
+    Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
 
-            Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
-            Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
-            Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
-        });
+    Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
+    });
 
-        Route::name('taxagents.')->prefix('taxagents')->group(function () {
-            Route::get('/requests', [TaxAgentController::class, 'index'])->name('requests');
-            Route::get('/request-show/{id}', [TaxAgentController::class, 'showAgentRequest'])->name('request-show');
-            Route::get('/active', [TaxAgentController::class, 'activeAgents'])->name('active');
-            Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
-            Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
-            Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
-            Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
-            Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
-        });
-
-        Route::name('returns.')->prefix('e-filling')->group(function () {
-            Route::get('/', [ReturnController::class, 'index'])->name('index');
-
-            Route::resource('/petroleum', PetroleumReturnController::class);
-
-            Route::name('vat-return.')->prefix('vat-return')->group(function () {
-                Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
-            });
-        });
-
-        Route::name('petroleum.')->prefix('petroleum')->group(function () {
-            Route::resource('/filling', PetroleumReturnController::class);
-            Route::get('/certificateOfQuantity/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
-            Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
-        });
-
-        Route::name('investigations.')->prefix('investigation')->group(function () {
-            Route::resource('/', TaxInvestigationController::class);
-        });
-
-        Route::name('auditings.')->prefix('auditing')->group(function () {
-            Route::resource('/', TaxAuditController::class);
-        });
-
-        Route::name('reliefs.')->prefix('reliefs')->group(function () {
-            Route::resource('/registrations', ReliefRegistrationController::class);
-            Route::resource('/projects', ReliefProjectController::class);
-            Route::resource('/applications', ReliefApplicationsController::class);
-        });
-
-        Route::name('verifications.')->prefix('verification')->group(function () {
-            Route::resource('/', TaxVerificationController::class);
-        });
-
-        Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
-
-        Route::name('land-lease.')->prefix('land-lease')->group(function () {
-            Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
-            Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
-            Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
-            Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
-            // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
-        });
-
-        Route::name('returns.')->prefix('returns')->group(function () {
-            // Hotel levy returns
-            Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
-            Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
-        });
+    Route::name('returns.')->prefix('returns')->group(function () {
+        // Hotel levy returns
+        Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
+        Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
+    });
 
 });

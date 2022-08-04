@@ -88,6 +88,9 @@
                 <li class="{{ request()->is('returns/') ? 'active' : '' }}">
                     <a href="{{ route('returns.index') }}">Vat Returns</a>
                 </li>
+                   <li class="{{ request()->is('returns/port*') ? 'active' : '' }}">
+                    <a href="{{ route('returns.port.index') }}">Port Returns</a>
+                </li>
             </ul>
         </li>
 
