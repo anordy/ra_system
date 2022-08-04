@@ -27,11 +27,18 @@ class TaxType extends Model implements Auditable
     public const TAX_CONSULTANT    = 'tax-consultant';
     public const STAMP_DUTY        = 'stamp-duty';
     public const LUMPSUM_PAYMENT   = 'lumpsum-payment';
+    public const ELECTRONIC_MONEY_TRANSACTION   = 'electronic-money-transaction';
+    public const MOBILE_MONEY_TRANSFER   = 'mobile-money-transfer';
 
     protected $fillable = [
         'name',
     ];
 
+    public function landLeases()
+    {
+        return $this->hasMany(LandLease::class,'taxpayer_id');
+    }
+    
     public function vatReturn()
     {
         return $this->hasOne(VatReturn::class, 'taxtype_code', 'code');

@@ -15,6 +15,8 @@ use App\Http\Controllers\AllPdfController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\Returns\ReturnController;
+use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Setting\InterestRateController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
@@ -26,7 +28,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\AuditController;
-use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
@@ -35,23 +36,36 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\TaxTypeController;
-use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TwoFactorAuthController;
+//use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\WorkflowerTestController;
+use App\Http\Controllers\Returns\ReturnsController;
+//use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\WithholdingAgentController;
+use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
+//use App\Http\Controllers\Setting\InterestRateController;
+//use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\RegistrationController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Investigation\TaxInvestigationController;
+use App\Http\Controllers\Relief\ReliefApplicationsController;
+use App\Http\Controllers\Relief\ReliefProjectController;
+use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
-use App\Http\Controllers\Returns\ReturnsController;
-use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
-use App\Http\Controllers\WorkflowController;
-use App\Http\Controllers\WorkflowerTestController;
+use App\Http\Controllers\LandLease\LandLeaseController;
+
+use App\Http\Controllers\Returns\Hotel\HotelReturnController;
+use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
+use App\Http\Controllers\Verification\TaxVerificationController;
 
 Auth::routes();
 
@@ -149,10 +163,45 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
 
+//    Route::name('returns.')->prefix('returns')->group(function () {
+//        Route::get('/', [ReturnController::class, 'index'])->name('index');
+//        Route::get('/vat-return/show/{id}', [ReturnController::class, 'show'])->name('show');
+//
+//    });
+
+
+    Route::name('returns.')->prefix('e-filling')->group(function () {
+        Route::get('/', [ReturnController::class, 'index'])->name('index');
+
+        Route::resource('/petroleum', PetroleumReturnController::class);
+
+        Route::name('vat-return.')->prefix('vat-return')->group(function (){
+            Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
+        });
+    });
+
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
-        Route::get('/certificateOfQuantity/certificate/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::get('/certificateOfQuantity/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
+    });
+
+    Route::name('investigations.')->prefix('investigation')->group(function () {
+        Route::resource('/', TaxInvestigationController::class);
+    });
+
+    Route::name('auditings.')->prefix('auditing')->group(function () {
+        Route::resource('/', TaxAuditController::class);
+    });
+
+    Route::name('reliefs.')->prefix('reliefs')->group(function () {
+        Route::resource('/registrations', ReliefRegistrationController::class);
+        Route::resource('/projects', ReliefProjectController::class);
+        Route::resource('/applications', ReliefApplicationsController::class);
+    });
+
+    Route::name('verifications.')->prefix('verification')->group(function () {
+        Route::resource('/', TaxVerificationController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
@@ -160,5 +209,18 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pdf')->name('pdf.')->group(function () {
         Route::get('all', [AllPdfController::class, 'index'])->name('all');
         Route::get('demand-notice/{file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
+
+    Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
+    });
+
+    Route::name('returns.')->prefix('returns')->group(function () {
+        // Hotel levy returns
+        Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
+        Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
     });
 });

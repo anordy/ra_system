@@ -28,5 +28,7 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['name' => 'Tax Consultant Licences', 'code'=>'Tax_Consultant_Licences']);
         TaxType::updateOrCreate(['name' => 'Stamp Duty', 'code' => TaxType::STAMP_DUTY]);
         TaxType::updateOrCreate(['name' => 'Lumpsum Payments', 'code' => TaxType::LUMPSUM_PAYMENT]);
+        TaxType::updateOrCreate(['name' => 'Electronic Money Transaction', 'code' => TaxType::ELECTRONIC_MONEY_TRANSACTION]);
+        TaxType::updateOrCreate(['name' => 'Mobile Money Transfer', 'code' => TaxType::MOBILE_MONEY_TRANSFER]);
     }
 }

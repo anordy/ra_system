@@ -29,7 +29,6 @@
             </ul>
         </li>
 
-
         <li class="{{ request()->is('business*') ? 'active' : '' }}">
             <a href="#businessMenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business
@@ -74,6 +73,20 @@
                 </li>
                 <li class="{{ request()->is('taxagents/fee*') ? 'active' : '' }}">
                     <a href="{{ route('taxagents.fee') }}">Fee Configuration</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('returns*') ? 'active' : '' }}">
+            <a href="#returnsSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('returns*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
+                Returns</a>
+            <ul class="collapse list-unstyled {{ request()->is('returns*') ? 'show' : '' }}" id="returnsSubmenu">
+                <li class="{{ request()->is('returns/index') ? 'active' : '' }}">
+                    <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
+                </li>
+                <li class="{{ request()->is('returns/') ? 'active': '' }}">
+                    <a href="{{ route('returns.index') }}">Vat Returns</a>
                 </li>
             </ul>
         </li>
@@ -167,6 +180,48 @@
                 <li class="{{ request()->is('petroleum/filling*') ? 'active' : '' }}">
                     <a href="{{ route('petroleum.filling.index') }}">Petroleum Return</a>
                 </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('verification*') ? 'active' : '' }}">
+            <a href="{{ route('verifications.index') }}">Verifications</a>
+        </li>
+
+        <li class="{{ request()->is('auditing*') ? 'active' : '' }}">
+            <a href="{{ route('auditings.index') }}">Auditings</a>
+        </li>
+
+        <li class="{{ request()->is('investigation*') ? 'active' : '' }}">
+            <a href="{{ route('investigations.index') }}">Investigations</a>
+        </li>
+
+        <li class="{{ request()->is('reliefs*') ? 'active' : '' }}">
+            <a href="#reliefs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reliefs Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('reliefs*') ? 'show' : '' }}" id="reliefs">
+                <li class="{{ request()->is('reliefs/projects*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.projects.index') }}">Projects</a>
+                </li>
+                <li class="{{ request()->is('reliefs/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.registrations.index') }}">Registrations</a>
+                </li>
+                <li class="{{ request()->is('reliefs/applications*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.applications.index') }}">Applications</a>
+                </li>
+            </ul>
+        </li>
+
+
+        <li  class="{{ request()->is('land-lease*') ? 'active':'' }}">
+            <a href="#landLeaseSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('land-lease*')  ? 'true' : 'false' }}" class="dropdown-toggle">Land Lease</a>
+            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
+
+                <li class="{{ request()->is('land-lease/list*') ? 'active': '' }}">
+                    <a href="{{ route('land-lease.list') }}">Land Lease List</a>
+                </li>
+                <li class="{{ request()->is('land-lease/generate-report*') ? 'active': '' }}">
+                    <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
+                </li>
+
             </ul>
         </li>
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
