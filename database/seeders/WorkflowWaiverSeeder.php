@@ -43,7 +43,7 @@ class WorkflowWaiverSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2, 3],
             ],
-                'Commissioner' => [
+            'commisioner' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2, 3],
@@ -65,11 +65,6 @@ class WorkflowWaiverSeeder extends Seeder
                 'to' => 'chief_assurance',
                 'condition' => '',
             ],
-            'chief_assurance_review' => [
-                'from' => 'chief_assurance',
-                'to' => 'Commissioner',
-                'condition' => '',
-            ],
             'application_filled_incorrect' => [
                 'from' => 'waiver_manager',
                 'to' => 'correct_application',
@@ -80,6 +75,27 @@ class WorkflowWaiverSeeder extends Seeder
                 'to' => 'waiver_manager',
                 'condition' => '',
             ],
+            'chief_assurance_review' => [
+                'from' => 'chief_assurance',
+                'to' => 'commisioner',
+                'condition' => '',
+            ],
+            'chief_assurance_reject' => [
+                'from' => 'chief_assurance',
+                'to' => 'waiver_manager',
+                'condition' => '',
+            ],
+            'commisioner_reject' => [
+                'from' => 'commisioner',
+                'to' => 'chief_assurance',
+                'condition' => '',
+            ],
+            'commisioner_review' => [
+                'from' => 'commisioner',
+                'to' => 'completed',
+                'condition' => '',
+            ],
+
         ];
 
         Workflow::updateOrCreate([

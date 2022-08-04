@@ -24,29 +24,29 @@
                     </div>
                 </div>
         </div>
-        @if ($this->checkTransition('registration_officer_review'))
+        @if ($this->checkTransition('waiver_manager_review'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
                     Incorrect
                     return to Applicant</button>
                 <button type="button" class="btn btn-primary"
-                    wire:click="approve('registration_officer_review')">Approve & Forward</button>
+                    wire:click="approve('waiver_manager_review')">Approve & Forward</button>
             </div>
-        @elseif ($this->checkTransition('registration_manager_review'))
+        @elseif ($this->checkTransition('chief_assurance_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('registration_manager_reject')">Reject
+                <button type="button" class="btn btn-danger" wire:click="reject('chief_assurance_reject')">Reject
                     & Return</button>
                 <button type="button" class="btn btn-primary"
-                    wire:click="approve('registration_manager_review')">Approve & Forward</button>
+                    wire:click="approve('chief_assurance_review')">Approve & Forward</button>
             </div>
-        @elseif ($this->checkTransition('director_of_trai_review'))
+        @elseif ($this->checkTransition('commisioner_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('director_of_trai_reject')">Reject &
+                <button type="button" class="btn btn-danger" wire:click="reject('commisioner_review')">Reject &
                     Return</button>
-                <button type="button" class="btn btn-primary" wire:click="approve('director_of_trai_review')">Approve &
+                <button type="button" class="btn btn-primary" wire:click="approve('commisioner_review')">Approve &
                     Complete</button>
             </div>
         @endif
-
+            
     </div>
 @endif
