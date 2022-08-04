@@ -163,7 +163,7 @@
 
                             <tr>
                                 <th>Net Vat Payable</th>
-                                <th class="text-right">{{number_format($return->total_vat_amount_due, 2, '.',',')}}
+                                <th class="text-right">{{number_format($return->total_amount_due, 2, '.',',')}}
                                     <strong>{{$return->business->currency->iso}}</strong>
                                 </th>
                             </tr>
