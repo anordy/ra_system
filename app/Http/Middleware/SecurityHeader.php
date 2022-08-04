@@ -27,7 +27,7 @@ class SecurityHeader
             $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
             $response->headers->set('X-Content-Type-Options', 'nosniff');
-
+            $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
             $this->removeUnwantedHeaders($this->unwantedHeaders);
         }
 
