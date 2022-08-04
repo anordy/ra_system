@@ -61,7 +61,6 @@ use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\LandLease\LandLeaseController;
-
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
@@ -169,13 +168,12 @@ Route::middleware(['auth'])->group(function () {
 //
 //    });
 
-
     Route::name('returns.')->prefix('e-filling')->group(function () {
         Route::get('/', [ReturnController::class, 'index'])->name('index');
 
         Route::resource('/petroleum', PetroleumReturnController::class);
 
-        Route::name('vat-return.')->prefix('vat-return')->group(function (){
+        Route::name('vat-return.')->prefix('vat-return')->group(function () {
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
         });
     });
@@ -206,10 +204,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
 
-    Route::prefix('pdf')->name('pdf.')->group(function () {
-        Route::get('all', [AllPdfController::class, 'index'])->name('all');
-        Route::get('demand-notice/{file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
-
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
@@ -222,5 +216,10 @@ Route::middleware(['auth'])->group(function () {
         // Hotel levy returns
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
+    });
+
+    Route::prefix('pdf')->name('pdf.')->group(function () {
+        Route::get('all', [AllPdfController::class, 'index'])->name('all');
+        Route::get('demand-notice/{file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
     });
 });
