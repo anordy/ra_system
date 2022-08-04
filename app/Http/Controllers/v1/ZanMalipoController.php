@@ -21,6 +21,10 @@ use Spatie\ArrayToXml\ArrayToXml;
 class ZanMalipoController extends Controller
 {
 
+    private $returnable = [
+        'App\Models\Returns\StampDuty\StampDutyReturn',
+    ];
+
     /**
      * Create a new controller instance.
      *
@@ -48,13 +52,11 @@ class ZanMalipoController extends Controller
             $zan_trx_sts_code =  ZmCore::extractStatusCode($xml['gepgBillSubResp']['BillTrxInf']['TrxStsCode']);
             $bill = ZmCore::getBill($xml['gepgBillSubResp']['BillTrxInf']['BillId']);
 
-            $r = new \ReflectionClass(StampDutyReturn::class);
-
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                     $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
-                    if ($bill->billable_type === $r->name){
+                    if (in_array($bill->billable_type, $this->returnable)){
                         $billable = $bill->billable;
                         $billable->status = ReturnStatus::CN_GENERATED;
                         $billable->save();
@@ -64,13 +66,12 @@ class ZanMalipoController extends Controller
             } else {
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
 
-                if ($bill->billable_type === $r->name){
+                if (in_array($bill->billable_type, $this->returnable)){
                     $billable = $bill->billable;
                     $billable->status = ReturnStatus::CN_GENERATION_FAILED;
                     $billable->save();
                 }
             }
-
 
             return $this->ackResp('gepgBillSubRespAck', '7101');
         } catch (\Throwable $ex) {
@@ -98,6 +99,7 @@ class ZanMalipoController extends Controller
             $tx_info = $xml['gepgPmtSpInfo']['PymtTrxInf'];
 
             $bill = ZmCore::getBill($tx_info['BillId']);
+
             ZmPayment::query()->insert([
                 'zm_bill_id' => $tx_info['BillId'],
                 'trx_id' => $tx_info['TrxId'],
