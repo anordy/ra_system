@@ -16,6 +16,7 @@ use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Returns\SettingController;
+use App\Http\Controllers\Setting\InterestRateController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -50,8 +51,7 @@ use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
-use App\Http\Controllers\VatReturn\VatReturnController;
-use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
+use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 
 Auth::routes();
 
@@ -90,9 +90,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
-        Route::resource('/interest-rates', InterestRateController::class);
-
+        Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
         Route::name('returns.')->prefix('returns')->group(function () {
+            Route::resource('/interest-rates', InterestRateController::class);
             Route::get('/', [ReturnsController::class, 'index'])->name('index');
             Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
         });
@@ -149,8 +149,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
 
-    Route::name('returns.')->prefix('e-filling')->group(function () {
-        Route::resource('/petroleum', PetroleumReturnController::class);
+    Route::name('petroleum.')->prefix('petroleum')->group(function () {
+        Route::resource('/filling', PetroleumReturnController::class);
+        Route::get('/certificateOfQuantity/certificate/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+        Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

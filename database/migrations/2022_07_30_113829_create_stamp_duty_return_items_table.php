@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReturnMonthsTable extends Migration
+class CreateStampDutyReturnItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateReturnMonthsTable extends Migration
      */
     public function up()
     {
-        Schema::create('return_months', function (Blueprint $table) {
+        Schema::create('stamp_duty_return_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code');
-            $table->dateTime('due_date');
-            $table->unsignedBigInteger('financial_year_id');
+            $table->unsignedBigInteger('config_id');
+            $table->unsignedBigInteger('return_id');
+            $table->string('value');
+            $table->string('tax');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateReturnMonthsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('return_months');
+        Schema::dropIfExists('stamp_duty_return_items');
     }
 }

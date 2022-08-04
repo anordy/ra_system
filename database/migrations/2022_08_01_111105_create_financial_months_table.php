@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFinancialYearsTable extends Migration
+class CreateFinancialMonthsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateFinancialYearsTable extends Migration
      */
     public function up()
     {
-        Schema::create('financial_years', function (Blueprint $table) {
+        Schema::create('financial_months', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('E.g 2021/2022, 2022/2023');
-            $table->string('code')->comment('E.g 2021, 2022, 2023');
-            $table->boolean('active')->default(0);
+            $table->unsignedBigInteger('financial_year_id');
+            $table->string('name');
+            $table->enum('number', [1,2,3,4,5,6,7,8,9,10,11,12]);
+            $table->dateTime('due_date');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateFinancialYearsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('financial_years');
+        Schema::dropIfExists('financial_months');
     }
 }
