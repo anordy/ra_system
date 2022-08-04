@@ -16,7 +16,7 @@ class Ward extends Model implements Auditable
     public function district() {
         return $this->belongsTo(District::class, 'district_id');
     }
- 
+    
     public function landLeases()
     {
         $this->hasMany(LandLease::class,'ward_id');

@@ -21,6 +21,11 @@ class CreateReliefsTable extends Migration
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('business_id');
             $table->decimal('rate');
+            $table->decimal('vat');
+            $table->decimal('total_amount');
+            $table->decimal('vat_amount');
+            $table->decimal('relieved_amount');
+            $table->decimal('amount_payable');
             $table->date('expire');
             $table->enum('status', ['draft', 'approved', 'rejected']);
             $table->boolean('active')->default(true);

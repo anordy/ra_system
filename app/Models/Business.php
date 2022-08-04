@@ -8,6 +8,7 @@ use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Relief\Relief;
 
 class Business extends Model implements Auditable
 {
@@ -48,8 +49,8 @@ class Business extends Model implements Auditable
         return $this->hasOne(BusinessHotel::class);
     }
     
-    public function location(){
-        return $this->hasOne(BusinessLocation::class);
+    public function locations(){
+        return $this->hasMany(BusinessLocation::class, 'business_id');
     }
 
     public function headquarter(){
@@ -132,4 +133,10 @@ class Business extends Model implements Auditable
     {
         return $this->hasMany(VatReturn::class);
     }
+
+    public function reliefs()
+    {
+        return $this->hasMany(Relief::class,'business_id');
+    }
+
 }
