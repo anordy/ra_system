@@ -27,7 +27,7 @@ class CreateVatReturnsTable extends Migration
             $table->decimal('total_vat_payable', 40,2);
             $table->decimal('vat_withheld', 40,2);
             $table->decimal('infrastructure_tax', 40,2)->nullable();
-            $table->decimal('total_vat_amount_due', 40,2);
+            $table->decimal('total_amount_due', 40,2);
             $table->string('has_exemption');
             $table->enum('status',['submitted','complete']);
             $table->integer('editing_count',0);
