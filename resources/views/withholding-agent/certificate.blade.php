@@ -48,9 +48,9 @@
 
         .location {
             position: absolute;
-            font-size: 1.2em;
-            top: 46.5%;
-            left: 45%;
+            font-size: 1.1em;
+            top: 46.7%;
+            left: 35%;
             text-transform: uppercase;
             font-weight: bold
         }

@@ -84,7 +84,8 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label class="form-label">Tax Type</label>
-                                <select class="form-control @error("selectedTaxTypes.{$key}.tax_type_id") is-invalid @enderror"
+                                <select
+                                    class="form-control @error("selectedTaxTypes.{$key}.tax_type_id") is-invalid @enderror"
                                     wire:model="selectedTaxTypes.{{ $key }}.tax_type_id">
                                     <option value="" selected disabled>--Select---</option>
                                     @foreach ($taxTypes as $type)
@@ -99,7 +100,8 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label class="form-label">Currency</label>
-                                <select class="form-control @error("selectedTaxTypes.{$key}.currency") is-invalid @enderror"
+                                <select
+                                    class="form-control @error("selectedTaxTypes.{$key}.currency") is-invalid @enderror"
                                     wire:model="selectedTaxTypes.{{ $key }}.currency">
                                     <option value="" selected disabled>--Select---</option>
                                     <option value="TZS">Tanzania Shillings</option>
@@ -110,6 +112,32 @@
                                 @enderror
                             </div>
                         </div>
+
+                        @if ($showLumpsumOptions === true)
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="form-label">Annual Estimate</label>
+                                    <input type="number"
+                                        class="form-control @error('annual_estimate') is-invalid @enderror"
+                                        wire:model='annual_estimate'>
+                                    @error('annual_estimate')
+                                        <span class="text-danger error">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="form-label">Payment Quaters per year</label>
+                                    <input type="number" class="form-control @error('quaters') is-invalid @enderror"
+                                        wire:model='quaters'>
+                                    @error('quaters')
+                                        <span class="text-danger error">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endif
+
+
                         <div class="col-md-2 d-flex align-items-center">
                             @if ($key > 0)
                                 <button class="btn btn-danger btn-sm"
@@ -122,10 +150,12 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button class="btn text-white btn-info" wire:click.prevent="addTaxtype()">
-                    <i class="bi bi-plus-square-fill"></i>
-                    Add Tax Type
-                </button>
+                @if ($showLumpsumOptions === false)
+                    <button class="btn text-white btn-info" wire:click.prevent="addTaxtype()">
+                        <i class="bi bi-plus-square-fill"></i>
+                        Add Tax Type
+                    </button>
+                @endif
             </div>
         </div>
     </div>
