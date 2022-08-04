@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBFOReturnItemsTable extends Migration
+class CreateEmTransactionReturnItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,14 @@ class CreateBFOReturnItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bfo_return_items', function (Blueprint $table) {
+        Schema::create('em_transaction_return_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('config_id');
-            $table->unsignedBigInteger('bfo_return_id');
+            $table->unsignedBigInteger('return_id');
             $table->decimal('value', 40,2); 
             $table->decimal('vat', 40,2);
             $table->softDeletes();
             $table->timestamps();
-
-            // $table->foreign('bfo_return_id')->references('id')->on('bfo_returns');
-            // $table->foreign('bfo_config_id')->references('id')->on('bfo_configs');
         });
     }
 
@@ -34,6 +31,6 @@ class CreateBFOReturnItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bfo_return_items');
+        Schema::dropIfExists('em_transaction_return_items');
     }
 }

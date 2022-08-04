@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBFOReturnsTable extends Migration
+class CreateMMTransferReturnsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateBFOReturnsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bfo_returns', function (Blueprint $table) {
+        Schema::create('mm_transfer_returns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('business_id');
@@ -29,12 +29,6 @@ class CreateBFOReturnsTable extends Migration
             $table->decimal('total_amount_due_with_penalties', 40, 2)->default(0);
             $table->softDeletes();
             $table->timestamps();
-
-            // $table->foreign('business_id')->references('id')->on('businesses');
-            // $table->foreign('location_id')->references('id')->on('business_locations');
-            // $table->foreign('filed_by_id')->references('id')->on('taxpayers');
-            // $table->foreign('financial_year_id')->references('id')->on('financial_years');
-            // $table->foreign('return_month_id')->references('id')->on('return_months');
         });
     }
 
@@ -45,6 +39,6 @@ class CreateBFOReturnsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bfo_returns');
+        Schema::dropIfExists('m_m_transfer_returns');
     }
 }
