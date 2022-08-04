@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use App\Traits\WorkflowTrait;
 use App\Models\BusinessStatus;
+use App\Models\VatReturn\VatReturn;
+use App\Traits\WorkflowTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Business extends Model implements Auditable
 {
@@ -16,110 +17,156 @@ class Business extends Model implements Auditable
     protected $guarded = [];
 
     protected $casts = [
-        'date_of_commencing' => 'datetime'
+        'date_of_commencing' => 'datetime',
     ];
 
-    public function taxpayer(){
+    public function taxpayer()
+    {
         return $this->belongsTo(Taxpayer::class);
     }
 
-    public function partners(){
+    public function partners()
+    {
         return $this->hasMany(BusinessPartner::class);
     }
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(BusinessCategory::class, 'business_category_id');
     }
 
-    public function currency(){
+    public function currency()
+    {
         return $this->belongsTo(Currency::class);
     }
 
-    public function taxTypes(){
+    public function taxTypes()
+    {
         return $this->belongsToMany(TaxType::class)->withPivot('currency');
     }
 
-    public function activityType(){
+    public function activityType()
+    {
         return $this->belongsTo(BusinessActivity::class, 'business_activities_type_id');
     }
 
-    public function hotel(){
+    public function hotel()
+    {
         return $this->hasOne(BusinessHotel::class);
     }
-    
-    public function location(){
+
+    public function location()
+    {
         return $this->hasOne(BusinessLocation::class);
     }
 
-    public function headquarter(){
+    public function headquarter()
+    {
         return $this->hasOne(BusinessLocation::class)->where('is_headquarter', true);
     }
 
-    public function branches(){
+    public function branches()
+    {
         return $this->hasMany(BusinessLocation::class)->where('is_headquarter', false);
     }
 
-    public function bank(){
+    public function bank()
+    {
         return $this->hasOne(BusinessBank::class);
     }
 
-    public function isici(){
+    public function isici()
+    {
         return $this->belongsTo(ISIC1::class, 'isiic_i');
     }
 
-    public function isicii(){
+    public function isicii()
+    {
         return $this->belongsTo(ISIC2::class, 'isiic_ii');
     }
 
-    public function isiciii(){
+    public function isiciii()
+    {
         return $this->belongsTo(ISIC3::class, 'isiic_iii');
     }
 
-    public function isiciv(){
+    public function isiciv()
+    {
         return $this->belongsTo(ISIC4::class, 'isiic_iv');
     }
 
-    public function consultants(){
+    public function consultants()
+    {
         return $this->hasMany(BusinessConsultant::class)
             ->orderByRaw("FIELD(status, 'approved', 'pending', 'rejected', 'removed')")
             ->orderBy('created_at', 'desc')
             ->orderBy('updated_at', 'desc');
     }
 
-    public function responsiblePerson(){
+    public function responsiblePerson()
+    {
         return $this->belongsTo(Taxpayer::class, 'responsible_person_id');
     }
 
-    public function temporaryBusinessClosures(){
+    public function temporaryBusinessClosures()
+    {
         return $this->hasMany(TemporaryBusinessClosure::class);
     }
 
-    public function taxTypeChanges(){
+    public function taxTypeChanges()
+    {
         return $this->hasMany(BusinessTaxTypeChange::class);
     }
 
-    public function openBusiness(){
+    public function openBusiness()
+    {
         return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
     }
 
-    public function businessStatus(){
+    public function businessStatus()
+    {
         return $this->hasOne(BusinessStatus::class);
     }
 
-    public function businessUpdate(){
+    public function businessUpdate()
+    {
         return $this->hasOne(BusinessUpdate::class);
     }
     // Files Relation
-    public function files(){
+    public function files()
+    {
         return $this->hasMany(BusinessFile::class);
     }
 
     // Scopes
-    public function scopeApproved($query){
+    public function scopeApproved($query)
+    {
         $query->where('status', BusinessStatus::APPROVED);
     }
 
-    public function scopeClosed($query){
+    public function scopeClosed($query)
+    {
         $query->where('status', BusinessStatus::TEMP_CLOSED);
+    }
+
+//    public function portTaxReturn()
+    //    {
+    //        return $this->hasMany(PortTaxReturn::class);
+    //    }
+    public function vatReturn()
+    {
+        return $this->hasMany(VatReturn::class);
+    }
+
+    public function waiver()
+    {
+        return $this->hasMany(Waiver::class);
+
+    }
+
+    public function objection()
+    {
+        return $this->hasMany(Objection::class);
+
     }
 }

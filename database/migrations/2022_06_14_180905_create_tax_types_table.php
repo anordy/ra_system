@@ -15,8 +15,11 @@ class CreateTaxTypesTable extends Migration
     {
         Schema::create('tax_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('code');
+            $table->string('name');
+            $table->enum('category', ['main', 'subcategory', 'other'])->default('main');
+            $table->unsignedBigInteger('parent_id')->default(0);
+            $table->string('gfs_code')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

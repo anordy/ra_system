@@ -24,4 +24,10 @@ class District extends Model implements Auditable
     {
         return $this->hasOne(TaxAgent::class);
     }
+
+    public function landLeases()
+    {
+        $this->hasMany(LandLease::class,'district_id');
+    }
+
 }

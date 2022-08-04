@@ -20,7 +20,7 @@ class CreateBusinessTaxTypeTable extends Migration
             $table->enum('currency',['TZS','USD']);
             $table->timestamps();
         });
-    }
+	}
 
     /**
      * Reverse the migrations.
