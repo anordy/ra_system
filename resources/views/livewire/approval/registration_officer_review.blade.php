@@ -128,8 +128,14 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label class="form-label">Payment Quaters per year</label>
-                                    <input type="number" class="form-control @error('quaters') is-invalid @enderror"
+
+                                    <select class="form-control @error('quaters') is-invalid @enderror"
                                         wire:model='quaters'>
+                                        <option value="0" selected disabled>--Select---</option>
+                                        <option value="1">One </option>
+                                        <option value="3">Three</option>
+                                    </select>
+
                                     @error('quaters')
                                         <span class="text-danger error">{{ $message }}</span>
                                     @enderror
