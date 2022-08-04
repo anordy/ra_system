@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Audit\TaxAuditController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\EducationLevelController;
@@ -40,18 +41,14 @@ use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TwoFactorAuthController;
-//use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\WorkflowerTestController;
 use App\Http\Controllers\Returns\ReturnsController;
-//use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
-//use App\Http\Controllers\Setting\InterestRateController;
-//use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Investigation\TaxInvestigationController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
@@ -199,8 +196,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/applications', ReliefApplicationsController::class);
     });
 
-    Route::name('verifications.')->prefix('verification')->group(function () {
-        Route::resource('/', TaxVerificationController::class);
+    Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
+        Route::resource('/verifications', TaxVerificationController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

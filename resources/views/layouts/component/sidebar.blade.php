@@ -182,8 +182,8 @@
             </ul>
         </li>
 
-        <li class="{{ request()->is('verification*') ? 'active' : '' }}">
-            <a href="{{ route('verifications.index') }}">Verifications</a>
+        <li class="{{ request()->is('tax_verifications*') ? 'active' : '' }}">
+            <a href="{{ route('tax_verifications.verifications.index') }}">Verifications</a>
         </li>
 
         <li class="{{ request()->is('auditing*') ? 'active' : '' }}">
