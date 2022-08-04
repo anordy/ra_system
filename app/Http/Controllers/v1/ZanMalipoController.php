@@ -96,6 +96,7 @@ class ZanMalipoController extends Controller
             if (!!ZmSignatureHelper::verifySignature($xml['gepgSignature'], $signedContent)) {
                 return $this->ackResp('gepgPmtSpInfoAck', '7303');
             }
+
             $tx_info = $xml['gepgPmtSpInfo']['PymtTrxInf'];
 
             $bill = ZmCore::getBill($tx_info['BillId']);
@@ -123,8 +124,19 @@ class ZanMalipoController extends Controller
 
             if ($bill->paidAmount() >= $bill->amount) {
                 $bill->status = 'paid';
+                if (in_array($bill->billable_type, $this->returnable)){
+                    $billable = $bill->billable;
+                    $billable->status = ReturnStatus::COMPLETE;
+                    $billable->save();
+                }
+
             } else {
                 $bill->status = 'partially';
+                if (in_array($bill->billable_type, $this->returnable)){
+                    $billable = $bill->billable;
+                    $billable->status = ReturnStatus::PAID_PARTIALLY;
+                    $billable->save();
+                }
             }
 
             $bill->save();
