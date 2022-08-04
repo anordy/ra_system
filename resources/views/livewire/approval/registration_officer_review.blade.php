@@ -133,7 +133,9 @@
                                         wire:model='quaters'>
                                         <option value="0" selected disabled>--Select---</option>
                                         <option value="1">One </option>
+                                        <option value="2">two</option>
                                         <option value="3">Three</option>
+                                        <option value="4">four</option>
                                     </select>
 
                                     @error('quaters')
