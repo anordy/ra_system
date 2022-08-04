@@ -46,6 +46,9 @@ class DatabaseSeeder extends Seeder
         $this->call(PetroleumConfigSeeder::class);
         $this->call(PortConfigSeeder::class);
         $this->call(BFOConfigSeeder::class);
+        $this->call(BFOConfigSeeder::class);
+        $this->call(EmTransactionSeeder::class);
+        $this->call(MmTransferSeeder::class);
         $this->call(FinancialYearSeeder::class);
         $this->call(VatReturnConfigSeeder::class);
         $this->call(ISIC1Seeder::class);
