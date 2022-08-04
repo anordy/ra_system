@@ -185,6 +185,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/petroleum', PetroleumReturnController::class);
         Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
+        Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
         Route::name('vat-return.')->prefix('vat-return')->group(function () {
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');

@@ -25,6 +25,7 @@ class PortReturnTable extends DataTableComponent
         return PortReturn::query()->where('filled_id', auth()->user()->id);
     }
 
+    
     public function columns(): array
     {
         return [
