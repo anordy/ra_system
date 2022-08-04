@@ -18,7 +18,7 @@
         <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
             <a href="#taxpayersMenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}"
-                class="dropdown-toggle">Taxpayers</a>
+                class="dropdown-toggle">Taxpayers Management</a>
             <ul class="collapse list-unstyled {{ request()->is('taxpayers*') ? 'show' : '' }}" id="taxpayersMenu">
                 <li class="{{ request()->is('taxpayers/taxpayer*') ? 'active' : '' }}">
                     <a href="{{ route('taxpayers.taxpayer.index') }}">Taxpayers</a>
@@ -29,182 +29,211 @@
             </ul>
         </li>
 
-        <li class="{{ request()->is('vat-return*') ? 'active' : '' }}">
-            <a href="#vat-returnSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('vat-return*') ? 'true' : 'false' }}" class="dropdown-toggle">Vat
-                Return</a>
-            <ul class="collapse list-unstyled {{ request()->is('vat-return*') ? 'show' : '' }}" id="vat-returnSubmenu">
-                <li class="{{ request()->is('vat-return/rates') ? 'active' : '' }}">
-                    {{-- <a href="{{ route('vat-return.rates') }}">Rates Configuration</a> --}}
-                </li>
-                <li class="{{ request()->is('vat-return/*') ? 'active' : '' }}">
-                    {{-- <a href="{{route('vat-return.index')}}">Returns Requests</a> --}}
-                </li>
-                {{-- <li class="{{ request()->is('vat-return/renew*') ? 'active': '' }}"> --}}
-                {{-- <a href="{{route('vat-return.renew')}}">Renewal Requests</a> --}}
-                {{-- </li> --}}
-                {{-- <li class="{{ request()->is('vat-return/fee*') ? 'active': '' }}"> --}}
-                {{-- <a href="{{route('vat-return.fee')}}">Fee Configuration</a> --}}
-        </li>
-    </ul>
-    </li>
-
-    <li class="{{ request()->is('port-tax-return*') ? 'active' : '' }}">
-        <a href="#port-tax-returnSubmenu" data-toggle="collapse"
-            aria-expanded="{{ request()->is('port-tax-return*') ? 'true' : 'false' }}" class="dropdown-toggle">Port Tax
-            Return</a>
-        <ul class="collapse list-unstyled {{ request()->is('port-tax-return*') ? 'show' : '' }}"
-            id="port-tax-returnSubmenu">
-            <li class="{{ request()->is('port-tax-return/rates') ? 'active' : '' }}">
-                {{-- <a href="{{ route('port-tax-return.rates') }}">Rates Configuration</a> --}}
-            </li>
-            {{-- <li class="{{ request()->is('vat-return/active*') ? 'active': '' }}"> --}}
-            {{-- <a href="{{route('vat-return.active')}}">Active Tax Consultants</a> --}}
-            {{-- </li> --}}
-            {{-- <li class="{{ request()->is('vat-return/renew*') ? 'active': '' }}"> --}}
-            {{-- <a href="{{route('vat-return.renew')}}">Renewal Requests</a> --}}
-            {{-- </li> --}}
-            {{-- <li class="{{ request()->is('vat-return/fee*') ? 'active': '' }}"> --}}
-            {{-- <a href="{{route('vat-return.fee')}}">Fee Configuration</a> --}}
-            {{-- </li> --}}
-        </ul>
-    </li>
-
-    <li class="{{ request()->is('business*') ? 'active' : '' }}">
-        <a href="#businessMenu" data-toggle="collapse"
-            aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business</a>
-        <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
-            @can('business_registrations_view')
-                <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
-                    <a href="{{ route('business.registrations.index') }}">Registrations</a>
-                </li>
-            @endcan
-            <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
-                <a href="{{ route('business.branches.index') }}">Branches</a>
-            </li>
-            <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
-                <a href="{{ route('business.deregistrations') }}">De-registrations</a>
-            </li>
-            <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
-                <a href="{{ route('business.closure') }}">Temporary Closures</a>
-            </li>
-            <li class="{{ request()->is('business/updates*') ? 'active' : '' }}">
-                <a href="{{ route('business.updatesRequests') }}">Business Updates Requests</a>
-                @can('change_tax_type_view')
-                <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
-                    <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
-                </li>
-            @endcan
-        </ul>
-    </li>
-    <li class="{{ request()->is('taxagents*') ? 'active' : '' }}">
-        <a href="#taxagentSubmenu" data-toggle="collapse"
-            aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
-            Consultants</a>
-        <ul class="collapse list-unstyled {{ request()->is('taxagents*') ? 'show' : '' }}" id="taxagentSubmenu">
-            <li class="{{ request()->is('taxagents/requests') ? 'active' : '' }}">
-                <a href="{{ route('taxagents.requests') }}">Registration Requests</a>
-            </li>
-            <li class="{{ request()->is('taxagents/active*') ? 'active' : '' }}">
-                <a href="{{ route('taxagents.active') }}">Active Tax Consultants</a>
-            </li>
-            <li class="{{ request()->is('taxagents/renew*') ? 'active' : '' }}">
-                <a href="{{ route('taxagents.renew') }}">Renewal Requests</a>
-            </li>
-            <li class="{{ request()->is('taxagents/fee*') ? 'active' : '' }}">
-                <a href="{{ route('taxagents.fee') }}">Fee Configuration</a>
-            </li>
-        </ul>
-    </li>
-
-    @can('withholding_agents_view')
-        <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
-            <a href="#withholdingAgentsMenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}"
-                class="dropdown-toggle">Withholding Agents</a>
-            <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
-                id="withholdingAgentsMenu">
-                @can('withholding_agents_add')
-                    <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
-                        <a href="{{ route('withholdingAgents.register') }}">Registration</a>
+        <li class="{{ request()->is('business*') ? 'active' : '' }}">
+            <a href="#businessMenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}"
+                class="dropdown-toggle">Business Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
+                @can('business_registrations_view')
+                    <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
+                        <a href="{{ route('business.registrations.index') }}">Registrations</a>
                     </li>
                 @endcan
-                <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
-                    <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
+                <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
+                    <a href="{{ route('business.branches.index') }}">Branches</a>
+                </li>
+                <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
+                    <a href="{{ route('business.deregistrations') }}">De-registrations</a>
+                </li>
+                <li class="{{ request()->is('business/closure*') ? 'active' : '' }}">
+                    <a href="{{ route('business.closure') }}">Temporary Closures</a>
+                </li>
+                <li class="{{ request()->is('business/updates*') ? 'active' : '' }}">
+                    <a href="{{ route('business.updatesRequests') }}">Business Updates Requests</a>
+                    @can('change_tax_type_view')
+                    <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
+                        <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
+                    </li>
+                @endcan
+            </ul>
+        </li>
+        <li class="{{ request()->is('taxagents*') ? 'active' : '' }}">
+            <a href="#taxagentSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('taxagents*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
+                Consultants</a>
+            <ul class="collapse list-unstyled {{ request()->is('taxagents*') ? 'show' : '' }}" id="taxagentSubmenu">
+                <li class="{{ request()->is('taxagents/requests') ? 'active' : '' }}">
+                    <a href="{{ route('taxagents.requests') }}">Registration Requests</a>
+                </li>
+                <li class="{{ request()->is('taxagents/active*') ? 'active' : '' }}">
+                    <a href="{{ route('taxagents.active') }}">Active Tax Consultants</a>
+                </li>
+                <li class="{{ request()->is('taxagents/renew*') ? 'active' : '' }}">
+                    <a href="{{ route('taxagents.renew') }}">Renewal Requests</a>
+                </li>
+                <li class="{{ request()->is('taxagents/fee*') ? 'active' : '' }}">
+                    <a href="{{ route('taxagents.fee') }}">Fee Configuration</a>
                 </li>
             </ul>
         </li>
-    @endcan
 
-    <li class="{{ request()->is('settings*') ? 'active' : '' }}">
-        <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
-        <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
-            @can('roles_add')
-                <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.users.index') }}">Users</a>
+        <li class="{{ request()->is('returns*') ? 'active' : '' }}">
+            <a href="#returnsSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('returns*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
+                Returns</a>
+            <ul class="collapse list-unstyled {{ request()->is('returns*') ? 'show' : '' }}" id="returnsSubmenu">
+                <li class="{{ request()->is('returns/index') ? 'active' : '' }}">
+                    <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
                 </li>
-            @endcan
-            @can('roles_add')
-                <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.roles.index') }}">Roles</a>
+                <li class="{{ request()->is('returns/') ? 'active': '' }}">
+                    <a href="{{ route('returns.index') }}">Vat Returns</a>
                 </li>
-            @endcan
-            <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
-                <a href="{{ route('settings.country.index') }}">Countries</a>
-            </li>
-            <li class="{{ request()->is('settings/region*') ? 'active' : '' }}">
-                <a href="{{ route('settings.region.index') }}">Region</a>
-            </li>
-            <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
-                <a href="{{ route('settings.district.index') }}">District</a>
-            </li>
-            <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
-                <a href="{{ route('settings.ward.index') }}">Ward</a>
-            </li>
-            <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
-                <a href="{{ route('settings.banks.index') }}">Banks</a>
-            </li>
-            <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
-                <a href="{{ route('settings.education-level.index') }}">Education Level</a>
-            </li>
-            <li class="{{ request()->is('settings/business-categories*') ? 'active' : '' }}">
-                <a href="{{ route('settings.business-categories.index') }}">Business categories</a>
-            </li>
-            <li class="{{ request()->is('settings/taxtypes*') ? 'active' : '' }}">
-                <a href="{{ route('settings.taxtypes.index') }}">Tax Types</a>
-            </li>
-            <li class="{{ request()->is('settings/isic1*') ? 'active' : '' }}">
-                <a href="{{ route('settings.isic1.index') }}">ISIC Level 1</a>
-            </li>
-            <li class="{{ request()->is('settings/isic2*') ? 'active' : '' }}">
-                <a href="{{ route('settings.isic2.index') }}">ISIC Level 2</a>
-            </li>
-            <li class="{{ request()->is('settings/isic3*') ? 'active' : '' }}">
-                <a href="{{ route('settings.isic3.index') }}">ISIC Level 3</a>
-            </li>
-            <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
-                <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
-            </li>
-            <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
-                <a href="{{ route('settings.business-files.index') }}">Business Files</a>
-            </li>
-            <li class="{{ request()->is('settings/returns*') ? 'active' : '' }}">
-                <a href="{{ route('settings.returns.index') }}">Returns</a>
-            </li>
-        </ul>
-    </li>
-    <li class="{{ request()->is('system*') ? 'active' : '' }}">
-        <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
-        <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
-            <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
-                <a href="{{ route('system.audits.index') }}">Audit Trail</a>
-            </li>
-            <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
-            </li>
-        </ul>
-    </li>
+            </ul>
+        </li>
 
+        @can('withholding_agents_view')
+            <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
+                <a href="#withholdingAgentsMenu" data-toggle="collapse"
+                    aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}"
+                    class="dropdown-toggle">Withholding Agents</a>
+                <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
+                    id="withholdingAgentsMenu">
+                    @can('withholding_agents_add')
+                        <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
+                            <a href="{{ route('withholdingAgents.register') }}">Registration</a>
+                        </li>
+                    @endcan
+                    <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
+                        <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
+                    </li>
+                </ul>
+            </li>
+        @endcan
+
+        <li class="{{ request()->is('settings*') ? 'active' : '' }}">
+            <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
+            <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
+                @can('roles_add')
+                    <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.users.index') }}">Users</a>
+                    </li>
+                @endcan
+                @can('roles_add')
+                    <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.roles.index') }}">Roles</a>
+                    </li>
+                @endcan
+                <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.country.index') }}">Countries</a>
+                </li>
+                <li class="{{ request()->is('settings/region*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.region.index') }}">Region</a>
+                </li>
+                <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.district.index') }}">District</a>
+                </li>
+                <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.ward.index') }}">Ward</a>
+                </li>
+                <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.banks.index') }}">Banks</a>
+                </li>
+                <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.education-level.index') }}">Education Level</a>
+                </li>
+                <li class="{{ request()->is('settings/business-categories*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.business-categories.index') }}">Business categories</a>
+                </li>
+                <li class="{{ request()->is('settings/taxtypes*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.taxtypes.index') }}">Tax Types</a>
+                </li>
+                <li class="{{ request()->is('settings/isic1*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.isic1.index') }}">ISIC Level 1</a>
+                </li>
+                <li class="{{ request()->is('settings/isic2*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.isic2.index') }}">ISIC Level 2</a>
+                </li>
+                <li class="{{ request()->is('settings/isic3*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.isic3.index') }}">ISIC Level 3</a>
+                </li>
+                <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
+                </li>
+                <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.business-files.index') }}">Business Files</a>
+                </li>
+                <li class="{{ request()->is('settings/stamp-duty*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.stamp-duty') }}">Stamp Duty</a>
+                </li>
+                <li class="{{ request()->is('settings/returns*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.returns.index') }}">Returns</a>
+                </li>
+            </ul>
+        </li>
+        <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">
+            <a href="#petroleum" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Petroleum Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('petroleum*') ? 'show' : '' }}" id="petroleum">
+                <li class="{{ request()->is('petroleum/certificateOfQuantity*') ? 'active' : '' }}">
+                    <a href="{{ route('petroleum.certificateOfQuantity.index') }}">Certificate of Quantity</a>
+                </li>
+                <li class="{{ request()->is('petroleum/filling*') ? 'active' : '' }}">
+                    <a href="{{ route('petroleum.filling.index') }}">Petroleum Return</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('verification*') ? 'active' : '' }}">
+            <a href="{{ route('verifications.index') }}">Verifications</a>
+        </li>
+
+        <li class="{{ request()->is('auditing*') ? 'active' : '' }}">
+            <a href="{{ route('auditings.index') }}">Auditings</a>
+        </li>
+
+        <li class="{{ request()->is('investigation*') ? 'active' : '' }}">
+            <a href="{{ route('investigations.index') }}">Investigations</a>
+        </li>
+
+        <li class="{{ request()->is('reliefs*') ? 'active' : '' }}">
+            <a href="#reliefs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reliefs Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('reliefs*') ? 'show' : '' }}" id="reliefs">
+                <li class="{{ request()->is('reliefs/projects*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.projects.index') }}">Projects</a>
+                </li>
+                <li class="{{ request()->is('reliefs/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.registrations.index') }}">Registrations</a>
+                </li>
+                <li class="{{ request()->is('reliefs/applications*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.applications.index') }}">Applications</a>
+                </li>
+            </ul>
+        </li>
+
+
+        <li  class="{{ request()->is('land-lease*') ? 'active':'' }}">
+            <a href="#landLeaseSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('land-lease*')  ? 'true' : 'false' }}" class="dropdown-toggle">Land Lease</a>
+            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
+
+                <li class="{{ request()->is('land-lease/list*') ? 'active': '' }}">
+                    <a href="{{ route('land-lease.list') }}">Land Lease List</a>
+                </li>
+                <li class="{{ request()->is('land-lease/generate-report*') ? 'active': '' }}">
+                    <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
+                </li>
+
+            </ul>
+        </li>
+        <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
+            <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
+                <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
+                    <a href="{{ route('system.audits.index') }}">Audit Trail</a>
+                </li>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
+                </li>
+            </ul>
+        </li>
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">

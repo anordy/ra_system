@@ -15,15 +15,18 @@ class CreateBFOReturnsTable extends Migration
     {
         Schema::create('bfo_returns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tax_type_id');
-            $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_location_id');
-            $table->string('filed_type');
+            $table->unsignedBigInteger('business_id');
+            $table->string('filled_type');
             $table->unsignedBigInteger('filed_by_id');
-            $table->string('currency');
+            $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
-            $table->unsignedBigInteger('return_month_id');
-            $table->decimal('total', 40,2);
+            $table->integer('edited_count')->default(0);
+            $table->enum('status',['submitted', 'complete'])->default('submitted');
+            $table->string('currency');
+            $table->string('financial_month_id');
+            $table->decimal('total_amount_due', 40, 2)->default(0);
+            $table->decimal('total_amount_due_with_penalties', 40, 2)->default(0);
             $table->softDeletes();
             $table->timestamps();
 
