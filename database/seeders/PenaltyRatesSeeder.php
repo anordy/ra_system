@@ -16,7 +16,7 @@ class PenaltyRatesSeeder extends Seeder
     {
         $rates = [
             ['financial_year_id'=> 1, 'code'=> 'LF', 'name' => 'Late Filling', 'rate' => 0.1],
-            ['financial_year_id'=> 1, 'code'=> 'LPB', 'name' => 'Late Payment Before', 'rate' => 0.1],
+            ['financial_year_id'=> 1, 'code'=> 'LPB', 'name' => 'Late Payment Before', 'rate' => 0.2],
             ['financial_year_id'=> 1, 'code'=> 'LPA', 'name' => 'Late Payment After', 'rate' => 0.1],
             ['financial_year_id'=> 1, 'code'=> 'WEG', 'name' => 'Which Ever Greater', 'rate' => 100000],
             ['financial_year_id'=> 2, 'code'=> 'LF', 'name' => 'Late Filling', 'rate' => 0.1],
