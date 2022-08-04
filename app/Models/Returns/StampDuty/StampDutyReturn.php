@@ -10,8 +10,5 @@ class StampDutyReturn extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public const SUBMITTED = 'submitted';
-    public const COMPLETE = 'complete';
-
     protected $guarded = [];
 }
