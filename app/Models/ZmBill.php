@@ -27,6 +27,8 @@ class ZmBill extends Model
 	{
 		return $this->morphTo();
 	}
-    
 
+    public function billable(){
+        return $this->morphTo();
+    }
 }

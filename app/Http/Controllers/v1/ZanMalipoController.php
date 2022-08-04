@@ -3,6 +3,8 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Models\Returns\ReturnStatus;
+use App\Models\Returns\StampDuty\StampDutyReturn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -18,6 +20,10 @@ use Spatie\ArrayToXml\ArrayToXml;
 
 class ZanMalipoController extends Controller
 {
+
+    private $returnable = [
+        'App\Models\Returns\StampDuty\StampDutyReturn',
+    ];
 
     /**
      * Create a new controller instance.
@@ -38,20 +44,34 @@ class ZanMalipoController extends Controller
             $xml = XmlWrapper::xmlStringToArray($content);
             $arrayToXml = new ArrayToXml($xml['gepgBillSubResp'], 'gepgBillSubResp');
             $signedContent = $arrayToXml->dropXmlDeclaration()->toXml();
+
             if (!ZmSignatureHelper::verifySignature($xml['gepgSignature'], $signedContent)) {
                 return $this->ackResp('gepgBillSubRespAck', '7303');
             }
 
             $zan_trx_sts_code =  ZmCore::extractStatusCode($xml['gepgBillSubResp']['BillTrxInf']['TrxStsCode']);
             $bill = ZmCore::getBill($xml['gepgBillSubResp']['BillTrxInf']['BillId']);
+
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                     $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
+
+                    if (in_array($bill->billable_type, $this->returnable)){
+                        $billable = $bill->billable;
+                        $billable->status = ReturnStatus::CN_GENERATED;
+                        $billable->save();
+                    }
+
                     SendZanMalipoSMS::dispatch(ZmCore::formatPhone($bill->payer_phone_number), $message);
             } else {
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
-            }
 
+                if (in_array($bill->billable_type, $this->returnable)){
+                    $billable = $bill->billable;
+                    $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+                    $billable->save();
+                }
+            }
 
             return $this->ackResp('gepgBillSubRespAck', '7101');
         } catch (\Throwable $ex) {
@@ -76,9 +96,11 @@ class ZanMalipoController extends Controller
             if (!!ZmSignatureHelper::verifySignature($xml['gepgSignature'], $signedContent)) {
                 return $this->ackResp('gepgPmtSpInfoAck', '7303');
             }
+
             $tx_info = $xml['gepgPmtSpInfo']['PymtTrxInf'];
 
             $bill = ZmCore::getBill($tx_info['BillId']);
+
             ZmPayment::query()->insert([
                 'zm_bill_id' => $tx_info['BillId'],
                 'trx_id' => $tx_info['TrxId'],
@@ -102,8 +124,19 @@ class ZanMalipoController extends Controller
 
             if ($bill->paidAmount() >= $bill->amount) {
                 $bill->status = 'paid';
+                if (in_array($bill->billable_type, $this->returnable)){
+                    $billable = $bill->billable;
+                    $billable->status = ReturnStatus::COMPLETE;
+                    $billable->save();
+                }
+
             } else {
                 $bill->status = 'partially';
+                if (in_array($bill->billable_type, $this->returnable)){
+                    $billable = $bill->billable;
+                    $billable->status = ReturnStatus::PAID_PARTIALLY;
+                    $billable->save();
+                }
             }
 
             $bill->save();

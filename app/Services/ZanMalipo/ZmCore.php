@@ -105,6 +105,7 @@ class ZmCore
                     'equivalent_amount' => $exchange_rate * $item['amount'],
                     'gfs_code' => $item['gfs_code']
                 ]);
+
                 $zm_item->save();
             }
             DB::commit();

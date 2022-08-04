@@ -20,7 +20,7 @@ class CreateHotelReturnsTable extends Migration
 
             $table->string('filled_type');
             $table->unsignedBigInteger('filled_id');
-            $table->unsignedBigInteger('taxtype_id');
+            $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
 
             $table->integer('edited_count')->default(0);
