@@ -22,7 +22,7 @@ class VatReturn extends Model
 
     public function taxtype()
     {
-        return $this->belongsTo(TaxType::class, 'taxtype_code', 'code');
+        return $this->belongsTo(TaxType::class, 'taxtype_id', 'id');
     }
 
     public function items(){
