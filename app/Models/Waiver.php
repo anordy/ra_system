@@ -10,10 +10,18 @@ class Waiver extends Model
     use HasFactory;
 
     protected $guarded = [];
-    
-        public function business()
+
+    public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');
     }
+
+    public function waiverStatus()
+    {
+        return $this->hasOne(WaiverStatus::class);
+    }
+
+   
+   
 
 }

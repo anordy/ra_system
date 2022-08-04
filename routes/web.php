@@ -11,9 +11,9 @@
 |
  */
 
-use App\Http\Controllers\Assesment\AssesmentFileController;
 use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
+use App\Http\Controllers\Assesment\AssesmentFileController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
@@ -144,6 +144,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/objection/show/{objection_id}', [ObjectionController::class, 'show'])->name('objection.show');
 
         Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
+        Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
         Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
     });
 

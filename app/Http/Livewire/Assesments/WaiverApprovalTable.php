@@ -1,20 +1,24 @@
 <?php
 
-namespace App\Http\Livewire\Assesments\Waiver;
+namespace App\Http\Livewire\Assesments;
 
 use App\Models\Waiver;
 use App\Models\WaiverStatus;
 use Illuminate\Database\Eloquent\Builder;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class WaiverTable extends DataTableComponent
+class WaiverApprovalTable extends DataTableComponent
 {
-    public $rejected = false;
-    public $pending = false;
-    public $approved = true;
+    use LivewireAlert;
 
-    // protected $model = Waiver::class;
+    public function builder(): Builder
+    {
+        return Waiver::query()
+            ->where('waivers.status', WaiverStatus::PENDING)
+            ->orderBy('waivers.created_at', 'desc');
+    }
 
     public function configure(): void
     {
@@ -23,25 +27,6 @@ class WaiverTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-
-    }
-
-    public function builder(): Builder
-    {
-        if ($this->rejected) {
-            return Waiver::where('waivers.status', WaiverStatus::REJECTED)->orderBy('waivers.created_at', 'desc');
-        }
-        
-        if ($this->approved) {
-            return Waiver::where('waivers.status', WaiverStatus::APPROVED)->orderBy('waivers.created_at', 'desc');
-        }
-        
-        if ($this->pending) {
-            return Waiver::where('waivers.status', WaiverStatus::PENDING)->orderBy('waivers.created_at', 'desc');
-        }
-
-        return Waiver::where('waivers.status', '!=', WaiverStatus::DRAFT)->orderBy('waivers.created_at', 'desc');
-
     }
 
     public function columns(): array
@@ -61,6 +46,16 @@ class WaiverTable extends DataTableComponent
                 ->sortable(),
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")
                 ->sortable(),
+            // Column::make('Previous Transition', 'id')
+            //     ->format(function ($value, $row) {
+            //         $transtion = str_replace('_', ' ', $row->pinstancesActive->name ?? '');
+            //         return <<<HTML
+            //            <span class="badge badge-info py-1 px-2"  style="border-radius: 1rem; font-size: 85%">
+            //             <i class="bi bi-clock mr-1"></i>
+            //             {$transtion}
+            //         </span>
+            //         HTML;
+            //     })->html(true),
             Column::make('Status', 'status')
                 ->view('assesments.waiver.includes.status'),
             Column::make('Action', 'id')
