@@ -53,9 +53,9 @@ class ApprovalHistoryTable extends DataTableComponent
                 ->format(fn ($value) => ucfirst(str_replace('_', ' ', $value))),
             Column::make('Comment', 'remarks'),
             Column::make('Approved By', 'user_id')
-                ->format(function ($value, $row) {
-                    return $row->user->full_name ?? null;
-                }),
+                ->format(
+                    fn ($value, $row) => $row->user->full_name ?? null
+                ),
             Column::make('Approved On', 'approved_on')
                 ->format(function ($value) {
                     return Carbon::make($value)->toDateTimeString();
