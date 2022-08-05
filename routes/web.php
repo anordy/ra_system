@@ -162,6 +162,8 @@ Route::middleware(['auth'])->group(function () {
     Route::name('assesments.')->prefix('assesments')->group(function () {
         Route::get('/objection/index', [ObjectionController::class, 'index'])->name('objection.index');
         Route::get('/objection/show/{objection_id}', [ObjectionController::class, 'show'])->name('objection.show');
+        Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
+
 
         Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
         Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');

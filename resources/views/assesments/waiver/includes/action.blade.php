@@ -1,5 +1,3 @@
-    {{-- <a href="{{ route('assesments.waiver.approval', encrypt($value)) }}" class="btn btn-info btn-sm" data-toggle="tooltip"
-        data-placement="right" title="View">View</a> --}}
 
 @php
 $instace = $row->pinstances->last();

@@ -31,4 +31,13 @@ class ObjectionController extends Controller
     {
         return view('assesments.objection.edit');
     }
+
+    
+    public function approval($objectionId)
+    {
+        $objection = Objection::findOrFail(decrypt($objectionId));
+        $business = Business::find($objection->business_id);
+
+        return view('assesments.objection.approval', compact('objection','business'));
+    }
 }
