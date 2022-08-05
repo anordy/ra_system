@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Enum;
 
-class BranchStatus {
+class TaxVerificationStatus
+{
     public const DRAFT = 'draft';
     public const PENDING = 'pending';
     public const APPROVED = 'approved';

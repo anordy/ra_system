@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Models\Verification;
+namespace App\Models\Returns\EmTransaction;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Verification extends Model
+class EmTransactionConfig extends Model
 {
     use HasFactory;
-
-     protected $guarded = [];
-
-
 }
