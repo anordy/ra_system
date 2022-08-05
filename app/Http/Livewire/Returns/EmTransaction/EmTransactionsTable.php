@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Returns\Hotel;
+namespace App\Http\Livewire\Returns\EmTransaction;
 
 use Carbon\Carbon;
-use App\Models\Returns\HotelReturns\HotelReturn;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use App\Models\Returns\EmTransaction\EmTransactionReturn;
 
-class HotelReturnsTable extends DataTableComponent
+class EmTransactionsTable extends DataTableComponent
 {
-    public $status;
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -19,25 +17,12 @@ class HotelReturnsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['financial_month_id']);
     }
-
-    public function mount($status)
-    {
-        $this->status = $status;
-    }
-
-
 
     public function builder(): Builder
     {
-        if ($this->status == 'all') {
-            return HotelReturn::query();
-        } else if ($this->status == 'submitted') {
-            return HotelReturn::where('hotel_returns.status', $this->status);
-        }
+        return EmTransactionReturn::query();
     }
-
 
     public function columns(): array
     {
@@ -55,25 +40,21 @@ class HotelReturnsTable extends DataTableComponent
                 ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
-                }),
-            Column::make('Total VAT with Penalty', 'total_amount_due_with_penalty')
+                })
+                ->searchable(),
+            Column::make('Total VAT With Penalties', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
-                }),
-            Column::make('Infrastructure Tax', 'hotel_infrastructure_tax')
-                ->sortable()
-                ->format(function ($value, $row) {
-                    return number_format($value, 2);
-                }),
+                })
+                ->searchable(),
             Column::make('Date', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {
                     return Carbon::create($value)->format('M d, Y');
                 })
                 ->searchable(),
-            Column::make('Action', 'id')->view('returns.hotel.includes.actions'),
-
+            Column::make('Action', 'id')->view('returns.em-transaction.includes.actions'),
         ];
     }
 }
