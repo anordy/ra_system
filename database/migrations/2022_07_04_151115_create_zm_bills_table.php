@@ -19,7 +19,7 @@ class CreateZmBillsTable extends Migration
             $table->string('billable_type');
             $table->unsignedBigInteger('tax_type_id');
             $table->decimal('amount');
-            $table->decimal('misc_amount')->default(0);
+            $table->decimal('misc_amount', 20, 2)->default(0);
             $table->decimal('paid_amount')->default(0);
             $table->enum('currency', ['TZS', 'USD', 'EUR']);
             $table->decimal('exchange_rate');
