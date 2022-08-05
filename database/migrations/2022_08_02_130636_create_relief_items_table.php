@@ -18,11 +18,11 @@ class CreateReliefItemsTable extends Migration
             $table->unsignedSmallInteger('vfms_item_id')->nullable();
             $table->unsignedBigInteger('relief_id');
             $table->string('item_name');
-            $table->decimal('quantity');
+            $table->decimal('quantity',15,2);
             $table->string('unit')->nullable();
             // $table->string('description');
-            $table->decimal('amount_per_item');
-            $table->decimal('amount');
+            $table->decimal('amount_per_item',15,2);
+            $table->decimal('amount',15,2);
             $table->timestamps();
         });
     }

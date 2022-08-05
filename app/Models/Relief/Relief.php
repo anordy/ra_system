@@ -5,19 +5,23 @@ namespace App\Models\Relief;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\User;
+
 class Relief extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
-    public function reliefProject()
+    public function projectSection()
     {
         return $this->belongsTo(ReliefProject::class,'project_id');
     }
 
-    public function reliefProjectItem()
+    public function project()
     {
-        return $this->belongsTo(ReliefProject::class, 'project_list_id');
+        return $this->belongsTo(ReliefProjectList::class, 'project_list_id');
     }
 
     public function business()

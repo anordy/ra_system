@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Storage;
 
-class ReliefRegistrations extends Component
+class ReliefEdit extends Component
 {
-
     use LivewireAlert, WithFileUploads;
 
     //input fields
@@ -51,26 +51,45 @@ class ReliefRegistrations extends Component
 
     //backend variable
     public $vatPercent;
+    public $relief;
+    public $previousAttachments;
 
-    public function mount()
+    public function mount($enc_id)
     {
+        $this->relief = Relief::find(decrypt($enc_id));
+        $this->supplier = $this->relief->business_id;
         $this->optionSuppliers = Business::where('status', BusinessStatus::APPROVED)->get();
-        $this->optionSupplierLocations = null;
+        $this->supplierLocation = $this->relief->location_id;
+        $this->optionSupplierLocations = Business::find($this->supplier)->locations;
 
+        // $this->optionSuppliers = Business::where('status', BusinessStatus::APPROVED)->get();
+        // $this->optionSupplierLocations = null;
+        $this->projectSection = ReliefProject::find($this->relief->project_id)->id;
         $this->optionProjectSections = ReliefProject::all();
-        $this->optionProjects = null;
 
-        $this->items = [
-            [
-                'name' => '',
-                // 'description' => '',
-                'quantity' => '',
-                'unit' => '',
-                'costPerItem' => '',
-                'amount' => '',
-            ],
-        ];
+        $this->project = ReliefProjectList::find($this->relief->project_list_id)->id;
+        $this->optionProjects = ReliefProjectList::where('project_id', $this->projectSection)->get();
+        $this->rate = ReliefProjectList::find($this->relief->project_list_id)->rate;
 
+        foreach ($this->relief->reliefItems as $item) {
+            $this->items[] = [
+                'name' => $item->item_name,
+                'quantity' => $item->quantity,
+                'unit' => $item->unit,
+                'costPerItem' => $item->amount_per_item,
+                'amount' => $item->amount,
+            ];
+        }
+        $this->previousAttachments = [];
+        if ($this->relief->reliefAttachments->count() > 0) {
+            foreach ($this->relief->reliefAttachments as $reliefAttachment) {
+                $this->previousAttachments[] = [
+                    'id' => $reliefAttachment->id,
+                    'file_name' => $reliefAttachment->file_name,
+                    'file_path' => $reliefAttachment->file_path,
+                ];
+            }
+        }
         $this->attachments = [
             [
                 'name' => '',
@@ -78,6 +97,7 @@ class ReliefRegistrations extends Component
             ],
         ];
         $this->vatPercent = 15;
+        $this->calculateTotal();
     }
 
     protected function rules()
@@ -100,16 +120,16 @@ class ReliefRegistrations extends Component
 
     public function save()
     {
-        $this->validate(); 
+        $this->validate();
         try {
             DB::beginTransaction();
-            $relief = Relief::create([
+            $this->relief->update([
                 'project_id' => $this->projectSection,
                 'project_list_id' => $this->project,
                 'location_id' => $this->supplierLocation,
                 'business_id' => $this->supplier,
                 'rate' => $this->rate,
-                'vat'=>$this->vatPercent,
+                'vat' => $this->vatPercent,
                 'total_amount' => $this->total,
                 'vat_amount' => $this->vatAmount,
                 'relieved_amount' => $this->relievedAmount,
@@ -119,9 +139,10 @@ class ReliefRegistrations extends Component
                 'created_by' => Auth::user()->id,
             ]);
 
+            $this->relief->reliefItems()->delete();
             foreach ($this->items as $item) {
                 $reliefItem = ReliefItems::create([
-                    'relief_id' => $relief->id,
+                    'relief_id' => $this->relief->id,
                     'item_name' => $item['name'],
                     'quantity' => $item['quantity'],
                     'unit' => $item['unit'],
@@ -132,21 +153,37 @@ class ReliefRegistrations extends Component
 
             }
 
+            //remove previous attachments which are not in the current attachments
+            foreach ($this->relief->reliefAttachments as $savedAttachment) {
+                $removeAttachment = true;
+                foreach ($this->previousAttachments as $remainingAttachment) {
+                    if ($remainingAttachment['id']==$savedAttachment->id){
+                        $removeAttachment = false;
+                        break;
+                    }
+                }
+                if($removeAttachment){
+                    ReliefAttachment::find($savedAttachment->id)->delete();
+                    Storage::disk('local-admin')->delete($savedAttachment->file_path);
+                }
+            }
+
             foreach ($this->attachments as $attachment) {
                 if ($attachment['file'] && $attachment['name']) {
-                    $documentPath = $attachment['file']->store("/relief_documents/" . $relief->id, 'local-admin');
+                    $documentPath = $attachment['file']->store("/relief_documents/" . $this->relief->id, 'local-admin');
                     $reliefDocument = ReliefAttachment::create([
-                        'relief_id' => $relief->id,
+                        'relief_id' => $this->relief->id,
                         'file_path' => $documentPath,
                         'file_name' => $attachment['name'],
                     ]);
                 }
             }
 
+
             DB::commit();
-            session()->flash('success', 'Successfully saved');
-            return redirect()->route('reliefs.registrations.index');
-        } catch (\Exception $e) {
+            session()->flash('success', 'Successfully Edited');
+            return redirect()->route('reliefs.applications.index');
+        } catch (\Exception$e) {
             DB::rollBack();
             Log::error($e->getMessage());
             // dd($e->getMessage());
@@ -177,7 +214,7 @@ class ReliefRegistrations extends Component
 
     public function render()
     {
-        return view('livewire.relief.registrations.add');
+        return view('livewire.relief.relief-edit');
     }
 
     public function updated($propertyName)
@@ -247,21 +284,16 @@ class ReliefRegistrations extends Component
         foreach ($this->items as $item) {
             $this->total += is_numeric($item['amount']) ? $item['amount'] : 0;
         }
-        
-         //calculate relieved amount
-        $this->vatAmount = ($this->vatPercent*$this->total)/100;
+
+        //calculate relieved amount
+        $this->vatAmount = ($this->vatPercent * $this->total) / 100;
         $rate = ($this->rate ?? 0) / 100;
         $this->relievedAmount = $rate * $this->vatAmount;
- 
-         //calculate amount payable
-         $this->amountPayable = $this->total - $this->relievedAmount;
+
+        //calculate amount payable
+        $this->amountPayable = $this->total - $this->relievedAmount;
 
     }
-
-    // public function calculateRelievedAmount()
-    // {
-       
-    // }
 
     public function addAttachment()
     {
@@ -274,6 +306,17 @@ class ReliefRegistrations extends Component
     public function removeAttachment($i)
     {
         unset($this->attachments[$i]);
+    }
+
+    public function removePreviousAttachment($id)
+    {
+        // $attachment = ReliefAttachment::find($id);
+        // $attachment->delete();
+        foreach ($this->previousAttachments as $key => $attachment) {
+            if ($attachment['id'] == $id) {
+                unset($this->previousAttachments[$key]);
+            }
+        }
     }
 
 }

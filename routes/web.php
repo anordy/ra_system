@@ -174,6 +174,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
+        // Route::resource('/show/{id}', ReliefApplicationsController::class)->name('show');
+        Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
+        
     });
 
     Route::name('verifications.')->prefix('verification')->group(function () {

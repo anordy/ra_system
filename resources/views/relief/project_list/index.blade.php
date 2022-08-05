@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="card-body">
-            @livewire('relief.relief-project-list-table')
+            @livewire('relief.relief-project-list-table',['id' => $project->id])
         </div>
     </div>
 @endsection
