@@ -2,9 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Events\SendMail;
-use App\Events\SendSms;
-use App\Models\BusinessStatus;
+
 use App\Models\WaiverStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
@@ -12,13 +10,15 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ApprovalWaiverProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait,WithFileUploads, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
+    public $waiver_report;
 
     public function mount($modelName, $modelId)
     {

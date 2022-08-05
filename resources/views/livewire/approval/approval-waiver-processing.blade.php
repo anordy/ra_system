@@ -6,9 +6,9 @@
         <div class="card-body">
             @include('livewire.approval.transitions')
 
-                @if ($this->checkTransition('registration_officer_review'))
-                    {{-- @include('livewire.approval.registration_officer_review') --}}
-                @endif
+                @if ($this->checkTransition('waiver_manager_review'))
+                    @include('livewire.approval.assesments.waiver_manager_review')
+                    @endif
                 <div class="row m">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
