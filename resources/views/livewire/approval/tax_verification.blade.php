@@ -12,18 +12,38 @@
                         <label class="control-label h6 text-uppercase">Assign Compliance officers</label>
                     </div>
                     <div class="form-group col-lg-6">
-                        <label class="control-label">Team Leader</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
-                        @error('name')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">Team Leader</label>
+                            <select class="form-control @error('teamLeader') is-invalid @enderror"
+                                wire:model="teamLeader">
+                                <option value='null' disabled selected>Select</option>
+                                @foreach ($staffs as $row)
+                                    <option value="{{ $row->id }}">{{ $row->full_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('teamLeader')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                     </div>
                     <div class="form-group col-lg-6">
-                        <label class="control-label">Team Member</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
-                        @error('name')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">Team Member</label>
+                            <select class="form-control @error('teamMember') is-invalid @enderror"
+                                wire:model="teamMember">
+                                <option value='null' disabled selected>Select</option>
+                                @foreach ($staffs as $row)
+                                    <option value="{{ $row->id }}">{{ $row->full_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('teamMember')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             @endif
@@ -34,30 +54,34 @@
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="control-label">Principal Amount</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
-                        @error('name')
+                        <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
+                            wire:model.lazy="principalAmount">
+                        @error('principalAmount')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="control-label">Interest Amount</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
-                        @error('name')
+                        <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
+                            wire:model.lazy="interestAmount">
+                        @error('interestAmount')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="control-label">Penalty Amount</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
-                        @error('name')
+                        <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
+                            wire:model.lazy="penaltyAmount">
+                        @error('penaltyAmount')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <div class="form-group col-lg-6">
                         <label class="control-label">Assessment Report</label>
-                        <input type="file" class="form-control" wire:model.lazy="name" id="name">
-                        @error('name')
+                        <input type="file" class="form-control  @error('assessmentReport') is-invalid @enderror"
+                            wire:model.lazy="assessmentReport">
+                        @error('assessmentReport')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
