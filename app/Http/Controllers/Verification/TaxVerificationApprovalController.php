@@ -20,7 +20,8 @@ class TaxVerificationApprovalController extends Controller
 
         $return = $verification->taxReturn;
         if($return instanceof PetroleumReturn){
-            return view('verification.petroleum.show', compact('return', 'verification'));
+            $viewRender = "returns.petroleum.filing.details";
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         }
 
     }

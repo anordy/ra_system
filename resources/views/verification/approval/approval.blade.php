@@ -47,12 +47,11 @@
                     </div>
                 </div>
             </div>
-
             <livewire:approval.tax-verification-approval-processing modelName='{{ get_class($verification) }}'
                 modelId="{{ $verification->id }}" />
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            @include('returns.petroleum.filing.details')
+            @php echo view($viewRender, compact('return'))->render() @endphp
         </div>
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
