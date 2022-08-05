@@ -29,6 +29,7 @@ class CreateHotelReturnsTable extends Migration
             $table->decimal('hotel_infrastructure_tax', 40, 2)->nullable();
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 40, 2)->default(0);
+            $table->decimal('total_amount_due_with_penalty', 40, 2)->default(0);
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
 
