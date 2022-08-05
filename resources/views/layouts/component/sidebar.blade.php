@@ -88,9 +88,10 @@
                 <li class="{{ request()->is('returns/') ? 'active' : '' }}">
                     <a href="{{ route('returns.index') }}">Vat Returns</a>
                 </li>
-                   <li class="{{ request()->is('returns/port*') ? 'active' : '' }}">
+                <li class="{{ request()->is('returns/port*') ? 'active' : '' }}">
                     <a href="{{ route('returns.port.index') }}">Port Returns</a>
                 </li>
+             
             </ul>
         </li>
 
@@ -122,6 +123,9 @@
                 </li>
                 <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
                     <a href="{{ route('assesments.waiver.index') }}">Waiver</a>
+                </li>
+                   <li class="{{ request()->is('assesments/waiverobjection*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.waiverobjection.index') }}">Both</a>
                 </li>
 
             </ul>
