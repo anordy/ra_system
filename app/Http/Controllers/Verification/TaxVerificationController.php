@@ -6,11 +6,10 @@ namespace App\Http\Controllers\Verification;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Verification\TaxVerification;
-use Illuminate\Http\Request;
 
 class TaxVerificationController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         return view('verification.index');
     }
@@ -21,7 +20,7 @@ class TaxVerificationController extends Controller
 
         $return = $verification->taxReturn;
         if($return instanceof PetroleumReturn){
-            return view('returns.petroleum.verifications.show', compact('return'));
+            return view('verification.petroleum.show', compact('return', 'verification'));
         }
 
     }

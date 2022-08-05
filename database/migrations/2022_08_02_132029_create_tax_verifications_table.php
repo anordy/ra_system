@@ -20,6 +20,7 @@ class CreateTaxVerificationsTable extends Migration
             $table->unsignedBigInteger('responsible_person_id');
             $table->unsignedBigInteger('tax_return_type');
             $table->unsignedBigInteger('tax_type_id');
+            $table->string('marking');
             $table->string('tax_return_id');
             $table->date('issue_date');
             $table->text('scope');
