@@ -25,12 +25,13 @@ class CreatePortReturnsTable extends Migration
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('financial_year_id')->references('id')->on('financial_years');
-            $table->string('return_month_id');
+            $table->string('financial_month_id');
             $table->decimal('total_vat_payable_tzs', 40, 2);
             $table->decimal('total_vat_payable_usd', 40, 2);
             $table->decimal('infrastructure', 40, 2);
             $table->decimal('infrastructure_znz_znz', 40, 2);
             $table->decimal('infrastructure_znz_tm', 40, 2);
+            $table->enum('status', ['submitted', 'complete'])->default('submitted');
             $table->timestamps();
         });
     }

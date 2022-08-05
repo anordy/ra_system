@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Models\Verification;
+namespace App\Models\Returns\Port;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Verification extends Model
+class PortConfig extends Model
 {
     use HasFactory;
 
-     protected $guarded = [];
-
-
+      protected $guarded = [];
 }
