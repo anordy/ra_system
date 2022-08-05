@@ -7,11 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Verification\TaxVerification;
 
-class TaxVerificationController extends Controller
+class TaxVerificationApprovalController extends Controller
 {
     public function index()
     {
-        return view('verification.index');
+        return view('verification.approval.index');
     }
 
     public function edit($id){
