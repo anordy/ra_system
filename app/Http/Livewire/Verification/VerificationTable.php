@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Approval;
+namespace App\Http\Livewire\Verification;
 
-use App\Models\WorkflowTask;
-use Carbon\Carbon;
+use App\Models\Verification\TaxVerification;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -14,28 +13,16 @@ class VerificationTable extends DataTableComponent
 
     use LivewireAlert;
 
-    public $model = WorkflowTask::class;
-    public $modelId;
-    public $modelName;
-
-    public function mount($modelName, $modelId)
-    {
-        $this->modelName = $modelName;
-        $this->modelId = $modelId;
-    }
+    public $model = TaxVerification::class;
 
     public function builder(): Builder
     {
-        return WorkflowTask::query()->with('user')
-            ->where('pinstance_type', $this->modelName)
-            ->where('pinstance_id', $this->modelId);
+        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn');
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setSearchStatus(false);
-        $this->setAdditionalSelects(['user_type']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -45,18 +32,14 @@ class VerificationTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Name', 'name'),
-            Column::make('From', 'from_place'),
-            Column::make('To', 'to_place'),
-            Column::make('Comment', 'remarks'),
-            Column::make('Approved By', 'user_id')
-                ->format(function ($value, $row) {
-                    return $row->user->full_name ?? null;
-                }),
-            Column::make('Approved On', 'approved_on')
-                ->format(function ($value) {
-                    return Carbon::make($value)->toDateString();
-                }),
+            Column::make('Z_Number', 'business.z_no'),
+            Column::make('Business Name', 'business.name'),
+            Column::make('Business Location', 'location.name'),
+            Column::make('Tax Type', 'taxType.name'),
+            Column::make('Action', 'id')
+                ->view('verification.action')
+                ->html(true),
+
         ];
     }
 }

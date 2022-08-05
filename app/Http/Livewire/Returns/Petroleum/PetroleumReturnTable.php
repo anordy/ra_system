@@ -51,7 +51,7 @@ class PetroleumReturnTable extends DataTableComponent
             Column::make('Total VAT', 'total')
                 ->sortable()
                 ->searchable(),
-            Column::make('Action', 'id')->view('returns.petroleum.includes.actions'),
+            Column::make('Action', 'id')->view('returns.petroleum.filing.includes.actions'),
 
         ];
     }

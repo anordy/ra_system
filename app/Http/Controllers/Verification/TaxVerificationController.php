@@ -4,7 +4,8 @@
 namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
-
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Verification\TaxVerification;
 use Illuminate\Http\Request;
 
 class TaxVerificationController extends Controller
@@ -12,6 +13,17 @@ class TaxVerificationController extends Controller
     public function index(Request $request)
     {
         return view('verification.index');
+    }
+
+    public function edit($id){
+
+        $verification = TaxVerification::find(decrypt($id));
+
+        $return = $verification->taxReturn;
+        if($return instanceof PetroleumReturn){
+            return view('returns.petroleum.verifications.show', compact('return'));
+        }
+
     }
 
     public function riskIndicators()
