@@ -2,7 +2,7 @@
     <div class="card-body">
         <div class="row px-3">
             <div class="form-group col-lg-12">
-                <label class="control-label h6 text-uppercase">Auditors</label>
+                <label class="control-label h6 text-uppercase">Compliance officers</label>
             </div>
             <div class="form-group col-lg-6">
                 <label class="control-label">Team Leader</label>
