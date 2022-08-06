@@ -31,6 +31,7 @@ class TaxType extends Model implements Auditable
     public const ELECTRONIC_MONEY_TRANSACTION = 'electronic-money-transaction';
     public const MOBILE_MONEY_TRANSFER = 'mobile-money-transfer';
     public const PENALTY = 'penalty';
+    public const INTEREST = 'interest';
     public const INFRASTRUCTURE = 'infrastructure';
     public const RDF = 'road-development-fund';
     public const ROAD_LICENSE_FEE = 'road-license-fee';
