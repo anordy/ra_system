@@ -19,6 +19,7 @@ class CreateStampDutyReturnsTable extends Migration
             $table->unsignedBigInteger('filed_id');
             $table->string('filed_type');
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('financial_month_id')->nullable();
             $table->unsignedBigInteger('financial_year_id')->nullable();

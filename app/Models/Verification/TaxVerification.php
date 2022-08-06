@@ -5,12 +5,13 @@ namespace App\Models\Verification;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\TaxType;
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TaxVerification extends Model
 {
-    use HasFactory;
+    use HasFactory, WorkflowTrait;
 
     protected $guarded = [];
 

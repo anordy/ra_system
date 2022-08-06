@@ -28,6 +28,8 @@ class CreatePetroleumReturnsTable extends Migration
             $table->decimal('infrastructure_tax')->default(0);
             $table->decimal('rdf_tax')->default(0);
             $table->decimal('road_lincence_fee')->default(0);
+            $table->enum('status',['submitted', 'control-number-generating', 'control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->default('submitted');
+            $table->integer('edited_count')->default(0);
             $table->timestamps();
         });
     }

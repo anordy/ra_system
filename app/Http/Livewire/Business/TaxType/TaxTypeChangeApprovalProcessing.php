@@ -34,6 +34,7 @@ class TaxTypeChangeApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+        $this->validate(['comments' => 'required']);
         $business = Business::findOrFail($this->taxchange->business_id);
 
         try {
@@ -77,6 +78,7 @@ class TaxTypeChangeApprovalProcessing extends Component
 
     public function reject($transtion)
     {
+        $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = BusinessStatus::REJECTED;
