@@ -111,6 +111,12 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
         try {
             foreach ($places as $key => $place) {
+
+                $operators = json_encode($place['operators']);
+                if (array_key_exists('operators', $context) && $context['operators'] != []) {
+                    $operators = json_encode($context['operators']);
+                }
+
                 $task =  new WorkflowTask([
                     'workflow_id' => $workflow->id,
                     'name' => $transition->getName(),
@@ -118,7 +124,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'to_place' => $key,
                     'owner' => $place['owner'],
                     'operator_type' => $place['operator_type'],
-                    'operators' => json_encode($place['operators']),
+                    'operators' => $operators,
                     'approved_on' => Carbon::now()->toDateTimeString(),
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
