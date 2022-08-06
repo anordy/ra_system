@@ -22,7 +22,7 @@ class CreateZmBillItemsTable extends Migration
             $table->string('fee_type')->nullable();
             $table->decimal('amount', 20, 2);
             $table->decimal('exchange_rate');
-            $table->decimal('equivalent_amount');
+            $table->decimal('equivalent_amount', 20, 2);
             $table->enum('currency', ['TZS', 'USD']);
             $table->boolean('paid')->default(false);
             $table->char('use_item_ref_on_pay')->default('N');
