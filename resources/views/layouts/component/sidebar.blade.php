@@ -94,6 +94,9 @@
                 <li class="{{ request()->is('returns/em-transaction*') ? 'active' : '' }}">
                     <a href="{{ route('returns.em-transaction.index') }}">Electronic Money Transaction Returns</a>
                 </li>
+                <li class="{{ request()->is('returns/stamp-duty*') ? 'active' : '' }}">
+                    <a href="{{ route('returns.stamp-duty.index') }}">Stamp Duty Returns</a>
+                </li>
             </ul>
         </li>
 

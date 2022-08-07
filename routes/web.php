@@ -70,17 +70,13 @@ use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
+use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Verification\TaxVerificationController;
 use App\Http\Controllers\Investigation\TaxInvestigationController;
 
 Auth::routes();
 
-Route::get('/oy', function () {
-    return view('auth.passwords.reset');
-});
-
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/workflow', [WorkflowerTestController::class, 'index']);
 
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
@@ -110,18 +106,18 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
-        Route::resource('/assesment-files', AssesmentFileController::class);
-
-    });
-
-    Route::name('returns.')->prefix('returns')->group(function () {
+        Route::resource('/interest-rates', InterestRateController::class);
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
+
         Route::name('returns.')->prefix('returns')->group(function () {
-            Route::resource('/interest-rates', InterestRateController::class);
-            Route::get('/', [ReturnsController::class, 'index'])->name('index');
-            Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
+            Route::name('returns.')->prefix('returns')->group(function () {
+                Route::get('/', [ReturnsController::class, 'index'])->name('index');
+                Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
+            });
         });
     });
+
+
 
     Route::prefix('system')->name('system.')->group(function () {
         Route::resource('audits', AuditController::class);
@@ -184,17 +180,31 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
 
-    Route::name('returns.')->prefix('e-filling')->group(function () {
+    Route::name('returns.')->prefix('/e-filling')->group(function () {
         Route::get('/', [ReturnController::class, 'index'])->name('index');
 
         Route::resource('/petroleum', PetroleumReturnController::class);
+
         Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
         Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
-        Route::name('vat-return.')->prefix('vat-return')->group(function () {
+        Route::name('stamp-duty.')->group(function (){
+            Route::get('/stamp-duty', [StampDutyReturnController::class, 'index'])->name('index');
+            Route::get('/stamp-duty/{returnId}', [StampDutyReturnController::class, 'show'])->name('show');
+        });
+
+        Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
+            Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
+            Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+        });
+
+        Route::name('vat-return.')->prefix('vat-return')->group(function ()  {
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
         });
+
+        Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
+        Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -230,19 +240,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
-        // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
-    });
-
-    Route::name('returns.')->prefix('returns')->group(function () {
-        // Hotel levy returns
-        Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
-        Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
-
-         //Electronic Money Transaction Return
-         Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
-             Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
-             Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
-         });
     });
 
 });

@@ -23,7 +23,7 @@ class CreateZmBillsTable extends Migration
             $table->decimal('paid_amount', 20, 2)->default(0);
             $table->enum('currency', ['TZS', 'USD', 'EUR']);
             $table->decimal('exchange_rate');
-            $table->decimal('equivalent_amount')->default(0);
+            $table->decimal('equivalent_amount', 20, 2)->default(0);
             $table->string('control_number')->nullable();
             $table->dateTime('expire_date');
             $table->unsignedBigInteger('payer_id');
