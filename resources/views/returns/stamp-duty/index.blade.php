@@ -8,7 +8,7 @@
             Stamp Duty Return
         </div>
         <div class="card-body">
-            <livewire:returns.stamp-duty.stamp-duty-return />
+            <livewire:returns.stamp-duty.stamp-duty-returns-table />
         </div>
     </div>
 @endsection

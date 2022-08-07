@@ -8,52 +8,29 @@ use App\Models\FinancialYear;
 use App\Models\InterestRate;
 use App\Models\PenaltyRate;
 use Carbon\Carbon;
-use Facade\FlareClient\Http\Exceptions\NotFound;
-use Illuminate\Support\Facades\Log;
 
 trait PenaltyTrait
 {
 
+
     public function getTotalPenalties($financialMonth, $taxAmount, $taxTypeCurency){
         $lateFilingFee = 0;
-        // dd($financialMonth->due_date);
         if($this->isLateFiling($financialMonth)){
             $lateFilingFee = $this->getLateFilingFee($financialMonth, $taxAmount, $taxTypeCurency);
-        } 
+        }
 
-        // Get late payments penalties
+        // Get late total payments
         $penaltableAmount = 0;
 
         $date = $this->getDateFromFinancialMonth($financialMonth);
-        // dd($date);
         $diffInMonths = $date->diffInMonths(Carbon::now());
         $interestRate = InterestRate::where('year', $financialMonth->year->code)->firstOrFail()->rate;
         $latePaymentBeforeRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'LPB')->firstOrFail()->rate;
         $latePaymentAfterRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'LPA')->firstOrFail()->rate;
 
-        // if(!$interestRate){
-        //     Log::error("Interest for the year {$financialMonth->year->code}");
-        //     abort(404);
-        // }
-
-        // if(!$lateFilingFee){
-        //     Log::error("Late filing for the year {$financialMonth->year->code}");
-        //     abort(404);
-        // }
-
-        // if(!$latePaymentBeforeRate){
-        //     Log::error("Late payment for the year {$financialMonth->year->code}");
-        //     abort(404);
-        // }
-
-        // if(!$latePaymentAfterRate){
-        //     Log::error("Late payment for the year {$financialMonth->year->code}");
-        //     abort(404);
-        // }
-
         $paymentStructure = [];
         $penaltableAMountForPerticularMonth = 0;
-        for ($i = 0; $i < $diffInMonths; $i++) { 
+        for ($i = 0; $i < $diffInMonths; $i++) {
             if($i === 0){
 
                 $penaltableAmount = $lateFilingFee + $taxAmount;
@@ -73,7 +50,7 @@ trait PenaltyTrait
                     'interestRate' => $interestRate,
                     'interestAmount' => $interestAmount
                 ];
-                
+
                 $date->addMonth();
                 continue;
             }
@@ -82,7 +59,7 @@ trait PenaltyTrait
             $penaltableAmount = $latePaymentAmount + $penaltableAmount;
             $interestAmount = $this->calculateInterest($penaltableAmount, $interestRate, $i);
             $penaltableAmount = $penaltableAmount + $interestAmount;
-            
+
             $paymentStructure[] = [
                 'returnMonth' => $date->monthName,
                 'taxAmount' => $penaltableAMountForPerticularMonth,
@@ -90,13 +67,33 @@ trait PenaltyTrait
                 'lateFilingAmount' =>  0,
                 'latePaymentAmount' => $latePaymentAmount ?? 0,
                 'interestRate' => $interestRate,
-                'interestAmount' => $interestAmount
+                'interestAmount' => $interestAmount,
             ];
+
             $penaltableAMountForPerticularMonth = $penaltableAmount;
             $date->addMonth();
 
         }
         return $paymentStructure;
+    }
+
+    public function getTotals($financialMonth, $taxAmount, $taxTypeCurency){
+        $penalty = $this->getTotalPenalties($financialMonth, $taxAmount, $taxTypeCurency);
+
+        if (count($penalty)){
+            return [
+                'total' => end($penalty)['penaltyAmount'],
+                'penalty' => end($penalty)['penaltyAmount'] - $taxAmount,
+                'interest' => 0
+            ];
+        }
+        else {
+            return [
+                'total' => $taxAmount,
+                'penalty' => 0,
+                'interest' => 0
+            ];
+        }
     }
 
     public function isLateFiling($financialMonth){
@@ -114,27 +111,28 @@ trait PenaltyTrait
         $weGRate = $lateFilingRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'WEG')->firstOrFail()->rate;
 
         $rate = 1;
-        if($taxTypeCurency !== 'TZS') {
+
+        if($taxTypeCurency != 'TZS') {
             $rate = 2300;
             $percentageFee = $this->checkCurrency($percentageFee, $rate);
         }
-        
+
         if($percentageFee >= $weGRate){
 
             return ($percentageFee / $rate);
         }
 
-        if($taxTypeCurency !== 'TZS') {
+        if($taxTypeCurency != 'TZS') {
             $weGRate = ($weGRate / $rate);
         }
-        
+
         return $weGRate;
     }
 
     private function checkCurrency($percentageFee, $rate) {
         // Api from BOT
         // USD or any from BOT
-        
+
         $percentageFee = ($percentageFee * $rate);
 
         return $percentageFee;
@@ -142,7 +140,7 @@ trait PenaltyTrait
 
     public function getFilingMonth($locationId, $ReturnClass){
         // Check last return w/ Status
-        if($return = $ReturnClass::where('business_location_id', $locationId)->first()){
+        if($return = $ReturnClass::where('business_location_id', $locationId)->latest()->first()){
             if($return->status === 'complete'){
                 return $this->checkNextViableReturnMonth($return->financialMonth);
             } else {
@@ -156,27 +154,26 @@ trait PenaltyTrait
         $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
                                 ->where('number', $date->month)
                                 ->first();
-        // dd($financialMonth);
         return $this->checkNextViableReturnMonth($financialMonth);
-
     }
 
     public function checkNextViableReturnMonth($financialMonth){
-        // Get next return month, 
+        // Get next return month,
         // check if 12, add year, get first month
         if($financialMonth->number === 12){
             $year = FinancialYear::where('code', $financialMonth->year->code + 1);
+            // TODO: First or fail
             $month = FinancialMonth::where('number', 1)
-                        ->where('financial_year_id', $year->id)
-                        ->first();
+                ->where('financial_year_id', $year->id)
+                ->first();
         } else {
+            // TODO: First or fail
             $month = FinancialMonth::where('financial_year_id', $financialMonth->financial_year_id)
-                        ->where('number', $financialMonth->number + 1)
-                        ->first();
+                ->where('number', $financialMonth->number + 1)
+                ->first();
         }
-
+        
         $date = $this->getDateFromFinancialMonth($month);
-
         // Compare with current date
         if($date->lessThanOrEqualTo(Carbon::now())){
             return $month;
