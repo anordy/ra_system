@@ -29,9 +29,10 @@ class CreateVatReturnsTable extends Migration
             $table->decimal('infrastructure_tax', 20,2)->nullable();
             $table->decimal('total_amount_due', 20,2);
             $table->decimal('penalty', 20,2);
+            $table->decimal('interest',20,2);
             $table->decimal('total_amount_due_with_penalties', 20,2);
             $table->string('has_exemption');
-            $table->enum('status',['submitted','complete', 'control-number-generating','control-number-generated','control-number-generating-failed','paid-partially']);
+            $table->enum('status',['submitted','complete', 'control number generating','control number generated','control number generating failed','paid partially']);
             $table->integer('editing_count',0);
             $table->string('method_used')->nullable();
             $table->unsignedBigInteger('filled_by_id');
