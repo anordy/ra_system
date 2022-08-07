@@ -36,7 +36,7 @@ class HotelReturn extends Model implements Auditable
     }
 
     public function taxtype() {
-        return $this->belongsTo(TaxType::class, 'taxtype_id');
+        return $this->belongsTo(TaxType::class, 'tax_type_id');
     }
 
     public function financialYear() {

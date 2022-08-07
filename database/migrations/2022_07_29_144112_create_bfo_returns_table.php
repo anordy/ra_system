@@ -22,7 +22,7 @@ class CreateBFOReturnsTable extends Migration
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->integer('edited_count')->default(0);
-            $table->enum('status',['submitted', 'complete'])->default('submitted');
+            $table->enum('status',['submitted','complete','control-number-generating','control-number-generated','control-number-generating-failed','paid-partially'])->default('submitted');
             $table->string('currency');
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 40, 2)->default(0);

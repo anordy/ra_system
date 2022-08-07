@@ -26,6 +26,7 @@
         "owen-it/laravel-auditing": "^13.0",
         "rappasoft/laravel-livewire-tables": "^2.7",
         "spatie/array-to-xml": "^2.16",
+        "spatie/laravel-csp": "^2.6",
         "symfony/event-dispatcher": "^5.4",
         "symfony/expression-language": "^5.4",
         "symfony/psr-http-message-bridge": "^2.1",

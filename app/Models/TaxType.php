@@ -19,6 +19,7 @@ class TaxType extends Model implements Auditable
     public const LAND = 'land-lease';
     public const PUBLIC_SERVICE = 'public-service';
     public const EXCISE_DUTY = 'excise-duty';
+    public const EXCISE_DUTY_BFO = 'Excise_Duty_Bfo';
     public const PETROLEUM = 'petroleum-levy';
     public const AIRPORT_SERVICE = 'airport-service';
     public const AIRPORT_SAFETY = 'airport-safety';
@@ -30,6 +31,7 @@ class TaxType extends Model implements Auditable
     public const ELECTRONIC_MONEY_TRANSACTION = 'electronic-money-transaction';
     public const MOBILE_MONEY_TRANSFER = 'mobile-money-transfer';
     public const PENALTY = 'penalty';
+    public const INTEREST = 'interest';
     public const INFRASTRUCTURE = 'infrastructure';
     public const RDF = 'road-development-fund';
     public const ROAD_LICENSE_FEE = 'road-license-fee';
