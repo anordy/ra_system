@@ -15,7 +15,6 @@ use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditAssessmentController;
-use App\Http\Controllers\Audit\TaxAuditController;
 use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
@@ -46,7 +45,6 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Returns\ReturnController;
-use App\Http\Controllers\WorkflowerTestController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
@@ -62,20 +60,17 @@ use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-//use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\LandLease\LandLeaseController;
-//use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Setting\InterestRateController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\RegistrationController;
-//use App\Http\Controllers\Setting\InterestRateController;
-//use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
+use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
-use App\Http\Controllers\Verification\TaxVerificationController;
-use App\Http\Controllers\Investigation\TaxInvestigationController;
+use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
 
 Auth::routes();
 
@@ -216,10 +211,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
     });
 
-    Route::name('investigations.')->prefix('investigation')->group(function () {
-        Route::resource('/', TaxInvestigationController::class);
-    });
-
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
@@ -236,6 +227,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
+    });   
+    
+    Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
+        Route::resource('/approvals', TaxInvestigationApprovalController::class);
+        Route::resource('/assessments', TaxInvestigationAssessmentController::class);
+        Route::resource('/verified', TaxInvestigationVerifiedController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

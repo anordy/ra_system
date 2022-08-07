@@ -238,8 +238,21 @@
             </ul>
         </li>
 
-        <li class="{{ request()->is('investigation*') ? 'active' : '' }}">
-            <a href="{{ route('investigations.index') }}">Investigations</a>
+        <li class="{{ request()->is('tax_investigation*') ? 'active' : '' }}">
+            <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                Tax Investigations
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax_investigation*') ? 'show' : '' }}" id="tax_investigation">
+                <li class="{{ request()->is('tax_investigation/approvals*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_investigation.approvals.index') }}">Approvals</a>
+                </li>
+                <li class="{{ request()->is('tax_investigation/assessments*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
+                </li>
+                <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
+                </li>
+            </ul>
         </li>
 
         <li class="{{ request()->is('reliefs*') ? 'active' : '' }}">
