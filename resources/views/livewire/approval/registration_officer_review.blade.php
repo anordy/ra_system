@@ -132,10 +132,11 @@
                                     <select class="form-control @error('quaters') is-invalid @enderror"
                                         wire:model='quaters'>
                                         <option value="0" selected disabled>--Select---</option>
-                                        <option value="1">One </option>
-                                        <option value="2">two</option>
-                                        <option value="3">Three</option>
-                                        <option value="4">four</option>
+                                        {{-- one quater = payment after every 12 monts and so on.. --}}
+                                        <option value="12">One </option>
+                                        <option value="6">two</option>
+                                        <option value="4">Three</option>
+                                        <option value="3">four</option>
                                     </select>
 
                                     @error('quaters')

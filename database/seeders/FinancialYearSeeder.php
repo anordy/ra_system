@@ -23,32 +23,32 @@ class FinancialYearSeeder extends Seeder
         ];
 
         $months = [
-            1 => 'January',
-            2 => 'February',
-            3 => 'March',
-            4 => 'April',
-            5 => 'May',
-            6 => 'June',
-            7 => 'July',
-            8 => 'August',
-            9 => 'September',
+            1  => 'January',
+            2  => 'February',
+            3  => 'March',
+            4  => 'April',
+            5  => 'May',
+            6  => 'June',
+            7  => 'July',
+            8  => 'August',
+            9  => 'September',
             10 => 'October',
             11 => 'November',
-            12 => 'December'
+            12 => 'December',
         ];
 
-        foreach($years as $year){
+        foreach ($years as $year) {
             $yr = FinancialYear::query()->updateOrCreate($year);
 
-            foreach($months as $index => $month){
+            foreach ($months as $index => $month) {
                 FinancialMonth::create([
                     'financial_year_id' => $yr->id,
-                    'number' => $index,
-                    'name' => $month,
-                    'due_date' => Carbon::create($year['code'], $index, 20)->toDateTimeString()
+                    'number'            => $index,
+                    'name'              => $month,
+                    'due_date'          => Carbon::create($year['code'], $index, 20)->toDateTimeString(),
+                    'lumpsum_due_date'  => Carbon::create($year['code'], $index)->endOfMonth()->toDateTimeString(),
                 ]);
             }
         }
-
     }
 }

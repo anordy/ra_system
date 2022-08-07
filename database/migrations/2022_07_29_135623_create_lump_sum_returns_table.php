@@ -17,9 +17,12 @@ class CreateLumpSumReturnsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('filled_id');
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_location_id');
+            $table->unsignedBigInteger('financial_month_id');
             $table->unsignedBigInteger('financial_year_id');
+            $table->decimal('total_amount_due')->default(0);
+            $table->decimal('total_amount_due_with_penalties', 20, 2)->default(0);
             $table->integer('quarter');
-
             $table->integer('amount')->default(0);
             $table->integer('receipt_no');
             $table->integer('edited_count')->default(0);
