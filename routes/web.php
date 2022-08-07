@@ -13,7 +13,10 @@
 
 use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
+use App\Http\Controllers\Audit\TaxAuditApprovalController;
+use App\Http\Controllers\Audit\TaxAuditAssessmentController;
 use App\Http\Controllers\Audit\TaxAuditController;
+use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
@@ -217,10 +220,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/', TaxInvestigationController::class);
     });
 
-    Route::name('auditings.')->prefix('auditing')->group(function () {
-        Route::resource('/', TaxAuditController::class);
-    });
-
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
@@ -231,6 +230,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxVerificationApprovalController::class);
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
         Route::resource('/verified', TaxVerificationVerifiedController::class);
+    });
+
+    Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {
+        Route::resource('/approvals', TaxAuditApprovalController::class);
+        Route::resource('/assessments', TaxAuditAssessmentController::class);
+        Route::resource('/verified', TaxAuditVerifiedController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

@@ -211,20 +211,31 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}" id="tax_verifications">
                 <li class="{{ request()->is('tax_verifications/approvals*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_verifications.approvals.index') }}">Approval Management</a>
+                    <a href="{{ route('tax_verifications.approvals.index') }}">Approvals</a>
                 </li>
                 <li class="{{ request()->is('tax_verifications/assessments*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_verifications.assessments.index') }}">Returns With Assessments</a>
+                    <a href="{{ route('tax_verifications.assessments.index') }}">Assessments</a>
                 </li>
                 <li class="{{ request()->is('tax_verifications/verified*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_verifications.verified.index') }}">All Verified Returns</a>
+                    <a href="{{ route('tax_verifications.verified.index') }}">Approved Returns</a>
                 </li>
             </ul>
-        </li>
-
-     
-        <li class="{{ request()->is('auditing*') ? 'active' : '' }}">
-            <a href="{{ route('auditings.index') }}">Auditings</a>
+        </li> 
+        <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
+            <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                Tax Auditing
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
+                <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
+                </li>
+                <li class="{{ request()->is('tax_auditing/assessments*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_auditing.assessments.index') }}">Assessments</a>
+                </li>
+                <li class="{{ request()->is('tax_auditing/verified*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_auditing.verified.index') }}">Approved Audits</a>
+                </li>
+            </ul>
         </li>
 
         <li class="{{ request()->is('investigation*') ? 'active' : '' }}">

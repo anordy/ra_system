@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Verification Preview')
+@section('title', 'View Petroleum Returns')
 
 @section('content')
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -89,6 +89,10 @@
                     </div>
                 </div>
             @endif
+
+
+            <livewire:approval.tax-verification-approval-processing modelName='{{ get_class($verification) }}'
+                modelId="{{ $verification->id }}" />
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @php echo view($viewRender, compact('return'))->render() @endphp

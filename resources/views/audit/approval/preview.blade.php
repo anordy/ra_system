@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Verification Preview')
+@section('title', 'Audit Preview')
 
 @section('content')
     <ul class="nav nav-tabs" id="myTab" role="tablist">
