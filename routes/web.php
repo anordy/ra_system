@@ -38,6 +38,7 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
@@ -106,7 +107,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/assesment-files', AssesmentFileController::class);
-
     });
 
     Route::name('returns.')->prefix('returns')->group(function () {
@@ -230,6 +230,11 @@ Route::middleware(['auth'])->group(function () {
         // Hotel levy returns
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
-    });
 
+        Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
+            //MNO Excise Duty returns
+            Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
+            Route::get('/mno/{return_id}', [MnoReturnController::class, 'show'])->name('mno.show');
+        });
+    });
 });
