@@ -39,7 +39,7 @@ class VerificationVerifiedTable extends DataTableComponent
             Column::make('Business Location', 'location.name'),
             Column::make('Tax Type', 'taxType.name'),
             Column::make('Action', 'id')
-                ->view('verification.action')
+                ->view('verification.verified.action')
                 ->html(true),
 
         ];

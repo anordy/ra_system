@@ -374,3 +374,17 @@ LIVEWIRE TABS
 }
 
 [x-cloak] { display: none !important; }
+
+.spinner-border-xs {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-width: 0.15em;
+}
+
+.swal2-icon.swal2-error {
+    border: none;
+}
+
+.swal2-popup.swal2-toast .swal2-title {
+    margin: 0.5em 0.5em;
+}

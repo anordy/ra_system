@@ -2,6 +2,7 @@
 
 namespace App\Models\Verification;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
