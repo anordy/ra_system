@@ -47,7 +47,8 @@
                             <tr>
                                 <td>{{ $item->config->name ?? 'name' }}</td>
                                 <td>{{ number_format($item->value) }}</td>
-                                <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ??'' : $item->config->rate_usd ?? '' }}</td>
+                                <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' : $item->config->rate_usd ?? '' }}
+                                </td>
                                 <td>{{ number_format($item->vat) }}</td>
                             </tr>
                         @endforeach
@@ -59,10 +60,11 @@
                             <th style="width: 25%"></th>
                             <th style="width: 25%">{{ number_format($return->total) }}</th>
                         </tr>
-                      
+
                     </tfoot>
                 </table>
 
             </div>
         </div>
-    @endsection
+    </div>
+@endsection

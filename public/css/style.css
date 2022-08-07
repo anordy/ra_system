@@ -367,6 +367,14 @@ LIVEWIRE TABS
     background: #fff;
 }
 
+
+
+.swal2-container {
+    z-index: 20000 !important;
+}
+
+[x-cloak] { display: none !important; }
+
 .spinner-border-xs {
     width: 0.8rem;
     height: 0.8rem;

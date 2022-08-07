@@ -41,11 +41,15 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowBusinessDeregistrationSeeder::class);
         $this->call(WorkflowBusinessUpdateSeeder::class);
         $this->call(WorkflowBusinessTaxTypeChangeSeeder::class);
+        $this->call(WorkflowTaxVerificationSeeder::class);
         $this->call(EducationLevelSeeder::class);
         $this->call(HotelReturnConfigSeeder::class);
         $this->call(PetroleumConfigSeeder::class);
         $this->call(PortConfigSeeder::class);
         $this->call(BFOConfigSeeder::class);
+        $this->call(BFOConfigSeeder::class);
+        $this->call(EmTransactionSeeder::class);
+        $this->call(MmTransferSeeder::class);
         $this->call(FinancialYearSeeder::class);
         $this->call(VatReturnConfigSeeder::class);
         $this->call(ISIC1Seeder::class);
@@ -53,6 +57,8 @@ class DatabaseSeeder extends Seeder
         $this->call(ISIC3Seeder::class);
         $this->call(ISIC4Seeder::class);
         $this->call(MnoConfigSeeder::class);
+        $this->call(AssesmentSeeder::class);
+        $this->call(WorkflowWaiverSeeder::class);
         $this->call(InterestRateSeeder::class);
         $this->call(PenaltyRatesSeeder::class);
         $this->call(StampDutyConfigSeeder::class);

@@ -27,6 +27,7 @@ class BranchesApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+        $this->validate(['comments' => 'required']);
 
         if ($this->checkTransition('director_of_trai_review')) {
             $this->subject->verified_at = Carbon::now()->toDateTimeString();

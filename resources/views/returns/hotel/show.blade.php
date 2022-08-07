@@ -67,7 +67,9 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12">PAYMENT STRUCTURE</div>
+                <div class="col-md-12">
+                    <p class="text-uppercase font-weight-bold">Payment Summary </p>
+                </div>
                 <div class="col-md-12">
                     <livewire:returns.returns-penalty modelName='App\Models\Returns\HotelReturns\HotelReturn'
                         modelId="{{ $return->id }}" />

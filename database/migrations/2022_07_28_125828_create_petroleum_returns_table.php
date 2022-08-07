@@ -21,11 +21,15 @@ class CreatePetroleumReturnsTable extends Migration
             $table->unsignedBigInteger('filled_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
-            $table->decimal('total')->default(0);
+            $table->unsignedBigInteger('financial_month_id');
+            $table->decimal('total_amount_due')->default(0);
+            $table->decimal('total_amount_due_with_penalties', 40,2)->default(0);
             $table->decimal('petroleum_levy')->default(0);
             $table->decimal('infrastructure_tax')->default(0);
             $table->decimal('rdf_tax')->default(0);
             $table->decimal('road_lincence_fee')->default(0);
+            $table->enum('status',['submitted', 'control-number-generating', 'control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->default('submitted');
+            $table->integer('edited_count')->default(0);
             $table->timestamps();
         });
     }

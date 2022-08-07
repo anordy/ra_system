@@ -141,6 +141,7 @@ trait PenaltyTrait
     }
 
     public function getFilingMonth($locationId, $ReturnClass){
+        // dd($locationId);
         // Check last return w/ Status
         if($return = $ReturnClass::where('business_location_id', $locationId)->latest()->first()){
             if($return->status === 'complete'){
@@ -152,11 +153,12 @@ trait PenaltyTrait
 
         // If not, Check date of commence
         $date = BusinessLocation::find($locationId)->business->date_of_commencing;
+        // dd($date);
         $financialYear = FinancialYear::where('code', $date->year)->first();
         $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
-            ->where('number', $date->month)
-            ->first();
-
+                                ->where('number', $date->month)
+                                ->first();
+        // dd($financialMonth);
         return $this->checkNextViableReturnMonth($financialMonth);
 
     }
@@ -176,7 +178,7 @@ trait PenaltyTrait
                 ->where('number', $financialMonth->number + 1)
                 ->first();
         }
-
+        
         $date = $this->getDateFromFinancialMonth($month);
         // Compare with current date
         if($date->lessThanOrEqualTo(Carbon::now())){
