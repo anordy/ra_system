@@ -70,27 +70,8 @@ use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
-use App\Http\Controllers\Returns\Port\PortReturnController;
-use App\Http\Controllers\Returns\ReturnController;
-use App\Http\Controllers\Returns\ReturnsController;
-use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
-use App\Http\Controllers\Returns\Vat\VatReturnController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\Setting\InterestRateController;
-use App\Http\Controllers\TaxAgents\TaxAgentController;
-use App\Http\Controllers\TaxAgents\TaxAgentFileController;
-use App\Http\Controllers\Taxpayers\RegistrationsController;
-use App\Http\Controllers\Taxpayers\TaxpayersController;
-use App\Http\Controllers\TaxTypeController;
-use App\Http\Controllers\TwoFactorAuthController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\Verification\TaxVerificationController;
-use App\Http\Controllers\WardController;
-use App\Http\Controllers\WithholdingAgentController;
-use App\Http\Controllers\WorkflowController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Investigation\TaxInvestigationController;
 
 Auth::routes();
@@ -259,7 +240,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
-        // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
     });
 
 });
