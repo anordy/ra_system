@@ -87,12 +87,6 @@
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-end">
 
-                    @if($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATION_FAILED)
-                        <a class="btn btn-primary" href="{{ route('returns.stamp-duty.edit', encrypt($return->id)) }}">
-                            <i class="bi bi-plus-circle-dotted mr-2"></i>
-                            Re-generate Control No.
-                        </a>
-                    @endif
                 </div>
             </div>
         </div>
