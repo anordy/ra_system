@@ -238,16 +238,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
 
+        Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
+            //MNO Excise Duty returns
+            Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
+            Route::get('/mno/{return_id}', [MnoReturnController::class, 'show'])->name('mno.show');
+        });
+
         //Electronic Money Transaction Return
         Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
             Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
             Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
         });
-    });
-
-    Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
-        //MNO Excise Duty returns
-        Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
-        Route::get('/mno/{return_id}', [MnoReturnController::class, 'show'])->name('mno.show');
     });
 });
