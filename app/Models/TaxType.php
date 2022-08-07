@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\VatReturn\VatReturn;
+use App\Models\Returns\Vat\VatReturn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -47,6 +47,6 @@ class TaxType extends Model implements Auditable
 
     public function vatReturn()
     {
-        return $this->hasOne(VatReturn::class, 'taxtype_code', 'code');
+        return $this->hasOne(VatReturn::class, 'taxtype_id', 'id');
     }
 }

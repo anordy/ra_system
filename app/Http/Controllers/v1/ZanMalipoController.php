@@ -23,6 +23,7 @@ class ZanMalipoController extends Controller
 
     private $returnable = [
         'App\Models\Returns\StampDuty\StampDutyReturn',
+        'App\Models\Returns\Vat\VatReturn',
         'App\Models\Returns\MmTransferReturn',
     ];
 

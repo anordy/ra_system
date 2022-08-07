@@ -11,6 +11,6 @@ class VatReturnController extends Controller
     public function show($id)
     {
         $return = VatReturn::query()->findOrFail(decrypt($id));
-        return view('returns.vat_returns.show', compact('return'));
+        return view('returns.vat_returns.show', compact('return', 'id'));
     }
 }
