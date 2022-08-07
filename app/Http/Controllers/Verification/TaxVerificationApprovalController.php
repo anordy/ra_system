@@ -16,7 +16,7 @@ class TaxVerificationApprovalController extends Controller
 
     public function edit($id){
 
-        $verification = TaxVerification::find(decrypt($id));
+        $verification = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
 
         $return = $verification->taxReturn;
         if($return instanceof PetroleumReturn){
