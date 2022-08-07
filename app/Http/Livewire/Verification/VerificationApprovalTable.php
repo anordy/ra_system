@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Verification;
 
+use App\Enum\TaxVerificationStatus;
 use App\Models\Verification\TaxVerification;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -17,7 +18,8 @@ class VerificationApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn');
+        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn')
+            ->where('tax_verifications.status', TaxVerificationStatus::PENDING);
     }
 
     public function configure(): void
@@ -37,7 +39,7 @@ class VerificationApprovalTable extends DataTableComponent
             Column::make('Business Location', 'location.name'),
             Column::make('Tax Type', 'taxType.name'),
             Column::make('Action', 'id')
-                ->view('verification.action')
+                ->view('verification.approval.action')
                 ->html(true),
 
         ];

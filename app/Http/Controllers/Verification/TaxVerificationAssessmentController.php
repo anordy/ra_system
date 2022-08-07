@@ -24,4 +24,13 @@ class TaxVerificationAssessmentController extends Controller
         }
 
     }
+    public function show($id){
+        $verification = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
+
+        $return = $verification->taxReturn;
+        if($return instanceof PetroleumReturn){
+            $viewRender = "returns.petroleum.filing.details";
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        }
+    }
 }
