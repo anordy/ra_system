@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAssesmentsTable extends Migration
+class CreateTaxAuditOfficersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateAssesmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assesments', function (Blueprint $table) {
+        Schema::create('tax_audit_officers', function (Blueprint $table) {
             $table->id();
-            $table->String('name');
-            $table->String('code');
-            $table->softDeletes();
+            $table->unsignedBigInteger('verification_id');
+            $table->unsignedBigInteger('user_id');
+            $table->boolean('team_leader')->default(false);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateAssesmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assesments');
+        Schema::dropIfExists('tax_audit_officers');
     }
 }

@@ -18,10 +18,18 @@ class CreateTaxAuditsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('tax_type_id');
-            $table->unsignedBigInteger('responsible_person_id');
-            $table->text('intension');
-            $table->text('explanation');
-            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('tax_return_id');
+            $table->string('tax_return_type');
+            $table->string('intension')->nullable();
+            $table->string('explanation')->nullable();
+            $table->text('scope')->nullable();
+            $table->date('auditing_date')->nullable();
+            $table->date('period_from')->nullable();
+            $table->date('period_to')->nullable();
+            $table->string('created_by_type');
+            $table->unsignedBigInteger('created_by_id');
+            $table->enum('status', ['draft', 'pending', 'approved', 'correction'])->default('draft');
+            $table->string('marking')->nullable();
             $table->timestamps();
         });
     }
