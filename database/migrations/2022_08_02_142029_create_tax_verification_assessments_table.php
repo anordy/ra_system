@@ -20,6 +20,7 @@ class CreateTaxVerificationAssessmentsTable extends Migration
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
             $table->string('report_path')->nullable();
+            $table->enum('status',['submitted', 'control-number-generating', 'control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->default('submitted');
             $table->timestamps();
         });
     }
