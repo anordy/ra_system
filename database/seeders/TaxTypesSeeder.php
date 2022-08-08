@@ -35,5 +35,8 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['gfs_code' => '112061', 'name' => 'Infrastructure', 'code' => TaxType::INFRASTRUCTURE]);
         TaxType::updateOrCreate(['gfs_code' => '112061', 'name' => 'RDF', 'code' => TaxType::RDF]);
         TaxType::updateOrCreate(['gfs_code' => '112061', 'name' => 'Road License Fee ', 'code' => TaxType::ROAD_LICENSE_FEE]);
+        TaxType::updateOrCreate(['gfs_code' => '112061', 'name' => 'Investigation', 'code' => TaxType::INVESTIGATION, 'category' => 'other']);
+        TaxType::updateOrCreate(['gfs_code' => '112061', 'name' => 'Audit', 'code' => TaxType::AUDIT, 'category' => 'other']);
+        TaxType::updateOrCreate(['gfs_code' => '112061', 'name' => 'Verification', 'code' => TaxType::VERIFICATION, 'category' => 'other']);
     }
 }

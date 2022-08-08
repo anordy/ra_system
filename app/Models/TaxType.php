@@ -35,6 +35,9 @@ class TaxType extends Model implements Auditable
     public const INFRASTRUCTURE = 'infrastructure';
     public const RDF = 'road-development-fund';
     public const ROAD_LICENSE_FEE = 'road-license-fee';
+    public const AUDIT = 'audit';
+    public const VERIFICATION = 'verification';
+    public const INVESTIGATION = 'investigation';
 
     protected $fillable = [
         'name',
