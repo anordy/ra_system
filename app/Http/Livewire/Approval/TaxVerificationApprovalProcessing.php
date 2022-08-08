@@ -107,7 +107,7 @@ class TaxVerificationApprovalProcessing extends Component
             TaxVerificationAssessment::create([
                 'verification_id' => $this->subject->id,
                 'principal_amount' => $this->principalAmount,
-                'intereset_amount' => $this->interestAmount,
+                'interest_amount' => $this->interestAmount,
                 'penalty_amount' => $this->penaltyAmount,
                 'report_path' => $reportPath ?? '',
             ]);
