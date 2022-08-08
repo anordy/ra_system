@@ -30,5 +30,7 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['name' => 'Lumpsum Payments', 'code' => TaxType::LUMPSUM_PAYMENT]);
         TaxType::updateOrCreate(['name' => 'Electronic Money Transaction', 'code' => TaxType::ELECTRONIC_MONEY_TRANSACTION]);
         TaxType::updateOrCreate(['name' => 'Mobile Money Transfer', 'code' => TaxType::MOBILE_MONEY_TRANSFER]);
+        TaxType::updateOrCreate(['name' => 'penalty', 'code' => TaxType::PENALTY]);
+        TaxType::updateOrCreate(['name' => 'interest', 'code' => TaxType::INTEREST]);
     }
 }
