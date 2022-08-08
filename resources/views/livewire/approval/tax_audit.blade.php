@@ -147,12 +147,15 @@
         </div>
         @if ($this->checkTransition('start'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('start')">Initiate Approval</button>
+                <button type="button" class="btn btn-primary" wire:click="approve('start')">
+                    Initiate Approval
+                </button>
             </div>
         @elseif ($this->checkTransition('assign_officers'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('assign_officers')">Assign &
-                    Forward</button>
+                <button type="button" class="btn btn-primary" wire:click="approve('assign_officers')">
+                    Assign & Forward
+                </button>
             </div>
         @elseif ($this->checkTransition('conduct_audit'))
             <div class="modal-footer p-2 m-0">
@@ -185,19 +188,13 @@
                     Approve & Forward
                 </button>
             </div>
-        @elseif ($this->checkTransition('prepare_final_report'))
-            <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('prepare_final_report')">
-                    Approve & Forward
-                </button>
-            </div>
         @elseif ($this->checkTransition('final_report'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger" wire:click="reject('correct_final_report')">
                     Reject & Return Back
                 </button>
                 <button type="button" class="btn btn-primary" wire:click="approve('final_report')">
-                    Approve & Complete
+                    Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('final_report_review'))
@@ -206,7 +203,7 @@
                     Reject & Return Back
                 </button>
                 <button type="button" class="btn btn-primary" wire:click="approve('final_report_review')">
-                    Approve & Complete
+                    Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('accepted'))

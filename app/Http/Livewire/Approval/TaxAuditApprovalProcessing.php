@@ -132,7 +132,7 @@ class TaxAuditApprovalProcessing extends Component
             );
 
             TaxAuditAssessment::create([
-                'verification_id' => $this->subject->id,
+                'audit_id' => $this->subject->id,
                 'principal_amount' => $this->principalAmount,
                 'interest_amount' => $this->interestAmount,
                 'penalty_amount' => $this->penaltyAmount,
