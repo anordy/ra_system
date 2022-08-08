@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Jobs\SendZanMalipoSMS;
-use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
@@ -24,7 +23,8 @@ class ZanMalipoController extends Controller
 
     private $returnable = [
         'App\Models\Returns\StampDuty\StampDutyReturn',
-        MnoReturn::class,
+        'App\Models\Returns\ExciseDuty\MnoReturn',
+        'App\Models\Returns\Vat\VatReturn',
         'App\Models\Returns\MmTransferReturn',
     ];
 

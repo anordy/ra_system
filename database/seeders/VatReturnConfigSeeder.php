@@ -261,7 +261,7 @@ class VatReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
                 'value_calculated' => true,
-                'formular' => 'SRS-SLP-SRI',
+                'formular' => 'SRS-SLP-IP-SRI',
                 'active' => true,
             ],
 
@@ -335,7 +335,7 @@ class VatReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'grandTotal',
                 'value_calculated' => true,
-                'formular' => 'SRS-SLP-SRI-VWH-CBF',
+                'formular' => 'SRS-SLP-IP-SRI-VWH-CBF',
                 'active' => true,
             ],
 

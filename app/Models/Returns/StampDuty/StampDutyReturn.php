@@ -2,6 +2,11 @@
 
 namespace App\Models\Returns\StampDuty;
 
+use App\Models\Business;
+use App\Models\FinancialMonth;
+use App\Models\FinancialYear;
+use App\Models\Taxpayer;
+use App\Models\TaxType;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,12 +16,41 @@ class StampDutyReturn extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public const SUBMITTED = 'submitted';
-    public const COMPLETE = 'complete';
-
     protected $guarded = [];
 
-    public function bill(){
-        return $this->morphOne(ZmBill::class, 'billable');
+    public function taxType(){
+        return $this->belongsTo(TaxType::class);
+    }
+
+    public function business(){
+        return $this->belongsTo(Business::class);
+    }
+
+    public function taxpayer(){
+        return $this->belongsTo(Taxpayer::class, 'filed_id');
+    }
+
+    public function financialYear(){
+        return $this->belongsTo(FinancialYear::class);
+    }
+
+    public function financialMonth(){
+        return $this->belongsTo(FinancialMonth::class);
+    }
+
+    public function items(){
+        return $this->hasMany(StampDutyReturnItem::class, 'return_id');
+    }
+
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+
+    /*
+     * Model attributes
+     */
+    public function getBillAttribute(){
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 }

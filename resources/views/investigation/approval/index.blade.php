@@ -1,14 +1,14 @@
 @extends('layouts.master')
 
-@section('title', 'Verifications')
+@section('title', 'Tax Investigation Approvals')
 
 @section('content')
     <div class="card">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            Return Verifications
+            Tax Investigation Approvals
         </div>
         <div class="card-body">
-            @livewire('verification.verification-table')
+            @livewire('investigation.tax-investigation-approval-table')
         </div>
     </div>
 @endsection

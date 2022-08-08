@@ -1,6 +1,6 @@
 @if (count($this->getEnabledTranstions()) >= 1)
     <div class="card shadow-sm mb-2 bg-white">
-        <div class="card-header font-weight-bold">
+        <div class="card-header text-uppercase font-weight-bold bg-white">
             Tax Verification Approval
         </div>
         <div class="card-body">

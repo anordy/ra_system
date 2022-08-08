@@ -8,7 +8,7 @@
             Tax Returns Verified
         </div>
         <div class="card-body">
-            @livewire('verification.verification-verified-table')
+            @livewire('verification.verification-assessment-table')
         </div>
     </div>
 @endsection
