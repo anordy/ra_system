@@ -23,7 +23,6 @@ class CreateLumpSumReturnsTable extends Migration
             $table->decimal('amount')->default(0);
             $table->integer('receipt_no');
             $table->integer('edited_count')->default(0);
-            $table->string('currency');
             $table->string('status');
             $table->timestamps();
         });

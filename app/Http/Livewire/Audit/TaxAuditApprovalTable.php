@@ -35,6 +35,7 @@ class TaxAuditApprovalTable extends DataTableComponent
     {
         return [
             Column::make('Z_Number', 'business.z_no'),
+            Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),
             Column::make('Tax Type', 'taxType.name'),

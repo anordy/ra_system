@@ -26,7 +26,7 @@ class CreateTaxVerificationsTable extends Migration
             $table->string('created_by_type');
             $table->unsignedBigInteger('created_by_id');
             $table->enum('status', ['draft', 'pending', 'approved', 'correction'])->default('draft');
-            $table->string('marking');
+            $table->string('marking')->nullable();
             $table->timestamps();
         });
     }

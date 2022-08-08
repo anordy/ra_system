@@ -48,7 +48,7 @@ class PetroleumReturnTable extends DataTableComponent
             Column::make('Road Licence Fee', 'road_lincence_fee')
                 ->sortable()
                 ->searchable(),
-            Column::make('Total VAT', 'total')
+            Column::make('Total VAT', 'total_amount_due')
                 ->sortable()
                 ->searchable(),
             Column::make('Action', 'id')->view('returns.petroleum.filing.includes.actions'),
