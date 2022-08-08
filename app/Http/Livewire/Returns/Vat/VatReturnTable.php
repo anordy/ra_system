@@ -31,7 +31,7 @@ class VatReturnTable extends DataTableComponent
                 ->sortable()->searchable(),
             Column::make("Business Name", "business.name")
                 ->sortable()->searchable(),
-            Column::make("Total Input Vat", 'total_input_tax')
+            Column::make("Total Input Tax", 'total_input_tax')
                 ->format(function($value, $row){
                     return number_format($row->total_input_tax,2);
                 })
@@ -41,9 +41,14 @@ class VatReturnTable extends DataTableComponent
                     return number_format($row->total_vat_payable,2);
                 })
                 ->sortable()->searchable(),
-            Column::make("Grant Total Vat", 'total_vat_amount_due')
+            Column::make("Total Amount Due", 'total_amount_due')
                 ->format(function($value, $row){
-                    return number_format($row->total_vat_amount_due,2);
+                    return number_format($row->total_amount_due,2);
+                })
+                ->sortable()->searchable(),
+            Column::make("Grant Total Vat", 'total_amount_due_with_penalties')
+                ->format(function($value, $row){
+                    return number_format($row->total_amount_due_with_penalties,2);
                 })
                 ->sortable()->searchable(),
             Column::make("Action", "id")

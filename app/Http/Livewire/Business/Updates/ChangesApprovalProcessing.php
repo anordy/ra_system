@@ -42,6 +42,7 @@ class ChangesApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+        $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
@@ -141,6 +142,7 @@ class ChangesApprovalProcessing extends Component
 
     public function reject($transtion)
     {
+        $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('registration_manager_reject')) {
                 // $this->subject->rejected_on = Carbon::now()->toDateTimeString();

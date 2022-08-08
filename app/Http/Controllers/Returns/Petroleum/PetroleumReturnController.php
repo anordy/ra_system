@@ -27,7 +27,7 @@ class PetroleumReturnController extends Controller
     {
         $returnId = decrypt($return_id);
         $return = PetroleumReturn::findOrFail($returnId);
-        return view('returns.filing.petroleum.filing.show', compact('return'));
+        return view('returns.petroleum.filing.show', compact('return'));
     }
 
     public function edit($return)
