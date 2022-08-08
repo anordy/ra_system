@@ -15,6 +15,7 @@ use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditAssessmentController;
+use App\Http\Controllers\Audit\TaxAuditFilesController;
 use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
@@ -227,6 +228,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
+        Route::resource('/files', TaxAuditFilesController::class);
     });   
     
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {

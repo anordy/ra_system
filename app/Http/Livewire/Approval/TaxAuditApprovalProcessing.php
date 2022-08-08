@@ -3,9 +3,9 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Models\Role;
+use App\Models\TaxAudit\TaxAuditAssessment;
+use App\Models\TaxAudit\TaxAuditOfficer;
 use App\Models\User;
-use App\Models\Verification\TaxVerificationAssessment;
-use App\Models\Verification\TaxVerificationOfficer;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -23,6 +23,11 @@ class TaxAuditApprovalProcessing extends Component
 
     public $teamLeader;
     public $teamMember;
+    public $auditingDate;
+    public $preliminaryReport;
+    public $workingReport;
+    public $finalReport;
+    public $exitMinutes;
 
     public $principalAmount;
     public $interestAmount;
@@ -65,6 +70,7 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
+                    'auditingDate' => 'required|date',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],
                     'teamMember' => ['required',  new NotIn([$this->teamLeader])],
                 ],
@@ -74,43 +80,76 @@ class TaxAuditApprovalProcessing extends Component
                 ]
             );
 
-            TaxVerificationOfficer::create([
-                'verification_id' => $this->subject->id,
+            $this->subject->auditing_date = $this->auditingDate;
+            $this->subject->save();
+
+            TaxAuditOfficer::create([
+                'audit_id' => $this->subject->id,
                 'user_id' => $this->teamLeader,
                 'team_leader' => true,
             ]);
 
-            TaxVerificationOfficer::create([
-                'verification_id' => $this->subject->id,
+            TaxAuditOfficer::create([
+                'audit_id' => $this->subject->id,
                 'user_id' => $this->teamMember,
             ]);
 
             $operators = [$this->teamLeader, $this->teamMember];
         }
 
-        if ($this->checkTransition('conduct_verification')) {
+
+        if ($this->checkTransition('conduct_audit')) {
+            $this->validate(
+                [
+                    'preliminaryReport' => 'required|mimes:pdf',
+                    'workingReport' => 'required|mimes:pdf',
+                ]
+            );
+
+            $preliminaryReport = "";
+            if ($this->preliminaryReport) {
+                $preliminaryReport = $this->preliminaryReport->store('audit', 'local-admin');
+            }
+            $workingReport = "";
+            if ($this->workingReport) {
+                $workingReport = $this->workingReport->store('audit', 'local-admin');
+            }
+
+            $this->subject->preliminary_report = $preliminaryReport;
+            $this->subject->working_report = $workingReport;
+            $this->subject->save();
+        }
+
+        if ($this->checkTransition('prepare_final_report')) {
             $this->validate(
                 [
                     'principalAmount' => ['required', 'numeric'],
                     'interestAmount' => ['required', 'numeric'],
                     'penaltyAmount' => ['required', 'numeric'],
-                    'assessmentReport' => 'required|mimes:pdf',
+                    'finalReport' => 'required|mimes:pdf',
+                    'exitMinutes' => 'required|mimes:pdf',
                 ]
             );
 
-            $reportPath = "";
-            if ($this->assessmentReport) {
-                $reportPath = $this->assessmentReport->store('verification', 'local-admin');
-            }
-
-
-            TaxVerificationAssessment::create([
+            TaxAuditAssessment::create([
                 'verification_id' => $this->subject->id,
                 'principal_amount' => $this->principalAmount,
                 'interest_amount' => $this->interestAmount,
                 'penalty_amount' => $this->penaltyAmount,
-                'report_path' => $reportPath ?? '',
             ]);
+
+            $exitMinutes = "";
+            if ($this->exitMinutes) {
+                $exitMinutes = $this->exitMinutes->store('audit', 'local-admin');
+            }
+            $finalReport = "";
+            if ($this->finalReport) {
+                $finalReport = $this->finalReport->store('audit', 'local-admin');
+            }
+
+            $this->subject->exit_minutes = $exitMinutes;
+            $this->subject->final_report = $finalReport;
+            $this->subject->save();
         }
 
 

@@ -24,7 +24,7 @@
                     TAXPAYER INFORMATIONS
                 </div>
                 <div class="card-body">
-                    <div class="row m-2 pt-3">
+                    <div class="row m-2">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
                             <p class="my-1">{{ $return->taxtype->name }}</p>
@@ -48,12 +48,14 @@
                         Compliance Officers
                     </div>
                     <div class="card-body">
-                        @foreach ($audit->officers as $officer)
+                      <div class="row">
+                          @foreach ($audit->officers as $officer)
                             <div class="col-md-6 mb-3">
                                 <span class="font-weight-bold text-uppercase">Team {{ $officer->team_leader ? 'Leader' : 'Member' }}</span>
                                 <p class="my-1">{{ $officer->user->full_name ?? '' }}</p>
                             </div>
                         @endforeach
+                      </div>
                     </div>
                 </div>
             @endif
