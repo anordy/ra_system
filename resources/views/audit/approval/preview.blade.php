@@ -21,21 +21,13 @@
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
-                    Tax Returns Verified
+                    TAXPAYER INFORMATIONS
                 </div>
                 <div class="card-body">
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
                             <p class="my-1">{{ $return->taxtype->name }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Filled By</span>
-                            <p class="my-1">{{ $return->taxpayer->full_name ?? '' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Financial Year</span>
-                            <p class="my-1">{{ $return->financialYear->name ?? '' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
@@ -50,13 +42,13 @@
             </div>
 
 
-            @if (count($verification->officers) > 0)
+            @if (count($audit->officers) > 0)
                 <div class="card">
                     <div class="card-header text-uppercase font-weight-bold bg-white">
                         Compliance Officers
                     </div>
                     <div class="card-body">
-                        @foreach ($verification->officers as $officer)
+                        @foreach ($audit->officers as $officer)
                             <div class="col-md-6 mb-3">
                                 <span class="font-weight-bold text-uppercase">Team {{ $officer->team_leader ? 'Leader' : 'Member' }}</span>
                                 <p class="my-1">{{ $officer->user->full_name ?? '' }}</p>
@@ -66,7 +58,7 @@
                 </div>
             @endif
 
-            @if ($verification->assessment)
+            @if ($audit->assessment)
                 <div class="card">
                     <div class="card-header text-uppercase font-weight-bold bg-white">
                         Assessment Details
@@ -75,15 +67,15 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                                <p class="my-1">{{ $verification->assessment->principal_amount ?? '' }}</p>
+                                <p class="my-1">{{ $audit->assessment->principal_amount ?? '' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ $verification->assessment->interest_amount ?? '' }}</p>
+                                <p class="my-1">{{ $audit->assessment->interest_amount ?? '' }}</p>
                             </div> 
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                                <p class="my-1">{{ $verification->assessment->penalty_amount ?? '' }}</p>
+                                <p class="my-1">{{ $audit->assessment->penalty_amount ?? '' }}</p>
                             </div>
                         </div>
                     </div>
@@ -96,8 +88,8 @@
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
                 <div class="card-body">
-                    <livewire:approval.approval-history-table modelName='{{ get_class($verification) }}'
-                        modelId="{{ $verification->id }}" />
+                    <livewire:approval.approval-history-table modelName='{{ get_class($audit) }}'
+                        modelId="{{ $audit->id }}" />
 
                 </div>
             </div>
