@@ -105,6 +105,7 @@ class ZmCore
                     'equivalent_amount' => $exchange_rate * $item['amount'],
                     'gfs_code' => $item['gfs_code']
                 ]);
+
                 $zm_item->save();
             }
             DB::commit();
@@ -118,7 +119,7 @@ class ZmCore
 
 
     /**
-     * @param Bill|int $bill Instance of ZmBill or bill id
+     * @param ZmBill|int $bill Instance of ZmBill or bill id
      * @param string $generated_by
      * @param string $approved_by
      * @return ZmResponse

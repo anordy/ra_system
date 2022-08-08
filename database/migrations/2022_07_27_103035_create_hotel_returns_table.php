@@ -20,15 +20,18 @@ class CreateHotelReturnsTable extends Migration
 
             $table->string('filled_type');
             $table->unsignedBigInteger('filled_id');
-            $table->unsignedBigInteger('taxtype_id');
+            $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
 
             $table->integer('edited_count')->default(0);
+            $table->enum('status',['submitted', 'control-number-generating', 'control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->default('submitted');
 
-            $table->decimal('hotel_infrastructure_tax')->nullable();
-            $table->string('currency');
-            $table->string('return_month_id');
-            $table->decimal('total_vat_payable', 40, 2)->default(0);
+            $table->decimal('hotel_infrastructure_tax', 40, 2)->nullable();
+            $table->string('financial_month_id');
+            $table->decimal('total_amount_due', 40, 2)->default(0);
+            $table->decimal('total_amount_due_with_penalty', 40, 2)->default(0);
+            $table->dateTime('submitted_at')->nullable();
+            $table->dateTime('paid_at')->nullable();
 
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
