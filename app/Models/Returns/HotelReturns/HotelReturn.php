@@ -23,6 +23,10 @@ class HotelReturn extends Model implements Auditable
         return $this->hasMany(HotelReturnItem::class, 'return_id');
     }
 
+    public function configReturns(){
+        return $this->hasMany(HotelReturnItem::class, 'return_id');
+    }
+
     public function business() {
         return $this->belongsTo(Business::class, 'business_id');
     }
@@ -36,7 +40,7 @@ class HotelReturn extends Model implements Auditable
     }
 
     public function taxtype() {
-        return $this->belongsTo(TaxType::class, 'taxtype_id');
+        return $this->belongsTo(TaxType::class, 'tax_type_id');
     }
 
     public function financialYear() {

@@ -49,8 +49,8 @@ class WorkflowPlaceUpdateModal extends Component
     {
         return [
             'operator_type' => 'in:user,role',
-            'role_id' => 'required_if:operator_type,==,role',
-            'user_id' => 'required_if:operator_type,==,user',
+            'role_id' => 'nullable',
+            'user_id' => 'nullable',
         ];
     }
 
@@ -60,12 +60,13 @@ class WorkflowPlaceUpdateModal extends Component
         $this->validate();
 
         $place = $this->place;
-
+        $place['operator_type'] = $this->operator_type;
         if ($this->operator_type == 'user') {
             $place['operators'] = collect($this->user_id)->toArray();
         } elseif ($this->operator_type == 'role') {
             $place['operators'] = collect($this->role_id)->toArray();
         }
+
 
         $workflowPlaces = json_decode($this->workflow->places, true);
 

@@ -27,7 +27,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="5" class="text-center py-3">
+                    <td colspan="7" class="text-center py-3">
                         No penalties for this return.
                     </td>
                 </tr>

@@ -34,6 +34,8 @@ class DeregisterApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+        $this->validate(['comments' => 'required']);
+
         try {
             if ($this->checkTransition('commissioner_review')) {
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
@@ -54,6 +56,8 @@ class DeregisterApprovalProcessing extends Component
 
     public function reject($transtion)
     {
+        $this->validate(['comments' => 'required']);
+
         try {
             if ($this->checkTransition('audit_manager_review')) {
                 $this->subject->status = BusinessStatus::CORRECTION;

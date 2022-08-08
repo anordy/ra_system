@@ -11,4 +11,8 @@ class StampDutyReturnItem extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function config() {
+        return $this->belongsTo(StampDutyConfig::class, 'config_id');
+    }
 }
