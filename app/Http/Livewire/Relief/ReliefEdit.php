@@ -12,10 +12,10 @@ use App\Models\Relief\ReliefProjectList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Storage;
 
 class ReliefEdit extends Component
 {
@@ -62,8 +62,6 @@ class ReliefEdit extends Component
         $this->supplierLocation = $this->relief->location_id;
         $this->optionSupplierLocations = Business::find($this->supplier)->locations;
 
-        // $this->optionSuppliers = Business::where('status', BusinessStatus::APPROVED)->get();
-        // $this->optionSupplierLocations = null;
         $this->projectSection = ReliefProject::find($this->relief->project_id)->id;
         $this->optionProjectSections = ReliefProject::all();
 
@@ -108,9 +106,7 @@ class ReliefEdit extends Component
             'projectSection' => 'required',
             'project' => 'required',
             'items.*.name' => 'required',
-            // 'items.*.description' => 'required',
             'items.*.quantity' => 'required|numeric',
-            // 'items.*.unit' => 'required',
             'items.*.costPerItem' => 'required|numeric',
             'attachments.*.file' => 'nullable|required_with:attachments.*.name|mimes:pdf',
             'attachments.*.name' => 'nullable|required_with:attachments.*.file',
@@ -146,7 +142,6 @@ class ReliefEdit extends Component
                     'item_name' => $item['name'],
                     'quantity' => $item['quantity'],
                     'unit' => $item['unit'],
-                    // 'description' => $item['description'],
                     'amount_per_item' => $item['costPerItem'],
                     'amount' => $item['quantity'] * $item['costPerItem'],
                 ]);
@@ -200,15 +195,10 @@ class ReliefEdit extends Component
             'projectSection.required' => 'Please select a project section',
             'project.required' => 'Please select a project',
             'items.*.name.required' => 'Please enter item name',
-            // 'items.*.description.required' => 'Please enter item description',
             'items.*.quantity.required' => 'Please enter item quantity',
-            // 'items.*.unit.required' => 'Please enter item unit',
             'items.*.costPerItem.required' => 'Please enter item cost per item',
             'attachments.*.file.required_with' => 'Please upload an attachment',
             'attachments.*.name.required_with' => 'Please enter attachment name',
-            // 'items.*.amount.required' => 'Please enter item amount',
-            // 'attachments.*.name.required' => 'Please enter attachment name',
-            // 'attachments.*.file.required' => 'Please select a file',
         ];
     }
 
@@ -254,7 +244,6 @@ class ReliefEdit extends Component
     {
         $this->items[] = [
             'name' => '',
-            // 'description' => '',
             'quantity' => '',
             'unit' => '',
             'costPerItem' => '',
@@ -291,7 +280,7 @@ class ReliefEdit extends Component
         $this->relievedAmount = $rate * $this->vatAmount;
 
         //calculate amount payable
-        $this->amountPayable = $this->total - $this->relievedAmount;
+        $this->amountPayable = $this->total + ($this->vatAmount - $this->relievedAmount);
 
     }
 

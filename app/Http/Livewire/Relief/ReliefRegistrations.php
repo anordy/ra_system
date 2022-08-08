@@ -100,7 +100,7 @@ class ReliefRegistrations extends Component
 
     public function save()
     {
-        $this->validate(); 
+        $this->validate();
         try {
             DB::beginTransaction();
             $relief = Relief::create([
@@ -109,7 +109,7 @@ class ReliefRegistrations extends Component
                 'location_id' => $this->supplierLocation,
                 'business_id' => $this->supplier,
                 'rate' => $this->rate,
-                'vat'=>$this->vatPercent,
+                'vat' => $this->vatPercent,
                 'total_amount' => $this->total,
                 'vat_amount' => $this->vatAmount,
                 'relieved_amount' => $this->relievedAmount,
@@ -129,7 +129,6 @@ class ReliefRegistrations extends Component
                     'amount_per_item' => $item['costPerItem'],
                     'amount' => $item['quantity'] * $item['costPerItem'],
                 ]);
-
             }
 
             foreach ($this->attachments as $attachment) {
@@ -152,7 +151,6 @@ class ReliefRegistrations extends Component
             // dd($e->getMessage());
             $this->alert('error', 'Something went wrong');
         }
-
     }
 
     protected function messages()
@@ -233,7 +231,6 @@ class ReliefRegistrations extends Component
 
     public function calculateAmountPayable($i)
     {
-        // dd('test');
         $costPerItem = is_numeric($this->items[$i]['costPerItem']) ? $this->items[$i]['costPerItem'] : 0;
         $quantity = is_numeric($this->items[$i]['quantity']) ? $this->items[$i]['quantity'] : 0;
         $this->items[$i]['amount'] = $costPerItem * $quantity;
@@ -242,26 +239,19 @@ class ReliefRegistrations extends Component
 
     public function calculateTotal()
     {
-        //calculate total
         $this->total = 0;
         foreach ($this->items as $item) {
             $this->total += is_numeric($item['amount']) ? $item['amount'] : 0;
         }
-        
-         //calculate relieved amount
-        $this->vatAmount = ($this->vatPercent*$this->total)/100;
+
+        //calculate relieved amount
+        $this->vatAmount = ($this->vatPercent * $this->total) / 100;
         $rate = ($this->rate ?? 0) / 100;
         $this->relievedAmount = $rate * $this->vatAmount;
- 
-         //calculate amount payable
-         $this->amountPayable = $this->total - $this->relievedAmount;
 
+        //calculate amount payable
+        $this->amountPayable = $this->total + ($this->vatAmount - $this->relievedAmount);
     }
-
-    // public function calculateRelievedAmount()
-    // {
-       
-    // }
 
     public function addAttachment()
     {
@@ -275,5 +265,4 @@ class ReliefRegistrations extends Component
     {
         unset($this->attachments[$i]);
     }
-
 }
