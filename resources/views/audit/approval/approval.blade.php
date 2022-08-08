@@ -41,8 +41,6 @@
                 </div>
             </div>
 
-
-
             <div class="card">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
                     Audit Informations
