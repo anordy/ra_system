@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Http\Controllers\Audit;
+namespace App\Http\Controllers\Investigation;
 
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 
-class TaxAuditFilesController extends Controller
+class TaxInvestigationFilesController extends Controller
 {
     public function show($path)
     {

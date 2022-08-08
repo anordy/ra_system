@@ -29,10 +29,8 @@
                             <th style="width: 25%"></th>
                             <th style="width: 25%">{{ number_format($return->total) }}</th>
                         </tr>
-
                     </tfoot>
                 </table>
-
             </div>
         </div>
     </div>
