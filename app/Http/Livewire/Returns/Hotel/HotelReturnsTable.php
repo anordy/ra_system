@@ -55,14 +55,17 @@ class HotelReturnsTable extends DataTableComponent
                 ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
-                })
-                ->searchable(),
+                }),
+            Column::make('Total VAT with Penalty', 'total_amount_due_with_penalty')
+                ->sortable()
+                ->format(function ($value, $row) {
+                    return number_format($value, 2);
+                }),
             Column::make('Infrastructure Tax', 'hotel_infrastructure_tax')
                 ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
-                })
-                ->searchable(),
+                }),
             Column::make('Date', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {

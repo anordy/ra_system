@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
+use App\Models\SevenDaysFinancialMonth;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -47,6 +48,15 @@ class FinancialYearSeeder extends Seeder
                     'name'              => $month,
                     'due_date'          => Carbon::create($year['code'], $index, 20)->toDateTimeString(),
                     'lumpsum_due_date'  => Carbon::create($year['code'], $index)->endOfMonth()->toDateTimeString(),
+                ]);
+            }
+
+            foreach($months as $index => $month){
+                SevenDaysFinancialMonth::create([
+                    'financial_year_id' => $yr->id,
+                    'number' => $index,
+                    'name' => $month,
+                    'due_date' => Carbon::create($year['code'], $index, 7)->toDateTimeString()
                 ]);
             }
         }

@@ -10,7 +10,13 @@
             <div class="col-md-12 mb-3">
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Comments</label>
-                    <textarea class="form-control" wire:model='comments' rows="3"></textarea>
+                    <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments' rows="3"></textarea>
+
+                    @error('comments')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
             </div>
         </div>

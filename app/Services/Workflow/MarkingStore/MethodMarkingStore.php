@@ -56,7 +56,8 @@ final class MethodMarkingStore implements MarkingStoreInterface
 
         if(gettype($marking) == 'array'){
             return new Marking($marking);   
-        }     
+        }
+        
         return new Marking(json_decode($marking, true));
     }
 

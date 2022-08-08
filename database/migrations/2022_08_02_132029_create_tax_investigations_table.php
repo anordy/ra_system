@@ -18,9 +18,12 @@ class CreateTaxInvestigationsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('responsible_person_id');
+            $table->unsignedBigInteger('return_type');
+            $table->string('return_id');
             $table->date('issue_date');
             $table->text('scope');
-            $table->integer('period_covered');
+            $table->date('period_from');
+            $table->date('period_to');
             $table->dateTime('audit_date_time');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
