@@ -4,21 +4,19 @@ namespace App\Http\Livewire\LandLease;
 
 use App\Models\LandLease;
 use App\Models\Taxpayer;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Illuminate\Database\Eloquent\Builder;
 
 class LandLeaseList extends DataTableComponent
 {
     // protected $model = LandLease::class;
-
 
     //create builder function
     public function builder(): builder
     {
         return LandLease::where('created_by', auth()->user()->id);
     }
-    
 
     public function configure(): void
     {
@@ -27,7 +25,7 @@ class LandLeaseList extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered','taxpayer_id']);
+        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered', 'taxpayer_id']);
     }
 
     public function columns(): array
