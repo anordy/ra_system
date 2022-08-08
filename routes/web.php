@@ -67,6 +67,7 @@ use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
@@ -235,6 +236,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxInvestigationApprovalController::class);
         Route::resource('/assessments', TaxInvestigationAssessmentController::class);
         Route::resource('/verified', TaxInvestigationVerifiedController::class);
+        Route::resource('/files', TaxInvestigationFilesController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
