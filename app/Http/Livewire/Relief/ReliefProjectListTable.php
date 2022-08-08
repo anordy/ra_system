@@ -12,9 +12,16 @@ class ReliefProjectListTable extends DataTableComponent
 {
     use LivewireAlert;
 
+    public $projectSectionId;
+
+    public function mount($id)
+    {
+        $this->projectSectionId = $id;
+    }
+
     public function builder(): Builder
     {
-        return ReliefProjectList::query();
+        return ReliefProjectList::query()->where('project_id', $this->projectSectionId);
     }
 
     protected $listeners = [
@@ -42,7 +49,7 @@ class ReliefProjectListTable extends DataTableComponent
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'education-level-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-project-list-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                     <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                 HTML)
                 ->html(true),
