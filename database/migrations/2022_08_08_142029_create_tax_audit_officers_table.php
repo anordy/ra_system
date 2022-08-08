@@ -15,7 +15,7 @@ class CreateTaxAuditOfficersTable extends Migration
     {
         Schema::create('tax_audit_officers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('verification_id');
+            $table->unsignedBigInteger('audit_id');
             $table->unsignedBigInteger('user_id');
             $table->boolean('team_leader')->default(false);
             $table->timestamps();

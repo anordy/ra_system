@@ -15,7 +15,7 @@ class CreateTaxAuditAssessmentsTable extends Migration
     {
         Schema::create('tax_audit_assessments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('verification_id');
+            $table->unsignedBigInteger('audit_id');
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
