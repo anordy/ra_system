@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\TaxAudit\TaxAudit;
 
 class TaxAuditApprovalController extends Controller
 {
@@ -17,7 +18,7 @@ class TaxAuditApprovalController extends Controller
 
     public function edit($id){
 
-        $audit = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
+        $audit = TaxAudit::with('assessment', 'officers')->find(decrypt($id));
 
         $return = $audit->taxReturn;
         if($return instanceof PetroleumReturn){
@@ -31,7 +32,7 @@ class TaxAuditApprovalController extends Controller
     }
 
     public function show($id){
-        $audit = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
+        $audit = TaxAudit::with('assessment', 'officers')->find(decrypt($id));
 
         $return = $audit->taxReturn;
         if($return instanceof PetroleumReturn){
