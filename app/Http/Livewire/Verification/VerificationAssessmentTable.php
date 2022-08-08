@@ -17,7 +17,8 @@ class VerificationAssessmentTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn');
+        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn')
+            ->has('assessment');
     }
 
     public function configure(): void
@@ -37,7 +38,7 @@ class VerificationAssessmentTable extends DataTableComponent
             Column::make('Business Location', 'location.name'),
             Column::make('Tax Type', 'taxType.name'),
             Column::make('Action', 'id')
-                ->view('verification.action')
+                ->view('verification.assessment.action')
                 ->html(true),
 
         ];

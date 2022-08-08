@@ -119,7 +119,7 @@ class ZmCore
 
 
     /**
-     * @param Bill|int $bill Instance of ZmBill or bill id
+     * @param ZmBill|int $bill Instance of ZmBill or bill id
      * @param string $generated_by
      * @param string $approved_by
      * @return ZmResponse

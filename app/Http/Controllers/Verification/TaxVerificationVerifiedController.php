@@ -14,13 +14,14 @@ class TaxVerificationVerifiedController extends Controller
         return view('verification.verified.index');
     }
 
-    public function edit($id){
+    public function show($id)
+    {
+        $verification = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
 
-        $verification = TaxVerification::find(decrypt($id));
         $return = $verification->taxReturn;
-        if($return instanceof PetroleumReturn){
-            return view('verification.petroleum.show', compact('return', 'verification'));
+        if ($return instanceof PetroleumReturn) {
+            $viewRender = "returns.petroleum.filing.details";
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
-
     }
 }

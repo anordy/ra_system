@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\VatReturn\VatReturn;
+use App\Models\Returns\Vat\VatReturn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,6 +19,7 @@ class TaxType extends Model implements Auditable
     public const LAND = 'land-lease';
     public const PUBLIC_SERVICE = 'public-service';
     public const EXCISE_DUTY = 'excise-duty';
+    public const EXCISE_DUTY_BFO = 'Excise_Duty_Bfo';
     public const PETROLEUM = 'petroleum-levy';
     public const AIRPORT_SERVICE = 'airport-service';
     public const AIRPORT_SAFETY = 'airport-safety';
@@ -46,6 +47,6 @@ class TaxType extends Model implements Auditable
 
     public function vatReturn()
     {
-        return $this->hasOne(VatReturn::class, 'taxtype_code', 'code');
+        return $this->hasOne(VatReturn::class, 'taxtype_id', 'id');
     }
 }
