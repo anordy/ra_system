@@ -55,16 +55,16 @@
                     <tbody>
                     @foreach ($return->MmTransferReturnItems as $item)
 
-                        <tr @if ($item->mmTransferConfig->col_type === 'total') class="table-active font-weight-bolder" @endif>
+                        <tr @if ($item->config->col_type === 'total') class="table-active font-weight-bolder" @endif>
                             <td>
-                                {{ $item->mmTransferConfig->name }}
+                                {{ $item->config->name }}
                             </td>
                             <td>
-                                {{ $item->mmTransferConfig->col_type === 'total' ? '-' : number_format($item->value, 2) }}
+                                {{ $item->config->col_type === 'total' ? '-' : number_format($item->value, 2) }}
                             </td>
                             </td>
                             <td>
-                                {{ $item->mmTransferConfig->rate_type === 'percentage' ? $item->mmTransferConfig->rate : $item->mmTransferConfig->rate_usd ?? '-' }}
+                                {{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd ?? '-' }}
                             </td>
                             <td>{{ number_format($item->vat, 2) }}</td>
                         </tr>
