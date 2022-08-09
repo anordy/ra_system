@@ -18,7 +18,7 @@
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
                     Taxpayer Informations
@@ -105,7 +105,7 @@
                 </div>
             @endif
         </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-pane fade" id="profile card p-2" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
                 @php echo view($viewRender, compact('return'))->render() @endphp
             @else
@@ -121,7 +121,7 @@
                 </div>
             @endif
         </div>
-        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="tab-pane fade" id="contact card p-2" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($investigation) }}'
