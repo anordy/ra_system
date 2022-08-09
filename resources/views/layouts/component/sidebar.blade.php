@@ -97,6 +97,9 @@
                 <li class="{{ request()->is('returns/stamp-duty*') ? 'active' : '' }}">
                     <a href="{{ route('returns.stamp-duty.index') }}">Stamp Duty Returns</a>
                 </li>
+                <li class="{{ request()->is('returns/bfo-excise-duty*') ? 'active' : '' }}">
+                    <a href="{{ route('returns.bfo-excise-duty.index') }}">BFO Excise Duty Return</a>
+                </li>
             </ul>
         </li>
 
