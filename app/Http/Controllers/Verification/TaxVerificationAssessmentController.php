@@ -48,6 +48,9 @@ class TaxVerificationAssessmentController extends Controller
             $viewRender = 'returns.excise-duty.mobile-money-transfer.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        } elseif ($return instanceof PortReturn) {
+            $viewRender = 'returns.port.details';
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
     }
 }
