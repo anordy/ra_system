@@ -30,15 +30,10 @@
                         Requests needed for approval
                     </div>
 
-{{--                    <livewire:tax-agent.tax-agent-table/>--}}
-
                 </div>
 
             </div>
 
-            <div>
-                <livewire:returns.vat.nill-return />
-            </div>
         </div>
     </div>
 @endsection
