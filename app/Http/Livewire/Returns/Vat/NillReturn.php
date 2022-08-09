@@ -13,31 +13,31 @@ class NillReturn extends Component
 {
     public function mount()
     {
-        $returnAll = VatReturn::all();
-        $firstMonthId = $returnAll->first()->financial_month_id;
-        $latestMonthId = $returnAll->last()->financial_month_id;
-//        $return=[];
-//        for ($x=$initial; $x <= $final; $x = $x +1 )
+//        $returnAll = VatReturn::all();
+//        $firstMonthId = $returnAll->first()->financial_month_id;
+//        $latestMonthId = $returnAll->last()->financial_month_id;
+////        $return=[];
+////        for ($x=$initial; $x <= $final; $x = $x +1 )
+////        {
+////            $return[] = VatReturn::query()
+////                ->where('infrastructure_tax',1399200.00)
+////                ->where('total_amount_due_with_penalties',3592014.76)
+////                ->whereIn('financial_month_id',[$x, $x+1, $x + 2])
+////                ->get();
+////    }
+//
+//        $month = FinancialMonth::query()->findOrFail($latestMonthId);
+//        $latestMonth = Carbon::create($month->year->code, $month->number, 1);
+//        $diff = now()->diffInMonths($latestMonth);
+//
+////        dd($this->nilTotal());
+//        if ($diff >= 3)
 //        {
-//            $return[] = VatReturn::query()
-//                ->where('infrastructure_tax',1399200.00)
-//                ->where('total_amount_due_with_penalties',3592014.76)
-//                ->whereIn('financial_month_id',[$x, $x+1, $x + 2])
-//                ->get();
-//    }
-
-        $month = FinancialMonth::query()->findOrFail($latestMonthId);
-        $latestMonth = Carbon::create($month->year->code, $month->number, 1);
-        $diff = now()->diffInMonths($latestMonth);
-
-//        dd($this->nilTotal());
-        if ($diff >= 3)
-        {
-            dd('this taxpayer has nil return for three consecutively months');
-        }
-        else{
-            dd('has no nil return');
-        }
+//            dd('this taxpayer has nil return for three consecutively months');
+//        }
+//        else{
+//            dd('has no nil return');
+//        }
 
 
 
