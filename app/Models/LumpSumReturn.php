@@ -23,16 +23,21 @@ class LumpSumReturn extends Model
 
     public function taxpayer()
     {
-        return $this->belongsTo(Taxpayer::class, 'filled_id');
+        return $this->belongsTo(Taxpayer::class, 'filed_by_id');
     }
 
     public function taxtype()
     {
-        return $this->belongsTo(TaxType::class, 'taxtype_id');
+        return $this->belongsTo(TaxType::class, 'tax_type_id');
     }
 
     public function financialYear()
     {
-        return $this->belongsTo(FinancialYear::class, 'financial_year_id');
+        return $this->belongsTo(FinancialYear::class, 'financial_year_id', 'id');
+    }
+
+    public function assignedPayments()
+    {
+        return $this->belongsTo(LumpSumPayment::class, 'business_location_id', 'business_id');
     }
 }

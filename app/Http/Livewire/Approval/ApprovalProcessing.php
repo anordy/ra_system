@@ -151,8 +151,6 @@ class ApprovalProcessing extends Component
             $this->subject->isiic_iii = $this->isiic_iii ?? null;
             $this->subject->isiic_iv  = $this->isiic_iv ?? null;
 
-            // dd($this->annual_estimate);
-
             $this->validate([
                 'isiic_i'                        => 'required',
                 'isiic_ii'                       => 'required',
@@ -168,10 +166,12 @@ class ApprovalProcessing extends Component
                 'selectedTaxTypes.*.currency.required'    => 'Currency is required',
             ]);
 
-            $business = Business::find($this->subject->id);
+            $business = Business::findOrFail($this->subject->id);
             $business->taxTypes()->detach();
 
             if ($this->showLumpsumOptions == true) {
+                $currency  = Arr::pluck($this->selectedTaxTypes, 'currency');
+
                 $this->validate(
                     [
                         'annual_estimate'  => 'required|integer',
@@ -187,10 +187,12 @@ class ApprovalProcessing extends Component
                 );
                     
                 DB::table('lump_sum_payments')->insert([
+                    'filled_id'         => auth()->user()->id,
                     'business_id'       => $business->id,
                     'financial_year_id' => 1,
                     'annual_estimate'   => $this->annual_estimate,
                     'payment_quarters'  => $this->quaters,
+                    'currency'          => $currency[0],
                 ]);
             }
 
