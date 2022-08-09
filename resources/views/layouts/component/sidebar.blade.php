@@ -77,32 +77,32 @@
             </ul>
         </li>
 
-        <li class="{{ request()->is('returns*') ? 'active' : '' }}">
+        <li class="{{ request()->is('e-filling*') ? 'active' : '' }}">
             <a href="#returnsSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('returns*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
+                aria-expanded="{{ request()->is('e-filling*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
                 Returns</a>
-            <ul class="collapse list-unstyled {{ request()->is('returns*') ? 'show' : '' }}" id="returnsSubmenu">
-                <li class="{{ request()->is('returns/index') ? 'active' : '' }}">
+            <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
+                <li class="{{ request()->is('e-filling/hotel') ? 'active' : '' }}">
                     <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
                 </li>
-                <li class="{{ request()->is('returns/') ? 'active' : '' }}">
-                    <a href="{{ route('returns.index') }}">Vat Returns</a>
+                <li class="{{ request()->is('e-filling/vat*') ? 'active' : '' }}">
+                    <a href="{{ route('returns.vat.index') }}">Vat Returns</a>
                 </li>
-                <li class="{{ request()->is('returns/port*') ? 'active' : '' }}">
+                <li class="{{ request()->is('e-filling/port*') ? 'active' : '' }}">
                     <a href="{{ route('returns.port.index') }}">Port Returns</a>
                 </li>
-                <li class="{{ request()->is('returns/excise-duty/mno*') ? 'active' : '' }}">
+                <li class="{{ request()->is('e-filling/excise-duty/mno*') ? 'active' : '' }}">
                     <a href="{{ route('returns.excise-duty.mno') }}">MNO Excise Duty Returns</a>
-                <li class="{{ request()->is('returns/em-transaction*') ? 'active' : '' }}">
+                <li class="{{ request()->is('e-filling/em-transaction*') ? 'active' : '' }}">
                     <a href="{{ route('returns.em-transaction.index') }}">Electronic Money Transaction Returns</a>
                 </li>
-                <li class="{{ request()->is('returns/stamp-duty*') ? 'active' : '' }}">
+                <li class="{{ request()->is('e-filling/stamp-duty*') ? 'active' : '' }}">
                     <a href="{{ route('returns.stamp-duty.index') }}">Stamp Duty Returns</a>
                 </li>
-                <li class="{{ request()->is('returns/bfo-excise-duty*') ? 'active' : '' }}">
+                <li class="{{ request()->is('e-filling/bfo-excise-duty*') ? 'active' : '' }}">
                     <a href="{{ route('returns.bfo-excise-duty.index') }}">BFO Excise Duty Return</a>
                 </li>
-                <li class="{{ request()->is('returns/mobile-money-transfer*') ? 'active' : '' }}">
+                <li class="{{ request()->is('e-filling/mobile-money-transfer*') ? 'active' : '' }}">
                     <a href="{{ route('returns.mobile-money-transfer.index') }}">Mobile Money Transfer</a>
                 </li>
             </ul>
@@ -192,12 +192,6 @@
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.business-files.index') }}">Business Files</a>
                 </li>
-                {{-- <li class="{{ request()->is('settings/stamp-duty*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.stamp-duty') }}">Stamp Duty</a>
-                </li>
-                <li class="{{ request()->is('settings/returns*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.returns.index') }}">Returns</a>
-                </li> --}}
             </ul>
         </li>
         <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">

@@ -194,8 +194,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
-        Route::get('/', [ReturnController::class, 'index'])->name('index');
-
+        
+        
+        Route::get('/vat', [ReturnController::class, 'index'])->name('vat.index');
+        
         Route::resource('/petroleum', PetroleumReturnController::class);
 
         Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
