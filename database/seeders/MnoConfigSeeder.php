@@ -133,7 +133,7 @@ class MnoConfigSeeder extends Seeder
                 'code' => 'TOTAL',
                 'name' => 'Total Excise Duty payable',
                 'row_type' => 'unremovable',
-                'col_type' => 'subtotal',
+                'col_type' => 'total',
                 'value_calculated' => true,
                 'formular' => 'MNOS+MVNOS+MCPRE+MCPOST+MM+OFS+OES',
                 'active' => true,

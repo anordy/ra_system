@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Relief;
 
-use App\Models\Bank;
+use App\Models\Relief\ReliefProjectList;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -14,28 +14,36 @@ class ReliefProjectListEditModal extends Component
     use LivewireAlert;
 
     public $name;
-    public $bank;
+    public $description;
+    public $rate;
+    public $project;
 
     protected function rules()
     {
         return [
-            'name' => 'required|unique:banks,name,'.$this->bank->id.',id',
+            'name' => 'required|unique:relief_project_lists,name,'.$this->project->id.',id',
+            'description' => 'required',
+            'rate' => 'required|numeric',
         ];
     }
 
     public function mount($id)
     {
-        $data = Bank::find($id);
-        $this->bank = $data;
+        $data = ReliefProjectList::find($id);
+        $this->project = $data;
         $this->name = $data->name;
+        $this->description = $data->description;
+        $this->rate = $data->rate;
     }
 
     public function submit()
     {
         $this->validate();
         try {
-            $this->bank->update([
+            $this->project->update([
                 'name' => $this->name,
+                'description' => $this->description,
+                'rate' => $this->rate,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -46,6 +54,6 @@ class ReliefProjectListEditModal extends Component
 
     public function render()
     {
-        return view('livewire.project_list.edit-modal');
+        return view('livewire.relief.project_list.edit-modal');
     }
 }

@@ -26,6 +26,10 @@ class CreateTaxAuditsTable extends Migration
             $table->date('auditing_date')->nullable();
             $table->date('period_from')->nullable();
             $table->date('period_to')->nullable();
+            $table->string('preliminary_report')->nullable();
+            $table->string('working_report')->nullable();
+            $table->string('final_report')->nullable();
+            $table->string('exit_minutes')->nullable();
             $table->string('created_by_type');
             $table->unsignedBigInteger('created_by_id');
             $table->enum('status', ['draft', 'pending', 'approved', 'correction'])->default('draft');

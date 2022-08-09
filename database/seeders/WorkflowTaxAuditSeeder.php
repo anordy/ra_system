@@ -155,6 +155,11 @@ class WorkflowTaxAuditSeeder extends Seeder
                 'to'   => 'completed',
                 'condition' => '',
             ],
+            'rejected' => [
+                'from' => 'commissioner',
+                'to'   => 'final_report_review',
+                'condition' => '',
+            ],
         ];
 
         Workflow::updateOrCreate([

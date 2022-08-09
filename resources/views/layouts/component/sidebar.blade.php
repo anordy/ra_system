@@ -10,8 +10,8 @@
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
             <a href="{{ route('notifications') }}">Notifications
                 @if (auth()->user()->unreadNotifications->count() > 0)
-                    <span class="badge badge-light">
-                        <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                <span class="badge badge-light">
+                    <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
                 @endif
             </a>
         </li>
@@ -35,9 +35,9 @@
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
                 @can('business_registrations_view')
-                    <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
-                        <a href="{{ route('business.registrations.index') }}">Registrations</a>
-                    </li>
+                <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('business.registrations.index') }}">Registrations</a>
+                </li>
                 @endcan
                 <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
                     <a href="{{ route('business.branches.index') }}">Branches</a>
@@ -51,9 +51,9 @@
                 <li class="{{ request()->is('business/updates*') ? 'active' : '' }}">
                     <a href="{{ route('business.updatesRequests') }}">Business Updates Requests</a>
                     @can('change_tax_type_view')
-                    <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
-                        <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
-                    </li>
+                <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
+                    <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
+                </li>
                 @endcan
             </ul>
         </li>
@@ -91,32 +91,37 @@
                 <li class="{{ request()->is('returns/port*') ? 'active' : '' }}">
                     <a href="{{ route('returns.port.index') }}">Port Returns</a>
                 </li>
+                <li class="{{ request()->is('returns/excise-duty/mno*') ? 'active' : '' }}">
+                    <a href="{{ route('returns.excise-duty.mno') }}">MNO Excise Duty Returns</a>
                 <li class="{{ request()->is('returns/em-transaction*') ? 'active' : '' }}">
                     <a href="{{ route('returns.em-transaction.index') }}">Electronic Money Transaction Returns</a>
                 </li>
                 <li class="{{ request()->is('returns/stamp-duty*') ? 'active' : '' }}">
                     <a href="{{ route('returns.stamp-duty.index') }}">Stamp Duty Returns</a>
                 </li>
+                <li class="{{ request()->is('returns/bfo-excise-duty*') ? 'active' : '' }}">
+                    <a href="{{ route('returns.bfo-excise-duty.index') }}">BFO Excise Duty Return</a>
+                </li>
             </ul>
         </li>
 
         @can('withholding_agents_view')
-            <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
-                <a href="#withholdingAgentsMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}"
-                    class="dropdown-toggle">Withholding Agents</a>
-                <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
-                    id="withholdingAgentsMenu">
-                    @can('withholding_agents_add')
-                        <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
-                            <a href="{{ route('withholdingAgents.register') }}">Registration</a>
-                        </li>
-                    @endcan
-                    <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
-                        <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
-                    </li>
-                </ul>
-            </li>
+        <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
+            <a href="#withholdingAgentsMenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}"
+                class="dropdown-toggle">Withholding Agents</a>
+            <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
+                id="withholdingAgentsMenu">
+                @can('withholding_agents_add')
+                <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
+                    <a href="{{ route('withholdingAgents.register') }}">Registration</a>
+                </li>
+                @endcan
+                <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
+                    <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
+                </li>
+            </ul>
+        </li>
         @endcan
         <li class="{{ request()->is('assesments*') ? 'active' : '' }}">
             <a href="#assesmentsSubmenu" data-toggle="collapse"
@@ -136,14 +141,14 @@
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
             <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
                 @can('roles_add')
-                    <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.users.index') }}">Users</a>
-                    </li>
+                <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.users.index') }}">Users</a>
+                </li>
                 @endcan
                 @can('roles_add')
-                    <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.roles.index') }}">Roles</a>
-                    </li>
+                <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.roles.index') }}">Roles</a>
+                </li>
                 @endcan
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.country.index') }}">Countries</a>
@@ -265,10 +270,10 @@
                     <a href="{{ route('reliefs.projects.index') }}">Projects</a>
                 </li>
                 <li class="{{ request()->is('reliefs/registrations*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.registrations.index') }}">Registrations</a>
+                    <a href="{{ route('reliefs.registrations.index') }}">Register Relief</a>
                 </li>
                 <li class="{{ request()->is('reliefs/applications*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.applications.index') }}">Applications</a>
+                    <a href="{{ route('reliefs.applications.index') }}">Relief Applications</a>
                 </li>
             </ul>
         </li>
@@ -278,8 +283,7 @@
             <a href="#landLeaseSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
                 Lease</a>
-            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}"
-                id="landLeaseSubmenu">
+            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
 
                 <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
                     <a href="{{ route('land-lease.list') }}">Land Lease List</a>

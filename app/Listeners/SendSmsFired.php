@@ -15,11 +15,13 @@ use App\Jobs\Taxpayer\SendRegistrationSMS;
 use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
 use App\Jobs\Business\SendBusinessApprovedSMS;
 use App\Jobs\SendWithholdingAgentRegistrationSMS;
+use App\Jobs\Business\Branch\SendBranchApprovalSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateSMS;
+use App\Jobs\Business\Branch\SendBranchCorrectionSMS;
 use App\Jobs\Business\SendBusinessClosureApprovedSMS;
 use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
 use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateSMS;
 
 class SendSmsFired
 {
@@ -89,6 +91,12 @@ class SendSmsFired
         } else if ($event->service === 'change-business-information'){
             // Token ID is payload data having all notification details
             SendBusinessUpdateSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-approval'){
+            // Token ID is payload data having all notification details
+            SendBranchApprovalSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-correction'){
+            // Token ID is payload data having all notification details
+            SendBranchCorrectionSMS::dispatch($event->tokenId);
         }
     }
 }

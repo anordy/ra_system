@@ -29,7 +29,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'rate' => 12,
                 'rate_usd' => 0,
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'heading_type' => 'supplies'
             ],
             [
@@ -45,7 +45,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'currency' => 'USD',
                 'rate_usd' => 8,
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'heading_type' => 'supplies'
             ],
             [
@@ -62,7 +62,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'rate' => 12,
                 'rate_usd' => 0,
                 'active' => true,
-                'taxtype_id' => 3,
+                'tax_type_id' => 3,
                 'heading_type' => 'supplies'
             ],
             [
@@ -79,7 +79,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'rate' => 12,
                 'rate_usd' => 1,
                 'active' => true,
-                'taxtype_id' => 4,
+                'tax_type_id' => 4,
                 'heading_type' => 'supplies'
             ],
             [
@@ -139,7 +139,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'rate_usd' => 1,
                 'active' => true,
                 'heading_type' => 'purchases',
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
             ],
             [
                 'financia_year_id' => 1,
@@ -150,7 +150,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'col_type' => 'normal',
                 'value_calculated' => false,
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'rate_applicable' => false,
                 'heading_type' => 'purchases'
             ],
@@ -162,7 +162,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_top',
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'rate_applicable' => false,
             ],
             [
@@ -173,7 +173,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'rate_applicable' => false,
             ],
             [
@@ -184,7 +184,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'rate_applicable' => false,
             ],
             [
@@ -195,7 +195,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'rate_applicable' => false,
             ],
             [
@@ -206,7 +206,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'row_type' => 'unremovable',
                 'col_type' => 'hotel_bottom',
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'rate_applicable' => false,
             ],
             [
@@ -219,7 +219,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => '(HS+NOBN+OS+LP+IP+IT)-LW',
                 'active' => true,
-                'taxtype_id' => 2,
+                'tax_type_id' => 2,
                 'rate_applicable' => false,
             ],
             [
@@ -232,7 +232,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'RS+OS+LP+IP',
                 'active' => true,
-                'taxtype_id' => 3,
+                'tax_type_id' => 3,
                 'rate_applicable' => false,
             ],
             [
@@ -245,7 +245,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'value_calculated' => true,
                 'formular' => 'TOS+OS+LP+IP',
                 'active' => true,
-                'taxtype_id' => 4,
+                'tax_type_id' => 4,
                 'rate_applicable' => false,
             ],
         ];

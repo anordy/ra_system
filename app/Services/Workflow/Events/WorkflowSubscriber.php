@@ -2,6 +2,8 @@
 
 namespace App\Services\Workflow\Events;
 
+use App\Enum\TaxAuditStatus;
+use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Role;
 use App\Models\User;
@@ -186,6 +188,14 @@ class WorkflowSubscriber implements EventSubscriberInterface
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
                 if (key($placesCurrent) == 'completed') {
                     $subject->status = TaxVerificationStatus::APPROVED;
+                }
+            } elseif ($placeName == 'TAX_AUDIT') {
+                if (key($placesCurrent) == 'completed') {
+                    $subject->status = TaxAuditStatus::APPROVED;
+                }
+            } elseif ($placeName == 'TAX_INVESTIGATION') {
+                if (key($placesCurrent) == 'completed') {
+                    $subject->status = TaxInvestigationStatus::APPROVED;
                 }
             } else {
 

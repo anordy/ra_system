@@ -4,8 +4,9 @@
 namespace App\Http\Controllers\Investigation;
 
 use App\Http\Controllers\Controller;
+use App\Models\Investigation\TaxInvestigation;
+use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Models\Verification\TaxVerification;
 
 class TaxInvestigationVerifiedController extends Controller
 {
@@ -16,12 +17,8 @@ class TaxInvestigationVerifiedController extends Controller
 
     public function show($id)
     {
-        $investigation = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
-
-        $return = $investigation->taxReturn;
-        if ($return instanceof PetroleumReturn) {
-            $viewRender = "returns.petroleum.filing.details";
-            return view('investigation.approval.preview', compact('return', 'investigation', 'viewRender'));
-        }
+        $investigation = TaxInvestigation::with('assessment', 'officers')->find(decrypt($id));
+        $viewRender = "";
+        return view('investigation.approval.preview', compact('investigation', 'viewRender'));
     }
 }

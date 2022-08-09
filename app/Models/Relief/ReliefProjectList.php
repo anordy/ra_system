@@ -10,4 +10,14 @@ class ReliefProjectList extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function reliefs()
+    {
+        return $this->hasMany(Relief::class,'project_list_id');
+    }
+
+    public function reliefProject()
+    {
+        return $this->belongsTo(ReliefProject::class,'project_id');
+    }
 }

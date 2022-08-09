@@ -14,10 +14,10 @@ class AssesmentSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            Assesment::updateOrCreate(['name'=> 'Waiver or Reduction','code' => 'WV001']),
-            Assesment::updateOrCreate(['name'=> 'Objection' , 'code' => 'OB001']),
-            Assesment::updateOrCreate(['name'=> 'Both Waiver & Objection' ,'code' => 'WVOB'])
-        ];
+        // $data = [
+        //     Assesment::updateOrCreate(['name'=> 'Waiver or Reduction','code' => 'WV001']),
+        //     Assesment::updateOrCreate(['name'=> 'Objection' , 'code' => 'OB001']),
+        //     Assesment::updateOrCreate(['name'=> 'Both Waiver & Objection' ,'code' => 'WVOB'])
+        // ];
     }
 }

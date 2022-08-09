@@ -32,8 +32,14 @@ class BranchesApprovalProcessing extends Component
         if ($this->checkTransition('director_of_trai_review')) {
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status = BusinessStatus::APPROVED;
-            // event(new SendSms('business-registration-approved', $this->subject->id));
-            // event(new SendMail('business-registration-approved', $this->subject->id));
+
+            $notification_payload = [
+                'branch' => $this->subject,
+                'time' => Carbon::now()->format('d-m-Y')
+            ];
+            
+            event(new SendSms('branch-approval', $notification_payload));
+            event(new SendMail('branch-approval', $notification_payload));
         }
 
         try {
@@ -46,11 +52,25 @@ class BranchesApprovalProcessing extends Component
 
     public function reject($transtion)
     {
+        $notification_payload = [
+            'branch' => $this->subject,
+            'time' => Carbon::now()->format('d-m-Y')
+        ];
+        
+        event(new SendSms('branch-correction', $notification_payload));
+        event(new SendMail('branch-correction', $notification_payload));
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
-                // event(new SendSms('business-registration-correction', $this->subject->id));
-                // event(new SendMail('business-registration-correction', $this->subject->id));
+
+                $notification_payload = [
+                    'branch' => $this->subject,
+                    'time' => Carbon::now()->format('d-m-Y')
+                ];
+                
+                event(new SendSms('branch-correction', $notification_payload));
+                event(new SendMail('branch-correction', $notification_payload));
+
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {

@@ -4,8 +4,7 @@
 namespace App\Http\Controllers\Investigation;
 
 use App\Http\Controllers\Controller;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Models\Verification\TaxVerification;
+use App\Models\Investigation\TaxInvestigation;
 
 class TaxInvestigationApprovalController extends Controller
 {
@@ -14,27 +13,18 @@ class TaxInvestigationApprovalController extends Controller
         return view('investigation.approval.index');
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
 
-        $investigation = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
-
-        $return = $investigation->taxReturn;
-        if($return instanceof PetroleumReturn){
-            $viewRender = "returns.petroleum.filing.details";
-            return view('investigation.approval.approval', compact('return', 'investigation', 'viewRender'));
-        }
-
+        $investigation = TaxInvestigation::with('assessment', 'officers')->find(decrypt($id));
+        $viewRender = "";
+        return view('investigation.approval.approval', compact('investigation', 'viewRender'));
     }
 
-    public function show($id){
-        $investigation = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
+    public function show($id)
+    {
 
-        $return = $investigation->taxReturn;
-        if($return instanceof PetroleumReturn){
-            $viewRender = "returns.petroleum.filing.details";
-            return view('investigation.approval.preview', compact('return', 'investigation', 'viewRender'));
-        }
+        $investigation = TaxInvestigation::with('assessment', 'officers')->find(decrypt($id));
+        return view('investigation.approval.preview', compact('investigation'));
     }
-
-    
 }

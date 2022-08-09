@@ -19,7 +19,6 @@ class CreateTaxAuditAssessmentsTable extends Migration
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
-            $table->string('report_path')->nullable();
             $table->timestamps();
         });
     }

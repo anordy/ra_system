@@ -43,7 +43,7 @@ class ReliefProjectTable extends DataTableComponent
                 ->view('relief.project.includes.project-actions'),
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'education-level-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-project-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                     <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                 HTML)
                 ->html(true),
