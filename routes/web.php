@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\AllPdfController;
 use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
@@ -115,8 +116,6 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-
-
     Route::prefix('system')->name('system.')->group(function () {
         Route::resource('audits', AuditController::class);
         Route::resource('workflow', WorkflowController::class);
@@ -135,6 +134,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('list', [WithholdingAgentController::class, 'index'])->name('list');
         Route::get('view/{id}', [WithholdingAgentController::class, 'view'])->name('view');
         Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
+    });
+
+    Route::prefix('pdf')->as('pdf.')->group(function () {
+        Route::get('register', [AllPdfController::class, 'index'])->name('all');
+        Route::get('demandNotice/{$file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
     });
 
     Route::prefix('business')->as('business.')->group(function () {
@@ -187,7 +191,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
         Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
-        Route::name('stamp-duty.')->group(function (){
+        Route::name('stamp-duty.')->group(function () {
             Route::get('/stamp-duty', [StampDutyReturnController::class, 'index'])->name('index');
             Route::get('/stamp-duty/{returnId}', [StampDutyReturnController::class, 'show'])->name('show');
         });
@@ -197,7 +201,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
         });
 
-        Route::name('vat-return.')->prefix('vat-return')->group(function ()  {
+        Route::name('vat-return.')->prefix('vat-return')->group(function () {
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
         });
 
@@ -227,7 +231,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
-    });   
+    });
     
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
         Route::resource('/approvals', TaxInvestigationApprovalController::class);
@@ -243,5 +247,4 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
     });
-
 });
