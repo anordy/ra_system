@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\PortConfig;
+use App\Models\TaxType;
 use Illuminate\Database\Seeder;
 
 class PortConfigSeeder extends Seeder
@@ -18,7 +19,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 1,
-                'tax_type_code' => 'Airport_Service_Safety_fee',
+                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
                 'code' => 'NFAT',
                 'name' => 'No. of foreign passengers (Airport Tax)',
                 'row_type' => 'dynamic',
@@ -33,7 +34,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 2,
-                'tax_type_code' => 'Airport_Service_Safety_fee',
+                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
                 'code' => 'NLAT',
                 'name' => 'No. of local passengers (Airport Tax)',
                 'row_type' => 'dynamic',
@@ -48,7 +49,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 3,
-                'tax_type_code' => 'Airport_Service_Safety_fee',
+                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
                 'code' => 'NFSF',
                 'name' => 'No. of Foreign passengers (Safety Fee)',
                 'row_type' => 'dynamic',
@@ -63,7 +64,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 4,
-                'tax_type_code' => 'Airport_Service_Safety_fee',
+                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
                 'code' => 'NLSF',
                 'name' => 'No. of local passengers (Safety fee)',
                 'row_type' => 'dynamic',
@@ -78,7 +79,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 5,
-                'tax_type_code' => 'Airport_Service_Safety_fee',
+                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
                 'code' => 'IT',
                 'name' => 'Imfrastracture Tax',
                 'row_type' => 'dynamic',
@@ -93,7 +94,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 6,
-                'tax_type_code' => 'Airport_Service_Safety_fee',
+                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
                 'code' => 'TLATZS',
                 'name' => 'Total Amount Fee Due(TZS)',
                 'row_type' => 'unremovable',
@@ -105,7 +106,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 7,
-                'tax_type_code' => 9,
+                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
                 'code' => 'TLAUSD',
                 'name' => 'Total Amount Fee Due (US$)',
                 'row_type' => 'unremovable',
@@ -118,7 +119,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 8,
-                'tax_type_code' => 'Sea_Service_Transport_Charge',
+                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
                 'code' => 'NFSP',
                 'name' => 'No. of foreign passengers',
                 'row_type' => 'dynamic',
@@ -133,7 +134,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 9,
-                'tax_type_code' => 'Sea_Service_Transport_Charge',
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'NLTM',
                 'name' => 'No. of local passengers(ZNZ - T/M)',
                 'row_type' => 'dynamic',
@@ -148,7 +149,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 10,
-                'tax_type_code' => 'Sea_Service_Transport_Charge',
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'NLZNZ',
                 'name' => 'No. of local passengers (ZNZ - ZNZ)',
                 'row_type' => 'dynamic',
@@ -163,7 +164,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 11,
-                'tax_type_code' => 'Sea_Service_Transport_Charge',
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'ITZNZ',
                 'name' => 'Imfrastructure Tax (ZNZ - ZNZ)',
                 'row_type' => 'dynamic',
@@ -179,7 +180,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 12,
-                'tax_type_code' => 'Sea_Service_Transport_Charge',
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'ITTM',
                 'name' => 'Imfrastructure Tax (ZNZ - T/M)',
                 'row_type' => 'dynamic',
@@ -194,7 +195,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 13,
-                'tax_type_code' => 10,
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'NSUS',
                 'name' => 'Value of Net Sales (US$)',
                 'row_type' => 'dynamic',
@@ -209,7 +210,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 14,
-                'tax_type_code' => 'Sea_Service_Transport_Charge',
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'NSTZ',
                 'name' => 'Value of Net Sales (TZS)',
                 'row_type' => 'dynamic',
@@ -224,7 +225,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 15,
-                'tax_type_code' => 'Sea_Service_Transport_Charge',
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'TLSTZS',
                 'name' => 'Total Amount Fee Due(TZS)',
                 'row_type' => 'unremovable',
@@ -236,7 +237,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 16,
-                'tax_type_code' => 'Sea_Service_Transport_Charge',
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'TLSUSD',
                 'name' => 'Total Amount Fee Due (US$)',
                 'row_type' => 'unremovable',
