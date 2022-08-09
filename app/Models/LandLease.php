@@ -33,4 +33,15 @@ class LandLease extends Model
     {
         return $this->hasMany(LandLeaseHistory::class, 'land_lease_id');
     }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(Taxpayer::class, 'created_by');
+    }
+
+    public function zmBills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+        // return $this->morphMany(ZmBill::class, 'payer_type','payer_id');
+    }
 }
