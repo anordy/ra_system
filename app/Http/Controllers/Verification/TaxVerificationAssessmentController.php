@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
+use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Verification\TaxVerification;
@@ -26,6 +27,9 @@ class TaxVerificationAssessmentController extends Controller
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } else if($return instanceof HotelReturn){
             $viewRender = "returns.hotel.details";
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        } else if($return instanceof StampDutyReturn){
+            $viewRender = "returns.stamp-duty.details";
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
 

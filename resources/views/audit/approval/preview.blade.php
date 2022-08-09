@@ -148,7 +148,20 @@
             @endif
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            @php echo view($viewRender, compact('return'))->render() @endphp
+            @if (view()->exists($viewRender))
+                @php echo view($viewRender, compact('return'))->render() @endphp
+            @else
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">Error!</h4>
+                            <p>
+                                Configured page not found kindly check with Administrator
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <livewire:approval.approval-history-table modelName='{{ get_class($audit) }}'

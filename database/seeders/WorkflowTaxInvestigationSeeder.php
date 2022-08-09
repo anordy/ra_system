@@ -33,17 +33,17 @@ class WorkflowTaxInvestigationSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'conduct_verification' => [
+            'conduct_investigation' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'verification_report' => [
+            'investigation_report' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'correct_verification_report' => [
+            'investigation_report_review' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
@@ -58,6 +58,11 @@ class WorkflowTaxInvestigationSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => []
             ],
+            'rejected' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => []
+            ],
         ];
         $transitions = [
             'start' => [
@@ -67,32 +72,42 @@ class WorkflowTaxInvestigationSeeder extends Seeder
             ],
             'assign_officers' => [
                 'from' => 'assign_officers',
-                'to'   => 'conduct_verification',
+                'to'   => 'conduct_investigation',
                 'condition' => '',
             ],
-            'conduct_verification' => [
-                'from' => 'conduct_verification',
-                'to'   => 'verification_report',
+            'conduct_investigation' => [
+                'from' => 'conduct_investigation',
+                'to'   => 'investigation_report',
                 'condition' => '',
             ],
-            'verification_review_report' => [
-                'from' => 'verification_report',
+            'investigation_report' => [
+                'from' => 'investigation_report',
+                'to'   => 'investigation_report_review',
+                'condition' => '',
+            ],
+            'investigation_report_correct' => [
+                'from' => 'investigation_report',
+                'to'   => 'conduct_investigation',
+                'condition' => '',
+            ],
+            'investigation_report_review' => [
+                'from' => 'investigation_report_review',
                 'to'   => 'commissioner',
                 'condition' => '',
             ],
-            'correct_verification_report' => [
-                'from' => 'verification_report',
-                'to'   => 'conduct_verification',
-                'condition' => '',
-            ],
-            'correct_reviewed_report' => [
-                'from' => 'commissioner',
-                'to'   => 'verification_report',
+            'investigation_report_review_reject' => [
+                'from' => 'investigation_report_review',
+                'to'   => 'investigation_report',
                 'condition' => '',
             ],
             'accepted' => [
                 'from' => 'commissioner',
                 'to'   => 'completed',
+                'condition' => '',
+            ],
+            'rejected' => [
+                'from' => 'commissioner',
+                'to'   => 'rejected',
                 'condition' => '',
             ],
         ];
