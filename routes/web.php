@@ -21,6 +21,7 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
@@ -207,6 +208,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::name('vat-return.')->prefix('vat-return')->group(function ()  {
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
+        });
+
+        Route::name('bfo-excise-duty.')->prefix('bfo-excise-duty')->group(function ()  {
+            Route::get('/',[BfoExciseDutyController::class, 'index'])->name('index');
+            Route::get('/show/{return_id}', [BfoExciseDutyController::class, 'show'])->name('show');
         });
 
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
