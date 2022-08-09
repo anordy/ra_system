@@ -23,6 +23,7 @@ class CreateMnoReturnsTable extends Migration
             $table->unsignedBigInteger('tax_type_id');
             $table->string('filed_type');
             $table->decimal('total_amount_due', 40, 2);
+            $table->decimal('total_amount_due_with_penalty', 40, 2);
             $table->string('status');
 
             $table->timestamps();
