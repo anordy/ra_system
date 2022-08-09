@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Returns\Vat\VatReturn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,8 +14,14 @@ class FinancialYear extends Model
 
     protected $guarded = [];
 
-    public function months(){
-        return $this->hasMany(FinancialYear::class);
+    public function months()
+    {
+        return $this->hasMany(FinancialMonth::class);
+    }
+
+    public function monthSevenDays()
+    {
+        return $this->hasMany(SevenDaysFinancialMonth::class);
     }
 
     public function vat_return()
