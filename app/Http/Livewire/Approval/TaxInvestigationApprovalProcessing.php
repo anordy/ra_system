@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\TaxInvestigationStatus;
+use App\Models\Investigation\TaxInvestigationAssessment;
+use App\Models\Investigation\TaxInvestigationOfficer;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Role;
@@ -12,16 +15,13 @@ use Livewire\WithFileUploads;
 use App\Services\ZanMalipo\ZmCore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\Verification\TaxVerificationOfficer;
-use App\Models\Verification\TaxVerificationAssessment;
 
-class TaxVerificationApprovalProcessing extends Component
+class TaxInvestigationApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
     public $modelId;
@@ -30,11 +30,13 @@ class TaxVerificationApprovalProcessing extends Component
 
     public $teamLeader;
     public $teamMember;
+    public $periodTo;
+    public $periodFrom;
 
     public $principalAmount;
     public $interestAmount;
     public $penaltyAmount;
-    public $assessmentReport;
+    public $investigationReport;
     public $taxTypes;
 
     public $staffs = [];
@@ -71,12 +73,12 @@ class TaxVerificationApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-        $taxType = $this->subject->taxType;
-
         $operators = [];
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
+                    'periodFrom' => 'required:date|before:periodTo',
+                    'periodTo' => 'required:date|after:periodFrom',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],
                     'teamMember' => ['required',  new NotIn([$this->teamLeader])],
                 ],
@@ -86,41 +88,46 @@ class TaxVerificationApprovalProcessing extends Component
                 ]
             );
 
-            TaxVerificationOfficer::create([
-                'verification_id' => $this->subject->id,
+            TaxInvestigationOfficer::create([
+                'investigation_id' => $this->subject->id,
                 'user_id' => $this->teamLeader,
                 'team_leader' => true,
             ]);
 
-            TaxVerificationOfficer::create([
-                'verification_id' => $this->subject->id,
+            TaxInvestigationOfficer::create([
+                'investigation_id' => $this->subject->id,
                 'user_id' => $this->teamMember,
             ]);
+
+            $this->subject->period_to = $this->periodTo;
+            $this->subject->period_from = $this->periodTo;
+
+            $this->subject->save();
 
             $operators = [$this->teamLeader, $this->teamMember];
         }
 
-        if ($this->checkTransition('conduct_verification')) {
+        if ($this->checkTransition('conduct_investigation')) {
             $this->validate(
                 [
                     'principalAmount' => ['required', 'numeric'],
                     'interestAmount' => ['required', 'numeric'],
                     'penaltyAmount' => ['required', 'numeric'],
-                    'assessmentReport' => 'required|mimes:pdf',
+                    'investigationReport' => 'required|mimes:pdf',
                 ]
             );
 
             $reportPath = "";
-            if ($this->assessmentReport) {
-                $reportPath = $this->assessmentReport->store('verification', 'local-admin');
+            if ($this->investigationReport) {
+                $reportPath = $this->investigationReport->store('investigation', 'local-admin');
             }
 
             DB::beginTransaction();
 
             try {
 
-                $verification_assessment = TaxVerificationAssessment::create([
-                    'verification_id' => $this->subject->id,
+                $verification_assessment = TaxInvestigationAssessment::create([
+                    'investigation_id' => $this->subject->id,
                     'principal_amount' => $this->principalAmount,
                     'interest_amount' => $this->interestAmount,
                     'penalty_amount' => $this->penaltyAmount,
@@ -135,8 +142,8 @@ class TaxVerificationApprovalProcessing extends Component
                         'use_item_ref_on_pay' => 'N',
                         'amount' => $this->principalAmount,
                         'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id
+                        'gfs_code' => $this->taxTypes->where('code', 'investigation')->first()->gfs_code,
+                        'tax_type_id' => $this->taxTypes->where('code', 'investigation')->first()->id
                     ],
                     [
                         'billable_id' => $verification_assessment->id,
@@ -164,7 +171,7 @@ class TaxVerificationApprovalProcessing extends Component
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
-                $description = "Debt for {$taxType->name} ";
+                $description = "Debt for {$this->subject->taxType->name}}";
                 $payment_option = ZmCore::PAYMENT_OPTION_FULL;
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
@@ -198,20 +205,20 @@ class TaxVerificationApprovalProcessing extends Component
                 if (config('app.env') != 'local') {
                     $response = ZmCore::sendBill($zmBill->id);
                     if ($response->status === ZmResponse::SUCCESS) {
-                        $verification_assessment->status = ReturnStatus::CN_GENERATING;
+                        $verification_assessment->status = TaxInvestigationStatus::CN_GENERATING;
                         $verification_assessment->save();
 
                         $this->flash('success', 'A control number has been generated successful.');
                     } else {
 
                         session()->flash('error', 'Control number generation failed, try again later');
-                        $verification_assessment->status = ReturnStatus::CN_GENERATION_FAILED;
+                        $verification_assessment->status = TaxInvestigationStatus::CN_GENERATION_FAILED;
                     }
 
                     $verification_assessment->save();
                 } else {
                     // We are local
-                    $verification_assessment->status = ReturnStatus::CN_GENERATED;
+                    $verification_assessment->status = TaxInvestigationStatus::CN_GENERATED;
                     $verification_assessment->save();
 
                     // Simulate successful control no generation
@@ -258,6 +265,6 @@ class TaxVerificationApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.tax_verification');
+        return view('livewire.approval.tax_investigation');
     }
 }

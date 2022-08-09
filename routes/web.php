@@ -73,6 +73,7 @@ use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
+use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
 Auth::routes();
 
@@ -226,6 +227,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxVerificationApprovalController::class);
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
         Route::resource('/verified', TaxVerificationVerifiedController::class);
+        Route::resource('/files', TaxVerificationFilesController::class);
     });
 
     Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {
