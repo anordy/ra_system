@@ -4,8 +4,11 @@
 namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
+use App\Models\Returns\BFO\BFOReturn;
+use App\Models\Returns\EmTransactionReturn;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 
 class TaxVerificationApprovalController extends Controller
@@ -25,6 +28,16 @@ class TaxVerificationApprovalController extends Controller
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         } else if($return instanceof HotelReturn){
             $viewRender = "returns.hotel.details";
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        } else if($return instanceof BFOReturn){
+            $viewRender = "returns.excise-duty.bfo.details";
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        } else if($return instanceof EmTransactionReturn){
+            
+            $viewRender = "returns.excise-duty.em-transaction.details";
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        } else if($return instanceof MmTransferReturn){
+            $viewRender = "returns.excise-duty.mm-transfer.details";
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         }
 
