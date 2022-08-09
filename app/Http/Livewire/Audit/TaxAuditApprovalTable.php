@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\Audit;
 
-use App\Enum\TaxVerificationStatus;
-use App\Models\Verification\TaxVerification;
+use App\Enum\TaxAuditStatus;
+use App\Models\TaxAudit\TaxAudit;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -14,12 +14,12 @@ class TaxAuditApprovalTable extends DataTableComponent
 
     use LivewireAlert;
 
-    public $model = TaxVerification::class;
+    public $model = TaxAudit::class;
 
     public function builder(): Builder
     {
-        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn')
-            ->where('tax_verifications.status', TaxVerificationStatus::PENDING);
+        return TaxAudit::query()->with('business', 'location', 'taxType', 'taxReturn')
+            ->where('tax_audits.status', TaxAuditStatus::PENDING);
     }
 
     public function configure(): void
@@ -35,6 +35,7 @@ class TaxAuditApprovalTable extends DataTableComponent
     {
         return [
             Column::make('Z_Number', 'business.z_no'),
+            Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),
             Column::make('Tax Type', 'taxType.name'),

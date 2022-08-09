@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ReliefAttachment extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function relief()
+    {
+        return $this->belongsTo(Relief::class,'relief_id');
+    }
 }

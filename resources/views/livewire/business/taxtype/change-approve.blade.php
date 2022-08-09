@@ -9,62 +9,37 @@
                         <div class="card-header text-uppercase font-weight-bold">
                             Change of Tax Type Request for {{ $taxchange->business->name }}
                         </div>
-                        <div class="card-body mt-0 p-2">
+                        <div class="card-body mt-0 p-2 px-4">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label class="text-left font-weight-bold text-uppercase"></label>
-                                <label class="text-right text-uppercase">Changed by <strong>{{ $taxchange->taxpayer->full_name }}</strong> <br> on <strong>{{ $taxchange->created_at->toFormattedDateString() }}</strong></label>
+                                <label class="text-right text-uppercase">Changed by
+                                    <strong>{{ $taxchange->taxpayer->full_name }}</strong> <br> on
+                                    <strong>{{ $taxchange->created_at->toFormattedDateString() }}</strong></label>
                             </div>
-                
-                                    <table class="table table-striped table-sm">
-                                        <thead>
-                                            <th style="width: 30%">Old Values</th>
-                                            <th style="width: 50%">New Values</th>
-                                            <th style="width: 20%">Status</th>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    @foreach (json_decode($taxchange->old_taxtype) as $type)
-                                                    {{ $type->name }}<br>
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach (json_decode($taxchange->new_taxtype) as $type)
-                                            {{ $this->getTaxName($type->tax_type_id) }}<br>
-                                        @endforeach
-                                                </td>
-                                                @if ($taxchange->old_taxtype == $taxchange->new_taxtype)
-                                                    <td class="table-primary">Unchanged</td>
-                                                @else
-                                                    <td class="table-success">Changed</td>
-                                                @endif
-                                            </tr>
-                                        </tbody>
-                                    </table>
 
-                                    <p><strong>Reason for Changing Tax Types: </strong>{{ $taxchange->reason }}</p>
-                                    <br>
-                                <hr style="margin-top: -16px" class="mx-3" />
-                            <livewire:business.tax-type.tax-type-change-approval-processing modelName='App\Models\BusinessTaxTypeChange'
-                                modelId="{{ $taxchange->id }}" />
-                
+                            <p><strong>Reason for Changing Tax Types: </strong>{{ $taxchange->reason }}</p>
+                            <br>
+                            <livewire:business.tax-type.tax-type-change-approval-processing
+                                modelName='App\Models\BusinessTaxTypeChange' modelId="{{ $taxchange->id }}" />
+
                         </div>
                     </div>
                 </div>
                 <div id="tab2" class="tab-pane fade">
-                    <livewire:approval.approval-history-table modelName='App\Models\BusinessTaxTypeChange' modelId="{{ $taxchange->id }}" />
+                    <livewire:approval.approval-history-table modelName='App\Models\BusinessTaxTypeChange'
+                        modelId="{{ $taxchange->id }}" />
                 </div>
             </div>
 
         </div>
 
 
-@section('scripts')
-        <script>
-            $(document).ready(function() {
-                $(".nav-tabs a").click(function() {
-                    $(this).tab('show');
+        @section('scripts')
+            <script>
+                $(document).ready(function() {
+                    $(".nav-tabs a").click(function() {
+                        $(this).tab('show');
+                    });
                 });
-            });
-        </script>
-@endsection
+            </script>
+        @endsection

@@ -25,6 +25,11 @@ class TaxVerification extends Model
         return $this->morphTo();
     }
 
+    public function createdBy()
+    {
+        return $this->morphTo();
+    }
+
     public function business()
     {
         return $this->belongsTo(Business::class);
@@ -44,4 +49,5 @@ class TaxVerification extends Model
     {
         return $this->hasMany(TaxVerificationOfficer::class, 'verification_id', 'id');
     }
+    
 }

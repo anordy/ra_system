@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\Investigation;
 
-use App\Enum\TaxVerificationStatus;
-use App\Models\Verification\TaxVerification;
+use App\Enum\TaxInvestigationStatus;
+use App\Models\Investigation\TaxInvestigation;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -14,12 +14,12 @@ class TaxInvestigationVerifiedTable extends DataTableComponent
 
     use LivewireAlert;
 
-    public $model = TaxVerification::class;
+    public $model = TaxInvestigation::class;
 
     public function builder(): Builder
     {
-        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn')
-            ->where('tax_verifications.status', TaxVerificationStatus::APPROVED);
+        return TaxInvestigation::query()->with('business', 'location', 'taxType')
+            ->where('tax_investigations.status', TaxInvestigationStatus::APPROVED);
     }
 
     public function configure(): void

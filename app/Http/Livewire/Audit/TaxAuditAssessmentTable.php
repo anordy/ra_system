@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Audit;
 
-use App\Models\Verification\TaxVerification;
+use App\Models\TaxAudit\TaxAudit;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -13,11 +13,11 @@ class TaxAuditAssessmentTable extends DataTableComponent
 
     use LivewireAlert;
 
-    public $model = TaxVerification::class;
+    public $model = TaxAudit::class;
 
     public function builder(): Builder
     {
-        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn')
+        return TaxAudit::query()->with('business', 'location', 'taxType', 'taxReturn')
             ->has('assessment');
     }
 

@@ -27,6 +27,9 @@ class ZmCore
     /**
      *
      * Create bill (without posting to ZM)
+     * @param $billable_id
+     * @param $billable_type
+     * @param $taxTypeId
      * @param $payer_id
      * @param $payer_type
      * @param $payer_name
@@ -40,9 +43,14 @@ class ZmCore
      * @param $createdby_id
      * @param $createdby_type
      * @param $bill_items
-     * @return array
+     * @return ZmBill
+     * @throws Exception
      */
+
     public static function createBill(
+        $billable_id,
+        $billable_type,
+        $taxTypeId,
         $payer_id,
         $payer_type,
         $payer_name,
@@ -73,6 +81,9 @@ class ZmCore
             $equivalent_amount = $bill_amount * $exchange_rate;
 
             $zm_bill = new ZmBill([
+                'billable_id' => $billable_id,
+                'billable_type' => $billable_type,
+                'tax_type_id' => $taxTypeId,
                 'amount' => $bill_amount,
                 'exchange_rate' => $exchange_rate,
                 'equivalent_amount' => $equivalent_amount,
@@ -89,6 +100,7 @@ class ZmCore
                 'createdby_id' => $createdby_id,
                 'createdby_type' => $createdby_type,
             ]);
+
             $zm_bill->save();
 
             foreach ($bill_items as $item) {
@@ -96,16 +108,16 @@ class ZmCore
                     'zm_bill_id' => $zm_bill->id,
                     'billable_id' => $item['billable_id'],
                     'billable_type' => $item['billable_type'],
-                    'fee_id' => $item['fee_id'],
-                    'fee_type' => $item['fee_type'],
+                    'fee_id' => array_key_exists('fee_id', $item)  ? $item['fee_id'] : null,
+                    'fee_type' =>  array_key_exists('fee_type', $item)? $item['fee_type'] : null,
                     'use_item_ref_on_pay' => 'N',
+                    'tax_type_id' => $item['tax_type_id'],
                     'amount' => $item['amount'],
                     'currency' => $item['currency'],
                     'exchange_rate' => $exchange_rate,
                     'equivalent_amount' => $exchange_rate * $item['amount'],
                     'gfs_code' => $item['gfs_code']
                 ]);
-
                 $zm_item->save();
             }
             DB::commit();
@@ -118,8 +130,35 @@ class ZmCore
     }
 
 
+    public static function createBillItems($items, $bill){
+        DB::beginTransaction();
+        try {
+            foreach ($items as $item) {
+                $zm_item = new ZmBillItem([
+                    'zm_bill_id' => $bill->id,
+                    'billable_id' => $item['billable_id'],
+                    'billable_type' => $item['billable_type'],
+                    'use_item_ref_on_pay' => 'N',
+                    'tax_type_id' => $item['tax_type_id'],
+                    'amount' => $item['amount'],
+                    'currency' => $item['currency'],
+                    'exchange_rate' => $bill->exchange_rate,
+                    'equivalent_amount' => $bill->exchange_rate * $item['amount'],
+                    'gfs_code' => $item['gfs_code']
+                ]);
+                $zm_item->save();
+            }
+            DB::commit();
+            return true;
+        } catch (Exception $e){
+            DB::rollBack();
+            report($e);
+            throw new Exception($e);
+        }
+    }
+
     /**
-     * @param ZmBill|int $bill Instance of ZmBill or bill id
+     * @param Bill|int $bill Instance of ZmBill or bill id
      * @param string $generated_by
      * @param string $approved_by
      * @return ZmResponse
@@ -134,6 +173,7 @@ class ZmCore
         } else {
             throw new \Exception('Invalid bill supplied to send bill');
         }
+
         $xml = new XmlWrapper('gepgBillSubReq');
         $xml_bill_hdr = $xml->createElement("BillHdr");
         $xml->addChildrenToNode([

@@ -16,9 +16,13 @@ class CreateReliefItemsTable extends Migration
         Schema::create('relief_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedSmallInteger('vfms_item_id')->nullable();
+            $table->unsignedBigInteger('relief_id');
             $table->string('item_name');
-            $table->integer('quantity');
-            $table->string('description');
+            $table->decimal('quantity',15,2);
+            $table->string('unit')->nullable();
+            // $table->string('description');
+            $table->decimal('amount_per_item',15,2);
+            $table->decimal('amount',15,2);
             $table->timestamps();
         });
     }

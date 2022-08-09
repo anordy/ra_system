@@ -4,16 +4,13 @@ namespace App\Http\Livewire\Business\Updates;
 
 use Exception;
 use Carbon\Carbon;
-use App\Models\User;
 use App\Events\SendSms;
 use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\TaxAgent;
-use App\Models\Taxpayer;
 use App\Models\BusinessBank;
 use App\Models\BusinessStatus;
-use App\Models\BusinessPartner;
 use App\Models\BusinessLocation;
 use App\Models\BusinessConsultant;
 use Illuminate\Support\Facades\Log;
@@ -106,20 +103,7 @@ class ChangesApprovalProcessing extends Component
 
                     $business->update([
                         'is_own_consultant' => $new_values['is_own_consultant'],
-                        // 'responsible_person_id' => $new_values['responsible_person_id'],
                     ]);
-
-                    //  Partners
-                    // if ($business->business_category_id !== 1) {
-                    //     $business->partners()->delete();
-
-                    //     foreach ($businessPartners as $partner) {
-                    //         $partner = BusinessPartner::create([
-                    //             'business_id' => $business->id,
-                    //             'taxpayer_id' => Taxpayer::where('reference_no', $partner['reference_no'])->first()->id
-                    //         ]);
-                    //     }
-                    // }
 
                     $this->subject->status = BusinessStatus::APPROVED;
 

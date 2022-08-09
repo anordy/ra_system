@@ -23,15 +23,18 @@ class CreateLandLeasesTable extends Migration
             $table->decimal('payment_amount', 10, 2);
             $table->integer('review_schedule');
             $table->integer('valid_period_term');
+            $table->enum('status',['submitted', 'control-number-generating', 'control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->default('submitted');
             $table->unsignedBigInteger('region_id');
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('ward_id');
             $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('edited_by')->nullable();
             $table->enum('category', ['sole','company','partnership'])->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
+            $table->string('lease_agreement_path');
             $table->timestamps();
         });
     }
