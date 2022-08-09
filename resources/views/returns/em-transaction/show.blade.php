@@ -5,7 +5,8 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <h6 class="text-uppercase mt-2 ml-2">{{ $return->taxtype->name }} Returns Details for {{ $return->financialMonth->name }},
+            <h6 class="text-uppercase mt-2 ml-2">{{ $return->taxtype->name }} Returns Details for
+                {{ $return->financialMonth->name }},
                 {{ $return->financialMonth->year->code }}</h6>
             <hr>
 
@@ -50,19 +51,22 @@
                     </thead>
                     <tbody>
                         @foreach ($return->emTransactionReturnItems as $item)
-                            <tr @if ($item->emTransactionConfig->col_type === 'total') class="table-active font-weight-bolder" @endif>
-                                <td>
-                                    {{ $item->emTransactionConfig->name }}
-                                </td>
-                                <td>
-                                    {{ $item->emTransactionConfig->col_type === 'total' ? '-' : number_format($item->value, 2) }}
-                                </td>
-                                </td>
-                                <td>
-                                    {{ $item->emTransactionConfig->rate_type === 'percentage' ? $item->emTransactionConfig->rate : $item->emTransactionConfig->rate_usd ?? '-' }}
-                                </td>
-                                <td>{{ number_format($item->vat, 2) }}</td>
-                            </tr>
+                            @if ($item->emTransactionConfig == null)
+                            @else
+                                <tr @if ($item->emTransactionConfig->col_type === 'total') class="table-active font-weight-bolder" @endif>
+                                    <td>
+                                        {{ $item->emTransactionConfig->name }}
+                                    </td>
+                                    <td>
+                                        {{ $item->emTransactionConfig->col_type === 'total' ? '-' : number_format($item->value, 2) }}
+                                    </td>
+                                    </td>
+                                    <td>
+                                        {{ $item->emTransactionConfig->rate_type === 'percentage' ? $item->emTransactionConfig->rate : $item->emTransactionConfig->rate_usd ?? '-' }}
+                                    </td>
+                                    <td>{{ number_format($item->vat, 2) }}</td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
@@ -71,6 +75,7 @@
         <div class="col-md-12">
             <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
             <hr>
-            <livewire:returns.returns-penalty modelName='App\Models\Returns\EmTransaction\EmTransactionReturn' modelId="{{ $returnId }}" />
+            <livewire:returns.returns-penalty modelName='App\Models\Returns\EmTransaction\EmTransactionReturn'
+                modelId="{{ $returnId }}" />
         </div>
     @endsection
