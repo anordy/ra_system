@@ -52,7 +52,7 @@
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Investigation From</span>
                             <p class="my-1">{{ $investigation->period_from ?? '' }}</p>
-                        </div>  
+                        </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Investigation To</span>
                             <p class="my-1">{{ $investigation->period_to ?? '' }}</p>
@@ -112,20 +112,7 @@
                 modelId="{{ $investigation->id }}" />
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            @if (view()->exists($viewRender))
-                @php echo view($viewRender)->render() @endphp
-            @else
-                <div class="card">
-                    <div class="card-body">
-                        <div class="alert alert-danger" role="alert">
-                            <h4 class="alert-heading">Error!</h4>
-                            <p>
-                                Configured page not found kindly check with Administrator
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation])
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
