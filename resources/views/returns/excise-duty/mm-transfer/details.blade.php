@@ -41,8 +41,8 @@
                     </thead>
             
                     <tbody>
-                        @if(count($return->bfoPenalties))
-                            @foreach ($return->bfoPenalties as $penalty)
+                        @if(count($return->mmTransferPenalties))
+                            @foreach ($return->mmTransferPenalties as $penalty)
                             <tr>
                                 <td>{{ $penalty['financial_month_name'] }}</td>
                                 <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
