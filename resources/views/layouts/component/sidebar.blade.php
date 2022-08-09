@@ -241,13 +241,6 @@
             </ul>
         </li>
 
-
-        <li class="{{ request()->is('auditing*') ? 'active' : '' }}">
-            <a href="{{ route('auditings.index') }}">Auditings</a>
-        </li>
-
-        <li class="{{ request()->is('investigation*') ? 'active' : '' }}">
-            <a href="{{ route('investigations.index') }}">Investigations</a>
         <li class="{{ request()->is('tax_investigation*') ? 'active' : '' }}">
             <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 Tax Investigations
