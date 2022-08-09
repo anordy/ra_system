@@ -4,11 +4,15 @@
 namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
+use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\Returns\BFO\BFOReturn;
+use App\Models\Returns\EmTransactionReturn;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\MmTransferReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
 
 class TaxVerificationApprovalController extends Controller
 {
@@ -36,6 +40,21 @@ class TaxVerificationApprovalController extends Controller
         elseif ($return instanceof VatReturn) {
             $viewRender = "returns.vat_returns.details";
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        } else if($return instanceof BFOReturn){
+            $viewRender = "returns.excise-duty.bfo.details";
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        } else if($return instanceof EmTransactionReturn){
+            
+            $viewRender = "returns.excise-duty.em-transaction.details";
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        } else if($return instanceof MmTransferReturn){
+            $viewRender = "returns.excise-duty.mm-transfer.details";
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        }
+
+        elseif ($return instanceof MmTransferReturn) {
+            $viewRender = "returns.excise-duty.mobile-money-transfer.details";
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         }
 
     }
@@ -57,6 +76,11 @@ class TaxVerificationApprovalController extends Controller
 
         elseif ($return instanceof VatReturn) {
             $viewRender = "returns.vat_returns.details";
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        }
+
+        elseif ($return instanceof MmTransferReturn) {
+            $viewRender = "returns.excise-duty.mobile-money-transfer.details";
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
     }

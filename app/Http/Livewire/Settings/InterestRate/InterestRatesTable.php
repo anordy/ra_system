@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings\InterestRate;
 
 use App\Models\InterestRate;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -12,7 +13,12 @@ class InterestRatesTable extends DataTableComponent
 {
     use LivewireAlert;
 
-    protected $model = InterestRate::class;
+    public function builder(): Builder
+    {
+        return  InterestRate::query()
+            ->orderBy('year', 'Desc');
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -21,17 +27,15 @@ class InterestRatesTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-        $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex) {
+        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
-              return [
-                'style' => 'width: 20%;',
-              ];
+                return [
+                    'style' => 'width: 20%;',
+                ];
             }
-        
+
             return [];
-          });
-
-
+        });
     }
 
     protected $listeners = [
@@ -42,8 +46,8 @@ class InterestRatesTable extends DataTableComponent
     {
         return [
             Column::make('Year', 'year')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make('Rate', 'rate')
                 ->sortable()
                 ->searchable(),

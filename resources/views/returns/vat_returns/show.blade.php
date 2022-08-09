@@ -270,7 +270,7 @@
                                         </tr>
 
                                         <tr>
-                                            <th>Infrastructure Vat To Be Paid ({{$return->infrastructure_tax}})</th>
+                                            <th>Infrastructure Vat To Be Paid ({{$return->business_type}})</th>
                                             <th class="text-right">{{number_format($return->infrastructure_tax,2, '.',',' )}}
                                                 <strong>{{$return->business->currency->iso}}</strong>
                                             </th>
@@ -279,6 +279,13 @@
                                         <tr>
                                             <th>Penalty</th>
                                             <th class="text-right">{{number_format($return->penalty,2, '.',',' )}}
+                                                <strong>{{$return->business->currency->iso}}</strong>
+                                            </th>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Interest</th>
+                                            <th class="text-right">{{number_format($return->interest,2, '.',',' )}}
                                                 <strong>{{$return->business->currency->iso}}</strong>
                                             </th>
                                         </tr>
