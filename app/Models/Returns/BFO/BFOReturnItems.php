@@ -10,4 +10,9 @@ class BFOReturnItems extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'bfo_return_items';
+
+    public function bfoConfig()
+    {
+        return $this->belongsTo(BFOConfig::class,'config_id','id');
+    }
 }
