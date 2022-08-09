@@ -1,7 +1,4 @@
 <div class="card">
-
-    <livewire:verification.declared-sales-analysis modelName='{{ get_class($return) }}' :return="$return" />
-
     <div class="card-body">
         <h6 class="text-uppercase mt-2 ml-2">Filled Return Details for {{ $return->financialMonth->name }}, {{ $return->financialMonth->year->code }}</h6>
         <hr>

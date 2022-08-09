@@ -28,13 +28,13 @@ class InterestRateAddModal extends Component
     public function submit()
     {
         $this->validate();
-        try{
+        try {
             InterestRate::create([
                 'year' => $this->year,
                 'rate' => $this->rate,
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             Log::error($e);
             dd($e);
             $this->alert('error', 'Something went wrong');
