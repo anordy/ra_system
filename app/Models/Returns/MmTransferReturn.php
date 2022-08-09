@@ -50,7 +50,6 @@ class MmTransferReturn extends Model
     public function financialMonth(){
         return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
     }
-
     public function bill(){
         return $this->morphOne(ZmBill::class, 'billable');
     }

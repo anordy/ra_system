@@ -56,6 +56,14 @@
                         Compliance Officers
                     </div>
                     <div class="card-body">
+                        @foreach ($verification->officers as $officer)
+                            <div class="col-md-6 mb-3">
+                                <span class="font-weight-bold text-uppercase">Team
+                                    {{ $officer->team_leader ? 'Leader' : 'Member' }}</span>
+                                <p class="my-1">{{ $officer->user->full_name ?? '' }}</p>
+                            </div>
+                        @endforeach
+
                         <div class="row">
                             @foreach ($verification->officers as $officer)
                                 <div class="col-md-6 mb-3">
@@ -65,6 +73,7 @@
                                 </div>
                             @endforeach
                         </div>
+
                     </div>
                 </div>
             @endif

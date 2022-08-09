@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\Returns\Petroleum;
 
-use App\Models\QuantityCertificate;
 use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\Petroleum\QuantityCertificate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,22 +34,13 @@ class QuantityCertificateTable extends DataTableComponent
             Column::make('Ship Name', 'ship')
                 ->sortable()
                 ->searchable(),
-            Column::make('Cargo Discharged', 'cargo')
+            Column::make('Port of Disembarkation', 'port')
                 ->sortable()
                 ->searchable(),
-            Column::make('Port of Disembarkation', 'liters_observed')
-                ->format(fn ($value) => number_format($value, 3))
+            Column::make('Ascertained Date', 'ascertained')
                 ->sortable()
                 ->searchable(),
-            Column::make('Quantity (ltrs) Observed', 'liters_observed')
-                ->format(fn ($value) => number_format($value, 3))
-                ->sortable()
-                ->searchable(),
-            Column::make('Quantity (ltrs) @20 Degree', 'liters_at_20')
-                ->format(fn ($value) => number_format($value, 3))
-                ->sortable()
-                ->searchable(),
-            Column::make('Metric Tons', 'metric_tons')
+            Column::make('Status', 'status')
                 ->sortable()
                 ->searchable(),
             Column::make('Action', 'id')->view('returns.petroleum.quantity_certificate.includes.actions'),
