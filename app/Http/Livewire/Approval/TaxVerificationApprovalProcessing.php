@@ -178,7 +178,7 @@ class TaxVerificationApprovalProcessing extends Component
                 $zmBill = ZmCore::createBill(
                     $billableId,
                     $billableType,
-                    $this->subject->tax_type_id,
+                    $this->taxTypes->where('code', 'verification')->first()->id,
                     $payer_id,
                     $payer_type,
                     $payer_name,

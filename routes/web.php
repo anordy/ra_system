@@ -32,6 +32,7 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
@@ -107,6 +108,10 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
+        Route::resource('/assesment-files', AssesmentFileController::class);
+    });
+
+    Route::name('returns.')->prefix('returns')->group(function () {
         Route::resource('/interest-rates', InterestRateController::class);
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
 
@@ -206,6 +211,12 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
+
+        Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
+            //MNO Excise Duty returns
+            Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
+            Route::get('/mno/{return_id}', [MnoReturnController::class, 'show'])->name('mno.show');
+        });
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -251,6 +262,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
     });
 
-});
+        //Electronic Money Transaction Return
+        Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
+            Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
+            Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+        });
+    });
