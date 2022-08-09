@@ -2,7 +2,8 @@
 
 namespace App\Http\Livewire\Approval;
 
-
+use App\Models\WaiverObjection;
+use App\Models\WaiverObjectionStatus;
 use App\Models\WaiverStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
@@ -12,7 +13,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class ApprovalWaiverProcessing extends Component
+class ApprovalWaiverObjectionProcessing extends Component
 {
     use WorkflowProcesssingTrait,WithFileUploads, LivewireAlert;
     public $modelId;
@@ -34,7 +35,7 @@ class ApprovalWaiverProcessing extends Component
             'comments' => 'required',
         ]);
 
-        if ($this->checkTransition('waiver_manager_review')) {
+        if ($this->checkTransition('objection_manager_review')) {
 
             // dd('waiver review');
 
@@ -71,7 +72,7 @@ class ApprovalWaiverProcessing extends Component
 
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->status = WaiverStatus::CORRECTION;
+                $this->subject->status = WaiverObjectionStatus::CORRECTION;
                 // event(new SendSms('business-registration-correction', $this->subject->id));
                 // event(new SendMail('business-registration-correction', $this->subject->id));
             }
@@ -86,6 +87,6 @@ class ApprovalWaiverProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.approval-waiver-processing');
+        return view('livewire.approval.approval-waiver-objection-processing');
     }
 }

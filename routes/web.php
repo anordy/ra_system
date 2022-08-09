@@ -14,6 +14,8 @@
 use App\Http\Controllers\AllPdfController;
 use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
+use App\Http\Controllers\Assesments\WaiverObjectionController;
+use App\Http\Controllers\Audit\TaxAuditController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditAssessmentController;
 use App\Http\Controllers\Audit\TaxAuditFilesController;
@@ -60,6 +62,8 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
+use App\Http\Controllers\Verification\TaxVerificationController;
+use App\Models\WaiverObjection;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
@@ -174,12 +178,20 @@ Route::middleware(['auth'])->group(function () {
 
     // assesments
     Route::name('assesments.')->prefix('assesments')->group(function () {
+        #objection
         Route::get('/objection/index', [ObjectionController::class, 'index'])->name('objection.index');
         Route::get('/objection/show/{objection_id}', [ObjectionController::class, 'show'])->name('objection.show');
-
+        Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
+        #waiver
         Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
         Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
         Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
+        # both waiver objection
+        Route::get('/waiverobjection/index', [WaiverObjectionController::class, 'index'])->name('waiverobjection.index');
+        Route::get('/waiverobjection/show/{waiver_id}', [WaiverObjectionController::class, 'approval'])->name('waiverobjection.approval');
+        Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
+        Route::get('/waiverobjection/create/location/{location_id}/tax/{tax_type_id}', [WaiverObjectionController::class, 'create'])->name('waiverobjection.create');
+
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {

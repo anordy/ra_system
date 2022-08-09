@@ -1,10 +1,10 @@
 {{-- @extends('layouts.master')
 
-@section('title', 'View Waiver')
+@section('title', 'View waiverObjection')
 
 @section('content') --}}
-    @if ($waiver->status === \App\Models\WaiverStatus::CORRECTION)
-        <livewire:approval.approval-processing modelName='App\Models\Waiver' modelId="{{ $waiver->id }}" />
+    @if ($waiverObjection->status === \App\Models\WaiverObjectionStatus::CORRECTION)
+        <livewire:approval.approval-waiver-objection-processing modelName='App\Models\WaiverObjection' modelId="{{ $waiverObjection->id }}" />
     @endif
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
@@ -18,7 +18,7 @@
 
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
-                aria-selected="false">Ground Waiver</a>
+                aria-selected="false">Ground waiverObjection</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="reason-tab" data-toggle="tab" href="#reason" role="tab" aria-controls="reason"
@@ -32,17 +32,17 @@
                      <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Objection Status</span>
                     <p class="my-1">
-                        @if($waiver->status === \App\Models\WaiverStatus::APPROVED)
+                        @if($waiverObjection->status === \App\Models\WaiverObjectionStatus::APPROVED)
                             <span class="font-weight-bold text-success">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
                             </span>
-                        @elseif($waiver->status === \App\Models\WaiverStatus::REJECTED)
+                        @elseif($waiverObjection->status === \App\Models\WaiverObjectionStatus::REJECTED)
                             <span class="font-weight-bold text-danger">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Rejected
                             </span>
-                        @elseif($waiver->status === \App\Models\WaiverStatus::CORRECTION)
+                        @elseif($waiverObjection->status === \App\Models\WaiverObjectionStatus::CORRECTION)
                             <span class="font-weight-bold text-warning">
                                 <i class="bi bi-pen-fill mr-1"></i>
                                 Requires Correction
@@ -126,17 +126,17 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
+                    <p class="my-1">{{ $waiverObjection->tax_in_dispute }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_not_in_dispute }} Tzs</p>
+                    <p class="my-1">{{ $waiverObjection->tax_not_in_dispute }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Objected</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} TZS</p>
+                    <p class="my-1">{{ $waiverObjection->tax_in_dispute }} TZS</p>
                 </div>
 
 
@@ -148,8 +148,8 @@
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Grounds for Waiver</span>
-                    <p class="my-1">{{ $waiver->ground_waiver }}</p>
+                    <span class="font-weight-bold text-uppercase">Grounds for waiverObjection</span>
+                    <p class="my-1">{{ $waiverObjection->ground }}</p>
 
                 </div>
 
@@ -160,8 +160,8 @@
         <div class="tab-pane fade" id="reason" role="tabpanel" aria-labelledby="reason-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Reason for Waiver</span>
-                    <p class="my-1">{{ $waiver->reason_waiver }}</p>
+                    <span class="font-weight-bold text-uppercase">Reason for waiverObjection</span>
+                    <p class="my-1">{{ $waiverObjection->reason }}</p>
                 </div>
 
             </div>
@@ -171,7 +171,7 @@
 
     <div class="card shadow-sm my-4 rounded-0">
         <div class="card-header font-weight-bold bg-white">
-            Waiver Attachments
+            waiverObjection Attachments
         </div>
         <div class="card-body">
             <div class="row">

@@ -1,11 +1,11 @@
-{{-- @extends('layouts.master')
+@extends('layouts.master')
 
 @section('title', 'View Waiver')
 
-@section('content') --}}
-    @if ($waiver->status === \App\Models\WaiverStatus::CORRECTION)
-        <livewire:approval.approval-processing modelName='App\Models\Waiver' modelId="{{ $waiver->id }}" />
-    @endif
+@section('content')
+    {{-- @if ($business->status === \App\Models\BusinessStatus::CORRECTION)
+        <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business->id }}" />
+    @endif --}}
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -208,4 +208,5 @@
             </div>
         </div>
     </div>
- 
+
+@endsection

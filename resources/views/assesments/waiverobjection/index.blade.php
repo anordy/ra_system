@@ -1,26 +1,27 @@
+
 @extends('layouts.master')
 
 @section('title')
-    Objection Management
+    Waiver & Objection Management
 @endsection
 
 @section('content')
     <div class="card p-0 m-0">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            Application for Objection
+            Application for both Waiver Objection
         </div>
         <div class="card-body mt-0 p-2">
             <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">All Objections</a>
+                <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">All Application</a>
                 <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Pending Approval</a>
             </nav>
-
+          
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 <div id="all-businesses" class="tab-pane fade active show">
-                    @livewire('assesments.objection.objection-table')
+                    <livewire:assesments.waiverobjection.waiver-objection-table></livewire:assesments.waiverobjection.waiver-objection-table>
                 </div>
                 <div id="pending-approval" class="tab-pane fade">
-                    @livewire('assesments.objection.objection-approval-table')
+                    @livewire('assesments.waiver-objection-approval-table')
                 </div>
             </div>
         </div>

@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\Livewire\Assesments\Objection;
+namespace App\Http\Livewire\Assesments\Waiverobjection;
 
-use App\Models\Objection;
-use App\Models\ObjectionStatus;
+use App\Models\WaiverObjection;
+use App\Models\WaiverObjectionStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class ObjectionTable extends DataTableComponent
+class WaiverObjectionTable extends DataTableComponent
 {
-    // protected $model = Objection::class;
-  public $rejected = false;
+    public $rejected = false;
     public $pending = false;
     public $approved = true;
 
-    // protected $model = Objection::class;
+    protected $model = WaiverObjection::class;
 
     public function configure(): void
     {
@@ -30,18 +29,20 @@ class ObjectionTable extends DataTableComponent
     public function builder(): Builder
     {
         if ($this->rejected) {
-            return Objection::where('Objections.status', ObjectionStatus::REJECTED)->orderBy('Objections.created_at', 'desc');
-        }
-        
-        if ($this->approved) {
-            return Objection::where('Objections.status', ObjectionStatus::APPROVED)->orderBy('Objections.created_at', 'desc');
-        }
-        
-        if ($this->pending) {
-            return Objection::where('Objections.status', ObjectionStatus::PENDING)->orderBy('Objections.created_at', 'desc');
+            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::REJECTED)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
         }
 
-        return Objection::where('Objections.status', '!=', ObjectionStatus::DRAFT)->orderBy('Objections.created_at', 'desc');
+        if ($this->approved) {
+            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::APPROVED)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
+        }
+
+        if ($this->pending) {
+            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::PENDING)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
+        }
+
+        return WaiverObjection::where('waiver_objections.status', '!=', WaiverObjectionStatus::DRAFT)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
+
+        // return WaiverObjection::query()->where('filled_id', auth()->user()->id)->where('type', 'both');
 
     }
 
@@ -63,9 +64,9 @@ class ObjectionTable extends DataTableComponent
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")
                 ->sortable(),
             Column::make('Status', 'status')
-                ->view('assesments.objection.includes.status'),
+                ->view('assesments.waiverobjection.includes.status'),
             Column::make('Action', 'id')
-                ->view('assesments.objection.includes.action'),
+                ->view('assesments.waiverobjection.includes.action'),
         ];
     }
 }

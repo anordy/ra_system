@@ -2,8 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
-
-use App\Models\WaiverStatus;
+use App\Models\ObjectionStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -12,13 +11,13 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class ApprovalWaiverProcessing extends Component
+class ApprovalObjectionProcessing extends Component
 {
-    use WorkflowProcesssingTrait,WithFileUploads, LivewireAlert;
+      use WorkflowProcesssingTrait,WithFileUploads, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
-    public $waiver_report;
+    public $objection_report;
 
     public function mount($modelName, $modelId)
     {
@@ -34,7 +33,7 @@ class ApprovalWaiverProcessing extends Component
             'comments' => 'required',
         ]);
 
-        if ($this->checkTransition('waiver_manager_review')) {
+        if ($this->checkTransition('objection_manager_review')) {
 
             // dd('waiver review');
 
@@ -47,7 +46,7 @@ class ApprovalWaiverProcessing extends Component
         if ($this->checkTransition('commisioner_review')) {
             // dd('chief assuarance review');
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
-            $this->subject->status = WaiverStatus::APPROVED;
+            $this->subject->status = ObjectionStatus::APPROVED;
             // event(new SendSms('business-registration-approved', $this->subject->id));
             // event(new SendMail('business-registration-approved', $this->subject->id));
         }
@@ -71,7 +70,7 @@ class ApprovalWaiverProcessing extends Component
 
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->status = WaiverStatus::CORRECTION;
+                $this->subject->status = ObjectionStatus::CORRECTION;
                 // event(new SendSms('business-registration-correction', $this->subject->id));
                 // event(new SendMail('business-registration-correction', $this->subject->id));
             }
@@ -86,6 +85,6 @@ class ApprovalWaiverProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.approval-waiver-processing');
+        return view('livewire.approval.approval-objection-processing');
     }
 }
