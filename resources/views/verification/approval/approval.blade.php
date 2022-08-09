@@ -58,7 +58,8 @@
                     <div class="card-body">
                         @foreach ($verification->officers as $officer)
                             <div class="col-md-6 mb-3">
-                                <span class="font-weight-bold text-uppercase">Team {{ $officer->team_leader ? 'Leader' : 'Member' }}</span>
+                                <span class="font-weight-bold text-uppercase">Team
+                                    {{ $officer->team_leader ? 'Leader' : 'Member' }}</span>
                                 <p class="my-1">{{ $officer->user->full_name ?? '' }}</p>
                             </div>
                         @endforeach
@@ -80,7 +81,7 @@
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>
                                 <p class="my-1">{{ $verification->assessment->interest_amount ?? '' }}</p>
-                            </div> 
+                            </div>
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                 <p class="my-1">{{ $verification->assessment->penalty_amount ?? '' }}</p>

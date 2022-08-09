@@ -209,7 +209,8 @@
             <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 Returns Verifications
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}" id="tax_verifications">
+            <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}"
+                id="tax_verifications">
                 <li class="{{ request()->is('tax_verifications/approvals*') ? 'active' : '' }}">
                     <a href="{{ route('tax_verifications.approvals.index') }}">Approvals</a>
                 </li>
@@ -220,7 +221,7 @@
                     <a href="{{ route('tax_verifications.verified.index') }}">Approved Returns</a>
                 </li>
             </ul>
-        </li> 
+        </li>
         <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
             <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 Tax Auditing
@@ -242,7 +243,8 @@
             <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 Tax Investigations
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('tax_investigation*') ? 'show' : '' }}" id="tax_investigation">
+            <ul class="collapse list-unstyled {{ request()->is('tax_investigation*') ? 'show' : '' }}"
+                id="tax_investigation">
                 <li class="{{ request()->is('tax_investigation/approvals*') ? 'active' : '' }}">
                     <a href="{{ route('tax_investigation.approvals.index') }}">Approvals</a>
                 </li>
@@ -297,9 +299,9 @@
                 <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                     <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                 </li>
-                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                     <a href="{{ route('pdf.all') }}">All PDF's</a>
-                </li>
+                </li> --}}
             </ul>
         </li>
     </ul>

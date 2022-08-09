@@ -1,12 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Returns\LampSum;
 
+use App\Models\Business;
+use App\Models\BusinessLocation;
+use App\Models\FinancialYear;
+use App\Models\LumpSumPayment;
+use App\Models\Taxpayer;
+use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LumpSumReturn extends Model
+class LampSumReturn extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'lump_sum_returns';
+
     use HasFactory;
 
     protected $guarded = [];
