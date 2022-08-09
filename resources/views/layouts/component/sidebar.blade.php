@@ -269,6 +269,9 @@
             <a href="#reliefs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reliefs
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('reliefs*') ? 'show' : '' }}" id="reliefs">
+                <li class="{{ request()->is('reliefs/ministries*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.ministries.index') }}">Ministries</a>
+                </li>  
                 <li class="{{ request()->is('reliefs/projects*') ? 'active' : '' }}">
                     <a href="{{ route('reliefs.projects.index') }}">Projects</a>
                 </li>

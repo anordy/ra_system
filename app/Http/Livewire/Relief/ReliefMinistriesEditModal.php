@@ -3,53 +3,41 @@
 namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefMinistry;
-use App\Models\Relief\ReliefProjectList;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
-class ReliefProjectListEditModal extends Component
+class ReliefMinistriesEditModal extends Component
 {
 
     use LivewireAlert;
 
     public $name;
     public $description;
-    public $rate;
-    public $project;
-    public $ministry_id;
-    public $ministries = [];
+    public $reliefProjectSection;
 
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_project_lists,name,'.$this->project->id.',id',
-            'description' => 'required',
-            'rate' => 'required|numeric|min:0|max:100',
+            'name' => 'required|unique:relief_projects,name,'.$this->reliefProjectSection->id.',id',
         ];
     }
 
     public function mount($id)
     {
-        $this->ministries = ReliefMinistry::all();
-        $data = ReliefProjectList::find($id);
-        $this->project = $data;
+        $data = ReliefMinistry::find($id);
+        $this->reliefProjectSection = $data;
         $this->name = $data->name;
         $this->description = $data->description;
-        $this->rate = $data->rate;
-        $this->ministry_id = $data->ministry_id;
     }
 
     public function submit()
     {
         $this->validate();
         try {
-            $this->project->update([
+            $this->reliefProjectSection->update([
                 'name' => $this->name,
-                'description' => $this->description,
-                'rate' => $this->rate,
-                'ministry_id' => $this->ministry_id,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -60,6 +48,6 @@ class ReliefProjectListEditModal extends Component
 
     public function render()
     {
-        return view('livewire.relief.project_list.edit-modal');
+        return view('livewire.relief.ministries.edit-modal');
     }
 }

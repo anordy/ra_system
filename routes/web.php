@@ -77,6 +77,7 @@ use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
+use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
 Auth::routes();
@@ -229,7 +230,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
 
         Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
-            //MNO Excise Duty returns
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
             Route::get('/mno/{return_id}', [MnoReturnController::class, 'show'])->name('mno.show');
         });
@@ -242,10 +242,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
+        Route::resource('/ministries', ReliefMinistriestController::class);
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
-        // Route::resource('/show/{id}', ReliefApplicationsController::class)->name('show');
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
     });
 

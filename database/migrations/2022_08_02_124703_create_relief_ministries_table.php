@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMmTransferReturnItemsTable extends Migration
+class CreateReliefMinistriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateMmTransferReturnItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mm_transfer_return_items', function (Blueprint $table) {
+        Schema::create('relief_ministries', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('config_id');
-            $table->unsignedBigInteger('return_id');
-            $table->decimal('value', 40,2); 
-            $table->decimal('vat', 40,2);
-            $table->softDeletes();
+            $table->string('name');
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateMmTransferReturnItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mm_transfer_return_items');
+        Schema::dropIfExists('relief_ministries');
     }
 }
