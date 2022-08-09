@@ -102,6 +102,9 @@
                 <li class="{{ request()->is('returns/bfo-excise-duty*') ? 'active' : '' }}">
                     <a href="{{ route('returns.bfo-excise-duty.index') }}">BFO Excise Duty Return</a>
                 </li>
+                <li class="{{ request()->is('returns/mobile-money-transfer*') ? 'active' : '' }}">
+                    <a href="{{ route('returns.mobile-money-transfer.index') }}">Mobile Money Transfer</a>
+                </li>
             </ul>
         </li>
 
