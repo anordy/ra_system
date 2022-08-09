@@ -5,9 +5,10 @@ namespace App\Models;
 use App\Models\BusinessStatus;
 use App\Models\VatReturn\VatReturn;
 use App\Traits\WorkflowTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Relief\Relief;
 
 class Business extends Model implements Auditable
 {
@@ -53,6 +54,10 @@ class Business extends Model implements Auditable
     public function hotel()
     {
         return $this->hasOne(BusinessHotel::class);
+    }
+    
+    public function locations(){
+        return $this->hasMany(BusinessLocation::class, 'business_id');
     }
 
     public function location()
@@ -156,6 +161,11 @@ class Business extends Model implements Auditable
     public function vatReturn()
     {
         return $this->hasMany(VatReturn::class);
+    }
+
+    public function reliefs()
+    {
+        return $this->hasMany(Relief::class,'business_id');
     }
 
     public function waiver()

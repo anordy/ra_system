@@ -15,11 +15,11 @@ class CreateTaxInvestigationAssessmentsTable extends Migration
     {
         Schema::create('tax_investigation_assessments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('audit_id');
+            $table->unsignedBigInteger('investigation_id');
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
-            $table->string('report_path')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

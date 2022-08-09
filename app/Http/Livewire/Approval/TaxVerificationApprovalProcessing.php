@@ -71,6 +71,8 @@ class TaxVerificationApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+        $taxType = $this->subject->taxType;
+
         $operators = [];
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
@@ -162,7 +164,7 @@ class TaxVerificationApprovalProcessing extends Component
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
-                $description = "Debt for {$this->subject->taxType->name} - {$this->subject->taxReturn->financialMonth->name} {$this->subject->taxReturn->financialMonth->year->code}";
+                $description = "Debt for {$taxType->name} ";
                 $payment_option = ZmCore::PAYMENT_OPTION_FULL;
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
@@ -176,7 +178,7 @@ class TaxVerificationApprovalProcessing extends Component
                 $zmBill = ZmCore::createBill(
                     $billableId,
                     $billableType,
-                    $this->subject->tax_type_id,
+                    $this->taxTypes->where('code', 'verification')->first()->id,
                     $payer_id,
                     $payer_type,
                     $payer_name,
