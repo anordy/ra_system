@@ -20,16 +20,14 @@
         </div>
 
         <div>
-            <div class="row">
-                <div class="col-md-12">
-                    <livewire:returns.return-payment :return="$return"/>
-                </div>
-            </div>
             <div class="card">
                 <div class="card-header">
                     Return details for the return month of {{$return->financialMonth->name}}
                 </div>
                 <div class="card-body">
+                    <div >
+                        <livewire:returns.return-payment :return="$return"/>
+                    </div>
                     @if(!empty($return))
                         <div>
                             <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
