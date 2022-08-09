@@ -52,7 +52,7 @@ class BfoExciseDutyTable extends DataTableComponent
                     return Carbon::create($value)->format('M d, Y');
                 })
                 ->searchable(),
-            Column::make('Action', 'id')->view('returns.excise_duty.bfo.includes.actions'),
+            Column::make('Action', 'id')->view('returns.excise-duty.bfo.includes.actions'),
         ];
     }
 }

@@ -10,12 +10,12 @@ class BfoExciseDutyController extends Controller
 {
     public function index()
     {
-        return view('returns.excise_duty.bfo.index');
+        return view('returns.excise-duty.bfo.index');
     }
 
     public function show($return_id)
     {
         $return = BFOReturn::query()->findOrFail(decrypt($return_id));
-        return view('returns.excise_duty.bfo.show', compact('return', 'return_id'));
+        return view('returns.excise-duty.bfo.show', compact('return', 'return_id'));
     }
 }
