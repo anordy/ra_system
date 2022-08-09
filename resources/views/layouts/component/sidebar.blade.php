@@ -263,10 +263,10 @@
                     <a href="{{ route('reliefs.projects.index') }}">Projects</a>
                 </li>
                 <li class="{{ request()->is('reliefs/registrations*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.registrations.index') }}">Registrations</a>
+                    <a href="{{ route('reliefs.registrations.index') }}">Register Relief</a>
                 </li>
                 <li class="{{ request()->is('reliefs/applications*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.applications.index') }}">Applications</a>
+                    <a href="{{ route('reliefs.applications.index') }}">Relief Applications</a>
                 </li>
             </ul>
         </li>

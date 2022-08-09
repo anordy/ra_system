@@ -15,6 +15,7 @@ use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditAssessmentController;
+use App\Http\Controllers\Audit\TaxAuditFilesController;
 use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
@@ -66,6 +67,7 @@ use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
@@ -215,6 +217,9 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
+        // Route::resource('/show/{id}', ReliefApplicationsController::class)->name('show');
+        Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
+        
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
@@ -227,12 +232,14 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
+        Route::resource('/files', TaxAuditFilesController::class);
     });   
     
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
         Route::resource('/approvals', TaxInvestigationApprovalController::class);
         Route::resource('/assessments', TaxInvestigationAssessmentController::class);
         Route::resource('/verified', TaxInvestigationVerifiedController::class);
+        Route::resource('/files', TaxInvestigationFilesController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');

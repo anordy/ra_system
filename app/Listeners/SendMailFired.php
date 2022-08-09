@@ -10,6 +10,8 @@ use App\Models\Business;
 use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Events\SendMail;
+use App\Jobs\Business\Branch\SendBranchApprovedMail;
+use App\Jobs\Business\Branch\SendBranchCorrectionMail;
 use App\Jobs\Business\SendBusinessClosureApprovedMail;
 use App\Jobs\Business\SendBusinessClosureCorrectionMail;
 use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
@@ -91,6 +93,12 @@ class SendMailFired
         } else if ($event->service === 'change-business-information'){
             // Token ID is payload data having all notification details
             SendBusinessUpdateMail::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-approval'){
+            // Token ID is payload data having all notification details
+            SendBranchApprovedMail::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-correction'){
+            // Token ID is payload data having all notification details
+            SendBranchCorrectionMail::dispatch($event->tokenId);
         }
     }
 }

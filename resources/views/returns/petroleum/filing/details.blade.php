@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card p-0 m-0">
     <div class="card-body">
         <h6 class="text-uppercase mt-2 ml-2">Filled Return Details</h6>
         <hr>
@@ -29,10 +29,8 @@
                             <th style="width: 25%"></th>
                             <th style="width: 25%">{{ number_format($return->total) }}</th>
                         </tr>
-
                     </tfoot>
                 </table>
-
             </div>
         </div>
     </div>
