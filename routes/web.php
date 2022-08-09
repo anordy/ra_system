@@ -171,7 +171,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
         Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
         Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
-
         # both waiver objection
         Route::get('/waiverobjection/index', [WaiverObjectionController::class, 'index'])->name('waiverobjection.index');
         Route::get('/waiverobjection/show/{waiver_id}', [WaiverObjectionController::class, 'approval'])->name('waiverobjection.approval');

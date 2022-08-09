@@ -18,7 +18,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 1,
-                'tax_type_id' => 9,
+                'tax_type_code' => 'Airport_Service_Safety_fee',
                 'code' => 'NFAT',
                 'name' => 'No. of foreign passengers (Airport Tax)',
                 'row_type' => 'dynamic',
@@ -33,7 +33,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 2,
-                'tax_type_id' => 9,
+                'tax_type_code' => 'Airport_Service_Safety_fee',
                 'code' => 'NLAT',
                 'name' => 'No. of local passengers (Airport Tax)',
                 'row_type' => 'dynamic',
@@ -48,7 +48,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 3,
-                'tax_type_id' => 9,
+                'tax_type_code' => 'Airport_Service_Safety_fee',
                 'code' => 'NFSF',
                 'name' => 'No. of Foreign passengers (Safety Fee)',
                 'row_type' => 'dynamic',
@@ -63,7 +63,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 4,
-                'tax_type_id' => 9,
+                'tax_type_code' => 'Airport_Service_Safety_fee',
                 'code' => 'NLSF',
                 'name' => 'No. of local passengers (Safety fee)',
                 'row_type' => 'dynamic',
@@ -78,7 +78,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 5,
-                'tax_type_id' => 9,
+                'tax_type_code' => 'Airport_Service_Safety_fee',
                 'code' => 'IT',
                 'name' => 'Imfrastracture Tax',
                 'row_type' => 'dynamic',
@@ -93,7 +93,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 6,
-                'tax_type_id' => 9,
+                'tax_type_code' => 'Airport_Service_Safety_fee',
                 'code' => 'TLATZS',
                 'name' => 'Total Amount Fee Due(TZS)',
                 'row_type' => 'unremovable',
@@ -105,7 +105,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 7,
-                'tax_type_id' => 9,
+                'tax_type_code' => 9,
                 'code' => 'TLAUSD',
                 'name' => 'Total Amount Fee Due (US$)',
                 'row_type' => 'unremovable',
@@ -118,7 +118,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 8,
-                'tax_type_id' => 10,
+                'tax_type_code' => 'Sea_Service_Transport_Charge',
                 'code' => 'NFSP',
                 'name' => 'No. of foreign passengers',
                 'row_type' => 'dynamic',
@@ -133,7 +133,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 9,
-                'tax_type_id' => 10,
+                'tax_type_code' => 'Sea_Service_Transport_Charge',
                 'code' => 'NLTM',
                 'name' => 'No. of local passengers(ZNZ - T/M)',
                 'row_type' => 'dynamic',
@@ -148,7 +148,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 10,
-                'tax_type_id' => 10,
+                'tax_type_code' => 'Sea_Service_Transport_Charge',
                 'code' => 'NLZNZ',
                 'name' => 'No. of local passengers (ZNZ - ZNZ)',
                 'row_type' => 'dynamic',
@@ -163,7 +163,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 11,
-                'tax_type_id' => 10,
+                'tax_type_code' => 'Sea_Service_Transport_Charge',
                 'code' => 'ITZNZ',
                 'name' => 'Imfrastructure Tax (ZNZ - ZNZ)',
                 'row_type' => 'dynamic',
@@ -179,7 +179,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 12,
-                'tax_type_id' => 10,
+                'tax_type_code' => 'Sea_Service_Transport_Charge',
                 'code' => 'ITTM',
                 'name' => 'Imfrastructure Tax (ZNZ - T/M)',
                 'row_type' => 'dynamic',
@@ -194,7 +194,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 13,
-                'tax_type_id' => 10,
+                'tax_type_code' => 10,
                 'code' => 'NSUS',
                 'name' => 'Value of Net Sales (US$)',
                 'row_type' => 'dynamic',
@@ -209,7 +209,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 14,
-                'tax_type_id' => 10,
+                'tax_type_code' => 'Sea_Service_Transport_Charge',
                 'code' => 'NSTZ',
                 'name' => 'Value of Net Sales (TZS)',
                 'row_type' => 'dynamic',
@@ -224,7 +224,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 15,
-                'tax_type_id' => 10,
+                'tax_type_code' => 'Sea_Service_Transport_Charge',
                 'code' => 'TLSTZS',
                 'name' => 'Total Amount Fee Due(TZS)',
                 'row_type' => 'unremovable',
@@ -236,7 +236,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 16,
-                'tax_type_id' => 10,
+                'tax_type_code' => 'Sea_Service_Transport_Charge',
                 'code' => 'TLSUSD',
                 'name' => 'Total Amount Fee Due (US$)',
                 'row_type' => 'unremovable',

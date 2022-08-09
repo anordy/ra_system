@@ -1,10 +1,10 @@
 <?php
 
-
 namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\Port\PortReturn;
 use App\Models\Verification\TaxVerification;
 
 class TaxVerificationAssessmentController extends Controller
@@ -14,14 +14,18 @@ class TaxVerificationAssessmentController extends Controller
         return view('verification.assessment.index');
     }
 
-
-    public function show($id){
+    public function show($id)
+    {
         $verification = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
 
         $return = $verification->taxReturn;
-        if($return instanceof PetroleumReturn){
+        if ($return instanceof PetroleumReturn) {
             $viewRender = "returns.petroleum.filing.details";
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        } elseif ($return instanceof PortReturn) {
+            $viewRender = "returns.port.details";
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
     }
 }
+    

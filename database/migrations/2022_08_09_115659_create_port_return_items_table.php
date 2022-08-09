@@ -20,7 +20,6 @@ class CreatePortReturnItemsTable extends Migration
             $table->decimal('value', 40, 2);
             $table->decimal('vat', 40, 2);
             $table->timestamps();
-
         });
     }
 
