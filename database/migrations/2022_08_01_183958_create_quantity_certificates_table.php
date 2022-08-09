@@ -16,15 +16,12 @@ class CreateQuantityCertificatesTable extends Migration
         Schema::create('quantity_certificates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
-            $table->date('ascertained');
             $table->string('ship');
             $table->string('port');
-            $table->string('cargo');
-            $table->decimal('liters_observed');
-            $table->decimal('liters_at_20');
-            $table->decimal('metric_tons');
+            $table->date('ascertained')->nullable();
             $table->integer('download_count')->default(0);
             $table->unsignedBigInteger('created_by');
+            $table->enum('status', ['draft', 'pending', 'filled'])->default('draft');
             $table->timestamps();
         });
     }

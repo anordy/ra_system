@@ -6,19 +6,17 @@ use App\Models\Business;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\QuantityCertificate;
 use App\Models\Returns\Petroleum\QuantityCertificateItem;
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Support\Collection;
 
 
-class QuantityCertificateAdd extends Component
+class QuantityCertificateEdit extends Component
 {
     use LivewireAlert;
-
 
     public $business;
     public $ship;
@@ -30,6 +28,8 @@ class QuantityCertificateAdd extends Component
     public $ascertained;
     public $configs = [];
     public Collection $products;
+
+    public $certificate;
 
 
     protected function rules()
@@ -61,25 +61,30 @@ class QuantityCertificateAdd extends Component
     ];
 
 
-    public function mount()
+    public function mount($id)
     {
-        $this->ascertained = Carbon::now()->toDateString();
+        $id = decrypt($id);
+        $this->certificate = QuantityCertificate::with('business', 'products')->find($id);
+
+        $this->ascertained = $this->certificate->ascertained;
+        $this->ship = $this->certificate->ship;
+        $this->port = $this->certificate->port;
+        $this->voyage_no = $this->certificate->voyage_no;
+        $this->business = $this->certificate->business->z_no;
 
         $this->configs = PetroleumConfig::where('row_type', 'dynamic')
             ->where('col_type', '!=', 'heading')
             ->get();
 
-
-        $this->fill([
-            'products' => collect([
-                [
-                    'config_id' => '',
-                    'liters_observed' => '',
-                    'liters_at_20' => '',
-                    'metric_tons' => '',
-                ]
-            ]),
-        ]);
+        $this->products = collect([]);
+        foreach ($this->certificate->products as $product) {
+            $this->products->push(collect([
+                'config_id' => $product->config_id,
+                'liters_observed' => $product->liters_observed,
+                'liters_at_20' => $product->liters_at_20,
+                'metric_tons' => $product->metric_tons,
+            ]));
+        }
     }
 
 
@@ -107,7 +112,7 @@ class QuantityCertificateAdd extends Component
         try {
             $business = Business::firstWhere('z_no', $this->business);
 
-            $certificate = QuantityCertificate::create([
+            $this->certificate->update([
                 'business_id' => $business->id,
                 'ascertained' => $this->ascertained,
                 'ship' => $this->ship,
@@ -116,21 +121,21 @@ class QuantityCertificateAdd extends Component
                 'created_by' => auth()->user()->id,
                 'download_count' => 0
             ]);
-
-            $product_payload = [];
+            $this->certificate->products()->delete();
+            $product_payload = collect();
             foreach ($this->products as $product) {
                 $product = (object) $product;
-                array_push($product_payload, [
-                    'certificate_id' => $certificate->id,
+                $product_payload->push(new QuantityCertificateItem([
+                    'certificate_id' => $this->certificate->id,
                     'config_id' => $product->config_id,
                     'cargo_name' => collect($this->configs)->firstWhere('id', $product->config_id)->name ?? '',
                     'liters_observed' => $product->liters_observed,
                     'liters_at_20' => $product->liters_at_20,
                     'metric_tons' => $product->metric_tons,
-                ]);
+                ]));
             }
 
-            $certificate->products()->associate($product_payload);
+            $this->certificate->products()->saveMany($product_payload);
 
             DB::commit();
             session()->flash('success', 'Certificate of Quantity has been generated successfully');
@@ -150,6 +155,6 @@ class QuantityCertificateAdd extends Component
 
     public function render()
     {
-        return view('livewire.returns.petroleum.quantity_certificate.add');
+        return view('livewire.returns.petroleum.quantity_certificate.edit');
     }
 }

@@ -227,8 +227,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
-        Route::get('/certificateOfQuantity/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
+        Route::get('/certificateOfQuantityFile/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {

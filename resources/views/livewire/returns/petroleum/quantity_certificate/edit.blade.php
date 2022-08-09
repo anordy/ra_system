@@ -43,6 +43,7 @@
     </div>
     <div class="card-body">
         <h6>Product Information</h6>
+
         @foreach ($products as $key => $value)
             <div class="mt-2 border p-2">
                 <div class="row">
