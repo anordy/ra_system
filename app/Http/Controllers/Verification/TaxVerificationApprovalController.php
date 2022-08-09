@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Returns\BFO\BFOReturn;
 use App\Models\Returns\EmTransactionReturn;
