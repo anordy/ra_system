@@ -1,6 +1,6 @@
 <div>
     <div class="d-flex justify-content-start mb-3">
-        <a href="{{ url()->previous() }}" class="btn btn-info">
+        <a href="{{ route('land-lease.list') }}" class="btn btn-info">
             {{-- back icon --}}
             <i class="fas fa-arrow-left"></i>
             Back
