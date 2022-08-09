@@ -15,16 +15,14 @@ class TaxType extends Model implements Auditable
     public const VAT = 'vat';
     public const HOTEL = 'hotel-levy';
     public const RESTAURANT = 'restaurant-levy';
-    public const TOUR = 'tour-operator-levy';
-    public const LAND = 'land-lease';
+    public const TOUR_OPERATOR = 'tour-operator-levy';
+    public const LAND_LEASE = 'land-lease';
     public const PUBLIC_SERVICE = 'public-service';
-    public const EXCISE_DUTY = 'excise-duty';
-    public const EXCISE_DUTY_BFO = 'Excise_Duty_Bfo';
+    public const EXCISE_DUTY_MNO = 'excise-duty-mno';
+    public const EXCISE_DUTY_BFO = 'excie-duty-bfo';
     public const PETROLEUM = 'petroleum-levy';
-    public const AIRPORT_SERVICE = 'airport-service';
-    public const AIRPORT_SAFETY = 'airport-safety';
-    public const SEAPORT_SERVICE = 'seaport-service';
-    public const SEAPORT_TRANSPORT = 'seaport-transport';
+    public const AIRPORT_SERVICE_SAFETY_FEE = 'airport-service-safety-fee';
+    public const SEA_SERVICE_TRANSPORT_CHARGE = 'sea-service-transport-charge';
     public const TAX_CONSULTANT = 'tax-consultant';
     public const STAMP_DUTY = 'stamp-duty';
     public const LUMPSUM_PAYMENT = 'lumpsum-payment';
@@ -35,6 +33,9 @@ class TaxType extends Model implements Auditable
     public const INFRASTRUCTURE = 'infrastructure';
     public const RDF = 'road-development-fund';
     public const ROAD_LICENSE_FEE = 'road-license-fee';
+    public const AUDIT = 'audit';
+    public const VERIFICATION = 'verification';
+    public const INVESTIGATION = 'investigation';
 
     protected $fillable = [
         'name',

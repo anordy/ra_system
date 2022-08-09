@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowBusinessUpdateSeeder::class);
         $this->call(WorkflowBusinessTaxTypeChangeSeeder::class);
         $this->call(WorkflowTaxVerificationSeeder::class);
+        $this->call(WorkflowTaxInvestigationSeeder::class);
         $this->call(WorkflowTaxAuditSeeder::class);
         $this->call(EducationLevelSeeder::class);
         $this->call(HotelReturnConfigSeeder::class);
@@ -58,7 +59,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ISIC3Seeder::class);
         $this->call(ISIC4Seeder::class);
         $this->call(MnoConfigSeeder::class);
-        $this->call(AssesmentSeeder::class);
+        // $this->call(AssesmentSeeder::class);
         $this->call(WorkflowWaiverSeeder::class);
         $this->call(InterestRateSeeder::class);
         $this->call(PenaltyRatesSeeder::class);

@@ -15,11 +15,13 @@ use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditAssessmentController;
+use App\Http\Controllers\Audit\TaxAuditFilesController;
 use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
@@ -31,6 +33,7 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
@@ -66,11 +69,13 @@ use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
+use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
 Auth::routes();
 
@@ -104,6 +109,10 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
+        Route::resource('/assesment-files', AssesmentFileController::class);
+    });
+
+    Route::name('returns.')->prefix('returns')->group(function () {
         Route::resource('/interest-rates', InterestRateController::class);
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
 
@@ -201,8 +210,19 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
         });
 
+        Route::name('bfo-excise-duty.')->prefix('bfo-excise-duty')->group(function ()  {
+            Route::get('/',[BfoExciseDutyController::class, 'index'])->name('index');
+            Route::get('/show/{return_id}', [BfoExciseDutyController::class, 'show'])->name('show');
+        });
+
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
+
+        Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
+            //MNO Excise Duty returns
+            Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
+            Route::get('/mno/{return_id}', [MnoReturnController::class, 'show'])->name('mno.show');
+        });
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -215,24 +235,30 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
+        // Route::resource('/show/{id}', ReliefApplicationsController::class)->name('show');
+        Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
+        
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
         Route::resource('/approvals', TaxVerificationApprovalController::class);
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
         Route::resource('/verified', TaxVerificationVerifiedController::class);
+        Route::resource('/files', TaxVerificationFilesController::class);
     });
 
     Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
+        Route::resource('/files', TaxAuditFilesController::class);
     });   
     
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
         Route::resource('/approvals', TaxInvestigationApprovalController::class);
         Route::resource('/assessments', TaxInvestigationAssessmentController::class);
         Route::resource('/verified', TaxInvestigationVerifiedController::class);
+        Route::resource('/files', TaxInvestigationFilesController::class);
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
@@ -242,6 +268,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
     });
 
-});
+        //Electronic Money Transaction Return
+        Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
+            Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
+            Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+        });
+    });

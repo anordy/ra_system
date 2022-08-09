@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Models\Investigation;
+namespace App\Models\Returns;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Investigation extends Model
+class EmTransactionConfig extends Model
 {
     use HasFactory;
-
-     protected $guarded = [];
-
-
 }
