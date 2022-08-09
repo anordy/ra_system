@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLandLeasesTable extends Migration
+class CreateLandLeaseHistories extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class CreateLandLeasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('land_leases', function (Blueprint $table) {
+        Schema::create('land_lease_histories', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('land_lease_id');
             $table->boolean('is_registered');
             $table->unsignedBigInteger('taxpayer_id')->nullable();
             $table->string('dp_number');
@@ -46,6 +47,6 @@ class CreateLandLeasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('land_leases');
+        Schema::dropIfExists('land_lease_histories');
     }
 }
