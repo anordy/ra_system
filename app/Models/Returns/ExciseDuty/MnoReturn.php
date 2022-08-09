@@ -25,6 +25,11 @@ class MnoReturn extends Model
         return $this->belongsTo(FinancialMonth::class);
     }
 
+    public function location()
+    {
+        return $this->belongsTo(BusinessLocation::class);
+    }
+
     public function business()
     {
         return $this->belongsTo(Business::class);
