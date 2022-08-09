@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Audit;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\Vat\VatReturn;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
@@ -29,6 +30,10 @@ class TaxAuditAssessmentController extends Controller
             return view('audit.approval.preview', compact('return', 'audit', 'viewRender'));
         } else if($return instanceof MnoReturn){
             $viewRender = "returns.excise-duty.mno.details";
+            return view('audit.approval.preview', compact('return', 'audit', 'viewRender'));
+        }
+        elseif ($return instanceof VatReturn) {
+            $viewRender = "returns.vat_returns.details";
             return view('audit.approval.preview', compact('return', 'audit', 'viewRender'));
         }
     }
