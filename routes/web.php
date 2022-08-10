@@ -76,6 +76,7 @@ use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
+use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
 Auth::routes();
@@ -123,6 +124,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
             });
         });
+        //lump-sum returns
+        Route::get('/lump-sum/index', [LumpSumReturnController::class, 'index'])->name('lump-sum.index');
+        Route::get('/lump-sum/view/{id}', [LumpSumReturnController::class, 'view'])->name('lump-sum.show');
     });
 
     Route::prefix('system')->name('system.')->group(function () {
