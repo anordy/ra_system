@@ -40,6 +40,7 @@
                     wire:click="approve('chief_assurance_review')">Approve & Forward</button>
             </div>
         @elseif ($this->checkTransition('commisioner_review'))
+       @include('livewire.approval.assesments.waiver_manager_review')
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger" wire:click="reject('commisioner_review')">Reject &
                     Return</button>
