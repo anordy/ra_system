@@ -23,6 +23,8 @@ class CreateTaxClaimsTable extends Migration
             $table->unsignedBigInteger('new_return_id');
             $table->string('old_return_type');
             $table->string('new_return_type');
+            $table->decimal('amount', 20, 2);
+            $table->enum('currency', ['TZS', 'USD', 'EUR'])->default('TZS');
             $table->unsignedBigInteger('financial_month_id');
             $table->string('marking')->nullable();
             $table->enum('status', TaxClaimStatus::getConstants())->default('draft');

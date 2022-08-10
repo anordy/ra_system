@@ -3,6 +3,16 @@
 @section('title','Tax Claims')
 
 @section('content')
+    @if($claim->status == \App\Enum\TaxClaimStatus::PENDING)
+        <div class="card rounded-0">
+            <div class="card-header bg-white font-weight-bold">
+                Payment Assignments
+            </div>
+            <div class="card-body">
+                    <livewire:claims.claims-approval :claim="$claim" />
+            </div>
+        </div>
+    @endif
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold">
             Claim Details
@@ -27,7 +37,7 @@
                 </div>
 
                 <div class="col-md-12 mt-3">
-                    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 0;">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="new-return-tab" data-toggle="tab" href="#new-return" role="tab" aria-controls="new-return" aria-selected="true">New Return</a>
                         </li>
@@ -40,9 +50,9 @@
                             <table class="table table-bordered normal-text">
                                 <thead>
                                 <th style="width: 30%">Item Name</th>
-                                <th style="width: 20%">Value</th>
+                                <th style="width: 20%">Value (TZS)</th>
                                 <th style="width: 10%">Rate</th>
-                                <th style="width: 20%">Tax</th>
+                                <th style="width: 20%">Tax (TZS)</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($newReturn->items as $item)
@@ -72,9 +82,9 @@
                             <table class="table table-bordered normal-text">
                                 <thead>
                                     <th style="width: 30%">Item Name</th>
-                                    <th style="width: 20%">Value</th>
+                                    <th style="width: 20%">Value (TZS)</th>
                                     <th style="width: 10%">Rate</th>
-                                    <th style="width: 20%">Tax</th>
+                                    <th style="width: 20%">Tax (TZS)</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($oldReturn->items as $item)
@@ -105,4 +115,5 @@
             </div>
         </div>
     </div>
+
 @endsection
