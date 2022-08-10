@@ -23,6 +23,7 @@ use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
@@ -83,6 +84,7 @@ use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
 use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
+use App\Http\Controllers\Setting\ExchangeRateController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
 Auth::routes();
@@ -118,6 +120,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/assesment-files', AssesmentFileController::class);
+        Route::resource('/exchange-rate', ExchangeRateController::class);
     });
 
     Route::name('returns.')->prefix('returns')->group(function () {
@@ -278,6 +281,11 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('/files', TaxAuditFilesController::class);
+});
+
+Route::name('claims.')->prefix('/tax-claims')->group(function (){
+    Route::get('/', [ClaimsController::class, 'index'])->name('index');
+    Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
 });
 
 Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {

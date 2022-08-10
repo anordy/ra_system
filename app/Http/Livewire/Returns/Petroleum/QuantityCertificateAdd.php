@@ -28,6 +28,7 @@ class QuantityCertificateAdd extends Component
     public $liters_at_20;
     public $metric_tons;
     public $ascertained;
+    public $voyage_no;
     public $configs = [];
     public Collection $products;
 
@@ -117,20 +118,20 @@ class QuantityCertificateAdd extends Component
                 'download_count' => 0
             ]);
 
-            $product_payload = [];
+            $product_payload = collect();
             foreach ($this->products as $product) {
                 $product = (object) $product;
-                array_push($product_payload, [
+                $product_payload->push(new QuantityCertificateItem([
                     'certificate_id' => $certificate->id,
                     'config_id' => $product->config_id,
                     'cargo_name' => collect($this->configs)->firstWhere('id', $product->config_id)->name ?? '',
                     'liters_observed' => $product->liters_observed,
                     'liters_at_20' => $product->liters_at_20,
                     'metric_tons' => $product->metric_tons,
-                ]);
+                ]));
             }
 
-            $certificate->products()->associate($product_payload);
+            $certificate->products()->saveMany($product_payload);
 
             DB::commit();
             session()->flash('success', 'Certificate of Quantity has been generated successfully');

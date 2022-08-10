@@ -21,7 +21,8 @@ class CreateTaxClaimsTable extends Migration
             $table->unsignedBigInteger('tax_type_id'); // Can be removed
             $table->unsignedBigInteger('old_return_id');
             $table->unsignedBigInteger('new_return_id');
-            $table->string('return_type');
+            $table->string('old_return_type');
+            $table->string('new_return_type');
             $table->unsignedBigInteger('financial_month_id');
             $table->string('marking')->nullable();
             $table->enum('status', TaxClaimStatus::getConstants())->default('draft');
