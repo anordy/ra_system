@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Returns\EmTransaction;
+namespace App\Models\Returns;
 
 use App\Models\ZmBill;
 use App\Models\TaxType;

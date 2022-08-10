@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Returns\EmTransaction;
 
 use App\Http\Controllers\Controller;
-use App\Models\Returns\EmTransaction\EmTransactionReturn;
+use App\Models\Returns\EmTransactionReturn;
 
 class EmTransactionController extends Controller
 {
