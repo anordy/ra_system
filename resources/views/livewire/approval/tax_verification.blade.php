@@ -50,7 +50,7 @@
             @if ($this->checkTransition('conduct_verification'))
                 <div class="row px-3">
                     <div class="form-group col-lg-12">
-                        <label class="control-label h6 text-uppercase">Notice of Asessement</label>
+                        <label class="control-label h6 text-uppercase">Adjusted Assessment</label>
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="control-label">Principal Amount</label>

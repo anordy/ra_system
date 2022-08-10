@@ -8,6 +8,7 @@ use App\Models\FinancialYear;
 use App\Models\LumpSumPayment;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -52,5 +53,10 @@ class LampSumReturn extends Model
     public function assignedPayments()
     {
         return $this->belongsTo(LumpSumPayment::class, 'business_location_id', 'business_id');
+    }
+
+    public function bill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable');
     }
 }
