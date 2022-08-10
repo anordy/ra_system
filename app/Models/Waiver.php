@@ -21,8 +21,14 @@ class Waiver extends Model
     {
         return $this->hasOne(WaiverStatus::class);
     }
+    public function taxpayer()
+    {
+        return $this->belongsTo(Taxpayer::class);
+    }
 
-   
-   
+    public function bill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable');
+    }
 
 }

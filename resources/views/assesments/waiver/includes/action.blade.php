@@ -9,13 +9,13 @@ $operators = json_decode($instace->operators, true);
 
 @if ($instace->operator_type == 'staff')
     @if (in_array(auth()->id, $operators))
-        <a href="{{ route('assesments.waiverobjection.approval', encrypt($row->id)) }}" class="btn btn-outline-primary btn-sm">
+        <a href="{{ route('assesments.waiver.approval', encrypt($row->id)) }}" class="btn btn-outline-primary btn-sm">
             <i class="bi bi-eye-fill mr-1"></i> View & Approve
         </a>
     @endif
 @elseif($instace->operator_type == 'role')
     @if (in_array(auth()->user()->role->id, $operators))
-        <a href="{{ route('assesments.waiverobjection.approval', encrypt($row->id)) }}" class="btn btn-outline-primary btn-sm">
+        <a href="{{ route('assesments.waiver.approval', encrypt($row->id)) }}" class="btn btn-outline-primary btn-sm">
             <i class="bi bi-eye-fill mr-1"></i> View & Approve
         </a>
     @endif

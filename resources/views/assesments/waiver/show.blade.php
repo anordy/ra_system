@@ -18,7 +18,7 @@
 
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
-                aria-selected="false">Ground Waiver</a>
+                aria-selected="false">Ground Weaver</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="reason-tab" data-toggle="tab" href="#reason" role="tab" aria-controls="reason"
@@ -30,7 +30,7 @@
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="row m-2 pt-3">
                      <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Objection Status</span>
+                    <span class="font-weight-bold text-uppercase">Weaver Status</span>
                     <p class="my-1">
                         @if($waiver->status === \App\Models\WaiverStatus::APPROVED)
                             <span class="font-weight-bold text-success">
@@ -116,14 +116,14 @@
                 <hr class="mt-2 mb-3" />
             </div>
             <div class="row m-2">
-                <div class="col-md-4 mb-3">
+                {{-- <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Assesment No</span>
-                    {{-- <p class="my-1"></p> --}}
+                    <p class="my-1"></p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Assesment Date</span>
-                    {{-- <p class="my-1">{{ $dispute->owner_name }}</p> --}}
-                </div>
+                    <p class="my-1">{{ $dispute->owner_name }}</p>
+                </div> --}}
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
                     <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
@@ -136,7 +136,7 @@
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Objected</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} TZS</p>
+                    <p class="my-1">{{ $waiver->tax_in_dispute + $waiver->tax_not_in_dispute  }} TZS</p>
                 </div>
 
 
