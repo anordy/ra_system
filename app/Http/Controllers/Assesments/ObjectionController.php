@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Assesments;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\Objection;
+use App\Models\ObjectionAttachment;
+use App\Models\WaiverAttachment;
 
 class ObjectionController extends Controller
 {
@@ -20,24 +22,16 @@ class ObjectionController extends Controller
         return view('assesments.objection.create', compact(['location_id', 'tax_type_id']));
     }
 
-    public function show($business_id)
-    {
-        $objection = Objection::findOrfail(decrypt($business_id));
-        $business = Business::find($objection->business_id);
-        return view('assesments.objection.show',compact('objection', 'business'));
-    }
-
     public function edit()
     {
         return view('assesments.objection.edit');
     }
 
-    
     public function approval($objectionId)
     {
         $objection = Objection::findOrFail(decrypt($objectionId));
         $business = Business::find($objection->business_id);
-
-        return view('assesments.objection.approval', compact('objection','business'));
+        $files = ObjectionAttachment::where('objection_id', $objection->id)->get();
+        return view('assesments.objection.approval', compact('objection','files', 'business'));
     }
 }
