@@ -22,7 +22,17 @@ use App\Http\Controllers\Audit\TaxAuditFilesController;
 use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\Business\BranchController;
+use App\Http\Controllers\Business\BusinessController;
+use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\Claims\ClaimsController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
@@ -45,6 +55,7 @@ use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
 use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
+use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
@@ -54,6 +65,7 @@ use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Setting\ExchangeRateController;
 use App\Http\Controllers\Setting\InterestRateController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
@@ -71,22 +83,6 @@ use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LandLease\LandLeaseController;
-use App\Http\Controllers\Setting\InterestRateController;
-use App\Http\Controllers\Business\BusinessFileController;
-use App\Http\Controllers\Business\RegistrationController;
-use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
-use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
-use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
-use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
-use App\Http\Controllers\Returns\Vat\VatReturnController;
-use App\Http\Controllers\Returns\Hotel\HotelReturnController;
-use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
-use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
-use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
-use App\Http\Controllers\Relief\ReliefMinistriestController;
-use App\Http\Controllers\Setting\ExchangeRateController;
-use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
 Auth::routes();
 
@@ -123,10 +119,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/assesment-files', AssesmentFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
     });
-
-    Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
-    Route::get('bill_transfer/pdf/{id}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
-    Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
     Route::name('returns.')->prefix('returns')->group(function () {
         Route::resource('/interest-rates', InterestRateController::class);
@@ -197,7 +189,6 @@ Route::middleware(['auth'])->group(function () {
         //waiver
         Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
         Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
-        Route::get('/waiver/files/{waiver_id}', [WaiverController::class, 'files'])->name('waiver.files');
         Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
         // both waiver objection
         Route::get('/waiverobjection/index', [WaiverObjectionController::class, 'index'])->name('waiverobjection.index');
@@ -289,7 +280,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/files', TaxAuditFilesController::class);
 });
 
-Route::name('claims.')->prefix('/tax-claims')->group(function (){
+Route::name('claims.')->prefix('/tax-claims')->group(function () {
     Route::get('/', [ClaimsController::class, 'index'])->name('index');
     Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
 });
