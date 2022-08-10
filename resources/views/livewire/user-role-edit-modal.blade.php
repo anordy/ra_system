@@ -1,15 +1,15 @@
 <div>
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Edit User</h5>
+                <h5 class="modal-title text-uppercase">Edit User Role</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row pr-3 pl-3">
-                    <div class="row">
-                        <div class="form-group col-lg-6">
+                    {{-- <div class="row"> --}}
+                        {{-- <div class="form-group col-lg-6">
                             <label class="control-label">First Name</label>
                             <input type="text" class="form-control" wire:model.lazy="fname" id="fnname">
                             @error('fname')
@@ -47,8 +47,8 @@
                             @error('gender')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
-                        </div>
-                        {{-- <div class="form-group col-lg-6">
+                        </div> --}}
+                        <div class="form-group col-12">
                             <label class="">Role </label>
                             <select class="form-control" wire:model.lazy="role">
                                 <option value="" disabled selected>Choose option</option>
@@ -59,9 +59,9 @@
                             @error('role')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
-                        </div> --}}
+                        </div>
 
-                    </div>
+                    {{-- </div> --}}
 
 
                 </div>
