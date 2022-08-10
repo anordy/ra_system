@@ -21,6 +21,11 @@
                     <td> {{ number_format($return->value('total_amount_due'), 2, '.', ',') }}</td>
                 </tr>
                 <tr>
+                    <td>Late payments penalities <br> <small>Adhabu ya kuchelewesha malipo</small> </td>
+                    <td> {{ number_format($return->bill->amount - $return->value('total_amount_due'), 2, '.', ',') }}
+                    </td>
+                </tr>
+                <tr>
                     <td>Status <br> <small> Hatua</small> </td>
                     <td>{{ $return->value('status') }}</td>
                 </tr>

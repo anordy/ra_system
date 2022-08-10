@@ -20,11 +20,24 @@
                             <td> {{ $return->value('quarter') }} </td>
                         </tr>
                         <tr>
-                            <td>Total Due <br> <small>Kiasi kinacholipiwa</small> </td>
+                            <td>Basic Tax Amount <br> <small>Kiasi Cha Kodi Cha Msingi</small> </td>
+                            <td> {{ number_format($return->value('total_amount_due'), 2, '.', ',' ?? 0.0) }}
+                                {{ $return->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Late Payment Penalities <br> <small>Adhabu ya kuchelewesha malipo</small> </td>
+                            <td> {{ number_format($return->value('total_amount_due_with_penalties') - $return->value('total_amount_due'), 2, '.', ',' ?? 0.0) }}
+                                {{ $return->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total <br> <small>Jumla</small> </td>
                             <td> {{ number_format($return->value('total_amount_due_with_penalties'), 2, '.', ',') }}
                                 {{ $return->currency }}
                             </td>
                         </tr>
+
                         <tr>
                             <td>Status <br> <small> Hatua</small> </td>
                             <td>{{ $return->value('status') }}</td>
