@@ -5,8 +5,6 @@ namespace App\Models\Claims;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
-use App\Models\Verification\TaxVerificationAssessment;
-use App\Models\Verification\TaxVerificationOfficer;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -54,8 +52,7 @@ class TaxClaim extends Model
         return $this->hasMany(TaxClaimOfficer::class, 'claim_id', 'id');
     }
 
-    public function credit()
-    {
-        return $this->hasMany(TaxCredit::class, 'claim_id', 'id');
+    public function credit(){
+        return $this->hasMany(TaxCredit::class, 'claim_id');
     }
 }
