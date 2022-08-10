@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use App\Models\Returns\EmTransaction\EmTransactionReturn;
+use App\Models\Returns\EmTransactionReturn;
 
 class EmTransactionsTable extends DataTableComponent
 {

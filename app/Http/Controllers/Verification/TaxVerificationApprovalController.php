@@ -10,7 +10,7 @@ use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Returns\BFO\BFOReturn;
-use App\Models\Returns\EmTransaction\EmTransactionReturn;
+use App\Models\Returns\EmTransactionReturn;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\HotelReturns\HotelReturn;
 

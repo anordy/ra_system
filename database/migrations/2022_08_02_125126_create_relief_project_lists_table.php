@@ -16,7 +16,7 @@ class CreateReliefProjectListsTable extends Migration
         Schema::create('relief_project_lists', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('ministry_id');
+            $table->unsignedBigInteger('ministry_id')->nullable();
             $table->string('name');
             $table->string('description')->nullable();
             $table->decimal('rate');
