@@ -24,13 +24,13 @@ class CreateWaiversTable extends Migration
             $table->enum('business_type', ['hotel', 'other'])->default('other');
             $table->decimal('tax_in_dispute', 40, 2)->default(0);
             $table->decimal('tax_not_in_dispute', 40, 2)->default(0);
+            $table->decimal('waiver_requirement', 40, 2)->default(0);
             $table->string('marking')->nullable();
             $table->text('ground_waiver')->nullable();
             $table->text('reason_waiver')->nullable();
             $table->string('attachments')->nullable();
             $table->timestamp('verified_at')->nullable();
-            $table->softDeletes();
-            $table->timeStamps();
+            $table->timestamps();
         });
     }
 

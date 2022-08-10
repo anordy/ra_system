@@ -22,7 +22,6 @@ class CreateHotelReturnsTable extends Migration
             $table->unsignedBigInteger('filled_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
-
             $table->integer('edited_count')->default(0);
             $table->enum('status',['submitted', 'control-number-generating', 'control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->default('submitted');
 

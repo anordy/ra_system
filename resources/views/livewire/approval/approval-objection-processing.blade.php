@@ -6,9 +6,9 @@
         <div class="card-body">
             @include('livewire.approval.transitions')
 
-                @if ($this->checkTransition('registration_officer_review'))
-                    {{-- @include('livewire.approval.registration_officer_review') --}}
-                @endif
+                @if ($this->checkTransition('objection_manager_review'))
+                    @include('livewire.approval.assesments.objection_manager_review')
+                    @endif
                 <div class="row m">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
@@ -24,13 +24,13 @@
                     </div>
                 </div>
         </div>
-        @if ($this->checkTransition('waiver_manager_review'))
+        @if ($this->checkTransition('objection_manager_review'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
                     Incorrect
                     return to Applicant</button>
                 <button type="button" class="btn btn-primary"
-                    wire:click="approve('waiver_manager_review')">Approve & Forward</button>
+                    wire:click="approve('objection_manager_review')">Approve & Forward</button>
             </div>
         @elseif ($this->checkTransition('chief_assurance_review'))
             <div class="modal-footer p-2 m-0">

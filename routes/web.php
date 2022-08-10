@@ -14,6 +14,8 @@
 use App\Http\Controllers\AllPdfController;
 use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
+use App\Http\Controllers\Assesments\WaiverObjectionController;
+use App\Http\Controllers\Audit\TaxAuditController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditAssessmentController;
 use App\Http\Controllers\Audit\TaxAuditFilesController;
@@ -23,6 +25,7 @@ use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
+use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WardController;
@@ -59,6 +62,8 @@ use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
+use App\Http\Controllers\Verification\TaxVerificationController;
+use App\Models\WaiverObjection;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
@@ -77,6 +82,7 @@ use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
 use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
+use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
 Auth::routes();
@@ -176,12 +182,19 @@ Route::middleware(['auth'])->group(function () {
 
     // assesments
     Route::name('assesments.')->prefix('assesments')->group(function () {
+        //objection
         Route::get('/objection/index', [ObjectionController::class, 'index'])->name('objection.index');
         Route::get('/objection/show/{objection_id}', [ObjectionController::class, 'show'])->name('objection.show');
-
+        Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
+        //waiver
         Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
         Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
         Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
+        // both waiver objection
+        Route::get('/waiverobjection/index', [WaiverObjectionController::class, 'index'])->name('waiverobjection.index');
+        Route::get('/waiverobjection/show/{waiver_id}', [WaiverObjectionController::class, 'approval'])->name('waiverobjection.approval');
+        Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
+        Route::get('/waiverobjection/create/location/{location_id}/tax/{tax_type_id}', [WaiverObjectionController::class, 'create'])->name('waiverobjection.create');
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
@@ -196,8 +209,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
-        Route::get('/', [ReturnController::class, 'index'])->name('index');
-
+        Route::get('/vat', [ReturnController::class, 'index'])->name('vat.index');
+        
         Route::resource('/petroleum', PetroleumReturnController::class);
 
         Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
@@ -223,11 +236,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/show/{return_id}', [BfoExciseDutyController::class, 'show'])->name('show');
         });
 
+        Route::name('mobile-money-transfer.')->prefix('mobile-money-transfer')->group(function () {
+            Route::get('/', [MobileMoneyTransferController::class, 'index'])->name('index');
+            Route::get('/show/{return_id}', [MobileMoneyTransferController::class, 'show'])->name('show');
+        });
+
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
 
         Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
-            //MNO Excise Duty returns
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
             Route::get('/mno/{return_id}', [MnoReturnController::class, 'show'])->name('mno.show');
         });
@@ -235,15 +252,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
-        Route::get('/certificateOfQuantity/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
+        Route::get('/certificateOfQuantityFile/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
+        Route::resource('/ministries', ReliefMinistriestController::class);
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
-        // Route::resource('/show/{id}', ReliefApplicationsController::class)->name('show');
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
     });
 

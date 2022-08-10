@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers\Returns\Petroleum;
-use PDF;
 
+use PDF;
 use App\Http\Controllers\Controller;
-use App\Models\QuantityCertificate;
+use App\Models\Returns\Petroleum\QuantityCertificate;
 
 class QuantityCertificateController extends Controller
 {
@@ -16,6 +16,17 @@ class QuantityCertificateController extends Controller
     {
         return view('returns.petroleum.quantity_certificate.create');
     }
+
+    public function edit($id)
+    {
+        return view('returns.petroleum.quantity_certificate.edit', compact('id'));
+    }
+
+    public function show($id)
+    {
+        return view('returns.petroleum.quantity_certificate.show', compact('id'));
+    }
+
 
     public function certificate($id)
     {
