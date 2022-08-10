@@ -5,7 +5,7 @@ namespace App\Models\Returns\BFO;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BFOConfig extends Model
+class BfoConfig extends Model
 {
     use HasFactory;
 
