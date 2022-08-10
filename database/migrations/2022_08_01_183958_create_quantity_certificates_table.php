@@ -18,6 +18,7 @@ class CreateQuantityCertificatesTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->string('ship');
             $table->string('port');
+            $table->string('voyage_no')->nullable();
             $table->date('ascertained')->nullable();
             $table->integer('download_count')->default(0);
             $table->unsignedBigInteger('created_by');

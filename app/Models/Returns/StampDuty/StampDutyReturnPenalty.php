@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Returns\StampDuty;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExchangeRate extends Model
+class StampDutyReturnPenalty extends Model
 {
     use HasFactory;
-    protected $table = 'exchange_rates';
-    protected $guarded = [];
 }

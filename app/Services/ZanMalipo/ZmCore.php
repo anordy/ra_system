@@ -303,7 +303,6 @@ class ZmCore
 
     public static function cancelBill($bill_id, $reason)
     {
-
         $gsb = [
             'SpCode' => config('modulesconfig.zm_spcode'),
             'SpSysId' =>  config('modulesconfig.zm_spsysid'),

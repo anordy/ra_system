@@ -7,11 +7,12 @@
     </div>
     @if ($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
         $return->status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
+
         @if ($return->bill)
-        <div class="col-md-4" wire:poll.visible.10000ms="refresh">
-            <span class="font-weight-bold text-uppercase">Control No.</span>
-            <p class="my-1">{{ $return->bill->control_number }}</p>
-        </div>
+            <div class="col-md-4" wire:poll.visible.10000ms="refresh">
+                <span class="font-weight-bold text-uppercase">Control No.</span>
+                <p class="my-1">{{ $return->bill->control_number }}</p>
+            </div>
         @endif
     @elseif($return->status === \App\Models\Returns\ReturnStatus::COMPLETE)
         <div class="col-md-4">
