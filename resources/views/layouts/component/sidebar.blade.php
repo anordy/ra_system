@@ -171,6 +171,9 @@
                 <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
                     <a href="{{ route('settings.banks.index') }}">Banks</a>
                 </li>
+                <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
+                </li>
                 <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
                     <a href="{{ route('settings.education-level.index') }}">Education Level</a>
                 </li>
