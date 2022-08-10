@@ -23,6 +23,7 @@ use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
@@ -81,6 +82,7 @@ use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
+use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
@@ -129,6 +131,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
             });
         });
+        //lump-sum returns
+        Route::get('/lump-sum/index', [LumpSumReturnController::class, 'index'])->name('lump-sum.index');
+        Route::get('/lump-sum/view/{id}', [LumpSumReturnController::class, 'view'])->name('lump-sum.show');
     });
 
     Route::prefix('system')->name('system.')->group(function () {
@@ -178,20 +183,19 @@ Route::middleware(['auth'])->group(function () {
 
     // assesments
     Route::name('assesments.')->prefix('assesments')->group(function () {
-        #objection
+        //objection
         Route::get('/objection/index', [ObjectionController::class, 'index'])->name('objection.index');
         Route::get('/objection/show/{objection_id}', [ObjectionController::class, 'show'])->name('objection.show');
         Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
-        #waiver
+        //waiver
         Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
         Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
         Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
-        # both waiver objection
+        // both waiver objection
         Route::get('/waiverobjection/index', [WaiverObjectionController::class, 'index'])->name('waiverobjection.index');
         Route::get('/waiverobjection/show/{waiver_id}', [WaiverObjectionController::class, 'approval'])->name('waiverobjection.approval');
         Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
         Route::get('/waiverobjection/create/location/{location_id}/tax/{tax_type_id}', [WaiverObjectionController::class, 'create'])->name('waiverobjection.create');
-
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
@@ -206,8 +210,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
-        
-        
         Route::get('/vat', [ReturnController::class, 'index'])->name('vat.index');
         
         Route::resource('/petroleum', PetroleumReturnController::class);
@@ -235,8 +237,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/show/{return_id}', [BfoExciseDutyController::class, 'show'])->name('show');
         });
 
-        Route::name('mobile-money-transfer.')->prefix('mobile-money-transfer')->group(function ()  {
-            Route::get('/',[MobileMoneyTransferController::class, 'index'])->name('index');
+        Route::name('mobile-money-transfer.')->prefix('mobile-money-transfer')->group(function () {
+            Route::get('/', [MobileMoneyTransferController::class, 'index'])->name('index');
             Route::get('/show/{return_id}', [MobileMoneyTransferController::class, 'show'])->name('show');
         });
 
@@ -277,6 +279,11 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('/files', TaxAuditFilesController::class);
+});
+
+Route::name('claims.')->prefix('/tax-claims')->group(function (){
+    Route::get('/', [ClaimsController::class, 'index'])->name('index');
+    Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
 });
 
 Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
