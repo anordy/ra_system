@@ -289,6 +289,7 @@ Route::middleware(['auth'])->group(function () {
 Route::name('claims.')->prefix('/tax-claims')->group(function () {
     Route::get('/', [ClaimsController::class, 'index'])->name('index');
     Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
+    Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
 });
 
 Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
