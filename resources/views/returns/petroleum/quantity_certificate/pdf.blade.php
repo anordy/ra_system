@@ -164,12 +164,15 @@
     <div>
         <p>Name of the Importer/Market: {{ $data->business->name ?? '' }}</p>
         <p>Name of the Ship: {{ $data->ship ?? '' }}</p>
-        <p>Intended Cargo discharge: {{ $data->cargo ?? '' }}</p>
         <p>Port of Disembarkation: {{ $data->port ?? '' }}</p>
-        <p>Voyage No: {{ $data->voyage ?? '' }}</p>
+        <p>Voyage No: {{ $data->voyage_no ?? '' }}</p>
     </div>
+
+    @foreach($data->products as $product)
     <div>
-        <p>This is to certify that the quantity of <b>{{ $data->liters_at_20 }} ltrs@20<sup>o</sup>C</b> dischared at
+        <p>Intended Cargo discharge: {{ $product->cargo_name ?? '' }}</p>
+
+        <p>This is to certify that the quantity of <b>{{ $product->liters_at_20 }} ltrs@20<sup>o</sup>C</b> dischared at
             {{ $data->port }}
             ex ship {{ $data->ship }} at {{ $data->port }} for account of {{ $data->business->name }} as
             ascertained on {{ Carbon\Carbon::create($data->ascertained)->isoFormat('DD-MMMM-YYYY') }}
@@ -178,18 +181,19 @@
         <table border="1" style="width: 300px;">
             <tr>
                 <th>Liters Observed</th>
-                <td>{{ number_format($data->liters_observed, 3) }}</td>
+                <td>{{ number_format($product->liters_observed, 3) }}</td>
             </tr>
             <tr>
                 <th>Liters at 20<sup>o</sup>C</th>
-                <td>{{ number_format($data->liters_at_20, 3) }}</td>
+                <td>{{ number_format($product->liters_at_20, 3) }}</td>
             </tr>
             <tr>
                 <th>Metric Tons in Air</th>
-                <td>{{ number_format($data->metric_tons, 3) }}</td>
+                <td>{{ number_format($product->metric_tons, 3) }}</td>
             </tr>
         </table>
     </div>
+    @endforeach
 
 
     <div class="text-center" style="margin-top: 100px">

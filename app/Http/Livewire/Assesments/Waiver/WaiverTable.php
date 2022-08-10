@@ -55,8 +55,8 @@ class WaiverTable extends DataTableComponent
             Column::make("Owner", "business.owner_designation")
                 ->sortable()
                 ->searchable(),
-            // Column::make("Mobile", "business.mobile")
-            //     ->sortable(),
+            Column::make("Mobile", "business.mobile")
+                ->sortable(),
             Column::make("Tax In Dispute(Tzs)", "tax_in_dispute")
                 ->sortable(),
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")

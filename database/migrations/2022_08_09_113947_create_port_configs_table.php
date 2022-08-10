@@ -17,7 +17,7 @@ class CreatePortConfigsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('financia_year_id');
             $table->integer('order')->default(0);
-            $table->unsignedBigInteger('tax_type_id')->nullable()->foreign('taxtype_id')->references('id')->on('tax_types');
+            $table->String('tax_type_code')->nullable();
             $table->string('code');
             $table->string('name');
             $table->enum('row_type', ['dynamic', 'unremovable'])->default('dynamic');

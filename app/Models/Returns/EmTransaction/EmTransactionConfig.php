@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class EmTransactionConfig extends Model
 {
     use HasFactory;
+
+
 }

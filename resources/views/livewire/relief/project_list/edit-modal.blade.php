@@ -39,6 +39,19 @@
                     </div>
                 </div>
 
+                <div class="form-group col-lg-12">
+                    <label class="">Ministry </label>
+                    <select class="form-control" wire:model.lazy="ministry_id">
+                        <option value='null' disabled selected>Choose option</option>
+                        @foreach ($ministries as $row)
+                            <option value="{{ $row->id }}">{{ $row->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('ministry_id')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

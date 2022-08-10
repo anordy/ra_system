@@ -15,6 +15,7 @@ class CreateLumpSumPaymentsTable extends Migration
     {
         Schema::create('lump_sum_payments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('filled_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->integer('annual_estimate');

@@ -12,7 +12,6 @@ use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Returns\EmTransaction\EmTransactionReturnItem;
 
 class EmTransactionReturn extends Model
 {
@@ -21,6 +20,10 @@ class EmTransactionReturn extends Model
     protected $table = 'em_transaction_returns';
 
     public function emTransactionReturnItems(){
+        return $this->hasMany(EmTransactionReturnItem::class, 'return_id');
+    }
+
+    public function configReturns(){
         return $this->hasMany(EmTransactionReturnItem::class, 'return_id');
     }
 
@@ -50,5 +53,9 @@ class EmTransactionReturn extends Model
 
     public function bill(){
         return $this->morphOne(ZmBill::class, 'billable');
+    }
+
+    public function emTransactionPenalties(){
+        return $this->hasMany(EmTransactionPenalty::class, 'return_id');
     }
 }

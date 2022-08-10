@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Relief;
 
+use App\Models\Relief\ReliefMinistry;
 use App\Models\Relief\ReliefProjectList;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -19,10 +20,14 @@ class ReliefProjectListAddModal extends Component
     public $government_notice_path;
     public $rate;
     public $project_id;
+    public $ministry_id;
+    public $ministries = [];
 
     public function mount($id)
     {
         $this->project_id = $id;
+
+        $this->ministries = ReliefMinistry::all();
     }
 
     protected function rules()
@@ -30,6 +35,8 @@ class ReliefProjectListAddModal extends Component
         return [
             'name' => 'required',
             'description' => 'nullable',
+            'ministry_id' => 'nullable',
+            'rate' => 'required|numeric|min:0|max:100',
             'government_notice_path' => 'nullable|mimes:pdf',
         ];
     }
@@ -48,6 +55,7 @@ class ReliefProjectListAddModal extends Component
                 'name' => $this->name,
                 'description' => $this->description,
                 'rate' => $this->rate,
+                'ministry_id' => $this->ministry_id ?? null,
                 'government_notice_path' => $government_notice_path ?? null,
                 'created_by' => auth()->user()->id
             ]);
