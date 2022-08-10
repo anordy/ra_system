@@ -50,9 +50,9 @@
                             <table class="table table-bordered normal-text">
                                 <thead>
                                 <th style="width: 30%">Item Name</th>
-                                <th style="width: 20%">Value</th>
+                                <th style="width: 20%">Value (TZS)</th>
                                 <th style="width: 10%">Rate</th>
-                                <th style="width: 20%">Tax</th>
+                                <th style="width: 20%">Tax (TZS)</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($newReturn->items as $item)
@@ -82,9 +82,9 @@
                             <table class="table table-bordered normal-text">
                                 <thead>
                                     <th style="width: 30%">Item Name</th>
-                                    <th style="width: 20%">Value</th>
+                                    <th style="width: 20%">Value (TZS)</th>
                                     <th style="width: 10%">Rate</th>
-                                    <th style="width: 20%">Tax</th>
+                                    <th style="width: 20%">Tax (TZS)</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($oldReturn->items as $item)
