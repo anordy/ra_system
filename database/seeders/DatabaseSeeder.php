@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EducationLevelSeeder::class);
         $this->call(HotelReturnConfigSeeder::class);
         $this->call(PetroleumConfigSeeder::class);
-        $this->call(PortConfigSeeder::class);
+        $this->call(PortConfigSeeder::class); 
         $this->call(BFOConfigSeeder::class);
         $this->call(BFOConfigSeeder::class);
         $this->call(EmTransactionSeeder::class);
@@ -59,6 +59,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ISIC3Seeder::class);
         $this->call(ISIC4Seeder::class);
         $this->call(MnoConfigSeeder::class);
+        $this->call(ExchangeRateSeeder::class);
         // $this->call(AssesmentSeeder::class);
         $this->call(WorkflowWaiverSeeder::class);
         $this->call(InterestRateSeeder::class);

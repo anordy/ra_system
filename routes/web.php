@@ -84,6 +84,7 @@ use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Investigation\TaxInvestigationVerifiedController;
 use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
+use App\Http\Controllers\Setting\ExchangeRateController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 
 Auth::routes();
@@ -119,6 +120,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/assesment-files', AssesmentFileController::class);
+        Route::resource('/exchange-rate', ExchangeRateController::class);
     });
 
     Route::name('returns.')->prefix('returns')->group(function () {

@@ -15,9 +15,9 @@
 
 @section('content')
     <div>
-        <div class="d-flex justify-content-end mb-3">
-            <a href="{{route('returns.index')}}" class="btn btn-info">Back</a>
-        </div>
+        {{-- <div class="d-flex justify-content-end mb-3">
+            <a href="{{route('vat-return.index')}}" class="btn btn-info">Back</a>
+        </div> --}}
 
         <div>
             <div class="card">
