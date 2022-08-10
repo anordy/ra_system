@@ -50,19 +50,19 @@
                         <th style="width: 20%">VAT ({{ $return->currency }})</th>
                     </thead>
                     <tbody>
-                        @foreach ($return->emTransactionReturnItems as $item)
-                            @if ($item->emTransactionConfig == null)
+                        @foreach ($return->configReturns as $item)
+                            @if ($item->config == null)
                             @else
-                                <tr @if ($item->emTransactionConfig->col_type === 'total') class="table-active font-weight-bolder" @endif>
+                                <tr @if ($item->config->col_type === 'total') class="table-active font-weight-bolder" @endif>
                                     <td>
-                                        {{ $item->emTransactionConfig->name }}
+                                        {{ $item->config->name }}
                                     </td>
                                     <td>
-                                        {{ $item->emTransactionConfig->col_type === 'total' ? '-' : number_format($item->value, 2) }}
+                                        {{ $item->config->col_type === 'total' ? '-' : number_format($item->value, 2) }}
                                     </td>
                                     </td>
                                     <td>
-                                        {{ $item->emTransactionConfig->rate_type === 'percentage' ? $item->emTransactionConfig->rate : $item->emTransactionConfig->rate_usd ?? '-' }}
+                                        {{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd ?? '-' }}
                                     </td>
                                     <td>{{ number_format($item->vat, 2) }}</td>
                                 </tr>
