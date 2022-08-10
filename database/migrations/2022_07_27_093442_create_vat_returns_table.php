@@ -1,5 +1,7 @@
 <?php
 
+use App\Enum\ReturnApplicationStatus;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +21,7 @@ class CreateVatReturnsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('financial_month_id');
-            $table->string('financial_year_id');
+            $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->string('business_type')->nullable();
             $table->decimal('total_output_tax', 20,2);
@@ -32,7 +34,8 @@ class CreateVatReturnsTable extends Migration
             $table->decimal('interest',20,2);
             $table->decimal('total_amount_due_with_penalties', 20,2);
             $table->string('has_exemption');
-            $table->enum('status',['submitted','complete', 'control-number-generating','control-number-generated','control-number-generating-failed','paid-partially']);
+            $table->enum('status', ReturnStatus::getConstants());
+            $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->integer('editing_count',0);
             $table->string('method_used')->nullable();
             $table->unsignedBigInteger('filled_by_id');
