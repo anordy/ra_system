@@ -75,7 +75,7 @@
         <div class="col-md-12">
             <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
             <hr>
-            <livewire:returns.returns-penalty modelName='App\Models\Returns\EmTransaction\EmTransactionReturn'
+            <livewire:returns.returns-penalty modelName='App\Models\Returns\EmTransactionReturn'
                 modelId="{{ $returnId }}" />
         </div>
     @endsection

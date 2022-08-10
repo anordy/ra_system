@@ -61,7 +61,7 @@ class LandLeaseView extends Component
             $payer_name = $isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name;
             $payer_email = $isRegistered ? $taxpayer->email : $this->landLease->email;
             $payer_phone = $isRegistered ? $taxpayer->mobile : $this->landLease->phone;
-            $description = "Payment for Land Lease for " . $isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name;
+            $description = "Payment for Land Lease for " . ($isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name);
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'USD';
             $createdby_type = get_class(Auth::user());

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Returns\EmTransaction\EmTransactionConfig;
+use App\Models\Returns\EmTransactionConfig;
 use Illuminate\Database\Seeder;
 
 class EmTransactionSeeder extends Seeder
