@@ -3,11 +3,13 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <label for="inputPassword4"> Upload Waiver Report </label>
-                        <input type="file" accept="application/pdf"
-                            name="waiver_report" class="form-control form-control-lg"
-                            wire:model="waiver_report" />
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Weaver Report</label>
+                        <input type="file" class="form-control  @error('weaverReport') is-invalid @enderror"
+                            wire:model.lazy="weaverReport">
+                        @error('weaverReport')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>

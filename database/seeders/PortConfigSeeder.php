@@ -119,7 +119,7 @@ class PortConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 8,
-                'tax_type_code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE,
+                'tax_type_code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE,
                 'code' => 'NFSP',
                 'name' => 'No. of foreign passengers',
                 'row_type' => 'dynamic',
