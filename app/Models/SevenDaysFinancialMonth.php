@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Returns\EmTransaction\EmTransactionReturn;
+use App\Models\Returns\EmTransactionReturn;
 use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
