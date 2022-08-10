@@ -123,7 +123,6 @@ class ZanMalipoController extends Controller
                 'ctr_acc_num' => $tx_info['CtrAccNum']
             ]);
 
-
             if ($bill->paidAmount() >= $bill->amount) {
                 $bill->status = 'paid';
                 if (in_array($bill->billable_type, $this->returnable)){
@@ -141,6 +140,7 @@ class ZanMalipoController extends Controller
                 }
             }
 
+            $bill->paid_amount = $bill->paidAmount();
             $bill->save();
 
             //TODO: we should send sms to customer here to notify payment reception
