@@ -22,6 +22,7 @@ class CreateTaxClaimsTable extends Migration
             $table->unsignedBigInteger('old_return_id');
             $table->unsignedBigInteger('new_return_id');
             $table->string('return_type');
+            $table->unsignedBigInteger('financial_month_id');
             $table->string('marking')->nullable();
             $table->enum('status', TaxClaimStatus::getConstants())->default('draft');
             $table->unsignedBigInteger('created_by_id');
