@@ -165,6 +165,9 @@
                 </li>
             </ul>
         </li>
+        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
+            <a href="{{ route('claims.index') }}">Tax Claims</a>
+        </li>
         <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
             <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 Tax Auditing

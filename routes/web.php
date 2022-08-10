@@ -23,6 +23,7 @@ use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
@@ -278,6 +279,11 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('/files', TaxAuditFilesController::class);
+});
+
+Route::name('claims.')->prefix('/tax-claims')->group(function (){
+    Route::get('/', [ClaimsController::class, 'index'])->name('index');
+    Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
 });
 
 Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
