@@ -60,11 +60,11 @@ class DatabaseSeeder extends Seeder
         $this->call(ISIC4Seeder::class);
         $this->call(MnoConfigSeeder::class);
         $this->call(ExchangeRateSeeder::class);
-        // $this->call(AssesmentSeeder::class);
         $this->call(WorkflowWaiverSeeder::class);
         $this->call(InterestRateSeeder::class);
         $this->call(PenaltyRatesSeeder::class);
         $this->call(StampDutyConfigSeeder::class);
         $this->call(BusinessSeeder::class);
+        $this->call(WorkflowTaxClaimSeeder::class);
     }
 }
