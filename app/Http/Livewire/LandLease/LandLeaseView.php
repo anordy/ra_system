@@ -45,10 +45,10 @@ class LandLeaseView extends Component
                     'billable_type' => get_class($this->landLease),
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->landLease->payment_amount,
-                    // 'amount' => 2242,
+                    'amount' => 2242,
                     'currency' => 'USD',
                     'gfs_code' => $this->taxType->gfs_code,
-                    // 'gfs_code' => "12432",
+                    'gfs_code' => "12432",
                     'tax_type_id' => $this->taxType->id,
                     'fee_id' => null,
                     'fee_type' => null,
@@ -61,7 +61,7 @@ class LandLeaseView extends Component
             $payer_name = $isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name;
             $payer_email = $isRegistered ? $taxpayer->email : $this->landLease->email;
             $payer_phone = $isRegistered ? $taxpayer->mobile : $this->landLease->phone;
-            $description = "Payment for Land Lease for " . ($isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name);
+            $description = "Payment for Land Lease for " . $isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name;
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'USD';
             $createdby_type = get_class(Auth::user());
