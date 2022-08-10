@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Assesments\Objection;
 
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Objection;
 use App\Models\ObjectionStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ObjectionApprovalTable extends DataTableComponent
 {
@@ -46,6 +46,8 @@ class ObjectionApprovalTable extends DataTableComponent
             Column::make("Tax In Dispute(Tzs)", "tax_in_dispute")
                 ->sortable(),
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")
+                ->sortable(),
+            Column::make("Objection Requirements", "objection_requirement")
                 ->sortable(),
             Column::make('Previous Transition', 'id')
                 ->format(function ($value, $row) {

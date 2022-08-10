@@ -11,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class ObjectionTable extends DataTableComponent
 {
     // protected $model = Objection::class;
-  public $rejected = false;
+    public $rejected = false;
     public $pending = false;
     public $approved = true;
 
@@ -32,11 +32,11 @@ class ObjectionTable extends DataTableComponent
         if ($this->rejected) {
             return Objection::where('Objections.status', ObjectionStatus::REJECTED)->orderBy('Objections.created_at', 'desc');
         }
-        
+
         if ($this->approved) {
             return Objection::where('Objections.status', ObjectionStatus::APPROVED)->orderBy('Objections.created_at', 'desc');
         }
-        
+
         if ($this->pending) {
             return Objection::where('Objections.status', ObjectionStatus::PENDING)->orderBy('Objections.created_at', 'desc');
         }
@@ -61,6 +61,8 @@ class ObjectionTable extends DataTableComponent
             Column::make("Tax In Dispute(Tzs)", "tax_in_dispute")
                 ->sortable(),
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")
+                ->sortable(),
+            Column::make("Objection Requirements", "objection_requirement")
                 ->sortable(),
             Column::make('Status', 'status')
                 ->view('assesments.objection.includes.status'),

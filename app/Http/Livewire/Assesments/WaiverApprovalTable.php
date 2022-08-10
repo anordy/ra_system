@@ -6,7 +6,6 @@ use App\Models\Waiver;
 use App\Models\WaiverStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\WithFileUploads;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -46,6 +45,8 @@ class WaiverApprovalTable extends DataTableComponent
             Column::make("Tax In Dispute(Tzs)", "tax_in_dispute")
                 ->sortable(),
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")
+                ->sortable(),
+            Column::make("Weaver Requirement", "waiver_requirement")
                 ->sortable(),
             Column::make('Previous Transition', 'id')
                 ->format(function ($value, $row) {

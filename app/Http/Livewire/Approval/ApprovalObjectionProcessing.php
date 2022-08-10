@@ -2,10 +2,12 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Models\Objection;
 use App\Models\ObjectionStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -13,11 +15,11 @@ use Livewire\WithFileUploads;
 
 class ApprovalObjectionProcessing extends Component
 {
-      use WorkflowProcesssingTrait,WithFileUploads, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
-    public $objection_report;
+    public $objectionReport;
 
     public function mount($modelName, $modelId)
     {
@@ -35,7 +37,31 @@ class ApprovalObjectionProcessing extends Component
 
         if ($this->checkTransition('objection_manager_review')) {
 
-            // dd('waiver review');
+            $this->validate(
+                [
+                    'objectionReport' => 'required|mimes:pdf',
+                ]
+            );
+
+            $objectionReport = "";
+            if ($this->objectionReport) {
+                $objectionReport = $this->objectionReport->store('objectionReport', 'local-admin');
+            }
+
+            $objection = Objection::find($this->modelId);
+            DB::beginTransaction();
+            try {
+
+                $objection->update([
+                    'attachments' => $objectionReport ?? '',
+                ]);
+
+                DB::commit();
+            } catch (\Exception $e) {
+                throw $e;
+                Log::error($e);
+                DB::rollBack();
+            }
 
         }
 
@@ -47,6 +73,7 @@ class ApprovalObjectionProcessing extends Component
             // dd('chief assuarance review');
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status = ObjectionStatus::APPROVED;
+            $this->subject->save();
             // event(new SendSms('business-registration-approved', $this->subject->id));
             // event(new SendMail('business-registration-approved', $this->subject->id));
         }

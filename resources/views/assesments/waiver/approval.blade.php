@@ -15,7 +15,6 @@
                 <div id="tab1" class="tab-pane fade active show">
                     @include('assesments.waiver.includes.waiver_info')
                         <livewire:approval.approval-waiver-processing modelName='App\Models\Waiver' modelId="{{ $waiver->id }}" />
-
                 </div>
                 <div id="tab2" class="tab-pane fade">
                     <livewire:approval.approval-history-table modelName='App\Models\Waiver' modelId="{{ $waiver->id }}" />
