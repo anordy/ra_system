@@ -20,7 +20,7 @@ class UserEditModal extends Component
     public $phone;
     public $gender = '';
     public $email;
-    public $role = '';
+    // public $role = '';
     public $user;
 
 
@@ -31,7 +31,7 @@ class UserEditModal extends Component
             'lname' => 'required|min:2|alpha',
             'email' => 'required|unique:users,email,'.$this->user->id.',id',
             'gender' => 'required|in:M,F',
-            'role' => 'required|exists:roles,id',
+            // 'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
         ];
     }
@@ -48,7 +48,7 @@ class UserEditModal extends Component
             $this->user->update([
                 'fname' => $this->fname,
                 'lname' => $this->lname,
-                'role_id' => $this->role,
+                // 'role_id' => $this->role,
                 'gender' => $this->gender,
                 'email' => $this->email,
                 'phone' => $this->phone,
@@ -71,7 +71,7 @@ class UserEditModal extends Component
         $this->phone = $user->phone;
         $this->email = $user->email;
         $this->gender = $user->gender ?? '';
-        $this->role = $user->role_id;
+        // $this->role = $user->role_id;
     }
 
     public function render()
