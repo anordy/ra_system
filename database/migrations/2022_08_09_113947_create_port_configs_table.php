@@ -28,6 +28,7 @@ class CreatePortConfigsTable extends Migration
             $table->enum('currency', ['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->decimal('rate')->unsigned()->default(0);
             $table->decimal('rate_usd')->nullable();
+            $table->string('value_formular')->nullable();
             $table->string('formular')->nullable();
             $table->boolean('active')->default(false);
             $table->timestamps();

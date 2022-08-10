@@ -23,7 +23,6 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NFAT',
                 'name' => 'No. of foreign passengers (Airport Tax)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
@@ -38,7 +37,6 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NLAT',
                 'name' => 'No. of local passengers (Airport Tax)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
@@ -53,13 +51,14 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NFSF',
                 'name' => 'No. of Foreign passengers (Safety Fee)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
                 'currency' => 'USD',
                 'rate_usd' => 9,
                 'active' => true,
+                'value_calculated' => true,
+                'value_formular' => 'NFAT'
             ],
             [
                 'financia_year_id' => 1,
@@ -68,13 +67,14 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NLSF',
                 'name' => 'No. of local passengers (Safety fee)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
                 'currency' => 'TZS',
                 'rate' => 3000,
                 'active' => true,
+                'value_calculated' => true,
+                'value_formular' => 'NLAT'
             ],
             [
                 'financia_year_id' => 1,
@@ -83,13 +83,14 @@ class PortConfigSeeder extends Seeder
                 'code' => 'IT',
                 'name' => 'Imfrastracture Tax',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
                 'currency' => 'TZS',
                 'rate' => 2000,
                 'active' => true,
+                'value_calculated' => true,
+                'value_formular' => 'NLAT'
             ],
             [
                 'financia_year_id' => 1,
@@ -99,7 +100,6 @@ class PortConfigSeeder extends Seeder
                 'name' => 'Total Amount Fee Due(TZS)',
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
-                'value_calculated' => true,
                 'formular' => 'NLAT+NLSF+IT',
                 'active' => true,
             ],
@@ -111,7 +111,6 @@ class PortConfigSeeder extends Seeder
                 'name' => 'Total Amount Fee Due (US$)',
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
-                'value_calculated' => true,
                 'formular' => 'NFAT+NFSF',
                 'active' => true,
             ],
@@ -123,7 +122,7 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NFSP',
                 'name' => 'No. of foreign passengers',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
+
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
@@ -138,7 +137,7 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NLTM',
                 'name' => 'No. of local passengers(ZNZ - T/M)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
+
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
@@ -153,7 +152,7 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NLZNZ',
                 'name' => 'No. of local passengers (ZNZ - ZNZ)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
+
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
@@ -168,7 +167,7 @@ class PortConfigSeeder extends Seeder
                 'code' => 'ITZNZ',
                 'name' => 'Imfrastructure Tax (ZNZ - ZNZ)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
+
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
@@ -184,7 +183,7 @@ class PortConfigSeeder extends Seeder
                 'code' => 'ITTM',
                 'name' => 'Imfrastructure Tax (ZNZ - T/M)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
+
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
@@ -199,7 +198,7 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NSUS',
                 'name' => 'Value of Net Sales (US$)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
+
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'percentage',
@@ -214,7 +213,7 @@ class PortConfigSeeder extends Seeder
                 'code' => 'NSTZ',
                 'name' => 'Value of Net Sales (TZS)',
                 'row_type' => 'dynamic',
-                'value_calculated' => true,
+
                 'col_type' => 'normal',
                 'rate_applicable' => true,
                 'rate_type' => 'percentage',
@@ -230,7 +229,7 @@ class PortConfigSeeder extends Seeder
                 'name' => 'Total Amount Fee Due(TZS)',
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
-                'value_calculated' => true,
+
                 'formular' => 'NLTM+NLZNZ+ITZNZ+ITTM+NSTZ',
                 'active' => true,
             ],
@@ -242,7 +241,7 @@ class PortConfigSeeder extends Seeder
                 'name' => 'Total Amount Fee Due (US$)',
                 'row_type' => 'unremovable',
                 'col_type' => 'total',
-                'value_calculated' => true, 
+
                 'formular' => 'NFSP+NSUS',
                 'active' => true,
             ],
@@ -251,6 +250,5 @@ class PortConfigSeeder extends Seeder
         foreach ($configs as $config) {
             PortConfig::updateOrCreate($config);
         }
-
     }
 }
