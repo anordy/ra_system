@@ -31,27 +31,27 @@ class WorkflowTaxClaimSeeder extends Seeder
             'assign_officers' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operators' => [1, 4]
             ],
             'verification_results' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operators' => [1, 5]
             ],
             'method_of_payment' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operators' => [1, 4]
             ],
             'correct_verification_result' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operators' => [1, 4]
             ],
             'commissioner' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operators' => [1, 7]
             ],
             'completed' => [
                 'owner' => 'staff',

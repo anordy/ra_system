@@ -1,5 +1,5 @@
 @if (count($this->getEnabledTranstions()) >= 1)
-    <div class="card shadow-sm mb-2 bg-white">
+    <div class="card shadow-sm mb-2 bg-white rounded-0">
         <div class="card-header text-uppercase font-weight-bold bg-white">
             Tax Verification Approval
         </div>
@@ -47,48 +47,42 @@
                     </div>
                 </div>
             @endif
-            @if ($this->checkTransition('conduct_verification'))
+            @if ($this->checkTransition('verification_results'))
                 <div class="row px-3">
                     <div class="form-group col-lg-12">
-                        <label class="control-label h6 text-uppercase">Adjusted Assessment</label>
+                        <label class="control-label font-weight-bold text-uppercase">Tax Claim Verification Assessment</label>
                     </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Principal Amount</label>
-                        <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
-                            wire:model.lazy="principalAmount">
-                        @error('principalAmount')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Interest Amount</label>
-                        <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
-                            wire:model.lazy="interestAmount">
-                        @error('interestAmount')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Penalty Amount</label>
-                        <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
-                            wire:model.lazy="penaltyAmount">
-                        @error('penaltyAmount')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
                     <div class="form-group col-lg-6">
                         <label class="control-label">Assessment Report</label>
-                        <input type="file" class="form-control  @error('assessmentReport') is-invalid @enderror"
+                        <input type="file" class="form-control-file border p-1  @error('assessmentReport') is-invalid @enderror"
                             wire:model.lazy="assessmentReport">
                         @error('assessmentReport')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-
                 </div>
             @endif
-            <div class="row px-3">
+            @if($this->checkTransition('method_of_payment'))
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label>Payment Type</label>
+                        <select wire:model="paymentType" class="form-control">
+                            <option></option>
+                            <option value="cash">Cash</option>
+                            <option value="installment">Installment</option>
+                            <option value="full">Full Payment</option>
+                        </select>
+                    </div>
+
+                    @if($paymentType === 'installment')
+                        <div class="col-md-4 form-group">
+                            <label>Installment Phases</label>
+                            <input class="form-control" wire:model="installmentCount" placeholder="E.g. 2 phases">
+                        </div>
+                    @endif
+                </div>
+            @endif
+            <div class="row">
                 <div class="col-md-12 mb-3">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Comments</label>
@@ -111,10 +105,16 @@
                 <button type="button" class="btn btn-primary" wire:click="approve('assign_officers')">Assign &
                     Forward</button>
             </div>
-        @elseif ($this->checkTransition('conduct_verification'))
+        @elseif ($this->checkTransition('verification_results'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('conduct_verification')">
-                    Approve & Complete
+                <button type="button" class="btn btn-primary" wire:click="approve('verification_results')">
+                    Approve & Continue
+                </button>
+            </div>
+        @elseif ($this->checkTransition('method_of_payment'))
+            <div class="modal-footer p-2 m-0">
+                <button type="button" class="btn btn-primary" wire:click="approve('method_of_payment')">
+                    Approve & Continue
                 </button>
             </div>
         @elseif ($this->checkTransition('verification_review_report'))

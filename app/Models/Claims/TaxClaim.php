@@ -3,14 +3,18 @@
 namespace App\Models\Claims;
 
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
+use App\Models\Verification\TaxVerificationAssessment;
+use App\Models\Verification\TaxVerificationOfficer;
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TaxClaim extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, WorkflowTrait;
 
     protected $guarded = [];
 
@@ -28,5 +32,30 @@ class TaxClaim extends Model
 
     public function newReturn(){
         return $this->morphTo();
+    }
+
+    public function createdBy()
+    {
+        return $this->morphTo();
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(BusinessLocation::class, 'location_id');
+    }
+
+    public function assessment()
+    {
+        return $this->belongsTo(TaxClaimAssessment::class, 'id', 'claim_id');
+    }
+
+    public function officers()
+    {
+        return $this->hasMany(TaxClaimOfficer::class, 'claim_id', 'id');
+    }
+
+    public function credit()
+    {
+        return $this->hasMany(TaxCredit::class, 'claim_id', 'id');
     }
 }
