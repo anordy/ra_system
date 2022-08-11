@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Models\LumpSumPayment;
-use App\Models\Returns\BFO\BFOReturn;
+use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Returns\HotelReturns\HotelReturn;
@@ -39,7 +39,7 @@ class ZanMalipoController extends Controller
         PetroleumReturn::class,
         PortReturn::class,
         EmTransactionReturn::class,
-        BFOReturn::class,
+        BfoReturn::class,
         LumpSumPayment::class
     ];
 
