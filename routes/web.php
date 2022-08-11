@@ -155,9 +155,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
     });
 
-    Route::prefix('pdf')->as('pdf.')->group(function () {
+    Route::prefix('pdf')->name('pdf.')->group(function () {
         Route::get('all', [AllPdfController::class, 'index'])->name('all');
-        Route::get('all/{$file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
+        Route::get('all/{file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
     });
 
     Route::prefix('business')->as('business.')->group(function () {
