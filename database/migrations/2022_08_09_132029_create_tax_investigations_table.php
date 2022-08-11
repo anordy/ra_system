@@ -26,6 +26,7 @@ class CreateTaxInvestigationsTable extends Migration
             $table->string('investigation_report')->nullable();
             $table->string('created_by_type');
             $table->unsignedBigInteger('created_by_id');
+            $table->enum('status', ['system', 'manual'])->default('system');
             $table->enum('status', ['draft', 'pending', 'approved', 'correction'])->default('draft');
             $table->string('marking')->nullable();
             $table->timestamps();

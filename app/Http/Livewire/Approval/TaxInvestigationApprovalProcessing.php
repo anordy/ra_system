@@ -38,6 +38,8 @@ class TaxInvestigationApprovalProcessing extends Component
     public $penaltyAmount;
     public $investigationReport;
     public $taxTypes;
+    public $intension;
+    public $scope;
 
     public $staffs = [];
     public $subRoles = [];
@@ -56,6 +58,11 @@ class TaxInvestigationApprovalProcessing extends Component
 
         $this->task = $this->subject->pinstancesActive;
 
+        $this->periodFrom = $this->subject->period_from;
+        $this->periodTo = $this->subject->period_to;
+        $this->intension = $this->subject->intension;
+        $this->scope = $this->subject->scope;
+
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);
             if (gettype($operators) != "array") {
@@ -67,6 +74,8 @@ class TaxInvestigationApprovalProcessing extends Component
 
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
         }
+
+        
     }
 
 
@@ -101,6 +110,8 @@ class TaxInvestigationApprovalProcessing extends Component
 
             $this->subject->period_to = $this->periodTo;
             $this->subject->period_from = $this->periodTo;
+            $this->subject->intension = $this->intension;
+            $this->subject->scope = $this->scope;
 
             $this->subject->save();
 
