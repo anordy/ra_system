@@ -28,6 +28,7 @@ use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\Claims\ClaimFilesController;
 use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
@@ -294,6 +295,7 @@ Route::name('claims.')->prefix('/tax-claims')->group(function () {
     Route::get('/', [ClaimsController::class, 'index'])->name('index');
     Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
     Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
+    Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
 });
 
 Route::name('debts.')->prefix('/debts')->group(function () {

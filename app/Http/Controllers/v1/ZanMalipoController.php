@@ -3,8 +3,17 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Models\LumpSumPayment;
+use App\Models\Returns\BFO\BFOReturn;
+use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\MmTransferReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\Vat\VatReturn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -22,10 +31,16 @@ class ZanMalipoController extends Controller
 {
 
     private $returnable = [
-        'App\Models\Returns\StampDuty\StampDutyReturn',
-        'App\Models\Returns\ExciseDuty\MnoReturn',
-        'App\Models\Returns\Vat\VatReturn',
-        'App\Models\Returns\MmTransferReturn',
+        StampDutyReturn::class,
+        MnoReturn::class,
+        VatReturn::class,
+        MmTransferReturn::class,
+        HotelReturn::class,
+        PetroleumReturn::class,
+        PortReturn::class,
+        EmTransactionReturn::class,
+        BFOReturn::class,
+        LumpSumPayment::class
     ];
 
     /**
@@ -57,7 +72,7 @@ class ZanMalipoController extends Controller
 
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
-                    $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
+                    $message = "Your control number for {$bill->description} is {$bill->control_number}. Please pay TZS ". number_format($bill->amount) ." before {$bill->expire_date}.";
 
                     if (in_array($bill->billable_type, $this->returnable)){
                         $billable = $bill->billable;
