@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Investigation;
+namespace App\Http\Livewire\Audit;
 
 use App\Models\Business;
-use App\Models\Investigation\TaxInvestigation;
+use App\Models\TaxAudit\TaxAudit;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
-class BusinessInvestigationEditModal extends Component
+class BusinessAuditAddModal extends Component
 {
 
     use LivewireAlert;
@@ -64,7 +64,7 @@ class BusinessInvestigationEditModal extends Component
     {
         $this->validate();
         try {
-            TaxInvestigation::create([
+            TaxAudit::create([
                 'business_id' => $this->business_id,
                 'location_id' => $this->location_id,
                 'tax_type_id' => $this->tax_type_id,
@@ -74,7 +74,8 @@ class BusinessInvestigationEditModal extends Component
                 'period_to' => $this->period_to,
                 'created_by_id' => auth()->user()->id,
                 'created_by_type' => get_class(auth()->user()),
-                'status' => 'pending'
+                'status' => 'pending',
+                'origin' => 'manual'
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -84,9 +85,8 @@ class BusinessInvestigationEditModal extends Component
         }
     }
 
-
     public function render()
     {
-        return view('livewire.investigation.business.edit-modal');
+        return view('livewire.audit.business.add-modal');
     }
 }
