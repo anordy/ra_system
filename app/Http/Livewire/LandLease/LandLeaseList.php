@@ -15,7 +15,8 @@ class LandLeaseList extends DataTableComponent
     //create builder function
     public function builder(): builder
     {
-        return LandLease::where('created_by', auth()->user()->id);
+        // return LandLease::where('created_by', auth()->user()->id);
+        return LandLease::query();
     }
 
     public function configure(): void
