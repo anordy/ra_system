@@ -15,7 +15,7 @@ class CreateMnoPenaltiesTable extends Migration
     {
         Schema::create('mno_penalties', function (Blueprint $table) {
             $table->id();
-            $table->string('return_id');
+            $table->unsignedBigInteger('return_id');
             $table->string('financial_month_name');
             $table->decimal('tax_amount', 20, 2);
             $table->decimal('late_filing', 20, 2);
