@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Relief\Relief;
+use App\Models\Returns\Petroleum\QuantityCertificate;
 
 class Business extends Model implements Auditable
 {
@@ -178,5 +179,9 @@ class Business extends Model implements Auditable
     {
         return $this->hasMany(Objection::class);
 
+    }
+
+    public function QuantityCertificates(){
+        return $this->hasMany(QuantityCertificate::class);
     }
 }
