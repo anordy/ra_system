@@ -8,7 +8,7 @@
             Investigations Approvals
             <div class="card-tools">
                 <button class="btn btn-info btn-sm"
-                onclick="Livewire.emit('showModal', 'relief.relief-project-add-modal')"><i
+                onclick="Livewire.emit('showModal', 'investigation.business-investigation-add-modal')"><i
                     class="fa fa-plus-circle"></i>
                 Add</button>
             </div>
