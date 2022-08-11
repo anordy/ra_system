@@ -12,6 +12,7 @@ use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\Taxpayer;
+use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Notifications\DatabaseNotification;
 use App\Traits\WorkflowProcesssingTrait;
@@ -38,6 +39,8 @@ class ApprovalProcessing extends Component
     public $isiic_iv;
     public $taxTypes;
     public Collection $selectedTaxTypes;
+    public $taxRegions;
+    public $selectedTaxRegion;
 
     public $isiiciList   = [];
     public $isiiciiList  = [];
@@ -52,7 +55,7 @@ class ApprovalProcessing extends Component
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
         $this->isiiciList = ISIC1::all();
-        $this->taxTypes   = TaxType::all();
+        $this->taxTypes   = TaxType::main()->get();
 
         $this->isiic_i = $this->subject->isiic_i ?? null;
 
@@ -64,12 +67,16 @@ class ApprovalProcessing extends Component
             $this->isiiciiChange($this->isiic_ii);
         }
         $this->isiic_iii = $this->subject->isiic_iii ?? null;
+
         if ($this->isiic_iii) {
             $this->isiiciiiChange($this->isiic_iii);
         }
+
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
         $this->selectedTaxTypes = collect();
+
+        $this->taxRegions = TaxRegion::all();
 
         foreach ($this->subject->taxTypes as $value) {
             $this->selectedTaxTypes->push([
@@ -125,6 +132,11 @@ class ApprovalProcessing extends Component
         // compare if plucked ID are the same as Lumpsum id
         if (in_array($lumpSumId, $Ids)) {
             $this->showLumpsumOptions = true;
+            $this->selectedTaxTypes = collect();
+            $this->selectedTaxTypes->push([
+                'tax_type_id' => $lumpSumId,
+                'currency'    => '',
+            ]);
         } else {
             $this->showLumpsumOptions =false;
         }
@@ -160,6 +172,7 @@ class ApprovalProcessing extends Component
                 'comments'                       => 'required',
                 'selectedTaxTypes.*.currency'    => 'required',
                 'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
+                'selectedTaxRegion' => 'required|exists:tax_regions,id'
             ], [
                 'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
                 'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
@@ -167,6 +180,8 @@ class ApprovalProcessing extends Component
             ]);
 
             $business = Business::findOrFail($this->subject->id);
+            $business->tax_region_id = $this->selectedTaxRegion;
+            $business->save();
             $business->taxTypes()->detach();
 
             if ($this->showLumpsumOptions == true) {
@@ -211,9 +226,12 @@ class ApprovalProcessing extends Component
         ]);
 
         if ($this->checkTransition('director_of_trai_review')) {
+            if (!$this->subject->generateZin()){
+                $this->alert('error', 'Something went wrong.');
+                return;
+            }
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status      = BusinessStatus::APPROVED;
-            $this->subject->z_no        = 'ZBR_' . rand(1, 1000000);
             event(new SendSms('business-registration-approved', $this->subject->id));
             event(new SendMail('business-registration-approved', $this->subject->id));
         }

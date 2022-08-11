@@ -19,6 +19,10 @@
         <a class="nav-link" id="reason-tab" data-toggle="tab" href="#reason" role="tab" aria-controls="reason"
             aria-selected="false">Reason for Ground</a>
     </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab"
+            aria-controls="attachment" aria-selected="false">Attachments</a>
+    </li>
 
 </ul>
 <div class="tab-content bg-white border shadow-sm" id="myTabContent">
@@ -178,52 +182,100 @@
         </div>
     </div>
 
-</div>
 
-<div class="card shadow-sm my-4 rounded-0">
-    <div class="card-header font-weight-bold bg-white">
-        objection Attachments
-    </div>
-    <div class="card-body">
-        <div class="row">
+    <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab">
+        <div class="row m-2 pt-3">
             @foreach ($files as $file)
                 <div class="col-md-4">
-                    <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
-                        class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                    <a class="file-item" target="_blank" href="">
                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                        <a target="_blank" href="{{ route('assesments.waiver.files', encrypt($file['file_path'])) }}"
-                            style="font-weight: 500;" class="ml-1">
+                        <div style="font-weight: 500;" class="ml-1">
                             {{ $file['file_name'] }}
-                            <i class="bi bi-arrow-up-right-square ml-1"></i>
-                        </a>
-                    </div>
+                        </div>
+                    </a>
                 </div>
             @endforeach
 
         </div>
     </div>
+
 </div>
 
+@if ($objection->taxVerificationAssesment)
+    <div class="card my-2">
+        <div class="card-header text-uppercase font-weight-bold bg-white">
+            Assessment Details
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Principal Amount</span>
+                    <p class="my-1">{{ $objection->taxVerificationAssesment->principal_amount ?? '' }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Penalty Amount</span>
+                    <p class="my-1">{{ $objection->taxVerificationAssesment->penalty_amount ?? '' }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                    <p class="my-1">{{ $objection->taxVerificationAssesment->interest_amount ?? '' }}</p>
+                </div>
 
-@if ($objection->attachments)
-    <div class="card shadow-sm my-4 rounded-0">
+            </div>
+        </div>
+    </div>
+@endif
+@if ($objection->objection_report)
+    <div class="card my-4 rounded-0">
         <div class="card-header font-weight-bold bg-white">
             Objection Report
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                         <a target="_blank"
-                            href="{{ route('assesments.waiver.files', encrypt($objection->attachments)) }}"
+                            href="{{ route('assesments.waiver.files', encrypt($objection->objection_report)) }}"
                             style="font-weight: 500;" class="ml-1">
                             Objection Report
                             <i class="bi bi-arrow-up-right-square ml-1"></i>
                         </a>
                     </div>
                 </div>
+
+
+                @if ($objection->notice_report)
+                    <div class="col-md-3">
+                        <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <a target="_blank"
+                                href="{{ route('assesments.waiver.files', encrypt($objection->notice_report)) }}"
+                                style="font-weight: 500;" class="ml-1">
+                                Notice Report
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endif
+
+
+                @if ($objection->setting_report)
+                    <div class="col-md-3">
+                        <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <a target="_blank"
+                                href="{{ route('assesments.waiver.files', encrypt($objection->setting_report)) }}"
+                                style="font-weight: 500;" class="ml-1">
+                                Setting Report
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endif
 
             </div>
         </div>
