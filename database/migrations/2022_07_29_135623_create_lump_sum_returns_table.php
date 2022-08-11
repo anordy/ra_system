@@ -28,6 +28,7 @@ class CreateLumpSumReturnsTable extends Migration
             $table->string('currency');
             $table->integer('amount')->default(0);
             $table->integer('edited_count')->default(0);
+            $table->bigInteger('control_no')->nullable();
             $table->string('status');
             $table->timestamps();
         });
