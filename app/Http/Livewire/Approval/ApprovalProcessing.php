@@ -52,7 +52,7 @@ class ApprovalProcessing extends Component
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
         $this->isiiciList = ISIC1::all();
-        $this->taxTypes   = TaxType::all();
+        $this->taxTypes   = TaxType::main()->get();
 
         $this->isiic_i = $this->subject->isiic_i ?? null;
 
@@ -125,6 +125,11 @@ class ApprovalProcessing extends Component
         // compare if plucked ID are the same as Lumpsum id
         if (in_array($lumpSumId, $Ids)) {
             $this->showLumpsumOptions = true;
+            $this->selectedTaxTypes = collect();
+            $this->selectedTaxTypes->push([
+                'tax_type_id' => $lumpSumId,
+                'currency'    => '',
+            ]);
         } else {
             $this->showLumpsumOptions =false;
         }
