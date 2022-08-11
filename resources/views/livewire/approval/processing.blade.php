@@ -9,9 +9,6 @@
                 @if ($this->checkTransition('registration_officer_review'))
                     @include('livewire.approval.registration_officer_review')
                 @endif
-                <pre>
-                    {{ $selectedTaxTypes }}
-                </pre>
                 <div class="row m">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
