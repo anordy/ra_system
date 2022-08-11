@@ -1,26 +1,34 @@
 @extends('layouts.master')
 
-@section('title', 'Waiver Application Details')
+@section('title', 'Waiver Details')
 
 @section('content')
 
     <div class="card p-0 m-0">
 
         <div class="card-body mt-0 p-2">
-            <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#tab1" class="nav-item nav-link font-weight-bold active">Waiver Information</a>
-                <a href="#tab2" class="nav-item nav-link font-weight-bold">Approval History</a>
-            </nav>
-            <div class="tab-content px-2 border border-top-0 pt-3 pb-2">
-                <div id="tab1" class="tab-pane fade active show">
+            <ul class="nav nav-tabs shadow-sm" id="waiverContent" role="tablist" style="margin-bottom: 0;">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="waiverInfo-tab" data-toggle="tab" href="#waiverInfo" role="tab"
+                        aria-controls="waiverInfo" aria-selected="true">Waiver Information</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="approvalHistory-tab" data-toggle="tab" href="#approvalHistory" role="tab"
+                        aria-controls="approvalHistory" aria-selected="false">Approval History</a>
+                </li>
+            </ul>
+
+            <div class="tab-content bg-white border shadow-sm" id="waiverContent">
+                <div class="tab-pane fade show active" id="waiverInfo" role="tabpanel" aria-labelledby="waiverInfo-tab">
                     @include('assesments.waiver.includes.waiver_info')
-                        <livewire:approval.approval-waiver-processing modelName='App\Models\Waiver' modelId="{{ $waiver->id }}" />
-
-                </div>
-                <div id="tab2" class="tab-pane fade">
-                    <livewire:approval.approval-history-table modelName='App\Models\Waiver' modelId="{{ $waiver->id }}" />
+                    <livewire:approval.approval-waiver-processing modelName='App\Models\Waiver'
+                        modelId="{{ $waiver->id }}" />
                 </div>
 
+                <div class="tab-pane fade" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
+                    <livewire:approval.approval-history-table modelName='App\Models\Waiver'
+                        modelId="{{ $waiver->id }}" />
+                </div>
             </div>
         </div>
     </div>
@@ -28,11 +36,5 @@
 
 @endsection
 @section('scripts')
-    <script>
-        $(document).ready(function() {
-            $(".nav-tabs a").click(function() {
-                $(this).tab('show');
-            });
-        });
-    </script>
+
 @endsection

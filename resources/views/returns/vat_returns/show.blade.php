@@ -15,9 +15,9 @@
 
 @section('content')
     <div>
-        <div class="d-flex justify-content-end mb-3">
-            <a href="{{route('returns.index')}}" class="btn btn-info">Back</a>
-        </div>
+        {{-- <div class="d-flex justify-content-end mb-3">
+            <a href="{{route('vat-return.index')}}" class="btn btn-info">Back</a>
+        </div> --}}
 
         <div>
             <div class="card">
@@ -25,7 +25,7 @@
                     Return details for the return month of {{$return->financialMonth->name}}
                 </div>
                 <div class="card-body">
-                    <div >
+                    <div>
                         <livewire:returns.return-payment :return="$return"/>
                     </div>
                     @if(!empty($return))
@@ -54,7 +54,8 @@
                             </ul>
                             <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
 
-                                <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
+                                <div class="tab-pane p-2 show active" id="biz" role="tabpanel"
+                                     aria-labelledby="biz-tab">
                                     <div class="row m-2 pt-3">
                                         <div class="col-md-3 mb-3">
                                             <span class="font-weight-bold text-uppercase">Tax Type</span>
@@ -166,7 +167,8 @@
                                                 @if($return->business->business_type =='hotel')
                                                     <tr>
                                                         <td>{{ $item->config->name }}</td>
-                                                        <td class="text-right">{{ number_format($item->input_amount) }} <strong>(No.
+                                                        <td class="text-right">{{ number_format($item->input_amount) }}
+                                                            <strong>(No.
                                                                 of bed nights)</strong></td>
                                                         <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
                                                             @if($item->config->rate_type =='percentage')
@@ -301,8 +303,50 @@
                                     </table>
                                 </div>
                                 <div class="tab-pane p-2" id="training" role="tabpanel" aria-labelledby="training-tab">
-                                    <livewire:returns.returns-penalty modelName='App\Models\Returns\Vat\VatReturn'
-                                                                      modelId="{{ \Illuminate\Support\Facades\Crypt::decrypt($id) }}"/>
+                                    <div class="col-md-12">
+
+                                        <table class="table table-bordered table-sm normal-text">
+                                            <thead>
+                                            <tr>
+                                                <th>Month</th>
+                                                <th>Tax Amount</th>
+                                                <th>Late Filing Amount</th>
+                                                <th>Late Payment Amount</th>
+                                                <th>Interest Rate</th>
+                                                <th>Interest Amount</th>
+                                                <th>Penalty Amount</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            @if (count($return->penalties))
+                                                @foreach ($return->penalties as $penalty)
+                                                    <tr>
+                                                        <td>{{ $penalty['financial_month_name'] }}</td>
+                                                        <td>{{ number_format($penalty['tax_amount'], 2) }}
+                                                            <strong>{{ $return->currency }}</strong></td>
+                                                        <td>{{ number_format($penalty['late_filing'], 2) }}
+                                                            <strong>{{ $return->currency }}</strong></td>
+                                                        <td>{{ number_format($penalty['late_payment'], 2) }}
+                                                            <strong>{{ $return->currency }}</strong></td>
+                                                        <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong>
+                                                        </td>
+                                                        <td>{{ number_format($penalty['rate_amount'], 2) }}
+                                                            <strong>{{ $return->currency }}</strong></td>
+                                                        <td>{{ number_format($penalty['penalty_amount'], 2) }}
+                                                            <strong>{{ $return->currency }}</strong></td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="7" class="text-center py-3">
+                                                        No penalties for this return.
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

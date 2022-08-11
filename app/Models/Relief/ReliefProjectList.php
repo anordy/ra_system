@@ -20,4 +20,9 @@ class ReliefProjectList extends Model
     {
         return $this->belongsTo(ReliefProject::class,'project_id');
     }
+
+    public function ministry()
+    {
+        return $this->belongsTo(ReliefMinistry::class);
+    }
 }

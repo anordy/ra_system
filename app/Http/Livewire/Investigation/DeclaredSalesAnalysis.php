@@ -6,6 +6,8 @@ use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\PetroleumReturnItem;
+use App\Models\Returns\Vat\VatReturnConfig;
+use App\Models\Returns\Vat\VatReturnItem;
 use App\Models\TaxType;
 use Carbon\Carbon;
 use DateTime;
@@ -42,6 +44,9 @@ class DeclaredSalesAnalysis extends Component
                 break;
             case TaxType::PETROLEUM:
                 $this->petroleum();
+                break;
+            case TaxType::VAT:
+                $this->vat();
                 break;
         }
 
@@ -98,7 +103,7 @@ class DeclaredSalesAnalysis extends Component
         }, $returns));
 
 
-        $this->returns = $calculations;
+        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
     }
 
 
@@ -147,6 +152,53 @@ class DeclaredSalesAnalysis extends Component
         dd($calculations, 'here');
 
         $this->returns = $calculations ?? [];
+    }
+
+    public function vat()
+    {
+        $purchaseConfigs = VatReturnConfig::query()->whereIn('code', ["EIP", "ELP","NCP","VDP","SLP","IP","SRI","SA","SC"])->get()->pluck('id');
+
+        $this->purchases = VatReturnItem::query()->selectRaw('financial_months.name as month, financial_years.code as year, SUM(input_amount) as total_purchases, SUM(vat_amount) as total_purchases_vat')
+            ->leftJoin('vat_return_configs', 'vat_return_configs.id', 'vat_return_items.vat_return_config_id')
+            ->leftJoin('vat_returns', 'vat_returns.id', 'vat_return_items.vat_return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'vat_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->where('vat_returns.tax_type_id', $this->taxType->id)
+            ->where('vat_returns.business_location_id', $this->branch->id)
+            ->whereIn('vat_return_config_id', $purchaseConfigs)
+            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+
+
+        $salesConfigs = VatReturnConfig::query()->whereIn('code', ["SRS", "ZRS", "ES", "SER"])->get()->pluck('id');
+
+        $this->sales = VatReturnItem::query()->selectRaw('financial_months.name as month, financial_years.code as year, SUM(input_amount) as total_sales, SUM(vat_amount) as total_sales_vat')
+            ->leftJoin('vat_return_configs', 'vat_return_configs.id', 'vat_return_items.vat_return_config_id')
+            ->leftJoin('vat_returns', 'vat_returns.id', 'vat_return_items.vat_return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'vat_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->where('vat_returns.tax_type_id', $this->taxType->id)
+            ->where('vat_returns.business_location_id', $this->branch->id)
+            ->whereIn('vat_return_config_id', $salesConfigs)
+            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+
+        $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
+
+        $calculations = collect(array_map(function ($returns) {
+            return array(
+                'year' => $returns['year'],
+                'month' => $returns['month'],
+                'financial_month' => "{$returns['month']} {$returns['year']}",
+                'total_sales' => $returns['total_sales'],
+                'total_purchases' => $returns['total_purchases'],
+                'output_vat' => $returns['total_sales_vat'],
+                'input_tax' => $returns['total_purchases_vat'],
+                'tax_paid' => ($returns['total_sales_vat']) - $returns['total_purchases_vat'],
+            );
+        }, $returns));
+
+
+        $this->returns = $calculations;
+
     }
 
 

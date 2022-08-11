@@ -17,12 +17,12 @@ class CreateBusinessesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_category_id'); // Sole / Partner / Company / NGO
             $table->unsignedBigInteger('taxpayer_id'); // Main owner
+            $table->unsignedBigInteger('tax_region_id')->nullable(); // Main owner
             $table->string('bpra_no')->nullable();
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed', 'temp_closed', 'deregistered'])->default('draft');
             $table->enum('business_type', ['hotel', 'other','electricity'])->default('other');
             $table->unsignedBigInteger('business_activities_type_id'); // Wholesale or Retail
             $table->unsignedBigInteger('currency_id');
-
 
             $table->string('name');
             $table->string('tin');
@@ -47,7 +47,7 @@ class CreateBusinessesTable extends Migration
 
             // Not sure
             $table->dateTime('reg_date')->nullable();
-            $table->string('z_no')->nullable();
+            $table->string('zin')->nullable();
             $table->string('marking')->nullable();
 
             $table->unsignedBigInteger('isiic_i')->nullable();

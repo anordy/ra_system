@@ -3,8 +3,17 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Models\LumpSumPayment;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\MmTransferReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\Vat\VatReturn;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -22,10 +31,16 @@ class ZanMalipoController extends Controller
 {
 
     private $returnable = [
-        'App\Models\Returns\StampDuty\StampDutyReturn',
-        'App\Models\Returns\ExciseDuty\MnoReturn',
-        'App\Models\Returns\Vat\VatReturn',
-        'App\Models\Returns\MmTransferReturn',
+        StampDutyReturn::class,
+        MnoReturn::class,
+        VatReturn::class,
+        MmTransferReturn::class,
+        HotelReturn::class,
+        PetroleumReturn::class,
+        PortReturn::class,
+        EmTransactionReturn::class,
+        BfoReturn::class,
+        LumpSumPayment::class,
     ];
 
     /**
@@ -124,7 +139,6 @@ class ZanMalipoController extends Controller
                 'ctr_acc_num' => $tx_info['CtrAccNum']
             ]);
 
-
             if ($bill->paidAmount() >= $bill->amount) {
                 $bill->status = 'paid';
                 if (in_array($bill->billable_type, $this->returnable)){
@@ -142,6 +156,7 @@ class ZanMalipoController extends Controller
                 }
             }
 
+            $bill->paid_amount = $bill->paidAmount();
             $bill->save();
 
             //TODO: we should send sms to customer here to notify payment reception

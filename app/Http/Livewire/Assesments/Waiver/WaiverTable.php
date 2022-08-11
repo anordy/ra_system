@@ -31,11 +31,11 @@ class WaiverTable extends DataTableComponent
         if ($this->rejected) {
             return Waiver::where('waivers.status', WaiverStatus::REJECTED)->orderBy('waivers.created_at', 'desc');
         }
-        
+
         if ($this->approved) {
             return Waiver::where('waivers.status', WaiverStatus::APPROVED)->orderBy('waivers.created_at', 'desc');
         }
-        
+
         if ($this->pending) {
             return Waiver::where('waivers.status', WaiverStatus::PENDING)->orderBy('waivers.created_at', 'desc');
         }
@@ -55,11 +55,13 @@ class WaiverTable extends DataTableComponent
             Column::make("Owner", "business.owner_designation")
                 ->sortable()
                 ->searchable(),
-            // Column::make("Mobile", "business.mobile")
-            //     ->sortable(),
+            Column::make("Mobile", "business.mobile")
+                ->sortable(),
             Column::make("Tax In Dispute(Tzs)", "tax_in_dispute")
                 ->sortable(),
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")
+                ->sortable(),
+            Column::make("Weaver Requirements", "waiver_requirement")
                 ->sortable(),
             Column::make('Status', 'status')
                 ->view('assesments.waiver.includes.status'),

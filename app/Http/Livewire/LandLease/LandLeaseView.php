@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use App\Traits\PaymentsTrait;
 
 class LandLeaseView extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, PaymentsTrait;
     public $landLease;
     public $taxType;
 
@@ -24,7 +25,7 @@ class LandLeaseView extends Component
     public function mount($enc_id)
     {
         $this->landLease = LandLease::find(decrypt($enc_id));
-        $this->taxType = TaxType::where('code', 'Land_Lease')->first();
+        $this->taxType = TaxType::where('code', TaxType::LAND_LEASE)->first();
     }
 
     public function render()
@@ -61,7 +62,7 @@ class LandLeaseView extends Component
             $payer_name = $isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name;
             $payer_email = $isRegistered ? $taxpayer->email : $this->landLease->email;
             $payer_phone = $isRegistered ? $taxpayer->mobile : $this->landLease->phone;
-            $description = "Payment for Land Lease for " . $isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name;
+            $description = "Payment for Land Lease for " . ($isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name);
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'USD';
             $createdby_type = get_class(Auth::user());
@@ -96,7 +97,7 @@ class LandLeaseView extends Component
                 if ($response->status === ZmResponse::SUCCESS) {
                     $this->landLease->status = 'control-number-generating';
                     $this->landLease->save();
-                    $this->alert('success', 'Control Number generated successfully.');
+                    $this->alert('success', 'Request sent successfully.');
                 } else {
                     $this->landLease->status = 'control-number-generating-failed';
                     $this->landLease->save();
@@ -119,7 +120,16 @@ class LandLeaseView extends Component
         } catch (Exception $e) {
             Log::error($e);
             DB::rollBack();
-            dd($e);
+            $this->alert('error', 'Something went wrong.');
         }
+    }
+
+    public function regenerate(){
+        $response = $this->regenerateControlNo($this->return->bill);
+        if ($response){
+            session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
+            return redirect()->back()->getTargetUrl();
+        }
+        $this->alert('error', 'Control number could not be generated, please try again later.');
     }
 }

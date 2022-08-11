@@ -21,7 +21,7 @@ class ReliefProjectListTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return ReliefProjectList::query()->where('project_id', $this->projectSectionId);
+        return ReliefProjectList::query()->with('ministry')->where('project_id', $this->projectSectionId);
     }
 
     protected $listeners = [
@@ -46,6 +46,8 @@ class ReliefProjectListTable extends DataTableComponent
             Column::make("Description", "description")
                 ->sortable(),
             Column::make("Rate", "rate")
+                ->sortable(),
+            Column::make("Ministry", "ministry.name")
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML

@@ -1,13 +1,19 @@
-<div class="row py-4 alert alert-success rounded-0">
+<div class="row py-4 alert alert-success rounded-0 shadow-sm">
     <div class="col-md-4">
         <span class="font-weight-bold text-uppercase">Total Payment Amount</span>
-        <p class="my-1">{{ number_format($return->bill->amount, 2) }} TZS</p>
+        @if ($return->bill)
+            <p class="my-1">{{ number_format($return->bill->amount, 2) }} TZS</p>
+        @endif
     </div>
-    @if($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATED || $return->status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
-        <div class="col-md-4" wire:poll.visible.10000ms="refresh">
-            <span class="font-weight-bold text-uppercase">Control No.</span>
-            <p class="my-1">{{ $return->bill->control_number }}</p>
-        </div>
+    @if ($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
+        $return->status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
+
+        @if ($return->bill)
+            <div class="col-md-4" wire:poll.visible.10000ms="refresh">
+                <span class="font-weight-bold text-uppercase">Control No.</span>
+                <p class="my-1">{{ $return->bill->control_number }}</p>
+            </div>
+        @endif
     @elseif($return->status === \App\Models\Returns\ReturnStatus::COMPLETE)
         <div class="col-md-4">
             <span class="font-weight-bold text-uppercase">Payment Status</span>
@@ -33,9 +39,12 @@
         </div>
         <div class="col-md-4">
             <p class="my-1">
-                <button target="_blank" wire:click="regenerate" class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
-                    <i class="spinner-border spinner-border-xs mr-2" role="status" wire:loading wire:target="regenerate"></i>
-                    <i class="bi bi-arrow-repeat mr-2" wire:loading.remove wire:target="regenerate"></i>Regenerate Control No
+                <button target="_blank" wire:click="regenerate"
+                    class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                    <i class="spinner-border spinner-border-xs mr-2" role="status" wire:loading
+                        wire:target="regenerate"></i>
+                    <i class="bi bi-arrow-repeat mr-2" wire:loading.remove wire:target="regenerate"></i>Regenerate
+                    Control No
                 </button>
             </p>
         </div>

@@ -16,10 +16,10 @@
             </nav>
           
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
-                <div id="all-businesses" class="tab-pane fade active show">
+                <div id="all-businesses" class="tab-pane fade active show card p-2">
                     <livewire:business.registrations-table></livewire:business.registrations-table>
                 </div>
-                <div id="pending-approval" class="tab-pane fade">
+                <div id="pending-approval" class="tab-pane fade card p-2">
                     @livewire('business.registrations-approval-table')
                 </div>
             </div>

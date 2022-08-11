@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Verifications Verified')
+@section('title', 'Return Verification')
 
 @section('content')
     <div class="card">
