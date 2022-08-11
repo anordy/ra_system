@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Verification\TaxVerificationAssessment;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,5 +26,11 @@ class Objection extends Model
     {
         return $this->belongsTo(Taxpayer::class);
     }
+
+      public function taxVerificationAssesment()
+    {
+        return $this->belongsTo(TaxVerificationAssessment::class,'assesment_id');
+    }
+
 
 }
