@@ -20,8 +20,11 @@ class BusinessInvestigationAddModal extends Component
     public $business_id;
     public $location_id;
     public $tax_type_id;
-    public $to_date;
-    public $from_date;
+    public $intension;
+    public $scope;
+    public $period_from;
+    public $period_to;
+
     public $selectedBusiness;
     public $locations = [];
     public $taxTypes = [];
@@ -30,7 +33,13 @@ class BusinessInvestigationAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required',
+            'business_id' => 'required',
+            'location_id' => 'required',
+            'tax_type_id' => 'required',
+            'intension' => 'required',
+            'scope' => 'required',
+            'period_from' => 'required',
+            'period_to' => 'required',
         ];
     }
 
@@ -56,8 +65,16 @@ class BusinessInvestigationAddModal extends Component
         $this->validate();
         try {
             TaxInvestigation::create([
-                'name' => $this->name,
-                'created_by' => auth()->user()->id
+                'business_id' => $this->business_id,
+                'location_id' => $this->location_id,
+                'tax_type_id' => $this->tax_type_id,
+                'intension' => $this->intension,
+                'scope' => $this->scope,
+                'period_from' => $this->period_from,
+                'period_to' => $this->period_to,
+                'created_by_id' => auth()->user()->id,
+                'created_by_type' => get_class(auth()->user()),
+                'status' => 'pending'
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
