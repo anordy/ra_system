@@ -24,6 +24,7 @@ class CreateMnoPenaltiesTable extends Migration
             $table->decimal('rate_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

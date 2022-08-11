@@ -11,8 +11,4 @@ class MnoPenalty extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
-
-    public function return(){
-        return $this->belongsTo(MnoReturn::class);
-    }
 }
