@@ -222,7 +222,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
-        Route::get('/vat', [ReturnController::class, 'index'])->name('vat.index');
+//        Route::get('/vat', [ReturnController::class, 'index'])->name('vat.index');
 
         Route::resource('/petroleum', PetroleumReturnController::class);
 
@@ -241,6 +241,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::name('vat-return.')->prefix('vat-return')->group(function () {
+            Route::get('/index',[VatReturnController::class,'index'])->name('index');
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
         });
 
