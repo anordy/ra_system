@@ -1,8 +1,8 @@
 <div>
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Add Business to Investigations</h5>
+                <h5 class="modal-title text-uppercase">Edit Business to Audit</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
@@ -46,7 +46,8 @@
 
                     <div class="col-md-6 form-group">
                         <label>Tax Type</label>
-                        <select wire:model="tax_type_id" class="form-control @error('tax_type_id') is-invalid @enderror">
+                        <select wire:model="tax_type_id"
+                            class="form-control @error('tax_type_id') is-invalid @enderror">
                             <option value="">Select Tax Type</option>
                             @if ($taxTypes)
                                 @foreach ($taxTypes as $taxType)
@@ -95,10 +96,11 @@
                         @enderror
                     </div>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" wire:click='submit'>Add Investigation</button>
+                <button type="button" class="btn btn-primary" wire:click='submit'>Update changes</button>
             </div>
         </div>
     </div>

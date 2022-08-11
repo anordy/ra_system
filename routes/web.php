@@ -141,9 +141,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
             });
         });
-        //lump-sum returns
-        Route::get('/lump-sum/index', [LumpSumReturnController::class, 'index'])->name('lump-sum.index');
-        Route::get('/lump-sum/view/{id}', [LumpSumReturnController::class, 'view'])->name('lump-sum.show');
     });
 
     Route::prefix('system')->name('system.')->group(function () {
@@ -222,7 +219,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
-//        Route::get('/vat', [ReturnController::class, 'index'])->name('vat.index');
 
         Route::resource('/petroleum', PetroleumReturnController::class);
 
@@ -241,7 +237,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::name('vat-return.')->prefix('vat-return')->group(function () {
-            Route::get('/index',[VatReturnController::class,'index'])->name('index');
+            Route::get('/index', [VatReturnController::class, 'index'])->name('index');
             Route::get('/show/{id}', [VatReturnController::class, 'show'])->name('show');
         });
 
@@ -264,6 +260,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
             Route::get('/mno/{return_id}', [MnoReturnController::class, 'show'])->name('mno.show');
         });
+
+        Route::get('/lump-sum/index', [LumpSumReturnController::class, 'index'])->name('lump-sum.index');
+        Route::get('/lump-sum/view/{id}', [LumpSumReturnController::class, 'view'])->name('lump-sum.show');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
