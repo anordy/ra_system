@@ -19,4 +19,9 @@ class HotelReturnController extends Controller
         return view('returns.hotel.show', compact('return'));
     }
 
+    public function adjust($return_id){
+        $returnId = decrypt($return_id);
+        return view('returns.hotel.adjust', compact('returnId'));
+    }
+
 }

@@ -28,9 +28,14 @@ use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\Claims\ClaimFilesController;
 use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Debt\AuditDebtController;
+use App\Http\Controllers\Debt\InvestigationDebtController;
+use App\Http\Controllers\Debt\ReturnDebtController;
+use App\Http\Controllers\Debt\VerificationDebtController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\HomeController;
@@ -160,8 +165,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('pdf')->as('pdf.')->group(function () {
-        Route::get('register', [AllPdfController::class, 'index'])->name('all');
-        Route::get('demandNotice/{$file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
+        Route::get('all', [AllPdfController::class, 'index'])->name('all');
+        Route::get('all/{file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
     });
 
     Route::prefix('business')->as('business.')->group(function () {
@@ -249,6 +254,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
+        Route::get('/hotel/adjust/{return_id}', [HotelReturnController::class, 'adjust'])->name('hotel.adjust');
+
 
         Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
@@ -290,6 +297,14 @@ Route::name('claims.')->prefix('/tax-claims')->group(function () {
     Route::get('/', [ClaimsController::class, 'index'])->name('index');
     Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
     Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
+    Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
+});
+
+Route::name('debts.')->prefix('/debts')->group(function () {
+    Route::resource('/returns', ReturnDebtController::class);
+    Route::resource('/investigation', InvestigationDebtController::class);
+    Route::resource('/auditing', AuditDebtController::class);
+    Route::resource('/verification', VerificationDebtController::class);
 });
 
 Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {

@@ -29,7 +29,7 @@ class CreateTaxpayersTable extends Migration
             $table->text('physical_address');
             $table->string('street');
 
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->string('mobile')->unique();
             $table->string('alt_mobile')->nullable();
 

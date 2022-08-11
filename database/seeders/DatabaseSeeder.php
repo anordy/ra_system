@@ -66,5 +66,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PenaltyRatesSeeder::class);
         $this->call(StampDutyConfigSeeder::class);
         $this->call(BusinessSeeder::class);
+        $this->call(WorkflowTaxClaimSeeder::class);
+        $this->call(TaxRegionsSeeder::class);
     }
 }

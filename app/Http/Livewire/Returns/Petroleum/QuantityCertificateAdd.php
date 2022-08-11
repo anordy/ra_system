@@ -107,7 +107,7 @@ class QuantityCertificateAdd extends Component
         DB::beginTransaction();
         try {
             $business = Business::firstWhere('z_no', $this->business);
-
+            
             $certificate = QuantityCertificate::create([
                 'business_id' => $business->id,
                 'ascertained' => $this->ascertained,
@@ -117,6 +117,11 @@ class QuantityCertificateAdd extends Component
                 'created_by' => auth()->user()->id,
                 'download_count' => 0
             ]);
+            
+            $certificateNumber = $business->z_no.'-'.$certificate->id;
+            $certificateUpdate = QuantityCertificate::find($certificate->id);
+            $certificateUpdate->certificate_no = $certificateNumber;
+            $certificateUpdate->save();
 
             $product_payload = collect();
             foreach ($this->products as $product) {
