@@ -291,6 +291,9 @@
             <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                <li class="{{ request()->is('debts/outstanding*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.outstanding') }}">Outstanding</a>
+                </li>
                 <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
                     <a href="{{ route('debts.returns.index') }}">Returns</a>
                 </li>
