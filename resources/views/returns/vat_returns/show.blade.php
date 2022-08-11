@@ -22,7 +22,8 @@
         <div>
             <div class="card">
                 <div class="card-header">
-                    Return details for the return month of {{$return->financialMonth->name}} {{$return->financialMonth->year->name}}
+                    Return details for the return month
+                    of {{$return->financialMonth->name}} {{$return->financialMonth->year->name}}
                 </div>
                 <div class="card-body">
                     <div>
@@ -109,43 +110,43 @@
                                         <div class="col-md-3 mb-3">
                                             <span class="font-weight-bold text-uppercase">Status</span>
                                             <p class="my-1">
-                                                @if($return->status == 'complete')
+                                                @if($return->status == \App\Models\Returns\ReturnStatus::COMPLETE)
                                                     <span class="badge badge-success py-1 px-2"
-                                                          style="border-radius: 1rem; background: #35dcb5; color: #0a9e99; font-size: 85%">
-        <i class="bi bi bi-x-circle-fill mr-1"></i>
-        {{\App\Models\Returns\ReturnStatus::COMPLETE}}
-    </span>
+                                                          style="border-radius: 1rem; background: #35dcb5; color: #0a9e99; font-size: 85%"><i
+                                                                class="bi bi bi-x-circle-fill mr-1"></i>
+                                                        complete
+                                                    </span>
 
-                                                @elseif($return->status == 'submitted')
+                                                @elseif($return->status == App\Models\Returns\ReturnStatus::SUBMITTED)
                                                     <span class="badge badge-success py-1 px-2"
-                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-        <i class="bi bi-check-circle-fill mr-1"></i>
-        {{\App\Models\Returns\ReturnStatus::SUBMITTED}}
-    </span>
-                                                @elseif($return->status == 'control-number-generating')
+                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                                                class="bi bi-check-circle-fill mr-1"></i>
+                                                        Submitted
+                                                    </span>
+                                                @elseif($return->status == App\Models\Returns\ReturnStatus::CN_GENERATING)
                                                     <span class="badge badge-success py-1 px-2"
-                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-        <i class="bi bi-check-circle-fill mr-1"></i>
-        {{\App\Models\Returns\ReturnStatus::CN_GENERATING}}
-    </span>
-                                                @elseif($return->status == 'control-number-generated')
+                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                                                class="bi bi-check-circle-fill mr-1"></i>
+                                                        Control number generating
+                                                    </span>
+                                                @elseif($return->status == App\Models\Returns\ReturnStatus::CN_GENERATED)
                                                     <span class="badge badge-success py-1 px-2"
-                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-        <i class="bi bi-check-circle-fill mr-1"></i>
-        {{\App\Models\Returns\ReturnStatus::CN_GENERATED}}
-    </span>
-                                                @elseif($return->status == 'control-number-generating-failed')
+                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                                                class="bi bi-check-circle-fill mr-1"></i>
+                                                        Control number generated
+                                                    </span>
+                                                @elseif($return->status == App\Models\Returns\ReturnStatus::CN_GENERATION_FAILED)
                                                     <span class="badge badge-success py-1 px-2"
-                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-        <i class="bi bi-check-circle-fill mr-1"></i>
-        {{\App\Models\Returns\ReturnStatus::CN_GENERATION_FAILED}}
-    </span>
+                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                                                class="bi bi-check-circle-fill mr-1"></i>
+                                                        Control number generating failed
+                                                    </span>
                                                 @else
                                                     <span class="badge badge-success py-1 px-2"
-                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-        <i class="bi bi-check-circle-fill mr-1"></i>
-        {{\App\Models\Returns\ReturnStatus::PAID_PARTIALLY}}
-    </span>
+                                                          style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
+                                                                class="bi bi-check-circle-fill mr-1"></i>
+                                                        Paid partially
+                                                    </span>
                                                 @endif
                                             </p>
                                         </div>
