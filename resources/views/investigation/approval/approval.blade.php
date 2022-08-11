@@ -61,7 +61,7 @@
             @if ($investigation->officers->count() > 0)
                 <div class="card">
                     <div class="card-header text-uppercase font-weight-bold bg-white">
-                        Investigation Details
+                        Investigation Findings
                     </div>
                     <div class="card-body">
                         <div class="row">
