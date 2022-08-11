@@ -156,8 +156,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('pdf')->as('pdf.')->group(function () {
-        Route::get('register', [AllPdfController::class, 'index'])->name('all');
-        Route::get('demandNotice/{$file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
+        Route::get('all', [AllPdfController::class, 'index'])->name('all');
+        Route::get('all/{$file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
     });
 
     Route::prefix('business')->as('business.')->group(function () {

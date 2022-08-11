@@ -312,9 +312,9 @@
                 <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                     <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                 </li>
-                {{-- <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                     <a href="{{ route('pdf.all') }}">All PDF's</a>
-                </li> --}}
+                </li>
             </ul>
         </li>
     </ul>

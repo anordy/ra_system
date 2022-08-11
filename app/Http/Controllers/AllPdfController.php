@@ -24,7 +24,7 @@ class AllPdfController extends Controller
 
             case 'third-party-payment':
                 $pdf = PDF::loadView('layouts.all-pdf.third-party-payment');
-
+              
                 break;
                 
             case 'distress-warant':
