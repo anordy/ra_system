@@ -6,6 +6,7 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
 use App\Models\BillingStatus;
+use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Models\User;
