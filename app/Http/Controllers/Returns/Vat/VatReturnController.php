@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class VatReturnController extends Controller
 {
+
+    public function index()
+    {
+         return view('returns.vat_returns.index');
+    }
     public function show($id)
     {
         $return = VatReturn::query()->findOrFail(decrypt($id));

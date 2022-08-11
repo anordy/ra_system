@@ -86,7 +86,7 @@
                     <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
                 </li>
                 <li class="{{ request()->is('e-filling/vat*') ? 'active' : '' }}">
-                    <a href="{{ route('returns.vat.index') }}">Vat Returns</a>
+                    <a href="{{ route('returns.vat-return.index') }}">Vat Returns</a>
                 </li>
                 <li class="{{ request()->is('e-filling/port*') ? 'active' : '' }}">
                     <a href="{{ route('returns.port.index') }}">Port Returns</a>

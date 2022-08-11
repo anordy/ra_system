@@ -22,11 +22,19 @@ class ZanMalipoController extends Controller
 {
 
     private $returnable = [
-        'App\Models\Returns\StampDuty\StampDutyReturn',
-        'App\Models\Returns\ExciseDuty\MnoReturn',
-        'App\Models\Returns\Vat\VatReturn',
-        'App\Models\Returns\MmTransferReturn',
+        StampDutyReturn::class,
+        MnoReturn::class,
+        VatReturn::class,
+        MmTransferReturn::class,
+        HotelReturn::class,
+        PetroleumReturn::class,
+        PortReturn::class,
+        EmTransactionReturn::class,
+        BFOReturn::class,
+        LumpSumPayment::class,
+        TaxAgent::class,
     ];
+
 
     /**
      * Create a new controller instance.
