@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Tax Returns')
+@section('title', 'VAT Tax Returns')
 
 @section('content')
     <div class="card mt-3">
