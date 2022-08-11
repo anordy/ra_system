@@ -3,8 +3,7 @@
         <div class="card-header text-uppercase font-weight-bold">
             Supplier
         </div>
-        <div class="card-body">
-
+        <div class="card-body p-1">
             <div class="row mx-4 mt-2">
                 <div class="col-4 form-group">
                     <label for="supplier_name" class="d-flex justify-content-between'">
@@ -57,7 +56,7 @@
         <div class="card-header text-uppercase font-weight-bold">
             Project
         </div>
-        <div class="card-body">
+        <div class="card-body p-1">
             <div class="row mx-4 mt-2">
                 <div class="col-4 form-group">
                     <label for="projectSection_name" class="d-flex justify-content-between'">
