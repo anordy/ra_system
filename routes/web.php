@@ -165,8 +165,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('pdf')->as('pdf.')->group(function () {
-        Route::get('register', [AllPdfController::class, 'index'])->name('all');
-        Route::get('demandNotice/{$file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
+        Route::get('all', [AllPdfController::class, 'index'])->name('all');
+        Route::get('all/{file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
     });
 
     Route::prefix('business')->as('business.')->group(function () {
@@ -254,6 +254,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
+        Route::get('/hotel/adjust/{return_id}', [HotelReturnController::class, 'adjust'])->name('hotel.adjust');
+
 
         Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');

@@ -148,14 +148,14 @@
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
             <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
                 @can('roles_add')
-                <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.users.index') }}">Users</a>
-                </li>
+                    <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.users.index') }}">Users</a>
+                    </li>
                 @endcan
                 @can('roles_add')
-                <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.roles.index') }}">Roles</a>
-                </li>
+                    <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.roles.index') }}">Roles</a>
+                    </li>
                 @endcan
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.country.index') }}">Countries</a>
@@ -288,7 +288,8 @@
         </li>
 
         <li class="{{ request()->is('debts*') ? 'active' : '' }}">
-            <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt Management</a>
+            <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
+                Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
                 <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
                     <a href="{{ route('debts.returns.index') }}">Returns</a>
@@ -322,7 +323,7 @@
 
             </ul>
         </li>
-       
+
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
             <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
             <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
@@ -332,9 +333,14 @@
                 <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                     <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                 </li>
+
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('pdf.all') }}">All PDF's</a>
+                </li>
+
             </ul>
         </li>
-     
+
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">
