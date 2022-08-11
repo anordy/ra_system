@@ -22,7 +22,7 @@
         <div>
             <div class="card">
                 <div class="card-header">
-                    Return details for the return month of {{$return->financialMonth->name}}
+                    Return details for the return month of {{$return->financialMonth->name}} {{$return->financialMonth->year->name}}
                 </div>
                 <div class="card-body">
                     <div>
