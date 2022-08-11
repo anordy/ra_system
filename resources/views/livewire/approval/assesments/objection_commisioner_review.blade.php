@@ -55,13 +55,13 @@
                                     </td>
 
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->penalty_amount }}
+                                        {{ $this->objection->taxVerificationAssesment->penalty_amount }}
                                     </td>
                                     <td>
                                         Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->interest_amount }}
+                                        {{ $this->objection->taxVerificationAssesment->interest_amount }}
                                     </td>
 
                                 </tr>
@@ -86,13 +86,13 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->penalty_amount - $penaltyAmount }}
+                                        {{ $this->objection->taxVerificationAssesment->penalty_amount - $penaltyAmount }}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->interest_amount - $interestAmount }}
+                                        {{ $this->objection->taxVerificationAssesment->interest_amount - $interestAmount }}
                                     </td>
 
                                 </tr>

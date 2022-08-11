@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Assesments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use App\Models\Verification\TaxVerificationAssessment;
 use App\Models\Waiver;
 use App\Models\WaiverAttachment;
 use Exception;
@@ -16,16 +17,6 @@ class WaiverController extends Controller
         return view('assesments.waiver.index');
     }
 
-    // public function show($waiverId)
-    // {
-
-    //     $waiver = Waiver::findOrfail(decrypt($waiverId));
-    //     $business = Business::find($waiver->business_id);
-    //     $files = WaiverAttachment::where('waiver_id', $waiver->id)->get();
-
-    //     return view('assesments.waiver.show', compact('waiver', 'business'));
-    // }
-
     public function edit()
     {
         return view('assesments.waiver.edit');
@@ -34,10 +25,11 @@ class WaiverController extends Controller
     public function approval($waiverId)
     {
         $waiver = Waiver::findOrFail(decrypt($waiverId));
+        $assesment = TaxVerificationAssessment::find($waiver->assesment_id);
         $business = Business::find($waiver->business_id);
         $files = WaiverAttachment::where('waiver_id', $waiver->id)->get();
 
-        return view('assesments.waiver.approval', compact('waiver', 'files', 'business'));
+        return view('assesments.waiver.approval', compact('waiver', 'files', 'business','assesment'));
     }
 
     public function files($path)
