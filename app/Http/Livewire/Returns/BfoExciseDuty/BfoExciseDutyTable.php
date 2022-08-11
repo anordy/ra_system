@@ -6,11 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Returns\BFO\BFOReturn;
+use App\Models\Returns\BFO\BfoReturn;
 
 class BfoExciseDutyTable extends DataTableComponent
 {
-    protected $model = BFOReturn::class;
+    protected $model = BfoReturn::class;
 
     public function configure(): void
     {
@@ -19,7 +19,7 @@ class BfoExciseDutyTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BFOReturn::query()->with('business', 'business.taxpayer');
+        return BfoReturn::query()->with('business', 'business.taxpayer');
     }
 
     public function columns(): array

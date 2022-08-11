@@ -59,4 +59,9 @@ class LampSumReturn extends Model
     {
         return $this->morphOne(ZmBill::class, 'billable');
     }
+
+    public function penalties()
+    {
+        return $this->hasMany(LumpSumPenalties::class, 'return_id');
+    }
 }

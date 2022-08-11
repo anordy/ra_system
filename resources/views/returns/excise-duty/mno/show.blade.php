@@ -57,14 +57,49 @@
 
         </div>
 
-        <div class="row m-2 pt-3">
-            <h6 class="text-uppercase mt-2 ml-2">PAYMENT STRUCTURE</h6>
-            <hr>
-            <div class="col-md-12 p-0 m-0">
+        <h6 class="text-uppercase mt-5 ml-2">PENALTIES</h6>
+        <hr class="mx-2">
+        <div class="col-md-12">
 
-                <livewire:returns.returns-penalty modelName='App\Models\Returns\ExciseDuty\MnoReturn'
-                    modelId="{{ $return->id }}" />
-            </div>
+            {{-- <livewire:returns.returns-penalty modelName='App\Models\Returns\ExciseDuty\MnoReturn'
+                modelId="{{ $return->id }}" /> --}}
+
+            <table class="table table-bordered table-sm normal-text">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Tax Amount</th>
+                        <th>Late Filing Amount</th>
+                        <th>Late Payment Amount</th>
+                        <th>Interest Rate</th>
+                        <th>Interest Amount</th>
+                        <th>Penalty Amount</th>
+                    </tr>
+                </thead>
+        
+                <tbody>
+                    @if(count($return->penalties))
+                        @foreach ($return->penalties as $penalty)
+                        <tr>
+                            <td>{{ $penalty['financial_month_name'] }}</td>
+                            <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                            <td>{{ number_format($penalty['late_filing'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                            <td>{{ number_format($penalty['late_payment'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                            <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                            <td>{{ number_format($penalty['rate_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                            <td>{{ number_format($penalty['penalty_amount'], 2)}} <strong>{{ $return->currency}}</strong></td>
+                        </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="7" class="text-center py-3">
+                                No penalties for this return.
+                            </td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
         </div>
+
     </div>
 @endsection

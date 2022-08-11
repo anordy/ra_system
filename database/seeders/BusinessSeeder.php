@@ -77,8 +77,8 @@ class BusinessSeeder extends Seeder
             "currency_id" => 1
         ];
 
-
         DB::beginTransaction();
+
         try {
             $business = Business::create($business);
             $business->location()->create($location);

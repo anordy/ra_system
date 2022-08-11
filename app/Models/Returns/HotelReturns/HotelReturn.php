@@ -2,6 +2,7 @@
 
 namespace App\Models\Returns\HotelReturns;
 
+use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Models\Taxpayer;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Returns\HotelReturns\HotelReturnPenalty;
 
 class HotelReturn extends Model implements Auditable
 {
@@ -49,6 +51,18 @@ class HotelReturn extends Model implements Auditable
 
     public function financialMonth(){
         return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
+    }
+
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function getBillAttribute(){
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
+    }
+
+    public function penalties(){
+        return $this->hasMany(HotelReturnPenalty::class, 'return_id');
     }
 
 }

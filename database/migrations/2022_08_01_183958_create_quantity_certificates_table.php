@@ -22,7 +22,7 @@ class CreateQuantityCertificatesTable extends Migration
             $table->date('ascertained')->nullable();
             $table->integer('download_count')->default(0);
             $table->unsignedBigInteger('created_by');
-            $table->enum('status', ['draft', 'pending', 'filled'])->default('draft');
+            $table->enum('status', ['draft', 'pending', 'filled'])->default('pending');
             $table->timestamps();
         });
     }
