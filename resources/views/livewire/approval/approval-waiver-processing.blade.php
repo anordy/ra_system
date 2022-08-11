@@ -26,20 +26,21 @@
         </div>
         @if ($this->checkTransition('waiver_manager_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
+                {{-- <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
                     Incorrect
-                    return to Applicant</button>
+                    return to Applicant</button> --}}
                 <button type="button" class="btn btn-primary"
                     wire:click="approve('waiver_manager_review')">Approve & Forward</button>
             </div>
         @elseif ($this->checkTransition('chief_assurance_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('chief_assurance_reject')">Reject
-                    & Return</button>
+                {{-- <button type="button" class="btn btn-danger" wire:click="reject('chief_assurance_reject')">Reject
+                    & Return</button> --}}
                 <button type="button" class="btn btn-primary"
                     wire:click="approve('chief_assurance_review')">Approve & Forward</button>
             </div>
         @elseif ($this->checkTransition('commisioner_review'))
+       @include('livewire.approval.assesments.waiver_manager_review')
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger" wire:click="reject('commisioner_review')">Reject &
                     Return</button>

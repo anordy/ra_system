@@ -2,11 +2,15 @@
 
 namespace App\Http\Livewire\Approval;
 
-
+use App\Events\SendMail;
+use App\Events\SendSms;
+use App\Models\Waiver;
+use App\Models\WaiverReport;
 use App\Models\WaiverStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -14,11 +18,11 @@ use Livewire\WithFileUploads;
 
 class ApprovalWaiverProcessing extends Component
 {
-    use WorkflowProcesssingTrait,WithFileUploads, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
-    public $waiver_report;
+    public $weaverReport;
 
     public function mount($modelName, $modelId)
     {
@@ -36,7 +40,31 @@ class ApprovalWaiverProcessing extends Component
 
         if ($this->checkTransition('waiver_manager_review')) {
 
-            // dd('waiver review');
+            $this->validate(
+                [
+                    'weaverReport' => 'required|mimes:pdf',
+                ]
+            );
+
+            $weaverReport = "";
+            if ($this->weaverReport) {
+                $weaverReport = $this->weaverReport->store('waiver_report', 'local-admin');
+            }
+
+            $waiver  = Waiver::find($this->modelId);
+
+            DB::beginTransaction();
+            try {
+
+                $waiver->update([
+                    'attachments' => $weaverReport ?? '',
+                ]);
+                DB::commit();
+            } catch (\Exception $e) {
+                throw $e;
+                Log::error($e);
+                DB::rollBack();
+            }
 
         }
 
@@ -48,6 +76,7 @@ class ApprovalWaiverProcessing extends Component
             // dd('chief assuarance review');
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status = WaiverStatus::APPROVED;
+            $this->subject->save();
             // event(new SendSms('business-registration-approved', $this->subject->id));
             // event(new SendMail('business-registration-approved', $this->subject->id));
         }

@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="col-md-12 mt-3">
-                    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom: 0;">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="new-return-tab" data-toggle="tab" href="#new-return" role="tab" aria-controls="new-return" aria-selected="true">New Return</a>
                         </li>
@@ -40,9 +40,9 @@
                             <table class="table table-bordered normal-text">
                                 <thead>
                                 <th style="width: 30%">Item Name</th>
-                                <th style="width: 20%">Value</th>
+                                <th style="width: 20%">Value (TZS)</th>
                                 <th style="width: 10%">Rate</th>
-                                <th style="width: 20%">Tax</th>
+                                <th style="width: 20%">Tax (TZS)</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($newReturn->items as $item)
@@ -72,9 +72,9 @@
                             <table class="table table-bordered normal-text">
                                 <thead>
                                     <th style="width: 30%">Item Name</th>
-                                    <th style="width: 20%">Value</th>
+                                    <th style="width: 20%">Value (TZS)</th>
                                     <th style="width: 10%">Rate</th>
-                                    <th style="width: 20%">Tax</th>
+                                    <th style="width: 20%">Tax (TZS)</th>
                                 </thead>
                                 <tbody>
                                 @foreach ($oldReturn->items as $item)
@@ -105,4 +105,74 @@
             </div>
         </div>
     </div>
+
+    @if (count($claim->officers) > 0)
+        <div class="card rounded-0">
+            <div class="card-header text-uppercase font-weight-bold bg-white">
+                Compliance Officers
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @foreach ($claim->officers as $officer)
+                        <div class="col-md-6 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Team
+                                        {{ $officer->team_leader ? 'Leader' : 'Member' }}</span>
+                            <p class="my-1">{{ $officer->user->full_name ?? '' }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($claim->assessment)
+        <div class="card">
+            <div class="card-header text-uppercase font-weight-bold bg-white">
+                Assessment Details
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <a target="_blank"
+                               href="{{ route('claims.files.show', encrypt($claim->assessment->report_path)) }}"
+                               style="font-weight: 500;" class="ml-1">
+                                Assessment Report
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if ($claim->credit)
+        <div class="card">
+            <div class="card-header text-uppercase font-weight-bold bg-white">
+                Payment Method
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="col-md-3 mb-3">
+                            <label class="font-weight-bold text-uppercase">Payment Method</label>
+                            <p class="my-1">{{ $claim->credit }}</p>
+                        </div>
+                        @if($claim->credit->installments_count)
+                            <div class="col-md-3 mb-3">
+                                <label class="font-weight-bold text-uppercase">Installment Counts</label>
+                                <p class="my-1">{{ $claim->credit }}</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <livewire:approval.tax-claim-approval-processing modelName="{{ get_class($claim) }}" modelId="{{ $claim->id }}" />
+
 @endsection

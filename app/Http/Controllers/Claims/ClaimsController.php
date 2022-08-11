@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Claims;
 
+use App\Enum\TaxClaimStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Claims\TaxClaim;
 
@@ -17,5 +18,14 @@ class ClaimsController extends Controller
         $newReturn = $claim->newReturn;
         $oldReturn = $claim->oldReturn;
         return view('claims.show', compact('claim', 'oldReturn', 'newReturn'));
+    }
+
+    public function approve($claimId){
+        $claimId = decrypt($claimId);
+        $claim = TaxClaim::findOrFail($claimId);
+
+        $claim->status = TaxClaimStatus::APPROVED;
+
+        // Create
     }
 }

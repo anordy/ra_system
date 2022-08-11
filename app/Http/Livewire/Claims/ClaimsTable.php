@@ -24,7 +24,7 @@ class ClaimsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxClaim::query()->where('created_by_id', auth()->user()->id)->orderBy('tax_claims.created_at', 'DESC');
+        return TaxClaim::query()->orderBy('tax_claims.created_at', 'DESC');
     }
 
     public function columns(): array

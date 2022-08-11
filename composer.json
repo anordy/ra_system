@@ -24,7 +24,7 @@
         "nyholm/psr7": "^1.5",
         "orchestra/parser": "^6.1",
         "owen-it/laravel-auditing": "^13.0",
-        "rappasoft/laravel-livewire-tables": "^2.7",
+        "rappasoft/laravel-livewire-tables": "^2.8",
         "spatie/array-to-xml": "^2.16",
         "symfony/event-dispatcher": "^5.4",
         "symfony/expression-language": "^5.4",

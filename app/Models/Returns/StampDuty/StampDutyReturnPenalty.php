@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Models\Returns\BFO;
+namespace App\Models\Returns\StampDuty;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BFOConfig extends Model
+class StampDutyReturnPenalty extends Model
 {
     use HasFactory;
-
-    protected $table = 'bfo_configs';
 }
