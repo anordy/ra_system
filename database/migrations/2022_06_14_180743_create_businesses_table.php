@@ -23,7 +23,6 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('business_activities_type_id'); // Wholesale or Retail
             $table->unsignedBigInteger('currency_id');
 
-
             $table->string('name');
             $table->string('tin');
             $table->string('reg_no');

@@ -28,7 +28,7 @@
                     @if ($operator_type == 'user')
                         <div class="form-group col-lg-6">
                             <label class="">Users </label>
-                            <select class="form-control" wire:model.lazy="user_id" multiple>
+                            <select class="form-control" wire:model.lazy="user_id" multiple style="min-height: 250px;">
                                 <option value="" disabled selected>Choose option</option>
                                 @foreach ($users as $row)
                                     <option value="{{ $row->id }}">{{ $row->full_name }}</option>
@@ -42,7 +42,7 @@
                     @if ($operator_type == 'role')
                         <div class="form-group col-lg-6">
                             <label class="">Roles </label>
-                            <select class="form-control" wire:model.lazy="role_id" multiple>
+                            <select class="form-control" wire:model.lazy="role_id" multiple style="min-height: 250px;">
                                 <option value="" disabled selected>Choose option</option>
                                 @foreach ($roles as $row)
                                     <option value="{{ $row->id }}">{{ $row->name }}</option>

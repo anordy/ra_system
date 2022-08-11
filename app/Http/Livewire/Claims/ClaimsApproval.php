@@ -35,6 +35,7 @@ class ClaimsApproval extends Component {
             'amount' => $this->claim->amount,
             'currency' => $this->claim->currency,
             'installments_count' => $this->installmentCount,
+            'status' => 'draft'
         ]);
 
         $this->claim->status = TaxClaimStatus::APPROVED;
