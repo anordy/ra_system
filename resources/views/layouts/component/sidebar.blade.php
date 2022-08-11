@@ -199,6 +199,9 @@
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.business-files.index') }}">Business Files</a>
                 </li>
+                <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">

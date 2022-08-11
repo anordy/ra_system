@@ -72,6 +72,7 @@ use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Setting\ExchangeRateController;
 use App\Http\Controllers\Setting\InterestRateController;
+use App\Http\Controllers\Setting\TaxRegionController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
@@ -123,6 +124,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/assesment-files', AssesmentFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
+        Route::resource('/tax-regions', TaxRegionController::class);
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
