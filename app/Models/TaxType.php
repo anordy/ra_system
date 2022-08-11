@@ -19,7 +19,7 @@ class TaxType extends Model implements Auditable
     public const LAND_LEASE = 'land-lease';
     public const PUBLIC_SERVICE = 'public-service';
     public const EXCISE_DUTY_MNO = 'excise-duty-mno';
-    public const EXCISE_DUTY_BFO = 'excie-duty-bfo';
+    public const EXCISE_DUTY_BFO = 'excise-duty-bfo';
     public const PETROLEUM = 'petroleum-levy';
     public const AIRPORT_SERVICE_SAFETY_FEE = 'airport-service-safety-fee';
     public const SEA_SERVICE_TRANSPORT_CHARGE = 'sea-service-transport-charge';

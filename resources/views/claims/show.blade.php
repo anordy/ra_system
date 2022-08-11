@@ -149,25 +149,23 @@
         </div>
     @endif
 
-    @if ($claim->credit)
+    @if ($claim->credit != null)
         <div class="card">
             <div class="card-header text-uppercase font-weight-bold bg-white">
                 Payment Method
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="col-md-3 mb-3">
-                            <label class="font-weight-bold text-uppercase">Payment Method</label>
-                            <p class="my-1">{{ $claim->credit }}</p>
-                        </div>
-                        @if($claim->credit->installments_count)
-                            <div class="col-md-3 mb-3">
-                                <label class="font-weight-bold text-uppercase">Installment Counts</label>
-                                <p class="my-1">{{ $claim->credit }}</p>
-                            </div>
-                        @endif
+                    <div class="col-md-4 mb-3">
+                        <label class="font-weight-bold text-uppercase">Payment Method</label>
+                        <p class="my-1">{{ $claim->credit->payment_method }}</p>
                     </div>
+                    @if($claim->credit->installments_count)
+                        <div class="col-md-4 mb-3">
+                            <label class="font-weight-bold text-uppercase">Number of Installments to Pay</label>
+                            <p class="my-1">{{ $claim->credit->installments_count }}</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
