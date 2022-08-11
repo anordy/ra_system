@@ -50,4 +50,8 @@ class TaxType extends Model implements Auditable
     {
         return $this->hasOne(VatReturn::class, 'taxtype_id', 'id');
     }
+
+    public function scopeMain($query){
+        $query->where('category', 'main');
+    }
 }
