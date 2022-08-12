@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Returns\ReturnStatus;
-use App\Enum\ReturnApplicationStatus;
+use App\Enum\DisputeStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -26,7 +26,7 @@ class CreateHotelReturnsTable extends Migration
             $table->unsignedBigInteger('financial_year_id');
             $table->integer('edited_count')->default(0);
             $table->enum('status', ReturnStatus::getConstants());
-            $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('application_status', DisputeStatus::getConstants());
             
             $table->decimal('hotel_infrastructure_tax', 20, 2)->nullable();
             $table->string('financial_month_id');
