@@ -4,12 +4,13 @@ namespace App\Enum;
 
 use ReflectionClass;
 
-class PaymentStatus implements Status
+class DisputeStatus implements Status
 {
-    const PAID = 'paid';
-    const PARTIALLY = 'partially';
+    const DRAFT = 'draft';
     const PENDING = 'pending';
-    const CANCELLED = 'cancelled';
+    const APPROVED = 'approved';
+    const CORRECTION = 'correction';
+    const REJECTED = 'rejected';
 
     static function getConstants(): array
     {

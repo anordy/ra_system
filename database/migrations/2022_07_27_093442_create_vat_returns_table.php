@@ -1,6 +1,6 @@
 <?php
 
-use App\Enum\ReturnApplicationStatus;
+use App\Enum\DisputeStatus;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -36,7 +36,7 @@ class CreateVatReturnsTable extends Migration
             $table->decimal('total_amount_due_with_penalties', 20,2);
             $table->string('has_exemption');
             $table->enum('status', ReturnStatus::getConstants());
-            $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('application_status', DisputeStatus::getConstants());
             $table->integer('editing_count',0);
             $table->string('method_used')->nullable();
             $table->unsignedBigInteger('filed_by_id');

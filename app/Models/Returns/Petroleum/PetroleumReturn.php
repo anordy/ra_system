@@ -44,7 +44,7 @@ class PetroleumReturn extends Model
     }
 
     public function taxpayer() {
-        return $this->belongsTo(Taxpayer::class, 'filled_id');
+        return $this->belongsTo(Taxpayer::class, 'filed_by_id');
     }
 
     public function bill(){
