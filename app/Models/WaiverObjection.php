@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Verification\TaxVerificationAssessment;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ class WaiverObjection extends Model
 {
     use HasFactory;
 
-        use HasFactory, WorkflowTrait;
+    use HasFactory, WorkflowTrait;
 
     protected $guarded = [];
 
@@ -24,5 +25,9 @@ class WaiverObjection extends Model
         return $this->hasOne(WaiverStatus::class);
     }
 
-   
+    public function taxVerificationAssesment()
+    {
+        return $this->belongsTo(TaxVerificationAssessment::class, 'assesment_id');
+    }
+
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWardsTable extends Migration
+class CreateDisputeAttachmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateWardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('wards', function (Blueprint $table) {
+        Schema::create('dispute_attachments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('district_id');
-            $table->string('name');
-            $table->foreign('district_id')->references('id')->on('districts');
-            $table->softDeletes();
+            $table->unsignedBigInteger('dispute_id');
+            $table->string('file_path');
+            $table->string('file_name');
             $table->timestamps();
+
         });
     }
 
@@ -30,6 +30,6 @@ class CreateWardsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wards');
+        Schema::dropIfExists('dispute_attachments');
     }
 }

@@ -39,7 +39,7 @@ class QuantityCertificateShow extends Component
             'ascertained' => 'required|date',
             'business' => [
                 'required',
-                'exists:businesses,z_no'
+                'exists:businesses,zin'
             ],
             'products.*.config_id' => 'required',
             'products.*.liters_observed' => 'required|numeric',
@@ -68,7 +68,7 @@ class QuantityCertificateShow extends Component
         $this->ship = $this->certificate->ship;
         $this->port = $this->certificate->port;
         $this->voyage_no = $this->certificate->voyage_no;
-        $this->business = $this->certificate->business->z_no;
+        $this->business = $this->certificate->business->zin;
 
         $this->configs = PetroleumConfig::where('row_type', 'dynamic')
             ->where('col_type', '!=', 'heading')
