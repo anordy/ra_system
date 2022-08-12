@@ -34,7 +34,7 @@ class TaxInvestigationVerifiedTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Z_Number', 'business.z_no'),
+            Column::make('Z_Number', 'business.zin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),
             Column::make('Tax Type', 'taxType.name'),

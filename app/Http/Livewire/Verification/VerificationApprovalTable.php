@@ -37,7 +37,7 @@ class VerificationApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZRB No', 'business.z_no'),
+            Column::make('ZRB No', 'business.zin'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),

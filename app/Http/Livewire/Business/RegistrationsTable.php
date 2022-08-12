@@ -47,7 +47,7 @@ class RegistrationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Z Number', 'z_no')
+            Column::make('Z Number', 'zin')
                 ->sortable()
                 ->searchable(),
             Column::make('Business Name', 'name')
