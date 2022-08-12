@@ -6,7 +6,7 @@
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Investigation Report</a>
+                aria-selected="true">Audit Report</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
@@ -25,17 +25,45 @@
                 </div>
                 <div class="card-body">
                     <div class="row m-2">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">TIN</span>
+                            <p class="my-1">{{ $audit->business->tin }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">ZIN</span>
+                            <p class="my-1">{{ $audit->business->z_no }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $return->taxtype->name }}</p>
+                            <p class="my-1">{{ $audit->taxtype->name }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
-                            <p class="my-1">{{ $return->business->name }}</p>
+                            <p class="my-1">{{ $audit->business->name }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
-                            <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
+                            <p class="my-1">{{ $audit->branch->name ?? 'Head Quarter' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Auditing From</span>
+                            <p class="my-1">{{ $audit->period_from ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Auditing To</span>
+                            <p class="my-1">{{ $audit->period_to ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Audit Date</span>
+                            <p class="my-1">{{ $audit->auditing_date ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Scope</span>
+                            <p class="my-1">{{ $audit->scope ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Intension</span>
+                            <p class="my-1">{{ $audit->intension ?? '' }}</p>
                         </div>
                     </div>
                 </div>

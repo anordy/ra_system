@@ -3,11 +3,10 @@
         <div class="card-header text-uppercase font-weight-bold bg-white">
             Tax Auditing Approval
         </div>
-        <div class="card-body">
-
+        <div class="card-body p-0 m-0">
             @if ($this->checkTransition('assign_officers'))
-                <div class="row px-3">
-                    <div class="form-group col-lg-12">
+                <div class="row p-3">
+                    <div class="col-lg-12 mt-2">
                         <label class="control-label h6 text-uppercase">Assign Auditors officers</label>
                     </div>
                     <div class="col-lg-6">
@@ -44,7 +43,6 @@
                             @enderror
                         </div>
                     </div>
-
                     <div class="col-lg-6 form-group">
                         <label for="periodFrom">Investigation Period From</label>
                         <input type="date" class="form-control @error('periodFrom') is-invalid @enderror"
@@ -83,23 +81,20 @@
                             </div>
                         @enderror
                     </div>
-
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="auditingDate">Date of auditing</label>
-                            <input type="date" class="form-control @error('auditingDate') is-invalid @enderror"
-                                wire:model="auditingDate">
-                            @error('auditingDate')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="auditingDate">Date of auditing</label>
+                        <input type="date" class="form-control @error('auditingDate') is-invalid @enderror"
+                            wire:model="auditingDate">
+                        @error('auditingDate')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
             @endif
             @if ($this->checkTransition('conduct_audit'))
-                <div class="row px-3">
+                <div class="row p-0">
                     <div class="form-group col-lg-6">
                         <label class="control-label">Preliminary report</label>
                         <input type="file" class="form-control  @error('preliminaryReport') is-invalid @enderror"
@@ -121,8 +116,8 @@
                 </div>
             @endif
             @if ($this->checkTransition('prepare_final_report'))
-                <div class="row px-3">
-                    <div class="form-group col-lg-12">
+                <div class="row p-3">
+                    <div class="col-lg-12">
                         <label class="control-label h6 text-uppercase">Notice of Asessement</label>
                     </div>
                     <div class="row px-3">
@@ -170,7 +165,7 @@
                     </div>
                 </div>
             @endif
-            <div class="row px-3">
+            <div class="row p-3">
                 <div class="col-md-12 ">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Comments</label>
