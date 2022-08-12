@@ -26,7 +26,7 @@
                     of {{$return->financialMonth->name}} {{$return->financialMonth->year->name}}
                 </div>
                 <div class="card-body">
-                    <div>
+                    <div style="margin-right: 13px; margin-left: 15px;">
                         <livewire:returns.return-payment :return="$return"/>
                     </div>
                     @if(!empty($return))
@@ -105,7 +105,7 @@
 
                                         <div class="col-md-3 mb-3">
                                             <span class="font-weight-bold text-uppercase">Currency</span>
-                                            <p class="my-1">{{ $return->business->currency->iso ?? 'Head Quarter' }}</p>
+                                            <p class="my-1">{{ $return->currency }}</p>
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <span class="font-weight-bold text-uppercase">Status</span>
