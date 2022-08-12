@@ -1,14 +1,14 @@
 @extends('layouts.master')
 
-@section('title', 'Return Verification')
+@section('title', 'VAT Tax Returns')
 
 @section('content')
-    <div class="card">
+    <div class="card mt-3">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            Tax Returns Verified
+            VAT Return
         </div>
         <div class="card-body">
-            @livewire('verification.verification-assessment-table')
+            <livewire:returns.vat.vat-return-table/>
         </div>
     </div>
 @endsection

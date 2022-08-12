@@ -1,10 +1,9 @@
 @if (count($this->getEnabledTranstions()) >= 1)
     <div class="card shadow-sm mb-2 bg-white">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            Tax Audit Approval
+            Tax Auditing Approval
         </div>
         <div class="card-body">
-            @include('livewire.approval.transitions')
 
             @if ($this->checkTransition('assign_officers'))
                 <div class="row px-3">
@@ -45,6 +44,46 @@
                             @enderror
                         </div>
                     </div>
+
+                    <div class="col-lg-6 form-group">
+                        <label for="periodFrom">Investigation Period From</label>
+                        <input type="date" class="form-control @error('periodFrom') is-invalid @enderror"
+                            wire:model="periodFrom">
+                        @error('periodFrom')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="periodTo">Investigation Period To</label>
+                        <input type="date" class="form-control @error('periodTo') is-invalid @enderror"
+                            wire:model="periodTo">
+                        @error('periodTo')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="intension">Intension</label>
+                        <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
+                        @error('intension')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="periodTo">Scope</label>
+                        <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
+                        @error('scope')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="auditingDate">Date of auditing</label>

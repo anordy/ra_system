@@ -21,22 +21,8 @@ class TaxAuditApprovalController extends Controller
     public function edit($id){
 
         $audit = TaxAudit::with('assessment', 'officers')->find(decrypt($id));
-
-        $return = $audit->taxReturn;
-        if($return instanceof PetroleumReturn){
-            $viewRender = "returns.petroleum.filing.details";
-            return view('audit.approval.approval', compact('return', 'audit', 'viewRender'));
-        } else if($return instanceof HotelReturn){
-            $viewRender = "returns.hotel.details";
-            return view('audit.approval.approval', compact('return', 'audit', 'viewRender'));
-        } else if($return instanceof MnoReturn){
-            $viewRender = "returns.excise-duty.mno.details";
-            return view('audit.approval.approval', compact('return', 'audit', 'viewRender'));
-        }
-        elseif ($return instanceof VatReturn) {
-            $viewRender = "returns.vat_returns.details";
-            return view('audit.approval.approval', compact('return', 'audit', 'viewRender'));
-        }
+        $viewRender = "";
+        return view('audit.approval.approval', compact('audit', 'viewRender'));
 
     }
 
