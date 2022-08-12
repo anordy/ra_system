@@ -28,7 +28,7 @@ class CreateObjectionsTable extends Migration
             $table->string('marking')->nullable();
             $table->text('ground_objection')->nullable();
             $table->text('reason_objection')->nullable();
-            $table->string('waiver_report')->nullable();
+            $table->string('objection_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();
