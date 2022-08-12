@@ -28,6 +28,9 @@ class QuantityCertificateTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('Certificate No', 'certificate_no')
+                ->sortable()
+                ->searchable(),
             Column::make('Name of Importer/Market', 'business.name')
                 ->sortable()
                 ->searchable(),

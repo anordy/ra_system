@@ -42,6 +42,5 @@ class LandLease extends Model
     public function zmBills()
     {
         return $this->morphMany(ZmBill::class, 'billable');
-        // return $this->morphMany(ZmBill::class, 'payer_type','payer_id');
     }
 }

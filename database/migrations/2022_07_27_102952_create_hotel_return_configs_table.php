@@ -30,6 +30,7 @@ class CreateHotelReturnConfigsTable extends Migration
             $table->decimal('rate')->unsigned()->default(0);
             $table->decimal('rate_usd')->nullable();
             $table->string('formular')->nullable();
+            $table->string('value_formular')->nullable();
             $table->boolean('active')->default(false);
 
             $table->foreign('tax_type_id')->references('id')->on('tax_types');

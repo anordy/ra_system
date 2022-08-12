@@ -15,7 +15,6 @@
                 <div id="tab1" class="tab-pane fade active show">
                     @include('assesments.objection.includes.objection_info')
                         <livewire:approval.approval-objection-processing modelName='App\Models\Objection' modelId="{{ $objection->id }}" />
-
                 </div>
                 <div id="tab2" class="tab-pane fade">
                     <livewire:approval.approval-history-table modelName='App\Models\Objection' modelId="{{ $objection->id }}" />

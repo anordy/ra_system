@@ -86,7 +86,7 @@
                     <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
                 </li>
                 <li class="{{ request()->is('e-filling/vat*') ? 'active' : '' }}">
-                    <a href="{{ route('returns.vat.index') }}">Vat Returns</a>
+                    <a href="{{ route('returns.vat-return.index') }}">Vat Returns</a>
                 </li>
                 <li class="{{ request()->is('e-filling/port*') ? 'active' : '' }}">
                     <a href="{{ route('returns.port.index') }}">Port Returns</a>
@@ -103,7 +103,7 @@
                     <a href="{{ route('returns.bfo-excise-duty.index') }}">BFO Excise Duty Return</a>
                 </li>
 
-                <li class="{{ request()->is('returns/*') ? 'active' : '' }}">
+                <li class="{{ request()->is('e-filling/lump-sum*') ? 'active' : '' }}">
                     <a href="{{ route('returns.lump-sum.index') }}">Lump Sum Payments</a>
 
                 <li class="{{ request()->is('e-filling/mobile-money-transfer*') ? 'active' : '' }}">
@@ -142,10 +142,6 @@
                 <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
                     <a href="{{ route('assesments.waiver.index') }}">Waiver</a>
                 </li>
-                <li class="{{ request()->is('assesments/waiverobjection*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.waiverobjection.index') }}">Both</a>
-                </li>
-
             </ul>
         </li>
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
@@ -176,6 +172,9 @@
                 <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
                     <a href="{{ route('settings.banks.index') }}">Banks</a>
                 </li>
+                <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
+                </li>
                 <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
                     <a href="{{ route('settings.education-level.index') }}">Education Level</a>
                 </li>
@@ -200,6 +199,9 @@
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.business-files.index') }}">Business Files</a>
                 </li>
+                <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">
@@ -214,7 +216,6 @@
                 </li>
             </ul>
         </li>
-
         <li class="{{ request()->is('tax_verifications*') ? 'active' : '' }}">
             <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 Returns Verifications
@@ -231,6 +232,9 @@
                     <a href="{{ route('tax_verifications.verified.index') }}">Approved Returns</a>
                 </li>
             </ul>
+        </li>
+        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
+            <a href="{{ route('claims.index') }}">Tax Claims</a>
         </li>
         <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
             <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -286,6 +290,25 @@
             </ul>
         </li>
 
+        <li class="{{ request()->is('debts*') ? 'active' : '' }}">
+            <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
+                Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.returns.index') }}">Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/verification*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.verification.index') }}">Verifications</a>
+                </li>
+                <li class="{{ request()->is('debts/auditing*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.auditing.index') }}">Auditing</a>
+                </li>
+                <li class="{{ request()->is('debts/investigation*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.investigation.index') }}">Investigations</a>
+                </li>
+            </ul>
+        </li>
+
 
         <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
             <a href="#landLeaseSubmenu" data-toggle="collapse"
@@ -303,6 +326,7 @@
 
             </ul>
         </li>
+
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
             <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
             <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
@@ -312,11 +336,14 @@
                 <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                     <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                 </li>
+
                 <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                     <a href="{{ route('pdf.all') }}">All PDF's</a>
                 </li>
+
             </ul>
         </li>
+
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">

@@ -28,6 +28,10 @@ class TaxAuditApprovalProcessing extends Component
     public $workingReport;
     public $finalReport;
     public $exitMinutes;
+    public $periodTo;
+    public $periodFrom;
+    public $intension;
+    public $scope;
 
     public $principalAmount;
     public $interestAmount;
@@ -48,6 +52,11 @@ class TaxAuditApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $modelId);
 
         $this->task = $this->subject->pinstancesActive;
+        $this->periodFrom = $this->subject->period_from;
+        $this->periodTo = $this->subject->period_to;
+        $this->intension = $this->subject->intension;
+        $this->scope = $this->subject->scope;
+        $this->auditingDate = $this->subject->auditing_date;
 
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);
@@ -71,6 +80,10 @@ class TaxAuditApprovalProcessing extends Component
             $this->validate(
                 [
                     'auditingDate' => 'required|date',
+                    'periodFrom' => 'required|date',
+                    'periodTo' => 'required|date',
+                    'intension' => 'required',
+                    'scope' => 'required',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],
                     'teamMember' => ['required',  new NotIn([$this->teamLeader])],
                 ],
@@ -81,6 +94,10 @@ class TaxAuditApprovalProcessing extends Component
             );
 
             $this->subject->auditing_date = $this->auditingDate;
+            $this->periodFrom = $this->subject->period_from;
+            $this->periodTo = $this->subject->period_to;
+            $this->intension = $this->subject->intension;
+            $this->scope = $this->subject->scope;
             $this->subject->save();
 
             TaxAuditOfficer::create([

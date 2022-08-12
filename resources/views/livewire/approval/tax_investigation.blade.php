@@ -4,7 +4,6 @@
             Tax Investigation Approval
         </div>
         <div class="card-body">
-            @include('livewire.approval.transitions')
 
             @if ($this->checkTransition('assign_officers'))
                 <div class="row px-3">
@@ -59,6 +58,24 @@
                             </div>
                         @enderror
                     </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="intension">Intension</label>
+                        <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
+                        @error('intension')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="periodTo">Scope</label>
+                        <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
+                        @error('scope')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
             @endif
          
@@ -104,6 +121,7 @@
                     </div>
                 </div>
             @endif
+
             <div class="row px-3">
                 <div class="col-md-12 ">
                     <div class="form-group">
@@ -118,6 +136,7 @@
                 </div>
             </div>
         </div>
+        
         @if ($this->checkTransition('start'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-primary" wire:click="approve('start')">

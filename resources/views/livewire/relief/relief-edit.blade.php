@@ -125,7 +125,6 @@
                         <tr>
                             <th scope="col" style="text-align:center">SN</th>
                             <th scope="col" style="text-align:center">Item Name *</th>
-                            {{-- <th scope="col" style="text-align:center">Description</th> --}}
                             <th scope="col" style="text-align:center">Quantity *</th>
                             <th scope="col" style="text-align:center">Unit Cost*</th>
                             <th scope="col" style="text-align:center">Unit Name</th>

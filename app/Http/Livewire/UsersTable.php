@@ -3,13 +3,13 @@
 namespace App\Http\Livewire;
 
 use App\Models\Audit;
-use id;
-use Exception;
 use App\Models\User;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use App\Traits\AuditTrait;
+use Exception;
+use id;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersTable extends DataTableComponent
 {
@@ -28,7 +28,7 @@ class UsersTable extends DataTableComponent
 
     protected $listeners = [
         'confirmed',
-        'toggleStatus'
+        'toggleStatus',
     ];
 
     public function columns(): array
@@ -42,8 +42,12 @@ class UsersTable extends DataTableComponent
                 ->searchable(),
             Column::make('Gender', 'gender')
                 ->format(function ($value) {
-                    if ($value == 'M') return 'Male';
-                    elseif ($value == 'F') return 'Female';
+                    if ($value == 'M') {
+                        return 'Male';
+                    } elseif ($value == 'F') {
+                        return 'Female';
+                    }
+
                 })
                 ->sortable()
                 ->searchable(),
@@ -58,14 +62,13 @@ class UsersTable extends DataTableComponent
                 ->searchable(),
             Column::make('Status', 'id')
                 ->format(function ($value, $row) {
-                    if ( $value == auth()->user()->id) {
+                    if ($value == auth()->user()->id) {
 
-                    }  else if ($row->status == 1) {
+                    } else if ($row->status == 1) {
                         return <<< HTML
                         <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock-open"></i> </button>
                     HTML;
-                    }
-                     else {
+                    } else {
                         return <<< HTML
                         <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
                     HTML;
@@ -88,9 +91,15 @@ class UsersTable extends DataTableComponent
                     }
                 })
                 ->html(true),
+            Column::make('Role Action', 'id')
+                ->format(function ($value, $row) {
+                    return <<< HTML
+                    <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal',$value)"><i class="fa fa-edit"></i> Change Role </button>
+                HTML;
+                })
+                ->html(true),
         ];
     }
-
 
     public function delete($id)
     {
@@ -104,7 +113,7 @@ class UsersTable extends DataTableComponent
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $id
+                'id' => $id,
             ],
 
         ]);
@@ -122,7 +131,7 @@ class UsersTable extends DataTableComponent
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $id
+                'id' => $id,
             ],
 
         ]);

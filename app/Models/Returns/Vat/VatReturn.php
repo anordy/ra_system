@@ -50,5 +50,9 @@ class VatReturn extends Model
 //        return $this->morphMany(ZmBill::class, 'billable');
 //    }
 
+    public function penalties(){
+        return $this->hasMany(VatReturnPenalty::class, 'return_id');
+    }
+
 
 }

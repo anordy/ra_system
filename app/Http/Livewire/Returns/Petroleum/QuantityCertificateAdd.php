@@ -28,6 +28,7 @@ class QuantityCertificateAdd extends Component
     public $liters_at_20;
     public $metric_tons;
     public $ascertained;
+    public $voyage_no;
     public $configs = [];
     public Collection $products;
 
@@ -41,7 +42,7 @@ class QuantityCertificateAdd extends Component
             'ascertained' => 'required|date',
             'business' => [
                 'required',
-                'exists:businesses,z_no'
+                'exists:businesses,zin'
             ],
             'products.*.config_id' => 'required',
             'products.*.liters_observed' => 'required|numeric',
@@ -105,8 +106,8 @@ class QuantityCertificateAdd extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            $business = Business::firstWhere('z_no', $this->business);
-
+            $business = Business::firstWhere('zin', $this->business);
+            
             $certificate = QuantityCertificate::create([
                 'business_id' => $business->id,
                 'ascertained' => $this->ascertained,
@@ -116,21 +117,26 @@ class QuantityCertificateAdd extends Component
                 'created_by' => auth()->user()->id,
                 'download_count' => 0
             ]);
+            
+            $certificateNumber = $business->zin.'-'.$certificate->id;
+            $certificateUpdate = QuantityCertificate::find($certificate->id);
+            $certificateUpdate->certificate_no = $certificateNumber;
+            $certificateUpdate->save();
 
-            $product_payload = [];
+            $product_payload = collect();
             foreach ($this->products as $product) {
                 $product = (object) $product;
-                array_push($product_payload, [
+                $product_payload->push(new QuantityCertificateItem([
                     'certificate_id' => $certificate->id,
                     'config_id' => $product->config_id,
                     'cargo_name' => collect($this->configs)->firstWhere('id', $product->config_id)->name ?? '',
                     'liters_observed' => $product->liters_observed,
                     'liters_at_20' => $product->liters_at_20,
                     'metric_tons' => $product->metric_tons,
-                ]);
+                ]));
             }
 
-            $certificate->products()->associate($product_payload);
+            $certificate->products()->saveMany($product_payload);
 
             DB::commit();
             session()->flash('success', 'Certificate of Quantity has been generated successfully');

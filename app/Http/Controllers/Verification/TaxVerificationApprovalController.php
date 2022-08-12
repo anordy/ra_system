@@ -9,7 +9,7 @@ use App\Models\Returns\LampSum\LampSumReturn;
 use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
-use App\Models\Returns\BFO\BFOReturn;
+use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\HotelReturns\HotelReturn;
@@ -46,7 +46,7 @@ class TaxVerificationApprovalController extends Controller
             $viewRender = 'returns.vat_returns.details';
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
-        } elseif ($return instanceof BFOReturn) {
+        } elseif ($return instanceof BfoReturn) {
             $viewRender = 'returns.excise-duty.bfo.details';
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));

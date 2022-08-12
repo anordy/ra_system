@@ -125,6 +125,43 @@ a[data-toggle="collapse"] {
     margin-bottom: 8px !important;
 }
 
+.form-control {
+    font-size: .99em;
+    border-radius: 0;
+    transition: 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    box-shadow: unset;
+    border-color: #996567;
+}
+
+.nav-tabs {
+    border-bottom: unset;
+}
+
+.tab-content {
+    padding: 0!important;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+    border-top: 2px solid #966566;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #996566;
+}
+
+.disp-Info {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #996567;
+    color: #fff;
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
@@ -156,12 +193,12 @@ a[data-toggle="collapse"] {
 .card-tools {
     display: block;
     float: none;
-    margin-top: 0;
     position: absolute;
     top: 15px;
     right: 15px;
     padding: 0;
     text-align: right;
+    margin-top: -8px !important;
 }
 
 .card-tools a {
@@ -310,7 +347,11 @@ LIVEWIRE TABS
 }
 
 .bg-secondary {
-    background-color: #f7f7f7 !important;
+    background-color: #e9e9e9 !important;
+}
+
+.bg-alt {
+    background-color: #00b32036 !important;
 }
 
 .btn, input, select {
@@ -366,8 +407,6 @@ LIVEWIRE TABS
     border-radius: 50%;
     background: #fff;
 }
-
-
 
 .swal2-container {
     z-index: 20000 !important;

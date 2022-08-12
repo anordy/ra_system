@@ -2,15 +2,16 @@
 
 namespace App\Models\Returns\Port;
 
-use App\Models\Business;
-use App\Models\BusinessLocation;
-use App\Models\FinancialMonth;
-use App\Models\FinancialYear;
-use App\Models\Returns\Port\PortReturnItem;
-use App\Models\Taxpayer;
 use App\Models\TaxType;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\FinancialYear;
+use App\Models\FinancialMonth;
+use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Returns\Port\PortReturnItem;
+use App\Models\Returns\Port\PortReturnPenalty;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PortReturn extends Model
 {
@@ -50,6 +51,10 @@ class PortReturn extends Model
     public function financialMonth()
     {
         return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
+    }
+
+    public function penalties(){
+        return $this->hasMany(PortReturnPenalty::class, 'return_id');
     }
 
 }
