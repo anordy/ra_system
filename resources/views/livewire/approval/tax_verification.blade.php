@@ -6,7 +6,7 @@
         <div class="card-body">
 
             @if ($this->checkTransition('assign_officers'))
-                <div class="row px-3">
+                <div class="row p-1">
                     <div class="form-group col-lg-12">
                         <label class="control-label h6 text-uppercase">Assign Compliance officers</label>
                     </div>

@@ -25,27 +25,27 @@
                 </div>
                 <div class="card-body">
                     <div class="row m-2 pt-3">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
                             <p class="my-1">{{ $verification->taxtype->name }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Filled By</span>
                             <p class="my-1">{{ $verification->createdBy->full_name ?? '' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Financial Year</span>
                             <p class="my-1">{{ $return->financialYear->name ?? '' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Return Month</span>
                             <p class="my-1">{{ $verification->taxReturn->financialMonth->name ?? '' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
                             <p class="my-1">{{ $return->business->name }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
                             <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                         </div>
@@ -69,7 +69,7 @@
                         @endforeach
 
                         @if ($verification->assessment_report)
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
                                     class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                     <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
