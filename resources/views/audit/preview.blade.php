@@ -1,16 +1,16 @@
 @extends('layouts.master')
 
-@section('title', 'Audit Preview')
+@section('title', 'Approval Details')
 
 @section('content')
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Investigation Report</a>
+                aria-selected="true">Audit Informations</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                aria-selected="false">Return Information</a>
+                aria-selected="false">Declaration Analysis</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
@@ -25,17 +25,45 @@
                 </div>
                 <div class="card-body">
                     <div class="row m-2">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">TIN</span>
+                            <p class="my-1">{{ $audit->business->tin }}</p>
+                        </div> 
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">ZIN</span>
+                            <p class="my-1">{{ $audit->business->zin }}</p>
+                        </div> 
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $return->taxtype->name }}</p>
+                            <p class="my-1">{{ $audit->taxtype->name }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
-                            <p class="my-1">{{ $return->business->name }}</p>
+                            <p class="my-1">{{ $audit->business->name }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
-                            <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
+                            <p class="my-1">{{ $audit->branch->name ?? 'Head Quarter' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Auditing From</span>
+                            <p class="my-1">{{ $audit->period_from ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Auditing To</span>
+                            <p class="my-1">{{ $audit->period_to ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Audit Date</span>
+                            <p class="my-1">{{ $audit->auditing_date ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Scope</span>
+                            <p class="my-1">{{ $audit->scope ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Intension</span>
+                            <p class="my-1">{{ $audit->intension ?? '' }}</p>
                         </div>
                     </div>
                 </div>
@@ -43,14 +71,10 @@
 
             <div class="card">
                 <div class="card-header text-uppercase font-weight-bold bg-white">
-                    Audit Informations
+                    Audit Findings
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Audit Date</span>
-                            <p class="my-1">{{ $audit->auditing_date ?? '' }}</p>
-                        </div>
                         @if (count($audit->officers) > 0)
                             @foreach ($audit->officers as $officer)
                                 <div class="col-md-4 mb-3">
@@ -148,20 +172,8 @@
             @endif
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            @if (view()->exists($viewRender))
-                @php echo view($viewRender, compact('return'))->render() @endphp
-            @else
-                <div class="card">
-                    <div class="card-body">
-                        <div class="alert alert-danger" role="alert">
-                            <h4 class="alert-heading">Error!</h4>
-                            <p>
-                                Configured page not found kindly check with Administrator
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            @livewire('audit.declared-sales-analysis', ['audit' => $audit])
+           
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <livewire:approval.approval-history-table modelName='{{ get_class($audit) }}'

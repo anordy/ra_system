@@ -290,6 +290,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
+        Route::resource('/files', TaxVerificationFilesController::class);
     });
 
     Route::resource('/files', TaxAuditFilesController::class);

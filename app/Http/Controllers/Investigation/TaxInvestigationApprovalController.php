@@ -17,8 +17,7 @@ class TaxInvestigationApprovalController extends Controller
     {
 
         $investigation = TaxInvestigation::with('assessment', 'officers')->find(decrypt($id));
-        $viewRender = "";
-        return view('investigation.approval.approval', compact('investigation', 'viewRender'));
+        return view('investigation.approval.approval', compact('investigation'));
     }
 
     public function show($id)

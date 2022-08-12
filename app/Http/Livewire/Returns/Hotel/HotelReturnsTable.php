@@ -59,7 +59,7 @@ class HotelReturnsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
-            Column::make('Total VAT with Penalty', 'total_amount_due_with_penalty')
+            Column::make('Total VAT with Penalty', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);

@@ -41,11 +41,11 @@ class MnoReturnsTable extends DataTableComponent
                     return "{$row->business->name}";
                 }),
 
-            Column::make("Total Payable Vat", 'total_amount_due_with_penalty')
+            Column::make("Total Payable Vat", 'total_amount_due_with_penalties')
                 ->sortable()
                 ->searchable()
                 ->format(function($value, $row){
-                    return number_format($row->total_amount_due_with_penalty,2);
+                    return number_format($row->total_amount_due_with_penalties,2);
                 }),
                 
             Column::make("Action", "status")
