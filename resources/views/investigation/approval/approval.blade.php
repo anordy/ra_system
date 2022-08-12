@@ -31,7 +31,7 @@
                         </div> 
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">ZIN</span>
-                            <p class="my-1">{{ $investigation->business->z_no }}</p>
+                            <p class="my-1">{{ $investigation->business->zin }}</p>
                         </div> 
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
