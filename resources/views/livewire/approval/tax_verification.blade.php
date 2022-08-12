@@ -12,7 +12,7 @@
                     </div>
                     <div class="form-group col-lg-6">
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Team Leader</label>
+                            <label for="teamLeader">Team Leader</label>
                             <select class="form-control @error('teamLeader') is-invalid @enderror"
                                 wire:model="teamLeader">
                                 <option value='null' disabled selected>Select</option>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="form-group col-lg-6">
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Team Member</label>
+                            <label for="teamMember">Team Member</label>
                             <select class="form-control @error('teamMember') is-invalid @enderror"
                                 wire:model="teamMember">
                                 <option value='null' disabled selected>Select</option>
@@ -47,34 +47,7 @@
                 </div>
             @endif
             @if ($this->checkTransition('conduct_verification'))
-                <div class="row px-3">
-                    <div class="form-group col-lg-12">
-                        <label class="control-label h6 text-uppercase">Adjusted Assessment</label>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Principal Amount</label>
-                        <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
-                            wire:model.lazy="principalAmount">
-                        @error('principalAmount')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Interest Amount</label>
-                        <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
-                            wire:model.lazy="interestAmount">
-                        @error('interestAmount')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Penalty Amount</label>
-                        <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
-                            wire:model.lazy="penaltyAmount">
-                        @error('penaltyAmount')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
+                <div class="row p-0">
 
                     <div class="form-group col-lg-6">
                         <label class="control-label">Assessment Report</label>
@@ -85,9 +58,50 @@
                         @enderror
                     </div>
 
+                    <div class="form-group col-lg-6">
+                        <label for="exampleFormControlTextarea1">Has Adjusted Assessment</label>
+                        <select class="form-control @error('hasAssessment') is-invalid @enderror"
+                            wire:model="hasAssessment" wire:change="hasNoticeOfAttachmentChange($event.target.value)">
+                            <option value='' selected>Select</option>
+                            <option value=1>Yes</option>
+                            <option value=0>No</option>
+                        </select>
+                        @error('hasAssessment')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    @if ($hasAssessment)
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Principal Amount</label>
+                            <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
+                                wire:model.lazy="principalAmount">
+                            @error('principalAmount')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Interest Amount</label>
+                            <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
+                                wire:model.lazy="interestAmount">
+                            @error('interestAmount')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Penalty Amount</label>
+                            <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
+                                wire:model.lazy="penaltyAmount">
+                            @error('penaltyAmount')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    @endif
+
                 </div>
             @endif
-            <div class="row px-3">
+            <div class="row p-0">
                 <div class="col-md-12 mb-3">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Comments</label>
