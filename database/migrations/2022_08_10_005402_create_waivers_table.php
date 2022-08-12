@@ -28,7 +28,9 @@ class CreateWaiversTable extends Migration
             $table->string('marking')->nullable();
             $table->text('ground_waiver')->nullable();
             $table->text('reason_waiver')->nullable();
-            $table->string('attachments')->nullable();
+            $table->string('waiver_report')->nullable();
+            $table->string('notice_report')->nullable();
+            $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();
         });

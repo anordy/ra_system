@@ -68,6 +68,7 @@ class ZmCore
         DB::beginTransaction();
         try {
             $bill_amount = 0;
+
             foreach ($bill_items as $item) {
                 if (!isset($item['amount']) || !isset($item['gfs_code'])) {
                     throw new \Exception('Bill item must contain item_amount and gfs_code');
@@ -78,6 +79,7 @@ class ZmCore
                     $bill_amount += $item['amount'];
                 }
             }
+
             $equivalent_amount = $bill_amount * $exchange_rate;
 
             $zm_bill = new ZmBill([

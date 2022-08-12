@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Hotel Returns History')
+@section('title','Hotel Returns')
 
 @section('content')
 <div class="card p-0 m-0">

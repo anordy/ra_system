@@ -4,7 +4,6 @@
             Tax Verification Approval
         </div>
         <div class="card-body">
-            @include('livewire.approval.transitions')
 
             @if ($this->checkTransition('assign_officers'))
                 <div class="row px-3">

@@ -86,7 +86,7 @@
                     <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
                 </li>
                 <li class="{{ request()->is('e-filling/vat*') ? 'active' : '' }}">
-                    <a href="{{ route('returns.vat.index') }}">Vat Returns</a>
+                    <a href="{{ route('returns.vat-return.index') }}">Vat Returns</a>
                 </li>
                 <li class="{{ request()->is('e-filling/port*') ? 'active' : '' }}">
                     <a href="{{ route('returns.port.index') }}">Port Returns</a>
@@ -103,7 +103,7 @@
                     <a href="{{ route('returns.bfo-excise-duty.index') }}">BFO Excise Duty Return</a>
                 </li>
 
-                <li class="{{ request()->is('returns/*') ? 'active' : '' }}">
+                <li class="{{ request()->is('e-filling/lump-sum*') ? 'active' : '' }}">
                     <a href="{{ route('returns.lump-sum.index') }}">Lump Sum Payments</a>
 
                 <li class="{{ request()->is('e-filling/mobile-money-transfer*') ? 'active' : '' }}">
@@ -198,6 +198,9 @@
                 </li>
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.business-files.index') }}">Business Files</a>
+                </li>
+                <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
                 </li>
             </ul>
         </li>

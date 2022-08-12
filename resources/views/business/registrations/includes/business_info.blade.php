@@ -168,6 +168,12 @@
                     <p class="my-1">{{ $business->taxRegion->name }}</p>
                 </div>
             @endif
+            @if($business->zin)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">ZIN</span>
+                    <p class="my-1">{{ $business->zin }}</p>
+                </div>
+            @endif
         </div>
     </div>
 
