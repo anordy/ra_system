@@ -4,6 +4,8 @@
             Tax Auditing Approval
         </div>
         <div class="card-body p-0 m-0">
+            @include('layouts.component.messages')
+
             @if ($this->checkTransition('assign_officers'))
                 <div class="row p-3">
                     <div class="col-lg-12 mt-2">
@@ -112,32 +114,43 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-
                 </div>
             @endif
             @if ($this->checkTransition('prepare_final_report'))
                 <div class="row p-3">
-                    <div class="col-lg-12">
-                        <label class="control-label h6 text-uppercase">Notice of Asessement</label>
-                    </div>
-                    <div class="row px-3">
-                        <div class="form-group col-lg-6">
-                            <label class="control-label">Final report</label>
-                            <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
-                                wire:model.lazy="finalReport">
-                            @error('finalReport')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
 
-                        <div class="form-group col-lg-6">
-                            <label class="control-label">Exit Minutes</label>
-                            <input type="file" class="form-control  @error('exitMinutes') is-invalid @enderror"
-                                wire:model.lazy="exitMinutes">
-                            @error('exitMinutes')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Final report</label>
+                        <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
+                            wire:model.lazy="finalReport">
+                        @error('finalReport')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Exit Minutes</label>
+                        <input type="file" class="form-control  @error('exitMinutes') is-invalid @enderror"
+                            wire:model.lazy="exitMinutes">
+                        @error('exitMinutes')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="exampleFormControlTextarea1">Has Notice of Asessement</label>
+                        <select class="form-control @error('hasAssessment') is-invalid @enderror"
+                            wire:model="hasAssessment"  wire:change="hasNoticeOfAttachmentChange($event.target.value)" >
+                            <option value='' selected>Select</option>
+                            <option value=1>Yes</option>
+                            <option value=0>No</option>
+                        </select>
+                        @error('hasAssessment')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    @if ($hasAssessment)
                         <div class="form-group col-lg-6">
                             <label class="control-label">Principal Amount</label>
                             <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
@@ -162,7 +175,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                    @endif
                 </div>
             @endif
             <div class="row p-3">
