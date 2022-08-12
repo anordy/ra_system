@@ -16,13 +16,13 @@
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Changes</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
-                <div id="tab1" class="tab-pane fade active show">
+                <div id="tab1" class="tab-pane fade active show card p-2">
                     <livewire:business.tax-type.tax-type-table status='pending'></livewire:business.tax-type.tax-type-table>
                 </div>
-                <div id="tab2" class="tab-pane fade">
+                <div id="tab2" class="tab-pane fade card p-2">
                     <livewire:business.tax-type.tax-type-table status='approved'></livewire:business.tax-type.tax-type-table>
                 </div>
-                <div id="tab3" class="tab-pane fade">
+                <div id="tab3" class="tab-pane fade card p-2">
                     <livewire:business.tax-type.tax-type-table status='rejected'></livewire:business.tax-type.tax-type-table>
                 </div>
             </div>

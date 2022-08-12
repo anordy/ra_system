@@ -63,7 +63,7 @@
 <body>
 <span class="embed-text business-name">{{ $business->name ?? '' }}</span>
 <span class="embed-text taxpayer-name">{{ $business->tin ?? '' }}</span>
-<span class="embed-text reg-no">{{ $business->reg_no ?? '' }}</span>
+<span class="embed-text reg-no">{{ $business->zin ?? '' }}</span>
 <span class="embed-text tax-types">
         @foreach($business->taxTypes as $type)
         @if ($loop->last)

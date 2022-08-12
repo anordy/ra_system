@@ -42,7 +42,7 @@ class QuantityCertificateAdd extends Component
             'ascertained' => 'required|date',
             'business' => [
                 'required',
-                'exists:businesses,z_no'
+                'exists:businesses,zin'
             ],
             'products.*.config_id' => 'required',
             'products.*.liters_observed' => 'required|numeric',
@@ -106,7 +106,7 @@ class QuantityCertificateAdd extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            $business = Business::firstWhere('z_no', $this->business);
+            $business = Business::firstWhere('zin', $this->business);
             
             $certificate = QuantityCertificate::create([
                 'business_id' => $business->id,
@@ -118,7 +118,7 @@ class QuantityCertificateAdd extends Component
                 'download_count' => 0
             ]);
             
-            $certificateNumber = $business->z_no.'-'.$certificate->id;
+            $certificateNumber = $business->zin.'-'.$certificate->id;
             $certificateUpdate = QuantityCertificate::find($certificate->id);
             $certificateUpdate->certificate_no = $certificateNumber;
             $certificateUpdate->save();
