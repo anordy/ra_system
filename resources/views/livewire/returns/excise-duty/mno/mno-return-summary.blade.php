@@ -1,22 +1,26 @@
-<div>
-    <table class="table table-bordered table-stripped">
-        <thead>
-            <tr>
-                <th>Total Submitted</th>
-                <th>Total Paid</th>
-                <th>Total unpaid</th>
-                <th>Late Filings</th>
-                <th>Late Paid</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ $totalSubmittedReturns }}</td>
-                <td>{{ $totalPaidReturns }}</td>
-                <td>{{ $totalUnpaidReturns }}</td>
-                <td>{{ $totalLateFiledReturns }}</td>
-                <td>{{ $totalLatePaidReturns }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="row text-center">
+    <div class="col-sm-3 mb-3">
+        <div><strong>Total Submitted</strong></div>
+        <div>{{ $totalSubmittedReturns }}</div>
+    </div>
+
+    <div class="col-sm-3 mb-3">
+        <div><strong>Total Paid</strong></div>
+        <div>{{ $totalPaidReturns }}</div>
+    </div>
+
+    <div class="col-sm-3 mb-3">
+        <div><strong>Total unpaid</strong></div>
+        <div>{{ $totalUnpaidReturns }}</div>
+    </div>
+
+    <div class="col-sm-3 mb-3">
+        <div><strong>Late Filings</strong></div>
+        <div>{{ $totalLateFiledReturns }}</div>
+    </div>
+
+    <div class="col-sm-3 mb-3">
+        <div><strong>Late Paid</strong></div>
+        <div>{{ $totalLatePaidReturns }}</div>
+    </div>
 </div>
