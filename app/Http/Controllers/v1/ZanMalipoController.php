@@ -37,10 +37,13 @@ class ZanMalipoController extends Controller
         MmTransferReturn::class,
         HotelReturn::class,
         PetroleumReturn::class,
-        PortReturn::class,
         EmTransactionReturn::class,
         BfoReturn::class,
         LumpSumPayment::class
+    ];
+
+    private $multipleReturnable = [
+        PortReturn::class,
     ];
 
     /**
