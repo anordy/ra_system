@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 form-group">
-                        <label for="periodFrom">Investigation Period From</label>
+                        <label for="periodFrom">Auditing Period From</label>
                         <input type="date" class="form-control @error('periodFrom') is-invalid @enderror"
                             wire:model="periodFrom">
                         @error('periodFrom')
@@ -56,7 +56,7 @@
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
-                        <label for="periodTo">Investigation Period To</label>
+                        <label for="periodTo">Auditing Period To</label>
                         <input type="date" class="form-control @error('periodTo') is-invalid @enderror"
                             wire:model="periodTo">
                         @error('periodTo')
