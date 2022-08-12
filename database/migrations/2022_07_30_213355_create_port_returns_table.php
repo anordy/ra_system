@@ -18,7 +18,7 @@ class CreatePortReturnsTable extends Migration
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('business_id');
             $table->string('filled_type');
-            $table->unsignedBigInteger('filled_id');
+            $table->unsignedBigInteger('filled');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->integer('edited_count')->default(0);
@@ -26,14 +26,15 @@ class CreatePortReturnsTable extends Migration
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('financial_year_id')->references('id')->on('financial_years');
             $table->unsignedBigInteger('financial_month_id');
-            $table->decimal('total_vat_payable_tzs', 40, 2);
-            $table->decimal('total_vat_payable_usd', 40, 2);
-            $table->decimal('infrastructure', 40, 2);
-            $table->decimal('infrastructure_znz_znz', 40, 2);
-            $table->decimal('infrastructure_znz_tm', 40, 2);
+            $table->decimal('total_vat_payable_tzs', 20, 2);
+            $table->decimal('total_vat_payable_usd', 20, 2);
+            $table->decimal('total_amount_due_with_penalties_tzs', 20, 2)->default(0);
+            $table->decimal('total_amount_due_with_penalties_usd', 20, 2)->default(0);
+            $table->decimal('infrastructure', 20, 2);
+            $table->decimal('infrastructure_znz_znz', 20, 2);
+            $table->decimal('infrastructure_znz_tm', 20, 2);
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
-
             $table->string('status');
             $table->timestamps();
         });

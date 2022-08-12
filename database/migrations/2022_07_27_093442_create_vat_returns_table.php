@@ -24,6 +24,7 @@ class CreateVatReturnsTable extends Migration
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->string('business_type')->nullable();
+            $table->string('currency');
             $table->decimal('total_output_tax', 20,2);
             $table->decimal('total_input_tax', 20,2);
             $table->decimal('total_vat_payable', 20,2);
@@ -38,8 +39,8 @@ class CreateVatReturnsTable extends Migration
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->integer('editing_count',0);
             $table->string('method_used')->nullable();
-            $table->unsignedBigInteger('filled_by_id');
-            $table->string('filled_by_type');
+            $table->unsignedBigInteger('filed_by_id');
+            $table->string('filed_by_type');
             $table->timestamps();
         });
     }
