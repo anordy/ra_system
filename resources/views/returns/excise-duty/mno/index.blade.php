@@ -8,7 +8,7 @@
         MNO Excise Duty Returns Summary
     </div>
     <div class="card-body mt-0 p-2">
-        @livewire('returns.excise-duty.mno-return-summary')
+        @livewire('returns.return-summary',['vars'=>$vars])
     </div>
 </div>
 
