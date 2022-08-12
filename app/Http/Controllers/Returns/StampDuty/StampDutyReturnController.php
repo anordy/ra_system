@@ -4,12 +4,18 @@ namespace App\Http\Controllers\Returns\StampDuty;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Traits\ReturnCardReport;
 use Illuminate\Http\Request;
 
 class StampDutyReturnController extends Controller
 {
+    use ReturnCardReport;
+
     public function index(){
-        return view('returns.stamp-duty.index');
+
+        $data = $this->returnCardReport(StampDutyReturn::class, 'stamp_duty', 'stamp_duty_return');
+
+        return view('returns.stamp-duty.index', compact('data'));
     }
 
     public function show($returnId){

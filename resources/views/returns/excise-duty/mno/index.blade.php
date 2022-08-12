@@ -16,6 +16,7 @@
     <div class="card-header text-uppercase font-weight-bold">
         MNO Excise Duty Returns
     </div>
+    @livewire('returns.return-card-report', ['data' => $data])
     <div class="card-body mt-0 p-2">
         @livewire('returns.excise-duty.mno-returns-table')
     </div>

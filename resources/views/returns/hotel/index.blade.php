@@ -7,6 +7,7 @@
     <div class="card-header text-uppercase font-weight-bold">
         Hotel Returns
     </div>
+    @livewire('returns.return-card-report', ['data' => $data])
     <div class="card-body mt-0 p-2">
         <livewire:returns.hotel.hotel-returns-table status='all'></livewire:returns.hotel.hotel-returns-table>
     </div>

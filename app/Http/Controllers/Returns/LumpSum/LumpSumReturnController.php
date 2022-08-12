@@ -6,13 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Livewire\Returns\LumpSum\LumpSumReturns;
 use App\Models\BusinessLocation;
 use App\Models\Returns\LampSum\LampSumReturn;
+use App\Traits\ReturnCardReport;
 use Illuminate\Http\Request;
 
 class LumpSumReturnController extends Controller
 {
+    use ReturnCardReport;
+
     public function index()
     {
-        return view('returns.lumpsum.history');
+        $data = $this->returnCardReport(StampDutyReturn::class, 'stamp_duty', 'stamp_duty_return');
+
+        return view('returns.lumpsum.history', compact('data'));
     }
 
     public function create(Request $request)

@@ -7,6 +7,7 @@
         <div class="card-header text-uppercase font-weight-bold bg-white">
             Stamp Duty Return
         </div>
+        @livewire('returns.return-card-report', ['data' => $data])
         <div class="card-body">
             <livewire:returns.stamp-duty.stamp-duty-returns-table />
         </div>

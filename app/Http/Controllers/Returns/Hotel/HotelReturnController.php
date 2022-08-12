@@ -4,13 +4,17 @@ namespace App\Http\Controllers\Returns\Hotel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Traits\ReturnCardReport;
 
 class HotelReturnController extends Controller
 {
-    
+    use ReturnCardReport;
 
     public function index(){
-        return view('returns.hotel.index');
+        
+        $data = $this->returnCardReport(HotelReturn::class, 'hotel', 'hotel_return');
+
+        return view('returns.hotel.index', compact('data'));
     }
 
     public function show($return_id){
