@@ -6,37 +6,39 @@
         <div class="card-body">
             @include('livewire.approval.transitions')
 
-                @if ($this->checkTransition('objection_manager_review'))
-                    @include('livewire.approval.assesments.objection_manager_review')
-                    @endif
-                <div class="row m">
-                    <div class="col-md-12 mb-3">
-                        <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Comments</label>
-                            <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments' rows="3"></textarea>
-                            @error('comments')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+            @if ($this->checkTransition('objection_manager_review'))
+                @include('livewire.approval.assesments.waiver_objection_manager_review')
+            @elseif ($this->checkTransition('commisioner_review'))
+                @include('livewire.approval.assesments.waiver_objection_commisioner_review')
+            @endif
+            <div class="row m">
+                <div class="col-md-12 mb-3">
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Comments</label>
+                        <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments' rows="3"></textarea>
+                        @error('comments')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
+            </div>
         </div>
         @if ($this->checkTransition('objection_manager_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
+                {{-- <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
                     Incorrect
-                    return to Applicant</button>
-                <button type="button" class="btn btn-primary"
-                    wire:click="approve('objection_manager_review')">Approve & Forward</button>
+                    return to Applicant</button> --}}
+                <button type="button" class="btn btn-primary" wire:click="approve('objection_manager_review')">Approve
+                    & Forward</button>
             </div>
         @elseif ($this->checkTransition('chief_assurance_review'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger" wire:click="reject('chief_assurance_reject')">Reject
                     & Return</button>
-                <button type="button" class="btn btn-primary"
-                    wire:click="approve('chief_assurance_review')">Approve & Forward</button>
+                <button type="button" class="btn btn-primary" wire:click="approve('chief_assurance_review')">Approve &
+                    Forward</button>
             </div>
         @elseif ($this->checkTransition('commisioner_review'))
             <div class="modal-footer p-2 m-0">
@@ -46,6 +48,6 @@
                     Complete</button>
             </div>
         @endif
-            
+
     </div>
 @endif
