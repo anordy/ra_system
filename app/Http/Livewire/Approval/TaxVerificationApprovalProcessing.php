@@ -97,12 +97,11 @@ class TaxVerificationApprovalProcessing extends Component
                 ]
             );
 
-            if($this->assessmentReport != $this->subject->assessment_report){
+            if ($this->assessmentReport != $this->subject->assessment_report) {
                 $this->validate([
                     'assessmentReport' => 'required|mimes:pdf|max:1024'
                 ]);
             }
-
         }
 
         if ($this->checkTransition('assign_officers')) {
@@ -120,7 +119,7 @@ class TaxVerificationApprovalProcessing extends Component
 
         $operators = [];
         if ($this->checkTransition('assign_officers')) {
-   
+
             TaxVerificationOfficer::create([
                 'verification_id' => $this->subject->id,
                 'user_id' => $this->teamLeader,
@@ -136,17 +135,36 @@ class TaxVerificationApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('conduct_verification')) {
-   
- 
+            $assessment = $this->subject->assessment()->exists();
+
+            if ($this->hasAssessment == "1") {
+                if ($assessment) {
+                    $this->subject->assessment()->update([
+                        'principal_amount' => $this->principalAmount,
+                        'interest_amount' => $this->interestAmount,
+                        'penalty_amount' => $this->penaltyAmount,
+                    ]);
+                } else {
+                    TaxVerificationAssessment::create([
+                        'verification_id' => $this->subject->id,
+                        'principal_amount' => $this->principalAmount,
+                        'interest_amount' => $this->interestAmount,
+                        'penalty_amount' => $this->penaltyAmount,
+                    ]);
+                }
+            } else {
+                if ($assessment) {
+                    $this->subject->assessment()->delete();
+                }
+            }
+
             $assessmentReport = $this->assessmentReport;
-            if($this->assessmentReport != $this->subject->assessment_report){
+            if ($this->assessmentReport != $this->subject->assessment_report) {
                 $assessmentReport = $this->assessmentReport->store('verification', 'local-admin');
-                
             }
 
             $this->subject->assessment_report = $assessmentReport;
             $this->subject->save();
-          
         }
 
 
