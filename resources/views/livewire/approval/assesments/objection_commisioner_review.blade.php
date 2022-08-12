@@ -98,10 +98,30 @@
                                 </tr>
 
 
-
-
-                            </tbody>
-                            <tfoot>
+{{--                                <tr>--}}
+{{--                                    <td class="card-footer text-center">--}}
+{{--                                        Total--}}
+{{--                                    </td>--}}
+{{--                                    <td colspan="4" class="font-weight-bold text-center">--}}
+{{--                                        {{ number_format($total) }}--}}
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+                                <tr>
+                                    <td class="card-footer text-center">
+                                        Principal Amount
+                                    </td>
+                                    <td colspan="4" class="font-weight-bold text-center">
+                                        {{ number_format($objection->taxVerificationAssesment->principal_amount) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="card-footer text-center">
+                                        Tax Deposited
+                                    </td>
+                                    <td colspan="4" class="font-weight-bold text-center">
+                                        {{ number_format($objection->tax_not_in_dispute) }}
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td class="card-footer text-center">
                                         Total Amount Due
@@ -110,7 +130,17 @@
                                         {{ number_format($total) }}
                                     </td>
                                 </tr>
-                            </tfoot>
+                            </tbody>
+{{--                            <tfoot>--}}
+{{--                                <tr>--}}
+{{--                                    <td class="card-footer text-center">--}}
+{{--                                        Total Amount Due--}}
+{{--                                    </td>--}}
+{{--                                    <td colspan="4" class="font-weight-bold text-center">--}}
+{{--                                        {{ number_format($total) }}--}}
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+{{--                            </tfoot>--}}
                         </table>
 
                     </div>
