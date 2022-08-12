@@ -11,31 +11,32 @@
                    aria-controls="return" aria-selected="true">Return Debts</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="verification-tab" data-toggle="tab" href="#verification" role="tab"
-                   aria-controls="profile" aria-selected="false">Verification Debts</a>
+                <a class="nav-link" id="objection-tab" data-toggle="tab" href="#objection" role="tab"
+                   aria-controls="profile" aria-selected="false">Assesment Debts</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="objection-tab" data-toggle="tab" href="#objection" role="tab"
+                <a class="nav-link" id="verification-tab" data-toggle="tab" href="#verification" role="tab"
                    aria-controls="profile" aria-selected="false">Objection Debts</a>
             </li>
+        
         </ul>
 
         <div class="tab-content card" id="myTabContent">
 
             <div class="tab-pane p-2 show active" id="return" role="tabpanel" aria-labelledby="return-tab">
-            
+                <livewire:debt.returns-table />
+                
 
+            </div>
+            <div class="tab-pane p-2" id="objection" role="tabpanel" aria-labelledby="objection-tab">
+                <livewire:debt.assesments-table />
             </div>
             <div class="tab-pane p-2" id="verification" role="tabpanel" aria-labelledby="verification-tab">
              
 
 
             </div>
-            <div class="tab-pane p-2" id="objection" role="tabpanel" aria-labelledby="objection-tab">
             
-                <livewire:debt.objection-table />
-
-            </div>
 
         </div>
     </div>

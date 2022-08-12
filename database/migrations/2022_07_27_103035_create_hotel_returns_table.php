@@ -21,6 +21,7 @@ class CreateHotelReturnsTable extends Migration
             $table->unsignedBigInteger('business_id');
 
             $table->string('filled_type');
+            $table->string('currency');
             $table->unsignedBigInteger('filled_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
@@ -31,7 +32,7 @@ class CreateHotelReturnsTable extends Migration
             $table->decimal('hotel_infrastructure_tax', 20, 2)->nullable();
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 20, 2)->default(0);
-            $table->decimal('total_amount_due_with_penalty', 20, 2)->default(0);
+            $table->decimal('total_amount_due_with_penalties', 20, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->decimal('interest', 20, 2)->default(0);
 

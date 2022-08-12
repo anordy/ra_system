@@ -90,6 +90,7 @@ use App\Http\Controllers\WorkflowController;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Row;
 
 Auth::routes();
 
@@ -304,7 +305,9 @@ Route::name('claims.')->prefix('/tax-claims')->group(function () {
 
 Route::name('debts.')->prefix('/debts')->group(function () {
     Route::get('/outstanding', [DebtController::class, 'index'])->name('outstanding');
-    Route::get('/objection/{id}', [DebtController::class, 'objection'])->name('objection');
+    Route::get('/objection/{id}', [DebtController::class, 'showObjection'])->name('objection');
+    Route::get('/returns/{id}', [DebtController::class,'showReturnDebt'])->name('returns');
+    Route::get('/assesment/{id}', [DebtController::class,'showAssesmentDebt'])->name('assesment');
     Route::resource('/returns', ReturnDebtController::class);
     Route::resource('/investigation', InvestigationDebtController::class);
     Route::resource('/auditing', AuditDebtController::class);
