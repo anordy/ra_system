@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVatReturnPenaltyTable extends Migration
+class CreateVatReturnPenaltiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateVatReturnPenaltyTable extends Migration
      */
     public function up()
     {
-        Schema::create('vat_return_penalty', function (Blueprint $table) {
+        Schema::create('vat_return_penalties', function (Blueprint $table) {
             $table->id();
             $table->string('return_id');
             $table->string('financial_month_name');

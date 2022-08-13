@@ -95,7 +95,7 @@
 
 
                     <div class="form-group col-lg-6">
-                        <label for="exampleFormControlTextarea1">Is Taxpayer in debt</label>
+                        <label for="exampleFormControlTextarea1">Does Investigation contain debt</label>
                         <select class="form-control @error('hasAssessment') is-invalid @enderror"
                             wire:model="hasAssessment" wire:change="hasNoticeOfAttachmentChange($event.target.value)">
                             <option value='' selected>Select</option>
@@ -135,9 +135,9 @@
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Workings</label>
-                            <input type="file" class="form-control  @error('exitMinutes') is-invalid @enderror"
-                                wire:model.lazy="exitMinutes">
-                            @error('exitMinutes')
+                            <input type="file" class="form-control  @error('workingsReport') is-invalid @enderror"
+                                wire:model.lazy="workingsReport">
+                            @error('workingsReport')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>

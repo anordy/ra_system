@@ -17,7 +17,6 @@ class CreateVatReturnsTable extends Migration
     {
         Schema::create('vat_returns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('financial_month_id');
