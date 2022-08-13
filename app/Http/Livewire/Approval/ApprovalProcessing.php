@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Approval;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
 use App\Models\Currency;
 use App\Models\ISIC1;
@@ -225,10 +226,15 @@ class ApprovalProcessing extends Component
         ]);
 
         if ($this->checkTransition('director_of_trai_review')) {
-            if (!$this->subject->generateZin()){
+            $location = BusinessLocation::where('business_id', $this->subject->id)
+                ->where('is_headquarter', true)
+                ->firstOrFail();
+
+            if (!$location->generateZin()){
                 $this->alert('error', 'Something went wrong.');
                 return;
             }
+
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status      = BusinessStatus::APPROVED;
             event(new SendSms('business-registration-approved', $this->subject->id));
@@ -239,9 +245,9 @@ class ApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-
             return;
         }
+
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 

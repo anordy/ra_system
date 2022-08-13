@@ -15,6 +15,8 @@ class CreateBusinessLocationsTable extends Migration
     {
         Schema::create('business_locations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tax_region_id')->nullable(); // Main owner
+            $table->string('zin')->nullable();
             $table->string('name')->nullable();
             $table->unsignedBigInteger('taxpayer_id');
             $table->unsignedBigInteger('business_id');

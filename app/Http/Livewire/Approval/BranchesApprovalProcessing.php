@@ -17,6 +17,7 @@ class BranchesApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
+    public $taxRegions;
 
     public function mount($modelName, $modelId)
     {
