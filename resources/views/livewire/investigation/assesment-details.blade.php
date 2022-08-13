@@ -18,7 +18,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($return as $item)
+                        @foreach ($return as $i => $item)
                             <tr>
                                 <td>{{ $item['financial_month'] }}</td>
                                 <td>{{ $item['total_purchases'] }}</td>
