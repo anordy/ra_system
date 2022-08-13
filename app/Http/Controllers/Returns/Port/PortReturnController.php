@@ -58,7 +58,7 @@ class PortReturnController extends Controller
             'totalTaxAmountTZS' => $returnQuery->sum('port_returns.total_amount_due_with_penalties_tzs'),
             'totalLateFilingTZS' => $penaltyDataTZS->sum('totalLateFiling'),
             'totalLatePaymentTZS' => $penaltyDataTZS->sum('totalLatePayment'),
-            'totalRateTZS' => $penaltyDataUSD->sum('totalRate'),
+            'totalRateTZS' => $penaltyDataTZS->sum('totalRate'),
             'totalTaxAmountUSD' => $returnQuery->sum('port_returns.total_amount_due_with_penalties_usd'),
             'totalLateFilingUSD' => $penaltyDataUSD->sum('totalLateFiling'),
             'totalLatePaymentUSD' => $penaltyDataUSD->sum('totalLatePayment'),
