@@ -3,6 +3,9 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Models\BusinessLocation;
+use App\Models\Returns\BFO\BfoConfig;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\BFO\BfoReturnItems;
 use App\Models\Returns\ExciseDuty\MnoConfig;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
@@ -52,6 +55,9 @@ class DeclaredSalesAnalysis extends Component
                 break;
             case TaxType::EXCISE_DUTY_MNO:
                 $this->mno();
+                break;
+            case TaxType::EXCISE_DUTY_BFO:
+                $this->bfo();
                 break;
         }
 
@@ -210,6 +216,40 @@ class DeclaredSalesAnalysis extends Component
         $purchaseConfigs = MnoConfig::whereIn('code', ["LP", "IP"])->get()->pluck('id');
     }
 
+    protected function bfo()
+    {
+        $salesConfigs = BfoConfig::whereIn('code', ["HS", "RS", "TOS", "OS"])->get()->pluck('id');
+
+        $this->sales = BfoReturnItems::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
+            ->leftJoin('bfo_configs', 'bfo_configs.id', 'hotel_return_items.config_id')
+            ->leftJoin('bfo_returns', 'bfo_returns.id', 'hotel_return_items.return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'bfo_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->where('bfo_returns.tax_type_id', $this->taxType->id)
+            ->where('bfo_returns.business_location_id', $this->branch->id)
+            ->whereIn('config_id', $salesConfigs)
+            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+            
+        dd($this->sales);
+        $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
+
+        $calculations = collect(array_map(function ($returns) {
+            return array(
+                'year' => $returns['year'],
+                'month' => $returns['month'],
+                'financial_month' => "{$returns['month']} {$returns['year']}",
+                'total_sales' => $returns['total_sales'],
+                'total_purchases' => $returns['total_purchases'],
+                'output_vat' => $returns['total_sales_vat'],
+                'input_tax' => $returns['total_purchases_vat'],
+                'tax_paid' => ($returns['total_sales_vat']) - $returns['total_purchases_vat'],
+            );
+        }, $returns));
+
+        dd($calculations, 'here');
+
+        $this->returns = $calculations ?? [];
+    }
 
     public function render()
     {
