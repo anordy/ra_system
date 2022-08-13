@@ -22,14 +22,47 @@
                             </tr>
                         @endforeach
                     </tbody>
-                    <tfoot>
+                    
+                </table>
+            </div>
+
+            <div class="col-md-12">
+                <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
+                <hr>
+                <table class="table table-bordered table-sm normal-text">
+                    <thead>
                         <tr>
-                            <th style="width: 20%"></th>
-                            <th style="width: 30%"></th>
-                            <th style="width: 25%"></th>
-                            <th style="width: 25%">{{ number_format($return->total) }}</th>
+                            <th>Month</th>
+                            <th>Tax Amount</th>
+                            <th>Late Filing Amount</th>
+                            <th>Late Payment Amount</th>
+                            <th>Interest Rate</th>
+                            <th>Interest Amount</th>
+                            <th>Penalty Amount</th>
                         </tr>
-                    </tfoot>
+                    </thead>
+            
+                    <tbody>
+                        @if(count($return->petroleumPenalties))
+                            @foreach ($return->petroleumPenalties as $penalty)
+                            <tr>
+                                <td>{{ $penalty['financial_month_name'] }}</td>
+                                <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                                <td>{{ number_format($penalty['late_filing'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                                <td>{{ number_format($penalty['late_payment'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                                <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                                <td>{{ number_format($penalty['rate_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
+                                <td>{{ number_format($penalty['penalty_amount'], 2)}} <strong>{{ $return->currency}}</strong></td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="7" class="text-center py-3">
+                                    No penalties for this return.
+                                </td>
+                            </tr>
+                        @endif
+                    </tbody>
                 </table>
             </div>
         </div>

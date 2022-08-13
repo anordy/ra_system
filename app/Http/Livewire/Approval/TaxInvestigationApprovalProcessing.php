@@ -38,6 +38,11 @@ class TaxInvestigationApprovalProcessing extends Component
     public $penaltyAmount;
     public $investigationReport;
     public $taxTypes;
+    public $intension;
+    public $scope;
+
+    public $hasAssessment;
+
 
     public $staffs = [];
     public $subRoles = [];
@@ -56,6 +61,21 @@ class TaxInvestigationApprovalProcessing extends Component
 
         $this->task = $this->subject->pinstancesActive;
 
+        $this->periodFrom = $this->subject->period_from;
+        $this->periodTo = $this->subject->period_to;
+        $this->intension = $this->subject->intension;
+        $this->scope = $this->subject->scope;
+
+        $assessment = $this->subject->assessment;
+        if ($assessment) {
+            $this->hasAssessment = "1";
+            $this->principalAmount = $assessment->principal_amount;
+            $this->interestAmount = $assessment->interest_amount;
+            $this->penaltyAmount = $assessment->penalty_amount;
+        } else {
+            $this->hasAssessment = "0";
+        }
+
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);
             if (gettype($operators) != "array") {
@@ -67,9 +87,19 @@ class TaxInvestigationApprovalProcessing extends Component
 
             $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
         }
+
+        
     }
 
 
+    public function hasNoticeOfAttachmentChange($value)
+    {
+        if ($value != "1") {
+            $this->principalAmount = null;
+            $this->interestAmount = null;
+            $this->penaltyAmount = null;
+        }
+    }
 
     public function approve($transtion)
     {
@@ -101,6 +131,8 @@ class TaxInvestigationApprovalProcessing extends Component
 
             $this->subject->period_to = $this->periodTo;
             $this->subject->period_from = $this->periodTo;
+            $this->subject->intension = $this->intension;
+            $this->subject->scope = $this->scope;
 
             $this->subject->save();
 

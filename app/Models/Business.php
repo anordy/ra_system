@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Models\BusinessStatus;
-use App\Models\VatReturn\VatReturn;
+use App\Models\Returns\Vat\VatReturn;
 use App\Traits\WorkflowTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Relief\Relief;
+use App\Models\Returns\Petroleum\QuantityCertificate;
 
 class Business extends Model implements Auditable
 {
@@ -20,6 +24,89 @@ class Business extends Model implements Auditable
     protected $casts = [
         'date_of_commencing' => 'datetime',
     ];
+
+    // Scopes
+    public function scopeApproved($query)
+    {
+        $query->where('status', BusinessStatus::APPROVED);
+    }
+
+    public function scopeClosed($query)
+    {
+        $query->where('status', BusinessStatus::TEMP_CLOSED);
+    }
+
+    public function generateZin(){
+        if ($this->zin){
+            return true;
+        }
+
+        try {
+            DB::beginTransaction();
+            $s = 'Z';
+
+            switch ($this->category->short_name){
+                case BusinessCategory::SOLE:
+                    $s = $s . 'S';
+                    break;
+                case BusinessCategory::COMPANY:
+                    $s = $s . 'C';
+                    break;
+                case BusinessCategory::PARTNERSHIP:
+                    $s = $s . 'P';
+                    break;
+                case BusinessCategory::NGO:
+                    $s = $s . 'N';
+                    break;
+                default:
+                    abort(404);
+            }
+
+            switch ($this->location->region->name){
+                case 'Unguja':
+                    $s = $s . '1';
+                    break;
+                case 'Pemba':
+                    $s = $s . '2';
+                    break;
+                default:
+                    abort(404);
+            }
+
+            // Append tax region
+            if (!$this->taxRegion){
+                abort(404);
+            }
+
+            $region = $this->taxRegion;
+
+            $s = $s . $region->prefix;
+
+            // Append random no from table
+            $s = $s . sprintf("%04s", $region->registration_count + 1);
+
+            // Append year
+            $s = $s . Carbon::now()->format('y');
+
+            // Save no, update count
+            $this->zin = $s;
+            $this->save();
+
+            $region->registration_count = $region->registration_count + 1;
+            $region->save();
+            DB::commit();
+            return true;
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return false;
+        }
+    }
+
+    public function taxRegion()
+    {
+        return $this->belongsTo(TaxRegion::class);
+    }
 
     public function taxpayer()
     {
@@ -75,9 +162,9 @@ class Business extends Model implements Auditable
         return $this->hasMany(BusinessLocation::class)->where('is_headquarter', false);
     }
 
-    public function bank()
+    public function banks()
     {
-        return $this->hasOne(BusinessBank::class);
+        return $this->hasMany(BusinessBank::class);
     }
 
     public function isici()
@@ -143,21 +230,6 @@ class Business extends Model implements Auditable
         return $this->hasMany(BusinessFile::class);
     }
 
-    // Scopes
-    public function scopeApproved($query)
-    {
-        $query->where('status', BusinessStatus::APPROVED);
-    }
-
-    public function scopeClosed($query)
-    {
-        $query->where('status', BusinessStatus::TEMP_CLOSED);
-    }
-
-//    public function portTaxReturn()
-    //    {
-    //        return $this->hasMany(PortTaxReturn::class);
-    //    }
     public function vatReturn()
     {
         return $this->hasMany(VatReturn::class);
@@ -178,5 +250,9 @@ class Business extends Model implements Auditable
     {
         return $this->hasMany(Objection::class);
 
+    }
+
+    public function QuantityCertificates(){
+        return $this->hasMany(QuantityCertificate::class);
     }
 }

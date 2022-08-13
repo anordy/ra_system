@@ -20,6 +20,7 @@ use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\Verification\TaxVerificationOfficer;
 use App\Models\Verification\TaxVerificationAssessment;
+use Illuminate\Validation\Rules\RequiredIf;
 
 class TaxVerificationApprovalProcessing extends Component
 {
@@ -37,6 +38,8 @@ class TaxVerificationApprovalProcessing extends Component
     public $assessmentReport;
     public $taxTypes;
 
+    public $hasAssessment;
+
     public $staffs = [];
     public $subRoles = [];
 
@@ -53,6 +56,17 @@ class TaxVerificationApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $modelId);
 
         $this->task = $this->subject->pinstancesActive;
+        $this->assessmentReport = $this->subject->assessment_report;
+
+        $assessment = $this->subject->assessment;
+        if ($assessment) {
+            $this->hasAssessment = "1";
+            $this->principalAmount = $assessment->principal_amount;
+            $this->interestAmount = $assessment->interest_amount;
+            $this->penaltyAmount = $assessment->penalty_amount;
+        } else {
+            $this->hasAssessment = "0";
+        }
 
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);
@@ -71,9 +85,25 @@ class TaxVerificationApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-        $taxType = $this->subject->taxType;
 
-        $operators = [];
+
+        if ($this->checkTransition('conduct_verification')) {
+            $this->validate(
+                [
+                    'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
+                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
+                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
+                    'assessmentReport' => 'required',
+                ]
+            );
+
+            if ($this->assessmentReport != $this->subject->assessment_report) {
+                $this->validate([
+                    'assessmentReport' => 'required|mimes:pdf|max:1024'
+                ]);
+            }
+        }
+
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
@@ -85,6 +115,10 @@ class TaxVerificationApprovalProcessing extends Component
                     'teamMember.not_in' => 'Duplicate already exists as team leader'
                 ]
             );
+        }
+
+        $operators = [];
+        if ($this->checkTransition('assign_officers')) {
 
             TaxVerificationOfficer::create([
                 'verification_id' => $this->subject->id,
@@ -101,132 +135,36 @@ class TaxVerificationApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('conduct_verification')) {
-            $this->validate(
-                [
-                    'principalAmount' => ['required', 'numeric'],
-                    'interestAmount' => ['required', 'numeric'],
-                    'penaltyAmount' => ['required', 'numeric'],
-                    'assessmentReport' => 'required|mimes:pdf',
-                ]
-            );
+            $assessment = $this->subject->assessment()->exists();
 
-            $reportPath = "";
-            if ($this->assessmentReport) {
-                $reportPath = $this->assessmentReport->store('verification', 'local-admin');
-            }
-
-            DB::beginTransaction();
-
-            try {
-
-                $verification_assessment = TaxVerificationAssessment::create([
-                    'verification_id' => $this->subject->id,
-                    'principal_amount' => $this->principalAmount,
-                    'interest_amount' => $this->interestAmount,
-                    'penalty_amount' => $this->penaltyAmount,
-                    'report_path' => $reportPath ?? '',
-                ]);
-
-                // Generate control number for payment of verification
-                $billitems = [
-                    [
-                        'billable_id' => $verification_assessment->id,
-                        'billable_type' => get_class($verification_assessment),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->principalAmount,
-                        'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id
-                    ],
-                    [
-                        'billable_id' => $verification_assessment->id,
-                        'billable_type' => get_class($verification_assessment),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->interestAmount,
-                        'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
-                    ],
-                    [
-                        'billable_id' => $verification_assessment->id,
-                        'billable_type' => get_class($verification_assessment),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->penaltyAmount,
-                        'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id
-                    ]
-                ];
-
-                $taxpayer = $this->subject->business->taxpayer;
-
-                $payer_type = get_class($taxpayer);
-                $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-                $payer_email = $taxpayer->email;
-                $payer_phone = $taxpayer->mobile;
-                $description = "Debt for {$taxType->name} ";
-                $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-                $currency = 'TZS';
-                $createdby_type = get_class(Auth::user());
-                $createdby_id = Auth::id();
-                $exchange_rate = 0;
-                $payer_id = $taxpayer->id;
-                $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-                $billableId = $verification_assessment->id;
-                $billableType = get_class($verification_assessment);
-
-                $zmBill = ZmCore::createBill(
-                    $billableId,
-                    $billableType,
-                    $this->taxTypes->where('code', 'verification')->first()->id,
-                    $payer_id,
-                    $payer_type,
-                    $payer_name,
-                    $payer_email,
-                    $payer_phone,
-                    $expire_date,
-                    $description,
-                    $payment_option,
-                    $currency,
-                    $exchange_rate,
-                    $createdby_id,
-                    $createdby_type,
-                    $billitems
-                );
-
-
-                if (config('app.env') != 'local') {
-                    $response = ZmCore::sendBill($zmBill->id);
-                    if ($response->status === ZmResponse::SUCCESS) {
-                        $verification_assessment->status = ReturnStatus::CN_GENERATING;
-                        $verification_assessment->save();
-
-                        $this->flash('success', 'A control number has been generated successful.');
-                    } else {
-
-                        session()->flash('error', 'Control number generation failed, try again later');
-                        $verification_assessment->status = ReturnStatus::CN_GENERATION_FAILED;
-                    }
-
-                    $verification_assessment->save();
+            if ($this->hasAssessment == "1") {
+                if ($assessment) {
+                    $this->subject->assessment()->update([
+                        'principal_amount' => $this->principalAmount,
+                        'interest_amount' => $this->interestAmount,
+                        'penalty_amount' => $this->penaltyAmount,
+                    ]);
                 } else {
-                    // We are local
-                    $verification_assessment->status = ReturnStatus::CN_GENERATED;
-                    $verification_assessment->save();
-
-                    // Simulate successful control no generation
-                    $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                    $zmBill->zan_status = 'pending';
-                    $zmBill->control_number = '90909919991909';
-                    $zmBill->save();
-
-                    $this->flash('success', 'A control number for this verification has been generated successflu');
+                    TaxVerificationAssessment::create([
+                        'verification_id' => $this->subject->id,
+                        'principal_amount' => $this->principalAmount,
+                        'interest_amount' => $this->interestAmount,
+                        'penalty_amount' => $this->penaltyAmount,
+                    ]);
                 }
-                DB::commit();
-            } catch (Exception $e) {
-                Log::error($e);
-                DB::rollBack();
+            } else {
+                if ($assessment) {
+                    $this->subject->assessment()->delete();
+                }
             }
+
+            $assessmentReport = $this->assessmentReport;
+            if ($this->assessmentReport != $this->subject->assessment_report) {
+                $assessmentReport = $this->assessmentReport->store('verification', 'local-admin');
+            }
+
+            $this->subject->assessment_report = $assessmentReport;
+            $this->subject->save();
         }
 
 
@@ -239,6 +177,135 @@ class TaxVerificationApprovalProcessing extends Component
         }
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
+
+
+    public function generateControlNumber()
+    {
+        $taxType = $this->subject->taxType;
+
+        DB::beginTransaction();
+
+        try {
+
+            $verification_assessment = TaxVerificationAssessment::create([
+                'verification_id' => $this->subject->id,
+                'principal_amount' => $this->principalAmount,
+                'interest_amount' => $this->interestAmount,
+                'penalty_amount' => $this->penaltyAmount,
+                'report_path' => $reportPath ?? '',
+            ]);
+
+            $billitems = [
+                [
+                    'billable_id' => $verification_assessment->id,
+                    'billable_type' => get_class($verification_assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $this->principalAmount,
+                    'currency' => 'TZS',
+                    'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id
+                ],
+                [
+                    'billable_id' => $verification_assessment->id,
+                    'billable_type' => get_class($verification_assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $this->interestAmount,
+                    'currency' => 'TZS',
+                    'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
+                ],
+                [
+                    'billable_id' => $verification_assessment->id,
+                    'billable_type' => get_class($verification_assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $this->penaltyAmount,
+                    'currency' => 'TZS',
+                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id
+                ]
+            ];
+
+            $taxpayer = $this->subject->business->taxpayer;
+
+            $payer_type = get_class($taxpayer);
+            $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+            $payer_email = $taxpayer->email;
+            $payer_phone = $taxpayer->mobile;
+            $description = "Debt for {$taxType->name} ";
+            $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+            $currency = 'TZS';
+            $createdby_type = get_class(Auth::user());
+            $createdby_id = Auth::id();
+            $exchange_rate = 0;
+            $payer_id = $taxpayer->id;
+            $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+            $billableId = $verification_assessment->id;
+            $billableType = get_class($verification_assessment);
+
+            $zmBill = ZmCore::createBill(
+                $billableId,
+                $billableType,
+                $this->taxTypes->where('code', 'verification')->first()->id,
+                $payer_id,
+                $payer_type,
+                $payer_name,
+                $payer_email,
+                $payer_phone,
+                $expire_date,
+                $description,
+                $payment_option,
+                $currency,
+                $exchange_rate,
+                $createdby_id,
+                $createdby_type,
+                $billitems
+            );
+
+
+            if (config('app.env') != 'local') {
+                $response = ZmCore::sendBill($zmBill->id);
+                if ($response->status === ZmResponse::SUCCESS) {
+                    $verification_assessment->status = ReturnStatus::CN_GENERATING;
+                    $verification_assessment->save();
+
+                    $this->flash('success', 'A control number has been generated successful.');
+                } else {
+
+                    session()->flash('error', 'Control number generation failed, try again later');
+                    $verification_assessment->status = ReturnStatus::CN_GENERATION_FAILED;
+                }
+
+                $verification_assessment->save();
+            } else {
+                // We are local
+                $verification_assessment->status = ReturnStatus::CN_GENERATED;
+                $verification_assessment->save();
+
+                // Simulate successful control no generation
+                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $zmBill->zan_status = 'pending';
+                $zmBill->control_number = '90909919991909';
+                $zmBill->save();
+
+                $this->flash('success', 'A control number for this verification has been generated successflu');
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+        }
+    }
+
+
+    public function hasNoticeOfAttachmentChange($value)
+    {
+        if ($value != "1") {
+            $this->principalAmount = null;
+            $this->interestAmount = null;
+            $this->penaltyAmount = null;
+        }
+    }
+
 
     public function reject($transtion)
     {

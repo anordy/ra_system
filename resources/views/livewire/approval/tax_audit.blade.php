@@ -1,14 +1,14 @@
 @if (count($this->getEnabledTranstions()) >= 1)
     <div class="card shadow-sm mb-2 bg-white">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            Tax Audit Approval
+            Tax Auditing Approval
         </div>
-        <div class="card-body">
-            @include('livewire.approval.transitions')
+        <div class="card-body p-0 m-0">
+            @include('layouts.component.messages')
 
             @if ($this->checkTransition('assign_officers'))
-                <div class="row px-3">
-                    <div class="form-group col-lg-12">
+                <div class="row p-3">
+                    <div class="col-lg-12 mt-2">
                         <label class="control-label h6 text-uppercase">Assign Auditors officers</label>
                     </div>
                     <div class="col-lg-6">
@@ -45,22 +45,58 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="auditingDate">Date of auditing</label>
-                            <input type="date" class="form-control @error('auditingDate') is-invalid @enderror"
-                                wire:model="auditingDate">
-                            @error('auditingDate')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="periodFrom">Auditing Period From</label>
+                        <input type="date" class="form-control @error('periodFrom') is-invalid @enderror"
+                            wire:model="periodFrom">
+                        @error('periodFrom')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="periodTo">Auditing Period To</label>
+                        <input type="date" class="form-control @error('periodTo') is-invalid @enderror"
+                            wire:model="periodTo">
+                        @error('periodTo')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="intension">Intension</label>
+                        <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
+                        @error('intension')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="periodTo">Scope</label>
+                        <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
+                        @error('scope')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="auditingDate">Date of auditing</label>
+                        <input type="date" class="form-control @error('auditingDate') is-invalid @enderror"
+                            wire:model="auditingDate">
+                        @error('auditingDate')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
             @endif
             @if ($this->checkTransition('conduct_audit'))
-                <div class="row px-3">
+                <div class="row p-0">
                     <div class="form-group col-lg-6">
                         <label class="control-label">Preliminary report</label>
                         <input type="file" class="form-control  @error('preliminaryReport') is-invalid @enderror"
@@ -78,32 +114,43 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-
                 </div>
             @endif
             @if ($this->checkTransition('prepare_final_report'))
-                <div class="row px-3">
-                    <div class="form-group col-lg-12">
-                        <label class="control-label h6 text-uppercase">Notice of Asessement</label>
-                    </div>
-                    <div class="row px-3">
-                        <div class="form-group col-lg-6">
-                            <label class="control-label">Final report</label>
-                            <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
-                                wire:model.lazy="finalReport">
-                            @error('finalReport')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                <div class="row p-3">
 
-                        <div class="form-group col-lg-6">
-                            <label class="control-label">Exit Minutes</label>
-                            <input type="file" class="form-control  @error('exitMinutes') is-invalid @enderror"
-                                wire:model.lazy="exitMinutes">
-                            @error('exitMinutes')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Final report</label>
+                        <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
+                            wire:model.lazy="finalReport">
+                        @error('finalReport')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Exit Minutes</label>
+                        <input type="file" class="form-control  @error('exitMinutes') is-invalid @enderror"
+                            wire:model.lazy="exitMinutes">
+                        @error('exitMinutes')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label for="exampleFormControlTextarea1">Has Notice of Asessement</label>
+                        <select class="form-control @error('hasAssessment') is-invalid @enderror"
+                            wire:model="hasAssessment"  wire:change="hasNoticeOfAttachmentChange($event.target.value)" >
+                            <option value='' selected>Select</option>
+                            <option value=1>Yes</option>
+                            <option value=0>No</option>
+                        </select>
+                        @error('hasAssessment')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    @if ($hasAssessment)
                         <div class="form-group col-lg-6">
                             <label class="control-label">Principal Amount</label>
                             <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
@@ -128,10 +175,10 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                    @endif
                 </div>
             @endif
-            <div class="row px-3">
+            <div class="row p-3">
                 <div class="col-md-12 ">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Comments</label>

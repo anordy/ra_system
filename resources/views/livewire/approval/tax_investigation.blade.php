@@ -4,7 +4,6 @@
             Tax Investigation Approval
         </div>
         <div class="card-body">
-            @include('livewire.approval.transitions')
 
             @if ($this->checkTransition('assign_officers'))
                 <div class="row px-3">
@@ -59,16 +58,57 @@
                             </div>
                         @enderror
                     </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="intension">Intension</label>
+                        <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
+                        @error('intension')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label for="periodTo">Scope</label>
+                        <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
+                        @error('scope')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
             @endif
-         
+
             @if ($this->checkTransition('conduct_investigation'))
                 <div class="row px-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label h6 text-uppercase">Notice of Asessement</label>
                     </div>
-                    <div class="row px-3">
-                       
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Investigation report</label>
+                        <input type="file" class="form-control  @error('investigationReport') is-invalid @enderror"
+                            wire:model.lazy="investigationReport">
+                        @error('investigationReport')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+
+                    <div class="form-group col-lg-6">
+                        <label for="exampleFormControlTextarea1">Is Taxpayer in debt</label>
+                        <select class="form-control @error('hasAssessment') is-invalid @enderror"
+                            wire:model="hasAssessment" wire:change="hasNoticeOfAttachmentChange($event.target.value)">
+                            <option value='' selected>Select</option>
+                            <option value=1>Yes</option>
+                            <option value=0>No</option>
+                        </select>
+                        @error('hasAssessment')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    @if ($hasAssessment)
                         <div class="form-group col-lg-6">
                             <label class="control-label">Principal Amount</label>
                             <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
@@ -94,16 +134,19 @@
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
-                            <label class="control-label">Investigation report</label>
-                            <input type="file" class="form-control  @error('investigationReport') is-invalid @enderror"
-                                wire:model.lazy="investigationReport">
-                            @error('investigationReport')
+                            <label class="control-label">Workings</label>
+                            <input type="file" class="form-control  @error('exitMinutes') is-invalid @enderror"
+                                wire:model.lazy="exitMinutes">
+                            @error('exitMinutes')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
+                    @endif
+
+
                 </div>
             @endif
+
             <div class="row px-3">
                 <div class="col-md-12 ">
                     <div class="form-group">
@@ -118,6 +161,7 @@
                 </div>
             </div>
         </div>
+
         @if ($this->checkTransition('start'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-primary" wire:click="approve('start')">

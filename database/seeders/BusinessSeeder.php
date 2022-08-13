@@ -24,7 +24,7 @@ class BusinessSeeder extends Seeder
             "business_category_id" => 1,
             "currency_id" => 1,
             "taxpayer_id" => 1,
-            "z_no" => "ZRB_459353",
+            "zin" => "Z01201293",
             "name" => "Goodman Enterprises",
             "tin" => "543980",
             "reg_no" => "12345",
@@ -82,7 +82,7 @@ class BusinessSeeder extends Seeder
         try {
             $business = Business::create($business);
             $business->location()->create($location);
-            $business->bank()->create($bank);
+            $business->banks()->create($bank);
 
             for ($i=1; $i < 16; $i++) { 
                 BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $i, "currency" => "TZS"]);

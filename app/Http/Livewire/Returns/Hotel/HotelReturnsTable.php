@@ -32,7 +32,7 @@ class HotelReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         if ($this->status == 'all') {
-            return HotelReturn::query();
+            return HotelReturn::query()->orderBy('created_at', 'desc');
         } else if ($this->status == 'submitted') {
             return HotelReturn::where('hotel_returns.status', $this->status);
         }
@@ -45,18 +45,21 @@ class HotelReturnsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('TIN', 'business.tin')
-                ->sortable()
-                ->searchable(),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Financial Month', 'financialMonth.name')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->financialMonth->name} {$row->financialMonth->year->code}";
+                }),
             Column::make('Total VAT', 'total_amount_due')
                 ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
-            Column::make('Total VAT with Penalty', 'total_amount_due_with_penalty')
+            Column::make('Total VAT with Penalty', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);

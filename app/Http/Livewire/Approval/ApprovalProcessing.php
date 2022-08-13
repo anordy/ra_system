@@ -12,6 +12,7 @@ use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\Taxpayer;
+use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Notifications\DatabaseNotification;
 use App\Traits\WorkflowProcesssingTrait;
@@ -30,14 +31,14 @@ class ApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
-    public $annual_estimate;
-    public $quaters;
     public $isiic_i;
     public $isiic_ii;
     public $isiic_iii;
     public $isiic_iv;
     public $taxTypes;
-    public Collection $selectedTaxTypes;
+    public $selectedTaxTypes = [];
+    public $taxRegions;
+    public $selectedTaxRegion;
 
     public $isiiciList   = [];
     public $isiiciiList  = [];
@@ -52,7 +53,7 @@ class ApprovalProcessing extends Component
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
         $this->isiiciList = ISIC1::all();
-        $this->taxTypes   = TaxType::all();
+        $this->taxTypes   = TaxType::main()->get();
 
         $this->isiic_i = $this->subject->isiic_i ?? null;
 
@@ -64,29 +65,27 @@ class ApprovalProcessing extends Component
             $this->isiiciiChange($this->isiic_ii);
         }
         $this->isiic_iii = $this->subject->isiic_iii ?? null;
+
         if ($this->isiic_iii) {
             $this->isiiciiiChange($this->isiic_iii);
         }
+
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
-        $this->selectedTaxTypes = collect();
+        $this->taxRegions = TaxRegion::all();
 
         foreach ($this->subject->taxTypes as $value) {
-            $this->selectedTaxTypes->push([
+            $this->selectedTaxTypes[] = [
                 'currency'    => $value->pivot->currency ?? '',
                 'tax_type_id' => $value->id,
-            ]);
+            ];
         }
 
-        if ($this->selectedTaxTypes->count() < 1) {
-            $this->fill([
-                'selectedTaxTypes' => collect([
-                    [
-                        'tax_type_id' => '',
-                        'currency'    => '',
-                    ],
-                ]),
-            ]);
+        if (count($this->selectedTaxTypes) < 1) {
+            $this->selectedTaxTypes[] = [
+                'tax_type_id' => '',
+                'currency'    => '',
+            ];
         }
     }
 
@@ -116,31 +115,42 @@ class ApprovalProcessing extends Component
 
     public function updated($property)
     {
-        // Pluck id
-        $Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
+        $property = explode('.', $property);
 
-        // Get lumpsum ID
-        $lumpSumId = TaxType::where('code', 'lumpsum-payment')->first()->id;
+        if (end($property) === 'tax_type_id'){
+            // Pluck id
+            $Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
 
-        // compare if plucked ID are the same as Lumpsum id
-        if (in_array($lumpSumId, $Ids)) {
-            $this->showLumpsumOptions = true;
-        } else {
-            $this->showLumpsumOptions =false;
+            // Get lumpsum ID
+            $lumpSumId = TaxType::where('code', 'lumpsum-payment')->first()->id;
+
+            // compare if plucked ID are the same as Lumpsum id
+            if (in_array($lumpSumId, $Ids)) {
+                $this->showLumpsumOptions = true;
+                $this->selectedTaxTypes = [];
+                $this->selectedTaxTypes[] = [
+                    'tax_type_id' => $lumpSumId,
+                    'currency'    => '',
+                    'annual_estimate' => '',
+                    'quarters' => ''
+                ];
+            } else {
+                $this->showLumpsumOptions =false;
+            }
         }
     }
 
     public function addTaxtype()
     {
-        $this->selectedTaxTypes->push([
+        $this->selectedTaxTypes[] = [
             'tax_type_id' => '',
             'currency'    => '',
-        ]);
+        ];
     }
 
-    public function removeTaxType($key)
+    public function removeTaxType($index)
     {
-        $this->selectedTaxTypes->pull($key);
+        unset($this->selectedTaxTypes[$index]);
     }
 
     public function approve($transtion)
@@ -160,6 +170,7 @@ class ApprovalProcessing extends Component
                 'comments'                       => 'required',
                 'selectedTaxTypes.*.currency'    => 'required',
                 'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
+                'selectedTaxRegion' => 'required|exists:tax_regions,id'
             ], [
                 'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
                 'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
@@ -167,22 +178,25 @@ class ApprovalProcessing extends Component
             ]);
 
             $business = Business::findOrFail($this->subject->id);
+            $business->tax_region_id = $this->selectedTaxRegion;
+            $business->save();
             $business->taxTypes()->detach();
 
             if ($this->showLumpsumOptions == true) {
                 $currency  = Arr::pluck($this->selectedTaxTypes, 'currency');
+                $annualEstimate  = Arr::pluck($this->selectedTaxTypes, 'annual_estimate');
+                $quarters  = Arr::pluck($this->selectedTaxTypes, 'quarters');
 
                 $this->validate(
                     [
-                        'annual_estimate'  => 'required|integer',
-                        'quaters'          => 'required|integer|between:1,12',
-                        'quaters'          => 'required|integer',
+                        'selectedTaxTypes.*.annual_estimate'    => 'required|integer',
+                        'selectedTaxTypes.*.quarters'           => 'required|integer|between:1,12',
                     ],
                     [
-                        'annual_estimate.required'  => 'Annual estimation is required',
-                        'annual_estimate.integer'   => 'Please enter the valid Annual Estimate',
-                        'quaters.required'          => 'Please enter the valid payment Quaters',
-                        'quaters.between'           => 'Please enter Quaters between 1 to 12',
+                        'selectedTaxTypes.*.annual_estimate.required'  => 'Annual estimation is required',
+                        'selectedTaxTypes.*.annual_estimate.integer'   => 'Please enter the valid Annual Estimate',
+                        'selectedTaxTypes.*.quarters.required'          => 'Please enter the valid payment Quaters',
+                        'selectedTaxTypes.*.quarters.between'           => 'Please enter Quaters between 1 to 12',
                     ]
                 );
                     
@@ -190,8 +204,8 @@ class ApprovalProcessing extends Component
                     'filled_id'         => auth()->user()->id,
                     'business_id'       => $business->id,
                     'financial_year_id' => 1,
-                    'annual_estimate'   => $this->annual_estimate,
-                    'payment_quarters'  => $this->quaters,
+                    'annual_estimate'   => $annualEstimate[0],
+                    'payment_quarters'  => $quarters[0],
                     'currency'          => $currency[0],
                 ]);
             }
@@ -211,9 +225,12 @@ class ApprovalProcessing extends Component
         ]);
 
         if ($this->checkTransition('director_of_trai_review')) {
+            if (!$this->subject->generateZin()){
+                $this->alert('error', 'Something went wrong.');
+                return;
+            }
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status      = BusinessStatus::APPROVED;
-            $this->subject->z_no        = 'ZBR_' . rand(1, 1000000);
             event(new SendSms('business-registration-approved', $this->subject->id));
             event(new SendMail('business-registration-approved', $this->subject->id));
         }

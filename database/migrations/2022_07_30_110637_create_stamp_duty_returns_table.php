@@ -1,6 +1,6 @@
 <?php
 
-use App\Enum\ReturnApplicationStatus;
+use App\Enum\DisputeStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use Illuminate\Database\Migrations\Migration;
@@ -30,10 +30,14 @@ class CreateStampDutyReturnsTable extends Migration
 
             $table->decimal('total_amount_due', 40,2);
             $table->decimal('total_amount_due_with_penalties', 40,2);
+            $table->decimal('penalty', 20, 2)->default(0);
+            $table->decimal('interest', 20, 2)->default(0);
+
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
+
             $table->enum('status', ReturnStatus::getConstants());
-            $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('application_status', DisputeStatus::getConstants());
             $table->softDeletes();
             $table->timestamps();
         });

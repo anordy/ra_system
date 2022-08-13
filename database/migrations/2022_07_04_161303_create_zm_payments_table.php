@@ -20,8 +20,8 @@ class CreateZmPaymentsTable extends Migration
             $table->string('sp_code')->nullable();
             $table->string('pay_ref_id')->nullable();
             $table->string('control_number');
-            $table->decimal('bill_amount');
-            $table->decimal('paid_amount');
+            $table->decimal('bill_amount', 20, 2);
+            $table->decimal('paid_amount', 20, 2);
             $table->string('bill_pay_opt');
             $table->string('currency');
             $table->string('trx_time')->nullable();
