@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class LumpSumPenalties extends Model
 {
     use HasFactory;
-    public $table  = 'lump_sum_penalties';
+    public $table  = 'lump_sum_return_penalties';
 }
