@@ -50,7 +50,6 @@ class ApprovalWaiverProcessing extends Component
                 $this->penaltyPercent = null;
             }
             $this->penaltyAmount = ($this->waiver->taxVerificationAssesment->penalty_amount * $this->penaltyPercent) / 100;
-
         }
 
         if ($propertyName == "interestPercent") {
@@ -110,9 +109,10 @@ class ApprovalWaiverProcessing extends Component
 
                 DB::commit();
             } catch (\Exception $e) {
-                throw $e;
                 Log::error($e);
                 DB::rollBack();
+                $this->alert('error', 'Something went wrong.');
+                throw $e;
             }
 
         }
@@ -218,17 +218,16 @@ class ApprovalWaiverProcessing extends Component
                 $this->alert('error', 'Something went wrong');
             }
 
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-
         }
 
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
+            $this->alert('error', 'Something went wrong.');
             return;
         }
-
     }
 
     public function reject($transtion)

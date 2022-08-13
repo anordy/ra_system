@@ -41,6 +41,9 @@ class TaxInvestigationApprovalProcessing extends Component
     public $intension;
     public $scope;
 
+    public $hasAssessment;
+
+
     public $staffs = [];
     public $subRoles = [];
 
@@ -63,6 +66,16 @@ class TaxInvestigationApprovalProcessing extends Component
         $this->intension = $this->subject->intension;
         $this->scope = $this->subject->scope;
 
+        $assessment = $this->subject->assessment;
+        if ($assessment) {
+            $this->hasAssessment = "1";
+            $this->principalAmount = $assessment->principal_amount;
+            $this->interestAmount = $assessment->interest_amount;
+            $this->penaltyAmount = $assessment->penalty_amount;
+        } else {
+            $this->hasAssessment = "0";
+        }
+
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);
             if (gettype($operators) != "array") {
@@ -79,6 +92,14 @@ class TaxInvestigationApprovalProcessing extends Component
     }
 
 
+    public function hasNoticeOfAttachmentChange($value)
+    {
+        if ($value != "1") {
+            $this->principalAmount = null;
+            $this->interestAmount = null;
+            $this->penaltyAmount = null;
+        }
+    }
 
     public function approve($transtion)
     {

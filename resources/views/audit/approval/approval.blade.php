@@ -26,6 +26,14 @@
                 <div class="card-body">
                     <div class="row m-2">
                         <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">TIN</span>
+                            <p class="my-1">{{ $audit->business->tin }}</p>
+                        </div> 
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">ZIN</span>
+                            <p class="my-1">{{ $audit->business->zin }}</p>
+                        </div> 
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
                             <p class="my-1">{{ $audit->taxtype->name }}</p>
                         </div>
@@ -168,21 +176,7 @@
                 modelId="{{ $audit->id }}" />
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-
-            @if (view()->exists($viewRender))
-                @php echo view($viewRender, compact('return'))->render() @endphp
-            @else
-                <div class="card">
-                    <div class="card-body">
-                        <div class="alert alert-danger" role="alert">
-                            <h4 class="alert-heading">Error!</h4>
-                            <p>
-                                Configured page not found kindly check with Administrator
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            @livewire('audit.declared-sales-analysis', ['audit' => $audit])
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <livewire:approval.approval-history-table modelName='{{ get_class($audit) }}'

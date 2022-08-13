@@ -62,7 +62,7 @@
                         @enderror
                     </div>
                     <div class="form-group col-lg-6">
-                        <label class="control-label">Investigation From</label>
+                        <label class="control-label">Auditing From</label>
                         <input type="date" class="form-control" wire:model.lazy="period_from" id="period_from">
                         @error('period_from')
                             <span class="text-danger">{{ $message }}</span>
@@ -70,7 +70,7 @@
                     </div>
 
                     <div class="form-group col-lg-6">
-                        <label class="control-label">Investigation To</label>
+                        <label class="control-label">Auditing To</label>
                         <input type="date" class="form-control" wire:model.lazy="period_to" id="period_to">
                         @error('period_to')
                             <span class="text-danger">{{ $message }}</span>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Enum\ReturnApplicationStatus;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,12 +19,13 @@ class CreateMMTransferReturnsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('business_id');
-            $table->string('filled_type');
+            $table->string('filed_by_type');
             $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->integer('edited_count')->default(0);
-            $table->enum('status',['submitted','complete','control-number-generating','control-number-generated','control-number-generating-failed','paid-partially'])->default('submitted');
+            $table->enum('status', ReturnStatus::getConstants());
+            $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->string('currency');
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 40, 2)->default(0);
