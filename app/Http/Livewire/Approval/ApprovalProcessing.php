@@ -132,10 +132,10 @@ class ApprovalProcessing extends Component
         // compare if plucked ID are the same as Lumpsum id
         if (in_array($lumpSumId, $Ids)) {
             $this->showLumpsumOptions = true;
-            $this->selectedTaxTypes = collect();
+            $this->selectedTaxTypes   = collect();
             $this->selectedTaxTypes->push([
                 'tax_type_id' => $lumpSumId,
-                'currency'    => '',
+                'currency'    => 'TZS',
             ]);
         } else {
             $this->showLumpsumOptions =false;
@@ -172,14 +172,14 @@ class ApprovalProcessing extends Component
                 'comments'                       => 'required',
                 'selectedTaxTypes.*.currency'    => 'required',
                 'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
-                'selectedTaxRegion' => 'required|exists:tax_regions,id'
+                'selectedTaxRegion'              => 'required|exists:tax_regions,id',
             ], [
                 'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
                 'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
                 'selectedTaxTypes.*.currency.required'    => 'Currency is required',
             ]);
 
-            $business = Business::findOrFail($this->subject->id);
+            $business                = Business::findOrFail($this->subject->id);
             $business->tax_region_id = $this->selectedTaxRegion;
             $business->save();
             $business->taxTypes()->detach();
@@ -226,8 +226,9 @@ class ApprovalProcessing extends Component
         ]);
 
         if ($this->checkTransition('director_of_trai_review')) {
-            if (!$this->subject->generateZin()){
+            if (!$this->subject->generateZin()) {
                 $this->alert('error', 'Something went wrong.');
+
                 return;
             }
             $this->subject->verified_at = Carbon::now()->toDateTimeString();

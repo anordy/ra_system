@@ -53,7 +53,9 @@
                 @if ($penalties)
                     <tr>
                         <td>Payment for <br> <small> Malipo kwa ajili ya </small> </td>
-                        <td> Penalties for late payment <br> <small> Adhabu ya kuchelewesha malipo </small> </td>
+                        <td> {{ $return->quarter }} Quater and Penalties for late payment <br>
+                            <small>Awamu ya {{ $return->quarter }} na Adhabu ya kuchelewesha malipo</small>
+                        </td>
                     </tr>
                 @else
                     <tr>

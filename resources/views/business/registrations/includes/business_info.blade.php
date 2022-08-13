@@ -75,6 +75,23 @@
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Tax Identification No. (TIN)</span>
                 <p class="my-1">{{ $business->tin }}</p>
+                @if (isset($verified))
+                    @if ($verified == 'verified')
+                        <span class="font-weight-light text-success">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            TIN Number Verified
+                        </span>
+                    @else
+                        <span class="font-weight-light text-danger">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                            {{ $verified }}
+                        </span>
+                    @endif
+                @else
+                    <a href="{{ route('verification.tin', encrypt($business)) }}">
+                        <button class="btn btn-info">Verify TIN Number</button>
+                    </a>
+                @endif
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
@@ -144,9 +161,7 @@
                     @endforeach
                 </p>
             </div>
-            <div class="col-md-4 mb-3">
-                <button class="btn text-white btn-info">Verify TIN NUMBER</button>
-            </div>
+
             @if ($business->isici)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">ISIC I</span>
@@ -171,19 +186,20 @@
                     <p class="my-1">{{ $business->isiciv->description }}</p>
                 </div>
             @endif
-            @if($business->tax_region_id)
+            @if ($business->tax_region_id)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Tax Region</span>
                     <p class="my-1">{{ $business->taxRegion->name }}</p>
                 </div>
             @endif
-            @if($business->zin)
+            @if ($business->zin)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">ZIN</span>
                     <p class="my-1">{{ $business->zin }}</p>
                 </div>
             @endif
         </div>
+
     </div>
 
     <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">

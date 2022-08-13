@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Returns\LumpSum;
 
-use App\Models\Returns\LampSum\LampSumReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +26,7 @@ class LumpSumReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return LampSumReturn::query();
+        return LumpSumReturn::query()->where('filed_by_id', auth()->user()->id);
     }
 
     public function columns(): array
@@ -39,17 +39,20 @@ class LumpSumReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Quarter', 'quarter')
-            ->view('returns.lumpsum.quater')
+            ->view('returns.lump-sum.quater')
                 ->searchable(),
             Column::make('Amount', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->searchable(),
+            Column::make('Control No', 'control_no')
+                ->searchable()
+                ->sortable(),
             Column::make('Status', 'status')
-            ->view('returns.lumpsum.status')
+            ->view('returns.lump-sum.status')
                 ->searchable()
                 ->sortable(),
             Column::make('Action', 'id')
-                ->view('returns.lumpsum.actions'),
+                ->view('returns.lump-sum.actions'),
         ];
     }
 }

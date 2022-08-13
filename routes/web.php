@@ -84,6 +84,7 @@ use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
@@ -141,6 +142,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
             });
         });
+    });
+    Route::name('verification.')->prefix('verification')->group(function () {
+        Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
     });
 
     Route::prefix('system')->name('system.')->group(function () {
@@ -219,7 +223,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
-
         Route::resource('/petroleum', PetroleumReturnController::class);
 
         Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
@@ -254,7 +257,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
         Route::get('/hotel/adjust/{return_id}', [HotelReturnController::class, 'adjust'])->name('hotel.adjust');
-
 
         Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Returns\LumpSum;
 use App\Http\Controllers\Controller;
 use App\Http\Livewire\Returns\LumpSum\LumpSumReturns;
 use App\Models\BusinessLocation;
-use App\Models\Returns\LampSum\LampSumReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use Illuminate\Http\Request;
 
 class LumpSumReturnController extends Controller
@@ -36,8 +36,8 @@ class LumpSumReturnController extends Controller
         $row = decrypt($row);
         $id  = $row->id;
         
-        $return = LampSumReturn::findOrFail($id);
-        
+        $return = LumpSumReturn::findOrFail($id);
+
         return view('returns.lumpsum.view', compact('return'));
     }
 }
