@@ -4,6 +4,7 @@ namespace App\Models\Verification;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

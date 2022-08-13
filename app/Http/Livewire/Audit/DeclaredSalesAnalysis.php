@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Models\BusinessLocation;
-use App\Models\Returns\ExciseDuty\MnoConfig;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\Petroleum\PetroleumConfig;
@@ -199,14 +198,29 @@ class DeclaredSalesAnalysis extends Component
             );
         }, $returns));
 
-
         $this->returns = $calculations;
 
     }
 
     protected function airportAndSea()
     {
-        $purchaseConfigs = PortConfig::whereIn('code', ["",])->get()->pluck('id');
+        $purchaseConfigs = PortConfig::whereIn('code', [""])->get()->pluck('id');
+
+        $headers = PortConfig::whereIn('code', ["NFAT", "NFAT", "NFSF", "NLSF", "NFSP", "NLTM", "NLZNZ", "NSUS", "NSTZ"])->get()->pluck('name');
+
+        // dd($headers);
+
+        $this->purchases = PortReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_purchases, SUM(vat) as total_purchases_vat')
+            ->leftJoin('port_configs', 'port_configs.id', 'port_return_items.config_id')
+            ->leftJoin('port_returns', 'port_returns.id', 'port_return_items.return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'port_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->where('port_returns.tax_type_id', $this->taxType->id)
+            ->where('port_returns.business_location_id', $this->branch->id)
+            ->whereIn('config_id', $headers)
+            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+
+       
 
         $this->purchases = PortReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_purchases, SUM(vat) as total_purchases_vat')
             ->leftJoin('port_configs', 'port_configs.id', 'port_return_items.config_id')
@@ -218,11 +232,10 @@ class DeclaredSalesAnalysis extends Component
             ->whereIn('config_id', $purchaseConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
 
-            
-            $salesConfigs = PortConfig::whereIn('code', ["NFAT", "NFAT", "NFSF", "NLSF","NFSP","NLTM","NLZNZ","NSUS","NSTZ"])->get()->pluck('id');
-            // dd($salesConfigs);
+        $salesConfigs = PortConfig::whereIn('code', ["NFAT", "NFAT", "NFSF", "NLSF", "NFSP", "NLTM", "NLZNZ", "NSUS", "NSTZ"])->get()->pluck('id');
+        // dd($salesConfigs);
 
-        $this->sales = PortReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
+        $this->sales = PortReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, sum(value) as total_sales, SUM(vat) as total_sales_vat')
             ->leftJoin('port_configs', 'port_configs.id', 'port_return_items.config_id')
             ->leftJoin('port_returns', 'port_returns.id', 'port_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'port_returns.financial_month_id')
@@ -232,6 +245,7 @@ class DeclaredSalesAnalysis extends Component
             ->whereIn('config_id', $salesConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
 
+        dd($this->sales);
 
         $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
 
@@ -248,7 +262,7 @@ class DeclaredSalesAnalysis extends Component
             );
         }, $returns));
 
-       $this->returns = $calculations->sortByDesc('month')->groupBy('year');
+        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
 
     }
 
