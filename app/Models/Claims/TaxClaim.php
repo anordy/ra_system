@@ -5,6 +5,7 @@ namespace App\Models\Claims;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
+use App\Models\Taxpayer;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -53,6 +54,10 @@ class TaxClaim extends Model
     }
 
     public function credit(){
-        return $this->hasMany(TaxCredit::class, 'claim_id');
+        return $this->hasOne(TaxCredit::class, 'claim_id');
+    }
+
+    public function taxpayer(){
+        return $this->morphTo('created_by');
     }
 }

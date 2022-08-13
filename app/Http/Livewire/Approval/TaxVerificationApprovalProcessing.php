@@ -37,6 +37,7 @@ class TaxVerificationApprovalProcessing extends Component
     public $penaltyAmount;
     public $assessmentReport;
     public $taxTypes;
+    public $taxType;
 
     public $hasAssessment;
 
@@ -52,6 +53,7 @@ class TaxVerificationApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->taxTypes = TaxType::all();
+        $this->taxType = $this->taxTypes->firstWhere('code', TaxType::VERIFICATION);
 
         $this->registerWorkflow($modelName, $modelId);
 
@@ -147,6 +149,7 @@ class TaxVerificationApprovalProcessing extends Component
                 } else {
 
                     TaxAssessment::create([
+                        'tax_type_id' => $this->taxType->id,
                         'assessment_type_id' => $this->subject->id,
                         'assessment_type_name' => get_class($this->subject),
                         'principal_amount' => $this->principalAmount,

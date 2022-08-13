@@ -39,10 +39,12 @@ class TaxInvestigationApprovalProcessing extends Component
     public $penaltyAmount;
     public $investigationReport;
     public $workingsReport;
-    public $taxTypes;
     public $intension;
     public $scope;
     public $exitMinutes;
+
+    public $taxTypes;
+    public $taxType;
 
     public $hasAssessment;
 
@@ -54,11 +56,13 @@ class TaxInvestigationApprovalProcessing extends Component
 
 
 
+
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->taxTypes = TaxType::all();
+        $this->taxType = $this->taxTypes->firstWhere('code', TaxType::INVESTIGATION);
 
         $this->registerWorkflow($modelName, $modelId);
 
@@ -189,6 +193,7 @@ class TaxInvestigationApprovalProcessing extends Component
                         ]);
                     } else {
                         TaxAssessment::create([
+                            'tax_type_id' => $this->taxType->id,
                             'assessment_type_id' => $this->subject->id,
                             'assessment_type_name' => get_class($this->subject),
                             'principal_amount' => $this->principalAmount,
