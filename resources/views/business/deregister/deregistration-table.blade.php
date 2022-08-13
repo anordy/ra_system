@@ -4,8 +4,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="text-uppercase">Business De-registrations</h5>
+        <div class="card-header text-uppercase font-weight-bold">
+            Business De-registrations
         </div>
         <div class="card-body">
             <nav class="nav nav-tabs mt-0 border-top-0">
