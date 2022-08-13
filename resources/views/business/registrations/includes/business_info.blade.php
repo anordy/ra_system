@@ -208,7 +208,7 @@
                 @if ($location->zin)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">ZIN</span>
-                        <p class="my-1">{{ $business->zin }}</p>
+                        <p class="my-1">{{ $location->zin }}</p>
                     </div>
                 @endif
                 <div class="col-md-4 mb-3">
@@ -275,7 +275,7 @@
                     @if ($location->zin)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">ZIN</span>
-                            <p class="my-1">{{ $business->zin }}</p>
+                            <p class="my-1">{{ $location->zin }}</p>
                         </div>
                     @endif
                     <div class="col-md-4 mb-3">

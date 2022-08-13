@@ -4,7 +4,9 @@ namespace App\Http\Livewire\Approval;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
+use App\Models\TaxRegion;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -18,19 +20,32 @@ class BranchesApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $taxRegions;
+    public $selectedTaxRegion;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
+        $this->taxRegions = TaxRegion::all();
+
     }
 
     public function approve($transtion)
     {
         $this->validate(['comments' => 'required']);
 
+        if ($this->checkTransition('registration_officer_review')){
+            $this->subject->tax_region_id = $this->selectedTaxRegion;
+            $this->subject->save();
+        }
+
         if ($this->checkTransition('director_of_trai_review')) {
+            if (!$this->subject->generateZin()){
+                $this->alert('error', 'Something went wrong.');
+                return;
+            }
+
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status = BusinessStatus::APPROVED;
 

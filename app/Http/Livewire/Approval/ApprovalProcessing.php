@@ -179,8 +179,8 @@ class ApprovalProcessing extends Component
             ]);
 
             $business = Business::findOrFail($this->subject->id);
-            $business->tax_region_id = $this->selectedTaxRegion;
-            $business->save();
+            $business->headquarter->tax_region_id = $this->selectedTaxRegion;
+            $business->headquarter->save();
             $business->taxTypes()->detach();
 
             if ($this->showLumpsumOptions == true) {
