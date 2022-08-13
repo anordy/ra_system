@@ -98,7 +98,7 @@ class PortFilingEditReturn extends Component
 
             $payload = [
                 'filled_type' => 'App\Models\User',
-                'filled_id' => auth()->user()->id,
+                'filed_by_id' => auth()->user()->id,
                 'total_vat_payable_tzs' => $configs->firstWhere('code', 'TLATZS')['vat'] ?? 0,
                 'total_vat_payable_usd' => $configs->firstWhere('code', 'TLAUSD')['vat'] ?? 0,
                 'infrastructure' => $configs->firstWhere('code', 'IT')['vat'] ?? 0,

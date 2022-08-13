@@ -201,7 +201,7 @@ class ApprovalProcessing extends Component
                 );
                     
                 DB::table('lump_sum_payments')->insert([
-                    'filled_id'         => auth()->user()->id,
+                    'filed_by_id'         => auth()->user()->id,
                     'business_id'       => $business->id,
                     'financial_year_id' => 1,
                     'annual_estimate'   => $annualEstimate[0],

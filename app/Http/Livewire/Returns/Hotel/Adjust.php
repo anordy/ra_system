@@ -206,7 +206,7 @@ class Adjust extends Component
             // store penalty amount in this table
             $payload = [
                 'filled_type' => Taxpayer::class,
-                'filled_id' => auth()->user()->id,
+                'filed_by_id' => auth()->user()->id,
                 'edited_count' => $edit_count,
                 'total_amount_due' => $this->total,
                 'total_amount_due_with_penalties' => $this->total + $this->penalty + $this->interest,
