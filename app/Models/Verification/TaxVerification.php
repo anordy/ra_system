@@ -35,6 +35,11 @@ class TaxVerification extends Model
         return $this->belongsTo(Business::class);
     }
 
+    public function businesses()
+    {
+        return $this->belongsTo(Business::class);
+    }
+
     public function location()
     {
         return $this->belongsTo(BusinessLocation::class, 'location_id');
