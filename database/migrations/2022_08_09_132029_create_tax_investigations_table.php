@@ -24,6 +24,7 @@ class CreateTaxInvestigationsTable extends Migration
             $table->date('period_to')->nullable();
             $table->date('initiated_date')->nullable();
             $table->string('investigation_report')->nullable();
+            $table->string('working_report')->nullable();
             $table->string('created_by_type');
             $table->unsignedBigInteger('created_by_id');
             $table->enum('origin', ['system', 'manual'])->default('system');
