@@ -145,9 +145,10 @@
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label class="form-label">Payment Quarters per year {{ print_r($selectedTaxTypes) }}</label>
+                                    <label class="form-label">Payment Quarters per year </label>
 
-                                    <select class="form-control @error("selectedTaxTypes.{$key}.quarters") is-invalid @enderror"
+                                    <select
+                                        class="form-control @error("selectedTaxTypes.{$key}.quarters") is-invalid @enderror"
                                         wire:model="selectedTaxTypes.{{ $key }}.quarters">
                                         <option value="" selected disabled>--Select---</option>
                                         <option value="12">One </option>

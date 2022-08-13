@@ -14,7 +14,7 @@ class VatReturnController extends Controller
     
     public function index()
     {
-        // $data = $this->returnCardReport(VatReturn::class, 'vat', 'vat_return');
+        $data = $this->returnCardReport(VatReturn::class, 'vat', 'vat_return');
 
         $vars['totalSubmittedReturns'] = VatReturn::query()->whereNotNull('created_at')->count();
 
@@ -39,7 +39,7 @@ class VatReturnController extends Controller
             ->where('vat_returns.created_at', '>', 'zm_payments.trx_time')
             ->count();
             
-        return view('returns.vat_returns.index', compact('vars'));
+        return view('returns.vat_returns.index', compact('vars', 'data'));
     }
     public function show($id)
     {
