@@ -98,7 +98,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" wire:click='submit'>Add Investigation</button>
+                <button type="button" class="btn btn-primary" wire:click='submit'>Add Audit</button>
             </div>
         </div>
     </div>
