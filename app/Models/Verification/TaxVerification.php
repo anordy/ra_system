@@ -2,12 +2,13 @@
 
 namespace App\Models\Verification;
 
-use App\Models\Business;
-use App\Models\BusinessLocation;
 use App\Models\TaxType;
+use App\Models\Business;
 use App\Traits\WorkflowTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TaxAssessments\TaxAssessment;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaxVerification extends Model
 {
