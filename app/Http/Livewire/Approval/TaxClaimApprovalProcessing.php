@@ -7,23 +7,16 @@ use App\Models\Claims\TaxClaimAssessment;
 use App\Models\Claims\TaxClaimOfficer;
 use App\Models\Claims\TaxCredit;
 use Exception;
-use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\TaxType;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Services\ZanMalipo\ZmCore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Returns\ReturnStatus;
-use Illuminate\Support\Facades\Auth;
-use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\Verification\TaxVerificationOfficer;
-use App\Models\Verification\TaxVerificationAssessment;
 
 class TaxClaimApprovalProcessing extends Component
 {
@@ -44,8 +37,6 @@ class TaxClaimApprovalProcessing extends Component
     public $subRoles = [];
 
     public $task;
-
-
 
     public function mount($modelName, $modelId)
     {
@@ -150,6 +141,13 @@ class TaxClaimApprovalProcessing extends Component
             $this->subject->save();
         }
 
+        if ($this->checkTransition('accepted')){
+            $this->subject->status = TaxClaimStatus::APPROVED;
+            $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
+            $credit->status = TaxClaimStatus::APPROVED;
+            $credit->save();
+        }
+
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
@@ -157,7 +155,6 @@ class TaxClaimApprovalProcessing extends Component
             $this->alert('error', $e->getMessage());
             return;
         }
-
 
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
@@ -168,11 +165,17 @@ class TaxClaimApprovalProcessing extends Component
             'comments' => 'required|string',
         ]);
 
+        if ($this->checkTransition('rejected')){
+            $this->subject->status = TaxClaimStatus::APPROVED;
+            $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
+            $credit->status = TaxClaimStatus::REJECTED;
+            $credit->save();
+        }
+
         try {
             $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
