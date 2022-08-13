@@ -40,6 +40,7 @@ class TaxInvestigationApprovalProcessing extends Component
     public $taxTypes;
     public $intension;
     public $scope;
+    public $exitMinutes;
 
     public $hasAssessment;
 
