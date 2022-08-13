@@ -33,6 +33,7 @@ use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AuditDebtController;
+use App\Http\Controllers\Debt\DebtController;
 use App\Http\Controllers\Debt\InvestigationDebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\Debt\VerificationDebtController;
@@ -88,8 +89,10 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Row;
 
 Auth::routes();
 
@@ -292,6 +295,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/approvals', TaxAuditApprovalController::class);
         Route::resource('/assessments', TaxAuditAssessmentController::class);
         Route::resource('/verified', TaxAuditVerifiedController::class);
+        Route::resource('/files', TaxVerificationFilesController::class);
     });
 
     Route::resource('/files', TaxAuditFilesController::class);
@@ -305,6 +309,10 @@ Route::name('claims.')->prefix('/tax-claims')->group(function () {
 });
 
 Route::name('debts.')->prefix('/debts')->group(function () {
+    Route::get('/outstanding', [DebtController::class, 'index'])->name('outstanding');
+    Route::get('/objection/{id}', [DebtController::class, 'showObjection'])->name('objection');
+    Route::get('/returns/{id}', [DebtController::class,'showReturnDebt'])->name('returns');
+    Route::get('/assesment/{id}', [DebtController::class,'showAssesmentDebt'])->name('assesment');
     Route::resource('/returns', ReturnDebtController::class);
     Route::resource('/investigation', InvestigationDebtController::class);
     Route::resource('/auditing', AuditDebtController::class);

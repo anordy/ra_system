@@ -27,7 +27,9 @@ class CreateWaiverObjectionsTable extends Migration
             $table->string('marking')->nullable();
             $table->text('ground')->nullable();
             $table->text('reason')->nullable();
-            $table->string('attachments')->nullable();
+            $table->string('objection_report')->nullable();
+            $table->string('notice_report')->nullable();
+            $table->string('setting_report')->nullable();
             $table->enum('type', ['waiver', 'objection', 'both']);
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();

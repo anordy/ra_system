@@ -27,7 +27,6 @@ class CreateZmBillItemsTable extends Migration
             $table->boolean('paid')->default(false);
             $table->char('use_item_ref_on_pay')->default('N');
             $table->string('gfs_code');
-
             $table->unsignedBigInteger('tax_type_id');
             $table->timestamps();
         });

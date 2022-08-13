@@ -18,8 +18,10 @@
             aria-selected="false">Responsible Person</a>
     </li>
     <li class="nav-item" role="presentation">
+
         <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank"
-            aria-selected="false">Bank Account</a>
+            aria-selected="false">Bank Accounts</a>
+
     </li>
     @if ($business->hotel)
         <li class="nav-item" role="presentation">
@@ -453,30 +455,35 @@
         </div>
     </div>
 
-    @if ($bank = $business->bank)
+    @if (count($business->banks))
         <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
-            <div class="row m-2 pt-3">
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Account No.</span>
-                    <p class="my-1">{{ $bank->acc_no }}</p>
+            @foreach ($business->banks as $bank)
+                <div class="row m-2">
+                    <div class="col-md-4 mt-3">
+                        <span class="font-weight-bold text-uppercase">Account No.</span>
+                        <p class="my-1">{{ $bank->acc_no }}</p>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <span class="font-weight-bold text-uppercase">Account Type</span>
+                        <p class="my-1">{{ $bank->accountType->name }}</p>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <span class="font-weight-bold text-uppercase">Currency</span>
+                        <p class="my-1">{{ $bank->currency->iso }}</p>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <span class="font-weight-bold text-uppercase">Bank Name</span>
+                        <p class="my-1">{{ $bank->bank->name }}</p>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <span class="font-weight-bold text-uppercase">Branch</span>
+                        <p class="my-1">{{ $bank->branch }}</p>
+                    </div>
+                    <div class="col-md-12">
+                        <hr />
+                    </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Account Type</span>
-                    <p class="my-1">{{ $bank->accountType->name }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Currency</span>
-                    <p class="my-1">{{ $bank->currency->iso }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Bank Name</span>
-                    <p class="my-1">{{ $bank->bank->name }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Branch</span>
-                    <p class="my-1">{{ $bank->branch }}</p>
-                </div>
-            </div>
+            @endforeach
         </div>
     @endif
 

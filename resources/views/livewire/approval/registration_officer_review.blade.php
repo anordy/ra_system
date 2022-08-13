@@ -136,28 +136,27 @@
                                 <div class="form-group">
                                     <label class="form-label">Annual Estimate</label>
                                     <input type="number"
-                                        class="form-control @error('annual_estimate') is-invalid @enderror"
-                                        wire:model='annual_estimate'>
-                                    @error('annual_estimate')
+                                        class="form-control @error("selectedTaxTypes.{$key}.annual_estimate") is-invalid @enderror"
+                                        wire:model="selectedTaxTypes.{{ $key }}.annual_estimate">
+                                    @error("selectedTaxTypes.{$key}.annual_estimate")
                                         <span class="text-danger error">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label class="form-label">Payment Quaters per year</label>
+                                    <label class="form-label">Payment Quarters per year {{ print_r($selectedTaxTypes) }}</label>
 
-                                    <select class="form-control @error('quaters') is-invalid @enderror"
-                                        wire:model='quaters'>
-                                        <option value="0" selected disabled>--Select---</option>
-                                        {{-- one quater = payment after every 12 monts and so on.. --}}
+                                    <select class="form-control @error("selectedTaxTypes.{$key}.quarters") is-invalid @enderror"
+                                        wire:model="selectedTaxTypes.{{ $key }}.quarters">
+                                        <option value="" selected disabled>--Select---</option>
                                         <option value="12">One </option>
                                         <option value="6">two</option>
                                         <option value="4">Three</option>
                                         <option value="3">four</option>
                                     </select>
 
-                                    @error('quaters')
+                                    @error("selectedTaxTypes.{$key}.quarters")
                                         <span class="text-danger error">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -176,14 +175,14 @@
                     @endforeach
                 </div>
             </div>
-            <div class="card-footer">
-                @if ($showLumpsumOptions === false)
+            @if ($showLumpsumOptions === false)
+                <div class="card-footer">
                     <button class="btn text-white btn-info" wire:click.prevent="addTaxtype()">
                         <i class="bi bi-plus-square-fill"></i>
                         Add Tax Type
                     </button>
-                @endif
-            </div>
+                </div>
+            @endif
         </div>
     </div>
 

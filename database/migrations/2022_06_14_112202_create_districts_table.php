@@ -17,7 +17,6 @@ class CreateDistrictsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('region_id');
             $table->string('name');
-
             $table->foreign('region_id')->references('id')->on('regions');
             $table->timestamps();
         });

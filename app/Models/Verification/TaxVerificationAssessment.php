@@ -4,6 +4,7 @@ namespace App\Models\Verification;
 
 use App\Models\User;
 use App\Models\Waiver;
+use App\Models\WaiverObjection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,5 +27,10 @@ class TaxVerificationAssessment extends Model
       public function waivers()
     {
         return $this->hasMany(Waiver::class,'assesment_id');
+    }
+
+        public function waiverobjection()
+    {
+        return $this->hasMany(WaiverObjection::class,'assesment_id');
     }
 }

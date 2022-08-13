@@ -32,7 +32,7 @@ class VatReturn extends Model
     }
 
     public function taxpayer() {
-        return $this->belongsTo(Taxpayer::class, 'filled_id');
+        return $this->belongsTo(Taxpayer::class, 'filed_by_id', 'id');
     }
 
     public function financialYear() {

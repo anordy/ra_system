@@ -140,7 +140,10 @@
                     <a href="{{ route('assesments.objection.index') }}">Objection</a>
                 </li>
                 <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.waiver.index') }}">Waiver</a>
+                    <a href="{{ route('assesments.waiver.index') }}">Weaver</a>
+                </li>
+                    <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.waiverobjection.index') }}">Weaver & Objection</a>
                 </li>
             </ul>
         </li>
@@ -294,6 +297,9 @@
             <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                <li class="{{ request()->is('debts/outstanding*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.outstanding') }}">Outstanding</a>
+                </li>
                 <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
                     <a href="{{ route('debts.returns.index') }}">Returns</a>
                 </li>
