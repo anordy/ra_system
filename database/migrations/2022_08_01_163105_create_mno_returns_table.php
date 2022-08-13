@@ -17,7 +17,7 @@ class CreateMnoReturnsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_location_id');
-            $table->unsignedBigInteger('filed_by');
+            $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('financial_month_id');
             $table->dateTime('submitted_at');
@@ -32,7 +32,7 @@ class CreateMnoReturnsTable extends Migration
 
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('business_location_id')->references('id')->on('business_locations');
-            $table->foreign('filed_by')->references('id')->on('taxpayers');
+            $table->foreign('filed_by_id')->references('id')->on('taxpayers');
             $table->foreign('financial_year_id')->references('id')->on('financial_years');
             $table->foreign('financial_month_id')->references('id')->on('financial_months');
             $table->foreign('tax_type_id')->references('id')->on('tax_types');
