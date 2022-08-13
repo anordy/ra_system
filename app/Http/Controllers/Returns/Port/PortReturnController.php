@@ -36,10 +36,29 @@ class PortReturnController extends Controller
                     ->where('port_returns.created_at','>','zm_payments.trx_time')
                     ->count();
                     
-        $data = $this->returnCardReport(PortReturn::class, 'port', 'port_return');
+        // $data = $this->returnCardReport(PortReturn::class, 'port', 'port_return');
 
+        $penaltyData = PortReturn::where("port_returns.status", '!=', 'complete')->leftJoin("port_return_penalties", "port_returns.id", '=', "port_return_penalties.return_id")
+            ->where('port_return_penalties.currency', 'TZS')
+            ->select(
+                DB::raw("SUM(port_return_penalties.late_filing) as totalLateFiling"),
+                DB::raw("SUM(port_return_penalties.late_payment) as totalLatePayment"),
+                DB::raw("SUM(port_return_penalties.rate_amount) as totalRate"),
+            )
+            ->groupBy('return_id')
+            ->get();
+
+        // return $penaltyData;
+        $returnQuery = PortReturn::where('status', '!=', 'complete');
+
+        $data =  [
+            'totalTaxAmount' => $returnQuery->sum("port_returns.total_amount_due_with_penalties_tzs"),
+            'totalLateFiling' => $penaltyData->sum('totalLateFiling'),
+            'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
+            'totalRate' => $penaltyData->sum('totalRate'),
+        ];
         return $data;
-        
+
         return view('returns.port.index',compact('vars', 'data'));
     }
 
