@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class VatReturnPenalty extends Model
 {
     use HasFactory;
-    protected $table = 'vat_return_penalty';
+    protected $table = 'vat_return_penalties';
     protected $guarded = [];
 }
