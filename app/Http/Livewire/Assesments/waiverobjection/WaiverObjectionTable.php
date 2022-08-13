@@ -42,7 +42,7 @@ class WaiverObjectionTable extends DataTableComponent
 
         return WaiverObjection::where('waiver_objections.status', '!=', WaiverObjectionStatus::DRAFT)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
 
-        // return WaiverObjection::query()->where('filled_id', auth()->user()->id)->where('type', 'both');
+        // return WaiverObjection::query()->where('filed_by_id', auth()->user()->id)->where('type', 'both');
 
     }
 

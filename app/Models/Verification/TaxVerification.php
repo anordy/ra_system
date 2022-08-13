@@ -2,8 +2,8 @@
 
 namespace App\Models\Verification;
 
-use App\Models\TaxType;
 use App\Models\Business;
+use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
 use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
@@ -48,7 +48,7 @@ class TaxVerification extends Model
 
     public function assessment()
     {
-        return $this->belongsTo(TaxAssessment::class, 'id', 'assessment_type_id');
+        return $this->morphOne(TaxAssessment::class, 'assessment');
     }
 
     public function officers()

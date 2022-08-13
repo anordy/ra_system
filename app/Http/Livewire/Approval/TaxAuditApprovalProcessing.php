@@ -45,7 +45,7 @@ class TaxAuditApprovalProcessing extends Component
     
     public $taxTypes;
     public $taxType;
-    
+
     public $staffs = [];
     public $subRoles = [];
 
@@ -207,9 +207,11 @@ class TaxAuditApprovalProcessing extends Component
                         ]);
                     } else {
                         TaxAssessment::create([
+                            'location_id' => $this->subject->location_id,
+                            'business_id' => $this->stubject->business_id,
                             'tax_type_id' => $this->taxType->id,
-                            'assessment_type_id' => $this->subject->id,
-                            'assessment_type_name' => get_class($this->subject),
+                            'assessment_id' => $this->subject->id,
+                            'assessment_type' => get_class($this->subject),
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
