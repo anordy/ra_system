@@ -21,11 +21,11 @@
                     <tbody>
                         @foreach ($penalties as $penalty)
                             <tr>
-                                <td>{{ $penalty['returnMonth'] }}</td>
-                                <td>{{ number_format($penalty['taxAmount'], 2) }}</td>
-                                <td>{{ number_format($penalty['latePaymentAmount'], 2) }}</td>
-                                <td>{{ number_format($penalty['interestAmount'], 2) }}</td>
-                                <td>{{ number_format($penalty['penaltyAmount'], 2) }}</td>
+                                <td>{{ $penalty['return_quater'] }}</td>
+                                <td>{{ number_format($penalty['tax_amount'], 2) }}</td>
+                                <td>{{ number_format($penalty['late_payment'], 2) }}</td>
+                                <td>{{ number_format($penalty['rate_amount'], 2) }}</td>
+                                <td>{{ number_format($penalty['penalty_amount'], 2) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
