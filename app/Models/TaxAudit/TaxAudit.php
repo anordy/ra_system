@@ -43,7 +43,7 @@ class TaxAudit extends Model
 
     public function assessment()
     {
-        return $this->belongsTo(TaxAssessment::class, 'id', 'assessment_type_id');
+        return $this->morphOne(TaxAssessment::class, 'assessment');
     }
 
     public function officers()
