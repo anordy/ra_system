@@ -92,7 +92,7 @@
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <span class="font-weight-bold text-uppercase">Filled By</span>
-                                            <p class="my-1">{{ $return->business->taxpayer->first_name.' ' .$return->business->taxpayer->middle_name.' ' .$return->business->taxpayer->last_name}}</p>
+                                            <p class="my-1">{{ $return->taxpayer->first_name.' ' .$return->taxpayer->middle_name.' ' .$return->taxpayer->last_name}}</p>
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <span class="font-weight-bold text-uppercase">Financial Year</span>
