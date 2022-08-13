@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Returns\Port;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Port\PortReturn;
+use App\Traits\ReturnCardReport;
 use Illuminate\Support\Facades\DB;
 
 class PortReturnController extends Controller
 {
+    use ReturnCardReport;
+
     public function index()
     {
         $vars['totalSubmittedReturns'] = PortReturn::query()->whereNotNull('created_at')->count();
@@ -32,7 +35,12 @@ class PortReturnController extends Controller
                     ->where('port_returns.status','complete')
                     ->where('port_returns.created_at','>','zm_payments.trx_time')
                     ->count();
-        return view('returns.port.index',compact('vars'));
+                    
+        $data = $this->returnCardReport(PortReturn::class, 'port', 'port_return');
+
+        return $data;
+        
+        return view('returns.port.index',compact('vars', 'data'));
     }
 
     public function show($return_id)

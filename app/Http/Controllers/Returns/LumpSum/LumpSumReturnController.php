@@ -17,7 +17,7 @@ class LumpSumReturnController extends Controller
 
     public function index()
     {
-        $data = $this->returnCardReport(StampDutyReturn::class, 'stamp_duty', 'stamp_duty_return');
+        $data = $this->returnCardReport(LumpSumReturn::class, 'lump_sum', 'lump_sum');
 
         $vars['totalSubmittedReturns'] = LumpSumReturn::query()->whereNotNull('created_at')->count();
 
