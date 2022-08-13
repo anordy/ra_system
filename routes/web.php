@@ -85,6 +85,7 @@ use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
@@ -145,6 +146,9 @@ Route::middleware(['auth'])->group(function () {
             });
         });
     });
+    Route::name('verification.')->prefix('verification')->group(function () {
+        Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
+    });
 
     Route::prefix('system')->name('system.')->group(function () {
         Route::resource('audits', AuditController::class);
@@ -166,7 +170,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('certificate/{id}', [WithholdingAgentController::class, 'certificate'])->name('certificate');
     });
 
-    Route::prefix('pdf')->as('pdf.')->group(function () {
+    Route::prefix('pdf')->name('pdf.')->group(function () {
         Route::get('all', [AllPdfController::class, 'index'])->name('all');
         Route::get('all/{file}', [AllPdfController::class, 'demandNotice'])->name('demand-notice');
     });
@@ -222,7 +226,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
-
         Route::resource('/petroleum', PetroleumReturnController::class);
 
         Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
@@ -257,7 +260,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
         Route::get('/hotel/adjust/{return_id}', [HotelReturnController::class, 'adjust'])->name('hotel.adjust');
-
 
         Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
@@ -307,11 +309,11 @@ Route::name('claims.')->prefix('/tax-claims')->group(function () {
 });
 
 Route::name('debts.')->prefix('/debts')->group(function () {
-    Route::get('/outstanding', [DebtController::class, 'index'])->name('outstanding');
+    Route::get('/verifications', [VerificationDebtController::class, 'index'])->name('verifications.index');
+    Route::get('/assesment/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
+    Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
+    Route::get('/returns/{id}', [ReturnDebtController::class,'show'])->name('returns.show');
     Route::get('/objection/{id}', [DebtController::class, 'showObjection'])->name('objection');
-    Route::get('/returns/{id}', [DebtController::class,'showReturnDebt'])->name('returns');
-    Route::get('/assesment/{id}', [DebtController::class,'showAssesmentDebt'])->name('assesment');
-    Route::resource('/returns', ReturnDebtController::class);
     Route::resource('/investigation', InvestigationDebtController::class);
     Route::resource('/auditing', AuditDebtController::class);
     Route::resource('/verification', VerificationDebtController::class);

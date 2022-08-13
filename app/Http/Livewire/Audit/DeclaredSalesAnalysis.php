@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Models\BusinessLocation;
+use App\Models\Returns\ExciseDuty\MnoConfig;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\Petroleum\PetroleumConfig;
@@ -48,6 +49,9 @@ class DeclaredSalesAnalysis extends Component
                 break;
             case TaxType::VAT:
                 $this->vat();
+                break;
+            case TaxType::EXCISE_DUTY_MNO:
+                $this->mno();
                 break;
         }
 
@@ -200,6 +204,10 @@ class DeclaredSalesAnalysis extends Component
 
         $this->returns = $calculations;
 
+    }
+
+    public function mno(){
+        $purchaseConfigs = MnoConfig::whereIn('code', ["LP", "IP"])->get()->pluck('id');
     }
 
 

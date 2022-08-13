@@ -54,7 +54,7 @@ class ReturnsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value);
                 }),
-            Column::make('Action', 'id')->view('debts.return.includes.actions'),
+            Column::make('Action', 'id')->view('debts.returns.includes.actions'),
 
         ];
     }

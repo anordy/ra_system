@@ -30,7 +30,7 @@ class AssesmentsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id', 'financial_month_id', 'tax_type_id', 'assesment_id']);
+        $this->setAdditionalSelects(['business_id', 'financial_month_id', 'tax_type_id', 'debt_type_id']);
 
     }
 
@@ -57,11 +57,11 @@ class AssesmentsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value);
                 }),
-            // Column::make('Date of Notice Assessment', 'assesment.created_at')
-            // ->format(function ($value, $row) {
-            //     return Carbon::create($value)->format('M d, Y');
-            // }),
-            Column::make('Action', 'id')->view('debts.assesment.includes.actions'),
+            Column::make('Date of Notice Assessment', 'assesment.created_at')
+            ->format(function ($value, $row) {
+                return Carbon::create($value)->format('M d, Y');
+            }),
+            Column::make('Action', 'id')->view('debts.verifications.includes.actions'),
 
         ];
     }

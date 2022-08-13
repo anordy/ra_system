@@ -74,16 +74,17 @@
                 <div class="col-md-6 ">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Tax Region</label>
-                        <select class="form-control @error('selectedTaxRegion') is-invalid @enderror" wire:model="selectedTaxRegion">
+                        <select class="form-control @error('selectedTaxRegion') is-invalid @enderror"
+                            wire:model="selectedTaxRegion">
                             <option value="null" disabled selected>Select</option>
                             @foreach ($taxRegions as $region)
                                 <option value="{{ $region->id }}">{{ $region->name }}</option>
                             @endforeach
                         </select>
                         @error('selectedTaxRegion')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
                 </div>
@@ -144,9 +145,10 @@
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label class="form-label">Payment Quarters per year {{ print_r($selectedTaxTypes) }}</label>
+                                    <label class="form-label">Payment Quarters per year </label>
 
-                                    <select class="form-control @error("selectedTaxTypes.{$key}.quarters") is-invalid @enderror"
+                                    <select
+                                        class="form-control @error("selectedTaxTypes.{$key}.quarters") is-invalid @enderror"
                                         wire:model="selectedTaxTypes.{{ $key }}.quarters">
                                         <option value="" selected disabled>--Select---</option>
                                         <option value="12">One </option>
