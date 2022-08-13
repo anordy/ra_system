@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire\Debt;
 
+use Carbon\Carbon;
 use App\Models\Debts\Debt;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class ReturnsTable extends DataTableComponent
+class AuditsTable extends DataTableComponent
 {
     
     use LivewireAlert;
@@ -16,7 +17,7 @@ class ReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Debt::query()->where('debts.category', 'return');
+        return Debt::query()->where('debts.category', 'audit');
     }
 
     public function configure(): void
@@ -26,7 +27,7 @@ class ReturnsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id', 'financial_month_id', 'tax_type_id']);
+        $this->setAdditionalSelects(['business_id','debt_type_id']);
 
     }
 
@@ -42,18 +43,12 @@ class ReturnsTable extends DataTableComponent
                 ->format(function($value, $row) { 
                     return "{$row->business->taxpayer->first_name} {$row->business->taxpayer->last_name}"; 
                 }),
-            Column::make('Financial Month', 'financialMonth.name')
-                ->sortable()
-                ->searchable()
-                ->format(function($value, $row) { 
-                    return "{$row->financialMonth->name} {$row->financialMonth->year->code}"; 
-                }),
             Column::make('Tax Type', 'taxtype.name'),
             Column::make('Total Debt', 'total')
                 ->format(function ($value, $row) {
                     return number_format($value);
                 }),
-            Column::make('Action', 'id')->view('debts.returns.includes.actions'),
+            Column::make('Action', 'id')->view('debts.audits.includes.actions'),
 
         ];
     }

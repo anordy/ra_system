@@ -4,10 +4,7 @@ namespace App\Http\Livewire\Debt;
 
 use Carbon\Carbon;
 use App\Models\Debts\Debt;
-use Illuminate\Support\Facades\DB;
-use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\Verification\TaxVerification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
