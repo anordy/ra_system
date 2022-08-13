@@ -11,5 +11,4 @@ class PortReturn extends Model
 
      protected $guarded = [];
 
-
 }

@@ -23,6 +23,7 @@ class CreateTaxVerificationsTable extends Migration
             $table->text('scope')->nullable();
             $table->date('period_from')->nullable();
             $table->date('period_to')->nullable();
+            $table->string('assessment_report')->nullable();
             $table->string('created_by_type');
             $table->unsignedBigInteger('created_by_id');
             $table->enum('status', ['draft', 'pending', 'approved', 'correction'])->default('draft');

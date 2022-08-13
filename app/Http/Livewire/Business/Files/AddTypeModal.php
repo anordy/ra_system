@@ -6,6 +6,7 @@ use App\Models\BusinessCategory;
 use App\Models\BusinessFileType;
 use App\Models\Country;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -35,6 +36,7 @@ class AddTypeModal extends Component
     {
         $this->validate();
         try {
+            DB::beginTransaction();
             BusinessFileType::create([
                 'name' => $this->name,
                 'short_name' => $this->short_name,
@@ -44,9 +46,10 @@ class AddTypeModal extends Component
                 'file_type' => 'pdf'
             ]);
             $this->flash('success', 'Business File Type Stored.', [], redirect()->back()->getTargetUrl());
+            DB::commit();
         } catch(Exception $e){
             Log::error($e);
-
+            DB::rollBack();
             $this->alert('error', "Couldn't add business file type. Please try again." . $e->getMessage());
         }
     }

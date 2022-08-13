@@ -1,4 +1,4 @@
-<div class="row py-4 alert alert-success rounded-0">
+<div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
     <div class="col-md-4">
         <span class="font-weight-bold text-uppercase">Total Payment Amount</span>
         @if ($return->bill)

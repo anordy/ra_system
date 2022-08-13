@@ -56,7 +56,7 @@ class MnoReturn extends Model
     }
 
 
-    //to replaced
+    //to be replaced
     public function bill(){
         return $this->morphOne(ZmBill::class, 'billable');
     }
@@ -64,5 +64,9 @@ class MnoReturn extends Model
     //replacer
     public function bills(){
         return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function penalties(){
+        return $this->hasMany(MnoPenalty::class,'return_id');
     }
 }

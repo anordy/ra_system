@@ -12,6 +12,7 @@ class ReturnStatus implements Status
     const CN_GENERATED = 'control-number-generated';
     const CN_GENERATION_FAILED = 'control-number-generating-failed';
     const PAID_PARTIALLY = 'paid-partially';
+    const COMPLETED_PARTIALLY = 'completed-partially';
     const COMPLETE = 'complete';
 
     static function getConstants(): array

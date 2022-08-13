@@ -35,6 +35,7 @@ class TaxType extends Model implements Auditable
     public const ROAD_LICENSE_FEE = 'road-license-fee';
     public const AUDIT = 'audit';
     public const VERIFICATION = 'verification';
+    public const DISPUTES = 'disputes';
     public const INVESTIGATION = 'investigation';
 
     protected $fillable = [
@@ -49,5 +50,9 @@ class TaxType extends Model implements Auditable
     public function vatReturn()
     {
         return $this->hasOne(VatReturn::class, 'taxtype_id', 'id');
+    }
+
+    public function scopeMain($query){
+        $query->where('category', 'main');
     }
 }

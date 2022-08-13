@@ -16,6 +16,14 @@ class NotificationsTable extends DataTableComponent
 {
     use LivewireAlert;
 
+    public function mount(){
+        $user = auth()->user();
+        Notification::where('notifiable_type',get_class($user))
+                ->where('notifiable_id',$user->id)
+                ->whereNull('read_at')
+                ->update(['read_at'=> Carbon::now()]);
+    }
+
     public function builder(): Builder
     {
         return Notification::query()
@@ -69,19 +77,6 @@ class NotificationsTable extends DataTableComponent
                 ->format(
                     fn ($value, $row, Column $column) => $row['data']->message
                 ),
-            Column::make('Status', 'read_at')
-                ->format(function ($value, $row) {
-                    if (isset($value)) {
-                        return <<< HTML
-                    <span class="badge badge-success">Read</span>
-                HTML;
-                    } else {
-                        return <<< HTML
-                    <span class="badge badge-warning">Unread</span>
-                HTML;
-                    }
-                })
-                ->html(true),
             Column::make('Action', 'id')
                 ->label(
                     function ($row) {
@@ -99,8 +94,6 @@ class NotificationsTable extends DataTableComponent
     public function read($id)
     {
         $notification = Notification::find($id);
-        $notification->read_at = Carbon::now();
-        $notification->save();
         if(Route::has($notification['data']->href)){
             return redirect()->route($notification['data']->href);
         }else{
