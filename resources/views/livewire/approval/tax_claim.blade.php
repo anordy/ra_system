@@ -3,11 +3,11 @@
         <div class="card-header text-uppercase font-weight-bold bg-white">
             Tax Verification Approval
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
             @include('livewire.approval.transitions')
 
             @if ($this->checkTransition('assign_officers'))
-                <div class="row px-3">
+                <div class="row">
                     <div class="form-group col-lg-12">
                         <label class="control-label h6 text-uppercase">Assign Compliance officers</label>
                     </div>
@@ -48,7 +48,7 @@
                 </div>
             @endif
             @if ($this->checkTransition('verification_results'))
-                <div class="row px-3">
+                <div class="row">
                     <div class="form-group col-lg-12">
                         <label class="control-label font-weight-bold text-uppercase">Tax Claim Verification Assessment</label>
                     </div>
@@ -96,6 +96,11 @@
                 </div>
             </div>
         </div>
+
+        <pre>
+            {{ print_r($this->getEnabledTranstions()) }}
+        </pre>
+
         @if ($this->checkTransition('start'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-primary" wire:click="approve('start')">Initiate Approval</button>
@@ -117,12 +122,12 @@
                     Approve & Continue
                 </button>
             </div>
-        @elseif ($this->checkTransition('verification_review_report'))
+        @elseif ($this->checkTransition('accepted'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('correct_verification_report')">
+                <button type="button" class="btn btn-danger" wire:click="reject('rejected')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('verification_review_report')">
+                <button type="button" class="btn btn-primary" wire:click="approve('accepted')">
                     Approve & Complete
                 </button>
             </div>
