@@ -20,7 +20,6 @@ class CreateDebtsTable extends Migration
             $table->unsignedBigInteger('debt_type_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('responsible_person_id');
             $table->enum('category',['return','assesment']);
             $table->unsignedBigInteger('financial_month_id')->nullable();
             $table->dateTime('due_date');

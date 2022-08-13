@@ -34,7 +34,7 @@ class Debt extends Model
     }
 
     public function assesment(){
-        return $this->belongsTo(TaxVerificationAssessment::class, 'assesment_id');
+        return $this->belongsTo(TaxVerificationAssessment::class, 'debt_type_id');
     }
     
 }

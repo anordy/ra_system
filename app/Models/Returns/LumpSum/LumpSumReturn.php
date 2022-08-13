@@ -1,29 +1,24 @@
 <?php
 
-namespace App\Models\Returns\LampSum;
+namespace App\Models\Returns\LumpSum;
 
-use App\Models\Business;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\BusinessLocation;
+use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
+use App\Models\Business;
 use App\Models\LumpSumPayment;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Models\ZmBill;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class LampSumReturn extends Model
+class LumpSumReturn extends Model
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'lump_sum_returns';
-
     use HasFactory;
-
-    protected $guarded = [];
+    public $table         = 'lump_sum_returns';
+    protected $fillable   = [];
+    protected $guarded    = [];
 
     public function business()
     {
@@ -50,14 +45,19 @@ class LampSumReturn extends Model
         return $this->belongsTo(FinancialYear::class, 'financial_year_id', 'id');
     }
 
-    public function assignedPayments()
+    public function financialMonth()
     {
-        return $this->belongsTo(LumpSumPayment::class, 'business_location_id', 'business_id');
+        return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
     }
 
     public function bill()
     {
         return $this->morphOne(ZmBill::class, 'billable');
+    }
+
+    public function assignedPayments()
+    {
+        return $this->belongsTo(LumpSumPayment::class, 'business_location_id', 'business_id');
     }
 
     public function penalties()

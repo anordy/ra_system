@@ -20,11 +20,11 @@
                         @if (is_array($penalties) && count($penalties))
                             @foreach ($penalties as $penalty)
                                 <tr>
-                                    <td>{{ $penalty['returnMonth'] }}</td>
-                                    <td>{{ number_format($penalty['taxAmount'], 2) }}</td>
-                                    <td>{{ number_format($penalty['latePaymentAmount'], 2) }}</td>
-                                    <td>{{ number_format($penalty['interestAmount'], 2) }}</td>
-                                    <td>{{ number_format($penalty['penaltyAmount'], 2) }}</td>
+                                    <td>{{ $penalty['return_quater'] }}</td>
+                                    <td>{{ number_format($penalty['tax_amount'], 2) }}</td>
+                                    <td>{{ number_format($penalty['late_payment'], 2) }}</td>
+                                    <td>{{ number_format($penalty['rate_amount'], 2) }}</td>
+                                    <td>{{ number_format($penalty['penalty_amount'], 2) }}</td>
                                 </tr>
                             @endforeach
                         @else
@@ -53,7 +53,9 @@
                 @if ($penalties)
                     <tr>
                         <td>Payment for <br> <small> Malipo kwa ajili ya </small> </td>
-                        <td> Penalties for late payment <br> <small> Adhabu ya kuchelewesha malipo </small> </td>
+                        <td> {{ $return->quarter }} Quater and Penalties for late payment <br>
+                            <small>Awamu ya {{ $return->quarter }} na Adhabu ya kuchelewesha malipo</small>
+                        </td>
                     </tr>
                 @else
                     <tr>
