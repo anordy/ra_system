@@ -104,7 +104,6 @@ class ZanMalipoController extends Controller
     }
 
 
-
     function paymentCallback(Request $request)
     {
         try {
