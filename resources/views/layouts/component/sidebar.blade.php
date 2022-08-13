@@ -297,14 +297,11 @@
             <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
-                <li class="{{ request()->is('debts/outstanding*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.outstanding') }}">Outstanding</a>
+                <li class="{{ request()->is('debts/verifications*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.verifications.index') }}">Assesments</a>
                 </li>
                 <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
                     <a href="{{ route('debts.returns.index') }}">Returns</a>
-                </li>
-                <li class="{{ request()->is('debts/verification*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.verification.index') }}">Verifications</a>
                 </li>
                 <li class="{{ request()->is('debts/auditing*') ? 'active' : '' }}">
                     <a href="{{ route('debts.auditing.index') }}">Auditing</a>
