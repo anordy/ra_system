@@ -35,6 +35,11 @@ class TaxVerification extends Model
         return $this->belongsTo(Business::class);
     }
 
+    public function businesses()
+    {
+        return $this->belongsTo(Business::class);
+    }
+
     public function location()
     {
         return $this->belongsTo(BusinessLocation::class, 'location_id');
@@ -42,7 +47,7 @@ class TaxVerification extends Model
 
     public function assessment()
     {
-        return $this->belongsTo(TaxVerificationAssessment::class, 'id', 'verification_id');
+        return $this->belongsTo(TaxAssessment::class, 'id', 'assessment_type_id');
     }
 
     public function officers()

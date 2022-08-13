@@ -15,20 +15,16 @@ class CreateDebtsTable extends Migration
     {
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('taxpayer_id');
-            $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('tax_type_id');
-            $table->decimal('amount_due',40,2);
-            $table->decimal('amount_due_with_penalties',40,2);
-            $table->string('currency');
-            $table->enum('status',['unpaid','waiver','overdue','control-number-generating','control-number-generated','control-number-generating-failed','paid-partially','complete']);
-            $table->date('due_date');
+            $table->string('debt_type');
+            $table->unsignedBigInteger('debt_type_id');
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('location_id');
+            $table->enum('category',['return','assesment']);
+            $table->unsignedBigInteger('financial_month_id')->nullable();
+            $table->dateTime('due_date');
+            $table->decimal('total', 20,2);
             $table->timestamps();
-            $table->softDeletes();
-
-            $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
-            $table->foreign('location_id')->references('id')->on('business_locations');
-            $table->foreign('tax_type_id')->references('id')->on('tax_types');
         });
     }
 

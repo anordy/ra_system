@@ -25,6 +25,7 @@ class CreateLumpSumReturnsTable extends Migration
             $table->decimal('total_amount_due')->default(0);
             $table->decimal('total_amount_due_with_penalties', 40, 2)->default(0);
             $table->integer('quarter');
+            $table->string('quarter_name')->nullable();
             $table->string('currency');
             $table->integer('amount')->default(0);
             $table->integer('edited_count')->default(0);

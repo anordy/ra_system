@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxInvestigationStatus;
-use App\Models\Investigation\TaxInvestigationAssessment;
 use App\Models\Investigation\TaxInvestigationOfficer;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Role;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\User;
 use App\Models\TaxType;
 use Livewire\Component;
@@ -188,8 +188,9 @@ class TaxInvestigationApprovalProcessing extends Component
                             'penalty_amount' => $this->penaltyAmount,
                         ]);
                     } else {
-                        TaxInvestigationAssessment::create([
-                            'investigation_id' => $this->subject->id,
+                        TaxAssessment::create([
+                            'assessment_type_id' => $this->subject->id,
+                            'assessment_type_name' => get_class($this->subject),
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,

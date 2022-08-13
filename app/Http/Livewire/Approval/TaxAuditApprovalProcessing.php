@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Models\Role;
-use App\Models\TaxAudit\TaxAuditAssessment;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAuditOfficer;
 use App\Models\User;
 use App\Traits\WorkflowProcesssingTrait;
@@ -198,8 +198,9 @@ class TaxAuditApprovalProcessing extends Component
                             'penalty_amount' => $this->penaltyAmount,
                         ]);
                     } else {
-                        TaxAuditAssessment::create([
-                            'audit_id' => $this->subject->id,
+                        TaxAssessment::create([
+                            'assessment_type_id' => $this->subject->id,
+                            'assessment_type_name' => get_class($this->subject),
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
