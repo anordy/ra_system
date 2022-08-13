@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\DisputeStatus;
+use App\Enum\ReturnApplicationStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use Illuminate\Database\Migrations\Migration;
@@ -18,8 +19,8 @@ class CreateStampDutyReturnsTable extends Migration
     {
         Schema::create('stamp_duty_returns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('filed_id');
-            $table->string('filed_type');
+            $table->unsignedBigInteger('filed_by_id');
+            $table->string('filed_by_type');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('business_location_id');
@@ -37,7 +38,7 @@ class CreateStampDutyReturnsTable extends Migration
             $table->dateTime('paid_at')->nullable();
 
             $table->enum('status', ReturnStatus::getConstants());
-            $table->enum('application_status', DisputeStatus::getConstants());
+            $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->softDeletes();
             $table->timestamps();
         });

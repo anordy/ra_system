@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxInvestigationStatus;
-use App\Models\Investigation\TaxInvestigationAssessment;
 use App\Models\Investigation\TaxInvestigationOfficer;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Role;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\User;
 use App\Models\TaxType;
 use Livewire\Component;
@@ -39,9 +39,11 @@ class TaxInvestigationApprovalProcessing extends Component
     public $penaltyAmount;
     public $investigationReport;
     public $workingsReport;
-    public $taxTypes;
     public $intension;
     public $scope;
+
+    public $taxTypes;
+    public $taxType;
 
     public $hasAssessment;
 
@@ -53,11 +55,13 @@ class TaxInvestigationApprovalProcessing extends Component
 
 
 
+
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->taxTypes = TaxType::all();
+        $this->taxType = $this->taxTypes->firstWhere('code', TaxType::INVESTIGATION);
 
         $this->registerWorkflow($modelName, $modelId);
 
@@ -187,8 +191,10 @@ class TaxInvestigationApprovalProcessing extends Component
                             'penalty_amount' => $this->penaltyAmount,
                         ]);
                     } else {
-                        TaxInvestigationAssessment::create([
-                            'investigation_id' => $this->subject->id,
+                        TaxAssessment::create([
+                            'tax_type_id' => $this->taxType->id,
+                            'assessment_type_id' => $this->subject->id,
+                            'assessment_type_name' => get_class($this->subject),
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,

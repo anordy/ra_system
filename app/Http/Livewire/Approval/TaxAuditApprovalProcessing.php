@@ -3,8 +3,9 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Models\Role;
-use App\Models\TaxAudit\TaxAuditAssessment;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAuditOfficer;
+use App\Models\TaxType;
 use App\Models\User;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
@@ -41,7 +42,10 @@ class TaxAuditApprovalProcessing extends Component
     public $assessmentReport;
 
     public $hasAssessment;
-
+    
+    public $taxTypes;
+    public $taxType;
+    
     public $staffs = [];
     public $subRoles = [];
 
@@ -51,6 +55,10 @@ class TaxAuditApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
+        $this->taxTypes = TaxType::all();
+        $this->taxType = $this->taxTypes->firstWhere('code', TaxType::AUDIT);
+
+        
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
@@ -198,8 +206,10 @@ class TaxAuditApprovalProcessing extends Component
                             'penalty_amount' => $this->penaltyAmount,
                         ]);
                     } else {
-                        TaxAuditAssessment::create([
-                            'audit_id' => $this->subject->id,
+                        TaxAssessment::create([
+                            'tax_type_id' => $this->taxType->id,
+                            'assessment_type_id' => $this->subject->id,
+                            'assessment_type_name' => get_class($this->subject),
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
