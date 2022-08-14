@@ -17,10 +17,10 @@
 
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 <div id="all-businesses" class="tab-pane fade active show card p-3">
-                    @livewire('assesments.objection.objection-table')
+                    <livewire:assesments.waiver.waiver-table category="objection" />
                 </div>
                 <div id="pending-approval" class="tab-pane fade card p-3">
-                    @livewire('assesments.objection.objection-approval-table')
+                    <livewire:assesments.waiver-approval-table category="objection" />
                 </div>
             </div>
         </div>

@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowTaxInvestigationSeeder::class);
         $this->call(WorkflowTaxAuditSeeder::class);
         $this->call(WorkflowObjectionSeeder::class);
+        $this->call(WorkflowDisputeSeeder::class);
         $this->call(WorkflowWaiverObjectionSeeder::class);
         $this->call(EducationLevelSeeder::class);
         $this->call(HotelReturnConfigSeeder::class);

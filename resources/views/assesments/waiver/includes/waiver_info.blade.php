@@ -11,7 +11,7 @@
 
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
-                aria-selected="false">Ground Waiver</a>
+                aria-selected="false">Ground dispute</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="reason-tab" data-toggle="tab" href="#reason" role="tab" aria-controls="reason"
@@ -27,19 +27,19 @@
 
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Waiver Status</span>
+                    <span class="font-weight-bold text-uppercase">dispute Status</span>
                     <p class="my-1">
-                        @if ($waiver->status === \App\Models\WaiverStatus::APPROVED)
+                        @if ($dispute->status === \App\Models\WaiverStatus::APPROVED)
                             <span class="font-weight-bold text-success">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
                             </span>
-                        @elseif($waiver->status === \App\Models\WaiverStatus::REJECTED)
+                        @elseif($dispute->status === \App\Models\WaiverStatus::REJECTED)
                             <span class="font-weight-bold text-danger">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Rejected
                             </span>
-                        @elseif($waiver->status === \App\Models\WaiverStatus::CORRECTION)
+                        @elseif($dispute->status === \App\Models\WaiverStatus::CORRECTION)
                             <span class="font-weight-bold text-warning">
                                 <i class="bi bi-pen-fill mr-1"></i>
                                 Requires Correction
@@ -53,16 +53,16 @@
                     </p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount To be paid as Waiver Requirements</span>
-                    <p class="my-1">{{ $waiver->bill->amount }}</p>
+                    <span class="font-weight-bold text-uppercase">Amount To be paid as dispute Requirements</span>
+                    <p class="my-1">{{ $dispute->bill->amount }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Control No</span>
-                    <p class="my-1">{{ $waiver->bill->control_number }}</p>
+                    <p class="my-1">{{ $dispute->bill->control_number }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <p class="my-1">
-                        <a target="_blank" href="{{ route('bill.invoice', encrypt($waiver->bill->id)) }}"
+                        <a target="_blank" href="{{ route('bill.invoice', encrypt($dispute->bill->id)) }}"
                             class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
                             <i class="bi bi-download mr-3"></i><u>Download Bill</u>
                         </a>
@@ -121,7 +121,7 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Payment Status</span>
                     <p class="my-1">
-                        @if ($waiver->status === 'completed')
+                        @if ($dispute->status === 'completed')
                             <span class="badge badge-success py-1 px-2"
                                 style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
                                 Paid
@@ -147,17 +147,17 @@
             <div class="row m-2">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
+                    <p class="my-1">{{ $dispute->tax_in_dispute }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_not_in_dispute }} Tzs</p>
+                    <p class="my-1">{{ $dispute->tax_not_in_dispute }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Assesed Amount</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute + $waiver->tax_not_in_dispute }} TZS</p>
+                    <p class="my-1">{{ $dispute->tax_in_dispute + $dispute->tax_not_in_dispute }} TZS</p>
                 </div>
 
 
@@ -169,8 +169,8 @@
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Grounds for Waiver</span>
-                    <p class="my-1">{{ $waiver->ground_waiver }}</p>
+                    <span class="font-weight-bold text-uppercase">Grounds for dispute</span>
+                    <p class="my-1">{{ $dispute->ground }}</p>
 
                 </div>
 
@@ -181,8 +181,8 @@
         <div class="tab-pane fade" id="reason" role="tabpanel" aria-labelledby="reason-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Reason for Waiver</span>
-                    <p class="my-1">{{ $waiver->reason_waiver }}</p>
+                    <span class="font-weight-bold text-uppercase">Reason for dispute</span>
+                    <p class="my-1">{{ $dispute->reason }}</p>
                 </div>
 
             </div>
@@ -236,10 +236,10 @@
     @endif
 
 
-    @if ($waiver->waiver_report)
+    @if ($dispute->dispute_report)
         <div class="card my-4 rounded-0">
             <div class="card-header font-weight-bold bg-white">
-                Waiver Report
+                dispute Report
             </div>
             <div class="card-body">
                 <div class="row">
@@ -248,22 +248,22 @@
                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <a target="_blank"
-                                href="{{ route('assesments.waiver.files', encrypt($waiver->waiver_report)) }}"
+                                href="{{ route('assesments.waiver.files', encrypt($dispute->dispute_report)) }}"
                                 style="font-weight: 500;" class="ml-1">
-                                Waiver Report
+                                dispute Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
                         </div>
                     </div>
 
 
-                    @if ($waiver->notice_report)
+                    @if ($dispute->notice_report)
                         <div class="col-md-3">
                             <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
                                 class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                 <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                 <a target="_blank"
-                                    href="{{ route('assesments.waiver.files', encrypt($waiver->notice_report)) }}"
+                                    href="{{ route('assesments.waiver.files', encrypt($dispute->notice_report)) }}"
                                     style="font-weight: 500;" class="ml-1">
                                     Notice Report
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -273,13 +273,13 @@
                     @endif
 
                     
-                    @if ($waiver->setting_report)
+                    @if ($dispute->setting_report)
                         <div class="col-md-3">
                             <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
                                 class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                 <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                 <a target="_blank"
-                                    href="{{ route('assesments.waiver.files', encrypt($waiver->setting_report)) }}"
+                                    href="{{ route('assesments.waiver.files', encrypt($dispute->setting_report)) }}"
                                     style="font-weight: 500;" class="ml-1">
                                     Setting Report
                                     <i class="bi bi-arrow-up-right-square ml-1"></i>

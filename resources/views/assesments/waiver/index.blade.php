@@ -1,4 +1,3 @@
-
 @extends('layouts.master')
 
 @section('title')
@@ -15,13 +14,13 @@
                 <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">All Waivers</a>
                 <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Pending Approval</a>
             </nav>
-          
+
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 <div id="all-businesses" class="tab-pane fade active show">
-                    <livewire:assesments.waiver.waiver-table></livewire:assesments.waiver.waiver-table>
+                    <livewire:assesments.waiver.waiver-table category="waiver" />
                 </div>
                 <div id="pending-approval" class="tab-pane fade">
-                    @livewire('assesments.waiver-approval-table')
+                    <livewire:assesments.waiver-approval-table category="waiver" />
                 </div>
             </div>
         </div>

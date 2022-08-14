@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Assesments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use App\Models\Disputes\Dispute;
+use App\Models\DisputeAttachment;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\Verification\TaxVerificationAssessment;
 use App\Models\Waiver;
 use App\Models\WaiverAttachment;
@@ -24,12 +27,11 @@ class WaiverController extends Controller
 
     public function approval($waiverId)
     {
-        $waiver = Waiver::findOrFail(decrypt($waiverId));
-        $assesment = TaxVerificationAssessment::find($waiver->assesment_id);
-        $business = Business::find($waiver->business_id);
-        $files = WaiverAttachment::where('waiver_id', $waiver->id)->get();
-
-        return view('assesments.waiver.approval', compact('waiver', 'files', 'business','assesment'));
+        $dispute = Dispute::findOrFail(decrypt($waiverId));
+        $assesment = TaxAssessment::find($dispute->assesment_id);
+        $business = Business::find($dispute->business_id);
+        $files = DisputeAttachment::where('dispute_id', $dispute->id)->get();
+        return view('assesments.waiver.approval', compact('dispute', 'files', 'business','assesment'));
     }
 
     public function files($path)

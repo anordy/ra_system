@@ -20,11 +20,12 @@ class CreateDisputesTable extends Migration
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('disputes_type_id');
-            $table->string('disputes_type_name');
+            $table->string('category');
             $table->unsignedBigInteger('assesment_id')->nullable();
             $table->enum('business_type', ['hotel', 'other'])->default('other');
             $table->decimal('tax_in_dispute', 40, 2)->default(0);
             $table->decimal('tax_not_in_dispute', 40, 2)->default(0);
+            $table->decimal('tax_deposit', 40, 2)->default(0);
             $table->string('marking')->nullable();
             $table->text('ground')->nullable();
             $table->text('reason')->nullable();
@@ -35,7 +36,6 @@ class CreateDisputesTable extends Migration
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed'])->default('draft');
             $table->softDeletes();
             $table->timestamps();
-
         });
     }
 

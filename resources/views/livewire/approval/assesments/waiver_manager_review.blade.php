@@ -4,7 +4,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-lg-4">
-                        <label class="control-label">Weaver Report</label>
+                        <label class="control-label">Dispute Report</label>
                         <input type="file" class="form-control  @error('weaverReport') is-invalid @enderror"
                             wire:model.lazy="weaverReport">
                         @error('weaverReport')
