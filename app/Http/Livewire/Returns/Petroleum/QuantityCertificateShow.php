@@ -36,7 +36,7 @@ class QuantityCertificateShow extends Component
             'ship' => 'required',
             'port' => 'required',
             'voyage_no' => 'nullable',
-            'ascertained' => 'required|date',
+            'ascertained' => 'required|date|before:today',
             'business' => [
                 'required',
                 'exists:businesses,zin'
