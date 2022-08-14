@@ -56,6 +56,7 @@ class LoginController extends Controller
 
 
         if (Auth::once($request->only('email', 'password'))) {
+            Auth::logoutOtherDevices(request('password'));
             $user = auth()->user();
             if ($user->status == 0) {
                 return redirect()->back()->withErrors([
