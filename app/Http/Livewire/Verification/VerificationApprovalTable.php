@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Verification;
 
 use App\Enum\TaxVerificationStatus;
+use App\Models\Returns\ReturnStatus;
 use App\Models\Verification\TaxVerification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,13 +17,32 @@ class VerificationApprovalTable extends DataTableComponent
     use LivewireAlert;
 
     public $model = TaxVerification::class;
+    public $paymentStatus;
+
+    public function mount($payment)
+    {
+        $this->paymentStatus = $payment;
+    }
 
     public function builder(): Builder
     {
-        return TaxVerification::query()
-            ->with('business', 'location', 'taxType', 'taxReturn')
-            ->with('pinstancesActive')
-            ->where('tax_verifications.status', TaxVerificationStatus::PENDING);
+        if ($this->paymentStatus == 'paid') {
+            return TaxVerification::query()
+                ->with('business', 'location', 'taxType', 'taxReturn')
+                ->with('pinstancesActive')
+                ->whereHas('taxReturn', function(Builder $builder){
+                    $builder->where('status', ReturnStatus::COMPLETE);
+                })
+                ->where('tax_verifications.status', TaxVerificationStatus::PENDING)
+                ->where('tax_verifications.status', TaxVerificationStatus::PENDING);
+        } elseif ($this->paymentStatus == 'unpaid') {
+            return TaxVerification::query()
+                ->with('business', 'location', 'taxType', 'taxReturn')
+                ->with('pinstancesActive')
+                ->where('tax_verifications.status', TaxVerificationStatus::PENDING);
+        } else {
+            return [];
+        }
     }
 
     public function configure(): void
@@ -54,6 +74,7 @@ class VerificationApprovalTable extends DataTableComponent
             Column::make('Payment Status', 'tax_return_id')
                 ->view('verification.payment_status'),
             Column::make('Action', 'id')
+                ->hideIf($this->paymentStatus != 'paid')
                 ->view('verification.approval.action')
                 ->html(true),
 
