@@ -15,9 +15,11 @@ class CreateTaxAssessmentsTable extends Migration
     {
         Schema::create('tax_assessments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('tax_type_id');
-            $table->unsignedBigInteger('assessment_type_id');
-            $table->string('assessment_type_name');
+            $table->unsignedBigInteger('assessment_id');
+            $table->string('assessment_type');
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
