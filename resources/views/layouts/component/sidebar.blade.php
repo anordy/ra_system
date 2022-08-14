@@ -303,8 +303,8 @@
                 <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
                     <a href="{{ route('debts.returns.index') }}">Returns</a>
                 </li>
-                <li class="{{ request()->is('debts/auditing*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.auditing.index') }}">Auditing</a>
+                <li class="{{ request()->is('debts/audits*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.audits.index') }}">Auditing</a>
                 </li>
                 <li class="{{ request()->is('debts/investigation*') ? 'active' : '' }}">
                     <a href="{{ route('debts.investigation.index') }}">Investigations</a>

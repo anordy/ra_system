@@ -208,7 +208,7 @@ class TaxAuditApprovalProcessing extends Component
                     } else {
                         TaxAssessment::create([
                             'location_id' => $this->subject->location_id,
-                            'business_id' => $this->stubject->business_id,
+                            'business_id' => $this->subject->business_id,
                             'tax_type_id' => $this->taxType->id,
                             'assessment_id' => $this->subject->id,
                             'assessment_type' => get_class($this->subject),

@@ -309,14 +309,18 @@ Route::name('claims.')->prefix('/tax-claims')->group(function () {
 });
 
 Route::name('debts.')->prefix('/debts')->group(function () {
+    // Verification Assesments
     Route::get('/verifications', [VerificationDebtController::class, 'index'])->name('verifications.index');
-    Route::get('/assesment/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
+    Route::get('/verifications/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
+    // Return debts
     Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
     Route::get('/returns/{id}', [ReturnDebtController::class,'show'])->name('returns.show');
+    // Audit Assesments
+    Route::get('/audits', [AuditDebtController::class, 'index'])->name('audits.index');
+    Route::get('/audits/{id}', [AuditDebtController::class,'show'])->name('audits.show');
+
     Route::get('/objection/{id}', [DebtController::class, 'showObjection'])->name('objection');
     Route::resource('/investigation', InvestigationDebtController::class);
-    Route::resource('/auditing', AuditDebtController::class);
-    Route::resource('/verification', VerificationDebtController::class);
 });
 
 Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
