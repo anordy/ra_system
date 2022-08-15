@@ -9,6 +9,8 @@ use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\PetroleumReturnItem;
+use App\Models\Returns\StampDuty\StampDutyConfig;
+use App\Models\Returns\StampDuty\StampDutyReturnItem;
 use App\Models\Returns\Vat\VatReturnConfig;
 use App\Models\Returns\Vat\VatReturnItem;
 use App\Models\TaxType;
@@ -54,6 +56,9 @@ class DeclaredSalesAnalysis extends Component
             case TaxType::EXCISE_DUTY_MNO:
                 $this->mno();
                 break;
+            case TaxType::STAMP_DUTY:
+                $this->stampDuty();
+                break;
         }
 
 
@@ -64,7 +69,6 @@ class DeclaredSalesAnalysis extends Component
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) === $date;
     }
-
 
     protected function hotel()
     {
@@ -111,7 +115,6 @@ class DeclaredSalesAnalysis extends Component
 
         $this->returns = $calculations->sortByDesc('month')->groupBy('year');
     }
-
 
     protected function petroleum()
     {
@@ -242,6 +245,49 @@ class DeclaredSalesAnalysis extends Component
         $this->returns = $calculations->sortByDesc('month')->groupBy('year');
     }
 
+    public function stampDuty(){
+        $purchaseConfigs = StampDutyConfig::whereIn('code', ["EXIMP", "LOCPUR", "IMPPUR"])->get()->pluck('id');
+
+        $this->purchases = StampDutyReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_purchases, SUM(tax) as total_purchases_vat')
+            ->leftJoin('stamp_duty_configs', 'stamp_duty_configs.id', 'stamp_duty_return_items.config_id')
+            ->leftJoin('stamp_duty_returns', 'stamp_duty_returns.id', 'stamp_duty_return_items.return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'stamp_duty_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->where('stamp_duty_returns.tax_type_id', $this->taxType->id)
+            ->where('stamp_duty_returns.business_location_id', $this->branch->id)
+            ->whereIn('config_id', $purchaseConfigs)
+            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+
+
+        $salesConfigs = StampDutyConfig::whereIn('code', ["SUP", "INST"])->get()->pluck('id');
+
+        $this->sales = StampDutyReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(tax) as total_sales_vat')
+            ->leftJoin('stamp_duty_configs', 'stamp_duty_configs.id', 'stamp_duty_return_items.config_id')
+            ->leftJoin('stamp_duty_returns', 'stamp_duty_returns.id', 'stamp_duty_return_items.return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'stamp_duty_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->where('stamp_duty_returns.tax_type_id', $this->taxType->id)
+            ->where('stamp_duty_returns.business_location_id', $this->branch->id)
+            ->whereIn('config_id', $salesConfigs)
+            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+
+        $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
+
+        $calculations = collect(array_map(function ($returns) {
+            return array(
+                'year' => $returns['year'],
+                'month' => $returns['month'],
+                'financial_month' => "{$returns['month']} {$returns['year']}",
+                'total_sales' => $returns['total_sales'],
+                'total_purchases' => $returns['total_purchases'],
+                'output_vat' => $returns['total_sales_vat'],
+                'input_tax' => $returns['total_purchases_vat'],
+                'tax_paid' => ($returns['total_sales_vat']) - $returns['total_purchases_vat'],
+            );
+        }, $returns));
+
+        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
+    }
 
     public function render()
     {
