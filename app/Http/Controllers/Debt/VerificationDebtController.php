@@ -30,20 +30,6 @@ class VerificationDebtController extends Controller
 
         return view('debts.verifications.show', compact('assesment', 'id', 'debt'));
     }
-
-    // public function showObjection($id)
-    // {
-    //     $now = Carbon::now();
-    //     $id = decrypt($id);
-
-    //     $objection = TaxVerification::selectRaw('*')
-    //         ->join('tax_verification_assessments', 'tax_verification_assessments.verification_id', 'tax_verifications.id')
-    //         ->leftJoin('objections', 'objections.assesment_id', 'tax_verification_assessments.id')
-    //         ->join('businesses', 'businesses.id', 'tax_verifications.business_id')
-    //         ->where('tax_verifications.id', $id)->first();
-
-    //     return view('debts.objection.show', compact('objection', 'id'));
-    // }
     
     public function generateAssesmentDebts()
     {
@@ -62,8 +48,6 @@ class VerificationDebtController extends Controller
              tax_assessments.id as assesment_id
          ')
          ->join('tax_assessments', 'tax_assessments.assessment_id', 'tax_verifications.id')
-         ->leftJoin('objections', 'objections.assesment_id', 'tax_assessments.id')
-            ->whereNull('objections.assesment_id')
             ->where("tax_assessments.assessment_type", TaxVerification::class)
             ->where("tax_assessments.status", '!=', ReturnStatus::COMPLETE)
             ->whereRaw("DATEDIFF('". $now->format("Y-m-d") . "', tax_assessments.created_at  ) >= 21")
