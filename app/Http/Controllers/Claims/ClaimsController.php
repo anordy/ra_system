@@ -6,6 +6,7 @@ use App\Enum\TaxClaimStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Claims\TaxClaim;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\Vat\VatReturn;
 
 class ClaimsController extends Controller
 {
@@ -20,6 +21,11 @@ class ClaimsController extends Controller
 
         if ($return instanceof StampDutyReturn){
             $returnView = 'returns.stamp-duty.details';
+            return view('claims.show', compact('claim', 'returnView'));
+        }
+
+        if ($return instanceof VatReturn){
+            $returnView = 'returns.vat_returns.details';
             return view('claims.show', compact('claim', 'returnView'));
         }
     }

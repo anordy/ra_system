@@ -23,7 +23,7 @@
             <div class="card">
                 <div class="card-header">
                     Return details for the return month
-                    of {{$return->financialMonth->name}} {{$return->financialMonth->year->name}}
+                    of {{$return->financialMonth->name}} {{$return->financialMonth->year->code}}
                 </div>
                 <div class="card-body">
                     <div style="margin-right: 13px; margin-left: 15px;">
@@ -95,12 +95,8 @@
                                             <p class="my-1">{{ $return->taxpayer->first_name.' ' .$return->taxpayer->middle_name.' ' .$return->taxpayer->last_name}}</p>
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            <span class="font-weight-bold text-uppercase">Financial Year</span>
-                                            <p class="my-1">{{ $return->financialYear->name }}</p>
-                                        </div>
-                                        <div class="col-md-3 mb-3">
                                             <span class="font-weight-bold text-uppercase">Return Month</span>
-                                            <p class="my-1">{{$return->financialMonth->name}}</p>
+                                            <p class="my-1">{{$return->financialMonth->name}} {{ $return->financialYear->code }}</p>
                                         </div>
 
                                         <div class="col-md-3 mb-3">
@@ -245,8 +241,19 @@
                                         </tr>
 
                                         <tr>
-                                            <th>Vat Payable/To Claim</th>
-                                            <th class="text-right">{{number_format($return->total_vat_payable,2, '.',',')}}
+                                            <th>
+                                                @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
+                                                    Vat To Claim
+                                                @else
+                                                    Vat Payable
+                                                @endif
+                                            </th>
+                                            <th class="text-right">
+                                                @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
+                                                    ({{number_format($return->total_vat_payable, 2, '.',',')}})
+                                                @else
+                                                    {{number_format($return->total_vat_payable, 2, '.',',')}}
+                                                @endif
                                                 <strong>{{$return->business->currency->iso}}</strong>
                                             </th>
                                         </tr>
@@ -266,19 +273,31 @@
                                         </tr>
 
                                         <tr>
-                                            <th>Net Vat Payable</th>
-                                            <th class="text-right">{{number_format($return->total_amount_due, 2, '.',',')}}
+                                            <th>
+                                                @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
+                                                    Net Vat To Claim
+                                                @else
+                                                    Net Vat Payable
+                                                @endif
+                                            </th>
+                                            <th class="text-right">
+                                                @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
+                                                    ({{number_format($return->total_amount_due, 2, '.',',')}})
+                                                @else
+                                                    {{number_format($return->total_amount_due, 2, '.',',')}}
+                                                @endif
                                                 <strong>{{$return->business->currency->iso}}</strong>
                                             </th>
                                         </tr>
 
                                         <tr>
-                                            <th>Infrastructure Vat To Be Paid ({{$return->business_type}})</th>
-                                            <th class="text-right">{{number_format($return->infrastructure_tax,2, '.',',' )}}
-                                                <strong>{{$return->business->currency->iso}}</strong>
-                                            </th>
+                                            @if($return->business_type != 'other')
+                                                <th>Infrastructure Vat To Be Paid ({{$return->business_type}})</th>
+                                                <th class="text-right">{{number_format($return->infrastructure_tax,2, '.',',' )}}
+                                                    <strong>{{$return->business->currency->iso}}</strong>
+                                                </th>
+                                            @endif
                                         </tr>
-
                                         <tr>
                                             <th>Penalty</th>
                                             <th class="text-right">{{number_format($return->penalty,2, '.',',' )}}
