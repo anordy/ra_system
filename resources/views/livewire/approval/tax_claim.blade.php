@@ -97,10 +97,6 @@
             </div>
         </div>
 
-        <pre>
-            {{ print_r($this->getEnabledTranstions()) }}
-        </pre>
-
         @if ($this->checkTransition('start'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-primary" wire:click="approve('start')">Initiate Approval</button>

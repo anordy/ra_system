@@ -7,7 +7,6 @@ use App\Models\Debts\Debt;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Verification\TaxVerification;
-use App\Models\Verification\TaxVerificationAssessment;
 
 class VerificationDebtController extends Controller
 {
@@ -54,26 +53,27 @@ class VerificationDebtController extends Controller
         $assessments = TaxVerification::selectRaw('
              tax_verifications.business_id,
              tax_verifications.location_id,
-             tax_type_id, 
+             tax_verifications.tax_type_id, 
              tax_return_type,
              tax_return_id,
-             tax_verification_assessments.principal_amount,
-             tax_verification_assessments.penalty_amount,
-             tax_verification_assessments.interest_amount,
-             tax_verification_assessments.id as assesment_id
+             tax_assessments.principal_amount,
+             tax_assessments.penalty_amount,
+             tax_assessments.interest_amount,
+             tax_assessments.id as assesment_id
          ')
-            ->join('tax_verification_assessments', 'tax_verification_assessments.verification_id', 'tax_verifications.id')
-            ->leftJoin('objections', 'objections.assesment_id', 'tax_verification_assessments.id')
+         ->join('tax_assessments', 'tax_assessments.assessment_id', 'tax_verifications.id')
+         ->leftJoin('objections', 'objections.assesment_id', 'tax_assessments.id')
             ->whereNull('objections.assesment_id')
-            ->where("tax_verification_assessments.status", '!=', ReturnStatus::COMPLETE)
-            ->whereRaw("DATEDIFF('" . $now->format("Y-m-d") . "', tax_verification_assessments.created_at  ) >= 21")
+            ->where("tax_assessments.assessment_type", TaxVerification::class)
+            ->where("tax_assessments.status", '!=', ReturnStatus::COMPLETE)
+            ->whereRaw("DATEDIFF('". $now->format("Y-m-d") . "', tax_assessments.created_at  ) >= 21")
             ->get()->toArray();
 
 
         $assesment_calculations = array_map(function ($assessments) {
             return array(
                 'tax_type_id' => $assessments['tax_type_id'],
-                'debt_type' => TaxVerificationAssessment::class,
+                'debt_type' => TaxVerification::class,
                 'debt_type_id' => $assessments['assesment_id'],
                 'business_id' => $assessments['business_id'],
                 'location_id' => $assessments['location_id'],

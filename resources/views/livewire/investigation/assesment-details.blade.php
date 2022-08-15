@@ -9,7 +9,6 @@
     @elseif ($returnTypeTable == App\Models\TaxType::PETROLEUM)
         @include('investigation.approval.return-details.petroleum')
     @endif
-    
 @else
     <div class="card">
         <div class="card-body">
@@ -21,14 +20,34 @@
                     <strong>{{ $year }}</strong>
                     <table class="table table-sm table-bordered">
                         <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Declared Purchases</th>
-                                <th>Input TAX</th>
-                                <th>Declared Sales</th>
-                                <th>Output VAT</th>
-                                <th>Tax Paid</th>
-                            </tr>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="text-uppercase mt-2 ml-2">Declared Sales Analysis</h6>
+                                    <hr>
+                                    <div class="row mx-2">
+                                        @foreach ($returns as $year => $return)
+                                            <strong>{{ $year }}</strong>
+                                            <table class="table table-sm table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Month</th>
+                                                        <th>Declared Purchases</th>
+                                                        <th>Input TAX</th>
+                                                        <th>Declared Sales</th>
+                                                        <th>Output VAT</th>
+                                                        <th>Tax Paid</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($return as $item)
+                                                        <tr>
+                                                            <th>Month</th>
+                                                            <th>Declared Purchases</th>
+                                                            <th>Input TAX</th>
+                                                            <th>Declared Sales</th>
+                                                            <th>Output VAT</th>
+                                                            <th>Tax Paid</th>
+                                                        </tr>
                         </thead>
                         <tbody>
                             @foreach ($return as $item)
@@ -60,4 +79,4 @@
         </div>
     </div>
 
-@endif
+    @endif

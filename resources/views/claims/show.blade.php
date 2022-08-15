@@ -32,73 +32,26 @@
 
                 <div class="col-md-12 mt-3">
                     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="old-return-tab" data-toggle="tab" href="#old-return" role="tab" aria-controls="old-return" aria-selected="true">Filed Return</a>
-                        </li>
-                        @if($newReturn)
+                        @if($claim->oldReturn)
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="old-return-tab" data-toggle="tab" href="#old-return" role="tab" aria-controls="old-return" aria-selected="true">Filed Return</a>
+                            </li>
+                        @endif
+                        @if($claim->newReturn)
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="new-return-tab" data-toggle="tab" href="#new-return" role="tab" aria-controls="new-return" aria-selected="false">New Return</a>
                             </li>
                         @endif
                     </ul>
                     <div class="tab-content bg-white border shadow-sm" id="myTabContent" style="padding: 1rem !important;">
-                        <div class="tab-pane fade  show active" id="old-return" role="tabpanel" aria-labelledby="old-return-tab">
-                            <table class="table table-bordered normal-text">
-                                <thead>
-                                <th style="width: 30%">Item Name</th>
-                                <th style="width: 20%">Value (TZS)</th>
-                                <th style="width: 10%">Rate</th>
-                                <th style="width: 20%">Tax (TZS)</th>
-                                </thead>
-                                <tbody>
-                                @foreach ($oldReturn->items as $item)
-                                    <tr>
-                                        <td>{{ $item->config->name }}</td>
-                                        <td>{{ number_format($item->value) }}</td>
-                                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}</td>
-                                        <td>{{ number_format($item->tax) }}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                                <tfoot>
-                                <tr class="bg-secondary">
-                                    <th class="font-weight-bold" style="width: 20%">Total</th>
-                                    <th style="width: 30%"></th>
-                                    <th style="width: 25%"></th>
-                                    <th style="width: 25%">{{ number_format($oldReturn->total_amount_due) }}</th>
-                                </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        @if($newReturn)
+                        @if($return = $claim->oldReturn)
+                            <div class="tab-pane fade  show active" id="old-return" role="tabpanel" aria-labelledby="old-return-tab">
+                                @include($returnView)
+                            </div>
+                        @endif
+                        @if($return = $claim->newReturn)
                             <div class="tab-pane fade" id="new-return" role="tabpanel" aria-labelledby="new-return-tab">
-                                <table class="table table-bordered normal-text">
-                                    <thead>
-                                    <th style="width: 30%">Item Name</th>
-                                    <th style="width: 20%">Value (TZS)</th>
-                                    <th style="width: 10%">Rate</th>
-                                    <th style="width: 20%">Tax (TZS)</th>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($newReturn->items as $item)
-                                        <tr>
-                                            <td>{{ $item->config->name }}</td>
-                                            <td>{{ number_format($item->value) }}</td>
-                                            <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}</td>
-                                            <td>{{ number_format($item->tax) }}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                    <tr class="bg-alt">
-                                        <th style="width: 20%"></th>
-                                        <th style="width: 30%"></th>
-                                        <th style="width: 25%"></th>
-                                        <th style="width: 25%">{{ number_format($newReturn->total_amount_due) }}</th>
-                                    </tr>
-
-                                    </tfoot>
-                                </table>
+                                @include($returnView)
                             </div>
                         @endif
                     </div>
@@ -106,4 +59,6 @@
             </div>
         </div>
     </div>
+
+    <livewire:approval.tax-claim-approval-processing modelId="{{ $claim->id }}" modelName="{{ get_class($claim) }}" />
 @endsection

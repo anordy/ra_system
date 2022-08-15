@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Claims;
 use App\Enum\TaxClaimStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Claims\TaxClaim;
+use App\Models\Returns\StampDuty\StampDutyReturn;
 
 class ClaimsController extends Controller
 {
@@ -15,17 +16,11 @@ class ClaimsController extends Controller
     public function show($claimId){
         $claimId = decrypt($claimId);
         $claim = TaxClaim::findOrFail($claimId);
-        $newReturn = $claim->newReturn;
-        $oldReturn = $claim->oldReturn;
-        return view('claims.show', compact('claim', 'oldReturn', 'newReturn'));
-    }
+        $return = $claim->oldReturn;
 
-    public function approve($claimId){
-        $claimId = decrypt($claimId);
-        $claim = TaxClaim::findOrFail($claimId);
-
-        $claim->status = TaxClaimStatus::APPROVED;
-
-        // Create
+        if ($return instanceof StampDutyReturn){
+            $returnView = 'returns.stamp-duty.details';
+            return view('claims.show', compact('claim', 'returnView'));
+        }
     }
 }

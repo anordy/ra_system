@@ -20,9 +20,9 @@ class CreateDebtsTable extends Migration
             $table->unsignedBigInteger('debt_type_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
-            $table->enum('category',['return','assesment']);
+            $table->enum('category',['return','assesment','audit']);
             $table->unsignedBigInteger('financial_month_id')->nullable();
-            $table->dateTime('due_date');
+            $table->dateTime('due_date')->nullable();
             $table->decimal('total', 20,2);
             $table->timestamps();
         });
