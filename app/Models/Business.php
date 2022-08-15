@@ -7,8 +7,6 @@ use App\Models\Returns\Vat\VatReturn;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Relief\Relief;
@@ -34,78 +32,6 @@ class Business extends Model implements Auditable
     public function scopeClosed($query)
     {
         $query->where('status', BusinessStatus::TEMP_CLOSED);
-    }
-
-    public function generateZin(){
-        if ($this->zin){
-            return true;
-        }
-
-        try {
-            DB::beginTransaction();
-            $s = 'Z';
-
-            switch ($this->category->short_name){
-                case BusinessCategory::SOLE:
-                    $s = $s . 'S';
-                    break;
-                case BusinessCategory::COMPANY:
-                    $s = $s . 'C';
-                    break;
-                case BusinessCategory::PARTNERSHIP:
-                    $s = $s . 'P';
-                    break;
-                case BusinessCategory::NGO:
-                    $s = $s . 'N';
-                    break;
-                default:
-                    abort(404);
-            }
-
-            switch ($this->location->region->name){
-                case 'Unguja':
-                    $s = $s . '1';
-                    break;
-                case 'Pemba':
-                    $s = $s . '2';
-                    break;
-                default:
-                    abort(404);
-            }
-
-            // Append tax region
-            if (!$this->taxRegion){
-                abort(404);
-            }
-
-            $region = $this->taxRegion;
-
-            $s = $s . $region->prefix;
-
-            // Append random no from table
-            $s = $s . sprintf("%04s", $region->registration_count + 1);
-
-            // Append year
-            $s = $s . Carbon::now()->format('y');
-
-            // Save no, update count
-            $this->zin = $s;
-            $this->save();
-
-            $region->registration_count = $region->registration_count + 1;
-            $region->save();
-            DB::commit();
-            return true;
-        } catch (\Exception $e){
-            DB::rollBack();
-            Log::error($e);
-            return false;
-        }
-    }
-
-    public function taxRegion()
-    {
-        return $this->belongsTo(TaxRegion::class);
     }
 
     public function taxpayer()
@@ -145,11 +71,6 @@ class Business extends Model implements Auditable
     
     public function locations(){
         return $this->hasMany(BusinessLocation::class, 'business_id');
-    }
-
-    public function location()
-    {
-        return $this->hasOne(BusinessLocation::class);
     }
 
     public function headquarter()

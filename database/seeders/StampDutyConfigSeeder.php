@@ -29,6 +29,7 @@ class StampDutyConfigSeeder extends Seeder
                 'currency' => 'TZS',
                 'rate' => 0.02,
                 'rate_usd' => 0,
+                'heading_type' => 'supplies',
                 'active' => true,
             ],
             [
@@ -40,6 +41,7 @@ class StampDutyConfigSeeder extends Seeder
                 'value_calculated' => false,
                 'col_type' => 'normal',
                 'rate_applicable' => false,
+                'heading_type' => 'supplies',
                 'active' => true,
             ],
             [
@@ -66,6 +68,7 @@ class StampDutyConfigSeeder extends Seeder
                 'rate' => 0.02,
                 'rate_usd' => 0,
                 'active' => true,
+                'heading_type' => 'purchases'
             ],
             [
                 'financia_year_id' => 1,
@@ -78,6 +81,7 @@ class StampDutyConfigSeeder extends Seeder
                 'rate_applicable' => false,
                 'is_summable' => false,
                 'active' => true,
+                'heading_type' => 'purchases'
             ],
             [
                 'financia_year_id' => 1,
@@ -91,6 +95,7 @@ class StampDutyConfigSeeder extends Seeder
                 'currency' => 'TZS',
                 'is_summable' => false,
                 'active' => true,
+                'heading_type' => 'purchases'
             ],
             [
                 'financia_year_id' => 1,
