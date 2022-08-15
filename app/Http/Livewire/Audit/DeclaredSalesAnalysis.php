@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Audit;
 
 use App\Models\BusinessLocation;
 use App\Models\Returns\ExciseDuty\MnoConfig;
+use App\Models\returns\ExciseDuty\MnoReturnItem;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\Petroleum\PetroleumConfig;
@@ -210,7 +211,38 @@ class DeclaredSalesAnalysis extends Component
     }
 
     public function mno(){
-        $purchaseConfigs = MnoConfig::whereIn('code', ["LP", "IP"])->get()->pluck('id');
+        $this->purchases = [];
+
+
+        $salesConfigs = MnoConfig::whereIn('code', ["MNOS", "MVNOS", "MCPRE", "MCPOST","MM","OFS","OES"])->get()->pluck('id');
+
+        $this->sales = MnoReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
+            ->leftJoin('mno_return_configs', 'mno_return_configs.id', 'mno_return_items.mno_config_id')
+            ->leftJoin('mno_returns', 'mno_returns.id', 'mno_return_items.return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'mno_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->where('mno_returns.tax_type_id', $this->taxType->id)
+            ->where('mno_returns.business_location_id', $this->branch->id)
+            ->whereIn('mno_config_id', $salesConfigs)
+            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+
+        $returns = array_replace_recursive($this->purchases, $this->sales->toArray());
+
+        $calculations = collect(array_map(function ($returns) {
+            return array(
+                'year' => $returns['year'],
+                'month' => $returns['month'],
+                'financial_month' => "{$returns['month']} {$returns['year']}",
+                'total_sales' => $returns['total_sales'],
+                'total_purchases' => $returns['total_purchases'],
+                'output_vat' => $returns['total_sales_vat'],
+                'input_tax' => $returns['total_purchases_vat'],
+                'tax_paid' => ($returns['total_sales_vat']) - $returns['total_purchases_vat'],
+            );
+        }, $returns));
+
+
+        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
     }
 
     public function stampDuty(){
