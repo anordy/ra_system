@@ -26,12 +26,6 @@ class CreateVatServicesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // $table->foreign('business_id')->references('id')->on('businesses');
-            // $table->foreign('location_id')->references('id')->on('business_locations');
-            // $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
-            // $table->foreign('financial_year_id')->references('id')->on('financial_years');
-            // $table->foreign('return_month_id')->references('id')->on('return_months');
-
         });
     }
 
