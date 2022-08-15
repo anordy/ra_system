@@ -11,7 +11,7 @@
                     $totalValue = 0;
                     $totalVat = 0;
                 @endphp
-                <table class="table table-sm table-bordered">
+                <table class="table table-sm table-bordered table-responsive">
                     <thead>
                         <tr>
                             <th>Month</th>

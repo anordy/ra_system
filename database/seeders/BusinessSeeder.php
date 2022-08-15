@@ -87,6 +87,7 @@ class BusinessSeeder extends Seeder
             for ($i=1; $i < 16; $i++) { 
                 BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $i, "currency" => "TZS"]);
             }
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

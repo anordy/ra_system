@@ -5,9 +5,9 @@
                 <div class="row">
                     <div class="form-group col-lg-4">
                         <label class="control-label">Objection Report</label>
-                        <input type="file" class="form-control  @error('objectionReport') is-invalid @enderror"
-                            wire:model.lazy="objectionReport">
-                        @error('objectionReport')
+                        <input type="file" class="form-control  @error('disputeReport') is-invalid @enderror"
+                            wire:model.lazy="disputeReport">
+                        @error('disputeReport')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

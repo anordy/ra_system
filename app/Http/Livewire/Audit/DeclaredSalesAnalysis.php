@@ -3,9 +3,7 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Models\BusinessLocation;
-use App\Models\FinancialMonth;
 use App\Models\Returns\BFO\BfoConfig;
-use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\BFO\BfoReturnItems;
 use App\Models\Returns\EmTransactionConfig;
 use App\Models\Returns\EmTransactionReturnItem;
@@ -26,7 +24,6 @@ use Carbon\Carbon;
 use DateTime;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use stdClass;
 
 class DeclaredSalesAnalysis extends Component
 {
@@ -38,11 +35,11 @@ class DeclaredSalesAnalysis extends Component
     public $output_vat;
     public $input_vat;
 
-
     public $returns = [];
     public $taxType;
     public $branch;
     public $headersBfo;
+    public $headersMno;
     public $headersEmTransaction;
     public $headersMmTransfer;
     public $headersPetroleum;
@@ -70,6 +67,7 @@ class DeclaredSalesAnalysis extends Component
                 $this->vat();
                 break;
             case TaxType::EXCISE_DUTY_MNO:
+                $this->returnTypeTable = TaxType::EXCISE_DUTY_MNO;
                 $this->mno();
                 break;
             case TaxType::EXCISE_DUTY_BFO:
@@ -87,11 +85,9 @@ class DeclaredSalesAnalysis extends Component
                 $this->stampDuty();
                 break;
         }
-
-
     }
 
-    function validateDate($date, $format = 'Y-m-d')
+    public function validateDate($date, $format = 'Y-m-d')
     {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) === $date;
@@ -110,7 +106,6 @@ class DeclaredSalesAnalysis extends Component
             ->where('hotel_returns.business_location_id', $this->branch->id)
             ->whereIn('config_id', $purchaseConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
-
 
         $salesConfigs = HotelReturnConfig::whereIn('code', ["HS", "RS", "TOS", "OS"])->get()->pluck('id');
 
@@ -139,7 +134,6 @@ class DeclaredSalesAnalysis extends Component
             );
         }, $returns));
 
-
         $this->returns = $calculations->sortByDesc('month')->groupBy('year');
     }
 
@@ -147,15 +141,15 @@ class DeclaredSalesAnalysis extends Component
     {
         $salesConfigs = PetroleumConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
         $headers = PetroleumConfig::where('code', '!=', 'TOTAL')->get()->pluck('name');
-        
+
         $yearReturnGroup = PetroleumReturnItem::select('petroleum_configs.code', 'petroleum_return_items.value', 'petroleum_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('petroleum_configs', 'petroleum_configs.id', 'petroleum_return_items.config_id')
             ->leftJoin('petroleum_returns', 'petroleum_returns.id', 'petroleum_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'petroleum_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
             ->whereIn('config_id', $salesConfigs)
-            ->get()->groupBy(['year','month']);
-        
+            ->get()->groupBy(['year', 'month']);
+
         $yearData = $this->formatDataArray($yearReturnGroup);
 
         $this->withoutPurchases = true;
@@ -165,7 +159,7 @@ class DeclaredSalesAnalysis extends Component
 
     public function vat()
     {
-        $purchaseConfigs = VatReturnConfig::query()->whereIn('code', ["EIP", "ELP","NCP","VDP","SLP","IP","SRI","SA","SC"])->get()->pluck('id');
+        $purchaseConfigs = VatReturnConfig::query()->whereIn('code', ["EIP", "ELP", "NCP", "VDP", "SLP", "IP", "SRI", "SA", "SC"])->get()->pluck('id');
 
         $this->purchases = VatReturnItem::query()->selectRaw('financial_months.name as month, financial_years.code as year, SUM(input_amount) as total_purchases, SUM(vat_amount) as total_purchases_vat')
             ->leftJoin('vat_return_configs', 'vat_return_configs.id', 'vat_return_items.vat_return_config_id')
@@ -176,7 +170,6 @@ class DeclaredSalesAnalysis extends Component
             ->where('vat_returns.business_location_id', $this->branch->id)
             ->whereIn('vat_return_config_id', $purchaseConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
-
 
         $salesConfigs = VatReturnConfig::query()->whereIn('code', ["SRS", "ZRS", "ES", "SER"])->get()->pluck('id');
 
@@ -205,44 +198,27 @@ class DeclaredSalesAnalysis extends Component
             );
         }, $returns));
 
-
         $this->returns = $calculations;
-
     }
 
-    public function mno(){
-        $this->purchases = [];
+    public function mno()
+    {
+        $salesConfigs = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
+        $headers = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('name');
 
-
-        $salesConfigs = MnoConfig::whereIn('code', ["MNOS", "MVNOS", "MCPRE", "MCPOST","MM","OFS","OES"])->get()->pluck('id');
-
-        $this->sales = MnoReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
-            ->leftJoin('mno_return_configs', 'mno_return_configs.id', 'mno_return_items.mno_config_id')
-            ->leftJoin('mno_returns', 'mno_returns.id', 'mno_return_items.return_id')
+        $yearReturnGroup = MnoReturnItem::select('mno_configs.code', 'mno_return_items.input_value', 'mno_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+            ->leftJoin('mno_configs', 'mno_configs.id', 'mno_return_items.mno_config_id')
+            ->leftJoin('mno_returns', 'mno_returns.id', 'mno_return_items.mno_return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'mno_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
-            ->where('mno_returns.tax_type_id', $this->taxType->id)
-            ->where('mno_returns.business_location_id', $this->branch->id)
             ->whereIn('mno_config_id', $salesConfigs)
-            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+            ->get()->groupBy(['year', 'month']);
 
-        $returns = array_replace_recursive($this->purchases, $this->sales->toArray());
+        $yearData = $this->formatDataArray($yearReturnGroup);
 
-        $calculations = collect(array_map(function ($returns) {
-            return array(
-                'year' => $returns['year'],
-                'month' => $returns['month'],
-                'financial_month' => "{$returns['month']} {$returns['year']}",
-                'total_sales' => $returns['total_sales'],
-                'total_purchases' => $returns['total_purchases'],
-                'output_vat' => $returns['total_sales_vat'],
-                'input_tax' => $returns['total_purchases_vat'],
-                'tax_paid' => ($returns['total_sales_vat']) - $returns['total_purchases_vat'],
-            );
-        }, $returns));
-
-
-        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
+        $this->withoutPurchases = true;
+        $this->returns = $yearData;
+        $this->headersMno = $headers;
     }
 
     protected function bfo()
@@ -256,15 +232,13 @@ class DeclaredSalesAnalysis extends Component
             ->leftJoin('financial_months', 'financial_months.id', 'bfo_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
             ->whereIn('config_id', $salesConfigs)
-            ->get()->groupBy(['year','month']);
-        
+            ->get()->groupBy(['year', 'month']);
 
         $yearData = $this->formatDataArray($yearReturnGroup);
 
         $this->withoutPurchases = true;
         $this->returns = $yearData;
         $this->headersBfo = $headers;
-
     }
 
     protected function emTransaction()
@@ -278,15 +252,13 @@ class DeclaredSalesAnalysis extends Component
             ->leftJoin('seven_days_financial_months', 'seven_days_financial_months.id', 'em_transaction_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'seven_days_financial_months.financial_year_id')
             ->whereIn('config_id', $salesConfigs)
-            ->get()->groupBy(['year','month']);
-        
+            ->get()->groupBy(['year', 'month']);
 
         $yearData = $this->formatDataArray($yearReturnGroup);
 
         $this->withoutPurchases = true;
         $this->returns = $yearData;
         $this->headersEmTransaction = $headers;
-
     }
 
     protected function mmTranfer()
@@ -300,37 +272,35 @@ class DeclaredSalesAnalysis extends Component
             ->leftJoin('seven_days_financial_months', 'seven_days_financial_months.id', 'mm_transfer_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'seven_days_financial_months.financial_year_id')
             ->whereIn('config_id', $salesConfigs)
-            ->get()->groupBy(['year','month']);
+            ->get()->groupBy(['year', 'month']);
 
         $yearData = $this->formatDataArray($yearReturnGroup);
-        
 
         $this->withoutPurchases = true;
         $this->returns = $yearData;
         $this->headersMmTransfer = $headers;
-
     }
 
-    protected function formatDataArray($yearReturnGroup){
+    protected function formatDataArray($yearReturnGroup)
+    {
         $yearData = [];
 
-
-        foreach($yearReturnGroup as $keyYear => $monthreturnGroup){
+        foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
             $monthData = [];
-            foreach($monthreturnGroup as $keyMonth => $returnItems){
+            foreach ($monthreturnGroup as $keyMonth => $returnItems) {
                 $itemValue = [
                     'month' => $keyMonth,
                 ];
                 $totalVat = 0;
                 $totalValue = 0;
                 foreach ($returnItems as $keyItem => $item) {
-                    $itemValue[$item['code']]=$item['value'];
+                    $itemValue[$item['code']] = $item['value'];
                     $totalValue += $item['value'];
                     $totalVat += $item['vat'];
                 }
                 $itemValue['totalValue'] = $totalValue;
                 $itemValue['totalVat'] = $totalVat;
-                $monthData[] =  $itemValue;
+                $monthData[] = $itemValue;
             }
             $yearData[$keyYear] = $monthData;
         }
@@ -338,7 +308,8 @@ class DeclaredSalesAnalysis extends Component
         return $yearData;
     }
 
-    public function stampDuty(){
+    public function stampDuty()
+    {
         $purchaseConfigs = StampDutyConfig::whereIn('code', ["EXIMP", "LOCPUR", "IMPPUR"])->get()->pluck('id');
 
         $this->purchases = StampDutyReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_purchases, SUM(tax) as total_purchases_vat')
@@ -350,7 +321,6 @@ class DeclaredSalesAnalysis extends Component
             ->where('stamp_duty_returns.business_location_id', $this->branch->id)
             ->whereIn('config_id', $purchaseConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
-
 
         $salesConfigs = StampDutyConfig::whereIn('code', ["SUP", "INST"])->get()->pluck('id');
 

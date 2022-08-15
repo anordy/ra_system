@@ -26,6 +26,7 @@ use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Business\BusinessUpdateFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\Claims\ClaimFilesController;
@@ -55,6 +56,7 @@ use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
@@ -190,9 +192,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
         Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
+        Route::get('/updates/{updateId}/file', [BusinessUpdateFileController::class, 'getContractFile'])->name('contract.file');
+
         Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
         Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
-        Route::get('/business-certificate/{business}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
+        Route::get('/business-certificate/{location}/taxType/{type}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
     });
 
     // assesments
@@ -282,6 +286,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
+        Route::get('/generate-report',[ReliefGenerateReportController::class, 'index'])->name('generate.report');
+        Route::get('/download-report-pdf/{dates}',[ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
@@ -313,8 +319,17 @@ Route::name('debts.')->prefix('/debts')->group(function () {
     Route::get('/verifications', [VerificationDebtController::class, 'index'])->name('verifications.index');
     Route::get('/verifications/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
     // Return debts
-    Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
-    Route::get('/returns/{id}', [ReturnDebtController::class,'show'])->name('returns.show');
+    Route::get('/returns/hotel/{taxType}', [ReturnDebtController::class, 'index'])->name('hotel.index');
+    Route::get('/returns/petroleum/{taxType}', [ReturnDebtController::class, 'index'])->name('petroleum.index');
+    Route::get('/returns/vat/{taxType}', [ReturnDebtController::class, 'index'])->name('vat.index');
+    Route::get('/returns/port/{taxType}', [ReturnDebtController::class, 'index'])->name('port.index');
+    Route::get('/returns/mno/{taxType}', [ReturnDebtController::class, 'index'])->name('mno.index');
+    Route::get('/returns/bfo/{taxType}', [ReturnDebtController::class, 'index'])->name('bfo.index');
+    Route::get('/returns/stamp-duty/{taxType}', [ReturnDebtController::class, 'index'])->name('stamp-duty.index');
+    Route::get('/returns/lump-sum/{taxType}', [ReturnDebtController::class, 'index'])->name('lump-sum.index');
+    Route::get('/returns/emt/{taxType}', [ReturnDebtController::class, 'index'])->name('emt.index');
+
+    // Route::get('/returns/{id}', [ReturnDebtController::class,'show'])->name('returns.show');
     // Audit Assesments
     Route::get('/audits', [AuditDebtController::class, 'index'])->name('audits.index');
     Route::get('/audits/{id}', [AuditDebtController::class,'show'])->name('audits.show');

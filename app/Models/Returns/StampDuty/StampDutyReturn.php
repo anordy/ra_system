@@ -46,6 +46,9 @@ class StampDutyReturn extends Model
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
+    public function claimable(){
+        $this->morphTo('old_return');
+    }
 
     /*
      * Model attributes

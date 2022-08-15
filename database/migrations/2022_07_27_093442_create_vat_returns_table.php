@@ -24,7 +24,7 @@ class CreateVatReturnsTable extends Migration
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->string('business_type')->nullable();
-            $table->string('currency');
+            $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->decimal('total_output_tax', 20,2);
             $table->decimal('total_input_tax', 20,2);
             $table->decimal('total_vat_payable', 20,2);
@@ -42,6 +42,10 @@ class CreateVatReturnsTable extends Migration
             $table->string('method_used')->nullable();
             $table->unsignedBigInteger('filed_by_id');
             $table->string('filed_by_type');
+            $table->dateTime('filing_due_date')->nullable();
+            $table->dateTime('payment_due_date')->nullable();
+            $table->dateTime('submitted_at')->nullable();
+            $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });
     }

@@ -55,13 +55,13 @@
                                     </td>
 
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->penalty_amount }}
+                                        {{-- {{ $this->objection->taxVerificationAssesment->penalty_amount }} --}}
                                     </td>
                                     <td>
                                         Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->interest_amount }}
+                                        {{-- {{ $this->objection->taxVerificationAssesment->interest_amount }} --}}
                                     </td>
 
                                 </tr>
@@ -86,24 +86,32 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->penalty_amount - $penaltyAmount }}
+                                        {{-- {{ $this->objection->taxVerificationAssesment->penalty_amount - $penaltyAmount }} --}}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->interest_amount - $interestAmount }}
+                                        {{-- {{ $this->objection->taxVerificationAssesment->interest_amount - $interestAmount }} --}}
                                     </td>
 
                                 </tr>
 
 
+{{--                                <tr>--}}
+{{--                                    <td class="card-footer text-center">--}}
+{{--                                        Total--}}
+{{--                                    </td>--}}
+{{--                                    <td colspan="4" class="font-weight-bold text-center">--}}
+{{--                                        {{ number_format($total) }}--}}
+{{--                                    </td>--}}
+{{--                                </tr>--}}
                                 <tr>
                                     <td class="card-footer text-center">
                                         Principal Amount
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($waiver->taxVerificationAssesment->principal_amount) }}
+                                        {{-- {{ number_format($objection->taxVerificationAssesment->principal_amount) }} --}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -111,7 +119,7 @@
                                         Tax Deposited
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($waiver->tax_not_in_dispute) }}
+                                        {{-- {{ number_format($objection->tax_not_in_dispute) }} --}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -119,10 +127,9 @@
                                         Total Amount Due
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($total) }}
+                                        {{-- {{ number_format($total) }} --}}
                                     </td>
                                 </tr>
-
                             </tbody>
 {{--                            <tfoot>--}}
 {{--                                <tr>--}}
