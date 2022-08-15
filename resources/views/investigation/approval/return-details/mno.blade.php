@@ -20,7 +20,7 @@
                 <thead>
                     <tr>
                         <th>Month</th>
-                        @foreach ($headersBfo as $header)
+                        @foreach ($headersMno as $header)
                         <th>{{ $header }}</th>
                         @endforeach
                         <th>Total</th>

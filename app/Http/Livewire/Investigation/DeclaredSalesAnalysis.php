@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Investigation;
 
+use App\Models\Returns\ExciseDuty\MnoConfig;
+use App\Models\returns\ExciseDuty\MnoReturnItem;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\Petroleum\PetroleumConfig;
@@ -28,6 +30,7 @@ class DeclaredSalesAnalysis extends Component
     public $returns = [];
     public $taxType;
     public $branch;
+    public $returnTypeTable;
 
     public function mount($investigation)
     {
@@ -47,6 +50,10 @@ class DeclaredSalesAnalysis extends Component
                 break;
             case TaxType::VAT:
                 $this->vat();
+                break;
+            case TaxType::EXCISE_DUTY_MNO:
+                $this->returnTypeTable = TaxType::EXCISE_DUTY_MNO;
+                $this->mno();
                 break;
         }
 
@@ -106,6 +113,24 @@ class DeclaredSalesAnalysis extends Component
         $this->returns = $calculations->sortByDesc('month')->groupBy('year');
     }
 
+    public function mno(){
+        $salesConfigs = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
+        $headers = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('name');
+
+        $yearReturnGroup = MnoReturnItem::select('mno_configs.code', 'mno_return_items.input_value', 'mno_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+            ->leftJoin('mno_configs', 'mno_configs.id', 'mno_return_items.mno_config_id')
+            ->leftJoin('mno_returns', 'mno_returns.id', 'mno_return_items.mno_return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'mno_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->whereIn('mno_config_id', $salesConfigs)
+            ->get()->groupBy(['year','month']);
+        
+        $yearData = $this->formatDataArray($yearReturnGroup);
+
+        $this->withoutPurchases = true;
+        $this->returns = $yearData;
+        $this->headersMno = $headers;
+    }
 
     protected function petroleum()
     {
