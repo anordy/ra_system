@@ -2,8 +2,8 @@
 
 namespace App\Models\Verification;
 
-use App\Models\Business;
 use App\Models\TaxType;
+use App\Models\Business;
 use App\Traits\WorkflowTrait;
 use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
