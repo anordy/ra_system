@@ -16,8 +16,8 @@ class CreateZmBillItemsTable extends Migration
         Schema::create('zm_bill_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('zm_bill_id');
-            $table->unsignedBigInteger('billable_id');
-            $table->string('billable_type');
+            $table->unsignedBigInteger('billable_id')->nullable();
+            $table->string('billable_type')->nullable();
             $table->unsignedBigInteger('fee_id')->nullable();
             $table->string('fee_type')->nullable();
             $table->decimal('amount',20,2);
