@@ -21,13 +21,13 @@
             <div class="tab-content bg-white border shadow-sm" id="waiverContent">
                 <div class="tab-pane fade show active" id="waiverInfo" role="tabpanel" aria-labelledby="waiverInfo-tab">
                     @include('assesments.waiver.includes.waiver_info')
-                    <livewire:approval.approval-waiver-processing modelName='App\Models\Waiver'
-                        modelId="{{ $waiver->id }}" />
+                    <livewire:approval.objection-approval-processing modelName='App\Models\Disputes\Dispute'
+                        modelId="{{ $dispute->id }}" />
                 </div>
 
                 <div class="tab-pane fade" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
-                    <livewire:approval.approval-history-table modelName='App\Models\Waiver'
-                        modelId="{{ $waiver->id }}" />
+                    <livewire:approval.approval-history-table modelName='App\Models\Disputes\Dispute'
+                        modelId="{{ $dispute->id }}" />
                 </div>
             </div>
         </div>

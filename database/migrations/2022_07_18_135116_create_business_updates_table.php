@@ -18,6 +18,7 @@ class CreateBusinessUpdatesTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('taxpayer_id');
             $table->string('marking')->nullable();
+            $table->text('agent_contract')->nullable();
             $table->longText('old_values')->nullable();
             $table->longText('new_values');
             $table->enum('type', ['business_information', 'responsible_person'])->default('business_information');

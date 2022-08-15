@@ -55,13 +55,13 @@
                                     </td>
 
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->penalty_amount }}
+                                        {{ $this->assessment->penalty_amount }}
                                     </td>
                                     <td>
                                         Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->interest_amount }}
+                                        {{ $this->assessment->interest_amount }}
                                     </td>
 
                                 </tr>
@@ -86,13 +86,13 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->penalty_amount - $penaltyAmount }}
+                                        {{ $this->assessment->penalty_amount - $penaltyAmount }}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiver->taxVerificationAssesment->interest_amount - $interestAmount }}
+                                        {{ $this->assessment->interest_amount - $interestAmount }}
                                     </td>
 
                                 </tr>
@@ -103,7 +103,7 @@
                                         Principal Amount
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($waiver->taxVerificationAssesment->principal_amount) }}
+                                        {{ number_format($assessment->principal_amount) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -111,7 +111,7 @@
                                         Tax Deposited
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($waiver->tax_not_in_dispute) }}
+                                        {{ number_format($dispute->tax_not_in_dispute) }}
                                     </td>
                                 </tr>
                                 <tr>

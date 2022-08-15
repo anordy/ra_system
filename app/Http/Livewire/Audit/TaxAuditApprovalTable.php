@@ -12,7 +12,6 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditApprovalTable extends DataTableComponent
 {
-
     use LivewireAlert;
 
     public $model = TaxAudit::class;
@@ -36,7 +35,7 @@ class TaxAuditApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Z_Number', 'business.zin'),
+            Column::make('Z_Number', 'location.zin'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),

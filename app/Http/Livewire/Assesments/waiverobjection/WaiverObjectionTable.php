@@ -26,23 +26,27 @@ class WaiverObjectionTable extends DataTableComponent
 
     }
 
+        public function mount($category)
+    {
+        $this->category = $category;
+    }
+
     public function builder(): Builder
     {
         if ($this->rejected) {
-            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::REJECTED)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
+            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::REJECTED)->where('disputes.category',$this->category)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
         }
 
         if ($this->approved) {
-            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::APPROVED)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
+            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::APPROVED)->where('disputes.category',$this->category)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
         }
 
         if ($this->pending) {
-            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::PENDING)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
+            return WaiverObjection::where('waiver_objections.status', WaiverObjectionStatus::PENDING)->where('disputes.category',$this->category)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
         }
 
-        return WaiverObjection::where('waiver_objections.status', '!=', WaiverObjectionStatus::DRAFT)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
+        return WaiverObjection::where('waiver_objections.status', '!=', WaiverObjectionStatus::DRAFT)->where('disputes.category',$this->category)->where('waiver_objections.type', 'both')->orderBy('waiver_objections.created_at', 'desc');
 
-        // return WaiverObjection::query()->where('filed_by_id', auth()->user()->id)->where('type', 'both');
 
     }
 

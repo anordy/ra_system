@@ -14,7 +14,7 @@ class WorkflowTaxClaimSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'tax_return_verifications';
+        $name = 'tax_claim_verifications';
         $type = 'workflow';
         $marking_store = [
             'type'      => 'multiple_state',
