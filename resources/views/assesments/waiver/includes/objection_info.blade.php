@@ -54,20 +54,12 @@
                 </div>
             @if($dispute->bill)
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount To be paid as dispute Requirements</span>
+                    <span class="font-weight-bold text-uppercase">Tax Deposit</span>
                     <p class="my-1">{{ $dispute->bill->amount }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Control No</span>
                     <p class="my-1">{{ $dispute->bill->control_number }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <p class="my-1">
-                        <a target="_blank" href="{{ route('bill.invoice', encrypt($dispute->bill->id)) }}"
-                            class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
-                            <i class="bi bi-download mr-3"></i><u>Download Bill</u>
-                        </a>
-                    </p>
                 </div>
             @endif
                 <div class="col-md-4 mb-3">
@@ -241,7 +233,7 @@
     @if ($dispute->dispute_report)
         <div class="card my-4 rounded-0">
             <div class="card-header font-weight-bold bg-white">
-                dispute Report
+               DISPUTE REPORT
             </div>
             <div class="card-body">
                 <div class="row">

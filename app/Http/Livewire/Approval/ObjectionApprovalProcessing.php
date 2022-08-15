@@ -65,14 +65,11 @@ class ObjectionApprovalProcessing extends Component
 
         $this->penaltyAmountDue = $this->assessment->penalty_amount - $this->penaltyAmount;
         $this->interestAmountDue = $this->assessment->interest_amount - $this->interestAmount;
-        $this->total = ($this->penaltyAmountDue +  $this->interestAmountDue + $this->assessment->principal_amount ) - ($this->dispute->tax_deposit);
+        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->assessment->principal_amount) - ($this->dispute->tax_deposit);
     }
 
     public function approve($transtion)
     {
-        $this->validate([
-            'comments' => 'required',
-        ]);
 
         $taxType = $this->subject->taxType;
 
@@ -120,12 +117,16 @@ class ObjectionApprovalProcessing extends Component
 
         }
 
-        if ($this->checkTransition('chief_assurance_reject')) {
-            // dd('chief assuarance review');
+        if ($this->checkTransition('chief_assurance_review')) {
+
         }
 
         if ($this->checkTransition('commisioner_review')) {
-
+            $this->validate([
+                'interestPercent' => 'required',
+                'penaltyPercent' => 'required',
+                
+            ]);
             DB::beginTransaction();
 
             try {
@@ -235,9 +236,6 @@ class ObjectionApprovalProcessing extends Component
 
     public function reject($transtion)
     {
-        $this->validate([
-            'comments' => 'required|string',
-        ]);
 
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
@@ -245,6 +243,21 @@ class ObjectionApprovalProcessing extends Component
                 // event(new SendSms('business-registration-correction', $this->subject->id));
                 // event(new SendMail('business-registration-correction', $this->subject->id));
             }
+
+            if ($this->checkTransition('chief_assurance_reject')) {
+                $this->validate([
+                    'comments' => 'required',
+                ]);
+
+            }
+
+            if ($this->checkTransition('commisioner_reject')) {
+                $this->validate([
+                    'comments' => 'required',
+                ]);
+
+            }
+
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
