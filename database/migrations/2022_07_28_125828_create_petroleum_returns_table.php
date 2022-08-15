@@ -40,7 +40,6 @@ class CreatePetroleumReturnsTable extends Migration
             $table->dateTime('paid_at')->nullable();
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->integer('edited_count')->default(0);
-            $table->string('currency')->nullable();
             $table->timestamps();
         });
     }
