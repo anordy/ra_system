@@ -49,6 +49,7 @@ use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
 use App\Http\Controllers\LandLease\LandLeaseController;
+use App\Http\Controllers\LumpSumReports;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
@@ -311,13 +312,13 @@ Route::name('claims.')->prefix('/tax-claims')->group(function () {
 Route::name('debts.')->prefix('/debts')->group(function () {
     // Verification Assesments
     Route::get('/verifications', [VerificationDebtController::class, 'index'])->name('verifications.index');
-    Route::get('/verifications/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
+    Route::get('/verifications/{id}', [VerificationDebtController::class, 'show'])->name('verifications.show');
     // Return debts
     Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
-    Route::get('/returns/{id}', [ReturnDebtController::class,'show'])->name('returns.show');
+    Route::get('/returns/{id}', [ReturnDebtController::class, 'show'])->name('returns.show');
     // Audit Assesments
     Route::get('/audits', [AuditDebtController::class, 'index'])->name('audits.index');
-    Route::get('/audits/{id}', [AuditDebtController::class,'show'])->name('audits.show');
+    Route::get('/audits/{id}', [AuditDebtController::class, 'show'])->name('audits.show');
 
     Route::get('/objection/{id}', [DebtController::class, 'showObjection'])->name('objection');
     Route::resource('/investigation', InvestigationDebtController::class);
@@ -344,4 +345,11 @@ Route::name('land-lease.')->prefix('land-lease')->group(function () {
 Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
     Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
     Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+});
+//Administrative Reports
+Route::name('admin-reports.')->prefix('admin-reports')->group(function () {
+    Route::name('lumpsum.')->prefix('lumpsum')->group(function () {
+        Route::get('reports', [LumpSumReports::class, 'index'])->name('index');
+        Route::get('/view/{return_id}', [LumpSumReports::class, 'show'])->name('show');
+    });
 });

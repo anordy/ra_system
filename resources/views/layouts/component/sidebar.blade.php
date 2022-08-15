@@ -329,18 +329,20 @@
 
             </ul>
         </li>
+
         <li class="{{ request()->is('managerial-reports*') ? 'active' : '' }}">
             <a href="#managerialReportSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                aria-expanded="{{ request()->is('managerial-reports*') ? 'true' : 'false' }}"
+                class="dropdown-toggle">
                 Managerial reports
             </a>
             <ul class="collapse list-unstyled {{ request()->is('managerial-reports*') ? 'show' : '' }}"
                 id="landLeaseSubmenu">
 
-                <li class="{{ request()->is('managerial-reports/list*') ? 'active' : '' }}">
-                    <a href="{{ route('land-lease.list') }}">Lump Sum Payments Reports</a>
-                </li>
             </ul>
+        </li>
+        <li class="{{ request()->is('managerial-reports/list*') ? 'active' : '' }}">
+            <a href="{{ route('admin-reports.lumpsum.index') }}">Lump Sum Payments Reports</a>
         </li>
 
 
