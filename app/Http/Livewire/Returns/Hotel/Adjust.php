@@ -45,7 +45,7 @@ class Adjust extends Component
     public $total_pax;
     public $penalties = [];
     public $submitted = false;
-    public $total_amount_due_with_penalty = 0;
+    public $total_amount_due_with_penalties = 0;
     public $interest = 0;
     public $penalty = 0;
     public $taxType;
@@ -206,10 +206,10 @@ class Adjust extends Component
             // store penalty amount in this table
             $payload = [
                 'filled_type' => Taxpayer::class,
-                'filled_id' => auth()->user()->id,
+                'filed_by_id' => auth()->user()->id,
                 'edited_count' => $edit_count,
                 'total_amount_due' => $this->total,
-                'total_amount_due_with_penalty' => $this->total + $this->penalty + $this->interest,
+                'total_amount_due_with_penalties' => $this->total + $this->penalty + $this->interest,
                 'interest' => $this->interest,
                 'penalty' => $this->penalty,
                 'hotel_infrastructure_tax' => $this->infrastructure_tax,

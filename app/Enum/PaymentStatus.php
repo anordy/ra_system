@@ -8,6 +8,8 @@ class PaymentStatus implements Status
 {
     const PAID = 'paid';
     const PARTIALLY = 'partially';
+    const PENDING = 'pending';
+    const CANCELLED = 'cancelled';
 
     static function getConstants(): array
     {

@@ -23,25 +23,29 @@
                 <div class="card-header text-uppercase font-weight-bold bg-white">
                     Tax Returns Verified
                 </div>
-                <div class="card-body">
-                    <div class="row m-2 pt-3">
-                        <div class="col-md-4 mb-3">
+                <div class="card-body p-3">
+                    <div class="row pt-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
                             <p class="my-1">{{ $return->taxtype->name }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Filled By</span>
                             <p class="my-1">{{ $return->taxpayer->full_name ?? '' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Financial Year</span>
                             <p class="my-1">{{ $return->financialYear->name ?? '' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Return Month</span>
+                            <p class="my-1">{{ $verification->taxReturn->financialMonth->name ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
                             <p class="my-1">{{ $return->business->name }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
                             <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                         </div>
@@ -49,25 +53,38 @@
                 </div>
             </div>
 
-
-            @if (count($verification->officers) > 0)
-                <div class="card">
-                    <div class="card-header text-uppercase font-weight-bold bg-white">
-                        Compliance Officers
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            @foreach ($verification->officers as $officer)
-                                <div class="col-md-6 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Team
-                                        {{ $officer->team_leader ? 'Leader' : 'Member' }}</span>
-                                    <p class="my-1">{{ $officer->user->full_name ?? '' }}</p>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+            <div class="card">
+                <div class="card-header text-uppercase font-weight-bold bg-white">
+                    Verification Details
                 </div>
-            @endif
+                <div class="card-body">
+                    <div class="row">
+                        @foreach ($verification->officers as $officer)
+                            <div class="col-md-6 mb-3">
+                                <span class="font-weight-bold text-uppercase">Team
+                                    {{ $officer->team_leader ? 'Leader' : 'Member' }}</span>
+                                <p class="my-1">{{ $officer->user->full_name ?? '' }}</p>
+                            </div>
+                        @endforeach
+
+                        @if ($verification->assessment_report)
+                            <div class="col-md-3">
+                                <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                                    class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                    <a target="_blank"
+                                        href="{{ route('tax_verifications.files.show', encrypt($verification->assessment_report)) }}"
+                                        style="font-weight: 500;" class="ml-1">
+                                        Verification Report
+                                        <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
 
             @if ($verification->assessment)
                 <div class="card">

@@ -18,7 +18,7 @@ class CreateWaiverObjectionsTable extends Migration
             $table->unsignedBigInteger('taxpayer_id')->comments('main Owner');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('filled_id');
+            $table->unsignedBigInteger('filed_by_id');
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed'])->default('draft');
             $table->unsignedBigInteger('assesment_id')->nullable();
             $table->enum('business_type', ['hotel', 'other'])->default('other');
@@ -27,7 +27,9 @@ class CreateWaiverObjectionsTable extends Migration
             $table->string('marking')->nullable();
             $table->text('ground')->nullable();
             $table->text('reason')->nullable();
-            $table->string('attachments')->nullable();
+            $table->string('objection_report')->nullable();
+            $table->string('notice_report')->nullable();
+            $table->string('setting_report')->nullable();
             $table->enum('type', ['waiver', 'objection', 'both']);
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();

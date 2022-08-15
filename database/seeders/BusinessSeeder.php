@@ -24,11 +24,10 @@ class BusinessSeeder extends Seeder
             "business_category_id" => 1,
             "currency_id" => 1,
             "taxpayer_id" => 1,
-            "zin" => "ZRB_459353",
             "name" => "Goodman Enterprises",
             "tin" => "543980",
             "reg_no" => "12345",
-            "owner_designation" => "Director",
+            "owner_designation" => "Director General",
             "mobile" => "0743300900",
             "alt_mobile" => null,
             "email" => "goodman@mailinator.com",
@@ -36,9 +35,9 @@ class BusinessSeeder extends Seeder
             "physical_address" => "PO BOX 456 Mazizini",
             "date_of_commencing" => "2022-01-01",
             "pre_estimated_turnover" => "12000000",
-            "post_estimated_turnover" => "3",
-            "goods_and_services_types" => "Food and bevarages",
-            "goods_and_services_example" => "Azam cola, Minute maid",
+            "post_estimated_turnover" => "0",
+            "goods_and_services_types" => "Food and drinks",
+            "goods_and_services_example" => "Azam-cola and Minute maid",
             "is_own_consultant" => 1,
             "responsible_person_id" => 1,
             "status" => "approved",
@@ -47,7 +46,6 @@ class BusinessSeeder extends Seeder
             "isiic_iii" => 45,
             "isiic_iv" => 32,
             "verified_at" => "2022-01-01"
-
         ];
 
         $location = [
@@ -66,7 +64,9 @@ class BusinessSeeder extends Seeder
             "taxpayer_id" => 1,
             "name" => "Mazizini Branch",
             "is_headquarter" => 1,
-            "status" => "approved"
+            "status" => "approved",
+            "tax_region_id" => 1,
+            "zin" => 1
         ];
 
         $bank = [
@@ -81,8 +81,8 @@ class BusinessSeeder extends Seeder
 
         try {
             $business = Business::create($business);
-            $business->location()->create($location);
-            $business->bank()->create($bank);
+            $business->headquarter()->create($location);
+            $business->banks()->create($bank);
 
             for ($i=1; $i < 16; $i++) { 
                 BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $i, "currency" => "TZS"]);

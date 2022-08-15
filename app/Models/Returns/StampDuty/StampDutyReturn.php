@@ -27,7 +27,7 @@ class StampDutyReturn extends Model
     }
 
     public function taxpayer(){
-        return $this->belongsTo(Taxpayer::class, 'filed_id');
+        return $this->morphTo('filed_by');
     }
 
     public function financialYear(){

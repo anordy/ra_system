@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\DisputeStatus;
 use App\Enum\ReturnApplicationStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
@@ -18,8 +19,8 @@ class CreateStampDutyReturnsTable extends Migration
     {
         Schema::create('stamp_duty_returns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('filed_id');
-            $table->string('filed_type');
+            $table->unsignedBigInteger('filed_by_id');
+            $table->string('filed_by_type');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('business_location_id');

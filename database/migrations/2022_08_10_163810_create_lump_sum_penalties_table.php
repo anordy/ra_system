@@ -13,15 +13,16 @@ class CreateLumpSumPenaltiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('lump_sum_penalities', function (Blueprint $table) {
+        Schema::create('lump_sum_penalties', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('return_id');
-            $table->string('returnMonth');
-            $table->bigInteger('taxAmount');
-            $table->bigInteger('penaltyAmount');
-            $table->integer('latePaymentAmount');
-            $table->bigInteger('interestRate');
-            $table->bigInteger('interestAmount');
+            $table->string('return_quater');
+            $table->decimal('tax_amount', 20, 2);
+            $table->integer('late_filing')->default(0);
+            $table->decimal('late_payment', 20, 2);
+            $table->decimal('rate_percentage', 20, 2);
+            $table->decimal('rate_amount', 20, 2);
+            $table->decimal('penalty_amount', 20, 2);
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ class CreateLumpSumPenaltiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lump_sum_penalties');
+        Schema::dropIfExists('lump_sum_return_penalties');
     }
 }

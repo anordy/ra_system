@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Assesments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
+use App\Models\DisputeAttachment;
+use App\Models\Verification\TaxVerificationAssessment;
 use App\Models\WaiverObjection;
-use Illuminate\Http\Request;
 
 class WaiverObjectionController extends Controller
 {
-     public function index()
+    public function index()
     {
         return view('assesments.waiverobjection.index');
     }
@@ -21,18 +22,11 @@ class WaiverObjectionController extends Controller
         return view('assesments.waiverobjection.create', compact('location_id', 'tax_type_id'));
     }
 
-    public function show($waiverObjectionId)
-    { 
-        $waiverObjection = WaiverObjection::findOrfail(decrypt($waiverObjectionId));
-        $business = Business::find($waiverObjectionId->business_id);
-        return view('assesments.waiverobjection.show',compact('waiverObjection','business'));
-    }
-
-        public function approval($waiverObjectionId)
+    public function approval($waiverObjectionId)
     {
         $waiverObjection = WaiverObjection::findOrFail(decrypt($waiverObjectionId));
         $business = Business::find($waiverObjection->business_id);
-
-        return view('assesments.waiverobjection.approval', compact('waiverObjection','business'));
+        $files = DisputeAttachment::where('dispute_id', $waiverObjection->id)->get();
+        return view('assesments.waiverobjection.approval', compact('waiverObjection', 'business', 'files'));
     }
 }

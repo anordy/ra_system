@@ -2,12 +2,13 @@
 
 namespace App\Models\Verification;
 
-use App\Models\Business;
-use App\Models\BusinessLocation;
 use App\Models\TaxType;
+use App\Models\Business;
 use App\Traits\WorkflowTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TaxAssessments\TaxAssessment;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaxVerification extends Model
 {
@@ -35,6 +36,11 @@ class TaxVerification extends Model
         return $this->belongsTo(Business::class);
     }
 
+    public function businesses()
+    {
+        return $this->belongsTo(Business::class);
+    }
+
     public function location()
     {
         return $this->belongsTo(BusinessLocation::class, 'location_id');
@@ -42,7 +48,7 @@ class TaxVerification extends Model
 
     public function assessment()
     {
-        return $this->belongsTo(TaxVerificationAssessment::class, 'id', 'verification_id');
+        return $this->morphOne(TaxAssessment::class, 'assessment');
     }
 
     public function officers()

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaxAuditAssessmentsTable extends Migration
+class CreateDisputeAttachmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateTaxAuditAssessmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tax_audit_assessments', function (Blueprint $table) {
+        Schema::create('dispute_attachments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('audit_id');
-            $table->decimal('principal_amount', 20, 2);
-            $table->decimal('interest_amount', 20, 2);
-            $table->decimal('penalty_amount', 20, 2);
+            $table->unsignedBigInteger('dispute_id');
+            $table->string('file_path');
+            $table->string('file_name');
             $table->timestamps();
+
         });
     }
 
@@ -30,6 +30,6 @@ class CreateTaxAuditAssessmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tax_audit_assessments');
+        Schema::dropIfExists('dispute_attachments');
     }
 }

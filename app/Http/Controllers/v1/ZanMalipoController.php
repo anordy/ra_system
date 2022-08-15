@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Enum\PaymentStatus;
 use App\Models\LumpSumPayment;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
@@ -14,6 +15,7 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\ZmBill;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -37,10 +39,13 @@ class ZanMalipoController extends Controller
         MmTransferReturn::class,
         HotelReturn::class,
         PetroleumReturn::class,
-        PortReturn::class,
         EmTransactionReturn::class,
         BfoReturn::class,
         LumpSumPayment::class,
+    ];
+
+    private $multipleBillsReturnable = [
+        PortReturn::class,
     ];
 
     /**
@@ -99,7 +104,6 @@ class ZanMalipoController extends Controller
     }
 
 
-
     function paymentCallback(Request $request)
     {
         try {
@@ -141,23 +145,15 @@ class ZanMalipoController extends Controller
 
             if ($bill->paidAmount() >= $bill->amount) {
                 $bill->status = 'paid';
-                if (in_array($bill->billable_type, $this->returnable)){
-                    $billable = $bill->billable;
-                    $billable->status = ReturnStatus::COMPLETE;
-                    $billable->save();
-                }
-
             } else {
                 $bill->status = 'partially';
-                if (in_array($bill->billable_type, $this->returnable)){
-                    $billable = $bill->billable;
-                    $billable->status = ReturnStatus::PAID_PARTIALLY;
-                    $billable->save();
-                }
             }
 
             $bill->paid_amount = $bill->paidAmount();
             $bill->save();
+
+            // Check and update return
+            $this->updateReturn($bill);
 
             //TODO: we should send sms to customer here to notify payment reception
 
@@ -188,5 +184,46 @@ class ZanMalipoController extends Controller
         $signedContent = "<$msgTag><TrxStsCode>$codes</TrxStsCode></$msgTag>";
         $sign = ZmSignatureHelper::signContent($signedContent);
         return "<Gepg>" . $signedContent . "<gepgSignature>" . $sign . "</gepgSignature></Gepg>";
+    }
+
+    private function updateReturn($bill){
+        if (in_array($bill->billable_type, $this->returnable)){
+            if ($bill->paidAmount() >= $bill->amount){
+                $billable = $bill->billable;
+                $billable->status = ReturnStatus::COMPLETE;
+                $billable->save();
+            } else {
+                $billable = $bill->billable;
+                $billable->status = ReturnStatus::PAID_PARTIALLY;
+                $billable->save();
+            }
+        }
+        else if (in_array($bill->billable_type, $this->multipleBillsReturnable)){
+            if ($bill->paidAmount() >= $bill->amount){
+                // Find the alternative bill for this return
+                $altBill = ZmBill::where('billable_id', $bill->billable_id)
+                    ->where('billable_type', $bill->billable_type)
+                    ->where('currency', '!=', $bill->currency)
+                    ->latest()->first();
+
+                if (!$altBill){
+                    return;
+                }
+
+                if ($altBill->status === PaymentStatus::PAID){
+                    $billable = $bill->billable;
+                    $billable->status = ReturnStatus::COMPLETE;
+                    $billable->save();
+                } else {
+                    $billable = $bill->billable;
+                    $billable->status = ReturnStatus::COMPLETED_PARTIALLY;
+                    $billable->save();
+                }
+            } else {
+                $billable = $bill->billable;
+                $billable->status = ReturnStatus::PAID_PARTIALLY;
+                $billable->save();
+            }
+        }
     }
 }

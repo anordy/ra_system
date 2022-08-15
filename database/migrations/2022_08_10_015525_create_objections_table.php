@@ -18,7 +18,7 @@ class CreateObjectionsTable extends Migration
             $table->unsignedBigInteger('taxpayer_id')->comments('main Owner');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('filled_id');
+            $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('assesment_id')->nullable();
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed'])->default('draft');
             $table->enum('business_type', ['hotel', 'other'])->default('other');
@@ -28,7 +28,7 @@ class CreateObjectionsTable extends Migration
             $table->string('marking')->nullable();
             $table->text('ground_objection')->nullable();
             $table->text('reason_objection')->nullable();
-            $table->string('waiver_report')->nullable();
+            $table->string('objection_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();

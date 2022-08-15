@@ -145,8 +145,8 @@ class FilingReturn extends Component
             $payload = [
                 'business_location_id' => $this->location_id,
                 'business_id' => $this->business_id,
-                'filled_type' => get_class(auth()->user()),
-                'filled_id' => auth()->user()->id,
+                'filed_by_type' => get_class(auth()->user()),
+                'filed_by_id' => auth()->user()->id,
                 'tax_type_id' => $this->tax_type_id,
                 'total' => $configs->firstWhere('code', 'TOTAL')['vat'] ?? 0,
                 'petroleum_levy' => $configs->firstWhere('code', 'PTL')['vat'] ?? 0,

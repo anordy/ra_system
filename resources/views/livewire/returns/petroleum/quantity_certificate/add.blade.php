@@ -13,7 +13,11 @@
             </div>
             <div class="form-group col-lg-6">
                 <label class="control-label">Ascertained Date</label>
-                <div type="text" class="form-control disabled">{{ $ascertained }}</div>
+                <input type="date" class="form-control @error('ascertained') is-invalid @enderror"
+                    wire:model.lazy="ascertained">
+                @error('ascertained')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
             <div class="form-group col-lg-6">
                 <label class="control-label">Name of Ship</label>
@@ -31,7 +35,7 @@
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
-             <div class="form-group col-lg-6">
+            <div class="form-group col-lg-6">
                 <label class="control-label">Voyage No:</label>
                 <input type="text" class="form-control @error('voyage_no') is-invalid @enderror"
                     wire:model.lazy="voyage_no">
@@ -61,7 +65,8 @@
 
                     <div class="form-group col-lg-6">
                         <label class="control-label">Liters Observed</label>
-                        <input type="number" class="form-control" wire:model="products.{{ $key }}.liters_observed">
+                        <input type="number" class="form-control"
+                            wire:model="products.{{ $key }}.liters_observed">
                         @error("products.{$key}.liters_observed")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -69,19 +74,21 @@
 
                     <div class="form-group col-lg-6">
                         <label class="control-label">Liters At 20 <sup>o</sup> C</label>
-                        <input type="number" class="form-control" wire:model="products.{{ $key }}.liters_at_20">
+                        <input type="number" class="form-control"
+                            wire:model="products.{{ $key }}.liters_at_20">
                         @error("products.{$key}.liters_at_20")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="control-label">Metric Tons in Air</label>
-                        <input type="number" class="form-control" wire:model="products.{{ $key }}.metric_tons">
+                        <input type="number" class="form-control"
+                            wire:model="products.{{ $key }}.metric_tons">
                         @error("products.{$key}.metric_tons")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                   
+
                     <div class="col-md-2 d-flex align-items-end">
                         @if ($key > 0)
                             <div>
@@ -101,7 +108,7 @@
             </div>
         </div>
 
-      
+
     </div>
     <div class="card-footer bg-white d-flex justify-content-end">
         <button type="button" class="btn btn-primary" wire:click='submit'>Save & Generate Certificate</button>

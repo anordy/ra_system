@@ -3,7 +3,6 @@
         <h6 class="text-uppercase mt-2 ml-2">Declared Sales Analysis</h6>
         <hr>
         <div class="row mx-2">
-
             @foreach ($returns as $year => $return)
                 <strong>{{ $year }}</strong>
                 <table class="table table-sm table-bordered">

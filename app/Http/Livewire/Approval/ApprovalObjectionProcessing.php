@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\DisputeStatus;
 use App\Models\Objection;
 use App\Models\ObjectionStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxType;
-use App\Models\Waiver;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\WorkflowProcesssingTrait;
@@ -61,7 +61,7 @@ class ApprovalObjectionProcessing extends Component
             $this->interestAmount = ($this->objection->taxVerificationAssesment->interest_amount * $this->interestPercent) / 100;
         }
 
-        $this->total = $this->interestAmount + $this->penaltyAmount + $this->objection->taxVerificationAssesment->principal_amount;
+        $this->total = ($this->interestAmount + $this->penaltyAmount + $this->objection->taxVerificationAssesment->principal_amount) - $this->objection->objection_requirement;
 
     }
 
@@ -157,7 +157,7 @@ class ApprovalObjectionProcessing extends Component
                 $zmBill = ZmCore::createBill(
                     $billableId,
                     $billableType,
-                    $this->taxTypes->where('code', 'verification')->first()->id,
+                    $this->taxTypes->where('code', TaxType::DISPUTES)->first()->id,
                     $payer_id,
                     $payer_type,
                     $payer_name,
@@ -176,22 +176,12 @@ class ApprovalObjectionProcessing extends Component
                 if (config('app.env') != 'local') {
                     $response = ZmCore::sendBill($zmBill->id);
                     if ($response->status === ZmResponse::SUCCESS) {
-                        $this->objection->status = ReturnStatus::CN_GENERATING;
-                        $this->objection->save();
-
                         $this->flash('success', 'A control number has been generated successful.');
                     } else {
-
                         session()->flash('error', 'Control number generation failed, try again later');
-                        $this->objection->status = ReturnStatus::CN_GENERATION_FAILED;
                     }
 
-                    $this->objection->save();
                 } else {
-
-                    // We are local
-                    // $this->waiver->status = ReturnStatus::CN_GENERATED;
-                    $this->objection->save();
 
                     // Simulate successful control no generation
                     $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -199,34 +189,33 @@ class ApprovalObjectionProcessing extends Component
                     $zmBill->control_number = '90909919991909';
                     $zmBill->save();
 
-                    $this->subject->verified_at = Carbon::now()->toDateTimeString();
-                    $this->subject->status = ObjectionStatus::APPROVED;
-                    $this->subject->save();
-                    // event(new SendSms('business-registration-approved', $this->subject->id));
-                    // event(new SendMail('business-registration-approved', $this->subject->id));
-
                     $this->flash('success', 'A control number for this Objection has been generated successfull and approved');
                 }
 
+                $this->subject->verified_at = Carbon::now()->toDateTimeString();
+                $this->subject->status = ObjectionStatus::APPROVED;
+                $this->subject->save();
+
                 DB::commit();
+
             } catch (Exception $e) {
                 Log::error($e);
-                throw $e;
+                DB::rollBack();
                 $this->alert('error', 'Something went wrong');
+                return;
             }
 
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
 
         }
 
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+
         } catch (Exception $e) {
             Log::error($e);
-
             return;
         }
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
 
     }
 

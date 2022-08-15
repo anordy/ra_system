@@ -13,6 +13,7 @@
                             <th>Quater of</th>
                             <th>Tax Amount</th>
                             <th>Late Payment Amount</th>
+                            <th>Interest Rate</th>
                             <th>Interest Amount</th>
                             <th>Tax Amount with Penalty </th>
                         </tr>
@@ -21,11 +22,12 @@
                     <tbody>
                         @foreach ($penalties as $penalty)
                             <tr>
-                                <td>{{ $penalty['returnMonth'] }}</td>
-                                <td>{{ number_format($penalty['taxAmount'], 2) }}</td>
-                                <td>{{ number_format($penalty['latePaymentAmount'], 2) }}</td>
-                                <td>{{ number_format($penalty['interestAmount'], 2) }}</td>
-                                <td>{{ number_format($penalty['penaltyAmount'], 2) }}</td>
+                                <td>{{ $penalty['return_quater'] }}</td>
+                                <td>{{ number_format($penalty['tax_amount'], 2) }}</td>
+                                <td>{{ number_format($penalty['late_payment'], 2) }}</td>
+                                <td>{{ number_format($penalty['rate_percentage'], 2) }}</td>
+                                <td>{{ number_format($penalty['rate_amount'], 2) }}</td>
+                                <td>{{ number_format($penalty['penalty_amount'], 2) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -47,7 +49,10 @@
                 @if ($penalties->count() > 0)
                     <tr>
                         <td>Payment For <br> <small> Malipo Kwa Ajili Ya</small> </td>
-                        <td> Late Payments Penalties <br> <small>Adhabu ya kuchelewesha malipo</small> </td>
+                        <td>
+                            {{ $return->quarter }} Quater plus Late Payments Penalties <br>
+                            <small>Awamu ya {{ $return->quarter }} na Adhabu ya kuchelewesha malipo</small>
+                        </td>
                     </tr>
                 @else
                     <tr>

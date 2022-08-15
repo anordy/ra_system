@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
-use App\Models\Returns\LampSum\LampSumReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
@@ -28,7 +28,7 @@ class TaxVerificationAssessmentController extends Controller
             $viewRender = 'returns.petroleum.filing.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
-        } elseif ($return instanceof LampSumReturn) {
+        } elseif ($return instanceof LumpSumReturn) {
             $viewRender = 'returns.lumpsum.details';
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
@@ -50,6 +50,7 @@ class TaxVerificationAssessmentController extends Controller
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof PortReturn) {
             $viewRender = 'returns.port.details';
+
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
     }

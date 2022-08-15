@@ -4,6 +4,7 @@ namespace App\Models\Investigation;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -42,7 +43,7 @@ class TaxInvestigation extends Model
 
     public function assessment()
     {
-        return $this->belongsTo(TaxInvestigationAssessment::class, 'id', 'investigation_id');
+        return $this->morphOne(TaxAssessment::class, 'assessment');
     }
 
     public function officers()

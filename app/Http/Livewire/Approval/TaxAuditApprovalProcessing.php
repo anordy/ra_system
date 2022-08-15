@@ -3,13 +3,16 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Models\Role;
-use App\Models\TaxAudit\TaxAuditAssessment;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAuditOfficer;
+use App\Models\TaxType;
 use App\Models\User;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\NotIn;
+use Illuminate\Validation\Rules\RequiredIf;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -38,6 +41,11 @@ class TaxAuditApprovalProcessing extends Component
     public $penaltyAmount;
     public $assessmentReport;
 
+    public $hasAssessment;
+    
+    public $taxTypes;
+    public $taxType;
+
     public $staffs = [];
     public $subRoles = [];
 
@@ -47,6 +55,10 @@ class TaxAuditApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
+        $this->taxTypes = TaxType::all();
+        $this->taxType = $this->taxTypes->firstWhere('code', TaxType::AUDIT);
+
+        
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
@@ -57,6 +69,18 @@ class TaxAuditApprovalProcessing extends Component
         $this->intension = $this->subject->intension;
         $this->scope = $this->subject->scope;
         $this->auditingDate = $this->subject->auditing_date;
+        $this->exitMinutes = $this->subject->exit_minutes;
+        $this->finalReport = $this->subject->final_report;
+
+        $assessment = $this->subject->assessment;
+        if ($assessment) {
+            $this->hasAssessment = "1";
+            $this->principalAmount = $assessment->principal_amount;
+            $this->interestAmount = $assessment->interest_amount;
+            $this->penaltyAmount = $assessment->penalty_amount;
+        } else {
+            $this->hasAssessment = "0";
+        }
 
         if ($this->task != null) {
             $operators = json_decode($this->task->operators);
@@ -75,7 +99,6 @@ class TaxAuditApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-        $operators = [];
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
@@ -92,28 +115,7 @@ class TaxAuditApprovalProcessing extends Component
                     'teamMember.not_in' => 'Duplicate already exists as team leader'
                 ]
             );
-
-            $this->subject->auditing_date = $this->auditingDate;
-            $this->periodFrom = $this->subject->period_from;
-            $this->periodTo = $this->subject->period_to;
-            $this->intension = $this->subject->intension;
-            $this->scope = $this->subject->scope;
-            $this->subject->save();
-
-            TaxAuditOfficer::create([
-                'audit_id' => $this->subject->id,
-                'user_id' => $this->teamLeader,
-                'team_leader' => true,
-            ]);
-
-            TaxAuditOfficer::create([
-                'audit_id' => $this->subject->id,
-                'user_id' => $this->teamMember,
-            ]);
-
-            $operators = [$this->teamLeader, $this->teamMember];
         }
-
 
         if ($this->checkTransition('conduct_audit')) {
             $this->validate(
@@ -122,63 +124,138 @@ class TaxAuditApprovalProcessing extends Component
                     'workingReport' => 'required|mimes:pdf',
                 ]
             );
-
-            $preliminaryReport = "";
-            if ($this->preliminaryReport) {
-                $preliminaryReport = $this->preliminaryReport->store('audit', 'local-admin');
-            }
-            $workingReport = "";
-            if ($this->workingReport) {
-                $workingReport = $this->workingReport->store('audit', 'local-admin');
-            }
-
-            $this->subject->preliminary_report = $preliminaryReport;
-            $this->subject->working_report = $workingReport;
-            $this->subject->save();
         }
-
         if ($this->checkTransition('prepare_final_report')) {
             $this->validate(
                 [
-                    'principalAmount' => ['required', 'numeric'],
-                    'interestAmount' => ['required', 'numeric'],
-                    'penaltyAmount' => ['required', 'numeric'],
-                    'finalReport' => 'required|mimes:pdf',
-                    'exitMinutes' => 'required|mimes:pdf',
+                    'finalReport' => 'required',
+                    'exitMinutes' => 'required',
+                    'hasAssessment' => ['required', 'boolean'],
+                    'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
+                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
+                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
                 ]
             );
 
-            TaxAuditAssessment::create([
-                'audit_id' => $this->subject->id,
-                'principal_amount' => $this->principalAmount,
-                'interest_amount' => $this->interestAmount,
-                'penalty_amount' => $this->penaltyAmount,
-            ]);
-
-            $exitMinutes = "";
-            if ($this->exitMinutes) {
-                $exitMinutes = $this->exitMinutes->store('audit', 'local-admin');
-            }
-            $finalReport = "";
-            if ($this->finalReport) {
-                $finalReport = $this->finalReport->store('audit', 'local-admin');
+            if($this->exitMinutes != $this->subject->exit_minutes){
+                $this->validate([
+                    'exitMinutes' => 'required|mimes:pdf|max:1024'
+                ]);
             }
 
-            $this->subject->exit_minutes = $exitMinutes;
-            $this->subject->final_report = $finalReport;
-            $this->subject->save();
-        }
+            if($this->finalReport != $this->subject->final_report){
+                $this->validate([
+                    'finalReport' => 'required|mimes:pdf|max:1024'
+                ]);
+            }
+        };
 
-
+        DB::beginTransaction();
         try {
+
+            $operators = [];
+            if ($this->checkTransition('assign_officers')) {
+    
+                $this->subject->auditing_date = $this->auditingDate;
+                $this->periodFrom = $this->subject->period_from;
+                $this->periodTo = $this->subject->period_to;
+                $this->intension = $this->subject->intension;
+                $this->scope = $this->subject->scope;
+                $this->subject->save();
+
+
+                TaxAuditOfficer::create([
+                    'audit_id' => $this->subject->id,
+                    'user_id' => $this->teamLeader,
+                    'team_leader' => true,
+                ]);
+
+                TaxAuditOfficer::create([
+                    'audit_id' => $this->subject->id,
+                    'user_id' => $this->teamMember,
+                ]);
+
+                $operators = [$this->teamLeader, $this->teamMember];
+            }
+
+
+            if ($this->checkTransition('conduct_audit')) {
+                $preliminaryReport = "";
+                if ($this->preliminaryReport) {
+                    $preliminaryReport = $this->preliminaryReport->store('audit', 'local-admin');
+                }
+                $workingReport = "";
+                if ($this->workingReport) {
+                    $workingReport = $this->workingReport->store('audit', 'local-admin');
+                }
+
+                $this->subject->preliminary_report = $preliminaryReport;
+                $this->subject->working_report = $workingReport;
+                $this->subject->save();
+            }
+
+            if ($this->checkTransition('prepare_final_report')) {
+
+                $assessment = $this->subject->assessment()->exists();
+
+                if ($this->hasAssessment == "1") {
+                    if ($assessment) {
+                        $this->subject->assessment()->update([
+                            'principal_amount' => $this->principalAmount,
+                            'interest_amount' => $this->interestAmount,
+                            'penalty_amount' => $this->penaltyAmount,
+                        ]);
+                    } else {
+                        TaxAssessment::create([
+                            'location_id' => $this->subject->location_id,
+                            'business_id' => $this->subject->business_id,
+                            'tax_type_id' => $this->taxType->id,
+                            'assessment_id' => $this->subject->id,
+                            'assessment_type' => get_class($this->subject),
+                            'principal_amount' => $this->principalAmount,
+                            'interest_amount' => $this->interestAmount,
+                            'penalty_amount' => $this->penaltyAmount,
+                        ]);
+                    }
+                } else {
+                    if ($assessment) {
+                        $this->subject->assessment()->delete();
+                    }
+                }
+
+                $exitMinutes = $this->exitMinutes;
+                if($this->exitMinutes != $this->subject->exit_minutes){
+                    $exitMinutes = $this->exitMinutes->store('audit', 'local-admin');
+                    
+                }
+    
+                $finalReport = $this->finalReport;
+                if($this->finalReport != $this->subject->final_report){
+                    $finalReport = $this->finalReport->store('audit', 'local-admin');
+                }
+
+                $this->subject->exit_minutes = $exitMinutes;
+                $this->subject->final_report = $finalReport;
+                $this->subject->save();
+            }
 
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
+            DB::commit();
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            return;
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+    public function hasNoticeOfAttachmentChange($value)
+    {
+        if ($value != "1") {
+            $this->principalAmount = null;
+            $this->interestAmount = null;
+            $this->penaltyAmount = null;
+        }
     }
 
     public function reject($transtion)
