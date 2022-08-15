@@ -7,8 +7,6 @@ use App\Models\Returns\Vat\VatReturn;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Relief\Relief;
