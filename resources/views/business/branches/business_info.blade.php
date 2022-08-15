@@ -154,11 +154,29 @@
 
         <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">
             @if ($location = $business->headquarter)
-                <div class="col-md-12 mt-1">
-                    <h6 class="pt-3 mb-0 font-weight-bold">Headquarter</h6>
+                <div class="col-md-12 mt-1 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 font-weight-bold" style="flex: 1;">Headquarter</h6>
+                    <a class="btn btn-outline-success btn-sm mt-1">
+                        <i class="bi bi-patch-check"></i>
+                        Print Certificate
+                    </a>
+                </div>
+                <div class="col-md-12">
                     <hr class="mt-2 mb-3" />
                 </div>
                 <div class="row m-2">
+                    @if ($location->zin)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">ZIN</span>
+                            <p class="my-1">{{ $location->zin }}</p>
+                        </div>
+                    @endif
+                    @if ($location->taxRegion)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Tax Region</span>
+                            <p class="my-1">{{ $location->taxRegion->name }}</p>
+                        </div>
+                    @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Nature of Premises</span>
                         <p class="my-1">{{ $location->nature_of_possession }}</p>
