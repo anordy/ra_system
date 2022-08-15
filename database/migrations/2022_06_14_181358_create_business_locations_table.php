@@ -33,6 +33,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->string('owner_phone_no')->nullable();
             $table->string('meter_no');
             $table->string('marking')->nullable();
+            $table->dateTime('approved_on')->nullable();
             $table->dateTime('verified_at')->nullable();
             $table->boolean('is_headquarter')->default(false);
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'rejected'])->default('pending');

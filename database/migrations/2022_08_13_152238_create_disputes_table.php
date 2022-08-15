@@ -26,7 +26,6 @@ class CreateDisputesTable extends Migration
             $table->decimal('tax_in_dispute', 40, 2)->default(0);
             $table->decimal('tax_not_in_dispute', 40, 2)->default(0);
             $table->decimal('tax_deposit', 40, 2)->default(0);
-            $table->string('marking')->nullable();
             $table->text('ground')->nullable();
             $table->text('reason')->nullable();
             $table->string('dispute_report')->nullable();
@@ -34,6 +33,8 @@ class CreateDisputesTable extends Migration
             $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed'])->default('draft');
+            $table->string('marking')->nullable();
+            $table->dateTime('approved_on')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
