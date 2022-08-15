@@ -43,6 +43,7 @@ class DeclaredSalesAnalysis extends Component
     public $taxType;
     public $branch;
     public $headersBfo;
+    public $headersMno;
     public $headersEmTransaction;
     public $headersMmTransfer;
     public $headersPetroleum;
@@ -70,6 +71,7 @@ class DeclaredSalesAnalysis extends Component
                 $this->vat();
                 break;
             case TaxType::EXCISE_DUTY_MNO:
+                $this->returnTypeTable = TaxType::EXCISE_DUTY_MNO;
                 $this->mno();
                 break;
             case TaxType::EXCISE_DUTY_BFO:
@@ -211,38 +213,23 @@ class DeclaredSalesAnalysis extends Component
     }
 
     public function mno(){
-        $this->purchases = [];
+        $salesConfigs = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
+        $headers = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('name');
 
-
-        $salesConfigs = MnoConfig::whereIn('code', ["MNOS", "MVNOS", "TOS", "OS"])->get()->pluck('id');
-
-        $this->sales = MnoReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
-            ->leftJoin('hotel_return_configs', 'hotel_return_configs.id', 'hotel_return_items.config_id')
-            ->leftJoin('hotel_returns', 'hotel_returns.id', 'hotel_return_items.return_id')
-            ->leftJoin('financial_months', 'financial_months.id', 'hotel_returns.financial_month_id')
+        $yearReturnGroup = BfoReturnItems::select('mno_configs.code', 'mno_return_items.value', 'mno_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+            ->leftJoin('mno_configs', 'mno_configs.id', 'mno_return_items.config_id')
+            ->leftJoin('mno_returns', 'mno_returns.id', 'mno_return_items.mno_return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'mno_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
-            ->where('hotel_returns.tax_type_id', $this->taxType->id)
-            ->where('hotel_returns.business_location_id', $this->branch->id)
             ->whereIn('config_id', $salesConfigs)
-            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+            ->get()->groupBy(['year','month']);
+        
 
-        $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
+        $yearData = $this->formatDataArray($yearReturnGroup);
 
-        $calculations = collect(array_map(function ($returns) {
-            return array(
-                'year' => $returns['year'],
-                'month' => $returns['month'],
-                'financial_month' => "{$returns['month']} {$returns['year']}",
-                'total_sales' => $returns['total_sales'],
-                'total_purchases' => $returns['total_purchases'],
-                'output_vat' => $returns['total_sales_vat'],
-                'input_tax' => $returns['total_purchases_vat'],
-                'tax_paid' => ($returns['total_sales_vat']) - $returns['total_purchases_vat'],
-            );
-        }, $returns));
-
-
-        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
+        $this->withoutPurchases = true;
+        $this->returns = $yearData;
+        $this->headersmno = $headers;
     }
 
     protected function bfo()

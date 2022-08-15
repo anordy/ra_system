@@ -2,6 +2,8 @@
 
     @if ($returnTypeTable == App\Models\TaxType::EXCISE_DUTY_BFO)
         @include('investigation.approval.return-details.bfo')
+    @if ($returnTypeTable == App\Models\TaxType::EXCISE_DUTY_MNO)
+        @include('investigation.approval.return-details.mno')
     @elseif ($returnTypeTable == App\Models\TaxType::ELECTRONIC_MONEY_TRANSACTION)
         @include('investigation.approval.return-details.emtransaction')
     @elseif ($returnTypeTable == App\Models\TaxType::MOBILE_MONEY_TRANSFER)
