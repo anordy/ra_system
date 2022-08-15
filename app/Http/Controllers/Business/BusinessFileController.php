@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Business;
 
 use App\Http\Controllers\Controller;
-use App\Models\Business;
 use App\Models\BusinessFile;
 use App\Models\BusinessLocation;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 
@@ -49,7 +52,32 @@ class BusinessFileController extends Controller
         $location = BusinessLocation::with('business', 'business.taxpayer')->find($locationId);
         $tax = TaxType::find($taxTypeId);
 
-        $pdf = PDF::loadView('business.certificate', compact('location', 'tax'));
+        $code = 'ZIN: ' . $location->zin . ", " .
+            'Business Name: ' . $location->business->name . ", " .
+            'Tax Type: ' . $tax->name . ", " .
+            'Location: ' . "{$location->street}, {$location->district->name}, {$location->region->name}" . ", " .
+            'Website: ' . 'https://uat.ubx.co.tz:8888/zrb_client/public/login';
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
+            ->data($code)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(207)
+            ->margin(0)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(36)
+            ->logoResizeToWidth(36)
+            ->labelText('')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        header('Content-Type: ' . $result->getMimeType());
+
+        $dataUri = $result->getDataUri();
+
+        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
