@@ -15,5 +15,10 @@ class ReliefProject extends Model
     {
         return $this->hasMany(Relief::class,'project_id');
     }
+
+    public function reliefProjects()
+    {
+        return $this->hasMany(ReliefProjectList::class,'project_id');
+    }
     
 }
