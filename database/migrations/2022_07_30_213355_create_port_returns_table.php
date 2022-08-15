@@ -20,7 +20,6 @@ class CreatePortReturnsTable extends Migration
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('business_id');
             $table->string('filed_by_type');
-            $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
