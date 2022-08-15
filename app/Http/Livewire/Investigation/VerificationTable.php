@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Debt;
+namespace App\Http\Livewire\Investigation;
 
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Eloquent\Builder;
