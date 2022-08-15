@@ -31,7 +31,7 @@ class TaxVerificationApprovalController extends Controller
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof LumpSumReturn) {
-            $viewRender = 'returns.lumpsum.details';
+            $viewRender = 'returns.lump-sum.details';
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof HotelReturn) {
@@ -75,7 +75,7 @@ class TaxVerificationApprovalController extends Controller
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof LumpSumReturn) {
-            $viewRender = 'returns.lumpsum.details';
+            $viewRender = 'returns.lump-sum.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof HotelReturn) {
