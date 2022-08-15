@@ -21,6 +21,12 @@
                                 <span class="font-weight-bold text-uppercase">Branch Name</span>
                                 <p class="my-1">{{ $location->name }}</p>
                             </div>
+                            @if($location->zin)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">ZIN</span>
+                                    <p class="my-1">{{ $location->zin }}</p>
+                                </div>
+                            @endif
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Nature of Premises</span>
                                 <p class="my-1">{{ $location->nature_of_possession }}</p>
