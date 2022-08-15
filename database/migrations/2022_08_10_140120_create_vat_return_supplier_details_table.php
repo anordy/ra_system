@@ -15,15 +15,16 @@ class CreateVatReturnSupplierDetailsTable extends Migration
     {
         Schema::create('vat_return_supplier_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('vat_return_id');
+            $table->string('taxpayer_reference_number');
+            $table->string('taxpayer_zin_number');
             $table->string('supplier_reference_number');
-            $table->string('zrb_number');
+            $table->string('supplier_zin_number');
             $table->string('tax_invoice_number');
             $table->dateTime('date_of_tax_invoice');
             $table->string('release_number');
-            $table->decimal('value');
-            $table->decimal('vat');
-            $table->unsignedBigInteger('filled_by_id');
-            $table->string('filled_by_type');
+            $table->decimal('value',20,2);
+            $table->decimal('vat',20,2);
             $table->timestamps();
         });
     }
