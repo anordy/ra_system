@@ -245,7 +245,6 @@ class DeclaredSalesAnalysis extends Component
             ->whereIn('config_id', $salesConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
 
-        dd($this->sales);
 
         $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
 

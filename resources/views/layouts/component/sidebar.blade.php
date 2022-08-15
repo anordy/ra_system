@@ -142,9 +142,9 @@
                 <li class="{{ request()->is('assesments/objection*') ? 'active' : '' }}">
                     <a href="{{ route('assesments.objection.index') }}">Objection</a>
                 </li>
-                {{-- <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
+                <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
                     <a href="{{ route('assesments.waiverobjection.index') }}">Weaver & Objection</a>
-                </li> --}}
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">

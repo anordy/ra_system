@@ -20,7 +20,7 @@
                     <livewire:assesments.waiver.waiver-table category="waiver" />
                 </div>
                 <div id="pending-approval" class="tab-pane fade">
-                    <livewire:assesments.waiver-approval-table category="waiver" />
+                    <livewire:assesments.waiver-approval-table category="waiver"/>
                 </div>
             </div>
         </div>

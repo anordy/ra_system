@@ -52,6 +52,7 @@
                         @endif
                     </p>
                 </div>
+            @if($dispute->bill)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount To be paid as dispute Requirements</span>
                     <p class="my-1">{{ $dispute->bill->amount }}</p>
@@ -68,6 +69,7 @@
                         </a>
                     </p>
                 </div>
+            @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>
                     <p class="my-1">{{ $business->name }}</p>
