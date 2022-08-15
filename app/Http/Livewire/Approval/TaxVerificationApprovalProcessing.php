@@ -13,13 +13,13 @@ use App\Services\ZanMalipo\ZmCore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Returns\ReturnStatus;
+use App\Models\TaxAssessments\TaxAssessment;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\Verification\TaxVerificationOfficer;
-use App\Models\Verification\TaxVerificationAssessment;
 use Illuminate\Validation\Rules\RequiredIf;
 
 class TaxVerificationApprovalProcessing extends Component
@@ -37,6 +37,7 @@ class TaxVerificationApprovalProcessing extends Component
     public $penaltyAmount;
     public $assessmentReport;
     public $taxTypes;
+    public $taxType;
 
     public $hasAssessment;
 
@@ -52,6 +53,7 @@ class TaxVerificationApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->taxTypes = TaxType::all();
+        $this->taxType = $this->taxTypes->firstWhere('code', TaxType::VERIFICATION);
 
         $this->registerWorkflow($modelName, $modelId);
 
@@ -145,8 +147,13 @@ class TaxVerificationApprovalProcessing extends Component
                         'penalty_amount' => $this->penaltyAmount,
                     ]);
                 } else {
-                    TaxVerificationAssessment::create([
-                        'verification_id' => $this->subject->id,
+
+                    TaxAssessment::create([
+                        'location_id' => $this->subject->location_id,
+                        'business_id' => $this->subject->business_id,
+                        'tax_type_id' => $this->taxType->id,
+                        'assessment_id' => $this->subject->id,
+                        'assessment_type' => get_class($this->subject),
                         'principal_amount' => $this->principalAmount,
                         'interest_amount' => $this->interestAmount,
                         'penalty_amount' => $this->penaltyAmount,
@@ -179,21 +186,13 @@ class TaxVerificationApprovalProcessing extends Component
     }
 
 
-    public function generateControlNumber()
+    public function generateControlNumber($verification_assessment)
     {
         $taxType = $this->subject->taxType;
 
         DB::beginTransaction();
 
         try {
-
-            $verification_assessment = TaxVerificationAssessment::create([
-                'verification_id' => $this->subject->id,
-                'principal_amount' => $this->principalAmount,
-                'interest_amount' => $this->interestAmount,
-                'penalty_amount' => $this->penaltyAmount,
-                'report_path' => $reportPath ?? '',
-            ]);
 
             $billitems = [
                 [

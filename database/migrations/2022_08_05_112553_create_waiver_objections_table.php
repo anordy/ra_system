@@ -18,7 +18,7 @@ class CreateWaiverObjectionsTable extends Migration
             $table->unsignedBigInteger('taxpayer_id')->comments('main Owner');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('filled_id');
+            $table->unsignedBigInteger('filed_by_id');
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed'])->default('draft');
             $table->unsignedBigInteger('assesment_id')->nullable();
             $table->enum('business_type', ['hotel', 'other'])->default('other');

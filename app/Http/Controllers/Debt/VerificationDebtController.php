@@ -57,16 +57,16 @@ class VerificationDebtController extends Controller
              tax_type_id, 
              tax_return_type,
              tax_return_id,
-             tax_verification_assessments.principal_amount,
-             tax_verification_assessments.penalty_amount,
-             tax_verification_assessments.interest_amount,
-             tax_verification_assessments.id as assesment_id
+             tax_assessments.principal_amount,
+             tax_assessments.penalty_amount,
+             tax_assessments.interest_amount,
+             tax_assessments.id as assesment_id
          ')
-            ->join('tax_verification_assessments', 'tax_verification_assessments.verification_id', 'tax_verifications.id')
-            ->leftJoin('objections', 'objections.assesment_id', 'tax_verification_assessments.id')
+            ->join('tax_assessments', 'tax_assessments.verification_id', 'tax_verifications.id')
+            ->leftJoin('objections', 'objections.assesment_id', 'tax_assessments.id')
             ->whereNull('objections.assesment_id')
-            ->where("tax_verification_assessments.status", '!=', ReturnStatus::COMPLETE)
-            ->whereRaw("DATEDIFF('" . $now->format("Y-m-d") . "', tax_verification_assessments.created_at  ) >= 21")
+            ->where("tax_assessments.status", '!=', ReturnStatus::COMPLETE)
+            ->whereRaw("DATEDIFF('" . $now->format("Y-m-d") . "', tax_assessments.created_at  ) >= 21")
             ->get()->toArray();
 
 

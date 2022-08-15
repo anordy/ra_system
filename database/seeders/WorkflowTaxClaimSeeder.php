@@ -43,11 +43,6 @@ class WorkflowTaxClaimSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 4]
             ],
-            'correct_verification_result' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 4]
-            ],
             'commissioner' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -83,11 +78,6 @@ class WorkflowTaxClaimSeeder extends Seeder
             'method_of_payment' => [
                 'from' => 'method_of_payment',
                 'to'   => 'commissioner',
-                'condition' => '',
-            ],
-            'correct_verification_result' => [
-                'from' => 'method_of_payment',
-                'to'   => 'verification_results',
                 'condition' => '',
             ],
             'rejected' => [

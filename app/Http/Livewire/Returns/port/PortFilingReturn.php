@@ -115,7 +115,7 @@ class PortFilingReturn extends Component
             $port_return->business_location_id = $this->business_location_id;
             $port_return->business_id = $this->business->id;
             $port_return->filled_type = $r->name;
-            $port_return->filled_id = auth()->user()->id;
+            $port_return->filed_by_id = auth()->user()->id;
             $port_return->tax_type_id = $this->tax_type_id;
             $port_return->financial_year_id = $this->fillingMonth->financial_year_id;
             $port_return->financial_month_id = $this->fillingMonth->id;
