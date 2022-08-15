@@ -77,6 +77,7 @@ use App\Http\Controllers\Setting\InterestRateController;
 use App\Http\Controllers\Setting\TaxRegionController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
+use App\Http\Controllers\TaxClearance\TaxClearanceController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\TaxTypeController;
@@ -347,4 +348,11 @@ Route::name('land-lease.')->prefix('land-lease')->group(function () {
 Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
     Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
     Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+});
+
+
+//Tax Clearance
+Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {
+    Route::get('/tax-clearances/request', [TaxClearanceController::class, 'requestList'])->name('list');
+    Route::get('/tax-clearance/view/{id}', [TaxClearanceController::class, 'viewRequest'])->name('request.view');
 });
