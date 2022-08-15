@@ -4,21 +4,14 @@ namespace App\Http\Livewire\Business\Updates;
 
 use App\Models\AccountType;
 use App\Models\Bank;
-use Exception;
 use Livewire\Component;
-use App\Models\Business;
 use App\Models\BusinessActivity;
-use App\Models\BusinessBank;
-use App\Models\BusinessStatus;
 use App\Models\BusinessUpdate;
-use App\Models\BusinessLocation;
 use App\Models\Currency;
 use App\Models\District;
 use App\Models\Region;
 use App\Models\Taxpayer;
 use App\Models\Ward;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ShowChanges extends Component
@@ -31,6 +24,7 @@ class ShowChanges extends Component
     private $old_values;
     private $new_values;
     public $business_id;
+    public $agent_contract;
 
     public function mount($updateId)
     {
@@ -38,6 +32,7 @@ class ShowChanges extends Component
         $this->old_values = json_decode($this->business_update->old_values);
         $this->business_id = $this->business_update->business_id;
         $this->new_values = json_decode($this->business_update->new_values);
+        $this->agent_contract = $this->business_update->agent_contract ?? null;
     }
 
     public function getNameById($type, $id)

@@ -26,6 +26,7 @@ use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Business\BusinessUpdateFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\Claims\ClaimFilesController;
@@ -190,6 +191,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
         Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
+        Route::get('/updates/{updateId}/file', [BusinessUpdateFileController::class, 'getContractFile'])->name('contract.file');
+
         Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
         Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
         Route::get('/business-certificate/{business}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
