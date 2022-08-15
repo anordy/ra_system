@@ -19,7 +19,6 @@ class CreateHotelReturnsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('business_id');
-
             $table->string('filled_type');
             $table->string('currency');
             $table->unsignedBigInteger('filed_by_id');
@@ -28,17 +27,14 @@ class CreateHotelReturnsTable extends Migration
             $table->integer('edited_count')->default(0);
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', DisputeStatus::getConstants());
-            
             $table->decimal('hotel_infrastructure_tax', 20, 2)->nullable();
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 20, 2)->default(0);
             $table->decimal('total_amount_due_with_penalties', 20, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->decimal('interest', 20, 2)->default(0);
-
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
-
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->timestamps();
