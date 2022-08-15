@@ -211,19 +211,19 @@ class DeclaredSalesAnalysis extends Component
         $this->purchases = [];
 
 
-        $salesConfigs = MnoConfig::whereIn('code', ["MNOS", "MVNOS", "MCPRE", "MCPOST","MM","OFS","OES"])->get()->pluck('id');
+        $salesConfigs = MnoConfig::whereIn('code', ["MNOS", "MVNOS", "TOS", "OS"])->get()->pluck('id');
 
         $this->sales = MnoReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
-            ->leftJoin('mno_return_configs', 'mno_return_configs.id', 'mno_return_items.mno_config_id')
-            ->leftJoin('mno_returns', 'mno_returns.id', 'mno_return_items.return_id')
-            ->leftJoin('financial_months', 'financial_months.id', 'mno_returns.financial_month_id')
+            ->leftJoin('hotel_return_configs', 'hotel_return_configs.id', 'hotel_return_items.config_id')
+            ->leftJoin('hotel_returns', 'hotel_returns.id', 'hotel_return_items.return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'hotel_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
-            ->where('mno_returns.tax_type_id', $this->taxType->id)
-            ->where('mno_returns.business_location_id', $this->branch->id)
-            ->whereIn('mno_config_id', $salesConfigs)
+            ->where('hotel_returns.tax_type_id', $this->taxType->id)
+            ->where('hotel_returns.business_location_id', $this->branch->id)
+            ->whereIn('config_id', $salesConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
 
-        $returns = array_replace_recursive($this->purchases, $this->sales->toArray());
+        $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
 
         $calculations = collect(array_map(function ($returns) {
             return array(
