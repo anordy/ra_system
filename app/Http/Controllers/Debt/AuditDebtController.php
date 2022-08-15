@@ -47,8 +47,8 @@ class AuditDebtController extends Controller
              tax_assessments.id as assesment_id
          ')
             ->join('tax_assessments', 'tax_assessments.assessment_id', 'tax_audits.id')
-            ->leftJoin('objections', 'objections.assesment_id', 'tax_assessments.id')
-            ->whereNull('objections.assesment_id')
+            ->leftJoin('disputes', 'disputes.assesment_id', 'tax_assessments.id')
+            ->whereNull('disputes.assesment_id')
             ->where("tax_audits.status", '!=', ReturnStatus::COMPLETE)
             ->whereRaw("DATEDIFF('" . $now->format("Y-m-d") . "', tax_assessments.created_at  ) >= 21")
             ->get()->toArray();
