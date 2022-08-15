@@ -5,7 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            Tax Returns Verified
+            Tax Returns Verification Approval
         </div>
         <div class="card-body">
             <nav class="nav nav-tabs mt-0 border-top-0">
