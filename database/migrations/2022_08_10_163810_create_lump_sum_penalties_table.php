@@ -13,7 +13,7 @@ class CreateLumpSumPenaltiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('lump_sum_return_penalties', function (Blueprint $table) {
+        Schema::create('lump_sum_penalties', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('return_id');
             $table->string('return_quater');

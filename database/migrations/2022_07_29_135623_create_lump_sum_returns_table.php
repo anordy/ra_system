@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\DisputeStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -31,6 +32,7 @@ class CreateLumpSumReturnsTable extends Migration
             $table->integer('edited_count')->default(0);
             $table->bigInteger('control_no')->nullable();
             $table->string('status');
+            $table->enum('application_status', DisputeStatus::getConstants());
             $table->timestamps();
         });
     }

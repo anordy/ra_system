@@ -7,7 +7,6 @@ use App\Models\Debts\Debt;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxAudit\TaxAudit;
-use App\Models\TaxAudit\TaxAuditAssessment;
 
 class AuditDebtController extends Controller
 {
@@ -41,17 +40,17 @@ class AuditDebtController extends Controller
         $assessments = TaxAudit::selectRaw('
              tax_audits.business_id,
              tax_audits.location_id,
-             tax_type_id, 
-             tax_audit_assessments.principal_amount,
-             tax_audit_assessments.penalty_amount,
-             tax_audit_assessments.interest_amount,
-             tax_audit_assessments.id as assesment_id
+             tax_audits.tax_type_id, 
+             tax_assessments.principal_amount,
+             tax_assessments.penalty_amount,
+             tax_assessments.interest_amount,
+             tax_assessments.id as assesment_id
          ')
-            ->join('tax_audit_assessments', 'tax_audit_assessments.audit_id', 'tax_audits.id')
-            ->leftJoin('objections', 'objections.assesment_id', 'tax_audit_assessments.id')
+            ->join('tax_assessments', 'tax_assessments.assessment_id', 'tax_audits.id')
+            ->leftJoin('objections', 'objections.assesment_id', 'tax_assessments.id')
             ->whereNull('objections.assesment_id')
             ->where("tax_audits.status", '!=', ReturnStatus::COMPLETE)
-            ->whereRaw("DATEDIFF('" . $now->format("Y-m-d") . "', tax_audit_assessments.created_at  ) >= 21")
+            ->whereRaw("DATEDIFF('" . $now->format("Y-m-d") . "', tax_assessments.created_at  ) >= 21")
             ->get()->toArray();
 
             
@@ -59,7 +58,7 @@ class AuditDebtController extends Controller
         $assesment_calculations = array_map(function ($assessments) {
             return array(
                 'tax_type_id' => $assessments['tax_type_id'],
-                'debt_type' => TaxAuditAssessment::class,
+                'debt_type' => TaxAudit::class,
                 'debt_type_id' => $assessments['assesment_id'],
                 'business_id' => $assessments['business_id'],
                 'location_id' => $assessments['location_id'],
