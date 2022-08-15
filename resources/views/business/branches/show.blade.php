@@ -10,7 +10,7 @@
             {{ $location->business->name }} Business Branch
         </div>
         <div class="card-body">
-            @include('business.branches.business_info')
+            @include('business.registrations.includes.business_info')
             <div class="row">
 
                 <div class="card">
@@ -21,10 +21,16 @@
                                 <span class="font-weight-bold text-uppercase">Branch Name</span>
                                 <p class="my-1">{{ $location->name }}</p>
                             </div>
-                            @if($location->zin)
+                            @if ($location->zin)
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">ZIN</span>
                                     <p class="my-1">{{ $location->zin }}</p>
+                                </div>
+                            @endif
+                            @if ($location->taxRegion)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Tax Region</span>
+                                    <p class="my-1">{{ $location->taxRegion->name }}</p>
                                 </div>
                             @endif
                             <div class="col-md-4 mb-3">

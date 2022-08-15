@@ -200,8 +200,8 @@
 
     <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">
         @if ($location = $business->headquarter)
-            <div class="col-md-12 mt-1">
-                <h6 class="pt-3 mb-0 font-weight-bold">Headquarter</h6>
+            <div class="col-md-12 mt-3">
+                <h6 class="mb-0 font-weight-bold" style="flex: 1;">Headquarter</h6>
                 <hr class="mt-2 mb-3" />
             </div>
             <div class="row m-2">
@@ -209,6 +209,12 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">ZIN</span>
                         <p class="my-1">{{ $location->zin }}</p>
+                    </div>
+                @endif
+                @if ($location->taxRegion)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Tax Region</span>
+                        <p class="my-1">{{ $location->taxRegion->name }}</p>
                     </div>
                 @endif
                 <div class="col-md-4 mb-3">
@@ -263,6 +269,18 @@
                     <span class="font-weight-bold text-uppercase">Longitude</span>
                     <p class="my-1">{{ $location->longitude }}</p>
                 </div>
+                <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
+                    @if ($location->status === \App\Models\BusinessStatus::APPROVED)
+                        <div>
+                            @foreach($business->taxTypes as $type)
+                                <a target="_blank" href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}" class="btn btn-success btn-sm mt-1 text-white">
+                                    <i class="bi bi-patch-check"></i>
+                                    {{ $type->name }} Certificate
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
             </div>
         @endif
         @if (count($business->branches))
@@ -276,6 +294,12 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">ZIN</span>
                             <p class="my-1">{{ $location->zin }}</p>
+                        </div>
+                    @endif
+                    @if ($location->taxRegion)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Tax Region</span>
+                            <p class="my-1">{{ $location->taxRegion->name }}</p>
                         </div>
                     @endif
                     <div class="col-md-4 mb-3">
@@ -359,6 +383,18 @@
                                 </span>
                             @endif
                         </p>
+                    </div>
+                    <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
+                        @if ($location->status === \App\Models\BranchStatus::APPROVED)
+                            <div>
+                                @foreach($business->taxTypes as $type)
+                                    <a target="_blank" href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}" class="btn btn-success btn-sm mt-1 text-white">
+                                        <i class="bi bi-patch-check"></i>
+                                        {{ $type->name }} Certificate
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <hr style="margin-top: -16px" class="mx-3" />
