@@ -61,6 +61,9 @@ class ReliefReportSummary extends Component
 
     public function refreshSummary($dates)
     {
+        $this->dates = [];
+        $this->data = [];
+        $this->projectSectionsArray = [];
         $this->dates = $dates;
         $this->mount();
     }
