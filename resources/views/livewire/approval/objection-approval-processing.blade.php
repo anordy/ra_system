@@ -4,7 +4,7 @@
             Approval
         </div>
         <div class="card-body">
-            @include('livewire.approval.transitions')
+            {{-- @include('livewire.approval.transitions') --}}
             @if ($this->checkTransition('objection_manager_review'))
                 @include('livewire.approval.assesments.objection_manager_review')
             @elseif ($this->checkTransition('commisioner_review'))
