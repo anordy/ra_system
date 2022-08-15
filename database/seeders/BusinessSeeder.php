@@ -24,7 +24,7 @@ class BusinessSeeder extends Seeder
             "business_category_id" => 1,
             "currency_id" => 1,
             "taxpayer_id" => 1,
-            "z_no" => "ZRB_459353",
+            "zin" => "ZRB_459353",
             "name" => "Goodman Enterprises",
             "tin" => "543980",
             "reg_no" => "12345",
