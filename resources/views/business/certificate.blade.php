@@ -43,6 +43,7 @@
         .commencing-date {
             font-size: 1.2em;
             top: 80%;
+            padding-left: 90px;
         }
         .commissioner-signature {
             top: 86%;
@@ -53,6 +54,12 @@
             padding-left: 70px;
             padding-right: 70px;
             left: 30px;
+        }
+        .qr-code {
+            top: 86%;
+            padding-left: 70px;
+            padding-right: 70px;
+            text-align: center;
         }
         .watermark {
             -webkit-transform: rotate(331deg);
@@ -69,21 +76,22 @@
         }
     </style>
 </head>
-
-<body>
-<span class="embed business-name">{{ $$location->business->name ?? '' }}</span>
-<span class="embed taxpayer-name">{{ $location->zin ?? '' }}</span>
-<span class="embed reg-no">{{ $location->business->zin ?? '' }}</span>
-<span class="embed tax-types">{{ $tax->name }}</span>
-<span class="embed location">
-    {{ $location->street }}, {{ $location->district->name }}, {{ $location->region->name }}
-</span>
-<span class="embed commencing-date">
-    {{ $location->business->date_of_commencing->toFormattedDateString() }}
-</span>
-<span class="commissioner-signature">
-    <img src="{{ public_path()}}/sign/commissioner.png">
-</span>
-</body>
-
+    <body>
+        <span class="embed business-name">{{ $$location->business->name ?? '' }}</span>
+        <span class="embed taxpayer-name">{{ $location->zin ?? '' }}</span>
+        <span class="embed reg-no">{{ $location->business->zin ?? '' }}</span>
+        <span class="embed tax-types">{{ $tax->name }}</span>
+        <span class="embed location">
+            {{ $location->street }}, {{ $location->district->name }}, {{ $location->region->name }}
+        </span>
+        <span class="embed commencing-date">
+            {{ $location->business->date_of_commencing->toFormattedDateString() }}
+        </span>
+        <span class="commissioner-signature">
+            <img src="{{ public_path()}}/sign/commissioner.png">
+        </span>
+        <div style="overflow: hidden; position:absolute; top: 83%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
+            <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+        </div>
+    </body>
 </html>
