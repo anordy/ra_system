@@ -6,18 +6,18 @@
         @foreach ($returns as $year => $return)
             <strong>{{ $year }}</strong>
             @php
-                $MSP = 0;
-                $GO = 0;
-                $IK = 0;
+                $PM = 0;
+                $AWP = 0;
+                $TP = 0;
             @endphp
 
-            <table class="table table-bordered ">
+            <table class="table table-bordered text-center">
                 <thead>
                     <tr>
                         <th>Quater</th>
                         <th>Principal Tax Amount</th>
-                        <th>Amount With penalties</th>
                         <th>Penalties</th>
+                        <th>Principal Amount + penalties</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,14 +25,14 @@
                         <tr>
                             <td>{{ $item['quarter'] }}</td>
                             <td>{{ number_format($item['principalAmount'], 2) }}</td>
-                            <td>{{ number_format($item['amountWithPenalties'], 2) }}</td>
                             <td>{{ number_format($item['Penalties']), 2 }}</td>
+                            <td>{{ number_format($item['amountWithPenalties'], 2) }}</td>
 
                         </tr>
                         @php
-                            $MSP += $item['principalAmount'];
-                            $GO += $item['amountWithPenalties'];
-                            $IK += $item['Penalties'];
+                            $PM += $item['principalAmount'];
+                            $AWP += $item['amountWithPenalties'];
+                            $TP += $item['Penalties'];
                             
                         @endphp
                     @endforeach
@@ -40,9 +40,9 @@
                 <tfoot>
                     <tr class="font-weight-bold">
                         <td>TOTAL</td>
-                        <td>{{ number_format($MSP, 2) }}</td>
-                        <td>{{ number_format($GO, 2) }}</td>
-                        <td>{{ number_format($IK, 2) }}</td>
+                        <td>{{ number_format($PM, 2) }}</td>
+                        <td>{{ number_format($AWP, 2) }}</td>
+                        <td>{{ number_format($TP, 2) }}</td>
 
                     </tr>
                 </tfoot>

@@ -201,12 +201,11 @@ class ApprovalProcessing extends Component
                         'selectedTaxTypes.*.quarters.between'           => 'Please enter Quaters between 1 to 12',
                     ]
                 );
-                    
+                
                 DB::table('lump_sum_payments')->insert([
                     'filed_by_id'         => auth()->user()->id,
-                    'business_id'         => $business->id,
+                    'business_id'         => $this->subject->id,
                     'business_location_id'=> $business->id,
-                    'financial_year_id'   => 1,
                     'annual_estimate'     => $annualEstimate[0],
                     'payment_quarters'    => $quarters[0],
                     'currency'            => $currency[0],

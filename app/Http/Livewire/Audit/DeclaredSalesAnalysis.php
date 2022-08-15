@@ -350,13 +350,13 @@ class DeclaredSalesAnalysis extends Component
                 $amountDueWithPenalties = 0;
                 $return_months          = 0;
                 foreach ($returnItems as $keyItem => $item) {
-                    $amountDue += $item['total_amount_due'];
-                    $amountDueWithPenalties += $item['total_amount_due_with_penalties'];
-                    $totalPenalties = $amountDueWithPenalties - $amountDue;
+                    $amountDue              = $item['total_amount_due'];
+                    $amountDueWithPenalties = $item['total_amount_due_with_penalties'];
+                    $totalPenalties         = $amountDueWithPenalties - $amountDue;
                 }
                 switch ($return_months) {
                     case '3':
-                        // if payments is made after every 3 moths means there is 4 quaters, and so on...
+                        // if payments is made after every 3 months means there is 4 quaters, and so on...
                         $pQuaters = 4;
                     
                         break;
@@ -381,7 +381,7 @@ class DeclaredSalesAnalysis extends Component
             }
             $yearData[$keyYear] = $quarterData;
         }
-        
+    
         return $yearData;
     }
 
