@@ -2,8 +2,14 @@
 
 namespace App\Http\Livewire\Investigation;
 
+use App\Models\Returns\BFO\BfoConfig;
+use App\Models\Returns\BFO\BfoReturnItems;
+use App\Models\Returns\EmTransactionConfig;
+use App\Models\Returns\EmTransactionReturnItem;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
+use App\Models\Returns\MmTransferConfig;
+use App\Models\Returns\MmTransferReturnItem;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\PetroleumReturnItem;
 use App\Models\Returns\Vat\VatReturnConfig;
