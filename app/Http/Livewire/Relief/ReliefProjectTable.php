@@ -49,4 +49,16 @@ class ReliefProjectTable extends DataTableComponent
                 ->html(true),
         ];
     }
+
+    public function delete($id)
+    {
+        $projectSection = ReliefProject::find($id);
+        //check if ministry has been used in relief project list and if so, prevent deletion
+        if ($projectSection->reliefProjects()->count()>0) {
+            $this->alert('error', 'Cannot delete project section. Project section is used in Project.');
+        } else {
+            $projectSection->delete();
+            $this->alert('success', 'Project Section deleted successfully.');
+        }
+    }
 }

@@ -16,6 +16,7 @@ class CreateReliefMinistriesTable extends Migration
         Schema::create('relief_ministries', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('type', ['Government', 'Non-Government']);
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
         });

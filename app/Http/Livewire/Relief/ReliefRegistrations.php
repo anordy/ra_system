@@ -52,12 +52,13 @@ class ReliefRegistrations extends Component
     //backend variable
     public $vatPercent;
 
+
     public function mount()
     {
         $this->optionSuppliers = Business::where('status', BusinessStatus::APPROVED)->get();
         $this->optionSupplierLocations = null;
 
-        $this->optionProjectSections = ReliefProject::all();
+        $this->optionProjectSections = ReliefProject::has('reliefProjects')->get();
         $this->optionProjects = null;
 
         $this->items = [

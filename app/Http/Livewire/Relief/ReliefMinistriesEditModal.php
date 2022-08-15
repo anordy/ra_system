@@ -14,13 +14,15 @@ class ReliefMinistriesEditModal extends Component
     use LivewireAlert;
 
     public $name;
+    public $type;
     public $description;
     public $reliefProjectSection;
 
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_projects,name,'.$this->reliefProjectSection->id.',id',
+            'name' => 'required|unique:relief_ministries,name,'.$this->reliefProjectSection->id.',id',
+            'type' => 'required',
         ];
     }
 
@@ -29,6 +31,7 @@ class ReliefMinistriesEditModal extends Component
         $data = ReliefMinistry::find($id);
         $this->reliefProjectSection = $data;
         $this->name = $data->name;
+        $this->type = $data->type;
         $this->description = $data->description;
     }
 
@@ -38,6 +41,7 @@ class ReliefMinistriesEditModal extends Component
         try {
             $this->reliefProjectSection->update([
                 'name' => $this->name,
+                'type' => $this->type,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
