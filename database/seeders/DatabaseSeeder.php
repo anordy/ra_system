@@ -67,5 +67,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BusinessSeeder::class);
         $this->call(WorkflowTaxClaimSeeder::class);
         $this->call(TaxRegionsSeeder::class);
+        $this->call(ReliefProjectSeeder::class);
     }
 }

@@ -28,7 +28,6 @@ class CreateHotelReturnsTable extends Migration
             $table->integer('edited_count')->default(0);
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', DisputeStatus::getConstants());
-            
             $table->decimal('hotel_infrastructure_tax', 20, 2)->nullable();
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 20, 2)->default(0);
