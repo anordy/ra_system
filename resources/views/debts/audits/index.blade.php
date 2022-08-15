@@ -8,7 +8,7 @@
             Audits Debt Management
         </div>
         <div class="card-body mt-0 p-2">
-            <livewire:debt.audits-table />
+            <livewire:debt.audits-table  />
         </div>
     </div>
 @endsection

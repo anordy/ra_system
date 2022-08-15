@@ -172,6 +172,11 @@ class Business extends Model implements Auditable
         return $this->hasMany(Objection::class);
 
     }
+        public function dispute()
+    {
+        return $this->hasMany(Waiver::class);
+
+    }
 
     public function QuantityCertificates(){
         return $this->hasMany(QuantityCertificate::class);

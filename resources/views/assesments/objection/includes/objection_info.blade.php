@@ -55,7 +55,7 @@
                 </p>
             </div>
             <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Amount To be paid as Objection Requirements</span>
+                <span class="font-weight-bold text-uppercase">Tax Deposit</span>
                 <p class="my-1">{{ $objection->bill->amount }}</p>
             </div>
             <div class="col-md-4 mb-3">

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Business;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\BusinessFile;
+use App\Models\BusinessLocation;
 use App\Models\Taxpayer;
+use App\Models\TaxType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -41,11 +43,13 @@ class BusinessFileController extends Controller
         return abort(404);
     }
 
-    public function getCertificate($businessId){
-        $id = decrypt($businessId);
-        $business = Business::with('taxpayer')->find($id);
+    public function getCertificate($locationId, $taxTypeId){
+        $locationId = decrypt($locationId);
+        $taxTypeId = decrypt($taxTypeId);
+        $location = BusinessLocation::with('business', 'business.taxpayer')->find($locationId);
+        $tax = TaxType::find($taxTypeId);
 
-        $pdf = PDF::loadView('business.certificate', compact('business'));
+        $pdf = PDF::loadView('business.certificate', compact('location', 'tax'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 

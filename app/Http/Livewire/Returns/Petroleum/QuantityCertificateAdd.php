@@ -39,10 +39,10 @@ class QuantityCertificateAdd extends Component
             'ship' => 'required',
             'port' => 'required',
             'voyage_no' => 'nullable',
-            'ascertained' => 'required|date',
+            'ascertained' => 'required|date|after_or_equal:today',
             'business' => [
                 'required',
-                'exists:businesses,zin'
+                'exists:business_locations,zin'
             ],
             'products.*.config_id' => 'required',
             'products.*.liters_observed' => 'required|numeric',

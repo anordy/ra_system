@@ -26,6 +26,7 @@ use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Business\BusinessUpdateFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\Claims\ClaimFilesController;
@@ -56,6 +57,7 @@ use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
@@ -191,9 +193,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/updates', [BusinessController::class, 'updatesRequests'])->name('updatesRequests');
         Route::get('/updates/{id}', [BusinessController::class, 'showRequest'])->name('showRequest');
+        Route::get('/updates/{updateId}/file', [BusinessUpdateFileController::class, 'getContractFile'])->name('contract.file');
+
         Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
         Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
-        Route::get('/business-certificate/{business}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
+        Route::get('/business-certificate/{location}/taxType/{type}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
     });
 
     // assesments
@@ -283,6 +287,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
+        Route::get('/generate-report',[ReliefGenerateReportController::class, 'index'])->name('generate.report');
+        Route::get('/download-report-pdf/{dates}',[ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {

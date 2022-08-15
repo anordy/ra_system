@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Add Bussiness</h5>
+                <h5 class="modal-title text-uppercase">ADD MINISTRY</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
@@ -13,6 +13,22 @@
                         <input type="text" class="form-control" wire:model.lazy="name" id="name">
                         @error('name')
                             <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row pr-3 pl-3">
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Type</label>
+                        <select name="type" id="Type" wire:model="type"
+                            class="form-control {{ $errors->has($type) ? 'is-invalid' : '' }}">
+                            <option value="" disabled>Select Project Type</option>
+                            <option value="Government">Government</option>
+                            <option value="Non-Government">Non Government</option>
+                        </select>
+                        @error('type')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
                     </div>
                 </div>

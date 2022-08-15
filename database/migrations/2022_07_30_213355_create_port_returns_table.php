@@ -1,5 +1,7 @@
 <?php
 
+use App\Enum\DisputeStatus;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -35,7 +37,8 @@ class CreatePortReturnsTable extends Migration
             $table->decimal('infrastructure_znz_tm', 20, 2);
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
-            $table->string('status');
+            $table->enum('status', ReturnStatus::getConstants());
+            $table->enum('application_status', DisputeStatus::getConstants());
             $table->timestamps();
         });
     }

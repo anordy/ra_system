@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Assesments;
 
-use App\Models\Waiver;
+use App\Models\Disputes\Dispute;
 use App\Models\WaiverStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -13,11 +13,16 @@ class WaiverApprovalTable extends DataTableComponent
 {
     use LivewireAlert;
 
+    public function mount($category)
+    {
+        $this->category = $category;
+    }
     public function builder(): Builder
     {
-        return Waiver::query()
-            ->where('waivers.status', WaiverStatus::PENDING)
-            ->orderBy('waivers.created_at', 'desc');
+        return Dispute::query()
+            ->where('disputes.status', WaiverStatus::PENDING)
+            ->where('disputes.category', $this->category)
+            ->orderBy('disputes.created_at', 'desc');
     }
 
     public function configure(): void
@@ -42,11 +47,13 @@ class WaiverApprovalTable extends DataTableComponent
                 ->searchable(),
             Column::make("Mobile", "business.mobile")
                 ->sortable(),
+            Column::make("Category", "category")
+                ->sortable(),
             Column::make("Tax In Dispute(Tzs)", "tax_in_dispute")
                 ->sortable(),
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")
                 ->sortable(),
-            Column::make("Weaver Requirement", "waiver_requirement")
+            Column::make("Weaver Requirement", "tax_deposit")
                 ->sortable(),
             Column::make('Previous Transition', 'id')
                 ->format(function ($value, $row) {
