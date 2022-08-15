@@ -20,6 +20,7 @@ class CreatePortReturnsTable extends Migration
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('business_id');
             $table->string('filed_by_type');
+            $table->string('currency')->default('TZS');
             $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');
@@ -32,6 +33,10 @@ class CreatePortReturnsTable extends Migration
             $table->decimal('total_vat_payable_usd', 20, 2);
             $table->decimal('total_amount_due_with_penalties_tzs', 20, 2)->default(0);
             $table->decimal('total_amount_due_with_penalties_usd', 20, 2)->default(0);
+            $table->decimal('penalty_tzs', 20, 2)->default(0);
+            $table->decimal('penalty_usd', 20, 2)->default(0);
+            $table->decimal('interest_tzs', 20, 2)->default(0);
+            $table->decimal('interest_usd', 20, 2)->default(0);
             $table->decimal('infrastructure', 20, 2);
             $table->decimal('infrastructure_znz_znz', 20, 2);
             $table->decimal('infrastructure_znz_tm', 20, 2);
