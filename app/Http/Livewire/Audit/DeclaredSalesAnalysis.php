@@ -85,7 +85,6 @@ class DeclaredSalesAnalysis extends Component
                 $this->stampDuty();
                 break;
         }
-
     }
 
     public function validateDate($date, $format = 'Y-m-d')
@@ -200,59 +199,26 @@ class DeclaredSalesAnalysis extends Component
         }, $returns));
 
         $this->returns = $calculations;
-
     }
 
-<<<<<<< HEAD
-    public function mno(){
+    public function mno()
+    {
         $salesConfigs = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
         $headers = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('name');
 
         $yearReturnGroup = MnoReturnItem::select('mno_configs.code', 'mno_return_items.input_value', 'mno_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('mno_configs', 'mno_configs.id', 'mno_return_items.mno_config_id')
             ->leftJoin('mno_returns', 'mno_returns.id', 'mno_return_items.mno_return_id')
-=======
-    public function mno()
-    {
-        $this->purchases = [];
-
-        $salesConfigs = MnoConfig::whereIn('code', ["MNOS", "MVNOS", "MCPRE", "MCPOST", "MM", "OFS", "OES"])->get()->pluck('id');
-
-        $this->sales = MnoReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
-            ->leftJoin('mno_return_configs', 'mno_return_configs.id', 'mno_return_items.mno_config_id')
-            ->leftJoin('mno_returns', 'mno_returns.id', 'mno_return_items.return_id')
->>>>>>> 77d80ebdc3efe8512cdc1c3a7a417e76ae226086
             ->leftJoin('financial_months', 'financial_months.id', 'mno_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
             ->whereIn('mno_config_id', $salesConfigs)
-<<<<<<< HEAD
-            ->get()->groupBy(['year','month']);
-        
+            ->get()->groupBy(['year', 'month']);
+
         $yearData = $this->formatDataArray($yearReturnGroup);
 
         $this->withoutPurchases = true;
         $this->returns = $yearData;
         $this->headersMno = $headers;
-=======
-            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
-
-        $returns = array_replace_recursive($this->purchases, $this->sales->toArray());
-
-        $calculations = collect(array_map(function ($returns) {
-            return array(
-                'year' => $returns['year'],
-                'month' => $returns['month'],
-                'financial_month' => "{$returns['month']} {$returns['year']}",
-                'total_sales' => $returns['total_sales'],
-                'total_purchases' => $returns['total_purchases'],
-                'output_vat' => $returns['total_sales_vat'],
-                'input_tax' => $returns['total_purchases_vat'],
-                'tax_paid' => ($returns['total_sales_vat']) - $returns['total_purchases_vat'],
-            );
-        }, $returns));
-
-        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
->>>>>>> 77d80ebdc3efe8512cdc1c3a7a417e76ae226086
     }
 
     protected function bfo()
@@ -293,7 +259,6 @@ class DeclaredSalesAnalysis extends Component
         $this->withoutPurchases = true;
         $this->returns = $yearData;
         $this->headersEmTransaction = $headers;
-
     }
 
     protected function mmTranfer()
@@ -314,7 +279,6 @@ class DeclaredSalesAnalysis extends Component
         $this->withoutPurchases = true;
         $this->returns = $yearData;
         $this->headersMmTransfer = $headers;
-
     }
 
     protected function formatDataArray($yearReturnGroup)
