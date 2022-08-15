@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Disputes;
 
 use App\Models\Verification\TaxVerificationAssessment;
 use App\Traits\WorkflowTrait;
