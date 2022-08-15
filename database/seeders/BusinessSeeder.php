@@ -81,7 +81,7 @@ class BusinessSeeder extends Seeder
 
         try {
             $business = Business::create($business);
-            $business->location()->create($location);
+            $business->headquarter()->create($location);
             $business->banks()->create($bank);
 
             for ($i=1; $i < 16; $i++) { 
