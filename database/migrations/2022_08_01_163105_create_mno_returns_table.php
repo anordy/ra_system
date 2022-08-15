@@ -27,6 +27,9 @@ class CreateMnoReturnsTable extends Migration
             $table->decimal('total_amount_due_with_penalties', 40, 2);
             $table->string('status');
 
+            $table->decimal('penalty', 20,2);
+            $table->decimal('interest',20,2);
+
             $table->timestamps();
             $table->softDeletes();
 
