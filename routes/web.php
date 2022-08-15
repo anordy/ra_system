@@ -262,6 +262,9 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
+        Route::get('/tour', [HotelReturnController::class, 'tour'])->name('tour.index');
+        Route::get('/restaurant', [HotelReturnController::class, 'restaurant'])->name('restaurant.index');
+
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
         Route::get('/hotel/adjust/{return_id}', [HotelReturnController::class, 'adjust'])->name('hotel.adjust');
 

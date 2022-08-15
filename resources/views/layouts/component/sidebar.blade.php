@@ -83,7 +83,13 @@
                 Returns</a>
             <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
                 <li class="{{ request()->is('e-filling/hotel') ? 'active' : '' }}">
-                    <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
+                    <a href="{{ route('returns.hotel.index') }}">Hotel Levy</a>
+                </li>
+                <li class="{{ request()->is('e-filling/tour') ? 'active' : '' }}">
+                    <a href="{{ route('returns.tour.index') }}">Tour Operation Levy</a>
+                </li>
+                <li class="{{ request()->is('e-filling/restaurant') ? 'active' : '' }}">
+                    <a href="{{ route('returns.restaurant.index') }}">Restaurant Levy</a>
                 </li>
                 <li class="{{ request()->is('e-filling/vat*') ? 'active' : '' }}">
                     <a href="{{ route('returns.vat-return.index') }}">Vat Returns</a>

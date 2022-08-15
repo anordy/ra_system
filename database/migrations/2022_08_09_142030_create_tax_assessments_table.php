@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateTaxAssessmentsTable extends Migration
 {
@@ -23,7 +24,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
-            $table->string('status')->nullable();
+            $table->enum('status', ReturnStatus::getConstants())->nullable()->default('');
             $table->timestamps();
         });
     }
