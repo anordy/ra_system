@@ -53,7 +53,12 @@
                 @if ($penalties)
                     <tr>
                         <td>Payment for <br> <small> Malipo kwa ajili ya </small> </td>
-                        <td> {{ $return->quarter }} Quater and Penalties for late payment <br>
+                        <td>
+                            @php
+                                $nf = new NumberFormatter('en_US', NumberFormatter::ORDINAL);
+                                echo $nf->format($return->quarter);
+                            @endphp
+                            Quater plus Penalties for late payment <br>
                             <small>Awamu ya {{ $return->quarter }} na Adhabu ya kuchelewesha malipo</small>
                         </td>
                     </tr>

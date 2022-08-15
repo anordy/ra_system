@@ -194,12 +194,6 @@
                     <p class="my-1">{{ $business->taxRegion->name }}</p>
                 </div>
             @endif
-            @if ($business->zin)
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">ZIN</span>
-                    <p class="my-1">{{ $business->zin }}</p>
-                </div>
-            @endif
         </div>
 
     </div>
@@ -211,6 +205,12 @@
                 <hr class="mt-2 mb-3" />
             </div>
             <div class="row m-2">
+                @if ($location->zin)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">ZIN</span>
+                        <p class="my-1">{{ $location->zin }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Nature of Premises</span>
                     <p class="my-1">{{ $location->nature_of_possession }}</p>
@@ -272,6 +272,12 @@
             </div>
             @foreach ($business->branches as $location)
                 <div class="row m-2">
+                    @if ($location->zin)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">ZIN</span>
+                            <p class="my-1">{{ $location->zin }}</p>
+                        </div>
+                    @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Branch Name</span>
                         <p class="my-1">{{ $location->name }}</p>

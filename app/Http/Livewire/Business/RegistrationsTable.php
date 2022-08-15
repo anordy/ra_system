@@ -21,18 +21,18 @@ class RegistrationsTable extends DataTableComponent
     public function builder(): Builder
     {
         if ($this->rejected){
-            return Business::where('status', BusinessStatus::REJECTED)->orderBy('created_at', 'desc');
+            return Business::where('businesses.status', BusinessStatus::REJECTED)->orderBy('businesses.created_at', 'desc');
         }
 
         if ($this->approved){
-            return Business::where('status', BusinessStatus::APPROVED)->orderBy('created_at', 'desc');
+            return Business::where('businesses.status', BusinessStatus::APPROVED)->orderBy('businesses.created_at', 'desc');
         }
 
         if ($this->pending){
-            return Business::where('status', BusinessStatus::PENDING)->orderBy('created_at', 'desc');
+            return Business::where('businesses.status', BusinessStatus::PENDING)->orderBy('businesses.created_at', 'desc');
         }
 
-        return Business::where('status', '!=', BusinessStatus::DRAFT)->orderBy('created_at', 'desc');
+        return Business::where('businesses.status', '!=', BusinessStatus::DRAFT)->orderBy('businesses.created_at', 'desc');
     }
 
     public function configure(): void
@@ -47,7 +47,7 @@ class RegistrationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Z Number', 'zin')
+            Column::make('ZIN(HQ)', 'headquarter.zin')
                 ->sortable()
                 ->searchable(),
             Column::make('Business Name', 'name')
