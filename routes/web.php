@@ -57,6 +57,7 @@ use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Relief\ReliefGenerateReportController;
+use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
@@ -91,6 +92,7 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
+use App\Http\Livewire\Reports\Returns\ReturnReport;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -350,4 +352,9 @@ Route::name('land-lease.')->prefix('land-lease')->group(function () {
 Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
     Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
     Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+});
+
+//Managerial Reports
+Route::name('reports.')->prefix('reports')->group(function () {
+    Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
 });
