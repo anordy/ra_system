@@ -27,7 +27,7 @@ class CreateBusinessTempClosures extends Migration
             $table->timestamp('rejected_on')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->string('marking')->nullable();
-            $table->timestamp('approved_on')->nullable();
+            $table->dateTime('approved_on')->nullable();
             $table->timestamps();
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('approved_by')->references('id')->on('users');
