@@ -415,6 +415,19 @@
                         </tbody>
                     </table>
                     <br>
+                    @if ($agent_contract)
+                    <div class="col-md-3">
+                        <a class="file-item" target="_blank"
+                           href="{{ route('business.contract.file', $business_update->id) }}">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div style="font-weight: 500;" class="ml-1">
+                                View Agent Contract
+                            </div>
+                        </a>
+                    </div>
+                    @endif
+              
+                    <br>
                     {{-- <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">Business Partners</label>
                     <thead>

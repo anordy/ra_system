@@ -18,10 +18,10 @@
           
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 <div id="all-businesses" class="tab-pane fade active show">
-                    <livewire:assesments.waiverobjection.waiver-objection-table></livewire:assesments.waiverobjection.waiver-objection-table>
+                    <livewire:assesments.waiver.waiver-table category="waiver&objection" />
                 </div>
                 <div id="pending-approval" class="tab-pane fade">
-                    @livewire('assesments.waiver-objection-approval-table')
+                    <livewire:assesments.waiver-approval-table category="waiver&objection"/>
                 </div>
             </div>
         </div>

@@ -134,13 +134,13 @@
         <li class="{{ request()->is('assesments*') ? 'active' : '' }}">
             <a href="#assesmentsSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('assesments*') ? 'true' : 'false' }}"
-                class="dropdown-toggle">Assesments</a>
+                class="dropdown-toggle">Disputes</a>
             <ul class="collapse list-unstyled {{ request()->is('assesments*') ? 'show' : '' }}" id="assesmentsSubmenu">
-                <li class="{{ request()->is('assesments/objection*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.objection.index') }}">Objection</a>
-                </li>
                 <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
                     <a href="{{ route('assesments.waiver.index') }}">Weaver</a>
+                </li>
+                <li class="{{ request()->is('assesments/objection*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.objection.index') }}">Objection</a>
                 </li>
                 <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
                     <a href="{{ route('assesments.waiverobjection.index') }}">Weaver & Objection</a>

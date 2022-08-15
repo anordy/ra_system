@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Disputes;
 
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\Verification\TaxVerificationAssessment;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,9 +32,9 @@ class Waiver extends Model
     {
         return $this->morphOne(ZmBill::class, 'billable');
     }
-      public function taxVerificationAssesment()
+      public function assessment()
     {
-        return $this->belongsTo(TaxVerificationAssessment::class,'assesment_id');
+        return $this->belongsTo(TaxAssessment::class,'assesment_id');
     }
 
 }

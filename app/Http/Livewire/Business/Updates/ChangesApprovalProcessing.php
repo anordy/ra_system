@@ -13,7 +13,7 @@ use App\Models\BusinessBank;
 use App\Models\BusinessStatus;
 use App\Models\BusinessLocation;
 use App\Models\BusinessConsultant;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -79,20 +79,26 @@ class ChangesApprovalProcessing extends Component
                     $business = Business::findOrFail($this->business_id);
                     $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first();
 
+                    // dd($current_business_consultant);
+                    // dd($this->business_update_data->agent_contract);
 
-                    if($new_values['is_own_consultant'] === false) {
+
+                    if($new_values['is_own_consultant'] == 0) {
                         if ($current_business_consultant) {
                             $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
 
-                            BusinessConsultant::create([
+                            $consultant = BusinessConsultant::create([
                                 'business_id' => $business->id,
+                                'contract' => $this->business_update_data->agent_contract ?? null,
                                 'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
                             ]);
                         } else {
-                            BusinessConsultant::create([
+                            $consultant = BusinessConsultant::create([
                                 'business_id' => $business->id,
+                                'contract' => $this->business_update_data->agent_contract ?? null,
                                 'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
                             ]);
+
                         }
                  
                     } else {

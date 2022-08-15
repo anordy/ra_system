@@ -63,6 +63,19 @@ class PortReturnController extends Controller
 
         $returnQuery = PortReturn::where('status', '!=', 'complete');
 
+        $penaltyDataTZS = PortReturn::where('port_returns.status', '!=', 'complete')->leftJoin('port_return_penalties', 'port_returns.id', '=', 'port_return_penalties.return_id')
+            ->where('port_return_penalties.currency', 'USD')
+            ->select(DB::raw('SUM(port_return_penalties.late_filing) as totalLateFiling'), DB::raw('SUM(port_return_penalties.late_payment) as totalLatePayment'), DB::raw('SUM(port_return_penalties.rate_amount) as totalRate'))
+            ->groupBy('return_id')
+            ->get();
+
+        $penaltyDataUSD = PortReturn::where('port_returns.status', '!=', 'complete')->leftJoin('port_return_penalties', 'port_returns.id', '=', 'port_return_penalties.return_id')
+                ->where('port_return_penalties.currency', 'USD')
+                ->select(DB::raw('SUM(port_return_penalties.late_filing) as totalLateFiling'), DB::raw('SUM(port_return_penalties.late_payment) as totalLatePayment'), DB::raw('SUM(port_return_penalties.rate_amount) as totalRate'))
+                ->groupBy('return_id')
+                ->get();
+
+
         $data = [
             'totalTaxAmountTZS' => $returnQuery->sum('port_returns.total_amount_due_with_penalties_tzs'),
             'totalLateFilingTZS' => $penaltyDataTZS->sum('totalLateFiling'),

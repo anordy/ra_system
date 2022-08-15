@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Workflow;
 use Illuminate\Database\Seeder;
 
-class WorkflowWaiverObjectionSeeder extends Seeder
+class WorkflowDisputeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,14 +14,14 @@ class WorkflowWaiverObjectionSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'waiver_objection';
+        $name = 'dispute';
         $type = 'workflow';
         $marking_store = [
             'type' => 'multiple_state',
             'property' => ['marking'],
         ];
         $initial_marking = 'apply';
-        $supports = ['App\Models\WaiverObjection'];
+        $supports = ['App\Models\Disputes\Dispute'];
         $places = [
             'apply' => [
                 'owner' => 'taxpayer',
@@ -99,8 +99,8 @@ class WorkflowWaiverObjectionSeeder extends Seeder
         ];
 
         Workflow::updateOrCreate([
-            'code' => 'WAIVEROBJECTION',
-            'summary' => 'Waiver Workflow',
+            'code' => 'DISPUTE',
+            'summary' => 'Dispute Workflow',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,
