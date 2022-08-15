@@ -10,4 +10,8 @@ class BfoConfig extends Model
     use HasFactory;
 
     protected $table = 'bfo_configs';
+
+    public function items() {
+        return $this->hasMany(BfoReturnItems::class);
+    }
 }
