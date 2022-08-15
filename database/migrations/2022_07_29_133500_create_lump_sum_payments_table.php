@@ -17,6 +17,7 @@ class CreateLumpSumPaymentsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->integer('annual_estimate');
             $table->integer('payment_quarters');
