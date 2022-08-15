@@ -1,12 +1,13 @@
 <?php
 
+use App\Enum\PaymentMethod;
 use App\Enum\TaxAssessmentPaymentStatus;
 use App\Enum\TaxAssessmentStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaxAssessmentsTable extends Migration
+class CreateTaxAssessmentHistoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,19 +16,16 @@ class CreateTaxAssessmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create(' ', function (Blueprint $table) {
+        Schema::create('tax_assessment_histories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
-            $table->unsignedBigInteger('tax_type_id');
-            $table->unsignedBigInteger('assessment_id');
-            $table->string('assessment_type');
+            $table->unsignedBigInteger('tax_assessment_id');
+            $table->decimal('tax_deposit', 20, 2);
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
-            $table->decimal('paid_amount', 20, 2)->default(0);
             $table->dateTime('payment_due_date')->nullable();
-            $table->enum('status', TaxAssessmentPaymentStatus::getConstants())->default(TaxAssessmentPaymentStatus::DRAFT);
+            $table->enum('status', TaxAssessmentPaymentStatus::getConstants());
+            $table->enum('payment_method', PaymentMethod::getConstants())->default(PaymentMethod::FULL);
             $table->enum('application_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
             $table->timestamps();
         });
@@ -40,6 +38,6 @@ class CreateTaxAssessmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tax_assessments');
+        Schema::dropIfExists('tax_assessment_histories');
     }
 }

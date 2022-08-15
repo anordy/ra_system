@@ -35,8 +35,8 @@ class WorkflowTaxVerificationSeeder extends Seeder
             ],
             'conduct_verification' => [
                 'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operator_type' => 'user',
+                'operators' => []
             ],
             'verification_report' => [
                 'owner' => 'staff',
@@ -90,7 +90,7 @@ class WorkflowTaxVerificationSeeder extends Seeder
                 'to'   => 'verification_report',
                 'condition' => '',
             ],
-            'accepted' => [
+            'completed' => [
                 'from' => 'commissioner',
                 'to'   => 'completed',
                 'condition' => '',

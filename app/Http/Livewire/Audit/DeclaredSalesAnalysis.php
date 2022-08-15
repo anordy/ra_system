@@ -198,7 +198,7 @@ class DeclaredSalesAnalysis extends Component
             );
         }, $returns));
 
-        $this->returns = $calculations;
+        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
     }
 
     public function mno()

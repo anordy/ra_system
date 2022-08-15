@@ -27,19 +27,19 @@
                     <div class="row m-2">
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
-                            <p class="my-1">{{ $audit->business->tin }}</p>
+                            <p class="my-1">{{ $audit->business->tin ?? '' }}</p>
                         </div> 
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">ZIN</span>
-                            <p class="my-1">{{ $audit->business->zin }}</p>
+                            <p class="my-1">{{ $audit->location->zin ?? '' }}</p>
                         </div> 
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $audit->taxtype->name }}</p>
+                            <p class="my-1">{{ $audit->taxtype->name ?? '' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
-                            <p class="my-1">{{ $audit->business->name }}</p>
+                            <p class="my-1">{{ $audit->business->name ?? '' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>

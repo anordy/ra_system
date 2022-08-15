@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\TaxVerificationStatus;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Role;
@@ -122,6 +123,12 @@ class TaxVerificationApprovalProcessing extends Component
         $operators = [];
         if ($this->checkTransition('assign_officers')) {
 
+            $officers = $this->subject->officers()->exists();
+
+            if ($officers) {
+                $this->subject->officers()->delete();
+            }
+
             TaxVerificationOfficer::create([
                 'verification_id' => $this->subject->id,
                 'user_id' => $this->teamLeader,
@@ -173,21 +180,49 @@ class TaxVerificationApprovalProcessing extends Component
             $this->subject->assessment_report = $assessmentReport;
             $this->subject->save();
         }
-
-
+        Db::beginTransaction();
         try {
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
             Log::error($e);
+            DB::rollBack();
+            $this->alert('error', 'Something went wrong');
+        }
+        DB::commit();
+        if ($this->subject->status == TaxVerificationStatus::APPROVED) {
+            $this->generateControlNumber();
+        } else {
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+        }
+    }
+
+    public function reject($transtion)
+    {
+        $this->validate([
+            'comments' => 'required|string',
+        ]);
+        Db::beginTransaction();
+        try {
+            $operators = [];
+            if ($this->checkTransition('correct_verification_report')) {
+                $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
+            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments, 'operators' => $operators]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
             return;
         }
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+
+        DB::commit();
+        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 
-    public function generateControlNumber($verification_assessment)
+    public function generateControlNumber()
     {
+        $assessment = $this->subject->assessment;
         $taxType = $this->subject->taxType;
 
         DB::beginTransaction();
@@ -196,8 +231,8 @@ class TaxVerificationApprovalProcessing extends Component
 
             $billitems = [
                 [
-                    'billable_id' => $verification_assessment->id,
-                    'billable_type' => get_class($verification_assessment),
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->principalAmount,
                     'currency' => 'TZS',
@@ -205,8 +240,8 @@ class TaxVerificationApprovalProcessing extends Component
                     'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id
                 ],
                 [
-                    'billable_id' => $verification_assessment->id,
-                    'billable_type' => get_class($verification_assessment),
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->interestAmount,
                     'currency' => 'TZS',
@@ -214,8 +249,8 @@ class TaxVerificationApprovalProcessing extends Component
                     'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
                 ],
                 [
-                    'billable_id' => $verification_assessment->id,
-                    'billable_type' => get_class($verification_assessment),
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->penaltyAmount,
                     'currency' => 'TZS',
@@ -238,8 +273,8 @@ class TaxVerificationApprovalProcessing extends Component
             $exchange_rate = 0;
             $payer_id = $taxpayer->id;
             $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-            $billableId = $verification_assessment->id;
-            $billableType = get_class($verification_assessment);
+            $billableId = $assessment->id;
+            $billableType = get_class($assessment);
 
             $zmBill = ZmCore::createBill(
                 $billableId,
@@ -264,21 +299,21 @@ class TaxVerificationApprovalProcessing extends Component
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
-                    $verification_assessment->status = ReturnStatus::CN_GENERATING;
-                    $verification_assessment->save();
+                    $assessment->status = ReturnStatus::CN_GENERATING;
+                    $assessment->save();
 
                     $this->flash('success', 'A control number has been generated successful.');
                 } else {
 
                     session()->flash('error', 'Control number generation failed, try again later');
-                    $verification_assessment->status = ReturnStatus::CN_GENERATION_FAILED;
+                    $assessment->status = ReturnStatus::CN_GENERATION_FAILED;
                 }
 
-                $verification_assessment->save();
+                $assessment->save();
             } else {
                 // We are local
-                $verification_assessment->status = ReturnStatus::CN_GENERATED;
-                $verification_assessment->save();
+                $assessment->status = ReturnStatus::CN_GENERATED;
+                $assessment->save();
 
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -303,23 +338,6 @@ class TaxVerificationApprovalProcessing extends Component
             $this->interestAmount = null;
             $this->penaltyAmount = null;
         }
-    }
-
-
-    public function reject($transtion)
-    {
-        $this->validate([
-            'comments' => 'required|string',
-        ]);
-
-        try {
-            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
-        } catch (Exception $e) {
-            Log::error($e);
-
-            return;
-        }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function render()

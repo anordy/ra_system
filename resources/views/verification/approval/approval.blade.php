@@ -24,6 +24,7 @@
                     Tax Returns Verified
                 </div>
                 <div class="card-body">
+                   
                     <div class="row m-2 pt-3">
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
