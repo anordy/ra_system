@@ -349,7 +349,7 @@ Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
 //Administrative Reports
 Route::name('admin-reports.')->prefix('admin-reports')->group(function () {
     Route::name('lumpsum.')->prefix('lumpsum')->group(function () {
-        Route::get('reports', [LumpSumReports::class, 'index'])->name('index');
+        Route::get('', [LumpSumReports::class, 'index'])->name('index');
         Route::get('/view/{return_id}', [LumpSumReports::class, 'show'])->name('show');
     });
 });

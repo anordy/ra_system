@@ -8,8 +8,9 @@
         @include('investigation.approval.return-details.mmtransfer')
     @elseif ($returnTypeTable == App\Models\TaxType::PETROLEUM)
         @include('investigation.approval.return-details.petroleum')
+    @elseif ($returnTypeTable == App\Models\TaxType::LUMPSUM_PAYMENT)
+        @include('investigation.approval.return-details.lumpsum')
     @endif
-    
 @else
     <div class="card">
         <div class="card-body">

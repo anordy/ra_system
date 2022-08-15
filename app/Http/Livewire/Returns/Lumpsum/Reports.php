@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Returns\Lumpsum;
+namespace App\Http\Livewire\Returns\LumpSum;
 
 use Livewire\Component;
 
