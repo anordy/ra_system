@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Returns\Petroleum;
 
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\QuantityCertificate;
 use App\Models\Returns\Petroleum\QuantityCertificateItem;
@@ -39,10 +40,10 @@ class QuantityCertificateAdd extends Component
             'ship' => 'required',
             'port' => 'required',
             'voyage_no' => 'nullable',
-            'ascertained' => 'required|date',
+            'ascertained' => 'required|date|after_or_equal:today',
             'business' => [
                 'required',
-                'exists:businesses,zin'
+                'exists:business_locations,zin'
             ],
             'products.*.config_id' => 'required',
             'products.*.liters_observed' => 'required|numeric',
@@ -106,7 +107,7 @@ class QuantityCertificateAdd extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            $business = Business::firstWhere('zin', $this->business);
+            $business = BusinessLocation::firstWhere('zin', $this->business);
             
             $certificate = QuantityCertificate::create([
                 'business_id' => $business->id,

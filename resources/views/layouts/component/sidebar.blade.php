@@ -290,6 +290,9 @@
                 <li class="{{ request()->is('reliefs/applications*') ? 'active' : '' }}">
                     <a href="{{ route('reliefs.applications.index') }}">Relief Applications</a>
                 </li>
+                <li class="{{ request()->is('reliefs/generate-report*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.generate.report') }}">Generate Report</a>
+                </li>
             </ul>
         </li>
 

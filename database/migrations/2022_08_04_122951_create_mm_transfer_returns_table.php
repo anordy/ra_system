@@ -26,10 +26,14 @@ class CreateMMTransferReturnsTable extends Migration
             $table->integer('edited_count')->default(0);
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
-            $table->string('currency');
+            $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 40, 2)->default(0);
             $table->decimal('total_amount_due_with_penalties', 40, 2)->default(0);
+            $table->dateTime('filing_due_date')->nullable();
+            $table->dateTime('payment_due_date')->nullable();
+            $table->dateTime('submitted_at')->nullable();
+            $table->dateTime('paid_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

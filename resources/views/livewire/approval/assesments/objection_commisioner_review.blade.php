@@ -38,7 +38,7 @@
                                         <div class="input-group @error($interestPercent) is-invalid @enderror">
                                             <input class="form-control @error($interestPercent) is-invalid @enderror"
                                                 wire:model="interestPercent" type="number" min=0 max=50
-                                                {{-- wire:change="calculatePenalty()" --}} />
+                                                 />
                                             @error($interestPercent)
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -55,13 +55,13 @@
                                     </td>
 
                                     <td>
-                                        {{-- {{ $this->objection->taxVerificationAssesment->penalty_amount }} --}}
+                                        {{ $this->assessment->penalty_amount }}
                                     </td>
                                     <td>
                                         Interest Amount
                                     </td>
                                     <td>
-                                        {{-- {{ $this->objection->taxVerificationAssesment->interest_amount }} --}}
+                                        {{ $this->assessment->interest_amount }}
                                     </td>
 
                                 </tr>
@@ -86,32 +86,24 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{-- {{ $this->objection->taxVerificationAssesment->penalty_amount - $penaltyAmount }} --}}
+                                        {{ $this->assessment->penalty_amount - $penaltyAmount }}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{-- {{ $this->objection->taxVerificationAssesment->interest_amount - $interestAmount }} --}}
+                                        {{ $this->assessment->interest_amount - $interestAmount }}
                                     </td>
 
                                 </tr>
 
 
-{{--                                <tr>--}}
-{{--                                    <td class="card-footer text-center">--}}
-{{--                                        Total--}}
-{{--                                    </td>--}}
-{{--                                    <td colspan="4" class="font-weight-bold text-center">--}}
-{{--                                        {{ number_format($total) }}--}}
-{{--                                    </td>--}}
-{{--                                </tr>--}}
                                 <tr>
                                     <td class="card-footer text-center">
                                         Principal Amount
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{-- {{ number_format($objection->taxVerificationAssesment->principal_amount) }} --}}
+                                        {{ number_format($assessment->principal_amount) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -119,7 +111,7 @@
                                         Tax Deposited
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{-- {{ number_format($objection->tax_not_in_dispute) }} --}}
+                                        {{ number_format($dispute->tax_not_in_dispute) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -127,32 +119,12 @@
                                         Total Amount Due
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{-- {{ number_format($total) }} --}}
+                                        {{ number_format($total) }}
                                     </td>
                                 </tr>
                             </tbody>
-{{--                            <tfoot>--}}
-{{--                                <tr>--}}
-{{--                                    <td class="card-footer text-center">--}}
-{{--                                        Total Amount Due--}}
-{{--                                    </td>--}}
-{{--                                    <td colspan="4" class="font-weight-bold text-center">--}}
-{{--                                        {{ number_format($total) }}--}}
-{{--                                    </td>--}}
-{{--                                </tr>--}}
-{{--                            </tfoot>--}}
                         </table>
-
                     </div>
-                    {{-- <div class="col-md-3">
-                        {{ $penaltyAmount ?? 'N/A' }}
-                    </div>
-                    <div class="col-md-3">
-
-                    </div>
-                    <div class="col-md-3">
-                        {{ $interestAmount ?? 'N/A' }}
-                    </div> --}}
                 </div>
             </div>
         </div>

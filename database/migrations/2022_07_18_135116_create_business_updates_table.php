@@ -17,12 +17,13 @@ class CreateBusinessUpdatesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('taxpayer_id');
-            $table->string('marking')->nullable();
             $table->text('agent_contract')->nullable();
             $table->longText('old_values')->nullable();
             $table->longText('new_values');
             $table->enum('type', ['business_information', 'responsible_person'])->default('business_information');
             $table->enum('status', ['pending', 'approved', 'correction', 'rejected'])->default('pending');
+            $table->string('marking')->nullable();
+            $table->dateTime('approved_on')->nullable();
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('taxpayer_id')->references('id')->on('taxpayers');
             $table->timestamps();

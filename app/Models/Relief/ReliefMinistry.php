@@ -11,9 +11,9 @@ class ReliefMinistry extends Model
 
     protected $guarded = [];
 
-    public function reliefs()
+    public function projectList()
     {
-        return $this->hasMany(Relief::class,'project_id');
+        return $this->hasMany(ReliefProjectList::class,'ministry_id');
     }
     
 }
