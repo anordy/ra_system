@@ -2,9 +2,14 @@
 
 namespace App\Services\Workflow\Events;
 
+use App\Enum\TaxAuditStatus;
+use App\Enum\TaxInvestigationStatus;
+use App\Enum\TaxVerificationStatus;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Workflow;
 use App\Models\WorkflowTask;
+use App\Notifications\DatabaseNotification;
 use App\Services\Workflow\Event\Event;
 use App\Services\Workflow\Event\GuardEvent;
 use Carbon\Carbon;
@@ -105,17 +110,25 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $task->save();
         }
 
+        $workflow = Workflow::where('code', $event->getWorkflowName())->first();
 
+        DB::beginTransaction();
         try {
             foreach ($places as $key => $place) {
+
+                $operators = json_encode($place['operators']);
+                if (array_key_exists('operators', $context) && $context['operators'] != []) {
+                    $operators = json_encode($context['operators']);
+                }
+
                 $task =  new WorkflowTask([
-                    'workflow_id' => 1,
+                    'workflow_id' => $workflow->id,
                     'name' => $transition->getName(),
                     'from_place' => $transition->getFroms()[0],
                     'to_place' => $key,
                     'owner' => $place['owner'],
                     'operator_type' => $place['operator_type'],
-                    'operators' => json_encode($place['operators']),
+                    'operators' => $operators,
                     'approved_on' => Carbon::now()->toDateTimeString(),
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
@@ -129,16 +142,100 @@ class WorkflowSubscriber implements EventSubscriberInterface
             }
         } catch (Exception $e) {
             report($e);
+            DB::rollBack();
+            throw new Exception($e);
         }
+
+        DB::commit();
     }
 
     public function announceEvent(Event $event)
     {
-        $user = auth()->user();
-        $subject = $event->getSubject();
-        $marking = $event->getMarking();
-        $places = $marking->getPlaces();
-        $transition = $event->getTransition();
+        try {
+            $user = auth()->user();
+            $subject = $event->getSubject();
+            $marking = $event->getMarking();
+            $placesCurrent = $marking->getPlaces();
+            $transition = $event->getTransition();
+
+            $places = $placesCurrent[key($placesCurrent)];
+
+            $notificationName = strtoupper(str_replace('_', ' ', $event->getWorkflowName())) . ' APPROVAL';
+
+            $placeName = $event->getWorkflowName();
+
+            if ($placeName == 'BUSINESS_UPDATE') {
+                $hrefClient = 'business.index';
+                $hrefAdmin = 'business.updatesRequests';
+            } elseif ($placeName == 'BUSSINESS_REGISTRATION') {
+                $hrefClient = 'business.index';
+                $hrefAdmin = 'business.registrations.index';
+            } elseif ($placeName == 'BUSINESS_TAX_TYPE_CHANGE') {
+                $hrefClient = 'business.taxTypes';
+                $hrefAdmin = 'business.registrations.index';
+            } elseif ($placeName == 'BUSSINESS_DEREGISTRATION') {
+                $hrefClient = 'business.deregistrations';
+                $hrefAdmin = 'business.deregistrations';
+            } elseif ($placeName == 'BUSSINESS_CLOSURE') {
+                $hrefClient = 'business.closures';
+                $hrefAdmin = 'business.closure';
+            } elseif ($placeName == 'BUSSINESS_BRANCH_REGISTRATION') {
+                $hrefClient = 'business.branches.index';
+                $hrefAdmin = 'business.branches.index';
+            }
+
+
+            if ($placeName == 'TAX_RETURN_VERIFICATION') {
+                if (key($placesCurrent) == 'completed') {
+                    $subject->status = TaxVerificationStatus::APPROVED;
+                }
+            } elseif ($placeName == 'TAX_AUDIT') {
+                if (key($placesCurrent) == 'completed') {
+                    $subject->status = TaxAuditStatus::APPROVED;
+                }
+            } elseif ($placeName == 'TAX_INVESTIGATION') {
+                if (key($placesCurrent) == 'completed') {
+                    $subject->status = TaxInvestigationStatus::APPROVED;
+                }
+            } else {
+
+                if (key($placesCurrent) == 'completed') {
+                    $event->getSubject()->taxpayer->notify(new DatabaseNotification(
+                        $subject = $notificationName,
+                        $message = 'Your request has been approved successfully.',
+                        $href = $hrefClient ?? null,
+                        $hrefText = 'View',
+                        $owner = 'taxpayer'
+                    ));
+                } elseif (key($placesCurrent) == 'rejected') {
+                    $event->getSubject()->taxpayer->notify(new DatabaseNotification(
+                        $subject = $notificationName,
+                        $message = 'Your request has been rejected .',
+                        $href = $hrefClient ?? null,
+                        $hrefText = 'View',
+                        $owner = 'taxpayer',
+                    ));
+                }
+
+                if ($places['owner'] == 'staff') {
+                    $operators = $places['operators'];
+                    if ($places['operator_type'] == 'role') {
+                        $users = User::whereIn('role_id', $operators)->get();
+                        foreach ($users as $u) {
+                            $u->notify(new DatabaseNotification(
+                                $subject = $notificationName,
+                                $message = 'You have a business to review',
+                                $href = $hrefAdmin ?? null,
+                                $hrefText = 'view'
+                            ));
+                        }
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            report($e);
+            throw new Exception($e);
+        }
     }
 
     public static function getSubscribedEvents()

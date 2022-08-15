@@ -16,7 +16,7 @@ class CreateBusinessHotelsTable extends Migration
         Schema::create('business_hotels', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
-            $table->string('business_reg_no')->nullable(); // If business is not owned by the current user
+            $table->string('business_reg_no')->nullable(); // If business is not owned by the current user TODO: replace with business id ? 😃
             $table->string('company_name')->nullable();
             $table->string('management_company')->nullable();
             $table->string('hotel_location');
@@ -26,7 +26,8 @@ class CreateBusinessHotelsTable extends Migration
             $table->unsignedInteger('number_of_other_rooms');
             $table->unsignedInteger('hotel_capacity');
             $table->string('average_rate');
-            $table->text('other_services');
+            $table->enum('rate_currency',['TZS','USD'])->nullable();
+            $table->text('other_services')->nullable();
             $table->timestamps();
         });
     }

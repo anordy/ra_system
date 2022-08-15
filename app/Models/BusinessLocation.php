@@ -28,4 +28,13 @@ class BusinessLocation extends Model
     public function ward(){
         return $this->belongsTo(Ward::class);
     }
+
+    public function taxpayer(){
+        return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
+    }
+
+    public function reliefs()
+    {
+        return $this->hasMany(Relief::class,'location_id');
+    }
 }

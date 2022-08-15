@@ -10,13 +10,17 @@ use App\Models\Business;
 use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Events\SendMail;
+use App\Jobs\Business\Branch\SendBranchApprovedMail;
+use App\Jobs\Business\Branch\SendBranchCorrectionMail;
 use App\Jobs\Business\SendBusinessClosureApprovedMail;
 use App\Jobs\Business\SendBusinessClosureCorrectionMail;
 use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
-use App\Models\WithholdingAgent;
+use App\Jobs\Business\Taxtype\SendTaxTypeMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateMail;
 use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\SendOTPEmail;
+use App\Models\WaResponsiblePerson;
 
 class SendMailFired
 {
@@ -45,9 +49,9 @@ class SendMailFired
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
         } else if ($event->service == 'withholding_agent_registration') {
-            /** TokenId is withholding agent id id */
-            $withholding_agent = WithholdingAgent::find($event->tokenId);
-            SendWithholdingAgentRegistrationEmail::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->institution_name, $withholding_agent->taxpayer->email);
+            /** TokenId is withholding agent history is */
+            $withholding_agent = WaResponsiblePerson::find($event->tokenId);
+            SendWithholdingAgentRegistrationEmail::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->withholdingAgent->institution_name, $withholding_agent->taxpayer->email);
         } else if ($event->service === 'taxpayer-registration'){
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
@@ -83,6 +87,18 @@ class SendMailFired
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
             SendBusinessDeregisterCorrectionMail::dispatch($business, $business->taxpayer);
+        } else if ($event->service === 'change-tax-type-approval'){
+            // Token ID is payload data having all notification details
+            SendTaxTypeMail::dispatch($event->tokenId);
+        } else if ($event->service === 'change-business-information'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateMail::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-approval'){
+            // Token ID is payload data having all notification details
+            SendBranchApprovedMail::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-correction'){
+            // Token ID is payload data having all notification details
+            SendBranchCorrectionMail::dispatch($event->tokenId);
         }
     }
 }

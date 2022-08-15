@@ -31,9 +31,9 @@ class SMSController extends Controller
         $Authorization = "YD5hFDSlN6rRVlyAoPCbmlU1YS4pLm9Xa7HbAQF55Nxdqmp90DFum05t9mJAvnLn";
 
         $data = [
-            'send_to' => $send_to,
-            'source' => $source,
-            'customer_message' => $customer_message,
+            'msisdn' => $send_to,
+            'sender' => $source,
+            'text' => $customer_message,
         ];
 
         $curl = curl_init();
@@ -49,7 +49,6 @@ class SMSController extends Controller
             CURLOPT_HTTPHEADER => array(
                 "accept: application/json",
                 "content-type: application/json",
-                'Authorization:' . $Authorization,
             ),
         ));
 

@@ -1,85 +1,84 @@
 @extends('layouts.login')
 @section('content')
-    <div class="middle-box ">
+<div class="middle-box ">
 
-        <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-md-12">
-
-                <div class="card rounded mb-2">
-                    <div class="d-flex justify-content-center pb-2">
-                        <img alt="image" class="rounded" width="160px" height="160px"
-                            src="{{ asset('images/logo.png') }}" />
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-12" style="margin-left: 10px;margin-right:10px">
+            <div class="card rounded" style="margin-top: 60px; margin-bottom:10px">
+                <div class="card-body">
+                    <div class="text-center">
+                        <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px">
                     </div>
-                </div>
-                <div class="card rounded">
-                    <h6 class="card-header bg-white text-uppercase">
-                        ZRB VERIFICATION
-                    </h6>
+                    <h5 class="bg-white text-uppercase text-center" style="padding-top: 70px;padding-bottom: 10px;">
+                        OTP VERIFICATION
+                    </h5>
 
-                    <div class="card-body">
-                        @if ($errors->any())
-                            {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-                        @endif
-                        @if (Session::has('success'))
-                            <div class="alert alert-success">{{ Session::get('success') }}</div>
-                        @endif
-                        <form method="POST" action="{{ route('twoFactorAuth.confirm') }}" novalidate>
+                    @if ($errors->any())
+                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                    @endif
+                    @if (Session::has('success'))
+                    <div class="alert alert-success">{{ Session::get('success') }}</div>
+                    @endif
+
+                    <form method="POST" action="{{ route('twoFactorAuth.confirm') }}" novalidate>
+                        @csrf
+                        <div class="text-center">
+                            <label class="">Please enter verification code sent either on<br> E-mail/Phone number
+                            </label>
+                            <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+                                <input class="m-2 text-center form-control rounded" type="text" name="first" id="first"
+                                    maxlength="1" />
+                                <input class="m-2 text-center form-control rounded" type="text" name="second"
+                                    id="second" maxlength="1" />
+                                <input class="m-2 text-center form-control rounded" type="text" name="third" id="third"
+                                    maxlength="1" />
+                                <input class="m-2 text-center form-control rounded" type="text" name="fourth"
+                                    id="fourth" maxlength="1" />
+                                <input class="m-2 text-center form-control rounded" type="text" name="fifth" id="fifth"
+                                    maxlength="1" />
+                                <input class="m-2 text-center form-control rounded" type="text" name="sixth" id="sixth"
+                                    maxlength="1" />
+                            </div>
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-info px-4 validate">Validate</button>
+                            </div>
+
+
+                            <div class="mt-2"></div>
+                        </div>
+
+                    </form>
+                    <div>
+                        <form action="{{ route('twoFactorAuth.resend') }}" method="POST" novalidate>
                             @csrf
-                            <div class="text-center">
-                                <label class="">Please enter verification code sent either on<br> E-mail/Phone number
-                                </label>
-                                <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
-                                    <input class="m-2 text-center form-control rounded" type="text" name="first"
-                                        id="first" maxlength="1" />
-                                    <input class="m-2 text-center form-control rounded" type="text" name="second"
-                                        id="second" maxlength="1" />
-                                    <input class="m-2 text-center form-control rounded" type="text" name="third"
-                                        id="third" maxlength="1" />
-                                    <input class="m-2 text-center form-control rounded" type="text" name="fourth"
-                                        id="fourth" maxlength="1" />
-                                    <input class="m-2 text-center form-control rounded" type="text" name="fifth"
-                                        id="fifth" maxlength="1" />
-                                    <input class="m-2 text-center form-control rounded" type="text" name="sixth"
-                                        id="sixth" maxlength="1" />
-                                </div>
-                                <div class="mt-4">
-                                    <button type="submit" class="btn btn-info px-4 validate">Validate</button>
-                                </div>
-
-
-                                <div class="mt-2"></div>
-                            </div>
-
-                        </form>
-                        <div>
-                            <form action="{{ route('twoFactorAuth.resend') }}" method="POST" novalidate>
-                                @csrf
-                                <div class="mt-3">
-                                    <span>Didn't get the code </span>
-                                    <button type="submit" title="Re-send" class="btn btn-link btn-xs">
-                                        Resend Token
-                                    </button>
-                                </div>
-                            </form>
-
                             <div class="mt-3">
-                                <a href="{{ route('login') }}" class="text-decoration-none ms-3"> Login</a>
+                                <span>Didn't get the code </span>
+                                <button type="submit" title="Re-send" class="btn btn-link btn-xs">
+                                    Resend Token
+                                </button>
                             </div>
+                        </form>
+
+                        <div class="mt-3">
+                            <a href="{{ route('login') }}" class="text-decoration-none ms-3"> Login</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 text-center small mt-4">
-                Copyright ZRB © 2022 - {{ date('Y') }}
+            <div class="text-center text-white">
+                ©2022
+                <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Board</a>.
+                All Rights Reserved.
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 
 @section('scripts')
-    <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
 
             function OTPInput() {
                 const inputs = document.querySelectorAll('#otp > *[id]');
@@ -108,15 +107,5 @@
 
 
         });
-
-        function captchaReload() {
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('captcha.reload') }}',
-                success: function(data) {
-                    $("#captcha-label").html(data.captcha);
-                }
-            });
-        }
-    </script>
+</script>
 @endsection

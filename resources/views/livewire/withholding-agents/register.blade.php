@@ -176,7 +176,12 @@
             <div class="row mt-3">
                 <div class="col-md-12 d-flex justify-content-center">
                     <a href="{{ route('withholdingAgents.list') }}" class="btn btn-danger mr-2">Cancel</a>
-                    <button wire:click="submit" class="btn btn-primary">Submit</button>
+                    <button wire:click="submit" wire:loading.attr="disabled" class="btn btn-primary">
+                        <div wire:loading wire:target="submit">
+                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                              </div>
+                         </div>Submit</button>
                 </div>
             </div>
         </div>

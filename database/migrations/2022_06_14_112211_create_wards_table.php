@@ -17,7 +17,6 @@ class CreateWardsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('district_id');
             $table->string('name');
-
             $table->foreign('district_id')->references('id')->on('districts');
             $table->softDeletes();
             $table->timestamps();

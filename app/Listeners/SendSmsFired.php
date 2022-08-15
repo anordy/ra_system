@@ -3,20 +3,25 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Models\UserOtp;
+use App\Jobs\SendOTPSMS;
+use App\Models\Business;
+use App\Models\TaxAgent;
+use App\Models\Taxpayer;
+use App\Models\WithholdingAgent;
+use App\Models\WaResponsiblePerson;
+use App\Jobs\SendTaxAgentApprovalSMS;
+use App\Jobs\Taxpayer\SendRegistrationSMS;
+use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
 use App\Jobs\Business\SendBusinessApprovedSMS;
+use App\Jobs\SendWithholdingAgentRegistrationSMS;
+use App\Jobs\Business\Branch\SendBranchApprovalSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateSMS;
+use App\Jobs\Business\Branch\SendBranchCorrectionSMS;
 use App\Jobs\Business\SendBusinessClosureApprovedSMS;
 use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
 use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
-use App\Jobs\SendTaxAgentApprovalSMS;
-use App\Jobs\Taxpayer\SendRegistrationSMS;
-use App\Models\Business;
-use App\Models\TaxAgent;
-use App\Models\Taxpayer;
-use App\Models\UserOtp;
-use App\Jobs\SendOTPSMS;
-use App\Models\WithholdingAgent;
-use App\Jobs\SendWithholdingAgentRegistrationSMS;
 
 class SendSmsFired
 {
@@ -46,8 +51,8 @@ class SendSmsFired
             SendOTPSMS::dispatch($token->code, $token->user->fullname(), $token->user->phone);
         } else if ($event->service == 'withholding_agent_registration') {
             /** TokenId is withholding agent id id */
-            $withholding_agent = WithholdingAgent::find($event->tokenId);
-            SendWithholdingAgentRegistrationSMS::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->institution_name, $withholding_agent->taxpayer->mobile);
+            $withholding_agent = WaResponsiblePerson::find($event->tokenId);
+            SendWithholdingAgentRegistrationSMS::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->withholdingAgent->institution_name, $withholding_agent->taxpayer->mobile);
         } else if ($event->service === 'taxpayer-registration'){
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
@@ -80,6 +85,18 @@ class SendSmsFired
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
             SendBusinessDeregisterCorrectionSMS::dispatch($business, $business->taxpayer);
+        }else if ($event->service === 'change-tax-type-approval'){
+            // Token ID is payload data having all notification details
+            SendTaxTypeSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'change-business-information'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-approval'){
+            // Token ID is payload data having all notification details
+            SendBranchApprovalSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-correction'){
+            // Token ID is payload data having all notification details
+            SendBranchCorrectionSMS::dispatch($event->tokenId);
         }
     }
 }

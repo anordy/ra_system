@@ -1,21 +1,8 @@
 @extends('layouts.master')
 
-@section('title', 'TaxAgents')
+@section('title', 'Tax Consultants')
 
 @section('content')
-
-    @if(empty($fee))
-        <div class=" alert alert-danger">
-            <div class="d-flex justify-content-start  align-items-center">
-                <div>
-                    <i style="font-size: 30px;" class="bi bi-x-circle mr-1"></i>
-                </div>
-                <div>
-                    Please kindly add registration fee before approving any request
-                </div>
-            </div>
-        </div>
-    @endif
     <div class="card mt-3">
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">

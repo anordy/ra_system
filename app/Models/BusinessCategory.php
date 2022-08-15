@@ -10,5 +10,11 @@ class BusinessCategory extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const SOLE = 'sole-proprietor';
+    public const COMPANY = 'company';
+    public const PARTNERSHIP = 'partnership';
+    public const NGO = 'ngo';
+    public const HOTEL = 'hotel';
+
     protected $fillable = ['short_name', 'name'];
 }

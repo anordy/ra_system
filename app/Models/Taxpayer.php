@@ -39,9 +39,13 @@ class Taxpayer extends Model implements Auditable
     public function taxAgent(){
         return $this->hasOne(TaxAgent::class);
     }
-    
 
 	public function bill(){
 		return $this->morphMany(ZmBill::class, 'user');
 	}
+
+    public function createdLeases()
+    {
+        return $this->hasMany(LandLease::class, 'created_by');
+    }
 }

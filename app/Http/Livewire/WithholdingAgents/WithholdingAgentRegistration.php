@@ -6,10 +6,13 @@ namespace App\Http\Livewire\WithholdingAgents;
 use Exception;
 use App\Models\Ward;
 use App\Models\Region;
+use App\Events\SendSms;
 use Livewire\Component;
+use App\Events\SendMail;
 use App\Models\District;
 use App\Models\Taxpayer;
 use App\Models\WithholdingAgent;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -76,9 +79,9 @@ class WithholdingAgentRegistration extends Component
     public function submit()
     {
         $this->validate();
-
+        DB::beginTransaction();
         try {
-            $payload = [
+            $withholding_agent = [
                 'wa_number' => mt_rand(1000000000,9999999999),
                 'tin' => $this->tin,
                 'institution_name' => $this->institution_name,
@@ -86,23 +89,31 @@ class WithholdingAgentRegistration extends Component
                 'email' => $this->email,
                 'mobile' => $this->mobile,
                 'address' => $this->address,
-                'responsible_person_id' => $this->responsible_person_id,
-                'officer_id' => auth()->user()->id,
-                'title' => $this->title,
-                'position' => $this->position,
                 'date_of_commencing' => $this->date_of_commencing,
                 'region_id' => $this->region_id,
                 'district_id' => $this->district_id,
                 'ward_id' => $this->ward_id,
             ];
 
-            $agent = WithholdingAgent::create($payload);
-            if ($agent->sendSuccessfulRegistrationNotification()) {
-                return redirect()->to('/withholdingAgents/list')->with('success', "A notification for successful registration of a withholding agent for {$this->institution_name} has been sent to the responsible person.");
-            }
+            $withholding_agent = WithholdingAgent::create($withholding_agent);
+            $withholding_agent_resp_person_data = [
+                'responsible_person_id' => $this->responsible_person_id,
+                'title' => $this->title,
+                'position' => $this->position,
+                'officer_id' => auth()->user()->id,
+            ];
+            $withholding_agent_resp_person = $withholding_agent->responsiblePersons()->create($withholding_agent_resp_person_data);
+            
+            DB::commit();
+
+            event(new SendMail('withholding_agent_registration', $withholding_agent_resp_person->id));
+            event(new SendSms('withholding_agent_registration', $withholding_agent_resp_person->id));
+
+            return redirect()->to('/withholdingAgents/list')->with('success', "A notification for successful registration of a withholding agent for {$this->institution_name} has been sent to the responsible person.");
          
         } catch (Exception $e) {
             Log::error($e);
+            DB::rollBack();
             $this->alert('error', 'Something went wrong');
         }
     }

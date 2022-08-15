@@ -30,12 +30,14 @@ class ClosureApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
-        $this->officers = User::all()->where('role_id', 5);
+        // $this->officers = User::all()->where('role_id', 5);
     }
 
 
     public function approve($transtion)
     {
+        $this->validate(['comments' => 'required']);
+
         try {
             if ($this->checkTransition('compliance_officer_review')) {
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
@@ -56,6 +58,8 @@ class ClosureApprovalProcessing extends Component
 
     public function reject($transtion)
     {
+        $this->validate(['comments' => 'required']);
+
         try {
             if ($this->checkTransition('compliance_officer_reject')) {
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
