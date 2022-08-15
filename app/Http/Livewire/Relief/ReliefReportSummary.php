@@ -10,9 +10,8 @@ use Livewire\Component;
 class ReliefReportSummary extends Component
 {
     public $dates = [];
-    // public $reliefs;
-    public $data;
-    public $projectSectionsArray;
+    public $data = [];
+    public $projectSectionsArray = [];
 
     protected $listeners = ['refreshSummary' => 'refreshSummary'];
 
@@ -37,8 +36,6 @@ class ReliefReportSummary extends Component
             return Carbon::parse($date)->format('F Y');
         })->unique()->values()->all();
 
-        //get project sections
-        $this->projectSectionsArray = null;
         $projectSections = ReliefProject::all();
         foreach ($projectSections as $projectSection ) {
             $this->projectSectionsArray[] = [
@@ -48,8 +45,6 @@ class ReliefReportSummary extends Component
             ];
         }
 
-        //data for each month
-        $this->data= null;
         foreach ($months as $month) {
             //data for each project section per month
             foreach ($projectSections as $projectSection) {

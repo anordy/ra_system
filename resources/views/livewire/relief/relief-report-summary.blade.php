@@ -17,7 +17,7 @@
         @php
             $totalAllMonths = 0;
         @endphp
-        @if (!$data)
+        @if (count($data) <= 0)
             <tr class="text-center">
                 <td colspan="{{ count($projectSectionsArray) + 2 }}">
                     No Data
