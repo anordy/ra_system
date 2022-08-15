@@ -11,4 +11,8 @@ class TaxCreditItem extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function returnable(){
+        return $this->morphTo('return');
+    }
 }
