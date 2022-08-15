@@ -14,13 +14,19 @@ class ReliefMinistriesAddModal extends Component
     use LivewireAlert;
 
     public $name;
+    public $type;
     public $description;
 
+    public function mount()
+    {
+        $this->type = "Government";
+    }
 
     protected function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|unique:relief_ministries,name',
+            'type' => 'required',
         ];
     }
 
@@ -31,6 +37,7 @@ class ReliefMinistriesAddModal extends Component
         try{
             ReliefMinistry::create([
                 'name' => $this->name,
+                'type' => $this->type,
                 'created_by' => auth()->user()->id
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
