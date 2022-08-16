@@ -26,7 +26,7 @@ class CreateTaxVerificationsTable extends Migration
             $table->string('assessment_report')->nullable();
             $table->string('created_by_type');
             $table->unsignedBigInteger('created_by_id');
-            $table->dateTime('approved_date')->nullable();
+            $table->dateTime('approved_on')->nullable();
             $table->enum('status', ['draft', 'pending', 'approved', 'correction'])->default('draft');
             $table->string('marking')->nullable();
             $table->timestamps();
