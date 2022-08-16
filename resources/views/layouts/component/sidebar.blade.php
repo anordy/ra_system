@@ -83,7 +83,13 @@
                 Returns</a>
             <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
                 <li class="{{ request()->is('e-filling/hotel') ? 'active' : '' }}">
-                    <a href="{{ route('returns.hotel.index') }}">Hotel Returns</a>
+                    <a href="{{ route('returns.hotel.index') }}">Hotel Levy</a>
+                </li>
+                <li class="{{ request()->is('e-filling/tour') ? 'active' : '' }}">
+                    <a href="{{ route('returns.tour.index') }}">Tour Operation Levy</a>
+                </li>
+                <li class="{{ request()->is('e-filling/restaurant') ? 'active' : '' }}">
+                    <a href="{{ route('returns.restaurant.index') }}">Restaurant Levy</a>
                 </li>
                 <li class="{{ request()->is('e-filling/vat*') ? 'active' : '' }}">
                     <a href="{{ route('returns.vat-return.index') }}">Vat Returns</a>
@@ -305,7 +311,15 @@
                 </li>
                 <li class="{{ request()->is('debts/hotel*') ? 'active' : '' }}">
                     <a href="{{ route('debts.hotel.index', encrypt(App\Models\TaxType::HOTEL)) }}">Hotel
-                        Returns</a>
+                        Levy</a>
+                </li>
+                <li class="{{ request()->is('debts/restaurant*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.restaurant.index', encrypt(App\Models\TaxType::RESTAURANT)) }}">Restaurant
+                        Levy</a>
+                </li>
+                <li class="{{ request()->is('debts/tour*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour Operation
+                        Levy</a>
                 </li>
                 <li class="{{ request()->is('debts/petroleum*') ? 'active' : '' }}">
                     <a href="{{ route('debts.petroleum.index', encrypt(App\Models\TaxType::PETROLEUM)) }}">Petroleum
@@ -328,11 +342,16 @@
                         href="{{ route('debts.emt.index', encrypt(App\Models\TaxType::ELECTRONIC_MONEY_TRANSACTION)) }}">Electronic
                         Money Transaction</a>
                 </li>
-                {{-- <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
+                <li class="{{ request()->is('debts/sea*') ? 'active' : '' }}">
                     <a
-                        href="{{ route('debts.returns.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Port
-                        Returns</a>
-                </li> --}}
+                        href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea Service Transport
+                    </a>
+                </li>
+                <li class="{{ request()->is('debts/airport*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport Service Safety Fee
+                    </a>
+                </li>
                 <li class="{{ request()->is('debts/bfo*') ? 'active' : '' }}">
                     <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">BFO
                         Returns</a>

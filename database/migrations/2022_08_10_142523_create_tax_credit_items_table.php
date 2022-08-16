@@ -17,8 +17,10 @@ class CreateTaxCreditItemsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('credit_id');
             $table->unsignedBigInteger('return_id');
+            $table->string('return_type');
             $table->decimal('amount');
             $table->enum('currency', ['TZS', 'USD', 'EUR'])->default('TZS');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Verification;
 
+use App\Enum\TaxVerificationStatus;
+use App\Models\Returns\ReturnStatus;
 use App\Models\Verification\TaxVerification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,8 +20,12 @@ class VerificationAssessmentTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn')
-            ->has('assessment');
+        return TaxVerification::query()
+            ->with('business', 'location', 'taxType', 'taxReturn')
+            ->whereHas('taxReturn', function (Builder $builder) {
+                $builder->where('status', ReturnStatus::COMPLETE);
+            })
+            ->where('tax_verifications.status', TaxVerificationStatus::APPROVED);
     }
 
     public function configure(): void

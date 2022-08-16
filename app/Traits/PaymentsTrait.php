@@ -48,4 +48,41 @@ trait PaymentsTrait {
             return false;
         }
     }
+
+    public function getTransactionFee($amount, $currency, $exchangeRate = null){
+        if ($currency != 'TZS' && $exchangeRate == null){
+            throw new \Exception('Please provide exchange rate for non TZS currency');
+        }
+
+        if ($currency != 'TZS'){
+            $amount = $amount * $exchangeRate;
+        }
+
+        switch ($amount) {
+            case $amount >= 0.00 && $amount <= 100000.00:
+                return $amount * 0.025;
+                break;
+            case $amount >= 100001.00 && $amount <= 500000.00:
+                return $amount * 0.02;
+                break;
+            case $amount >= 500001.00 && $amount <= 1000000.00:
+                return $amount * 0.013;
+                break;
+            case $amount >= 1000001.00 && $amount <= 5000000.00:
+                return $amount * 0.003;
+                break;
+            case $amount >= 5000001.00 && $amount <= 10000000.00:
+                return $amount * 0.0015;
+                break;
+            case $amount >= 10000001.00:
+                if ($currency == 'TZS') {
+                    return 20000;
+                } else {
+                    return round(20000 / $exchangeRate, 2);
+                }
+                break;
+            default:
+                abort(404);
+        }
+    }
 }

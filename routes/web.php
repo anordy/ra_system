@@ -163,6 +163,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
         Route::resource('taxpayer', TaxpayersController::class);
     });
+
     Route::resource('taxpayers', TaxpayersController::class);
 
     Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
@@ -262,6 +263,9 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
+        Route::get('/tour', [HotelReturnController::class, 'tour'])->name('tour.index');
+        Route::get('/restaurant', [HotelReturnController::class, 'restaurant'])->name('restaurant.index');
+
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
         Route::get('/hotel/adjust/{return_id}', [HotelReturnController::class, 'adjust'])->name('hotel.adjust');
 
@@ -320,6 +324,8 @@ Route::name('debts.')->prefix('/debts')->group(function () {
     Route::get('/verifications/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
     // Return debts
     Route::get('/returns/hotel/{taxType}', [ReturnDebtController::class, 'index'])->name('hotel.index');
+    Route::get('/returns/tour/{taxType}', [ReturnDebtController::class, 'index'])->name('tour.index');
+    Route::get('/returns/restaurant/{taxType}', [ReturnDebtController::class, 'index'])->name('restaurant.index');
     Route::get('/returns/petroleum/{taxType}', [ReturnDebtController::class, 'index'])->name('petroleum.index');
     Route::get('/returns/vat/{taxType}', [ReturnDebtController::class, 'index'])->name('vat.index');
     Route::get('/returns/port/{taxType}', [ReturnDebtController::class, 'index'])->name('port.index');
@@ -328,6 +334,9 @@ Route::name('debts.')->prefix('/debts')->group(function () {
     Route::get('/returns/stamp-duty/{taxType}', [ReturnDebtController::class, 'index'])->name('stamp-duty.index');
     Route::get('/returns/lump-sum/{taxType}', [ReturnDebtController::class, 'index'])->name('lump-sum.index');
     Route::get('/returns/emt/{taxType}', [ReturnDebtController::class, 'index'])->name('emt.index');
+    Route::get('/returns/sea/{taxType}', [ReturnDebtController::class, 'index'])->name('sea.index');
+    Route::get('/returns/airport/{taxType}', [ReturnDebtController::class, 'index'])->name('airport.index');
+
 
     // Route::get('/returns/{id}', [ReturnDebtController::class,'show'])->name('returns.show');
     // Audit Assesments

@@ -21,6 +21,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 class TaxClaimApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
+
     public $modelId;
     public $modelName;
     public $comments;
@@ -61,7 +62,13 @@ class TaxClaimApprovalProcessing extends Component
         }
     }
 
-
+    public function calcMoney(){
+        try {
+            return $this->subject->amount / $this->installmentCount;
+        } catch (Exception $exception){
+            return 0;
+        }
+    }
 
     public function approve($transtion)
     {
@@ -122,7 +129,7 @@ class TaxClaimApprovalProcessing extends Component
         if ($this->checkTransition('method_of_payment')){
             $this->validate([
                 'paymentType' => 'required',
-                'installmentCount' => 'required_if:paymentType,installment'
+                'installmentCount' => 'required_if:paymentType,installment|numeric|max:12'
             ]);
 
             TaxCredit::create([
@@ -133,7 +140,7 @@ class TaxClaimApprovalProcessing extends Component
                 'payment_method' => $this->paymentType,
                 'amount' => $this->subject->amount,
                 'currency' => $this->subject->currency,
-                'installments_count' => $this->installmentCount,
+                'installments_count' => $this->paymentType == 'installment' ? $this->installmentCount : null,
                 'status' => 'draft'
             ]);
 

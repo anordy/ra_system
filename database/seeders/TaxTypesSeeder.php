@@ -39,5 +39,6 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Audit', 'code' => TaxType::AUDIT, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Verification', 'code' => TaxType::VERIFICATION, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Disputes', 'code' => TaxType::DISPUTES, 'category' => 'other']);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'eGovernment Fee', 'code' => TaxType::GOVERNMENT_FEE, 'category' => 'other']);
     }
 }

@@ -42,8 +42,6 @@
 
             <livewire:returns.lump-sum.view-return :return="$return">
 
-
-
         </div>
 
     </div>

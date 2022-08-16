@@ -24,13 +24,17 @@ class ReturnDebtController extends Controller
     public function index($taxType)
     {
         $taxType = decrypt($taxType);
-        return view('debts.returns.index', compact('taxType'));
+        if ($taxType == TaxType::AIRPORT_SERVICE_SAFETY_FEE || $taxType == TaxType::SEA_SERVICE_TRANSPORT_CHARGE) {
+            return view('debts.returns.port', compact('taxType'));
+        } else {
+            return view('debts.returns.index', compact('taxType'));
+        }
     }
 
     public function show($id, $taxType)
     {
         $id = decrypt($id);
-        if ($taxType == TaxType::HOTEL) {
+        if ($taxType == TaxType::HOTEL || $taxType == TaxType::RESTAURANT || $taxType == TaxType::TOUR_OPERATOR) {
             $return =  HotelReturn::find($id); 
         } else if ($taxType == TaxType::PETROLEUM) {
             $return =  PetroleumReturn::find($id);
@@ -44,11 +48,13 @@ class ReturnDebtController extends Controller
             $return =  VatReturn::find($id);
         } else if ($taxType == TaxType::LUMPSUM_PAYMENT) {
             $return =  LumpSumReturn::find($id);
-        } else if ($taxType == TaxType::SEA_SERVICE_TRANSPORT_CHARGE) {
+        } else if ($taxType == TaxType::SEA_SERVICE_TRANSPORT_CHARGE || $taxType == TaxType::AIRPORT_SERVICE_SAFETY_FEE) {
             $return =  PortReturn::find($id);
         } else if ($taxType == TaxType::ELECTRONIC_MONEY_TRANSACTION) {
             $return =  EmTransactionReturn::find($id);
         } else if ($taxType == TaxType::MOBILE_MONEY_TRANSFER) {
+            $return =  MmTransferReturn::find($id);
+        }  else if ($taxType == TaxType::MOBILE_MONEY_TRANSFER) {
             $return =  MmTransferReturn::find($id);
         }
         return view('debts.returns.show', compact('return', 'id'));
