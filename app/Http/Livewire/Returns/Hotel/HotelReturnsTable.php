@@ -3,8 +3,9 @@
 namespace App\Http\Livewire\Returns\Hotel;
 
 use Carbon\Carbon;
-use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Returns\HotelReturns\HotelReturn;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
@@ -32,7 +33,8 @@ class HotelReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         if ($this->status == 'all') {
-            return HotelReturn::query()->orderBy('created_at', 'desc');
+            $tax = TaxType::where('code', TaxType::HOTEL)->first();
+            return HotelReturn::where('tax_type_id', $tax->id)->orderBy('created_at', 'desc');
         } else if ($this->status == 'submitted') {
             return HotelReturn::where('hotel_returns.status', $this->status);
         }

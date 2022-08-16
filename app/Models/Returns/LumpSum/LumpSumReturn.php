@@ -57,7 +57,7 @@ class LumpSumReturn extends Model
 
     public function assignedPayments()
     {
-        return $this->belongsTo(LumpSumPayment::class, 'business_location_id', 'business_id');
+        return $this->belongsTo(LumpSumPayment::class, 'business_location_id', 'business_location_id');
     }
 
     public function penalties()

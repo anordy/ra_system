@@ -48,7 +48,6 @@ class ChangesApprovalProcessing extends Component
 
                     $business_information_data = $new_values['business_information'];
                     $business_location_data = $new_values['business_location'];
-                    $business_bank_data = $new_values['business_bank'];
 
                     /** Update business information */
                     $business = Business::findOrFail($this->business_id);
@@ -57,10 +56,6 @@ class ChangesApprovalProcessing extends Component
                     /** Update business location */
                     $business_location = BusinessLocation::where('business_id', $this->business_id)->where('is_headquarter', true)->firstOrFail();
                     $business_location->update($business_location_data);
-
-                    /** Update business bank information */
-                    $business_bank = BusinessBank::where('business_id', $this->business_id)->firstOrFail();
-                    $business_bank->update($business_bank_data);
 
                     $this->subject->status = BusinessStatus::APPROVED;
 
@@ -78,10 +73,6 @@ class ChangesApprovalProcessing extends Component
                     $new_values = json_decode($this->business_update_data->new_values, true);
                     $business = Business::findOrFail($this->business_id);
                     $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first();
-
-                    // dd($current_business_consultant);
-                    // dd($this->business_update_data->agent_contract);
-
 
                     if($new_values['is_own_consultant'] == 0) {
                         if ($current_business_consultant) {

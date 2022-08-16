@@ -144,7 +144,7 @@
                 <button type="button" class="btn btn-danger" wire:click="reject('correct_reviewed_report')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('accepted')">
+                <button type="button" class="btn btn-primary" wire:click="approve('completed')">
                     Approve & Complete
                 </button>
             </div>
