@@ -15,7 +15,7 @@ class CreateTaxAssessmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create(' ', function (Blueprint $table) {
+        Schema::create('tax_assessments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
@@ -25,10 +25,11 @@ class CreateTaxAssessmentsTable extends Migration
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
-            $table->decimal('paid_amount', 20, 2)->default(0);
+            $table->decimal('total_amount', 20, 2);
+            $table->decimal('paid_amount', 20, 2)->default();
             $table->dateTime('payment_due_date')->nullable();
             $table->enum('status', TaxAssessmentPaymentStatus::getConstants())->default(TaxAssessmentPaymentStatus::DRAFT);
-            $table->enum('application_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
+            $table->enum('app_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
             $table->timestamps();
         });
     }

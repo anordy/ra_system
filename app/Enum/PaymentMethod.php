@@ -8,6 +8,7 @@ class PaymentMethod implements Status
 {
     const INSTALLMENT = 'installment';
     const FULL = 'full';
+    const DEPOSIT = 'deposit';
 
     static function getConstants(): array
     {
