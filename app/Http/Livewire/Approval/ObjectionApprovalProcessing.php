@@ -9,6 +9,8 @@ use App\Models\TaxType;
 use App\Models\WaiverStatus;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\PaymentsTrait;
+use App\Traits\TaxAssessmentDisputeTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -21,7 +23,7 @@ use Livewire\WithFileUploads;
 
 class ObjectionApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait,PaymentsTrait, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -124,11 +126,14 @@ class ObjectionApprovalProcessing extends Component
             $this->validate([
                 'interestPercent' => 'required',
                 'penaltyPercent' => 'required',
-                
+
             ]);
             DB::beginTransaction();
 
             try {
+
+                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->assessment->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
+                $this->cancelBill($this->assessment->bill, 'User has initiated waiver.');
 
                 // Generate control number for waived application
                 $billitems = [
@@ -158,7 +163,7 @@ class ObjectionApprovalProcessing extends Component
                 $payer_id = $taxpayer->id;
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
                 $billableId = $this->dispute->id;
-                $billableType = get_class($this->dispute);
+                $billableType = get_class($this->assessment);
 
                 $zmBill = ZmCore::createBill(
                     $billableId,
@@ -217,7 +222,7 @@ class ObjectionApprovalProcessing extends Component
                 DB::commit();
             } catch (Exception $e) {
                 Log::error($e);
-                // throw $e;
+                throw $e;
                 $this->alert('error', 'Something went wrong');
             }
 
@@ -227,6 +232,7 @@ class ObjectionApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong.');
             return;
