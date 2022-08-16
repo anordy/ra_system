@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Lump Sum Payments History ')
+@section('title', 'Tour Operator Returns History')
 
 @section('content')
     <div class="card p-0 m-0 mb-3">
@@ -12,15 +12,11 @@
         </div>
     </div>
 
-    <div class="card rounded-0">
-        <div class="card-header bg-white h-100 d-flex justify-content-between align-items-center rounded-1">
-            <div>Payments History</div>
-        </div>
-
+    <div class="card">
         @livewire('returns.return-card-report', ['data' => $data])
-        <div class="card-body">
-            <livewire:returns.lump-sum.lump-sum-returns-table />
 
+        <div class="card-body">
+            @livewire('returns.hotel.tour-operator-returns-table')
         </div>
     </div>
 @endsection
