@@ -10,7 +10,7 @@ class BusinessUpdateFileController extends Controller
 {
     public function getContractFile($updateId)
     {
-        $file = BusinessUpdate::find($updateId);
+        $file = BusinessUpdate::find(decrypt($updateId));
         return Storage::disk('local-admin')->response($file->agent_contract);
     }
 }
