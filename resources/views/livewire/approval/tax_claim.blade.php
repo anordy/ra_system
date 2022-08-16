@@ -77,7 +77,16 @@
                     @if($paymentType === 'installment')
                         <div class="col-md-4 form-group">
                             <label>Installment Phases</label>
-                            <input class="form-control" wire:model="installmentCount" placeholder="E.g. 2 phases">
+                            <input class="form-control @error('installmentCount') is-invalid @enderror" wire:model="installmentCount" placeholder="E.g. 2 phases" max="12" type="number">
+                            @error('installmentCount')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label>Payment per month</label>
+                            <input class="form-control" disabled value="{{ $this->calcMoney() }} {{ $this->subject->currency }}">
                         </div>
                     @endif
                 </div>
