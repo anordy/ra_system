@@ -94,7 +94,7 @@
 
                                 <div class="col-md-3 mb-3">
                                     <span class="font-weight-bold text-uppercase">Currency</span>
-                                    <p class="my-1">{{ $return->business->currency->iso ?? 'Head Quarter' }}</p>
+                                    <p class="my-1">{{ $return->currency ?? 'Head Quarter' }}</p>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <span class="font-weight-bold text-uppercase">Return Application Status</span>
@@ -173,7 +173,7 @@
                                                         <strong>  {{ $item->config->currency}}</strong></td>
                                                     <td class="table-active"></td>
                                                     <td class="text-right">{{ number_format($item->vat_amount,2) }}
-                                                        <strong>{{$return->business->currency->iso}}</strong></td>
+                                                        <strong>{{$return->currency}}</strong></td>
                                                 </tr>
                                             @else
                                                 @if($item->config->code == 'ITH')
@@ -190,7 +190,7 @@
                                                                 @endif
                                                             </td>
                                                             <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
-                                                                <strong>{{$return->business->currency->iso}}</strong></td>
+                                                                <strong>{{$return->currency}}</strong></td>
                                                         </tr>
                                                     @endif
                                                 @elseif($item->config->code == 'ITE')
@@ -207,7 +207,7 @@
                                                                 @endif
                                                             </td>
                                                             <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
-                                                                <strong>{{$return->business->currency->iso}}</strong></td>
+                                                                <strong>{{$return->currency}}</strong></td>
                                                         </tr>
                                                     @endif
 
@@ -222,7 +222,7 @@
                                                             @endif
                                                         </td>
                                                         <td class="text-right">{{ number_format($item->vat_amount,2) }}
-                                                            <strong>{{$return->business->currency->iso}}</strong></td>
+                                                            <strong>{{$return->currency}}</strong></td>
                                                     </tr>
                                                 @endif
                                             @endif
@@ -237,7 +237,7 @@
                                             <td>Total Output Tax</td>
                                             <td colspan="2" class="table-active"></td>
                                             <td class="text-right">{{number_format($return->total_output_tax,2, '.',',')}}
-                                                <strong>{{$return->business->currency->iso}}</strong>
+                                                <strong>{{$return->currency}}</strong>
                                             </td>
                                         </tr>
 
@@ -245,7 +245,7 @@
                                             <td>Total Input Tax</td>
                                             <td colspan="2" class="table-active"></td>
                                             <td class="text-right">{{number_format($return->total_input_tax,2, '.',',')}}
-                                                <strong>{{$return->business->currency->iso}}</strong>
+                                                <strong>{{$return->currency}}</strong>
                                             </td>
                                         </tr>
 
@@ -264,7 +264,7 @@
                                                 @else
                                                     {{number_format($return->total_vat_payable, 2, '.',',')}}
                                                 @endif
-                                                <strong>{{$return->business->currency->iso}}</strong>
+                                                <strong>{{$return->currency}}</strong>
                                             </th>
                                         </tr>
 
@@ -272,7 +272,7 @@
                                             <td>Vat Withheld</td>
                                             <td colspan="2" class="table-active"></td>
                                             <td class="text-right">{{number_format($return->vat_withheld,2, '.',',')}}
-                                                <strong>{{$return->business->currency->iso}}</strong>
+                                                <strong>{{$return->currency}}</strong>
                                             </td>
                                         </tr>
 
@@ -280,7 +280,7 @@
                                             <td>Vat Credit Brought Forward</td>
                                             <td colspan="2" class="table-active"></td>
                                             <td class="text-right">{{number_format($return->vat_credit_brought_forward,2, '.',',' )}}
-                                                <strong>{{$return->business->currency->iso}}</strong>
+                                                <strong>{{$return->currency}}</strong>
                                             </td>
                                         </tr>
 
@@ -299,7 +299,7 @@
                                                 @else
                                                     {{number_format($return->total_amount_due, 2, '.',',')}}
                                                 @endif
-                                                <strong>{{$return->business->currency->iso}}</strong>
+                                                <strong>{{$return->currency}}</strong>
                                             </th>
                                         </tr>
 
@@ -308,7 +308,7 @@
                                                 <th>Infrastructure Vat To Be Paid ({{$return->business_type}})</th>
                                                 <td colspan="2" class="table-active"></td>
                                                 <th class="text-right">{{number_format($return->infrastructure_tax,2, '.',',' )}}
-                                                    <strong>{{$return->business->currency->iso}}</strong>
+                                                    <strong>{{$return->currency}}</strong>
                                                 </th>
                                             @endif
                                         </tr>
@@ -317,7 +317,7 @@
                                             <th>Penalty</th>
                                             <td colspan="2" class="table-active"></td>
                                             <th class="text-right">{{number_format($return->penalty,2, '.',',' )}}
-                                                <strong>{{$return->business->currency->iso}}</strong>
+                                                <strong>{{$return->currency}}</strong>
                                             </th>
                                         </tr>
 
@@ -325,7 +325,7 @@
                                             <th>Interest</th>
                                             <td colspan="2" class="table-active"></td>
                                             <th class="text-right">{{number_format($return->interest,2, '.',',' )}}
-                                                <strong>{{$return->business->currency->iso}}</strong>
+                                                <strong>{{$return->currency}}</strong>
                                             </th>
                                         </tr>
 
