@@ -19,6 +19,7 @@ use App\Models\ZmBill;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
@@ -39,6 +40,7 @@ class ZanMalipoController extends Controller
         EmTransactionReturn::class,
         BfoReturn::class,
         LumpSumReturn::class,
+        TaxAssessment::class
     ];
 
     private $multipleBillsReturnable = [
