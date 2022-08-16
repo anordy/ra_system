@@ -112,7 +112,6 @@ class ObjectionApprovalProcessing extends Component
                 Log::error($e);
                 DB::rollBack();
                 $this->alert('error', 'Something went wrong.');
-                throw $e;
             }
 
         }
@@ -218,7 +217,7 @@ class ObjectionApprovalProcessing extends Component
                 DB::commit();
             } catch (Exception $e) {
                 Log::error($e);
-                throw $e;
+                // throw $e;
                 $this->alert('error', 'Something went wrong');
             }
 
