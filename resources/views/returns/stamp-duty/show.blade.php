@@ -8,6 +8,9 @@
             <livewire:returns.return-payment :return="$return" />
         </div>
     </div>
+
+    <x-bill-structure :bill="$return->bill" />
+
     <div class="card">
         <div class="card-header bg-white">
             Returns Details
@@ -47,12 +50,12 @@
                     <p class="text-uppercase font-weight-bold">Return Items</p>
                 </div>
                 <div class="col-md-12">
-                    <table class="table table-bordered table-sm table-striped normal-text">
+                    <table class="table table-bordered table-striped normal-text">
                         <thead>
                         <th style="width: 30%">Item Name</th>
-                        <th style="width: 20%">Value</th>
+                        <th style="width: 20%">Value(TZS)</th>
                         <th style="width: 10%">Rate</th>
-                        <th style="width: 20%">Tax</th>
+                        <th style="width: 20%">Tax(TZS)</th>
                         </thead>
                         <tbody>
                         @foreach ($return->items as $item)
@@ -90,4 +93,5 @@
                 </div>
             </div>
         </div>
+    </div>
 @endsection
