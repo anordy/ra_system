@@ -152,6 +152,7 @@ class TaxVerificationApprovalProcessing extends Component
                         'principal_amount' => $this->principalAmount,
                         'interest_amount' => $this->interestAmount,
                         'penalty_amount' => $this->penaltyAmount,
+                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
                     ]);
                 } else {
 
