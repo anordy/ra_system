@@ -29,7 +29,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->decimal('total_amount', 20, 2);
             $table->decimal('paid_amount', 20, 2)->default();
             $table->dateTime('payment_due_date')->nullable();
-            $table->enum('status', TaxAssessmentPaymentStatus::getConstants())->default(TaxAssessmentPaymentStatus::DRAFT);
+            $table->enum('status', TaxAssessmentPaymentStatus::getConstants());
             $table->enum('app_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
             $table->timestamps();
         });
