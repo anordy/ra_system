@@ -137,22 +137,6 @@
                 </ul>
             </li>
         @endcan
-        <li class="{{ request()->is('assesments*') ? 'active' : '' }}">
-            <a href="#assesmentsSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('assesments*') ? 'true' : 'false' }}"
-                class="dropdown-toggle">Assesments</a>
-            <ul class="collapse list-unstyled {{ request()->is('assesments*') ? 'show' : '' }}" id="assesmentsSubmenu">
-                <li class="{{ request()->is('assesments/objection*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.objection.index') }}">Objection</a>
-                </li>
-                <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.waiver.index') }}">Weaver</a>
-                </li>
-                <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.waiverobjection.index') }}">Weaver & Objection</a>
-                </li>
-            </ul>
-        </li>
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
             <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
@@ -242,6 +226,7 @@
                 </li>
             </ul>
         </li>
+
         <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
             <a href="{{ route('claims.index') }}">Tax Claims</a>
         </li>
@@ -279,7 +264,23 @@
                 </li>
             </ul>
         </li>
-
+        <li class="{{ request()->is('assesments*') ? 'active' : '' }}">
+            <a href="#assesmentsSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('assesments*') ? 'true' : 'false' }}"
+                class="dropdown-toggle">Disputes Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('assesments*') ? 'show' : '' }}"
+                id="assesmentsSubmenu">
+                <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.waiver.index') }}">Waiver</a>
+                </li>
+                <li class="{{ request()->is('assesments/objection*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.objection.index') }}">Objection</a>
+                </li>
+                <li class="{{ request()->is('assesments/waiverobjection*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.waiverobjection.index') }}">Waiver & Objection</a>
+                </li>
+            </ul>
+        </li>
         <li class="{{ request()->is('reliefs*') ? 'active' : '' }}">
             <a href="#reliefs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reliefs
                 Management</a>
@@ -318,7 +319,8 @@
                         Levy</a>
                 </li>
                 <li class="{{ request()->is('debts/tour*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour Operation
+                    <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour
+                        Operation
                         Levy</a>
                 </li>
                 <li class="{{ request()->is('debts/petroleum*') ? 'active' : '' }}">
@@ -330,7 +332,8 @@
                         Returns</a>
                 </li>
                 <li class="{{ request()->is('debts/stamp-duty*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp Duty
+                    <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp
+                        Duty
                         Returns</a>
                 </li>
                 <li class="{{ request()->is('debts/lump-sum*') ? 'active' : '' }}">
@@ -344,12 +347,14 @@
                 </li>
                 <li class="{{ request()->is('debts/sea*') ? 'active' : '' }}">
                     <a
-                        href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea Service Transport
+                        href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea
+                        Service Transport
                     </a>
                 </li>
                 <li class="{{ request()->is('debts/airport*') ? 'active' : '' }}">
                     <a
-                        href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport Service Safety Fee
+                        href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport
+                        Service Safety Fee
                     </a>
                 </li>
                 <li class="{{ request()->is('debts/bfo*') ? 'active' : '' }}">

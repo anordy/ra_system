@@ -112,22 +112,6 @@
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $business->physical_address }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Payment Status</span>
-                    <p class="my-1">
-                        @if ($dispute->status === 'completed')
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                Paid
-                            </span>
-                        @else
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
-                                Not Paid
-                            </span>
-                        @endif
-                    </p>
-                </div>
 
             </div>
         </div>

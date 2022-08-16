@@ -1,8 +1,7 @@
-
 @extends('layouts.master')
 
 @section('title')
-    Weaver & Objection Management
+    Waiver & Objection Management
 @endsection
 
 @section('content')
@@ -11,17 +10,20 @@
             Application for Weaver & Objection
         </div>
         <div class="card-body mt-0 p-2">
-            <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">All Application</a>
-                <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Pending Approval</a>
+            <nav class="nav nav-tabs mt-0 border-top-0 mb-3">
+                <a href="#approved-approval" class="nav-item nav-link font-weight-bold active">Approved Waiver and Objection</a>
+                <a href="#paid-approval" class="nav-item nav-link font-weight-bold">Approval Waiver and Objection</a>
             </nav>
-          
+
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
-                <div id="all-businesses" class="tab-pane fade active show">
-                    <livewire:assesments.waiver.waiver-table category="waiver&objection" />
+                <div id="approved-approval" class="tab-pane fade active show">
+                    @livewire('assesments.waiver.waiver-table', ['category' => 'waiver-and-objection'])
+                </div>
+                <div id="paid-approval" class="tab-pane fade">
+                    @livewire('assesments.waiver-approval-table', ['category' => 'waiver-and-objection', 'payment' => 'complete'])
                 </div>
                 <div id="pending-approval" class="tab-pane fade">
-                    <livewire:assesments.waiver-approval-table category="waiver&objection"/>
+                    @livewire('assesments.waiver-approval-table', ['category' => 'waiver-and-objection', 'payment' => 'unpaid'])
                 </div>
             </div>
         </div>

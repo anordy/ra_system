@@ -1,5 +1,8 @@
 <?php
 
+use App\Enum\BillStatus;
+use App\Enum\DisputeStatus;
+use App\Enum\PaymentStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -32,7 +35,8 @@ class CreateDisputesTable extends Migration
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();
-            $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed'])->default('draft');
+            $table->enum('app_status', DisputeStatus::getConstants())->default(DisputeStatus::DRAFT);
+            $table->enum('status', BillStatus::getConstants())->nullable();
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->softDeletes();
