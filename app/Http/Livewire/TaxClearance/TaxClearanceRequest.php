@@ -30,7 +30,7 @@ class TaxClearanceRequest extends Component
         ->get();
 
         $this->totalInfrastructure += $this->petroleumReturn->sum('infrastructure_tax');
-        $this->petroleumTotal += $this->petroleumReturn->sum('infrastructure_tax');
+        // $this->petroleumTotal += $this->petroleumReturn->sum('infrastructure_tax');
         
         $this->hotelReturn = HotelReturn::where('business_location_id', $business_location_id)
         ->where('status', '!=' ,'complete')
