@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Verification;
 
+use App\Enum\DisputeStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Verification\TaxVerification;
@@ -22,6 +23,7 @@ class VerificationAssessmentTable extends DataTableComponent
     {
         return TaxVerification::query()
             ->with('business', 'location', 'taxType', 'taxReturn')
+            ->has('assessment')
             ->whereHas('taxReturn', function (Builder $builder) {
                 $builder->where('status', ReturnStatus::COMPLETE);
             })
