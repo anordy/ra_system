@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Livewire\Livewire;
 use App\Services\LivewireModal\Modals;
-use App\View\Components\Select2;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Livewire::component('modals', Modals::class);
-        Livewire::component('select2', Select2::class);
+        Paginator::useBootstrap();
     }
 }

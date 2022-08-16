@@ -4,19 +4,16 @@ namespace App\Http\Livewire\Business\Updates;
 
 use Exception;
 use Carbon\Carbon;
-use App\Models\User;
 use App\Events\SendSms;
 use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\TaxAgent;
-use App\Models\Taxpayer;
 use App\Models\BusinessBank;
 use App\Models\BusinessStatus;
-use App\Models\BusinessPartner;
 use App\Models\BusinessLocation;
 use App\Models\BusinessConsultant;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -42,6 +39,7 @@ class ChangesApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+        $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
@@ -50,7 +48,6 @@ class ChangesApprovalProcessing extends Component
 
                     $business_information_data = $new_values['business_information'];
                     $business_location_data = $new_values['business_location'];
-                    $business_bank_data = $new_values['business_bank'];
 
                     /** Update business information */
                     $business = Business::findOrFail($this->business_id);
@@ -59,10 +56,6 @@ class ChangesApprovalProcessing extends Component
                     /** Update business location */
                     $business_location = BusinessLocation::where('business_id', $this->business_id)->where('is_headquarter', true)->firstOrFail();
                     $business_location->update($business_location_data);
-
-                    /** Update business bank information */
-                    $business_bank = BusinessBank::where('business_id', $this->business_id)->firstOrFail();
-                    $business_bank->update($business_bank_data);
 
                     $this->subject->status = BusinessStatus::APPROVED;
 
@@ -81,20 +74,22 @@ class ChangesApprovalProcessing extends Component
                     $business = Business::findOrFail($this->business_id);
                     $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first();
 
-
-                    if($new_values['is_own_consultant'] === false) {
+                    if($new_values['is_own_consultant'] == 0) {
                         if ($current_business_consultant) {
                             $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
 
-                            BusinessConsultant::create([
+                            $consultant = BusinessConsultant::create([
                                 'business_id' => $business->id,
+                                'contract' => $this->business_update_data->agent_contract ?? null,
                                 'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
                             ]);
                         } else {
-                            BusinessConsultant::create([
+                            $consultant = BusinessConsultant::create([
                                 'business_id' => $business->id,
+                                'contract' => $this->business_update_data->agent_contract ?? null,
                                 'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
                             ]);
+
                         }
                  
                     } else {
@@ -105,20 +100,7 @@ class ChangesApprovalProcessing extends Component
 
                     $business->update([
                         'is_own_consultant' => $new_values['is_own_consultant'],
-                        // 'responsible_person_id' => $new_values['responsible_person_id'],
                     ]);
-
-                    //  Partners
-                    // if ($business->business_category_id !== 1) {
-                    //     $business->partners()->delete();
-
-                    //     foreach ($businessPartners as $partner) {
-                    //         $partner = BusinessPartner::create([
-                    //             'business_id' => $business->id,
-                    //             'taxpayer_id' => Taxpayer::where('reference_no', $partner['reference_no'])->first()->id
-                    //         ]);
-                    //     }
-                    // }
 
                     $this->subject->status = BusinessStatus::APPROVED;
 
@@ -141,6 +123,7 @@ class ChangesApprovalProcessing extends Component
 
     public function reject($transtion)
     {
+        $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('registration_manager_reject')) {
                 // $this->subject->rejected_on = Carbon::now()->toDateTimeString();

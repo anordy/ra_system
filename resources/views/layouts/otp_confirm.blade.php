@@ -10,7 +10,7 @@
                         <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px">
                     </div>
                     <h5 class="bg-white text-uppercase text-center" style="padding-top: 70px;padding-bottom: 10px;">
-                        ZRB VERIFICATION
+                        OTP VERIFICATION
                     </h5>
 
                     @if ($errors->any())

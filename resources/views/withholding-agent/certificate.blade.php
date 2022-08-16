@@ -45,14 +45,29 @@
             text-transform: uppercase;
             font-weight: bold
         }
-
         .location {
             position: absolute;
-            font-size: 1.2em;
-            top: 46.5%;
-            left: 45%;
+            font-size: 1.1em;
+            top: 46.7%;
+            left: 35%;
             text-transform: uppercase;
             font-weight: bold
+        }
+        .qr-code {
+            top: 86%;
+            padding-left: 70px;
+            padding-right: 70px;
+            text-align: center;
+        }
+        .commissioner-signature {
+            top: 86%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            left: 30px;
         }
     </style>
 </head>
@@ -64,6 +79,12 @@
     <span class="witholdingAgentNumber">{{ $wa_responsible_person->withholdingAgent->wa_number ?? '' }}</span>
     <span class="startDate">{{ $wa_responsible_person->created_at->toFormattedDateString() ?? '' }}</span>
     <span class="dateGiven">{{ date('M d, Y') }}</span>
+    <span class="commissioner-signature">
+        <img src="{{ public_path()}}/sign/commissioner.png">
+    </span>
+    <div style="overflow: hidden; position:absolute; top: 83%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
+        <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+    </div>
 </body>
 
 </html>

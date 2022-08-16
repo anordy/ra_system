@@ -16,17 +16,18 @@ class CreateZmBillItemsTable extends Migration
         Schema::create('zm_bill_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('zm_bill_id');
-            $table->unsignedBigInteger('billable_id');
-            $table->string('billable_type');
+            $table->unsignedBigInteger('billable_id')->nullable();
+            $table->string('billable_type')->nullable();
             $table->unsignedBigInteger('fee_id')->nullable();
             $table->string('fee_type')->nullable();
-            $table->decimal('amount');
-            $table->decimal('exchange_rate');
-            $table->decimal('equivalent_amount');
+            $table->decimal('amount',20,2);
+            $table->decimal('exchange_rate',5,2);
+            $table->decimal('equivalent_amount',20,2);
             $table->enum('currency', ['TZS', 'USD']);
             $table->boolean('paid')->default(false);
             $table->char('use_item_ref_on_pay')->default('N');
             $table->string('gfs_code');
+            $table->unsignedBigInteger('tax_type_id');
             $table->timestamps();
         });
     }

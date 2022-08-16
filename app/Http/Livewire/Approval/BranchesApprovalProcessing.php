@@ -4,7 +4,9 @@ namespace App\Http\Livewire\Approval;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
+use App\Models\TaxRegion;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -17,22 +19,43 @@ class BranchesApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
+    public $taxRegions;
+    public $selectedTaxRegion;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
+        $this->taxRegions = TaxRegion::all();
+
     }
 
     public function approve($transtion)
     {
+        $this->validate(['comments' => 'required']);
+
+        if ($this->checkTransition('registration_officer_review')){
+            $this->subject->tax_region_id = $this->selectedTaxRegion;
+            $this->subject->save();
+        }
 
         if ($this->checkTransition('director_of_trai_review')) {
+            if (!$this->subject->generateZin()){
+                $this->alert('error', 'Something went wrong.');
+                return;
+            }
+
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status = BusinessStatus::APPROVED;
-            // event(new SendSms('business-registration-approved', $this->subject->id));
-            // event(new SendMail('business-registration-approved', $this->subject->id));
+
+            $notification_payload = [
+                'branch' => $this->subject,
+                'time' => Carbon::now()->format('d-m-Y')
+            ];
+            
+            event(new SendSms('branch-approval', $notification_payload));
+            event(new SendMail('branch-approval', $notification_payload));
         }
 
         try {
@@ -45,11 +68,25 @@ class BranchesApprovalProcessing extends Component
 
     public function reject($transtion)
     {
+        $notification_payload = [
+            'branch' => $this->subject,
+            'time' => Carbon::now()->format('d-m-Y')
+        ];
+        
+        event(new SendSms('branch-correction', $notification_payload));
+        event(new SendMail('branch-correction', $notification_payload));
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
-                // event(new SendSms('business-registration-correction', $this->subject->id));
-                // event(new SendMail('business-registration-correction', $this->subject->id));
+
+                $notification_payload = [
+                    'branch' => $this->subject,
+                    'time' => Carbon::now()->format('d-m-Y')
+                ];
+                
+                event(new SendSms('branch-correction', $notification_payload));
+                event(new SendMail('branch-correction', $notification_payload));
+
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {

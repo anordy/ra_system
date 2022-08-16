@@ -48,7 +48,7 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="form-group col-lg-6">
+                        {{-- <div class="form-group col-lg-6">
                             <label class="">Role </label>
                             <select class="form-control" wire:model.lazy="role">
                                 <option value="" disabled selected>Choose option</option>
@@ -59,7 +59,7 @@
                             @error('role')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
-                        </div>
+                        </div> --}}
 
                     </div>
 

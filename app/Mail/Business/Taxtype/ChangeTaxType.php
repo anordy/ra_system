@@ -3,9 +3,10 @@
 namespace App\Mail\Business\Taxtype;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use PDF;
 
 class ChangeTaxType extends Mailable
 {
@@ -30,6 +31,11 @@ class ChangeTaxType extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.taxtypes.change')->subject("ZRB Change Tax Type Request - " . strtoupper($this->payload['business']->name));
+        $business = $this->payload['business'];
+        $pdf = PDF::loadView('business.certificate', compact('business'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return $this->markdown('emails.business.taxtypes.change')->subject("ZRB Change Tax Type Request - " . strtoupper($this->payload['business']->name))->attachData($pdf->output(), "{$this->payload['business']->name}_certificate.pdf");
     }
 }

@@ -15,12 +15,18 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
+
+    protected $maxAttempts = 1;
+    protected $decayMinutes = 10;
+
+
     public function __construct()
     {
         $this->middleware('guest', ['except' => ['logout']]);
     }
 
-    public function redirectTo(){
+    public function redirectTo()
+    {
         return redirect()->route('home');
     }
 
@@ -45,17 +51,16 @@ class LoginController extends Controller
     {
 
         $this->validateLogin($request);
-        if (
-            method_exists($this, 'hasTooManyLoginAttempts') &&
-            $this->hasTooManyLoginAttempts($request)
-        ) {
-            $this->fireLockoutEvent($request);
 
+        $lockedOut = $this->hasTooManyLoginAttempts($request);
+        if ($lockedOut) {
+            $this->fireLockoutEvent($request);
             return $this->sendLockoutResponse($request);
         }
 
 
         if (Auth::once($request->only('email', 'password'))) {
+            Auth::logoutOtherDevices(request('password'));
             $user = auth()->user();
             if ($user->status == 0) {
                 return redirect()->back()->withErrors([
@@ -63,13 +68,13 @@ class LoginController extends Controller
                 ]);
             }
 
-            if ($user->is_first_login == true ) {
+            if ($user->is_first_login == true) {
                 $id = Crypt::encrypt(Crypt::encrypt($user->id));
                 session()->forget("token_id");
                 session()->forget("user_id");
                 session()->forget("email");
                 session()->forget("password");
-                return redirect()->route('password.change',$id);
+                return redirect()->route('password.change', $id);
             }
 
             if ($user->otp == null && $user->is_first_login == false) {
