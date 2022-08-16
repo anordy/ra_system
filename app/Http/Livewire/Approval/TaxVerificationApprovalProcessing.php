@@ -191,7 +191,7 @@ class TaxVerificationApprovalProcessing extends Component
             $this->alert('error', 'Something went wrong');
         }
         DB::commit();
-        if ($this->subject->status == TaxVerificationStatus::APPROVED) {
+        if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
             $this->generateControlNumber();
         } else {
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
