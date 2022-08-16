@@ -193,6 +193,9 @@ class TaxVerificationApprovalProcessing extends Component
         DB::commit();
         if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
             $this->generateControlNumber();
+            $this->subject->assessment->update([
+                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+            ]);
         } else {
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         }

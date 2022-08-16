@@ -25,7 +25,6 @@ class CreateTaxAssessmentHistoriesTable extends Migration
             $table->decimal('total_amount', 20, 2);
             $table->dateTime('payment_due_date')->nullable();
             $table->decimal('paid_amount', 20, 2);
-            $table->decimal('tax_deposit', 20, 2);
             $table->enum('app_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
             $table->timestamps();
         });
