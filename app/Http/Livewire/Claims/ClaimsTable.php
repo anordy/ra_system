@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Claims;
 
+use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
 use App\Models\WaiverObjection;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,7 +11,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ClaimsTable extends DataTableComponent
 {
-    protected $model = WaiverObjection::class;
+    public $pending;
+    public $rejected;
 
     public function configure(): void
     {
@@ -24,6 +26,16 @@ class ClaimsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        if ($this->pending){
+            return TaxClaim::query()
+                ->where('tax_claims.status', TaxClaimStatus::PENDING)
+                ->orderBy('tax_claims.created_at', 'DESC');
+        }
+        if ($this->rejected){
+            return TaxClaim::query()
+                ->where('tax_claims.status', TaxClaimStatus::REJECTED)
+                ->orderBy('tax_claims.created_at', 'DESC');
+        }
         return TaxClaim::query()->orderBy('tax_claims.created_at', 'DESC');
     }
 

@@ -427,3 +427,7 @@ LIVEWIRE TABS
 .swal2-popup.swal2-toast .swal2-title {
     margin: 0.5em 0.5em;
 }
+
+div.table-bordered {
+    border: none;
+}
