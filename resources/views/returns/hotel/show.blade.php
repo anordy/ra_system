@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="row m-2 pt-3">
-                            <h6>Payment Structure</h6>
+                            <h6>Payment Summary</h6>
 
                             <table class="table table-sm">
                                 <thead>
