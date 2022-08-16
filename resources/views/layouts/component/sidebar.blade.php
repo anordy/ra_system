@@ -307,6 +307,9 @@
             <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.waivers.index') }}">Waiver</a>
+                </li>
                 <li class="{{ request()->is('debts/verifications*') ? 'active' : '' }}">
                     <a href="{{ route('debts.verifications.index') }}">Verification Debts</a>
                 </li>
