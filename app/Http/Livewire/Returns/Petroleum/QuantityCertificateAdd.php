@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Returns\Petroleum;
 
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\QuantityCertificate;
 use App\Models\Returns\Petroleum\QuantityCertificateItem;
@@ -106,7 +107,7 @@ class QuantityCertificateAdd extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            $business = Business::firstWhere('zin', $this->business);
+            $business = BusinessLocation::firstWhere('zin', $this->business);
             
             $certificate = QuantityCertificate::create([
                 'business_id' => $business->id,
