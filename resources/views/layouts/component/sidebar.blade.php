@@ -141,7 +141,8 @@
             <a href="#assesmentsSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('assesments*') ? 'true' : 'false' }}"
                 class="dropdown-toggle">Assesments</a>
-            <ul class="collapse list-unstyled {{ request()->is('assesments*') ? 'show' : '' }}" id="assesmentsSubmenu">
+            <ul class="collapse list-unstyled {{ request()->is('assesments*') ? 'show' : '' }}"
+                id="assesmentsSubmenu">
                 <li class="{{ request()->is('assesments/objection*') ? 'active' : '' }}">
                     <a href="{{ route('assesments.objection.index') }}">Objection</a>
                 </li>
@@ -307,7 +308,13 @@
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
                 <li class="{{ request()->is('debts/verifications*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.verifications.index') }}">Assesments</a>
+                    <a href="{{ route('debts.verifications.index') }}">Verification Debts</a>
+                </li>
+                <li class="{{ request()->is('debts/audits*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.audits.index') }}">Audit Debts</a>
+                </li>
+                <li class="{{ request()->is('debts/investigations*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.investigations.index') }}">Investigation Debts</a>
                 </li>
                 <li class="{{ request()->is('debts/hotel*') ? 'active' : '' }}">
                     <a href="{{ route('debts.hotel.index', encrypt(App\Models\TaxType::HOTEL)) }}">Hotel
@@ -318,7 +325,8 @@
                         Levy</a>
                 </li>
                 <li class="{{ request()->is('debts/tour*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour Operation
+                    <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour
+                        Operation
                         Levy</a>
                 </li>
                 <li class="{{ request()->is('debts/petroleum*') ? 'active' : '' }}">
@@ -330,7 +338,8 @@
                         Returns</a>
                 </li>
                 <li class="{{ request()->is('debts/stamp-duty*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp Duty
+                    <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp
+                        Duty
                         Returns</a>
                 </li>
                 <li class="{{ request()->is('debts/lump-sum*') ? 'active' : '' }}">
@@ -344,12 +353,14 @@
                 </li>
                 <li class="{{ request()->is('debts/sea*') ? 'active' : '' }}">
                     <a
-                        href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea Service Transport
+                        href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea
+                        Service Transport
                     </a>
                 </li>
                 <li class="{{ request()->is('debts/airport*') ? 'active' : '' }}">
                     <a
-                        href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport Service Safety Fee
+                        href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport
+                        Service Safety Fee
                     </a>
                 </li>
                 <li class="{{ request()->is('debts/bfo*') ? 'active' : '' }}">
@@ -360,63 +371,58 @@
                     <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">MNO
                         Returns</a>
                 </li>
+          
+            </ul>
         </li>
-        <li class="{{ request()->is('debts/audits*') ? 'active' : '' }}">
-            <a href="{{ route('debts.audits.index') }}">Auditing</a>
+
+
+        <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
+            <a href="#landLeaseSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
+                Lease</a>
+            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}"
+                id="landLeaseSubmenu">
+
+                <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
+                    <a href="{{ route('land-lease.list') }}">Land Lease List</a>
+                </li>
+                <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
+                    <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
+                </li>
+
+            </ul>
         </li>
-        <li class="{{ request()->is('debts/investigation*') ? 'active' : '' }}">
-            <a href="{{ route('debts.investigation.index') }}">Investigations</a>
+        <li class="{{ request()->is('managerial-reports*') ? 'active' : '' }}">
+            <a href="#managerialReportSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                Managerial reports
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('managerial-reports*') ? 'show' : '' }}"
+                id="landLeaseSubmenu">
+
+                <li class="{{ request()->is('managerial-reports/list*') ? 'active' : '' }}">
+                    <a href="{{ route('land-lease.list') }}">Lump Sum Payments Reports</a>
+                </li>
+            </ul>
         </li>
-    </ul>
-    </li>
 
 
-    <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
-        <a href="#landLeaseSubmenu" data-toggle="collapse"
-            aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
-            Lease</a>
-        <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
+        <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
+            <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
+                <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
+                    <a href="{{ route('system.audits.index') }}">Audit Trail</a>
+                </li>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
+                </li>
 
-            <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
-                <a href="{{ route('land-lease.list') }}">Land Lease List</a>
-            </li>
-            <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
-                <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
-            </li>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('pdf.all') }}">All PDF's</a>
+                </li>
 
-        </ul>
-    </li>
-    <li class="{{ request()->is('managerial-reports*') ? 'active' : '' }}">
-        <a href="#managerialReportSubmenu" data-toggle="collapse"
-            aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">
-            Managerial reports
-        </a>
-        <ul class="collapse list-unstyled {{ request()->is('managerial-reports*') ? 'show' : '' }}"
-            id="landLeaseSubmenu">
-
-            <li class="{{ request()->is('managerial-reports/list*') ? 'active' : '' }}">
-                <a href="{{ route('land-lease.list') }}">Lump Sum Payments Reports</a>
-            </li>
-        </ul>
-    </li>
-
-
-    <li class="{{ request()->is('system*') ? 'active' : '' }}">
-        <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
-        <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
-            <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
-                <a href="{{ route('system.audits.index') }}">Audit Trail</a>
-            </li>
-            <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
-            </li>
-
-            <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                <a href="{{ route('pdf.all') }}">All PDF's</a>
-            </li>
-
-        </ul>
-    </li>
+            </ul>
+        </li>
 
     </ul>
 
