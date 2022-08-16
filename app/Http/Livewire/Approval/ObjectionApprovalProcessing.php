@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\DisputeStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -210,7 +211,7 @@ class ObjectionApprovalProcessing extends Component
                     $zmBill->save();
 
                     $this->subject->verified_at = Carbon::now()->toDateTimeString();
-                    $this->subject->status = WaiverStatus::APPROVED;
+                    $this->subject->app_status = DisputeStatus::APPROVED;
                     $this->subject->save();
                     // event(new SendSms('business-registration-approved', $this->subject->id));
                     // event(new SendMail('business-registration-approved', $this->subject->id));
@@ -243,7 +244,7 @@ class ObjectionApprovalProcessing extends Component
 
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->status = WaiverStatus::CORRECTION;
+                $this->subject->app_status = DisputeStatus::CORRECTION;
                 // event(new SendSms('business-registration-correction', $this->subject->id));
                 // event(new SendMail('business-registration-correction', $this->subject->id));
             }

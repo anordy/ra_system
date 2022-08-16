@@ -4,6 +4,10 @@
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Complainant</a>
         </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="dispute-tab" data-toggle="tab" href="#dispute" role="tab"
+                aria-controls="dispute" aria-selected="false">Tax In Dispute</a>
+        </li>
 
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
@@ -108,24 +112,36 @@
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $business->physical_address }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Payment Status</span>
-                    <p class="my-1">
-                        @if ($waiver->status === 'completed')
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                Paid
-                            </span>
-                        @else
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
-                                Not Paid
-                            </span>
-                        @endif
-                    </p>
-                </div>
 
             </div>
+        </div>
+
+        <div class="tab-pane fade" id="dispute" role="tabpanel" aria-labelledby="dispute-tab">
+            {{-- @if ($dispute = $business->headquarter) --}}
+            <div class="col-md-12 mt-1">
+                <h6 class="pt-3 mb-0 font-weight-bold">Disputes</h6>
+                <hr class="mt-2 mb-3" />
+            </div>
+            <div class="row m-2">
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
+                    <p class="my-1">{{ $dispute->tax_in_dispute }} Tzs</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
+                    <p class="my-1">{{ $dispute->tax_not_in_dispute }} Tzs</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Assesed Amount</span>
+                    <p class="my-1">{{ $dispute->tax_in_dispute + $dispute->tax_not_in_dispute }} TZS</p>
+                </div>
+
+
+            </div>
+            {{-- @endif --}}
+
         </div>
 
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
