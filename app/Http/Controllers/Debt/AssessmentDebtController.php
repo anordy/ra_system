@@ -7,6 +7,8 @@ use App\Models\Business;
 use App\Models\Debts\Debt;
 use App\Models\TaxAudit\TaxAudit;
 use App\Http\Controllers\Controller;
+use App\Models\Debts\DebtWaiver;
+use App\Models\Debts\DebtWaiverAttachment;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -15,6 +17,20 @@ use App\Models\Investigation\TaxInvestigation;
 
 class AssessmentDebtController extends Controller
 {
+
+    public function waivers()
+    {
+        return view('debts.waivers.index');
+    }
+
+    public function approval($waiverId)
+    {
+        $waiver = DebtWaiver::findOrFail(decrypt($waiverId));
+        $assesment = TaxAssessment::find($waiver->assesment_id);
+        $business = Business::find($waiver->business_id);
+        $files = DebtWaiverAttachment::where('dispute_id', $waiver->id)->get();
+        return view('debts.waivers.approval', compact('waiver', 'files', 'business','assesment'));
+    }
 
     public function verification()
     {
