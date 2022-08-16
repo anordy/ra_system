@@ -133,7 +133,6 @@ class ObjectionApprovalProcessing extends Component
             try {
 
                 $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->assessment->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
-                $this->cancelBill($this->assessment->bill, 'User has initiated waiver.');
 
                 // Generate control number for waived application
                 $billitems = [
@@ -154,7 +153,7 @@ class ObjectionApprovalProcessing extends Component
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
-                $description = "dispute";
+                $description = "dispute for assessment";
                 $payment_option = ZmCore::PAYMENT_OPTION_FULL;
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
@@ -162,7 +161,7 @@ class ObjectionApprovalProcessing extends Component
                 $exchange_rate = 0;
                 $payer_id = $taxpayer->id;
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-                $billableId = $this->dispute->id;
+                $billableId = $this->assessment->id;
                 $billableType = get_class($this->assessment);
 
                 $zmBill = ZmCore::createBill(
