@@ -49,7 +49,10 @@ class DebtWaiverTable extends DataTableComponent
             Column::make("Mobile", "business.mobile")
                 ->sortable(),
             Column::make("Assesment Type", "assesment.assessment_type")
-                ->sortable(),
+                ->sortable()
+                ->format(function($value, $row) {
+                    return preg_split('[\\\]', $value)[2];
+                }),
             Column::make("Waiver Category", "category")
                 ->sortable(),
             Column::make('Status', 'status')

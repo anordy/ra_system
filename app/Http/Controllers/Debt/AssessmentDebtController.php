@@ -18,6 +18,8 @@ use App\Models\Investigation\TaxInvestigation;
 class AssessmentDebtController extends Controller
 {
 
+    // TODO: Verify if assesment debts are triggered after 21 days
+
     public function waivers()
     {
         return view('debts.waivers.index');
@@ -34,11 +36,12 @@ class AssessmentDebtController extends Controller
 
     public function verification()
     {
-        $businesses = Business::query()->orWhere('taxpayer_id', Auth::id())->orWhere('responsible_person_id',Auth::id())->get()->pluck('id')->toArray();
+        $now = Carbon::now();
         
-        // TODO: Filter by not complete status
         $assessmentDebts = TaxAssessment::query()
             ->where('assessment_type', TaxVerification::class)
+            ->where('status', '!=', ReturnStatus::COMPLETE)
+            ->whereRaw("DATEDIFF('". $now->format("Y-m-d") . "', tax_assessments.created_at  ) >= 21")
             ->get();
             
         return view('debts.verifications.index', compact('assessmentDebts'));
@@ -46,10 +49,12 @@ class AssessmentDebtController extends Controller
 
     public function audit()
     {
-        $businesses = Business::query()->orWhere('taxpayer_id', Auth::id())->orWhere('responsible_person_id',Auth::id())->get()->pluck('id')->toArray();
-        
+        $now = Carbon::now();
+
         $assessmentDebts = TaxAssessment::query()
             ->where('assessment_type', TaxAudit::class)
+            ->where('status', '!=', ReturnStatus::COMPLETE)
+            ->whereRaw("DATEDIFF('". $now->format("Y-m-d") . "', tax_assessments.created_at  ) >= 21")
             ->get();
 
         return view('debts.audits.index', compact('assessmentDebts'));
@@ -57,10 +62,12 @@ class AssessmentDebtController extends Controller
 
     public function investigation()
     {
-        $businesses = Business::query()->orWhere('taxpayer_id', Auth::id())->orWhere('responsible_person_id',Auth::id())->get()->pluck('id')->toArray();
-        
+        $now = Carbon::now();
+
         $assessmentDebts = TaxAssessment::query()
             ->where('assessment_type', TaxInvestigation::class)
+            ->where('status', '!=', ReturnStatus::COMPLETE)
+            ->whereRaw("DATEDIFF('". $now->format("Y-m-d") . "', tax_assessments.created_at  ) >= 21")
             ->get();
 
         return view('debts.investigations.index', compact('assessmentDebts'));
