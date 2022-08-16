@@ -4,7 +4,7 @@
         <a href="#tab2" class="nav-item nav-link font-weight-bold">Approval History</a>
     </nav>
     <div class="tab-content px-2 card pt-3 pb-2">
-        <div id="tab1" class="tab-pane fade active show">
+        <div id="tab1" class="tab-pane fade active show p-4">
 
             @if ($business_update->type == 'business_information')
                 <div class="col-md-12">
@@ -298,75 +298,6 @@
 
                         </tbody>
                     </table>
-                    <br>
-                    <table class="table table-bordered table-striped table-sm">
-                        <label class="font-weight-bold text-uppercase">Business Location</label>
-                        <thead>
-                            <th style="width: 20%">Property</th>
-                            <th style="width: 30%">Old Values</th>
-                            <th style="width: 30%">New Values</th>
-                            <th style="width: 20%">Status</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Account No</th>
-                                <td>{{ $old_values->business_bank->acc_no }}</td>
-                                <td>{{ $new_values->business_bank->acc_no }}</td>
-                                @if ($old_values->business_bank->acc_no == $new_values->business_bank->acc_no)
-                                    <td class="table-primary">Unchanged</td>
-                                @else
-                                    <td class="table-success">Changed</td>
-                                @endif
-
-                            </tr>
-                            <tr>
-                                <th>Branch</th>
-                                <td>{{ $old_values->business_bank->branch }}</td>
-                                <td>{{ $new_values->business_bank->branch }}</td>
-                                @if ($old_values->business_bank->branch == $new_values->business_bank->branch)
-                                    <td class="table-primary">Unchanged</td>
-                                @else
-                                    <td class="table-success">Changed</td>
-                                @endif
-                            </tr>
-                            <tr>
-                                <th>Bank Name</th>
-                                <td>{{ $old_values->business_bank->bank_id->name }}</td>
-                                <td>{{ $this->getNameById('bank_id', $new_values->business_bank->bank_id) }}</td>
-                                @if ($old_values->business_bank->bank_id->name ==
-                                    $this->getNameById('bank_id', $new_values->business_bank->bank_id))
-                                    <td class="table-primary">Unchanged</td>
-                                @else
-                                    <td class="table-success">Changed</td>
-                                @endif
-                            </tr>
-                            <tr>
-                                <th>Account Type</th>
-                                <td>{{ $old_values->business_bank->account_type_id->name }}</td>
-                                <td>{{ $this->getNameById('account_type_id', $new_values->business_bank->account_type_id) }}
-                                </td>
-                                @if ($old_values->business_bank->account_type_id->name ==
-                                    $this->getNameById('account_type_id', $new_values->business_bank->account_type_id))
-                                    <td class="table-primary">Unchanged</td>
-                                @else
-                                    <td class="table-success">Changed</td>
-                                @endif
-                            </tr>
-                            <tr>
-                                <th>Currency</th>
-                                <td>{{ $old_values->business_bank->currency_id->name }}</td>
-                                <td>{{ $this->getNameById('currency_id', $new_values->business_bank->currency_id) }}
-                                </td>
-                                @if ($old_values->business_bank->currency_id->name ==
-                                    $this->getNameById('currency_id', $new_values->business_bank->currency_id))
-                                    <td class="table-primary">Unchanged</td>
-                                @else
-                                    <td class="table-success">Changed</td>
-                                @endif
-                            </tr>
-
-                        </tbody>
-                    </table>
                 </div>
             @else
                 <div class="col-md-12">
@@ -379,18 +310,6 @@
                             <th style="width: 20%">Status</th>
                         </thead>
                         <tbody>
-                            {{-- @if ($old_values->responsible_person_id || $new_values->responsible_person_id)
-                        <tr>
-                            <th>Responsible Person Reference No.</th>
-                            <td>{{ $this->getResponsiblePersonNameById($old_values->responsible_person_id) }}</td>
-                            <td>{{ $this->getResponsiblePersonNameById($new_values->responsible_person_id) }}</td>
-                            @if ($old_values->responsible_person_id == $new_values->responsible_person_id)
-                                <td class="table-primary">Unchanged</td>
-                            @else
-                                <td class="table-success">Changed</td>
-                            @endif
-                        </tr>
-                        @endif --}}
 
                             <tr>
                                 <th>Is Own Consultant</th>
@@ -418,7 +337,7 @@
                     @if ($agent_contract)
                     <div class="col-md-3">
                         <a class="file-item" target="_blank"
-                           href="{{ route('business.contract.file', $business_update->id) }}">
+                           href="{{ route('business.contract.file', encrypt($business_update->id)) }}">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <div style="font-weight: 500;" class="ml-1">
                                 View Agent Contract
@@ -428,40 +347,13 @@
                     @endif
               
                     <br>
-                    {{-- <table class="table table-striped table-sm">
-                    <label class="font-weight-bold text-uppercase">Business Partners</label>
-                    <thead>
-                        <th style="width: 30%">Old Values</th>
-                        <th style="width: 50%">New Values</th>
-                        <th style="width: 20%">Status</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                @foreach ($old_values->partners as $partner)
-                                    {{ $this->getResponsiblePersonNameByReferenceNo($partner->reference_no) }} <br>
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($new_values->partners as $partner)
-                                {{ $this->getResponsiblePersonNameByReferenceNo($partner->reference_no) }} <br>
-                            @endforeach
-                            </td>
-                            @if ($old_values->partners == $new_values->partners)
-                                <td class="table-primary">Unchanged</td>
-                            @else
-                                <td class="table-success">Changed</td>
-                            @endif
-                        </tr>
-                    </tbody>
-                </table> --}}
                 </div>
             @endif
 
 
             @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => $business_update->id, 'businessUpdate' => $business_update])
         </div>
-        <div id="tab2" class="tab-pane fade">
+        <div id="tab2" class="tab-pane fade p-4">
             <livewire:approval.approval-history-table modelName='App\Models\BusinessUpdate'
                 modelId="{{ $business_update->id }}" />
         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Returns\Vat;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessStatus;
 use App\Models\Returns\Vat\VatReturn;
+use App\Traits\PaymentsTrait;
 use App\Traits\ReturnCardReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class VatReturnController extends Controller
 {
-    use ReturnCardReport;
+    use ReturnCardReport, PaymentsTrait;
 
     public function index()
     {
@@ -113,6 +114,11 @@ class VatReturnController extends Controller
     public function show($id)
     {
         $return = VatReturn::query()->findOrFail(decrypt($id));
-        return view('returns.vat_returns.show', compact('return', 'id'));
+        $egovernmentFee = $this->getTransactionFee(
+            $return->total_amount_due_with_penalties,
+            $return->currency,
+            2300
+        );
+        return view('returns.vat_returns.show', compact('return', 'id', 'egovernmentFee'));
     }
 }

@@ -27,19 +27,19 @@
                     <div class="row m-2 pt-3">
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
-                            <p class="my-1">{{ $investigation->business->tin }}</p>
+                            <p class="my-1">{{ $investigation->business->tin ?? '' }}</p>
                         </div> 
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">ZIN</span>
-                            <p class="my-1">{{ $investigation->business->zin }}</p>
+                            <p class="my-1">{{ $investigation->location->zin ?? '' }}</p>
                         </div> 
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $investigation->taxtype->name }}</p>
+                            <p class="my-1">{{ $investigation->taxtype->name ?? '' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
-                            <p class="my-1">{{ $investigation->business->name }}</p>
+                            <p class="my-1">{{ $investigation->business->name ?? '' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
@@ -92,17 +92,21 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Principal Amount</span>
                                 <p class="my-1">{{ $investigation->assessment->principal_amount ?? '' }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>
                                 <p class="my-1">{{ $investigation->assessment->interest_amount ?? '' }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                 <p class="my-1">{{ $investigation->assessment->penalty_amount ?? '' }}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Total Amount Due</span>
+                                <p class="my-1">{{ $investigation->assessment->total_amount ?? '' }}</p>
                             </div>
                             @if ($investigation->assessment->report_path)
                                 <div class="col-md-4">

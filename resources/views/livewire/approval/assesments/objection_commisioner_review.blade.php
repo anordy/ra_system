@@ -111,7 +111,7 @@
                                         Tax Deposited
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($dispute->tax_not_in_dispute) }}
+                                        {{ number_format($dispute->tax_deposit) }}
                                     </td>
                                 </tr>
                                 <tr>

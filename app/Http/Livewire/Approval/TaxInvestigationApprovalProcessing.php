@@ -155,41 +155,48 @@ class TaxInvestigationApprovalProcessing extends Component
         }
 
         DB::beginTransaction();
-        try {   
+        try {
 
             if ($this->checkTransition('assign_officers')) {
+
+                $officers = $this->subject->officers()->exists();
+
+                if ($officers) {
+                    $this->subject->officers()->delete();
+                }
 
                 TaxInvestigationOfficer::create([
                     'investigation_id' => $this->subject->id,
                     'user_id' => $this->teamLeader,
                     'team_leader' => true,
                 ]);
-    
+
                 TaxInvestigationOfficer::create([
                     'investigation_id' => $this->subject->id,
                     'user_id' => $this->teamMember,
                 ]);
-    
+
                 $this->subject->period_to = $this->periodTo;
                 $this->subject->period_from = $this->periodTo;
                 $this->subject->intension = $this->intension;
                 $this->subject->scope = $this->scope;
-    
+
                 $this->subject->save();
-    
+
                 $operators = [$this->teamLeader, $this->teamMember];
             }
-    
+
             if ($this->checkTransition('conduct_investigation')) {
-    
+
                 $assessment = $this->subject->assessment()->exists();
-    
+
                 if ($this->hasAssessment == "1") {
                     if ($assessment) {
                         $this->subject->assessment()->update([
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
+                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                         ]);
                     } else {
                         TaxAssessment::create([
@@ -201,6 +208,7 @@ class TaxInvestigationApprovalProcessing extends Component
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
+                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                         ]);
                     }
                 } else {
@@ -208,29 +216,28 @@ class TaxInvestigationApprovalProcessing extends Component
                         $this->subject->assessment()->delete();
                     }
                 }
-    
-    
+
+
                 $investigationReport = "";
                 if ($this->investigationReport) {
                     $investigationReport = $this->investigationReport->store('investigation', 'local-admin');
                 }
-    
+
                 $workingsReport = "";
                 if ($this->workingsReport) {
                     $workingsReport = $this->investigationReport->store('investigation', 'local-admin');
                 }
-    
-    
+
+
                 $this->subject->working_report = $workingsReport;
                 $this->subject->investigation_report = $investigationReport;
                 $this->subject->save();
             }
-    
+
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
 
             DB::commit();
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
@@ -352,7 +359,11 @@ class TaxInvestigationApprovalProcessing extends Component
         ]);
 
         try {
-            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            $operators = [];
+            if ($this->checkTransition('conduct_investigation')) {
+                $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
+            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
             Log::error($e);
 

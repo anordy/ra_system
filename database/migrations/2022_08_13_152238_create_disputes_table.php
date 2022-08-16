@@ -20,7 +20,7 @@ class CreateDisputesTable extends Migration
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('disputes_type_id');
-            $table->string('category');
+            $table->enum('category', ['waiver', 'objection', 'waiver-and-objection'])->default('waiver');
             $table->unsignedBigInteger('assesment_id')->nullable();
             $table->enum('business_type', ['hotel', 'other'])->default('other');
             $table->decimal('tax_in_dispute', 40, 2)->default(0);
