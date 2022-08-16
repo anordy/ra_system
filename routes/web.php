@@ -11,46 +11,49 @@
 |
 */
 
-use App\Http\Controllers\Business\BranchController;
-use App\Http\Controllers\Business\BusinessFileController;
-use App\Http\Controllers\EducationLevelController;
-use App\Http\Controllers\TaxAgents\TaxAgentFileController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BankController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\WardController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\ChangePasswordController;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\Business\BranchController;
+use App\Http\Controllers\Business\BusinessController;
+use App\Http\Controllers\Business\BusinessFileController;
+use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\BusinessCategoryController;
+use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
-use App\Http\Controllers\RegionController;
-use App\Http\Controllers\CaptchaController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\TaxTypeController;
-use App\Http\Controllers\Business\BusinessController;
-use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\TwoFactorAuthController;
-use App\Http\Controllers\BusinessCategoryController;
-use App\Http\Controllers\WithholdingAgentController;
-use App\Http\Controllers\TaxAgents\TaxAgentController;
-use App\Http\Controllers\Taxpayers\TaxpayersController;
-use App\Http\Controllers\Business\RegistrationController;
+use App\Http\Controllers\MVR\DeRegistrationController;
+use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
+use App\Http\Controllers\MVR\MvrGenericSettingController;
+use App\Http\Controllers\MVR\RegistrationChangeController;
+use App\Http\Controllers\MVR\TRAChassisSearchController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Returns\HotelLevyReturnController;
-use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
+use App\Http\Controllers\Returns\ReturnsController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Setting\InterestRateController;
+use App\Http\Controllers\TaxAgents\TaxAgentController;
+use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
+use App\Http\Controllers\Taxpayers\TaxpayersController;
+use App\Http\Controllers\TaxTypeController;
+use App\Http\Controllers\TwoFactorAuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WardController;
+use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\WorkflowerTestController;
-use App\Http\Controllers\VatReturn\VatReturnController;
-use App\Http\Controllers\PortTaxReturn\PortTaxReturnController;
-use App\Http\Controllers\Setting\InterestRateController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
@@ -94,6 +97,12 @@ Route::middleware(['auth'])->group(function () {
         Route::name('returns.')->prefix('returns')->group(function(){
             Route::get('/', [ReturnsController::class, 'index'])->name('index');
             Route::get('hotel',[HotelLevyReturnController::class,'hotel'])->name('hotel');
+        });
+
+        Route::name('mvr-generic.')->prefix('mvr-generic')->group(function(){
+            Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
+                ->name('index')
+                ->where('model','MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
         });
     });
 
@@ -148,6 +157,31 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
         Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
+    });
+
+
+    Route::prefix('mvr')->as('mvr.')->group(function () {
+        Route::get('/register', [MotorVehicleRegistrationController::class, 'index'])->name('register');
+        Route::get('/registered', [MotorVehicleRegistrationController::class, 'registeredIndex'])->name('registered');
+        Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');
+        Route::get('/change-status', [MotorVehicleRegistrationController::class, 'index'])->name('change-status');
+        Route::get('/view/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('show');
+        Route::get('/submit-inspection/{id}', [MotorVehicleRegistrationController::class, 'submitInspection'])->name('submit-inspection');
+        Route::get('/de-register-requests', [DeRegistrationController::class, 'index'])->name('de-register-requests');
+        Route::get('/de-register-requests/approve/{id}', [DeRegistrationController::class, 'approve'])->name('de-register-requests.approve');
+        Route::get('/de-register-requests/submit/{id}', [DeRegistrationController::class, 'zbsSubmit'])->name('de-register-requests.submit');
+        Route::get('/de-register-requests/{id}', [DeRegistrationController::class, 'show'])->name('de-register-requests.show');
+        Route::get('/reg-change-requests', [RegistrationChangeController::class, 'index'])->name('reg-change-requests');
+        Route::get('/reg-change-requests/{id}', [RegistrationChangeController::class, 'show'])->name('reg-change-requests.show');
+        Route::get('/reg-change-requests-approve/{id}', [RegistrationChangeController::class, 'approve'])->name('reg-change-requests.approve');
+        Route::get('/chassis-search/{chassis}', [TRAChassisSearchController::class, 'search'])->name('chassis-search');
+        Route::get('/reg-change-chassis-search/{type}/{number}', [RegistrationChangeController::class, 'search'])
+            ->name('internal-search')->where('type','plate-number|chassis');
+        Route::get('/de-registration-chassis-search/{type}/{number}', [DeRegistrationController::class, 'search'])
+            ->name('internal-search-dr')->where('type','plate-number|chassis');
+        Route::get('/sm/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']);//todo: remove
+        Route::get('/sm2/{id}', [RegistrationChangeController::class, 'simulatePayment']);//todo: remove
+        Route::get('/sm3/{id}', [DeRegistrationController::class, 'simulatePayment']);//todo: remove
     });
 
     Route::name('returns.')->prefix('e-filling')->group(function () {

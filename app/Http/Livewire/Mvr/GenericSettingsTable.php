@@ -1,0 +1,121 @@
+<?php
+
+namespace App\Http\Livewire\Mvr;
+
+use App\Models\GenericSettingModel;
+use App\Models\MvrColor;
+use App\Models\MvrFee;
+use App\Models\MvrModel;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+
+class GenericSettingsTable extends DataTableComponent
+{
+	use LivewireAlert;
+    public $model;
+    public $setting_title = '';
+
+    public function builder(): Builder
+	{
+		return $this->model::query();
+	}
+
+
+    public function mount($model)
+    {
+        $this->model = $model;
+
+        if (array_search(GenericSettingModel::class,class_parents($model))){
+            $this->setting_title = $model::settingTitle();
+        }else {
+            $this->setting_title = preg_replace('/^.*\\\\Mvr/','',$model);
+        }
+    }
+
+    protected $listeners = [
+        'confirmed'
+    ];
+
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+
+	    $this->setTableWrapperAttributes([
+	      'default' => true,
+	      'class' => 'table-bordered table-sm',
+	    ]);
+    }
+
+    public function columns(): array
+    {
+        return array_merge([
+            Column::make("Name", "name")
+            ->sortable()
+        ],
+            $this->modelExtraColumns(),[
+                Column::make('Action', 'id')
+            ->format(function ($value){
+                $model = preg_replace('/\\\\/','\\\\\\',$this->model);
+                return <<< HTML
+                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'mvr.generic-setting-add-modal','$model',$value)"><i class="fa fa-edit"></i> </button>
+                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                HTML;
+                    })->html()]);
+    }
+
+
+    public function delete($id)
+    {
+        $this->alert('warning', 'Are you sure you want to delete ?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Delete',
+            'onConfirmed' => 'confirmed',
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'id' => $id
+            ],
+
+        ]);
+    }
+
+    public function confirmed($value)
+    {
+        try {
+            $data = (object) $value['data'];
+            $this->model::find($data->id)->delete();
+            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+        } catch (Exception $e) {
+            report($e);
+            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+        }
+    }
+
+    private function modelExtraColumns()
+    {
+        $model_extra_columns = [
+            MvrModel::class => [
+                Column::make("Motor Vehicle Make", "make.name")->sortable()
+            ],
+            MvrColor::class => [
+                Column::make("Hex Value", "hex_value")->sortable()
+            ],
+            MvrFee::class => [
+                Column::make("Amount", "amount")->sortable()->format(fn($value)=>number_format($value).' TZS'),
+                Column::make("GFS Code", "gfs_code")->sortable(),
+                Column::make("Fee Category", "fee_type.type")->sortable(),
+                Column::make("Registration Type", "registration_type.name")->sortable(),
+            ]
+        ];
+
+        return $model_extra_columns[$this->model]??[];
+    }
+
+
+}

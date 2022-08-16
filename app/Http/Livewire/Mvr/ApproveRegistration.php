@@ -1,0 +1,132 @@
+<?php
+
+namespace App\Http\Livewire\Mvr;
+
+use App\Models\Bank;
+use App\Models\MvrFee;
+use App\Models\MvrFeeType;
+use App\Models\MvrMotorVehicle;
+use App\Models\MvrMotorVehicleRegistration;
+use App\Models\MvrPlateNumberStatus;
+use App\Models\MvrRegistrationStatus;
+use App\Models\MvrRegistrationType;
+use App\Models\ZmBill;
+use App\Services\TRA\ServiceRequest;
+use App\Services\ZanMalipo\ZmCore;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+
+class ApproveRegistration extends Component
+{
+
+    use LivewireAlert;
+
+    public $motor_vehicle_id;
+    public $registration_type_id;
+    public $plate_number_size_id;
+    public $plate_number;
+    public $agent_z_number;
+
+
+    protected function rules()
+    {
+        return [
+            'registration_type_id' => 'required',
+            'plate_number_size_id' => 'required',
+            'plate_number' => 'unique:mvr_motor_vehicle_registration,plate_number',
+        ];
+    }
+
+    public function mount($motor_vehicle_id)
+    {
+        $this->motor_vehicle_id = $motor_vehicle_id;
+    }
+
+
+    public function submit()
+    {
+        $this->validate();
+        $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_NOT_ASSIGNED]);
+        try {
+            DB::beginTransaction();
+            $registration_id = MvrMotorVehicleRegistration::query()->insertGetId([
+                'mvr_plate_size_id' => $this->plate_number_size_id,
+                'mvr_plate_number_status_id' => $plate_status->id,
+                'mvr_motor_vehicle_id' => $this->motor_vehicle_id,
+                'plate_number' => $this->plate_number,
+                'mvr_registration_type_id' => $this->registration_type_id
+            ]);
+
+            /** @var MvrMotorVehicle $mv */
+            $mv = MvrMotorVehicle::query()->find($this->motor_vehicle_id);
+            $mv->update([
+                'mvr_registration_status_id' => MvrRegistrationStatus::query()->firstOrCreate([
+                    'name' => MvrRegistrationStatus::STATUS_PENDING_PAYMENT
+                ])->id
+            ]);
+
+            //Generate control number
+            $registration = MvrMotorVehicleRegistration::query()->find($registration_id);
+            $fee_type = MvrFeeType::query()->firstOrCreate(['type' => 'Registration']);
+
+            $fee = MvrFee::query()->where([
+                'mvr_registration_type_id' => $this->registration_type_id,
+                'mvr_fee_type_id' => $fee_type->id,
+            ])->first();
+
+            if (empty($fee)) {
+                $this->alert('error', "Registration fee for selected registration type is not configured");
+                DB::rollBack();
+                return;
+            }
+            $exchange_rate = 1;
+            $amount = $fee->amount;
+            $gfs_code = $fee->gfs_code;
+
+            ZmCore::createBill(
+                $mv->agent->id,
+                get_class($mv->agent),
+                $mv->agent->fullname(),
+                $mv->agent->email,
+                ZmCore::formatPhone($mv->agent->mobile),
+                Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
+                $fee->description,
+                ZmCore::PAYMENT_OPTION_EXACT,
+                'TZS',
+                1,
+                auth()->user()->id,
+                get_class(auth()->user()),
+                [
+                    [
+                        'billable_id' => $registration->id,
+                        'billable_type' => get_class($registration),
+                        'fee_id' => $fee->id,
+                        'fee_type' => get_class($fee),
+                        'amount' => $amount,
+                        'currency' => 'TZS',
+                        'exchange_rate' => $exchange_rate,
+                        'equivalent_amount' => $exchange_rate * $amount,
+                        'gfs_code' => $gfs_code
+                    ]
+                ]
+            );
+
+            DB::commit();
+            return redirect()->to(route('mvr.show', encrypt($this->motor_vehicle_id)));
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.mvr.approve-registration-modal');
+    }
+}

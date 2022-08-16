@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Http\Livewire\Mvr;
+
+
+use App\Models\Country;
+use App\Models\MvrBodyType;
+use App\Models\MvrClass;
+use App\Models\MvrColor;
+use App\Models\MvrFuelType;
+use App\Models\MvrMake;
+use App\Models\MvrModel;
+use App\Models\MvrMotorVehicle;
+use App\Models\MvrMotorVehicleOwner;
+use App\Models\MvrOwnershipStatus;
+use App\Models\MvrRegistrationStatus;
+use App\Models\MvrTransmissionType;
+use App\Models\MvrVehicleStatus;
+use App\Models\Taxpayer;
+use App\Services\TRA\ServiceRequest;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
+
+class UploadInspectionReport extends Component
+{
+
+    use LivewireAlert,WithFileUploads;
+
+
+    public string $chassis;
+    /**
+     * @var  TemporaryUploadedFile
+     */
+    public $inspection_report;
+    private ?string $inspection_report_path = null;
+
+
+    public function mount($chassis)
+    {
+        $this->chassis = $chassis;
+    }
+
+    protected function rules()
+    {
+        return [
+            'inspection_report'=>'required|mimes:pdf'
+        ];
+    }
+
+
+    public function submit()
+    {
+        $this->validate();
+        DB::beginTransaction();
+        try{
+            $data = $this->prepareMotorVehicleData();
+            $taxpayer = Taxpayer::query()->where(['reference_no'=>$data['owner']['z_number']])->first();
+            if (empty($taxpayer)){
+                $this->alert('error', "Could not find owner/taxpayer with Z number {$data['owner']['z_number']}");
+                Storage::delete($this->inspection_report_path);
+                DB::rollBack();
+                return;
+            }
+
+            $taxpayer_agent = Taxpayer::query()->where(['reference_no'=>$data['agent']['z_number']])->first();
+            if (empty($taxpayer_agent)){
+                $this->alert('error', "Could not find agent/taxpayer with Z number {$data['agent']['z_number']}");
+                Storage::delete($this->inspection_report_path);
+                DB::rollBack();
+                return;
+            }
+            $data['motor_vehicle']['agent_taxpayer_id'] = $taxpayer_agent->id;
+            $id = MvrMotorVehicle::query()->insertGetId($data['motor_vehicle']);
+            MvrMotorVehicleOwner::query()->create([
+                'mvr_motor_vehicle_id'=>$id,
+                'taxpayer_id'=>$taxpayer->id,
+                'mvr_ownership_status_id'=>$this->getForeignKey('CURRENT OWNER',MvrOwnershipStatus::class,true),
+            ]);
+            DB::commit();
+            $this->flash('success', 'Inspection Report Uploaded', [], redirect()->route('mvr.show',encrypt($id))->getTargetUrl());
+        }catch(Exception $e){
+            Log::error($e);
+            if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);
+            DB::rollBack();
+            $this->alert('error', 'Something went wrong: '.$e->getMessage());
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.mvr.inspection-report-upload-modal');
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function prepareMotorVehicleData(): array
+    {
+        $result = ServiceRequest::searchMotorVehicleByChassis($this->chassis);
+        if ($result['status']!='success'){
+            throw new \Exception("Could not fetch motor vehicle details");
+        }
+        $motor_vehicle = $result['data'];
+        $inspection_report_path = $this->inspection_report->storePubliclyAs('MVR', "Inspection-Report-{$this->chassis}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->inspection_report->extension());
+        $mv_data = [
+            'registration_number'=>'Z-'.rand(100000000,999999999),
+            'number_of_axle'=>$motor_vehicle['number_of_axle'],
+            'chassis_number'=>$motor_vehicle['chassis_number'],
+            'year_of_manufacture'=>$motor_vehicle['year'],
+            'engine_number'=>$motor_vehicle['engine_number'],
+            'gross_weight'=>$motor_vehicle['gross_weight'],
+            'engine_capacity'=>$motor_vehicle['engine_capacity'],
+            'seating_capacity'=>$motor_vehicle['seating_capacity'],
+            'mvr_vehicle_status_id'=>$this->getForeignKey('Imported',MvrVehicleStatus::class,true),
+            'imported_from_country_id'=>$this->getForeignKey($motor_vehicle['imported_from'],Country::class),
+            'mvr_color_id'=>$this->getForeignKey($motor_vehicle['color'],MvrColor::class),
+            'mvr_class_id'=>$this->getForeignKey($motor_vehicle['class'],MvrClass::class),
+            'mvr_model_id'=>$this->getForeignKey($motor_vehicle['model'],MvrModel::class),
+            'mvr_fuel_type_id'=>$this->getForeignKey($motor_vehicle['fuel_type'],MvrFuelType::class),
+            'mvr_transmission_id'=>$this->getForeignKey($motor_vehicle['transmission_type'],MvrTransmissionType::class),
+            'mvr_body_type_id'=>$this->getForeignKey($motor_vehicle['body_type'],MvrBodyType::class),
+            'inspection_report_path'=>$inspection_report_path,
+            'mvr_registration_status_id'=>$this->getForeignKey('INSPECTION',MvrRegistrationStatus::class,true)
+        ];
+        return ['motor_vehicle'=>$mv_data,'owner'=>$motor_vehicle['owner'],'agent'=>$motor_vehicle['agent']];
+    }
+
+
+    private function getForeignKey(string $value, string $class,$auto_create=false)
+    {
+        $item = $class::query()->where(['name'=>$value])->first();
+        if (empty($item) && $auto_create){
+            return $class::query()->insertGetId(['name'=>$value]);
+        }else if (empty($item)){
+            $class = preg_replace('/(.+\\\\)(\S+)/','$2',$class);
+            throw new \Exception("Field value {$value} returned from API does not exist on {$class} Table");
+        }
+        return $item->id;
+    }
+}
