@@ -3,6 +3,7 @@
 namespace App\Models\Returns\StampDuty;
 
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Taxpayer;
@@ -24,6 +25,10 @@ class StampDutyReturn extends Model
 
     public function business(){
         return $this->belongsTo(Business::class);
+    }
+
+    public function businessLocation(){
+        return $this->belongsTo(BusinessLocation::class,'business_location_id');
     }
 
     public function taxpayer(){

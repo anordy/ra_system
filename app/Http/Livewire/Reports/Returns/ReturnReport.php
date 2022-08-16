@@ -84,6 +84,7 @@ class ReturnReport extends Component
         $parameters = [
             'tax_type_id' => $this->tax_type_id,
             'tax_type_code' => TaxType::find($this->tax_type_id)->code,
+            'tax_type_name' => TaxType::find($this->tax_type_id)->name,
             'type' => $this->type,
             'year' => $this->year,
             'period' => $this->period,

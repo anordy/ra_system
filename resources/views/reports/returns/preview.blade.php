@@ -3,9 +3,15 @@
 @section('title','Report preview')
 
 @section('content')
+<div class="d-flex justify-content-start mb-3">
+    <a href="{{ route('reports.returns') }}" class="btn btn-info">
+        <i class="fas fa-arrow-left"></i>
+        Back
+    </a>
+</div>
 <div class="card">
     <div class="card-header text-uppercase font-weight-bold">
-        Report preview
+        Report preview of {{ $parameters['tax_type_name'] }}.
     </div>
     <div class="card-body mt-0">
         @switch($parameters['tax_type_code'])
@@ -48,7 +54,7 @@
         @break
         
         @case('stamp-duty')
-        this is airport services
+        @livewire('reports.returns.previews.stamp-duty-preview-table',['parameters'=>$parameters])
         @break
         {{-- @default --}}
         @endswitch
