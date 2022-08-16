@@ -24,30 +24,30 @@ class ReturnsTable extends DataTableComponent
 
     use LivewireAlert;
     public $taxType;
+    public $tax;
 
     public function mount($taxType)
     {
         $this->taxType = $taxType;
+        $this->tax = TaxType::where('code', $this->taxType)->first();
     }
 
     public function builder(): Builder
     {
-        if ($this->taxType == TaxType::HOTEL) {
-            return HotelReturn::query()->where('hotel_returns.status', '!=', ReturnStatus::COMPLETE);
+        if ($this->taxType == TaxType::HOTEL || $this->taxType == TaxType::RESTAURANT || $this->taxType == TaxType::TOUR_OPERATOR) {
+            return HotelReturn::query()->where('tax_type_id', $this->tax->id)->where('hotel_returns.status', '!=', ReturnStatus::COMPLETE);
         } else if ($this->taxType == TaxType::PETROLEUM) {
             return PetroleumReturn::query()->where('petroleum_returns.status', '!=', ReturnStatus::COMPLETE);
         } else if ($this->taxType == TaxType::EXCISE_DUTY_BFO) {
             return BfoReturn::query()->where('bfo_returns.status', '!=', ReturnStatus::COMPLETE);
         } else if ($this->taxType == TaxType::EXCISE_DUTY_MNO) {
-            return MnoReturn::query();
+            return MnoReturn::query()->where('mno_returns.status', '!=', ReturnStatus::COMPLETE);
         } else if ($this->taxType == TaxType::STAMP_DUTY) {
             return StampDutyReturn::query()->where('stamp_duty_returns.status', '!=', ReturnStatus::COMPLETE);
         } else if ($this->taxType == TaxType::VAT) {
             return VatReturn::query()->where('vat_returns.status', '!=', ReturnStatus::COMPLETE);
         } else if ($this->taxType == TaxType::LUMPSUM_PAYMENT) {
             return LumpSumReturn::query()->where('lump_sum_returns.status', '!=', ReturnStatus::COMPLETE);
-        } else if ($this->taxType == TaxType::SEA_SERVICE_TRANSPORT_CHARGE) {
-            return PortReturn::query();
         } else if ($this->taxType == TaxType::ELECTRONIC_MONEY_TRANSACTION) {
             return EmTransactionReturn::query()->where('em_transaction_returns.status', '!=', ReturnStatus::COMPLETE);
         } else if ($this->taxType == TaxType::MOBILE_MONEY_TRANSFER) {
