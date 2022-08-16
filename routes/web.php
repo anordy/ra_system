@@ -91,10 +91,8 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
-use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Maatwebsite\Excel\Row;
 
 Auth::routes();
 
@@ -309,63 +307,60 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('/files', TaxAuditFilesController::class);
-});
-
-Route::name('claims.')->prefix('/tax-claims')->group(function () {
-    Route::get('/', [ClaimsController::class, 'index'])->name('index');
-    Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
-    Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
-    Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
-});
-
-Route::name('debts.')->prefix('/debts')->group(function () {
-    // Verification Assesments
-    Route::get('/verifications', [VerificationDebtController::class, 'index'])->name('verifications.index');
-    Route::get('/verifications/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
-    // Return debts
-    Route::get('/returns/hotel/{taxType}', [ReturnDebtController::class, 'index'])->name('hotel.index');
-    Route::get('/returns/tour/{taxType}', [ReturnDebtController::class, 'index'])->name('tour.index');
-    Route::get('/returns/restaurant/{taxType}', [ReturnDebtController::class, 'index'])->name('restaurant.index');
-    Route::get('/returns/petroleum/{taxType}', [ReturnDebtController::class, 'index'])->name('petroleum.index');
-    Route::get('/returns/vat/{taxType}', [ReturnDebtController::class, 'index'])->name('vat.index');
-    Route::get('/returns/port/{taxType}', [ReturnDebtController::class, 'index'])->name('port.index');
-    Route::get('/returns/mno/{taxType}', [ReturnDebtController::class, 'index'])->name('mno.index');
-    Route::get('/returns/bfo/{taxType}', [ReturnDebtController::class, 'index'])->name('bfo.index');
-    Route::get('/returns/stamp-duty/{taxType}', [ReturnDebtController::class, 'index'])->name('stamp-duty.index');
-    Route::get('/returns/lump-sum/{taxType}', [ReturnDebtController::class, 'index'])->name('lump-sum.index');
-    Route::get('/returns/emt/{taxType}', [ReturnDebtController::class, 'index'])->name('emt.index');
-    Route::get('/returns/sea/{taxType}', [ReturnDebtController::class, 'index'])->name('sea.index');
-    Route::get('/returns/airport/{taxType}', [ReturnDebtController::class, 'index'])->name('airport.index');
 
 
-    // Route::get('/returns/{id}', [ReturnDebtController::class,'show'])->name('returns.show');
-    // Audit Assesments
-    Route::get('/audits', [AuditDebtController::class, 'index'])->name('audits.index');
-    Route::get('/audits/{id}', [AuditDebtController::class,'show'])->name('audits.show');
+    Route::name('claims.')->prefix('/tax-claims')->group(function () {
+        Route::get('/', [ClaimsController::class, 'index'])->name('index');
+        Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
+        Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
+        Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
+    });
 
-    Route::get('/objection/{id}', [DebtController::class, 'showObjection'])->name('objection');
-    Route::resource('/investigation', InvestigationDebtController::class);
-});
+    Route::name('debts.')->prefix('/debts')->group(function () {
+        // Verification Assesments
+        Route::get('/verifications', [VerificationDebtController::class, 'index'])->name('verifications.index');
+        Route::get('/verifications/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
+        // Return debts
+        Route::get('/returns/hotel/{taxType}', [ReturnDebtController::class, 'index'])->name('hotel.index');
+        Route::get('/returns/tour/{taxType}', [ReturnDebtController::class, 'index'])->name('tour.index');
+        Route::get('/returns/restaurant/{taxType}', [ReturnDebtController::class, 'index'])->name('restaurant.index');
+        Route::get('/returns/petroleum/{taxType}', [ReturnDebtController::class, 'index'])->name('petroleum.index');
+        Route::get('/returns/vat/{taxType}', [ReturnDebtController::class, 'index'])->name('vat.index');
+        Route::get('/returns/port/{taxType}', [ReturnDebtController::class, 'index'])->name('port.index');
+        Route::get('/returns/mno/{taxType}', [ReturnDebtController::class, 'index'])->name('mno.index');
+        Route::get('/returns/bfo/{taxType}', [ReturnDebtController::class, 'index'])->name('bfo.index');
+        Route::get('/returns/stamp-duty/{taxType}', [ReturnDebtController::class, 'index'])->name('stamp-duty.index');
+        Route::get('/returns/lump-sum/{taxType}', [ReturnDebtController::class, 'index'])->name('lump-sum.index');
+        Route::get('/returns/emt/{taxType}', [ReturnDebtController::class, 'index'])->name('emt.index');
+        Route::get('/returns/sea/{taxType}', [ReturnDebtController::class, 'index'])->name('sea.index');
+        Route::get('/returns/airport/{taxType}', [ReturnDebtController::class, 'index'])->name('airport.index');
 
-Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
-    Route::resource('/approvals', TaxInvestigationApprovalController::class);
-    Route::resource('/assessments', TaxInvestigationAssessmentController::class);
-    Route::resource('/verified', TaxInvestigationVerifiedController::class);
-    Route::resource('/files', TaxInvestigationFilesController::class);
-});
+        Route::get('/audits', [AuditDebtController::class, 'index'])->name('audits.index');
+        Route::get('/audits/{id}', [AuditDebtController::class,'show'])->name('audits.show');
 
-Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
+        Route::get('/objection/{id}', [DebtController::class, 'showObjection'])->name('objection');
+        Route::resource('/investigation', InvestigationDebtController::class);
+    });
 
-Route::name('land-lease.')->prefix('land-lease')->group(function () {
-    Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
-    Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
-    Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
-    Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
-    // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
-});
+    Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
+        Route::resource('/approvals', TaxInvestigationApprovalController::class);
+        Route::resource('/assessments', TaxInvestigationAssessmentController::class);
+        Route::resource('/verified', TaxInvestigationVerifiedController::class);
+        Route::resource('/files', TaxInvestigationFilesController::class);
+    });
 
-//Electronic Money Transaction Return
-Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
-    Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
-    Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+    Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
+
+    Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+    });
+
+    //Electronic Money Transaction Return
+    Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
+        Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
+        Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+    });
 });
