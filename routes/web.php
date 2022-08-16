@@ -307,6 +307,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('/files', TaxAuditFilesController::class);
+
+    //Managerial Reports
+    Route::name('reports.')->prefix('reports')->group(function () {
+        Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
+        Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
+        
+    });
 });
 
 Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -354,7 +361,4 @@ Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
     Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
 });
 
-//Managerial Reports
-Route::name('reports.')->prefix('reports')->group(function () {
-    Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
-});
+

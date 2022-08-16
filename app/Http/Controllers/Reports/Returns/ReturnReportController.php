@@ -10,4 +10,10 @@ class ReturnReportController extends Controller
     public function index(){
         return view('reports.returns.index');
     }
+
+    public function preview($parameters)
+    {
+        $parameters = json_decode(decrypt($parameters));
+        return view('reports.returns.preview',compact('parameters'));       
+    }
 }

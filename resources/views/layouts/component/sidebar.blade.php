@@ -332,17 +332,17 @@
 
             </ul>
         </li>
-        <li class="{{ request()->is('managerial-reports*') ? 'active' : '' }}">
-            <a href="#managerialReportSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">
+        <li class="{{ request()->is('reports*') ? 'active' : '' }}">
+            <a href="#reportSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
                 Managerial reports
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('managerial-reports*') ? 'show' : '' }}"
-                id="landLeaseSubmenu">
-
-                <li class="{{ request()->is('managerial-reports/list*') ? 'active' : '' }}">
-                    <a href="{{ route('land-lease.list') }}">Lump Sum Payments Reports</a>
+            <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}"
+                id="reportSubmenu">
+                <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.returns') }}">Return Reports</a>
                 </li>
+                
             </ul>
         </li>
 
