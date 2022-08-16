@@ -35,8 +35,8 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
             'conduct_audit' => [
                 'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operator_type' => 'user',
+                'operators' => []
             ],
             'preliminary_report' => [
                 'owner' => 'staff',
@@ -55,8 +55,8 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
             'prepare_final_report' => [
                 'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operator_type' => 'user',
+                'operators' => []
             ],
             'final_report' => [
                 'owner' => 'staff',
@@ -65,15 +65,10 @@ class WorkflowTaxAuditSeeder extends Seeder
             ],
             'correct_final_report' => [
                 'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operator_type' => 'user',
+                'operators' => [],
             ],
             'final_report_review' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
-            ],
-            'correct_final_report' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
