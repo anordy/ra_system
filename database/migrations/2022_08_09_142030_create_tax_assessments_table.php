@@ -24,7 +24,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
-            $table->enum('status', ReturnStatus::getConstants())->nullable()->default('');
+            $table->enum('status', ReturnStatus::getConstants())->nullable()->default('submitted'); // Not sure of default status
             $table->timestamps();
         });
     }
