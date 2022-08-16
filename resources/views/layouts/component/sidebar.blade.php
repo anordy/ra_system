@@ -301,7 +301,19 @@
                 </li>
             </ul>
         </li>
+        <li class="{{ request()->is('tax-clearance*') ? 'active' : '' }}">
+            <a href="#taxClearance" data-toggle="collapse"
+                aria-expanded="{{ request()->is('tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                Tax Clearance Management
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
+                id="taxClearance">
 
+                <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
+                    <a href="{{ route('tax-clearance.list') }}">Requests</a>
+                </li>
+            </ul>
+        </li>
         <li class="{{ request()->is('debts*') ? 'active' : '' }}">
             <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
                 Management</a>
@@ -351,19 +363,7 @@
         <li class="{{ request()->is('debts/audits*') ? 'active' : '' }}">
             <a href="{{ route('debts.audits.index') }}">Auditing</a>
         </li>
-        <li class="{{ request()->is('tax-clearance*') ? 'active' : '' }}">
-            <a href="#taxClearance" data-toggle="collapse"
-                aria-expanded="{{ request()->is('tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                Tax Clearance Management
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
-                id="taxClearance">
-
-                <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
-                    <a href="{{ route('tax-clearance.list') }}">Requests</a>
-                </li>
-            </ul>
-        </li>
+        
         <li class="{{ request()->is('managerial-reports*') ? 'active' : '' }}">
             <a href="#managerialReportSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">

@@ -15,12 +15,20 @@ class TaxClearanceRequest extends Component
     public $petroleumReturn;
     public $petroleumTotal;
     public $hotelReturn;
-    public $stampDuty;
+    public $hotelTotal;
+    public $stampDutyTotal;
     public $taxAssesment;
     public $portReturn;
     public $tourLevy;
     public $restaurantLevy;
     public $tourLevyId;
+    public $restaurantLevyId;
+    public $hotelLevyId;
+    public $seaPortReturnId;
+    public $seaPortReturn;
+    public $seaPortReturnTotalTZS;
+    public $airportReturnId;
+    public $airportReturn;
     public $totalInfrastructure = 0;
 
     public function mount($business_location_id){
@@ -29,36 +37,77 @@ class TaxClearanceRequest extends Component
         ->where('status', '!=' ,'complete')
         ->get();
 
+        // dd($this->petroleumReturn);
+
         $this->totalInfrastructure += $this->petroleumReturn->sum('infrastructure_tax');
-        // $this->petroleumTotal += $this->petroleumReturn->sum('infrastructure_tax');
+        $this->petroleumTotal += $this->petroleumReturn->sum('petroleum_levy');
+        $this->petroleumTotal += $this->petroleumReturn->sum('penalty');
+        $this->petroleumTotal += $this->petroleumReturn->sum('interest');
+
+        // dd($this->petroleumTotal);
         
+        $this->hotelLevyId = TaxType::where('code', TaxType::HOTEL)->pluck('id');
         $this->hotelReturn = HotelReturn::where('business_location_id', $business_location_id)
-        ->where('status', '!=' ,'complete')
-        ->get();
-        dd($this->hotelReturn);
-
-        $this->stampDuty = StampDutyReturn::where('business_location_id', $business_location_id)
+        ->whereIn('tax_type_id', $this->hotelLevyId)
         ->where('status', '!=' ,'complete')
         ->get();
 
-        $this->portReturn = PortReturn::where('business_location_id', $business_location_id)
+        $this->hotelTotal += ($this->hotelReturn->sum('total_amount_due') - $this->hotelReturn->sum('hotel_infrastructure_tax'));
+        // dd($this->hotelTotal);
+        $this->hotelTotal += $this->hotelReturn->sum('penalty');
+        $this->hotelTotal += $this->hotelReturn->sum('interest');
+        // dd($this->hotelTotal);
+
+        $this->totalInfrastructure += $this->hotelReturn->sum('hotel_infrastructure_tax');
+        // dd($this->totalInfrastructure);
+
+        $this->stampDutyTotal = StampDutyReturn::where('business_location_id', $business_location_id)
+        ->where('status', '!=' ,'complete')
+        ->sum('total_amount_due_with_penalties');
+        // dd($this->stampDutyTotal);
+
+        $this->seaPortReturnId = TaxType::where('code', TaxType::SEA_SERVICE_TRANSPORT_CHARGE)->pluck('id');
+        $this->seaPortReturn = PortReturn::where('business_location_id', $business_location_id)
+        ->whereIn('tax_type_id', $this->seaPortReturnId)
         ->where('status', '!=' ,'complete')
         ->get();
+        
+        $this->seaPortReturnTotalTZS = $this->seaPortReturn->sum('infrastructure_znz_znz');
+        $this->seaPortReturnTotalTZS += $this->seaPortReturn->sum('penalty');
+        $this->seaPortReturnTotalTZS += $this->seaPortReturn->sum('interest');
+        dd($this->seaPortReturnTotalTZS);
+
+
+        $this->totalInfrastructure += $this->seaPortReturn->sum('infrastructure_znz_znz');
+        $this->totalInfrastructure += $this->seaPortReturn->sum('infrastructure_znz_tm');
+
+
+        $this->airportReturnId = TaxType::where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->pluck('id');
+        $this->airportReturn = PortReturn::where('business_location_id', $business_location_id)
+        ->whereIn('tax_type_id', $this->airportReturnId)
+        ->where('status', '!=' ,'complete')
+        ->get();
+
+        $this->totalInfrastructure += $this->airportReturn->sum('infrastructure');
+
 
         $this->taxAssesment = TaxAssessment::where('location_id', $business_location_id)
         ->where('status', '!=' ,'complete')
         ->get();
+        
 
         $this->tourLevyId = TaxType::where('code', TaxType::TOUR_OPERATOR)->pluck('id');
-        // dd($this->tourLevyId);
-        $this->tourLevy = HotelReturn::where('business_location_id', $business_location_id)->where('tax_type_id', $this->tourLevyId)
+        $this->tourLevy = HotelReturn::where('business_location_id', $business_location_id)
+        ->whereIn('tax_type_id', $this->tourLevyId)
         ->where('status', '!=' ,'complete')
         ->sum('total_amount_due_with_penalties');
 
-        $restaurantLevyId = TaxType::where('code', TaxType::RESTAURANT)->pluck('id');
-        $this->restaurantLevy = HotelReturn::where('business_location_id', $business_location_id)->where('tax_type_id', $restaurantLevyId)
+
+        $this->restaurantLevyId = TaxType::where('code', TaxType::RESTAURANT)->pluck('id');
+        $this->restaurantLevy = HotelReturn::where('business_location_id', $business_location_id)
+        ->whereIn('tax_type_id', $this->restaurantLevyId)
         ->where('status', '!=' ,'complete')
-        ->sum('total_amount_due_with_penalties');
+        ->sum(' ');
 
         dd($this->tourLevy);
 
