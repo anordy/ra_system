@@ -37,6 +37,7 @@ class TaxType extends Model implements Auditable
     public const VERIFICATION = 'verification';
     public const DISPUTES = 'disputes';
     public const INVESTIGATION = 'investigation';
+    public const GOVERNMENT_FEE = 'government-fee';
 
     protected $fillable = [
         'name',

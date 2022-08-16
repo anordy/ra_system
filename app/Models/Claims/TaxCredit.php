@@ -11,4 +11,8 @@ class TaxCredit extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function items(){
+        return $this->hasMany(TaxCreditItem::class, 'credit_id');
+    }
 }

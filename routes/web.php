@@ -163,6 +163,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
         Route::resource('taxpayer', TaxpayersController::class);
     });
+
     Route::resource('taxpayers', TaxpayersController::class);
 
     Route::prefix('withholdingAgents')->as('withholdingAgents.')->group(function () {
