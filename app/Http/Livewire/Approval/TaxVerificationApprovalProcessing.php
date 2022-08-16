@@ -152,6 +152,7 @@ class TaxVerificationApprovalProcessing extends Component
                         'principal_amount' => $this->principalAmount,
                         'interest_amount' => $this->interestAmount,
                         'penalty_amount' => $this->penaltyAmount,
+                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
                     ]);
                 } else {
 
@@ -191,8 +192,11 @@ class TaxVerificationApprovalProcessing extends Component
             $this->alert('error', 'Something went wrong');
         }
         DB::commit();
-        if ($this->subject->status == TaxVerificationStatus::APPROVED) {
+        if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
             $this->generateControlNumber();
+            $this->subject->assessment->update([
+                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+            ]);
         } else {
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         }

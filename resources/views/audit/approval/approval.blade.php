@@ -154,17 +154,21 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Principal Amount</span>
                                 <p class="my-1">{{ $audit->assessment->principal_amount ?? '' }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>
                                 <p class="my-1">{{ $audit->assessment->interest_amount ?? '' }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                 <p class="my-1">{{ $audit->assessment->penalty_amount ?? '' }}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Total Amount Due</span>
+                                <p class="my-1">{{ $audit->assessment->total_amount ?? '' }}</p>
                             </div>
                         </div>
                     </div>

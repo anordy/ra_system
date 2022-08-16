@@ -107,6 +107,10 @@
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                 <p class="my-1">{{ $verification->assessment->penalty_amount ?? '' }}</p>
                             </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Total Amount Due</span>
+                                <p class="my-1">{{ $verification->assessment->total_amount ?? '' }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>

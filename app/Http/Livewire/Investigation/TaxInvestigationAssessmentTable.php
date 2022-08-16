@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Investigation;
 
+use App\Enum\TaxInvestigationStatus;
 use App\Models\Investigation\TaxInvestigation;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -18,7 +19,8 @@ class TaxInvestigationAssessmentTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxInvestigation::query()->with('business', 'location', 'taxType', 'taxReturn')
-            ->has('assessment');
+            ->has('assessment')
+            ->where('tax_investigations.status', TaxInvestigationStatus::APPROVED);
     }
 
     public function configure(): void
