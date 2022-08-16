@@ -2,6 +2,7 @@
 
 namespace App\Services\Workflow\Events;
 
+use App\Enum\DisputeStatus;
 use App\Enum\TaxAuditStatus;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
@@ -102,6 +103,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
         $places = $marking->getPlaces();
         $transition = $event->getTransition();
         $context = $event->getContext();
+        $placeName = $event->getWorkflowName();
 
 
         $task = $subject->pinstancesActive;
@@ -140,6 +142,43 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->pinstances()->save($task);
                 });
             }
+
+            if ($placeName == 'TAX_RETURN_VERIFICATION') {
+                if (key($places) == 'completed') {
+                    $assessmentExists = $subject->assessment()->exists();
+                    if($assessmentExists){
+                        $subject->taxReturn->application_status = DisputeStatus::ADJUSTED;
+                    }else{
+                        $subject->taxReturn->application_status = DisputeStatus::SELF_ASSESSMENT;
+                    }
+                    $subject->status = TaxVerificationStatus::APPROVED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+
+                    $subject->taxReturn->save();
+                }
+            } elseif ($placeName == 'TAX_AUDIT') {
+                if (key($places) == 'completed') {
+                    $subject->status = TaxAuditStatus::APPROVED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
+            } elseif ($placeName == 'TAX_INVESTIGATION') {
+                if (key($places) == 'completed') {
+                    $subject->status = TaxInvestigationStatus::APPROVED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
+            } else {
+                if (key($place) == 'completed') {
+                    $subject->status = TaxAuditStatus::APPROVED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+
+                } elseif (key($place) == 'rejected') {
+                    $subject->status = TaxAuditStatus::REJECTED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                  
+                }
+            }
+
+            $subject->save();
         } catch (Exception $e) {
             report($e);
             DB::rollBack();
@@ -187,18 +226,16 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
                 if (key($placesCurrent) == 'completed') {
-                    $subject->status = TaxVerificationStatus::APPROVED;
+                   
                 }
             } elseif ($placeName == 'TAX_AUDIT') {
                 if (key($placesCurrent) == 'completed') {
-                    $subject->status = TaxAuditStatus::APPROVED;
+                   
                 }
             } elseif ($placeName == 'TAX_INVESTIGATION') {
                 if (key($placesCurrent) == 'completed') {
-                    $subject->status = TaxInvestigationStatus::APPROVED;
                 }
             } else {
-
                 if (key($placesCurrent) == 'completed') {
                     $event->getSubject()->taxpayer->notify(new DatabaseNotification(
                         $subject = $notificationName,

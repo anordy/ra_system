@@ -54,7 +54,7 @@ class ZmFeeHelper
                 }
                 break;
             default:
-                abort(404);
+                throw new \Exception('Bill amount out of range.');
         }
 
         $billItems[] = [
@@ -62,7 +62,7 @@ class ZmFeeHelper
             'amount' => $fee,
             'currency' => $currency,
             'gfs_code' => '116101',
-            'tax_type_id' => TaxType::where('code', TaxType::GOVERNMENT_FEE)->first()->id,
+            'tax_type_id' => TaxType::where('code', TaxType::GOVERNMENT_FEE)->firstOrFail()->id,
         ];
 
         return $billItems;

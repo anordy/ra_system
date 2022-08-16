@@ -71,6 +71,8 @@ class TaxAuditApprovalProcessing extends Component
         $this->auditingDate = $this->subject->auditing_date;
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;
+        $this->workingReport = $this->subject->working_report;
+        $this->preliminaryReport = $this->subject->preliminary_report;
 
         $assessment = $this->subject->assessment;
         if ($assessment) {
@@ -120,10 +122,22 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('conduct_audit')) {
             $this->validate(
                 [
-                    'preliminaryReport' => 'required|mimes:pdf',
-                    'workingReport' => 'required|mimes:pdf',
+                    'preliminaryReport' => 'required',
+                    'workingReport' => 'required',
                 ]
             );
+
+            if($this->preliminaryReport != $this->subject->preliminary_report){
+                $this->validate([
+                    'preliminaryReport' => 'required|mimes:pdf|max:1024'
+                ]);
+            }
+
+            if($this->workingReport != $this->subject->working_report){
+                $this->validate([
+                    'workingReport' => 'required|mimes:pdf|max:1024'
+                ]);
+            }
         }
         if ($this->checkTransition('prepare_final_report')) {
             $this->validate(
@@ -163,6 +177,12 @@ class TaxAuditApprovalProcessing extends Component
                 $this->scope = $this->subject->scope;
                 $this->subject->save();
 
+                $officers = $this->subject->officers()->exists();
+
+                if ($officers) {
+                    $this->subject->officers()->delete();
+                }
+
 
                 TaxAuditOfficer::create([
                     'audit_id' => $this->subject->id,
@@ -180,12 +200,14 @@ class TaxAuditApprovalProcessing extends Component
 
 
             if ($this->checkTransition('conduct_audit')) {
-                $preliminaryReport = "";
-                if ($this->preliminaryReport) {
+                
+                $preliminaryReport = $this->preliminaryReport;
+                if($this->preliminaryReport != $this->subject->preliminary_report){
                     $preliminaryReport = $this->preliminaryReport->store('audit', 'local-admin');
                 }
-                $workingReport = "";
-                if ($this->workingReport) {
+    
+                $workingReport = $this->workingReport;
+                if($this->workingReport != $this->subject->working_report){
                     $workingReport = $this->workingReport->store('audit', 'local-admin');
                 }
 
@@ -194,8 +216,11 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if ($this->checkTransition('prepare_final_report')) {
+            if($this->checkTransition('preliminary_report_review')){
+                $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
 
+            if ($this->checkTransition('prepare_final_report')) {
                 $assessment = $this->subject->assessment()->exists();
 
                 if ($this->hasAssessment == "1") {
@@ -204,6 +229,7 @@ class TaxAuditApprovalProcessing extends Component
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
+                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                         ]);
                     } else {
                         TaxAssessment::create([
@@ -215,6 +241,7 @@ class TaxAuditApprovalProcessing extends Component
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
+                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                         ]);
                     }
                 } else {
@@ -265,7 +292,15 @@ class TaxAuditApprovalProcessing extends Component
         ]);
 
         try {
-            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            $operators = [];
+            if ($this->checkTransition('correct_preliminary_report')) {
+                $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
+            if ($this->checkTransition('correct_final_report')) {
+                $operators = $this->subject->officers->pluck('user_id')->toArray();
+            }
+
+            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
             Log::error($e);
 

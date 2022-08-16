@@ -35,8 +35,8 @@ class WorkflowTaxInvestigationSeeder extends Seeder
             ],
             'conduct_investigation' => [
                 'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
+                'operator_type' => 'user',
+                'operators' => []
             ],
             'investigation_report' => [
                 'owner' => 'staff',

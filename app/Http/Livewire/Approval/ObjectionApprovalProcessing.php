@@ -9,6 +9,8 @@ use App\Models\TaxType;
 use App\Models\WaiverStatus;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\PaymentsTrait;
+use App\Traits\TaxAssessmentDisputeTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -21,7 +23,7 @@ use Livewire\WithFileUploads;
 
 class ObjectionApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait,PaymentsTrait, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -112,7 +114,6 @@ class ObjectionApprovalProcessing extends Component
                 Log::error($e);
                 DB::rollBack();
                 $this->alert('error', 'Something went wrong.');
-                throw $e;
             }
 
         }
@@ -125,11 +126,13 @@ class ObjectionApprovalProcessing extends Component
             $this->validate([
                 'interestPercent' => 'required',
                 'penaltyPercent' => 'required',
-                
+
             ]);
             DB::beginTransaction();
 
             try {
+
+                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->assessment->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
 
                 // Generate control number for waived application
                 $billitems = [
@@ -150,7 +153,7 @@ class ObjectionApprovalProcessing extends Component
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
-                $description = "dispute";
+                $description = "dispute for assessment";
                 $payment_option = ZmCore::PAYMENT_OPTION_FULL;
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
@@ -158,8 +161,8 @@ class ObjectionApprovalProcessing extends Component
                 $exchange_rate = 0;
                 $payer_id = $taxpayer->id;
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-                $billableId = $this->dispute->id;
-                $billableType = get_class($this->dispute);
+                $billableId = $this->assessment->id;
+                $billableType = get_class($this->assessment);
 
                 $zmBill = ZmCore::createBill(
                     $billableId,
@@ -228,6 +231,7 @@ class ObjectionApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong.');
             return;
