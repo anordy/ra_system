@@ -3,6 +3,7 @@
 namespace App\Models\Returns\BFO;
 
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Returns\Vat\VatReturnItem;

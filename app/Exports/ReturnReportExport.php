@@ -13,7 +13,7 @@ use App\Traits\ReturnReportTrait;
 
 // use Maatwebsite\Excel\Concerns\FromCollection;
 
-class ReturnReportExport implements FromView, WithEvents,ShouldAutoSize
+class ReturnReportExport implements FromView, WithEvents, ShouldAutoSize
 {
     use ReturnReportTrait;
 
@@ -27,7 +27,7 @@ class ReturnReportExport implements FromView, WithEvents,ShouldAutoSize
      * @param  mixed $request
      * @return void
      */
-    function __construct($records,$title,$parameters)
+    function __construct($records, $title, $parameters)
     {
         $this->records = $records;
         $this->title = $title;
@@ -65,9 +65,7 @@ class ReturnReportExport implements FromView, WithEvents,ShouldAutoSize
         $title = $this->title;
         $parameters = $this->parameters;
         $modelData = $this->getModelData($parameters);
-        $viewName = str_replace(' ','-',strtolower($modelData['returnName']));
-        // return view('exports.returns.reports.excel.stamp-duty',compact('records','title','parameters'));
-        return view('exports.returns.reports.excel.'.$viewName,compact('records','title','parameters'));
-       
+        $viewName = str_replace(' ', '-', strtolower($modelData['returnName']));
+        return view('exports.returns.reports.excel.' . $viewName, compact('records', 'title', 'parameters'));
     }
 }

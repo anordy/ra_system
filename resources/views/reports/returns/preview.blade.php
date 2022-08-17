@@ -19,7 +19,7 @@
         @livewire('reports.returns.previews.mno-preview-table',['parameters'=>$parameters])
         @break
         @case('excise-duty-bfo')
-        this is bfo
+        @livewire('reports.returns.previews.bfo-preview-table',['parameters'=>$parameters])
         @break
         @case('hotel-levy')
         this is hotel levy
