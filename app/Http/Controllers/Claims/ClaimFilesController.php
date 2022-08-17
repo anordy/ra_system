@@ -10,9 +10,10 @@ class ClaimFilesController extends Controller
 {
     public function show($path)
     {
+//        dd(decrypt($path));
         if ($path) {
             try {
-                return Storage::disk('local-admin')->response(decrypt($path));
+                return Storage::response(decrypt($path));
             } catch (Exception $e) {
                 report($e);
                 abort(404);
