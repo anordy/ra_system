@@ -13,6 +13,7 @@ class TaxClaimStatus implements Status
     const REJECTED = 'rejected';
     const PAID = 'paid';
     Const PAID_PARTIALLy = 'paid-partially';
+    const NO_CLAIM = 'no-claim';
 
     static function getConstants(): array
     {

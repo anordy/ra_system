@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\TaxAssessments\TaxAssessmentHistory;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -31,10 +32,13 @@ trait TaxAssessmentDisputeTrait
                 'interest_amount' => $interest,
                 'penalty_amount' => $penalty,
                 'total_amount' => $principal_amount + $penalty + $interest,
-                'payment_due_date' => $payment_due_date ?? null,
+                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString() ?? null,
                 'paid_amount' => $paid_amount,
                 'app_status' => $app_status,
             ];
+
+
+
             try {
                 TaxAssessmentHistory::create([
                     'tax_assessment_id' => $assessment->id,
@@ -42,7 +46,7 @@ trait TaxAssessmentDisputeTrait
                     'interest_amount' => $assessment->interest_amount,
                     'penalty_amount' => $assessment->penalty_amount,
                     'total_amount' => $assessment->total_amount,
-                    'payment_due_date' => $assessment->payment_due_date ?? null,
+                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString() ?? null,
                     'paid_amount' => $assessment->paid_amount,
                     'app_status' => $assessment->app_status,
                 ]);
