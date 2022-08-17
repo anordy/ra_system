@@ -152,7 +152,7 @@ class DeclaredSalesAnalysis extends Component
         $yearReturnGroup = LumpSumReturn::select('total_amount_due', 'quarter_name', 'payment_quarters as return_months', 'total_amount_due_with_penalties', 'quarter as quarter', 'financial_years.name as year')
             ->leftJoin('financial_months', 'financial_months.id', 'lump_sum_returns.financial_month_id')
             ->leftJoin('lump_sum_payments', 'lump_sum_payments.business_id', 'lump_sum_returns.business_id')
-            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'lump_sum_returns.financial_year_id')
             ->get()->groupBy(['year', 'quarter']);
             
         $yearData = $this->formatQuaters($yearReturnGroup);
