@@ -57,6 +57,11 @@ class HotelReturn extends Model implements Auditable
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
+    }
+
     public function getBillAttribute(){
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }

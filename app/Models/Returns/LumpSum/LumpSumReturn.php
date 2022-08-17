@@ -55,6 +55,16 @@ class LumpSumReturn extends Model
         return $this->morphOne(ZmBill::class, 'billable');
     }
 
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
+    }
+
     public function assignedPayments()
     {
         return $this->belongsTo(LumpSumPayment::class, 'business_location_id', 'business_location_id');

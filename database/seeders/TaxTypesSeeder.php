@@ -21,7 +21,7 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Land Lease', 'code' => TaxType::LAND_LEASE]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Public Services', 'code' => TaxType::PUBLIC_SERVICE]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Excise Duty MNO', 'code' => TaxType::EXCISE_DUTY_MNO]);
-        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Excise Duty BFO', 'code' => TaxType::EXCISE_DUTY_BFO]);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Banks, Financial Institutions and Others', 'code' => TaxType::EXCISE_DUTY_BFO]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Petroleum Levy', 'code' => TaxType::PETROLEUM]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Airport Service & Safety Fee', 'code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Sea Port Service & Transport Charge', 'code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE]);

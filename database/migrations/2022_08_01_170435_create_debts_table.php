@@ -15,11 +15,12 @@ class CreateDebtsTable extends Migration
     {
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tax_type_id');
             $table->string('debt_type');
             $table->unsignedBigInteger('debt_type_id');
+            $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('business_location_id');
+            $table->string('currency')->nullable();
             $table->decimal('original_principal_amount', 20,2);
             $table->decimal('original_penalty', 20,2);
             $table->decimal('original_interest', 20,2);
@@ -29,12 +30,15 @@ class CreateDebtsTable extends Migration
             $table->decimal('interest', 20,2);
             $table->decimal('total_amount', 20,2);
             $table->decimal('outstanding_amount', 20,2);
-            $table->decimal('logged_date', 20,2);
+            $table->dateTime('logged_date');
+            $table->dateTime('submitted_at');
+            $table->dateTime('filing_due_date')->nullable();
             $table->dateTime('last_due_date')->nullable();
             $table->dateTime('curr_due_date')->nullable();
             $table->integer('demand_notice_count')->nullable();
             $table->enum('app_step', ['waiver', 'extension', 'normal'])->default('normal');
             $table->enum('origin', ['job', 'manual'])->nullable();
+            $table->unique(['debt_type', 'debt_type_id'], 'debt_type_unique');
             $table->timestamps();
         });
     }
