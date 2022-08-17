@@ -18,19 +18,16 @@ class ReturnReportController extends Controller
     public function preview($parameters)
     {
         $parameters = json_decode(decrypt($parameters),true);
-        // dd($parameters);
         return view('reports.returns.preview',compact('parameters'));       
     }
 
     public function exportReturnReportPdf($parameters)
     {
         $parameters = json_decode(decrypt($parameters),true);
-        // dd($parameters);
         $modelData = $this->getModelData($parameters);
         $records = $this->getRecords($modelData['model'], $parameters);
         $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
         $for = str_replace('-', ' ', $for);
-        // dd($records);
         if($parameters['year']=='all'){
             $fileName = 'Return Records ('.$for.').pdf';
             $title = $modelData['returnName'].' Return Records ('.$for.')';

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Reports\Returns;
 
 use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
+use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxType;
 use Livewire\Component;
@@ -217,44 +218,5 @@ class ReturnReport extends Component
         ];
     }
 
-    public function getModel()
-    {
-        $parameters = $this->getParameters();
-        switch ($parameters['tax_type_code']) {
-            case 'excise-duty-mno':
-                dd('excise-duty-mno');
-                break;
-            case 'excise-duty-bfo':
-                dd('excise-duty-bfo');
-                break;
-            case 'hotel-levy':
-                dd('hotel-levy');
-                break;
-            case 'restaurant-levy':
-                dd('restaurant-levy');
-                break;
-            case 'petroleum-levy':
-                dd('petroleum-levy');
-                break;
-            case 'airport-service-safety-fee':
-                dd('airport-service-safety-fee');
-                break;
-            case 'mobile-money-transfer':
-                dd('mobile-money-transfer');
-                break;
-            case 'electronic-money-transaction':
-                dd('electronic-money-transaction');
-                break;
-            case 'lumpsum-payment':
-                dd('lumpsum-payment');
-                break;
-            case 'sea-service-transport-charge':
-                dd('sea-service-transport-charge');
-                break;
-            case 'stamp-duty':
-                $modelData['returnName'] = 'Stamp Duty';
-                return StampDutyReturn::query();
-                break;
-        }
-    }
+   
 }

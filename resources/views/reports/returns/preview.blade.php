@@ -50,7 +50,7 @@
         @break
 
         @case('sea-service-transport-charge')
-        this is airport services
+        @livewire('reports.returns.previews.sea-port-preview-table',['parameters'=>$parameters])
         @break
         
         @case('stamp-duty')
