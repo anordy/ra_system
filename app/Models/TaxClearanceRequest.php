@@ -18,6 +18,6 @@ class TaxClearanceRequest extends Model
     }
 
     public function businessLocation(){
-        return $this->belongsTo(BusinessLocation::class, 'location_id');
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
     }
 }

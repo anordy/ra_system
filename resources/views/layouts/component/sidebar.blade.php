@@ -416,9 +416,6 @@
                     <a href="{{ route('land-lease.list') }}">Lump Sum Payments Reports</a>
                 </li>
             </ul>
-        <li class="{{ request()->is('debts/investigation*') ? 'active' : '' }}">
-            <a href="{{ route('debts.investigation.index') }}">Investigations</a>
-        </li>
 
 
         <li class="{{ request()->is('system*') ? 'active' : '' }}">

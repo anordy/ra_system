@@ -18,7 +18,7 @@ class CreateTaxClearanceRequestsTable extends Migration
         Schema::create('tax_clearance_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('business_location_id');
             $table->string('reason');
             $table->enum('status', TaxClearanceStatus::getConstants());
             $table->softDeletes();

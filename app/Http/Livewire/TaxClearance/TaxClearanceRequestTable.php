@@ -4,6 +4,7 @@ namespace App\Http\Livewire\TaxClearance;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\TaxClearanceRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -23,22 +24,21 @@ class TaxClearanceRequestTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessLocation::query()->leftJoin('businesses', 'businesses.id', '=', 'business_locations.business_id' )->where('businesses.status', 'approved');
+        return TaxClearanceRequest::with('business')->with('businessLocation');
     }
 
     
     public function columns(): array
     {
         return [
-            Column::make('ZIN', 'zin')
+            Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Business Name', 'name')
+            Column::make('Branch', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
-            Column::make("Action", "id")
-                ->view('tax-clearance.includes.actions'),
-
+            Column::make('Status', 'status')->view('tax-clearance.includes.status'),
+            Column::make('Action', 'id')->view('tax-clearance.includes.actions'),
         ];
     }
 }
