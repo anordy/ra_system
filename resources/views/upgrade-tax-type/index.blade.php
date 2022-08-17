@@ -2,6 +2,9 @@
 
 @section('title','Upgrade Tax Type')
 
+@section('css')
+    <link href="{{ asset('plugins/datatables/datatables.min.css') }}" rel="stylesheet" />
+@endsection
 @section('content')
     <div class="card">
         <div class="card-body">
@@ -12,11 +15,10 @@
             </nav>
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 <div id="hotel_levy" class="tab-pane fade active show  p-2">
-{{--                    <livewire:upgrade-tax-type.upgrade-hotel-table />--}}
                     <div class="card">
                         <div class="card-header">All business with hotel levy qualified to upgrade  their tax types</div>
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <table  class="table table-bordered myTable">
                                 <thead>
                                 <tr>
                                     <th>No:</th>
@@ -29,7 +31,7 @@
                                 </thead>
                                 <tbody>
 
-                                @foreach($returns as $index=>$return)
+                                @foreach($hotel_returns as $index=>$return)
                                     @if($return->total_sales > 50000000)
                                     <tr>
 
@@ -39,7 +41,7 @@
                                         <td>{{$return->businessLocation->name}}</td>
                                         <td>{{$return->total_sales}}</td>
                                         <td>
-                                            <a href="{{route('upgrade-tax-types.show', encrypt($return->id))}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                            <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($hotel_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                data-placement="right" title="View">
                                                 <i class="bi bi-eye-fill"></i>
                                                 View
@@ -57,7 +59,7 @@
                     <div class="card">
                         <div class="card-header">All business with stamp duty qualified to upgrade  their tax types</div>
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <table  class="table table-bordered myTable">
                                 <thead>
                                 <tr>
                                     <th>No:</th>
@@ -69,7 +71,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($returns as $index=>$return)
+                                @foreach($stamp_duty_return as $index=>$return)
                                     @if($return->total_sales > 50000000)
                                         <tr>
                                             <td>{{$index + 1}}</td>
@@ -78,7 +80,7 @@
                                             <td>{{$return->businessLocation->name}}</td>
                                             <td>{{$return->total_sales}}</td>
                                             <td>
-                                                <a href="{{route('upgrade-tax-types.show', encrypt($return->id))}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($stamp_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                    data-placement="right" title="View">
                                                     <i class="bi bi-eye-fill"></i>
                                                     View
@@ -94,9 +96,9 @@
                 </div>
                 <div id="lump_sum" class="tab-pane fade  p-2">
                     <div class="card">
-                        <div class="card-header">All business with lump sum qualified to upgrade  their tax types</div>
+                        <div class="card-header">All business with lump sum payments qualified to upgrade  their tax types</div>
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered myTable">
                                 <thead>
                                 <tr>
                                     <th>No:</th>
@@ -108,8 +110,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($returns as $index=>$return)
-                                    @if($return->total_sales > 50000000)
+                                @foreach($lump_sum_return as $index=>$return)
+                                    @if($return->total_sales < 15000000)
                                         <tr>
                                             <td>{{$index + 1}}</td>
                                             <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
@@ -117,7 +119,7 @@
                                             <td>{{$return->businessLocation->name}}</td>
                                             <td>{{$return->total_sales}}</td>
                                             <td>
-                                                <a href="" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($lump_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                    data-placement="right" title="View">
                                                     <i class="bi bi-eye-fill"></i>
                                                     View
@@ -137,11 +139,17 @@
 @endsection
 
 @section('scripts')
+    <script src="{{asset('plugins/datatables/datatables.min.js')}}"></script>
     <script>
         $(document).ready(function() {
             $(".nav-tabs a").click(function() {
                 $(this).tab('show');
             });
         });
+
+        $(document).ready( function () {
+            $('.myTable').DataTable();
+        } );
     </script>
+
 @endsection

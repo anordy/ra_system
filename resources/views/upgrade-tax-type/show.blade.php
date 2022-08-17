@@ -40,19 +40,28 @@
                             <td class="my-1">{{ $return->businessLocation->name  }}</td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold text-uppercase">Tax Type</td>
-                            <td class="my-1">{{$return->taxtype->name }}</td>
+                            <td class="font-weight-bold text-uppercase">Tax Region</td>
+                            <td class="my-1">{{ $return->businessLocation->taxRegion->name }}</td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold text-uppercase">Tax Region</td>
-                            <td class="my-1">{{ $return->businessLocaton->taxRegion->name }}</td>
+                            <td class="font-weight-bold text-uppercase">Date of Business Commencement</td>
+                            <td class="my-1">{{date('D, Y-m-d',strtotime($return->businessLocation->date_of_commencing)) }}</td>
                         </tr>
+
                         </tbody>
                     </table>
                 </div>
                 <div class="col-md-6">
                     <table class="table">
                         <tbody>
+                        <tr>
+                            <td class="font-weight-bold text-uppercase">Tax Type</td>
+                            <td class="my-1">{{$return->taxtype->name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold text-uppercase">Currency</td>
+                            <td class="my-1">{{ $currency }}</td>
+                        </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Phone</td>
                             <td class="my-1">{{ $return->business->mobile }}</td>
@@ -63,10 +72,15 @@
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Current Turnover</td>
-                            <td class="my-1">{{ $return->businessLocation->name }}</td>
+                            <td class="my-1">{{ number_format($sales,2) }}</td>
                         </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-end">
+                        <livewire:upgrade-tax-type.create :return="$return"/>
+                    </div>
                 </div>
             </div>
 

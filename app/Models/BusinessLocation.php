@@ -27,7 +27,7 @@ class BusinessLocation extends Model
 
     public function taxRegion()
     {
-        return $this->belongsTo(TaxRegion::class);
+        return $this->belongsTo(TaxRegion::class, 'tax_region_id');
     }
 
     public function generateZin(){

@@ -313,9 +313,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
     });
 
-    Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-type')->group(function () {
+    Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-types')->group(function () {
         Route::get('/', [UpgradeTaxtypeController::class, 'index'])->name('index');
-        Route::get('/show/{id}', [UpgradeTaxtypeController::class, 'show'])->name('show');
+        Route::get('/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('show');
 
     });
 
