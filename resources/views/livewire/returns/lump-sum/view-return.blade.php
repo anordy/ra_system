@@ -65,7 +65,7 @@
                 @else
                     <tr>
                         <td>Quater <br> <small> Awamu</small> </td>
-                        <td> {{ $return->quarter }} </td>
+                        <td> {{ $return->installment }} </td>
                     </tr>
                 @endif
                 <tr>
@@ -85,6 +85,7 @@
                 </tr>
             </tbody>
         </table>
+        <x-bill-structure :bill="$return->bill" />
 
 
     </div>

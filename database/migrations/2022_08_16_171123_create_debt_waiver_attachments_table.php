@@ -15,7 +15,7 @@ class CreateDebtWaiverAttachmentsTable extends Migration
     {
         Schema::create('debt_waiver_attachments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('dispute_id');
+            $table->unsignedBigInteger('debt_id');
             $table->string('file_path');
             $table->string('file_name');
             $table->timestamps();

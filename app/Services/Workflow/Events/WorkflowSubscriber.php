@@ -146,9 +146,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
                 if (key($places) == 'completed') {
                     $assessmentExists = $subject->assessment()->exists();
-                    if($assessmentExists){
+                    if ($assessmentExists) {
                         $subject->taxReturn->application_status = DisputeStatus::ADJUSTED;
-                    }else{
+                    } else {
                         $subject->taxReturn->application_status = DisputeStatus::SELF_ASSESSMENT;
                     }
                     $subject->status = TaxVerificationStatus::APPROVED;
@@ -166,15 +166,22 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->status = TaxInvestigationStatus::APPROVED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
+            } elseif ($placeName == 'TAX_CLEARENCE') {
+                if (key($places) == 'completed') {
+                    $subject->status = TaxInvestigationStatus::APPROVED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
+                if (key($places) == 'rejected') {
+                    $subject->status = TaxInvestigationStatus::REJECTED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
             } else {
                 if (key($place) == 'completed') {
                     $subject->status = TaxAuditStatus::APPROVED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
-
                 } elseif (key($place) == 'rejected') {
                     $subject->status = TaxAuditStatus::REJECTED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
-                  
                 }
             }
 
@@ -225,16 +232,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
 
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
-                if (key($placesCurrent) == 'completed') {
-                   
-                }
             } elseif ($placeName == 'TAX_AUDIT') {
-                if (key($placesCurrent) == 'completed') {
-                   
-                }
             } elseif ($placeName == 'TAX_INVESTIGATION') {
-                if (key($placesCurrent) == 'completed') {
-                }
+            } elseif ($placeName == 'TAX_CLEARENCE') {
             } else {
                 if (key($placesCurrent) == 'completed') {
                     $event->getSubject()->taxpayer->notify(new DatabaseNotification(

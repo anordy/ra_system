@@ -11,40 +11,7 @@
         </div>
     </div>
     <div class="card-body mt-0 p-2">
-        <table class="table table-md">
-            <thead>
-                <tr>
-                    <th>Business Name</th>
-                    <th>Location</th>
-                    <th>Principal</th>
-                    <th>Penalty</th>
-                    <th>Interest</th>
-                    <th>Total Debt</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (count($assessmentDebts))
-                    @foreach ($assessmentDebts as $assessment)
-                        <tr>
-                            <td>{{ $assessment->business->name }}</td>
-                            <td>{{ $assessment->location->name }}</td>
-                            <td>{{ number_format($assessment->principal_amount, 2) }}</td>
-                            <td>{{ number_format($assessment->penalty_amount, 2) }}</td>
-                            <td>{{ number_format($assessment->interest_amount, 2) }}</td>
-                            <td>{{ number_format($assessment->principal_amount + $assessment->penalty_amount + $assessment->interest_amount, 2) }}
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="7" class="text-center py-3">
-                            No assessment debts.
-                        </td>
-                    </tr>
-                @endif
-
-            </tbody>
-        </table>
+        <livewire:debt.assessment-debts-table />
     </div>
 </div>
 @endsection
