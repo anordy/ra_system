@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CountriesTableSeeder::class);
         $this->call(CurrenciesTableSeeder::class);
         $this->call(IDTypesTableSeeder::class);
-        $this->call(TaxTypesSeeder::class);
         $this->call(RegionSeeder::class);
         $this->call(DistrictSeeder::class);
         $this->call(WardSeeder::class);
