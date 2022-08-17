@@ -160,13 +160,12 @@ class DailyDebtCalculateCommand extends Command
                     'penalty_amount as original_penalty',
                     'interest_amount as interest',
                     'interest_amount as original_interest',
-                    'created_at',
+                    'created_at as submitted_at',
                     'payment_due_date as last_due_date',
                     'payment_due_date as curr_due_date'
                 )
                     ->doesntHave('payments')
                     ->where('status', '!=', 'complete')
-                    ->whereIn('app_status', ['self_assessment', 'adjusted', 'submitted'])
                     ->orWhere('payment_due_date', '<', $financialMonth->due_date)
                     ->get();
 
@@ -177,6 +176,8 @@ class DailyDebtCalculateCommand extends Command
                     $return->logged_date = Carbon::now()->toDateTimeString();
                     return $return;
                 });
+
+                // dd($data);
 
                 $dataToInsert = $data->toArray();
 
