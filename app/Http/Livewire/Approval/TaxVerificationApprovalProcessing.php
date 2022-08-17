@@ -152,6 +152,7 @@ class TaxVerificationApprovalProcessing extends Component
                         'principal_amount' => $this->principalAmount,
                         'interest_amount' => $this->interestAmount,
                         'penalty_amount' => $this->penaltyAmount,
+                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
                     ]);
                 } else {
 
@@ -274,7 +275,7 @@ class TaxVerificationApprovalProcessing extends Component
             $currency = 'TZS';
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();
-            $exchange_rate = 0;
+            $exchange_rate = 1;
             $payer_id = $taxpayer->id;
             $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
             $billableId = $assessment->id;

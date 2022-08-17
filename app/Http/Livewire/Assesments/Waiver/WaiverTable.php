@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\Assesments\Waiver;
 
+use App\Enum\DisputeStatus;
 use App\Models\Disputes\Dispute;
-use App\Models\WaiverStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -35,18 +35,18 @@ class WaiverTable extends DataTableComponent
     public function builder(): Builder
     {
         if ($this->rejected) {
-            return Dispute::where('disputes.status', WaiverStatus::REJECTED)->where('disputes.category',$this->category)->orderBy('disputes.created_at', 'desc');
+            return Dispute::where('disputes.app_status', DisputeStatus::REJECTED)->where('disputes.category', $this->category)->orderBy('disputes.created_at', 'desc');
         }
 
         if ($this->approved) {
-            return Dispute::where('disputes.status', WaiverStatus::APPROVED)->where('disputes.category',$this->category)->orderBy('disputes.created_at', 'desc');
+            return Dispute::where('disputes.app_status', DisputeStatus::APPROVED)->where('disputes.category', $this->category)->orderBy('disputes.created_at', 'desc');
         }
 
         if ($this->pending) {
-            return Dispute::where('disputes.status', WaiverStatus::PENDING)->where('disputes.category',$this->category)->orderBy('disputes.created_at', 'desc');
+            return Dispute::where('disputes.app_status', DisputeStatus::PENDING)->where('disputes.category', $this->category)->orderBy('disputes.created_at', 'desc');
         }
 
-        return Dispute::where('disputes.status', '!=', WaiverStatus::DRAFT)->where('disputes.category',$this->category)->orderBy('disputes.created_at', 'desc');
+        return Dispute::where('disputes.app_status', '!=', DisputeStatus::DRAFT)->where('disputes.category', $this->category)->orderBy('disputes.created_at', 'desc');
 
     }
 
@@ -71,10 +71,12 @@ class WaiverTable extends DataTableComponent
                 ->sortable(),
             Column::make("Tax Deposit", "tax_deposit")
                 ->sortable(),
-            Column::make('Status', 'status')
+            Column::make('Status', 'app_status')
                 ->view('assesments.waiver.includes.status'),
+            // Column::make('Payment Status', 'status')
+            //     ->view('assesments.waiver.includes.payment_status'),
             Column::make('Action', 'id')
-                ->view('assesments.waiver.includes.action'),
+                ->view('assesments.waiver.verified.action'),
         ];
     }
 }

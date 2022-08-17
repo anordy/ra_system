@@ -14,6 +14,10 @@ class ZmFeeHelper
      * @throws \Exception
      */
     public static function addTransactionFee(array $billItems, $currency, $exchangeRate): array {
+        if (!is_numeric($exchangeRate) || $exchangeRate <= 0){
+            throw new \Exception("Exchange rate can not be zero or null.");
+        }
+
         $bill_amount = 0;
         foreach ($billItems as $item) {
             if (!isset($item['amount']) || !isset($item['gfs_code'])) {
@@ -54,7 +58,7 @@ class ZmFeeHelper
                 }
                 break;
             default:
-                abort(404);
+                throw new \Exception('Bill amount out of range.');
         }
 
         $billItems[] = [
@@ -62,7 +66,7 @@ class ZmFeeHelper
             'amount' => $fee,
             'currency' => $currency,
             'gfs_code' => '116101',
-            'tax_type_id' => TaxType::where('code', TaxType::GOVERNMENT_FEE)->first()->id,
+            'tax_type_id' => TaxType::where('code', TaxType::GOVERNMENT_FEE)->firstOrFail()->id,
         ];
 
         return $billItems;

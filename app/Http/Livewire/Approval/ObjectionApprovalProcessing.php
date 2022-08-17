@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\DisputeStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -9,6 +10,8 @@ use App\Models\TaxType;
 use App\Models\WaiverStatus;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\PaymentsTrait;
+use App\Traits\TaxAssessmentDisputeTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -21,7 +24,7 @@ use Livewire\WithFileUploads;
 
 class ObjectionApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait,PaymentsTrait, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -112,7 +115,6 @@ class ObjectionApprovalProcessing extends Component
                 Log::error($e);
                 DB::rollBack();
                 $this->alert('error', 'Something went wrong.');
-                throw $e;
             }
 
         }
@@ -125,11 +127,13 @@ class ObjectionApprovalProcessing extends Component
             $this->validate([
                 'interestPercent' => 'required',
                 'penaltyPercent' => 'required',
-                
+
             ]);
             DB::beginTransaction();
 
             try {
+
+                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->assessment->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
 
                 // Generate control number for waived application
                 $billitems = [
@@ -150,16 +154,16 @@ class ObjectionApprovalProcessing extends Component
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
-                $description = "dispute";
+                $description = "dispute for assessment";
                 $payment_option = ZmCore::PAYMENT_OPTION_FULL;
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
                 $createdby_id = Auth::id();
-                $exchange_rate = 0;
+                $exchange_rate = 1;
                 $payer_id = $taxpayer->id;
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-                $billableId = $this->dispute->id;
-                $billableType = get_class($this->dispute);
+                $billableId = $this->assessment->id;
+                $billableType = get_class($this->assessment);
 
                 $zmBill = ZmCore::createBill(
                     $billableId,
@@ -207,7 +211,7 @@ class ObjectionApprovalProcessing extends Component
                     $zmBill->save();
 
                     $this->subject->verified_at = Carbon::now()->toDateTimeString();
-                    $this->subject->status = WaiverStatus::APPROVED;
+                    $this->subject->app_status = DisputeStatus::APPROVED;
                     $this->subject->save();
                     // event(new SendSms('business-registration-approved', $this->subject->id));
                     // event(new SendMail('business-registration-approved', $this->subject->id));
@@ -228,6 +232,7 @@ class ObjectionApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong.');
             return;
@@ -239,7 +244,7 @@ class ObjectionApprovalProcessing extends Component
 
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->status = WaiverStatus::CORRECTION;
+                $this->subject->app_status = DisputeStatus::CORRECTION;
                 // event(new SendSms('business-registration-correction', $this->subject->id));
                 // event(new SendMail('business-registration-correction', $this->subject->id));
             }

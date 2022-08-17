@@ -17,6 +17,10 @@ class BusinessLocation extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'date_of_commencing' => 'datetime',
+    ];
+
     public function business(){
         return $this->belongsTo(Business::class);
     }
@@ -113,5 +117,9 @@ class BusinessLocation extends Model
     public function reliefs()
     {
         return $this->hasMany(Relief::class,'location_id');
+    }
+
+    public function taxClearanceRequest(){
+        return $this->hasMany(TaxClearanceRequest::class);
     }
 }

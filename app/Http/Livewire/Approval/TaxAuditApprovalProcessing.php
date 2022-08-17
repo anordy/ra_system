@@ -229,6 +229,7 @@ class TaxAuditApprovalProcessing extends Component
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
+                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                         ]);
                     } else {
                         TaxAssessment::create([
@@ -240,6 +241,7 @@ class TaxAuditApprovalProcessing extends Component
                             'principal_amount' => $this->principalAmount,
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
+                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                         ]);
                     }
                 } else {

@@ -119,7 +119,7 @@ class QuantityCertificateAdd extends Component
                 'download_count' => 0
             ]);
             
-            $certificateNumber = $business->zin.'-'.$certificate->id;
+            $certificateNumber = 'COQ-'.$business->zin.$certificate->id;
             $certificateUpdate = QuantityCertificate::find($certificate->id);
             $certificateUpdate->certificate_no = $certificateNumber;
             $certificateUpdate->save();

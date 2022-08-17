@@ -94,7 +94,7 @@ class WorkflowTaxClaimSeeder extends Seeder
 
         Workflow::updateOrCreate([
             'code' => 'TAX_CLAIM_VERIFICATION',
-            'summary' => 'Tax claim verification modal',
+            'summary' => 'Tax claim verification.',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,

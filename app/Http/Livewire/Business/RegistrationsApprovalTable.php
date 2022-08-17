@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
 use App\Models\BusinessStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -40,10 +41,6 @@ class RegistrationsApprovalTable extends DataTableComponent
             Column::make('TIN', 'tin'),
             Column::make('Buss. Reg. No.', 'reg_no'),
             Column::make('Mobile', 'mobile'),
-            Column::make('Date of Commencing', 'date_of_commencing')
-                ->format(function ($value, $row) {
-                    return $value->toFormattedDateString();
-                }),
             Column::make('Previous Transition', 'id')
                 ->format(function ($value, $row) {
                     $transtion  = str_replace('_', ' ', $row->pinstancesActive->name ?? '');
