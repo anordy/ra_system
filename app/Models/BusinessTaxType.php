@@ -11,4 +11,6 @@ class BusinessTaxType extends Model
 
     protected $table = 'business_tax_type';
 
+    protected $guarded = [];
+
 }
