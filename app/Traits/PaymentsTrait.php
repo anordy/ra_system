@@ -143,8 +143,15 @@ trait PaymentsTrait {
         }
     }
 
+    /**
+     * @param $amount
+     * @param $currency
+     * @param $exchangeRate
+     * @return float|int|void
+     * @throws \Exception
+     */
     public function getTransactionFee($amount, $currency, $exchangeRate = null){
-        if ($currency != 'TZS' && $exchangeRate == null){
+        if ($currency != 'TZS' && (!is_numeric($exchangeRate) || $exchangeRate <= 0)){
             throw new \Exception('Please provide exchange rate for non TZS currency');
         }
 
@@ -154,29 +161,31 @@ trait PaymentsTrait {
 
         switch ($amount) {
             case $amount >= 0.00 && $amount <= 100000.00:
-                return $amount * 0.025;
+                $fee = $amount * 0.025;
                 break;
             case $amount >= 100001.00 && $amount <= 500000.00:
-                return $amount * 0.02;
+                $fee = $amount * 0.02;
                 break;
             case $amount >= 500001.00 && $amount <= 1000000.00:
-                return $amount * 0.013;
+                $fee = $amount * 0.013;
                 break;
             case $amount >= 1000001.00 && $amount <= 5000000.00:
-                return $amount * 0.003;
+                $fee = $amount * 0.003;
                 break;
             case $amount >= 5000001.00 && $amount <= 10000000.00:
-                return $amount * 0.0015;
+                $fee = $amount * 0.0015;
                 break;
             case $amount >= 10000001.00:
-                if ($currency == 'TZS') {
-                    return 20000;
-                } else {
-                    return round(20000 / $exchangeRate, 2);
-                }
+                $fee = 20000;
                 break;
             default:
-                abort(404);
+                throw new \Exception('Amount out of range.');
         }
+
+        if ($currency != 'TZS') {
+            $fee = round($fee / $exchangeRate, 2);
+        }
+
+        return $fee;
     }
 }
