@@ -153,7 +153,7 @@ class DeclaredSalesAnalysis extends Component
 
     protected function lumpSum()
     {
-        $yearReturnGroup = LumpSumReturn::select('total_amount_due', 'payment_quarters as return_months', 'total_amount_due_with_penalties', 'quarter as quarter', 'financial_years.name as year')
+        $yearReturnGroup = LumpSumReturn::select('total_amount_due', 'quarter_name', 'payment_quarters as return_months', 'total_amount_due_with_penalties', 'quarter as quarter', 'financial_years.name as year')
             ->leftJoin('financial_months', 'financial_months.id', 'lump_sum_returns.financial_month_id')
             ->leftJoin('lump_sum_payments', 'lump_sum_payments.business_id', 'lump_sum_returns.business_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
@@ -348,32 +348,15 @@ class DeclaredSalesAnalysis extends Component
                 ];
                 $amountDue              = 0;
                 $amountDueWithPenalties = 0;
-                $return_months          = 0;
+                $quatersName            = '';
                 foreach ($returnItems as $keyItem => $item) {
+                    $quatersName            = $item['quarter_name'];
                     $amountDue              = $item['total_amount_due'];
                     $amountDueWithPenalties = $item['total_amount_due_with_penalties'];
                     $totalPenalties         = $amountDueWithPenalties - $amountDue;
                 }
-                switch ($return_months) {
-                    case '3':
-                        // if payments is made after every 3 months means there is 4 quaters, and so on...
-                        $pQuaters = 4;
-                    
-                        break;
-                    case '4':
-                        $pQuaters = 3;
-        
-                        break;
-                    case '6':
-                        $pQuaters = 2;
-        
-                        break;
-                    case '12':
-                        $pQuaters = 1;
-        
-                        break;
-                }
                 
+                $itemValue['quarter_name']       = $quatersName;
                 $itemValue['amountWithPenalties']= $amountDueWithPenalties;
                 $itemValue['principalAmount']    = $amountDue;
                 $itemValue['Penalties']          = $totalPenalties;
