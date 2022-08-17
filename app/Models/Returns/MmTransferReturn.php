@@ -54,6 +54,16 @@ class MmTransferReturn extends Model
         return $this->morphOne(ZmBill::class, 'billable');
     }
 
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
+    }
+
     public function mmTransferPenalties(){
         return $this->hasMany(MmTransferPenalty::class, 'return_id');
     }

@@ -11,6 +11,7 @@ use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Returns\Port\PortReturnItem;
 use App\Models\Returns\Port\PortReturnPenalty;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PortReturn extends Model
@@ -55,6 +56,19 @@ class PortReturn extends Model
 
     public function penalties(){
         return $this->hasMany(PortReturnPenalty::class, 'return_id');
+    }
+
+    public function bill(){
+        return $this->morphOne(ZmBill::class, 'billable');
+    }
+
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
     }
 
 }

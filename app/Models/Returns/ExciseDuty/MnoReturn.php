@@ -66,6 +66,11 @@ class MnoReturn extends Model
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
+    }
+
     public function penalties(){
         return $this->hasMany(MnoPenalty::class,'return_id');
     }

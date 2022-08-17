@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\ReturnApplicationStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -32,7 +33,7 @@ class CreateMnoReturnsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
-
+            $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->timestamps();
             $table->softDeletes();
         });

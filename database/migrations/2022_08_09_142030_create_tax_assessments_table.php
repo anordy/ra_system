@@ -22,6 +22,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('assessment_id');
+            $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->string('assessment_type');
             $table->decimal('principal_amount', 20, 2);
             $table->decimal('interest_amount', 20, 2);
@@ -31,6 +32,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
             $table->enum('status', TaxAssessmentPaymentStatus::getConstants());
             $table->enum('app_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
+            $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });
     }

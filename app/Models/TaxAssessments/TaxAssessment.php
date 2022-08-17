@@ -60,7 +60,18 @@ class TaxAssessment extends Model
         return $query->where('assessment_type', TaxInvestigation::class);
     }
 
-       public function bill(){
+    public function bill()
+    {
         return $this->morphOne(ZmBill::class, 'billable');
+    }
+
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
     }
 }
