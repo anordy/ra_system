@@ -5,13 +5,13 @@
                 aria-selected="true">Complainant</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="dispute-tab" data-toggle="tab" href="#dispute" role="tab"
-                aria-controls="dispute" aria-selected="false">Tax In Dispute</a>
+            <a class="nav-link" id="waiver-tab" data-toggle="tab" href="#waiver" role="tab"
+                aria-controls="waiver" aria-selected="false">Tax In waiver</a>
         </li>
 
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
-                aria-selected="false">Ground dispute</a>
+                aria-selected="false">Ground waiver</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="reason-tab" data-toggle="tab" href="#reason" role="tab" aria-controls="reason"
@@ -27,7 +27,7 @@
 
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">dispute Status</span>
+                    <span class="font-weight-bold text-uppercase">waiver Status</span>
                     <p class="my-1">
                         @if ($waiver->status === \App\Models\WaiverStatus::APPROVED)
                             <span class="font-weight-bold text-success">
@@ -112,30 +112,46 @@
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $business->physical_address }}</p>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Payment Status</span>
+                    <p class="my-1">
+                        @if ($waiver->status === 'completed')
+                            <span class="badge badge-success py-1 px-2"
+                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                Paid
+                            </span>
+                        @else
+                            <span class="badge badge-success py-1 px-2"
+                                style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
+                                Not Paid
+                            </span>
+                        @endif
+                    </p>
+                </div>
 
             </div>
         </div>
 
-        <div class="tab-pane fade" id="dispute" role="tabpanel" aria-labelledby="dispute-tab">
-            {{-- @if ($dispute = $business->headquarter) --}}
+        <div class="tab-pane fade" id="waiver" role="tabpanel" aria-labelledby="waiver-tab">
+            {{-- @if ($waiver = $business->headquarter) --}}
             <div class="col-md-12 mt-1">
                 <h6 class="pt-3 mb-0 font-weight-bold">Disputes</h6>
                 <hr class="mt-2 mb-3" />
             </div>
             <div class="row m-2">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
-                    <p class="my-1">{{ $dispute->tax_in_dispute }} Tzs</p>
+                    <span class="font-weight-bold text-uppercase">Amount In waiver</span>
+                    <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
-                    <p class="my-1">{{ $dispute->tax_not_in_dispute }} Tzs</p>
+                    <span class="font-weight-bold text-uppercase">Amount Not in waiver</span>
+                    <p class="my-1">{{ $waiver->tax_not_in_dispute }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Assesed Amount</span>
-                    <p class="my-1">{{ $dispute->tax_in_dispute + $dispute->tax_not_in_dispute }} TZS</p>
+                    <p class="my-1">{{ $waiver->tax_in_dispute + $waiver->tax_not_in_dispute }} TZS</p>
                 </div>
 
 
@@ -147,7 +163,7 @@
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Grounds for dispute</span>
+                    <span class="font-weight-bold text-uppercase">Grounds for waiver</span>
                     <p class="my-1">{{ $waiver->ground }}</p>
 
                 </div>
@@ -159,7 +175,7 @@
         <div class="tab-pane fade" id="reason" role="tabpanel" aria-labelledby="reason-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Reason for dispute</span>
+                    <span class="font-weight-bold text-uppercase">Reason for waiver</span>
                     <p class="my-1">{{ $waiver->reason }}</p>
                 </div>
 
@@ -221,7 +237,7 @@
     @if ($waiver->dispute_report)
         <div class="card my-4 rounded-0">
             <div class="card-header font-weight-bold bg-white">
-               DISPUTE REPORT
+               waiver REPORT
             </div>
             <div class="card-body">
                 <div class="row">
@@ -232,7 +248,7 @@
                             <a target="_blank"
                                 href="{{ route('assesments.waiver.files', encrypt($waiver->dispute_report)) }}"
                                 style="font-weight: 500;" class="ml-1">
-                                dispute Report
+                                waiver Report
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
                             </a>
                         </div>
