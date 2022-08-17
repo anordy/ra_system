@@ -46,6 +46,11 @@
                             <a class="nav-link" id="training-tab" data-toggle="tab" href="#training" role="tab"
                                aria-controls="contact" aria-selected="false">Penalties</a>
                         </li>
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="payment-summary-tab" data-toggle="tab" href="#payment-summary" role="tab"
+                               aria-controls="payment-summary" aria-selected="false">Payment Summary</a>
+                        </li>
                     </ul>
                     <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
 
@@ -442,6 +447,12 @@
                                     </table>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="tab-pane p-2" id="payment-summary" role="tabpanel" aria-labelledby="payment-summary-tab">
+                            @if($return->bill)
+                                <x-bill-structure :bill="$return->bill" />
+                            @endif
                         </div>
                     </div>
                 </div>
