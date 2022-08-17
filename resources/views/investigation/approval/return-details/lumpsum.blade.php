@@ -11,10 +11,11 @@
                 $TP = 0;
             @endphp
 
-            <table class="table table-bordered text-center">
+            <table class="table table-bordered ">
                 <thead>
                     <tr>
                         <th>Quater</th>
+                        <th>Quater Of</th>
                         <th>Principal Tax Amount</th>
                         <th>Penalties</th>
                         <th>Principal Amount + penalties</th>
@@ -24,22 +25,22 @@
                     @foreach ($return as $item)
                         <tr>
                             <td>{{ $item['quarter'] }}</td>
+                            <td>{{ $item['quarter_name'] }}</td>
                             <td>{{ number_format($item['principalAmount'], 2) }}</td>
                             <td>{{ number_format($item['Penalties']), 2 }}</td>
                             <td>{{ number_format($item['amountWithPenalties'], 2) }}</td>
-
                         </tr>
                         @php
                             $PM += $item['principalAmount'];
                             $AWP += $item['amountWithPenalties'];
                             $TP += $item['Penalties'];
-                            
                         @endphp
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr class="font-weight-bold">
                         <td>TOTAL</td>
+                        <td class="bg-secondary"></td>
                         <td>{{ number_format($PM, 2) }}</td>
                         <td>{{ number_format($AWP, 2) }}</td>
                         <td>{{ number_format($TP, 2) }}</td>
