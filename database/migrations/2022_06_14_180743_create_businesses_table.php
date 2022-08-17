@@ -32,7 +32,6 @@ class CreateBusinessesTable extends Migration
             $table->string('email')->nullable();
             $table->string('place_of_business');
             $table->string('physical_address');
-            $table->dateTime('date_of_commencing');
             $table->string('pre_estimated_turnover');
             $table->string('post_estimated_turnover');
             $table->string('goods_and_services_types');

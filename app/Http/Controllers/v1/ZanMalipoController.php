@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Enum\PaymentStatus;
-use App\Models\LumpSumPayment;
+use App\Models\Disputes\Dispute;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
@@ -24,7 +24,6 @@ use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmSignatureHelper;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\ArrayToXml\ArrayToXml;
 
@@ -40,7 +39,8 @@ class ZanMalipoController extends Controller
         EmTransactionReturn::class,
         BfoReturn::class,
         LumpSumReturn::class,
-        TaxAssessment::class
+        TaxAssessment::class,
+        Dispute::class
     ];
 
     private $multipleBillsReturnable = [
@@ -79,9 +79,13 @@ class ZanMalipoController extends Controller
                 $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
                 if (in_array($bill->billable_type, $this->returnable)) {
-                    $billable         = $bill->billable;
-                    $billable->status = ReturnStatus::CN_GENERATED;
-                    $billable->save();
+                    try {
+                        $billable         = $bill->billable;
+                        $billable->status = ReturnStatus::CN_GENERATED;
+                        $billable->save();
+                    } catch(\Exception $e){
+                        Log::error($e);
+                    }
                 }
 
                 SendZanMalipoSMS::dispatch(ZmCore::formatPhone($bill->payer_phone_number), $message);
@@ -89,9 +93,13 @@ class ZanMalipoController extends Controller
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
 
                 if (in_array($bill->billable_type, $this->returnable)) {
-                    $billable         = $bill->billable;
-                    $billable->status = ReturnStatus::CN_GENERATION_FAILED;
-                    $billable->save();
+                    try {
+                        $billable         = $bill->billable;
+                        $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+                        $billable->save();
+                    } catch (\Exception $e){
+                        Log::error($e);
+                    }
                 }
             }
 
@@ -191,42 +199,46 @@ class ZanMalipoController extends Controller
 
     private function updateReturn($bill)
     {
-        if (in_array($bill->billable_type, $this->returnable)) {
-            if ($bill->paidAmount() >= $bill->amount) {
-                $billable         = $bill->billable;
-                $billable->status = ReturnStatus::COMPLETE;
-                $billable->save();
-            } else {
-                $billable         = $bill->billable;
-                $billable->status = ReturnStatus::PAID_PARTIALLY;
-                $billable->save();
-            }
-        } elseif (in_array($bill->billable_type, $this->multipleBillsReturnable)) {
-            if ($bill->paidAmount() >= $bill->amount) {
-                // Find the alternative bill for this return
-                $altBill = ZmBill::where('billable_id', $bill->billable_id)
-                    ->where('billable_type', $bill->billable_type)
-                    ->where('currency', '!=', $bill->currency)
-                    ->latest()->first();
-
-                if (!$altBill) {
-                    return;
-                }
-
-                if ($altBill->status === PaymentStatus::PAID) {
+        try {
+            if (in_array($bill->billable_type, $this->returnable)) {
+                if ($bill->paidAmount() >= $bill->amount) {
                     $billable         = $bill->billable;
                     $billable->status = ReturnStatus::COMPLETE;
                     $billable->save();
                 } else {
                     $billable         = $bill->billable;
-                    $billable->status = ReturnStatus::COMPLETED_PARTIALLY;
+                    $billable->status = ReturnStatus::PAID_PARTIALLY;
                     $billable->save();
                 }
-            } else {
-                $billable         = $bill->billable;
-                $billable->status = ReturnStatus::PAID_PARTIALLY;
-                $billable->save();
+            } elseif (in_array($bill->billable_type, $this->multipleBillsReturnable)) {
+                if ($bill->paidAmount() >= $bill->amount) {
+                    // Find the alternative bill for this return
+                    $altBill = ZmBill::where('billable_id', $bill->billable_id)
+                        ->where('billable_type', $bill->billable_type)
+                        ->where('currency', '!=', $bill->currency)
+                        ->latest()->first();
+
+                    if (!$altBill) {
+                        return;
+                    }
+
+                    if ($altBill->status === PaymentStatus::PAID) {
+                        $billable         = $bill->billable;
+                        $billable->status = ReturnStatus::COMPLETE;
+                        $billable->save();
+                    } else {
+                        $billable         = $bill->billable;
+                        $billable->status = ReturnStatus::COMPLETED_PARTIALLY;
+                        $billable->save();
+                    }
+                } else {
+                    $billable         = $bill->billable;
+                    $billable->status = ReturnStatus::PAID_PARTIALLY;
+                    $billable->save();
+                }
             }
+        } catch (\Exception $exception){
+            Log::error($exception);
         }
     }
 }

@@ -14,6 +14,10 @@ class ZmFeeHelper
      * @throws \Exception
      */
     public static function addTransactionFee(array $billItems, $currency, $exchangeRate): array {
+        if (!is_numeric($exchangeRate) || $exchangeRate <= 0){
+            throw new \Exception("Exchange rate can not be zero or null.");
+        }
+
         $bill_amount = 0;
         foreach ($billItems as $item) {
             if (!isset($item['amount']) || !isset($item['gfs_code'])) {

@@ -19,10 +19,6 @@ class Business extends Model implements Auditable
 
     protected $guarded = [];
 
-    protected $casts = [
-        'date_of_commencing' => 'datetime',
-    ];
-
     // Scopes
     public function scopeApproved($query)
     {

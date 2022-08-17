@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Assesments;
 
+use App\Enum\BillStatus;
+use App\Enum\DisputeStatus;
+use App\Enum\PaymentStatus;
 use App\Models\Disputes\Dispute;
-use App\Models\WaiverStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -12,17 +14,35 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class WaiverApprovalTable extends DataTableComponent
 {
     use LivewireAlert;
+    public $paymentStatus;
 
-    public function mount($category)
+    public function mount($category, $payment)
     {
+        $this->paymentStatus = $payment;
         $this->category = $category;
     }
     public function builder(): Builder
     {
-        return Dispute::query()
-            ->where('disputes.status', WaiverStatus::PENDING)
-            ->where('disputes.category', $this->category)
-            ->orderBy('disputes.created_at', 'desc');
+
+        if ($this->paymentStatus == 'complete') {
+            return Dispute::query()
+                ->where('disputes.status', BillStatus::COMPLETE)
+                ->where('disputes.category', $this->category)
+                ->whereNotIn('disputes.app_status', [DisputeStatus::APPROVED])
+                ->with('pinstancesActive')
+                ->orderBy('disputes.created_at', 'desc');
+
+        } elseif ($this->paymentStatus == 'unpaid') {
+            return Dispute::query()
+                ->where('disputes.category', $this->category)
+                ->whereNotIn('disputes.status', [BillStatus::COMPLETE])
+                ->whereNotIn('disputes.app_status', [DisputeStatus::APPROVED])
+                ->with('pinstancesActive')
+                ->orderBy('disputes.created_at', 'desc');
+        } else {
+            return [];
+        }
+
     }
 
     public function configure(): void
@@ -53,7 +73,7 @@ class WaiverApprovalTable extends DataTableComponent
                 ->sortable(),
             Column::make("Tax Not in Dispute", "tax_not_in_dispute")
                 ->sortable(),
-            Column::make("Weaver Requirement", "tax_deposit")
+            Column::make("Tax Deposit", "tax_deposit")
                 ->sortable(),
             Column::make('Previous Transition', 'id')
                 ->format(function ($value, $row) {
@@ -65,10 +85,16 @@ class WaiverApprovalTable extends DataTableComponent
                     </span>
                     HTML;
                 })->html(true),
-            Column::make('Status', 'status')
+            Column::make('Status', 'app_status')
                 ->view('assesments.waiver.includes.status'),
+            Column::make('Payment Status', 'status')
+                ->hideIf($this->category == 'waiver-and-objection')
+                ->view('assesments.waiver.includes.payment_status')
+                ->html(true),
             Column::make('Action', 'id')
-                ->view('assesments.waiver.includes.action'),
+                ->hideIf($this->paymentStatus != 'complete')
+                ->view('assesments.waiver.includes.action')
+                ->html(true),
         ];
     }
 }

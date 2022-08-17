@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Assesments Debt Management')
+@section('title', 'Verification Debt Management')
 
 @section('content')
 <div class="card p-0 m-0">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <div class="text-uppercase font-weight-bold">Assessment Debts</div>
+        <div class="text-uppercase font-weight-bold">Verification Debts</div>
         <div class="card-tools">
 
         </div>
@@ -20,7 +20,6 @@
                     <th>Penalty</th>
                     <th>Interest</th>
                     <th>Total Debt</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,11 +32,6 @@
                             <td>{{ number_format($assessment->penalty_amount, 2) }}</td>
                             <td>{{ number_format($assessment->interest_amount, 2) }}</td>
                             <td>{{ number_format($assessment->principal_amount + $assessment->penalty_amount + $assessment->interest_amount, 2) }}
-                            </td>
-                            <td>
-                                {{-- <a href="{{ route('debts.verification.waive', 2) }}" class="btn btn-primary">
-                                    Waive
-                                </a> --}}
                             </td>
                         </tr>
                     @endforeach

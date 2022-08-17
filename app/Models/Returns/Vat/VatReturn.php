@@ -54,5 +54,9 @@ class VatReturn extends Model
         return $this->hasMany(VatReturnPenalty::class, 'return_id');
     }
 
+    public function suppliers(){
+        return $this->hasMany(VatReturnSupplierDetail::class, 'vat_return_id');
+    }
+
 
 }
