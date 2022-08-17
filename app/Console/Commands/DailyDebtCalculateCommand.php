@@ -107,7 +107,7 @@ class DailyDebtCalculateCommand extends Command
                     'payment_due_date as curr_due_date'
                 )
                     ->doesntHave('payments')
-                    ->where('status', '!=', 'complete')
+                    ->whereNotIn('status', ['complete', 'paid-by-debt'])
                     ->whereIn('application_status', ['self_assessment', 'adjusted', 'submitted'])
                     ->where('filing_due_date', '<', $financialMonth->due_date)
                     ->orWhere('payment_due_date', '<', $financialMonth->due_date)
