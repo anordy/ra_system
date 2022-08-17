@@ -87,7 +87,7 @@ class DailyDebtCalculateCommand extends Command
             try {
 
                 $hoteReturn = $model::select(
-                    'id as debt_type_id',
+                    'id as debt_id',
                     'business_location_id',
                     'business_id',
                     'currency',
@@ -107,7 +107,7 @@ class DailyDebtCalculateCommand extends Command
                     'payment_due_date as curr_due_date'
                 )
                     ->doesntHave('payments')
-                    ->where('status', '!=', 'complete')
+                    ->whereNotIn('status', ['complete', 'paid-by-debt'])
                     ->whereIn('application_status', ['self_assessment', 'adjusted', 'submitted'])
                     ->where('filing_due_date', '<', $financialMonth->due_date)
                     ->orWhere('payment_due_date', '<', $financialMonth->due_date)
@@ -123,7 +123,7 @@ class DailyDebtCalculateCommand extends Command
 
                 $dataToInsert = $data->toArray();
 
-                Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
+                Debt::upsert($dataToInsert, ['debt_id', 'dept_type']);
                 DB::commit();
                 Log::channel('debtCollection')->info("Daily Debt collection for return model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
             } catch (Exception $e) {
@@ -146,7 +146,7 @@ class DailyDebtCalculateCommand extends Command
             try {
 
                 $data = $model::select(
-                    'id as debt_type_id',
+                    'id as debt_id',
                     'location_id as business_location_id',
                     'business_id',
                     'currency',
@@ -160,13 +160,12 @@ class DailyDebtCalculateCommand extends Command
                     'penalty_amount as original_penalty',
                     'interest_amount as interest',
                     'interest_amount as original_interest',
-                    'created_at',
+                    'created_at as submitted_at',
                     'payment_due_date as last_due_date',
                     'payment_due_date as curr_due_date'
                 )
                     ->doesntHave('payments')
                     ->where('status', '!=', 'complete')
-                    ->whereIn('app_status', ['self_assessment', 'adjusted', 'submitted'])
                     ->orWhere('payment_due_date', '<', $financialMonth->due_date)
                     ->get();
 
@@ -178,9 +177,11 @@ class DailyDebtCalculateCommand extends Command
                     return $return;
                 });
 
+                // dd($data);
+
                 $dataToInsert = $data->toArray();
 
-                Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
+                Debt::upsert($dataToInsert, ['debt_id', 'dept_type']);
                 DB::commit();
                 Log::channel('debtCollection')->info("Daily Debt collection for model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
             } catch (Exception $e) {

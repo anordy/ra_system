@@ -19,8 +19,7 @@ class CreateDebtWaiversTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('filed_by_id');
-            $table->unsignedBigInteger('assesment_type_id'); // Put model for either verification, investigation or audit
-            $table->unsignedBigInteger('assesment_id')->nullable();
+            $table->unsignedBigInteger('debt_id')->nullable();
             $table->enum('category', ['penalty', 'interest', 'both']);
             $table->enum('business_type', ['hotel', 'other'])->default('other');
             $table->text('ground')->nullable();

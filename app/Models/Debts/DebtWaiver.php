@@ -4,8 +4,8 @@ namespace App\Models\Debts;
 
 use App\Models\ZmBill;
 use App\Models\Business;
-use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
 use App\Models\WaiverStatus;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -22,9 +22,9 @@ class DebtWaiver extends Model
         return $this->belongsTo(Business::class, 'business_id');
     }
 
-    public function assesment()
+    public function debt()
     {
-        return $this->belongsTo(TaxAssessment::class, 'assesment_id');
+        return $this->belongsTo(Debt::class, 'debt_id');
     }
 
     public function waiverStatus()
