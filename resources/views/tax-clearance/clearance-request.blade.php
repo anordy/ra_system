@@ -8,7 +8,7 @@
             <livewire:tax-clearance.tax-clearance-request 
             :returnDebts="$returnDebts" :verificationDebts="$verificationDebts"
             :auditDebts="$auditDebts" :investigationDebts="$investigationDebts"
-            :businessLocation="$businessLocation" />
+            :taxClearence="$taxClearence" />
         </div>
     </div>
 @endsection
