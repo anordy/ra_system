@@ -21,7 +21,7 @@ class VerificationDebtController extends Controller
     {
         $id = decrypt($id);
         $debt = Debt::findOrFail($id);
-        $assesment = $debt->debt_type::find($debt->debt_type_id);
+        $assesment = $debt->debt_type::find($debt->debt_id);
 
         return view('debts.verifications.show', compact('assesment', 'id', 'debt'));
     }
@@ -53,7 +53,7 @@ class VerificationDebtController extends Controller
             return array(
                 'tax_type_id' => $assessments['tax_type_id'],
                 'debt_type' => TaxVerification::class,
-                'debt_type_id' => $assessments['assesment_id'],
+                'debt_id' => $assessments['assesment_id'],
                 'business_id' => $assessments['business_id'],
                 'location_id' => $assessments['location_id'],
                 'category' => 'assesment',

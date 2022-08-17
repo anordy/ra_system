@@ -87,7 +87,7 @@ class DailyDebtCalculateCommand extends Command
             try {
 
                 $hoteReturn = $model::select(
-                    'id as debt_type_id',
+                    'id as debt_id',
                     'business_location_id',
                     'business_id',
                     'currency',
@@ -123,7 +123,7 @@ class DailyDebtCalculateCommand extends Command
 
                 $dataToInsert = $data->toArray();
 
-                Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
+                Debt::upsert($dataToInsert, ['debt_id', 'dept_type']);
                 DB::commit();
                 Log::channel('debtCollection')->info("Daily Debt collection for return model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
             } catch (Exception $e) {
@@ -146,7 +146,7 @@ class DailyDebtCalculateCommand extends Command
             try {
 
                 $data = $model::select(
-                    'id as debt_type_id',
+                    'id as debt_id',
                     'location_id as business_location_id',
                     'business_id',
                     'currency',
@@ -181,7 +181,7 @@ class DailyDebtCalculateCommand extends Command
 
                 $dataToInsert = $data->toArray();
 
-                Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
+                Debt::upsert($dataToInsert, ['debt_id', 'dept_type']);
                 DB::commit();
                 Log::channel('debtCollection')->info("Daily Debt collection for model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
             } catch (Exception $e) {

@@ -78,7 +78,7 @@ class AssessmentDebtController extends Controller
     {
         $id = decrypt($id);
         $debt = Debt::findOrFail($id);
-        $assesment = $debt->debt_type::find($debt->debt_type_id);
+        $assesment = $debt->debt_type::find($debt->debt_id);
 
         return view('debts.audits.show', compact('assesment', 'id', 'debt'));
     }
