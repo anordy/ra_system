@@ -38,7 +38,6 @@ class CreateHotelReturnsTable extends Migration
             $table->dateTime('paid_at')->nullable();
             $table->date('filing_due_date')->nullable();
             $table->date('payment_due_date')->nullable();
-
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->timestamps();
