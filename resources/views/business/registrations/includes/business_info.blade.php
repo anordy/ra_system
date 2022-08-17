@@ -128,10 +128,6 @@
                 <p class="my-1">{{ $business->physical_address }}</p>
             </div>
             <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
-                <p class="my-1">{{ $business->date_of_commencing->toFormattedDateString() }}</p>
-            </div>
-            <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months) TZS</span>
                 <p class="my-1">{{ fmCurrency($business->post_estimated_turnover) }}</p>
             </div>
@@ -234,6 +230,10 @@
                     </div>
                 @endif
                 <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
+                    <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Electric Metre No.</span>
                     <p class="my-1">{{ $location->meter_no }}</p>
                 </div>
@@ -322,6 +322,10 @@
                             <p class="my-1">{{ $location->owner_mobile }}</p>
                         </div>
                     @endif
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
+                        <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
+                    </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Electric Metre No.</span>
                         <p class="my-1">{{ $location->meter_no }}</p>
