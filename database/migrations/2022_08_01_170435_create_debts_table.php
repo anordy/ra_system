@@ -35,6 +35,7 @@ class CreateDebtsTable extends Migration
             $table->dateTime('filing_due_date')->nullable();
             $table->dateTime('last_due_date')->nullable();
             $table->dateTime('curr_due_date')->nullable();
+            $table->dateTime('approved_on')->nullable();
             $table->integer('demand_notice_count')->nullable();
             $table->enum('app_step', ['waiver', 'extension', 'normal'])->default('normal');
             $table->enum('origin', ['job', 'manual'])->nullable();

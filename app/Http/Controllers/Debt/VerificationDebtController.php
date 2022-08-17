@@ -13,11 +13,6 @@ class VerificationDebtController extends Controller
 
     public function index()
     {
-        $debts = Debt::truncate();
-        $assesments = $this->generateAssesmentDebts();
-
-        // Insert assesments into debts
-        $debts->insert($assesments);
         return view('debts.verifications.index');
     }
 

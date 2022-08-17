@@ -20,7 +20,7 @@
 
             <div class="tab-content bg-white border shadow-sm" id="waiverContent">
                 <div class="tab-pane fade show active" id="waiverInfo" role="tabpanel" aria-labelledby="waiverInfo-tab">
-                    @include('debts.waivers.includes.objection_info')
+                    @include('debts.waivers.show')
                     <livewire:approval.debt-waiver-approval-processing modelName='App\Models\Debts\DebtWaiver'
                         modelId="{{ $waiver->id }}" />
                 </div>

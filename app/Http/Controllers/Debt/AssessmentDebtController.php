@@ -28,10 +28,10 @@ class AssessmentDebtController extends Controller
     public function approval($waiverId)
     {
         $waiver = DebtWaiver::findOrFail(decrypt($waiverId));
-        $assesment = TaxAssessment::find($waiver->assesment_id);
+        $debt = Debt::find($waiver->debt_id);
         $business = Business::find($waiver->business_id);
-        $files = DebtWaiverAttachment::where('dispute_id', $waiver->id)->get();
-        return view('debts.waivers.approval', compact('waiver', 'files', 'business','assesment'));
+        $files = DebtWaiverAttachment::where('debt_id', $waiver->id)->get();
+        return view('debts.waivers.approval', compact('waiver', 'files', 'business', 'debt'));
     }
 
     public function verification()
