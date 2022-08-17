@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Models\Debts\Debt;
 use App\Models\Debts\DebtWaiver;
+use App\Models\ExchangeRate;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
@@ -24,12 +26,13 @@ class DebtWaiverApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, LivewireAlert;
     public $modelId;
+    public $debt;
     public $modelName;
     public $comments;
     public $waiverReport;
     public $taxTypes;
-    public $penaltyPercent, $penaltyAmount, $penaltyAmountDue, $interestAmountDue;
-    public $interestPercent, $interestAmount, $debt_waiver, $assesment, $total;
+    public $penaltyPercent = 0, $penaltyAmount = 0, $penaltyAmountDue = 0, $interestAmountDue = 0;
+    public $interestPercent = 0, $interestAmount = 0, $debt_waiver, $total;
     public $natureOfAttachment, $noticeReport, $settingReport;
 
     public function mount($modelName, $modelId)
@@ -38,7 +41,7 @@ class DebtWaiverApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->debt_waiver = DebtWaiver::find($this->modelId);
-        $this->assessment = TaxAssessment::find($this->debt_waiver->assesment_id);
+        $this->debt = Debt::find($this->debt_waiver->debt_id);
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $modelId);
 
@@ -52,7 +55,7 @@ class DebtWaiverApprovalProcessing extends Component
             } elseif ($this->penaltyPercent < 0 || !is_numeric($this->penaltyPercent)) {
                 $this->penaltyPercent = null;
             }
-            $this->penaltyAmount = ($this->assessment->penalty_amount * $this->penaltyPercent) / 100;
+            $this->penaltyAmount = ($this->debt->penalty * $this->penaltyPercent) / 100;
         }
 
         if ($propertyName == "interestPercent") {
@@ -61,12 +64,12 @@ class DebtWaiverApprovalProcessing extends Component
             } elseif ($this->interestPercent < 0 || !is_numeric($this->interestPercent)) {
                 $this->interestPercent = null;
             }
-            $this->interestAmount = ($this->assessment->interest_amount * $this->interestPercent) / 100;
+            $this->interestAmount = ($this->debt->interest * $this->interestPercent) / 100;
         }
 
-        $this->penaltyAmountDue = $this->assessment->penalty_amount - $this->penaltyAmount;
-        $this->interestAmountDue = $this->assessment->interest_amount - $this->interestAmount;
-        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->assessment->principal_amount) - ($this->debt_waiver->tax_deposit);
+        $this->penaltyAmountDue = $this->debt->penalty - $this->penaltyAmount;
+        $this->interestAmountDue = $this->debt->interest - $this->interestAmount;
+        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->debt->principal_amount);
     }
 
     public function approve($transtion)
@@ -87,16 +90,6 @@ class DebtWaiverApprovalProcessing extends Component
                 $waiverReport = $this->waiverReport->store('waiver_report', 'local-admin');
             }
 
-            $noticeReport = "";
-            if ($this->noticeReport) {
-                $noticeReport = $this->noticeReport->store('notice_report', 'local-admin');
-            }
-
-            $settingReport = "";
-            if ($this->settingReport) {
-                $settingReport = $this->settingReport->store('setting_report', 'local-admin');
-            }
-
             $debt_waiver = DebtWaiver::find($this->modelId);
 
             DB::beginTransaction();
@@ -104,8 +97,6 @@ class DebtWaiverApprovalProcessing extends Component
 
                 $debt_waiver->update([
                     'waiver_report' => $waiverReport ?? '',
-                    'notice_report' => $noticeReport ?? '',
-                    'setting_report' => $settingReport ?? '',
                 ]);
 
                 DB::commit();
@@ -135,7 +126,7 @@ class DebtWaiverApprovalProcessing extends Component
                         'billable_id' => $this->debt_waiver->id,
                         'billable_type' => get_class($this->debt_waiver),
                         'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->assessment->principal_amount,
+                        'amount' => $this->debt->principal_amount,
                         'currency' => 'TZS',
                         'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
                         'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id,
@@ -174,14 +165,14 @@ class DebtWaiverApprovalProcessing extends Component
                 $payer_phone = $taxpayer->mobile;
                 $description = "Debt Waiver for assessment";
                 $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-                $currency = 'TZS';
+                $currency = $this->debt->currency;
                 $createdby_type = get_class(Auth::user());
                 $createdby_id = Auth::id();
-                $exchange_rate = 0;
+                $exchange_rate = $this->debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $this->debt->currency)->first()->mean;
                 $payer_id = $taxpayer->id;
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-                $billableId = $this->assessment->id;
-                $billableType = get_class($this->assessment);
+                $billableId = $this->debt->id;
+                $billableType = get_class($this->debt);
 
 
                 $zmBill = ZmCore::createBill(
@@ -211,18 +202,22 @@ class DebtWaiverApprovalProcessing extends Component
                     if ($response->status === ZmResponse::SUCCESS) {
                         $this->debt_waiver->status = ReturnStatus::CN_GENERATING;
                         $this->debt_waiver->save();
-                        $this->assessment->update([
-                            'penalty_amount' => $this->penaltyAmountDue,
-                            'interest_amount' => $this->interestAmountDue,
+                        $this->debt->update([
+                            'penalty' => $this->penaltyAmountDue,
+                            'interest' => $this->interestAmountDue,
                             'total_amount' => $this->total,
+                            'outstanding_amount' => $this->total,
+                            'app_step' => 'waiver',
                             'status' => ReturnStatus::CN_GENERATED
                         ]);
                         $this->flash('success', 'A control number has been generated successful.');
                     } else {
-                        $this->assessment->update([
-                            'penalty_amount' => $this->penaltyAmountDue,
-                            'interest_amount' => $this->interestAmountDue,
+                        $this->debt->update([
+                            'penalty' => $this->penaltyAmountDue,
+                            'interest' => $this->interestAmountDue,
                             'total_amount' => $this->total,
+                            'outstanding_amount' => $this->total,
+                            'app_step' => 'waiver',
                             'status' => ReturnStatus::CN_GENERATION_FAILED
                         ]);
                         session()->flash('error', 'Control number generation failed, try again later');
@@ -235,11 +230,12 @@ class DebtWaiverApprovalProcessing extends Component
                     // We are local
                     // $this->debt_waiver->status = ReturnStatus::CN_GENERATED;
                     $this->debt_waiver->save();
-                    $this->assessment->update([
-                        'penalty_amount' => $this->penaltyAmountDue,
-                        'interest_amount' => $this->interestAmountDue,
+                    $this->debt->update([
+                        'penalty' => $this->penaltyAmountDue,
+                        'interest' => $this->interestAmountDue,
                         'total_amount' => $this->total,
-                        'status' => ReturnStatus::CN_GENERATED
+                        'outstanding_amount' => $this->total,
+                        'app_step' => 'waiver'
                     ]);
 
                     // Simulate successful control no generation
