@@ -39,7 +39,8 @@ class ReturnReportController extends Controller
             $title = $modelData['returnName'].' Return Records ('.$for.')';
         } 
         $records = $records->get(); 
-        $pdf = PDF::loadView('exports.returns.reports.pdf.stamp-duty', compact('records', 'title', 'parameters'));
+        $viewName = str_replace(' ','-',strtolower($modelData['returnName']));
+        $pdf = PDF::loadView('exports.returns.reports.pdf.'.$viewName, compact('records', 'title', 'parameters'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download($fileName);
