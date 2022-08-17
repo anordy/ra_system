@@ -17,6 +17,10 @@ class BusinessLocation extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'date_of_commencing' => 'datetime',
+    ];
+
     public function business(){
         return $this->belongsTo(Business::class);
     }

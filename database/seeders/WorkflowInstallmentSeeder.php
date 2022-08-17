@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Workflow;
 use Illuminate\Database\Seeder;
 
-class WorkflowTaxClaimSeeder extends Seeder
+class WorkflowInstallmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,34 +14,29 @@ class WorkflowTaxClaimSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'tax_claim_verifications';
+        $name = 'installments_request';
         $type = 'workflow';
         $marking_store = [
             'type'      => 'multiple_state',
             'property'  => ['marking']
         ];
         $initial_marking = 'apply';
-        $supports =  ['App\Models\Claims\TaxClaim'];
+        $supports =  ['App\Models\Installment\InstallmentRequest'];
         $places = [
             'initial' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'assign_officers' => [
+            'debt_manager' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 4]
+                'operators' => [1, 9]
             ],
-            'verification_results' => [
+            'crdm' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 5]
-            ],
-            'method_of_payment' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 4]
+                'operators' => [1, 10]
             ],
             'commissioner' => [
                 'owner' => 'staff',
@@ -62,21 +57,16 @@ class WorkflowTaxClaimSeeder extends Seeder
         $transitions = [
             'start' => [
                 'from' => 'initial',
-                'to'   => 'assign_officers',
+                'to'   => 'debt_manager',
                 'condition' => '',
             ],
-            'assign_officers' => [
-                'from' => 'assign_officers',
-                'to'   => 'verification_results',
+            'debt_manager' => [
+                'from' => 'debt_manager',
+                'to'   => 'crdm',
                 'condition' => '',
             ],
-            'verification_results' => [
-                'from' => 'verification_results',
-                'to'   => 'method_of_payment',
-                'condition' => '',
-            ],
-            'method_of_payment' => [
-                'from' => 'method_of_payment',
+            'crdm' => [
+                'from' => 'crdm',
                 'to'   => 'commissioner',
                 'condition' => '',
             ],
@@ -93,8 +83,8 @@ class WorkflowTaxClaimSeeder extends Seeder
         ];
 
         Workflow::updateOrCreate([
-            'code' => 'TAX_CLAIM_VERIFICATION',
-            'summary' => 'Tax claim verification.',
+            'code' => 'INSTALLMENT_REQUESTS',
+            'summary' => 'Installment Request',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,
