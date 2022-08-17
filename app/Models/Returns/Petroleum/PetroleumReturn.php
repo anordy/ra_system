@@ -51,6 +51,11 @@ class PetroleumReturn extends Model
         return $this->morphOne(ZmBill::class, 'billable');
     }
 
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
+    }
+
     public function petroleumPenalties(){
         return $this->hasMany(PetroleumPenalty::class, 'return_id');
     }

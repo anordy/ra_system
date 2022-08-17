@@ -5,7 +5,16 @@ namespace App\Console\Commands;
 use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
+use App\Models\Returns\MmTransferReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\Vat\VatReturn;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -45,21 +54,39 @@ class DailyDebtCalculateCommand extends Command
      */
     public function handle()
     {
-        Log::info('Daily Debt calculation process started');
-        /**
-         * Get current return month
-         * Get current return month due date
-         * Select data from return with current due date
-         * Insert into debt all unpaid and update status of return to debt
-         */
+        Log::channel('debtCollection')->info('Daily Debt collection process started');
+        $financialYear = FinancialYear::firstWhere('code', date('Y'));
+        $month = Carbon::now()->month;
+        $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
+            ->where('number', $month)->first();
+
+        $returnModels = [
+            StampDutyReturn::class,
+            MnoReturn::class,
+            VatReturn::class,
+            MmTransferReturn::class,
+            HotelReturn::class,
+            PetroleumReturn::class,
+            PortReturn::class,
+            EmTransactionReturn::class,
+            BfoReturn::class,
+            LumpSumReturn::class
+        ];
+
+        foreach ($returnModels as $model) {
+            $this->returnsDebts($model, $financialMonth);
+        }
+
+        Log::channel('debtCollection')->info('Daily Debt collection ended');
+    }
+
+    protected function returnsDebts($model, $financialMonth)
+    {
+        Log::channel('debtCollection')->info("Daily Debt collection for model ". strval($model) ." for financial month ". $financialMonth->id ." with due date ".$financialMonth->due_date." process started");
         DB::beginTransaction();
         try {
-            $financialYear = FinancialYear::firstWhere('code', date('Y'));
-            $month = Carbon::now()->month;
-            $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
-                ->where('number', $month)->first();
 
-            $hoteReturn = HotelReturn::select(
+            $hoteReturn = $model::select(
                 'id as debt_type_id',
                 'business_location_id',
                 'business_id',
@@ -98,10 +125,11 @@ class DailyDebtCalculateCommand extends Command
 
             Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
             DB::commit();
-            Log::info('Daily Debt calculation process ended');
+            Log::channel('debtCollection')->info("Daily Debt collection for model ". strval($model) ." for financial month ". $financialMonth->id ." with due date ".$financialMonth->due_date." process ended");
+        
         } catch (Exception $e) {
-            Log::info('Daily Debt calculation process ended with error');
-            Log::error($e);
+            Log::channel('debtCollection')->info('Daily Debt calculation process ended with error');
+            Log::channel('debtCollection')->error($e);
             DB::rollBack();
         }
     }
