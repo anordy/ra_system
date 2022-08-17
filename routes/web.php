@@ -78,6 +78,7 @@ use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\TaxTypeController;
 use App\Http\Controllers\TwoFactorAuthController;
+use App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
@@ -311,6 +312,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
     });
+
+    Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-type')->group(function () {
+        Route::get('/', [UpgradeTaxtypeController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [UpgradeTaxtypeController::class, 'show'])->name('show');
+
+    });
+
 
     Route::name('debts.')->prefix('/debts')->group(function () {
         // Assesments

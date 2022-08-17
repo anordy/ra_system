@@ -77,6 +77,18 @@
             </ul>
         </li>
 
+        <li class="{{ request()->is('upgrade-tax-type*') ? 'active' : '' }}">
+            <a href="#upgrade-tax-typeSubmenu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('upgrade-tax-types*') ? 'true' : 'false' }}" class="dropdown-toggle">Upgrade Tax Types
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('upgrade-tax-types*') ? 'show' : '' }}" id="upgrade-tax-typeSubmenu">
+                <li class="{{ request()->is('upgrade-tax-type*') ? 'active' : '' }}">
+                    <a href="{{ route('upgrade-tax-types.index') }}">Qualified Tax Types</a>
+                </li>
+
+            </ul>
+        </li>
+
         <li class="{{ request()->is('e-filling*') ? 'active' : '' }}">
             <a href="#returnsSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('e-filling*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
