@@ -33,7 +33,6 @@ class CreateDisputesTable extends Migration
             $table->string('dispute_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
-            $table->timestamp('verified_at')->nullable();
             $table->enum('app_status', DisputeStatus::getConstants())->default(DisputeStatus::DRAFT);
             $table->enum('status', BillStatus::getConstants())->nullable();
             $table->string('marking')->nullable();

@@ -2,12 +2,10 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\DisputeStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
-use App\Models\WaiverStatus;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\PaymentsTrait;
@@ -24,7 +22,7 @@ use Livewire\WithFileUploads;
 
 class ObjectionApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait,PaymentsTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait, PaymentsTrait, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -209,13 +207,6 @@ class ObjectionApprovalProcessing extends Component
                     $zmBill->zan_status = 'pending';
                     $zmBill->control_number = '90909919991909';
                     $zmBill->save();
-
-                    $this->subject->verified_at = Carbon::now()->toDateTimeString();
-                    $this->subject->app_status = DisputeStatus::APPROVED;
-                    $this->subject->save();
-                    // event(new SendSms('business-registration-approved', $this->subject->id));
-                    // event(new SendMail('business-registration-approved', $this->subject->id));
-
                     $this->flash('success', 'A control number for this dispute has been generated successfull and approved');
                 }
 
@@ -242,24 +233,20 @@ class ObjectionApprovalProcessing extends Component
     public function reject($transtion)
     {
 
+        $this->validate([
+            'comments' => 'required',
+        ]);
+
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->app_status = DisputeStatus::CORRECTION;
-                // event(new SendSms('business-registration-correction', $this->subject->id));
-                // event(new SendMail('business-registration-correction', $this->subject->id));
+
             }
 
             if ($this->checkTransition('chief_assurance_reject')) {
-                $this->validate([
-                    'comments' => 'required',
-                ]);
 
             }
 
             if ($this->checkTransition('commisioner_reject')) {
-                $this->validate([
-                    'comments' => 'required',
-                ]);
 
             }
 
