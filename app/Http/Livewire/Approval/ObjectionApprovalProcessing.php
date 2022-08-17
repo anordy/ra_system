@@ -159,7 +159,7 @@ class ObjectionApprovalProcessing extends Component
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
                 $createdby_id = Auth::id();
-                $exchange_rate = 0;
+                $exchange_rate = 1;
                 $payer_id = $taxpayer->id;
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
                 $billableId = $this->assessment->id;
