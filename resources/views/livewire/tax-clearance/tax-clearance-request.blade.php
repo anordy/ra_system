@@ -38,10 +38,10 @@
                             <i class="bi bi-check-circle-fill mr-1"></i>
                             Requested
                         </span>
-                    @elseif($taxClearence->status === 'denied')
+                    @elseif($taxClearence->status === 'rejected')
                         <span class="font-weight-bold text-warning">
                             <i class="bi bi-pen-fill mr-1"></i>
-                            Denied
+                            Rejected
                         </span>
                     @else
                         <span class="font-weight-bold text-info">

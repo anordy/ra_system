@@ -3,7 +3,7 @@
         style="border-radius: 1rem; background: #d97706; color: #facc15; font-size: 85%">
         {{ $value }}
     </span>
-@elseif ($value === 'denied')
+@elseif ($value === 'rejected')
     <span class="badge badge-danger py-1 px-2"
         style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
         {{ $value }}
