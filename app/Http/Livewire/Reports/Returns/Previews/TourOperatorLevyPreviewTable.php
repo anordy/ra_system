@@ -11,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 use App\Traits\ReturnReportTrait;
 
-class HotelLevyPreviewTable extends DataTableComponent
+class TourOperatorLevyPreviewTable extends DataTableComponent
 {
     use LivewireAlert, ReturnReportTrait;
 
@@ -25,9 +25,9 @@ class HotelLevyPreviewTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $taxtype = TaxType::where('code',TaxType::HOTEL)->first();
-        $hotelLevies = $this->getRecords(HotelReturn::query()->where('tax_type_id',$taxtype->id), $this->parameters);
-        return $hotelLevies;
+        $taxtype = TaxType::where('code',TaxType::TOUR_OPERATOR)->first();
+        $tourOperators = $this->getRecords(HotelReturn::query()->where('tax_type_id',$taxtype->id), $this->parameters);
+        return $tourOperators;
     }
 
     public function configure(): void

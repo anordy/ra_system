@@ -120,10 +120,10 @@
                     {{ $record->payment_due_date==null?'-':date('d/m/Y', strtotime($record->payment_due_date)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">     
-                    @if ($record->created_at == null || $record->payment_due_date == null)
+                    @if ($record->paid_at == null || $record->payment_due_date == null)
                         -
                     @else
-                        @if ($record->created_at < $record->payment_due_date)
+                        @if ($record->paid_at < $record->payment_due_date)
                             In-Time
                         @else
                             Late

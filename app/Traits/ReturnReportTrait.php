@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxType;
@@ -68,11 +69,26 @@ trait ReturnReportTrait
                 ]; 
                 break;
             case 'hotel-levy':
-                dd('hotel-levy');
+                $taxType = TaxType::where('code',TaxType::HOTEL)->first();
+                return [
+                    'returnName' => 'Hotel Levy',
+                    'model' => HotelReturn::query()->where('tax_type_id',$taxType->id),
+                ];
                 break;
             case 'restaurant-levy':
-                dd('restaurant-levy');
+                $taxType = TaxType::where('code',TaxType::RESTAURANT)->first();
+                return [
+                    'returnName' => 'Restaurant Levy',
+                    'model' => HotelReturn::query()->where('tax_type_id',$taxType->id),
+                ];
                 break;
+            case 'tour-operator-levy':
+                $taxType = TaxType::where('code',TaxType::TOUR_OPERATOR)->first();
+                return [
+                    'returnName' => 'Tour Operator Levy',
+                    'model' => HotelReturn::query()->where('tax_type_id',$taxType->id),
+                ];
+            break;
             case 'petroleum-levy':
                 dd('petroleum-levy');
                 break;

@@ -188,7 +188,7 @@ class SeaPortPreviewTable extends DataTableComponent
             Column::make("Payment Status", "id")
                 ->format(
                     function ($value, $row) {
-                        if ($row->created_at < $row->payment_due_date) {
+                        if ($row->paid_at < $row->payment_due_date) {
                             return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
                             <i class="bi bi-check-circle"></i>
                                         Not Late

@@ -6,6 +6,7 @@ use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxType;
@@ -233,10 +234,24 @@ class ReturnReport extends Component
                 return BfoReturn::query();
                 break;
             case 'hotel-levy':
-                dd('hotel-levy');
+                $taxType = TaxType::where('code',TaxType::HOTEL)->first();
+                $modelData['returnName'] = 'Hotel Levy';
+                return HotelReturn::query()->where('tax_type_id',$taxType->id);
                 break;
             case 'restaurant-levy':
-                dd('restaurant-levy');
+                $taxType = TaxType::where('code',TaxType::RESTAURANT)->first();
+                $modelData['returnName'] = 'Restaurant Levy';
+                return HotelReturn::query()->where('tax_type_id',$taxType->id);
+                break;
+            case 'restaurant-levy':
+                $taxType = TaxType::where('code',TaxType::RESTAURANT)->first();
+                $modelData['returnName'] = 'Restaurant Levy';
+                return HotelReturn::query()->where('tax_type_id',$taxType->id);
+                break;
+            case 'tour-operator-levy':
+                $taxType = TaxType::where('code',TaxType::TOUR_OPERATOR)->first();
+                $modelData['returnName'] = 'Tour Operator Levy';
+                return HotelReturn::query()->where('tax_type_id',$taxType->id);
                 break;
             case 'petroleum-levy':
                 dd('petroleum-levy');
