@@ -311,7 +311,7 @@
                 id="taxClearance">
 
                 <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
-                    <a href="{{ route('tax-clearance.list') }}">Requests</a>
+                    <a href="{{ route('tax-clearance.index') }}">Requests</a>
                 </li>
             </ul>
         </li>

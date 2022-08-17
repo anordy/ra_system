@@ -2,16 +2,18 @@
 
 namespace App\Http\Livewire\TaxClearance;
 
-use App\Models\Business;
-use App\Models\BusinessLocation;
+use App\Enum\TaxClearanceStatus;
 use App\Models\TaxClearanceRequest;
 use Illuminate\Database\Eloquent\Builder;
-use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxClearanceRequestTable extends DataTableComponent
 {
+
+    public $requested = false;
+    public $denied = false;
+    public $approved = true;
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -24,10 +26,21 @@ class TaxClearanceRequestTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxClearanceRequest::with('business')->with('businessLocation');
+        if ($this->requested) {
+            return TaxClearanceRequest::with('business')->where('tax_clearance_requests.status', TaxClearanceStatus::REQUESTED)->with('businessLocation')->orderBy('tax_clearance_requests.created_at', 'desc');
+        }
+
+        if ($this->approved) {
+            return TaxClearanceRequest::with('business')->where('tax_clearance_requests.status', TaxClearanceStatus::APPROVED)->with('businessLocation')->orderBy('tax_clearance_requests.created_at', 'desc');
+        }
+
+        if ($this->denied) {
+            return TaxClearanceRequest::with('business')->where('tax_clearance_requests.status', TaxClearanceStatus::DENIED)->with('businessLocation')->orderBy('tax_clearance_requests.created_at', 'desc');
+        }
+
+
     }
 
-    
     public function columns(): array
     {
         return [
@@ -38,7 +51,7 @@ class TaxClearanceRequestTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Status', 'status')->view('tax-clearance.includes.status'),
-            Column::make('Action', 'id')->view('tax-clearance.includes.actions'),
+            Column::make('Action', 'id')->view('tax-clearance.includes.view'),
         ];
     }
 }
