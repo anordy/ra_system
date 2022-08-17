@@ -39,7 +39,6 @@ class CreateDisputesTable extends Migration
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->dateTime('paid_at')->nullable();
-
             $table->softDeletes();
             $table->timestamps();
         });

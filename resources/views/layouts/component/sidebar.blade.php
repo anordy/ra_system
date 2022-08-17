@@ -77,6 +77,18 @@
             </ul>
         </li>
 
+        <li class="{{ request()->is('upgrade-tax-type*') ? 'active' : '' }}">
+            <a href="#upgrade-tax-typeSubmenu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('upgrade-tax-types*') ? 'true' : 'false' }}" class="dropdown-toggle">Upgrade Tax Types
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('upgrade-tax-types*') ? 'show' : '' }}" id="upgrade-tax-typeSubmenu">
+                <li class="{{ request()->is('upgrade-tax-types*') ? 'active' : '' }}">
+                    <a href="{{ route('upgrade-tax-types.index') }}">Qualified Tax Types</a>
+                </li>
+
+            </ul>
+        </li>
+
         <li class="{{ request()->is('e-filling*') ? 'active' : '' }}">
             <a href="#returnsSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('e-filling*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
@@ -311,7 +323,7 @@
                 id="taxClearance">
 
                 <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
-                    <a href="{{ route('tax-clearance.list') }}">Requests</a>
+                    <a href="{{ route('tax-clearance.index') }}">Requests</a>
                 </li>
             </ul>
         </li>
@@ -320,16 +332,10 @@
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
                 <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.waivers.index') }}">Waiver</a>
+                    <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
                 </li>
-                <li class="{{ request()->is('debts/verifications*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.verifications.index') }}">Verification Debts</a>
-                </li>
-                <li class="{{ request()->is('debts/audits*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.audits.index') }}">Audit Debts</a>
-                </li>
-                <li class="{{ request()->is('debts/investigations*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.investigations.index') }}">Investigation Debts</a>
+                <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
                 </li>
                 <li class="{{ request()->is('debts/hotel*') ? 'active' : '' }}">
                     <a href="{{ route('debts.hotel.index', encrypt(App\Models\TaxType::HOTEL)) }}">Hotel

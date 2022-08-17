@@ -84,7 +84,7 @@ class BusinessSeeder extends Seeder
             $business->headquarter()->create($location);
             $business->banks()->create($bank);
 
-            for ($i=1; $i <= 16; $i++) { 
+            for ($i=1; $i < 26; $i++) {
                 BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $i, "currency" => "TZS"]);
             }
 

@@ -8,7 +8,7 @@
             {{ str_replace('-', ' ', $taxType) }} Debts Management
         </div>
         <div class="card-body mt-0 p-2">
-            <livewire:debt.returns-table taxType="{{ $taxType }}" />
+            <livewire:debt.return-debts-table taxType="{{ $taxType }}" />
         </div>
     </div>
 @endsection

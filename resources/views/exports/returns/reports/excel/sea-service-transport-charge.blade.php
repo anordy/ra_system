@@ -2,10 +2,10 @@
 <table style="border-collapse:collapse;">
     <thead>
         <tr>
-            <th style="text-align:center;" colspan="15" height="70">
+            <th style="text-align:center;" colspan="17" height="70">
                 <strong>ZANZIBAR REVENUE AUTHORITY</strong><br>
                 <strong>{{ $title }}</strong><br>
-                {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
+                
                 @if ($parameters['period'] == 'Annual')
                     <strong>{{ $parameters['year'] }}</strong>
                 @elseif ($parameters['period'] != null)

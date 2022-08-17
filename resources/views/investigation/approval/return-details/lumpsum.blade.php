@@ -24,7 +24,7 @@
                 <tbody>
                     @foreach ($return as $item)
                         <tr>
-                            <td>{{ $item['quarter'] }}</td>
+                            <td>{{ $item['installment'] }}</td>
                             <td>{{ $item['quarter_name'] }}</td>
                             <td>{{ number_format($item['principalAmount'], 2) }}</td>
                             <td>{{ number_format($item['Penalties']), 2 }}</td>
@@ -32,8 +32,8 @@
                         </tr>
                         @php
                             $PM += $item['principalAmount'];
-                            $AWP += $item['amountWithPenalties'];
                             $TP += $item['Penalties'];
+                            $AWP += $item['amountWithPenalties'];
                         @endphp
                     @endforeach
                 </tbody>
@@ -42,8 +42,8 @@
                         <td>TOTAL</td>
                         <td class="bg-secondary"></td>
                         <td>{{ number_format($PM, 2) }}</td>
-                        <td>{{ number_format($AWP, 2) }}</td>
                         <td>{{ number_format($TP, 2) }}</td>
+                        <td>{{ number_format($AWP, 2) }}</td>
 
                     </tr>
                 </tfoot>

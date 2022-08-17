@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxType;
@@ -78,7 +79,10 @@ trait ReturnReportTrait
                 dd('electronic-money-transaction');
                 break;
             case 'lumpsum-payment':
-                dd('lumpsum-payment');
+                return [
+                    'returnName'=> 'Lump Sum',
+                    'model' => LumpSumReturn::query(),
+                ];
                 break;
             case 'sea-service-transport-charge':
                 $taxType = TaxType::where('code', 'sea-service-transport-charge')->first();

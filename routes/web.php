@@ -50,6 +50,7 @@ use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
+use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
@@ -80,12 +81,13 @@ use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\TaxTypeController;
 use App\Http\Controllers\TwoFactorAuthController;
+use App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
-use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
@@ -288,8 +290,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
-        Route::get('/generate-report',[ReliefGenerateReportController::class, 'index'])->name('generate.report');
-        Route::get('/download-report-pdf/{dates}',[ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
+        Route::get('/generate-report', [ReliefGenerateReportController::class, 'index'])->name('generate.report');
+        Route::get('/download-report-pdf/{dates}', [ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
@@ -324,15 +326,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
     });
 
+    Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-types')->group(function () {
+        Route::get('/', [UpgradeTaxtypeController::class, 'index'])->name('index');
+        Route::get('/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('show');
+
+    });
+
+
     Route::name('debts.')->prefix('/debts')->group(function () {
         // Assesments
         Route::get('/waivers', [AssessmentDebtController::class, 'waivers'])->name('waivers.index');
         Route::get('/waivers/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('waivers.approval');
 
         Route::get('/audits', [AssessmentDebtController::class, 'audit'])->name('audits.index');
-        Route::get('/verifications', [AssessmentDebtController::class, 'verification'])->name('verifications.index');
+        Route::get('/assessments', [AssessmentDebtController::class, 'verification'])->name('assessments.index');
         Route::get('/investigations', [AssessmentDebtController::class, 'investigation'])->name('investigations.index');
-        
+
         // Return debts
         Route::get('/returns/hotel/{taxType}', [ReturnDebtController::class, 'index'])->name('hotel.index');
         Route::get('/returns/tour/{taxType}', [ReturnDebtController::class, 'index'])->name('tour.index');
@@ -366,12 +375,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
     });
 
+// <<<<<<< HEAD
+    //Electronic Money Transaction Return
+    Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
+        Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
+        Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+    });
 
 //Tax Clearance
-Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {
-    Route::get('/tax-clearances/request', [TaxClearanceController::class, 'requestList'])->name('list');
-    Route::get('/tax-clearance/view/{id}', [TaxClearanceController::class, 'viewRequest'])->name('request.view');
-});
+    Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {
+        Route::get('/tax-clearances/index', [TaxClearanceController::class, 'index'])->name('index');
+        Route::get('/tax-clearances/request', [TaxClearanceController::class, 'requestList'])->name('list');
+        Route::get('/tax-clearance/view/{id}', [TaxClearanceController::class, 'viewRequest'])->name('request.view');
+        Route::get('/tax-clearance/approval/{id}', [TaxClearanceController::class, 'approval'])->name('request.approval');
+    });
 
     //Electronic Money Transaction Return
     Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
