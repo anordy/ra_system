@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 
 trait ReturnReportTrait
@@ -52,7 +53,10 @@ trait ReturnReportTrait
         // $parameters = $this->getParameters();
         switch ($parameters['tax_type_code']) {
             case 'excise-duty-mno':
-                dd('excise-duty-mno');
+                return [
+                    'returnName' => 'Excise Duty MNO',
+                    'model' => MnoReturn::query(),
+                ]; 
                 break;
             case 'excise-duty-bfo':
                 dd('excise-duty-bfo');

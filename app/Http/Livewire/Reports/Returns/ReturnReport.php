@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Reports\Returns;
 
 use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
+use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxType;
 use Livewire\Component;
@@ -222,7 +223,8 @@ class ReturnReport extends Component
         $parameters = $this->getParameters();
         switch ($parameters['tax_type_code']) {
             case 'excise-duty-mno':
-                dd('excise-duty-mno');
+                $modelData['returnName'] = 'Excise Duty MNO';
+                return MnoReturn::query();
                 break;
             case 'excise-duty-bfo':
                 dd('excise-duty-bfo');
