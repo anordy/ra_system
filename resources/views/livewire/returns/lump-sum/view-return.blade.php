@@ -85,6 +85,7 @@
                 </tr>
             </tbody>
         </table>
+        <x-bill-structure :bill="$return->bill" />
 
 
     </div>
