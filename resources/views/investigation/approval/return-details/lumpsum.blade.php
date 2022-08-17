@@ -24,7 +24,7 @@
                 <tbody>
                     @foreach ($return as $item)
                         <tr>
-                            <td>{{ $item['quarter'] }}</td>
+                            <td>{{ $item['installment'] }}</td>
                             <td>{{ $item['quarter_name'] }}</td>
                             <td>{{ number_format($item['principalAmount'], 2) }}</td>
                             <td>{{ number_format($item['Penalties']), 2 }}</td>

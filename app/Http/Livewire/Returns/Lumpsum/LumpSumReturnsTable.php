@@ -38,7 +38,8 @@ class LumpSumReturnsTable extends DataTableComponent
             Column::make('Financial Year', 'financialyear.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Quarter', 'quarter')
+            Column::make('Quarter', 'installment')
+
                ->sortable()
                 ->searchable(),
             Column::make('Quarter Of', 'quarter_name')
