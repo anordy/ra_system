@@ -114,8 +114,8 @@ class DailyDebtCalculateCommand extends Command
                     ->get();
 
 
-                $data = $hoteReturn->map(function ($return) {
-                    $return->debt_type = HotelReturn::class;
+                $data = $hoteReturn->map(function ($return) use ($model) {
+                    $return->debt_type = $model;
                     $return->origin = 'job';
                     $return->logged_date = Carbon::now()->toDateTimeString();
                     return $return;
@@ -132,6 +132,8 @@ class DailyDebtCalculateCommand extends Command
                 DB::rollBack();
             }
         }
+
+        // dd($datas);
     }
 
     protected function assessmentDebt($financialMonth)

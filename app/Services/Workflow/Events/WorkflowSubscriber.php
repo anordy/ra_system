@@ -169,6 +169,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 if (key($places) == 'completed') {
                     $subject->status = TaxInvestigationStatus::APPROVED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
+                    $subject->expire_on = Carbon::now()->addYear(1)->toDateTimeString();
                 }
                 if (key($places) == 'rejected') {
                     $subject->status = TaxInvestigationStatus::REJECTED;

@@ -129,7 +129,7 @@ class TaxClaimApprovalProcessing extends Component
         if ($this->checkTransition('method_of_payment')){
             $this->validate([
                 'paymentType' => 'required',
-                'installmentCount' => 'required_if:paymentType,installment|numeric|max:12'
+                'installmentCount' => 'required_if:paymentType,installment|exclude_if:paymentType,full|exclude_if:paymentType,cash|numeric|max:12'
             ]);
 
             TaxCredit::create([
