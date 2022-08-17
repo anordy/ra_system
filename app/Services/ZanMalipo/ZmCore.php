@@ -67,8 +67,8 @@ class ZmCore
     ): ZmBill {
         DB::beginTransaction();
         try {
+            $bill_items = ZmFeeHelper::addTransactionFee($bill_items, $currency, $exchange_rate);
             $bill_amount = 0;
-
             foreach ($bill_items as $item) {
                 if (!isset($item['amount']) || !isset($item['gfs_code'])) {
                     throw new \Exception('Bill item must contain item_amount and gfs_code');
@@ -108,8 +108,8 @@ class ZmCore
             foreach ($bill_items as $item) {
                 $zm_item = new ZmBillItem([
                     'zm_bill_id' => $zm_bill->id,
-                    'billable_id' => $item['billable_id'],
-                    'billable_type' => $item['billable_type'],
+                    'billable_id' => array_key_exists('billable_id', $item)  ? $item['billable_id'] : null,
+                    'billable_type' => array_key_exists('billable_type', $item)  ? $item['billable_type'] : null,
                     'fee_id' => array_key_exists('fee_id', $item)  ? $item['fee_id'] : null,
                     'fee_type' =>  array_key_exists('fee_type', $item)? $item['fee_type'] : null,
                     'use_item_ref_on_pay' => 'N',

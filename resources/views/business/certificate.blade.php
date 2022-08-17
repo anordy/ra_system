@@ -55,12 +55,6 @@
             padding-right: 70px;
             left: 30px;
         }
-        .qr-code {
-            top: 86%;
-            padding-left: 70px;
-            padding-right: 70px;
-            text-align: center;
-        }
         .watermark {
             -webkit-transform: rotate(331deg);
             -moz-transform: rotate(331deg);
@@ -77,7 +71,7 @@
     </style>
 </head>
     <body>
-        <span class="embed business-name">{{ $$location->business->name ?? '' }}</span>
+        <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
         <span class="embed taxpayer-name">{{ $location->zin ?? '' }}</span>
         <span class="embed reg-no">{{ $location->business->zin ?? '' }}</span>
         <span class="embed tax-types">{{ $tax->name }}</span>

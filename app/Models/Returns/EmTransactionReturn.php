@@ -55,6 +55,16 @@ class EmTransactionReturn extends Model
         return $this->morphOne(ZmBill::class, 'billable');
     }
 
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
+    }
+
     public function emTransactionPenalties(){
         return $this->hasMany(EmTransactionPenalty::class, 'return_id');
     }
