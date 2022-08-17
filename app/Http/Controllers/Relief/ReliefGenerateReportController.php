@@ -18,7 +18,6 @@ class ReliefGenerateReportController extends Controller
         return view('relief.reports.index');
     }
     
-    
     public function downloadReliefReportPdf($datesJson)
     {
         $dates = decrypt($datesJson);

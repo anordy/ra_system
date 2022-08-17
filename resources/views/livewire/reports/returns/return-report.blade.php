@@ -42,7 +42,7 @@
             @enderror
         </div>
 
-        @if($type=="filing")
+        @if($type=="Filing")
         <div class="col-md-4 form-group">
             <label for="type" class="d-flex justify-content-between'">
                 <span>
@@ -66,7 +66,7 @@
         </div>
         @endif
 
-        @if($type=="payment")
+        @if($type=="Payment")
         <div class="col-md-4 form-group">
             <label for="type" class="d-flex justify-content-between'">
                 <span>
@@ -222,11 +222,17 @@
                     Preview Report  
                 </button>
             </div>
-            <button  class="btn btn-success ml-2"  wire:click="export " wire:loading.attr="disabled">
-                <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="export"></i>
+            <button  class="btn btn-success ml-2"  wire:click="exportExcel " wire:loading.attr="disabled">
+                <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                    wire:target="export"></i>
-                Generate Report  
+                    wire:target="exportExcel"></i>
+                Export to Excel  
+            </button>
+            <button  class="btn btn-success ml-2"  wire:click="exportPdf" wire:loading.attr="disabled">
+                <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportPdf"></i>
+                <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                    wire:target="exportPdf"></i>
+                Export to Pdf  
             </button>
         </div>
     </div>

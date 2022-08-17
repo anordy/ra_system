@@ -316,7 +316,7 @@ Route::middleware(['auth'])->group(function () {
     Route::name('reports.')->prefix('reports')->group(function () {
         Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
         Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
-        
+        Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
     });
 });
 

@@ -8,37 +8,24 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
+use App\Traits\ReturnReportTrait;
+
 class StampDutyPreviewTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, ReturnReportTrait;
 
     public $parameters;
-
-    protected $listeners = ['refreshTable' => 'refreshTable', 'test'];
 
     public function mount($parameters)
     {
         // dd($parameters);
         $this->parameters = $parameters;
     }
-
+    
     public function builder(): Builder
     {
-
-        $dates = $this->parameters['dates'];
-        if ($dates == []) {
-            return StampDutyReturn::query()->orderBy('stamp_duty_returns.created_at', 'asc');
-        }
-        if ($dates['startDate'] == null || $dates['endDate'] == null) {
-            return StampDutyReturn::query()->orderBy('created_at', 'asc');
-        }
-        return StampDutyReturn::query()->whereBetween('stamp_duty_returns.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('stamp_duty_returns.created_at', 'asc');
-    }
-
-    public function refreshTable($dates)
-    {
-        $this->dates = $dates;
-        $this->builder();
+        $stampDuties =$this->getRecords(StampDutyReturn::query(), $this->parameters); 
+        return $stampDuties;
     }
 
     public function configure(): void
@@ -128,6 +115,9 @@ class StampDutyPreviewTable extends DataTableComponent
             Column::make("Filing Due Date", "filing_due_date")
                 ->format(
                     function ($value, $row) {
+                        if(!$value){
+                            return '-';
+                        }
                         return date('d/m/Y', strtotime($value));
                     }
                 )
@@ -140,7 +130,7 @@ class StampDutyPreviewTable extends DataTableComponent
                         if ($row->created_at < $row->filing_due_date) {
                             return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
                             <i class="bi bi-check-circle"></i>
-                                        Not Late
+                                        In Time
                                     </span>';
                         } else {
                             return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
