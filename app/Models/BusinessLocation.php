@@ -118,4 +118,8 @@ class BusinessLocation extends Model
     {
         return $this->hasMany(Relief::class,'location_id');
     }
+
+    public function taxClearanceRequest(){
+        return $this->hasMany(TaxClearanceRequest::class);
+    }
 }

@@ -177,4 +177,8 @@ class Business extends Model implements Auditable
     public function QuantityCertificates(){
         return $this->hasMany(QuantityCertificate::class);
     }
+
+    public function taxClearanceRequest(){
+        return $this->hasMany(TaxClearanceRequest::class);
+    }
 }

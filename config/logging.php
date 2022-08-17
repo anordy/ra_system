@@ -35,11 +35,6 @@ return [
     */
 
     'channels' => [
-        'shipco' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/shipco/laravel.log'),
-            'ignore_exceptions' => false,
-        ],
         'stack' => [
             'driver' => 'stack',
             'channels' => ['daily'],
@@ -104,6 +99,11 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+        'debtCollection' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/debt/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
         ],
     ],
 

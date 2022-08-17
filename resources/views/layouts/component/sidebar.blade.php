@@ -302,7 +302,19 @@
                 </li>
             </ul>
         </li>
+        <li class="{{ request()->is('tax-clearance*') ? 'active' : '' }}">
+            <a href="#taxClearance" data-toggle="collapse"
+                aria-expanded="{{ request()->is('tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                Tax Clearance Management
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
+                id="taxClearance">
 
+                <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
+                    <a href="{{ route('tax-clearance.list') }}">Requests</a>
+                </li>
+            </ul>
+        </li>
         <li class="{{ request()->is('debts*') ? 'active' : '' }}">
             <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
                 Management</a>
@@ -407,7 +419,6 @@
                     <a href="{{ route('land-lease.list') }}">Lump Sum Payments Reports</a>
                 </li>
             </ul>
-        </li>
 
 
         <li class="{{ request()->is('system*') ? 'active' : '' }}">
