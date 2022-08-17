@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\TaxClearance;
 
 use App\Http\Controllers\Controller;
-use App\Models\Business;
-use App\Models\BusinessLocation;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
@@ -19,41 +17,79 @@ use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
+use App\Models\TaxClearanceRequest;
 use App\Models\Verification\TaxVerification;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class TaxClearanceController extends Controller
 {
-    //
-    public function requestList(){
+
+    public function index()
+    {
+        return view('tax-clearance.index');
+    }
+    public function requestList()
+    {
         return view('tax-clearance.requests');
 
     }
 
-    public function viewRequest($id){
-        
-        $business_location_id = decrypt($id);
-        $businessLocation = BusinessLocation::where('id', $business_location_id)->with('business')->first();
+    public function viewRequest($requestId)
+    {
 
-        $returnDebts = $this->generateReturnsDebts($business_location_id);
+        $request_id = decrypt($requestId);
+
+        $taxClearence = TaxClearanceRequest::where('id', $request_id)
+            ->with('businessLocation')
+            ->with('businessLocation.business')
+            ->first();
+
+        $returnDebts = $this->generateReturnsDebts($taxClearence->business_location_id);
 
         $verificationDebts = TaxAssessment::query()
             ->where('assessment_type', TaxVerification::class)
-            ->where('location_id', $business_location_id)
+            ->where('location_id', $taxClearence->business_location_id)
             ->get();
         $auditDebts = TaxAssessment::query()
             ->where('assessment_type', TaxAudit::class)
-            ->where('location_id', $business_location_id)
+            ->where('location_id', $taxClearence->business_location_id)
             ->get();
 
         $investigationDebts = TaxAssessment::query()
             ->where('assessment_type', TaxInvestigation::class)
-            ->where('location_id', $business_location_id)
+            ->where('location_id', $taxClearence->business_location_id)
             ->get();
         // return $investigationDebts;
-        return view('tax-clearance.clearance-request', compact('businessLocation', 'returnDebts', 'verificationDebts', 'auditDebts', 'investigationDebts'));
+        return view('tax-clearance.clearance-request', compact('taxClearence', 'returnDebts', 'verificationDebts', 'auditDebts', 'investigationDebts'));
 
+    }
+
+    public function approval($requestId)
+    {
+        $request_id = decrypt($requestId);
+
+        $taxClearence = TaxClearanceRequest::where('id', $request_id)
+            ->with('businessLocation')
+            ->with('businessLocation.business')
+            ->first();
+
+        $returnDebts = $this->generateReturnsDebts($taxClearence->business_location_id);
+
+        $verificationDebts = TaxAssessment::query()
+            ->where('assessment_type', TaxVerification::class)
+            ->where('location_id', $taxClearence->business_location_id)
+            ->get();
+        $auditDebts = TaxAssessment::query()
+            ->where('assessment_type', TaxAudit::class)
+            ->where('location_id', $taxClearence->business_location_id)
+            ->get();
+
+        $investigationDebts = TaxAssessment::query()
+            ->where('assessment_type', TaxInvestigation::class)
+            ->where('location_id', $taxClearence->business_location_id)
+            ->get();
+
+        return view('tax-clearance.approval',compact('taxClearence', 'returnDebts', 'verificationDebts', 'auditDebts', 'investigationDebts'));
     }
 
     public function generateReturnsDebts($business_location_id)
@@ -70,13 +106,13 @@ class TaxClearanceController extends Controller
             PortReturn::class,
             EmTransactionReturn::class,
             BfoReturn::class,
-            LumpSumReturn::class
+            LumpSumReturn::class,
         ];
         // dd($returnModels);
         $return_debts = [];
 
         foreach ($returnModels as $model) {
-            
+
             if ($model == PortReturn::class) {
                 $fields = 'total_amount_due_with_penalties_tzs, total_amount_due_with_penalties_usd, total_vat_payable_tzs, total_vat_payable_usd, interest_usd, interest_tzs, penalty_usd, penalty_tzs';
             } else if ($model == MmTransferReturn::class || $model == EmTransactionReturn::class) {
@@ -93,7 +129,7 @@ class TaxClearanceController extends Controller
                 business_location_id,
                 tax_type_id,
                 currency,
-                '. $fields . ',
+                ' . $fields . ',
                 financial_months.name
             ')
                 ->leftJoin('financial_months', 'financial_months.id', '' . $table_name . '.financial_month_id')

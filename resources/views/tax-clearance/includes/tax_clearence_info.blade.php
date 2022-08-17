@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
     <li class="nav-item" role="presentation">
         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-            aria-selected="true">Tax Clearence Information</a>
+            aria-selected="true">Business Information</a>
     </li>
     <li class="nav-item" role="presentation">
         <a class="nav-link" id="return-debts-tab" data-toggle="tab" href="#return-debts" role="tab"
