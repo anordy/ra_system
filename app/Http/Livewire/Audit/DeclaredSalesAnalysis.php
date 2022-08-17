@@ -289,7 +289,7 @@ class DeclaredSalesAnalysis extends Component
         $this->headersEmTransaction = $headers;
     }
 
-    protected function mmTranfer()
+    protected function mmTransfer()
     {
         $salesConfigs = MmTransferConfig::where('code', '!=', 'TotalEMT')->get()->pluck('id');
         $headers      = MmTransferConfig::where('code', '!=', 'TotalEMT')->get()->pluck('name');
