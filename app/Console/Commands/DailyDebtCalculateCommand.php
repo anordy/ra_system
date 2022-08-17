@@ -15,6 +15,7 @@ use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\TaxAssessments\TaxAssessment;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -60,6 +61,13 @@ class DailyDebtCalculateCommand extends Command
         $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
             ->where('number', $month)->first();
 
+        $this->returnsDebts($financialMonth);
+        $this->assessmentDebt($financialMonth);
+        Log::channel('debtCollection')->info('Daily Debt collection ended');
+    }
+
+    protected function returnsDebts($financialMonth)
+    {
         $returnModels = [
             StampDutyReturn::class,
             MnoReturn::class,
@@ -67,70 +75,119 @@ class DailyDebtCalculateCommand extends Command
             MmTransferReturn::class,
             HotelReturn::class,
             PetroleumReturn::class,
-            PortReturn::class,
+            // PortReturn::class,
             EmTransactionReturn::class,
             BfoReturn::class,
             LumpSumReturn::class
         ];
 
         foreach ($returnModels as $model) {
-            $this->returnsDebts($model, $financialMonth);
-        }
+            Log::channel('debtCollection')->info("Daily Debt collection for return model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process started");
+            DB::beginTransaction();
+            try {
 
-        Log::channel('debtCollection')->info('Daily Debt collection ended');
+                $hoteReturn = $model::select(
+                    'id as debt_type_id',
+                    'business_location_id',
+                    'business_id',
+                    'currency',
+                    'tax_type_id',
+                    'total_amount_due as principal_amount',
+                    'total_amount_due as original_principal_amount',
+                    'total_amount_due_with_penalties as original_total_amount',
+                    'total_amount_due_with_penalties as total_amount',
+                    'total_amount_due_with_penalties as outstanding_amount',
+                    'penalty',
+                    'penalty as original_penalty',
+                    'interest',
+                    'interest as original_interest',
+                    'submitted_at',
+                    'filing_due_date',
+                    'payment_due_date as last_due_date',
+                    'payment_due_date as curr_due_date'
+                )
+                    ->doesntHave('payments')
+                    ->where('status', '!=', 'complete')
+                    ->whereIn('application_status', ['self_assessment', 'adjusted', 'submitted'])
+                    ->where('filing_due_date', '<', $financialMonth->due_date)
+                    ->orWhere('payment_due_date', '<', $financialMonth->due_date)
+                    ->get();
+
+
+                $data = $hoteReturn->map(function ($return) {
+                    $return->debt_type = HotelReturn::class;
+                    $return->origin = 'job';
+                    $return->logged_date = Carbon::now()->toDateTimeString();
+                    return $return;
+                });
+
+                $dataToInsert = $data->toArray();
+
+                Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
+                DB::commit();
+                Log::channel('debtCollection')->info("Daily Debt collection for return model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
+            } catch (Exception $e) {
+                Log::channel('debtCollection')->info('Daily Debt calculation process ended with error');
+                Log::channel('debtCollection')->error($e);
+                DB::rollBack();
+            }
+        }
     }
 
-    protected function returnsDebts($model, $financialMonth)
+    protected function assessmentDebt($financialMonth)
     {
-        Log::channel('debtCollection')->info("Daily Debt collection for model ". strval($model) ." for financial month ". $financialMonth->id ." with due date ".$financialMonth->due_date." process started");
-        DB::beginTransaction();
-        try {
+        $returnModels = [
+            TaxAssessment::class,
+        ];
 
-            $hoteReturn = $model::select(
-                'id as debt_type_id',
-                'business_location_id',
-                'business_id',
-                'currency',
-                'tax_type_id',
-                'total_amount_due as principal_amount',
-                'total_amount_due as original_principal_amount',
-                'total_amount_due_with_penalties as original_total_amount',
-                'total_amount_due_with_penalties as total_amount',
-                'total_amount_due_with_penalties as outstanding_amount',
-                'penalty',
-                'penalty as original_penalty',
-                'interest',
-                'interest as original_interest',
-                'submitted_at',
-                'filing_due_date',
-                'payment_due_date as last_due_date',
-                'payment_due_date as curr_due_date'
-            )
-                ->doesntHave('payments')
-                ->where('status', '!=', 'complete')
-                ->whereIn('application_status', ['self_assessment', 'adjusted', 'submitted'])
-                ->where('filing_due_date', '<', $financialMonth->due_date)
-                ->orWhere('payment_due_date', '<', $financialMonth->due_date)
-                ->get();
+        foreach ($returnModels as $model) {
+            Log::channel('debtCollection')->info("Daily Debt collection for assessment model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process started");
+            DB::beginTransaction();
+            try {
+
+                $data = $model::select(
+                    'id as debt_type_id',
+                    'location_id as business_location_id',
+                    'business_id',
+                    'currency',
+                    'tax_type_id',
+                    'principal_amount',
+                    'principal_amount as original_principal_amount',
+                    'total_amount as original_total_amount',
+                    'total_amount',
+                    'total_amount as outstanding_amount',
+                    'penalty_amount as penalty',
+                    'penalty_amount as original_penalty',
+                    'interest_amount as interest',
+                    'interest_amount as original_interest',
+                    'created_at',
+                    'payment_due_date as last_due_date',
+                    'payment_due_date as curr_due_date'
+                )
+                    ->doesntHave('payments')
+                    ->where('status', '!=', 'complete')
+                    ->whereIn('app_status', ['self_assessment', 'adjusted', 'submitted'])
+                    ->orWhere('payment_due_date', '<', $financialMonth->due_date)
+                    ->get();
 
 
-            $data = $hoteReturn->map(function ($return) {
-                $return->debt_type = HotelReturn::class;
-                $return->origin = 'job';
-                $return->logged_date = Carbon::now()->toDateTimeString();
-                return $return;
-            });
+                $data = $data->map(function ($return) {
+                    $return->debt_type = TaxAssessment::class;
+                    $return->origin = 'job';
+                    $return->logged_date = Carbon::now()->toDateTimeString();
+                    return $return;
+                });
 
-            $dataToInsert = $data->toArray();
+                $dataToInsert = $data->toArray();
 
-            Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
-            DB::commit();
-            Log::channel('debtCollection')->info("Daily Debt collection for model ". strval($model) ." for financial month ". $financialMonth->id ." with due date ".$financialMonth->due_date." process ended");
-        
-        } catch (Exception $e) {
-            Log::channel('debtCollection')->info('Daily Debt calculation process ended with error');
-            Log::channel('debtCollection')->error($e);
-            DB::rollBack();
+                Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
+                DB::commit();
+                Log::channel('debtCollection')->info("Daily Debt collection for model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
+            } catch (Exception $e) {
+                Log::channel('debtCollection')->info('Daily Debt calculation process ended with error');
+                Log::channel('debtCollection')->error($e);
+                DB::rollBack();
+            }
         }
     }
 }
