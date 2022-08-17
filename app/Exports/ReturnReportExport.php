@@ -9,10 +9,14 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Carbon\Carbon;
 
+use App\Traits\ReturnReportTrait;
+
 // use Maatwebsite\Excel\Concerns\FromCollection;
 
 class ReturnReportExport implements FromView, WithEvents,ShouldAutoSize
 {
+    use ReturnReportTrait;
+
     public $records;
     public $title;
     public $parameters;
@@ -60,7 +64,10 @@ class ReturnReportExport implements FromView, WithEvents,ShouldAutoSize
         $records = $this->records->get();
         $title = $this->title;
         $parameters = $this->parameters;
-        return view('exports.returns.reports.excel.stamp-duty',compact('records','title','parameters'));
+        $modelData = $this->getModelData($parameters);
+        $viewName = str_replace(' ','-',strtolower($modelData['returnName']));
+        // return view('exports.returns.reports.excel.stamp-duty',compact('records','title','parameters'));
+        return view('exports.returns.reports.excel.'.$viewName,compact('records','title','parameters'));
        
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\TaxType;
 
 trait ReturnReportTrait
 {
@@ -59,7 +62,10 @@ trait ReturnReportTrait
                 ]; 
                 break;
             case 'excise-duty-bfo':
-                dd('excise-duty-bfo');
+                return [
+                    'returnName' => 'Excise Duty BFO',
+                    'model' => BfoReturn::query(),
+                ]; 
                 break;
             case 'hotel-levy':
                 dd('hotel-levy');
@@ -83,7 +89,11 @@ trait ReturnReportTrait
                 dd('lumpsum-payment');
                 break;
             case 'sea-service-transport-charge':
-                dd('sea-service-transport-charge');
+                $taxType = TaxType::where('code', 'sea-service-transport-charge')->first();
+                return [
+                    'returnName' => 'Sea Service Transport Charge',
+                    'model' => PortReturn::query()->where('tax_type_id', $taxType->id),
+                ];
                 break;
             case 'stamp-duty':
                 return [

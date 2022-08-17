@@ -4,7 +4,9 @@ namespace App\Http\Livewire\Reports\Returns;
 
 use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
+use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxType;
 use Livewire\Component;
@@ -227,7 +229,8 @@ class ReturnReport extends Component
                 return MnoReturn::query();
                 break;
             case 'excise-duty-bfo':
-                dd('excise-duty-bfo');
+                $modelData['returnName'] = 'Excise Duty BFO';
+                return BfoReturn::query();
                 break;
             case 'hotel-levy':
                 dd('hotel-levy');
