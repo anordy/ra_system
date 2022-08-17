@@ -22,7 +22,6 @@ class CreateMnoReturnsTable extends Migration
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('financial_month_id');
             $table->unsignedBigInteger('tax_type_id');
-            $table->string('filed_type');
             $table->decimal('total_amount_due', 40, 2);
             $table->decimal('total_amount_due_with_penalties', 40, 2);
             $table->string('status');

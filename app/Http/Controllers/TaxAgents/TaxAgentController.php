@@ -8,6 +8,12 @@ use App\Models\TaxAgent;
 use App\Models\TaxAgentAcademicQualification;
 use App\Models\TaxAgentProfessionals;
 use App\Models\TaxAgentTrainingExperience;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -67,7 +73,34 @@ class TaxAgentController extends Controller
         $end = date('d', strtotime($taxagent->app_expire_date));
         $superStart = $this->sup($start);
         $superEnd = $this->sup($end);
-        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'superStart','superEnd'));
+
+        $code = 'Name: ' . $taxagent->taxpayer->fullName . ", " .
+            'Location: ' . $taxagent->district->name.', '.$taxagent->region->name . ", " .
+            'Period: 1 Year'.
+            'From: ' . "{$start}" . ", " .
+            'To: ' . "{$end}" . ", " .
+            'https://uat.ubx.co.tz:8888/zrb_client/public/login';
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
+            ->data($code)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(207)
+            ->margin(0)
+            ->logoPath(public_path('/images/logo.png'))
+            ->logoResizeToHeight(36)
+            ->logoResizeToWidth(36)
+            ->labelText('')
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+
+        header('Content-Type: ' . $result->getMimeType());
+
+        $dataUri = $result->getDataUri();
+
+        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'superStart','superEnd', 'dataUri'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
