@@ -2,29 +2,40 @@
 
 namespace App\Http\Livewire\Debt;
 
+use App\Models\Business;
 use App\Models\Debts\Debt;
-use App\Models\TaxType;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\Vat\VatReturn;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\Returns\MmTransferReturn;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\TaxType;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class ReturnsTable extends DataTableComponent
+class ReturnDebtsTable extends DataTableComponent
 {
 
     use LivewireAlert;
     public $taxType;
-    public $tax;
 
     public function mount($taxType)
     {
         $this->taxType = $taxType;
-        $this->tax = TaxType::where('code', $this->taxType)->first();
     }
 
     public function builder(): Builder
     {
-        return Debt::query()->where('tax_type_id', $this->tax->id);
+
+        $tax = TaxType::where('code', $this->taxType)->first();
+        return Debt::query()->where('tax_type_id', $tax->id);
     }
 
     public function configure(): void
@@ -34,7 +45,7 @@ class ReturnsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id','tax_type_id']);
+        $this->setAdditionalSelects(['business_id','tax_type_id', 'business_location_id']);
     }
 
     public function columns(): array
@@ -62,8 +73,7 @@ class ReturnsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount, 2);
                 }),
-            // Column::make('Action', 'id')->view('debts.returns.includes.actions'),
-
+            Column::make('Status', 'app_step')->view('debts.includes.status'),
         ];
     }
 }

@@ -319,7 +319,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/waivers/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('waivers.approval');
 
         Route::get('/audits', [AssessmentDebtController::class, 'audit'])->name('audits.index');
-        Route::get('/verifications', [AssessmentDebtController::class, 'verification'])->name('verifications.index');
+        Route::get('/assessments', [AssessmentDebtController::class, 'verification'])->name('assessments.index');
         Route::get('/investigations', [AssessmentDebtController::class, 'investigation'])->name('investigations.index');
         
         // Return debts
