@@ -96,7 +96,7 @@ class ReliefExport implements FromView, WithEvents,ShouldAutoSize
             }
         }
         $reliefs = $reliefs->get();
-        return view('Exports.relief-report',compact('reliefs','months','projectSections','projectSectionsArray','data','dates'));
+        return view('exports.relief.reports.relief-report',compact('reliefs','months','projectSections','projectSectionsArray','data','dates'));
        
     }
 }

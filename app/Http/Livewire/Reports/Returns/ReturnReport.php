@@ -89,6 +89,10 @@ class ReturnReport extends Component
         $parameters = $this->getParameters();
         $modelData = $this->getModelData($parameters);
         $records = $this->getRecords($modelData['model'], $parameters);
+        if($records->count()<1){
+            $this->alert('error', 'No Records Found in the selected criteria');
+            return;
+        }
         $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
         $for = str_replace('-', ' ', $for);
         // dd($parameters);
@@ -106,25 +110,25 @@ class ReturnReport extends Component
     {
         $this->validate();
         $parameters = $this->getParameters();
-        // $modelData = $this->getModelData($parameters);
-        // $records = $this->getRecords($modelData['model'], $parameters);
-        // $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
-        // $for = str_replace('-', ' ', $for);
-        // // dd($parameters);
-        // if($parameters['year']=='all'){
-        //     $fileName = 'Return Records ('.$for.')';
-        //     $title = $modelData['returnName'].' Return Records ('.$for.')';
-        // }else{
-        //     $fileName = 'Return Records ('.$for.') - '.$parameters['year'];
-        //     $title = $modelData['returnName'].' Return Records ('.$for.')';
-        // }  
-
+        $modelData = $this->getModelData($parameters);
+        $records = $this->getRecords($modelData['model'], $parameters);
+        if($records->count()<1){
+            $this->alert('error', 'No Records Found in the selected criteria');
+            return;
+        }
         return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
     }
 
     public function preview()
     {
         $this->validate();
+        $parameters = $this->getParameters();
+        $modelData = $this->getModelData($parameters);
+        $records = $this->getRecords($modelData['model'], $parameters);
+        if($records->count()<1){
+            $this->alert('error', 'No Records Found in the selected criteria');
+            return;
+        }
         return redirect()->route('reports.returns.preview',encrypt(json_encode($this->getParameters())));
     }
 

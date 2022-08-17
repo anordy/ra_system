@@ -60,7 +60,7 @@ class ReturnReportExport implements FromView, WithEvents,ShouldAutoSize
         $records = $this->records->get();
         $title = $this->title;
         $parameters = $this->parameters;
-        return view('Exports.return-report',compact('records','title','parameters'));
+        return view('exports.returns.reports.excel.stamp-duty',compact('records','title','parameters'));
        
     }
 }
