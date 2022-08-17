@@ -108,8 +108,8 @@ class ZmCore
             foreach ($bill_items as $item) {
                 $zm_item = new ZmBillItem([
                     'zm_bill_id' => $zm_bill->id,
-                    'billable_id' => $item['billable_id'],
-                    'billable_type' => $item['billable_type'],
+                    'billable_id' => array_key_exists('billable_id', $item)  ? $item['billable_id'] : null,
+                    'billable_type' => array_key_exists('billable_type', $item)  ? $item['billable_type'] : null,
                     'fee_id' => array_key_exists('fee_id', $item)  ? $item['fee_id'] : null,
                     'fee_type' =>  array_key_exists('fee_type', $item)? $item['fee_type'] : null,
                     'use_item_ref_on_pay' => 'N',
