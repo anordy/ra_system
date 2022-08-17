@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('title', 'Verification Debt Management')
+@section('title', 'Audits Debt Management')
 
 @section('content')
 <div class="card p-0 m-0">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <div class="text-uppercase font-weight-bold">Verification Debts</div>
+        <div class="text-uppercase font-weight-bold">Investigation Debts</div>
         <div class="card-tools">
 
         </div>
@@ -16,6 +16,7 @@
                 <tr>
                     <th>Business Name</th>
                     <th>Location</th>
+                    <th>Assessment Type</th>
                     <th>Principal</th>
                     <th>Penalty</th>
                     <th>Interest</th>
@@ -28,6 +29,7 @@
                         <tr>
                             <td>{{ $assessment->business->name }}</td>
                             <td>{{ $assessment->location->name }}</td>
+                            <td>{{ preg_split('[\\\]', $assessment->assessment_type)[2] }}</td>
                             <td>{{ number_format($assessment->principal_amount, 2) }}</td>
                             <td>{{ number_format($assessment->penalty_amount, 2) }}</td>
                             <td>{{ number_format($assessment->interest_amount, 2) }}</td>

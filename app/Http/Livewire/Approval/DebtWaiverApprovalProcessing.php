@@ -2,8 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\DisputeStatus;
-use App\Models\Disputes\Dispute;
+use App\Models\Debts\DebtWaiver;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
@@ -11,7 +10,6 @@ use App\Models\WaiverStatus;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\PaymentsTrait;
-use App\Traits\TaxAssessmentDisputeTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -22,16 +20,16 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class ObjectionApprovalProcessing extends Component
+class DebtWaiverApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait,PaymentsTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
-    public $disputeReport;
+    public $waiverReport;
     public $taxTypes;
     public $penaltyPercent, $penaltyAmount, $penaltyAmountDue, $interestAmountDue;
-    public $interestPercent, $interestAmount, $dispute, $assesment, $total;
+    public $interestPercent, $interestAmount, $debt_waiver, $assesment, $total;
     public $natureOfAttachment, $noticeReport, $settingReport;
 
     public function mount($modelName, $modelId)
@@ -39,8 +37,8 @@ class ObjectionApprovalProcessing extends Component
 
         $this->modelName = $modelName;
         $this->modelId = $modelId;
-        $this->dispute = Dispute::find($this->modelId);
-        $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+        $this->debt_waiver = DebtWaiver::find($this->modelId);
+        $this->assessment = TaxAssessment::find($this->debt_waiver->assesment_id);
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $modelId);
 
@@ -68,7 +66,7 @@ class ObjectionApprovalProcessing extends Component
 
         $this->penaltyAmountDue = $this->assessment->penalty_amount - $this->penaltyAmount;
         $this->interestAmountDue = $this->assessment->interest_amount - $this->interestAmount;
-        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->assessment->principal_amount) - ($this->dispute->tax_deposit);
+        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->assessment->principal_amount) - ($this->debt_waiver->tax_deposit);
     }
 
     public function approve($transtion)
@@ -80,13 +78,13 @@ class ObjectionApprovalProcessing extends Component
 
             $this->validate(
                 [
-                    'disputeReport' => 'required|mimes:pdf',
+                    'waiverReport' => 'required|mimes:pdf',
                 ]
             );
 
-            $disputeReport = "";
-            if ($this->disputeReport) {
-                $disputeReport = $this->disputeReport->store('waiver_report', 'local-admin');
+            $waiverReport = "";
+            if ($this->waiverReport) {
+                $waiverReport = $this->waiverReport->store('waiver_report', 'local-admin');
             }
 
             $noticeReport = "";
@@ -99,13 +97,13 @@ class ObjectionApprovalProcessing extends Component
                 $settingReport = $this->settingReport->store('setting_report', 'local-admin');
             }
 
-            $dispute = Dispute::find($this->modelId);
+            $debt_waiver = DebtWaiver::find($this->modelId);
 
             DB::beginTransaction();
             try {
 
-                $dispute->update([
-                    'dispute_report' => $disputeReport ?? '',
+                $debt_waiver->update([
+                    'waiver_report' => $waiverReport ?? '',
                     'notice_report' => $noticeReport ?? '',
                     'setting_report' => $settingReport ?? '',
                 ]);
@@ -127,26 +125,46 @@ class ObjectionApprovalProcessing extends Component
             $this->validate([
                 'interestPercent' => 'required',
                 'penaltyPercent' => 'required',
-
             ]);
             DB::beginTransaction();
 
             try {
 
-                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->assessment->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
-
                 // Generate control number for waived application
-                $billitems = [
-                    [
-                        'billable_id' => $this->dispute->id,
-                        'billable_type' => get_class($this->dispute),
+                $billitems[] = [
+                        'billable_id' => $this->debt_waiver->id,
+                        'billable_type' => get_class($this->debt_waiver),
                         'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->total,
+                        'amount' => $this->assessment->principal_amount,
                         'currency' => 'TZS',
                         'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
                         'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id,
-                    ],
                 ];
+
+                if ($this->penaltyAmountDue > 0) {
+                    $billitems[] = [
+                        'billable_id' => $this->debt_waiver->id,
+                        'billable_type' => get_class($this->debt_waiver),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $this->penaltyAmountDue,
+                        'currency' => 'TZS',
+                        'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
+                        'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id,
+                    ];
+                }
+  
+                if ($this->interestAmountDue > 0) {
+                    $billitems[] = [
+                        'billable_id' => $this->debt_waiver->id,
+                        'billable_type' => get_class($this->debt_waiver),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $this->interestAmountDue,
+                        'currency' => 'TZS',
+                        'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
+                        'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id,
+                    ];
+                }
+       
 
                 $taxpayer = $this->subject->business->taxpayer;
 
@@ -154,7 +172,7 @@ class ObjectionApprovalProcessing extends Component
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
-                $description = "dispute for assessment";
+                $description = "Debt Waiver for assessment";
                 $payment_option = ZmCore::PAYMENT_OPTION_FULL;
                 $currency = 'TZS';
                 $createdby_type = get_class(Auth::user());
@@ -164,6 +182,7 @@ class ObjectionApprovalProcessing extends Component
                 $expire_date = Carbon::now()->addMonth()->toDateTimeString();
                 $billableId = $this->assessment->id;
                 $billableType = get_class($this->assessment);
+
 
                 $zmBill = ZmCore::createBill(
                     $billableId,
@@ -185,24 +204,43 @@ class ObjectionApprovalProcessing extends Component
                 );
 
                 if (config('app.env') != 'local') {
+                    dd('de');
                     $response = ZmCore::sendBill($zmBill->id);
-                    if ($response->status === ZmResponse::SUCCESS) {
-                        $this->dispute->status = ReturnStatus::CN_GENERATING;
-                        $this->dispute->save();
+                    
 
+                    if ($response->status === ZmResponse::SUCCESS) {
+                        $this->debt_waiver->status = ReturnStatus::CN_GENERATING;
+                        $this->debt_waiver->save();
+                        $this->assessment->update([
+                            'penalty_amount' => $this->penaltyAmountDue,
+                            'interest_amount' => $this->interestAmountDue,
+                            'total_amount' => $this->total,
+                            'status' => ReturnStatus::CN_GENERATED
+                        ]);
                         $this->flash('success', 'A control number has been generated successful.');
                     } else {
-
+                        $this->assessment->update([
+                            'penalty_amount' => $this->penaltyAmountDue,
+                            'interest_amount' => $this->interestAmountDue,
+                            'total_amount' => $this->total,
+                            'status' => ReturnStatus::CN_GENERATION_FAILED
+                        ]);
                         session()->flash('error', 'Control number generation failed, try again later');
-                        $this->dispute->status = ReturnStatus::CN_GENERATION_FAILED;
+                        $this->debt_waiver->status = ReturnStatus::CN_GENERATION_FAILED;
                     }
 
-                    $this->dispute->save();
+                    $this->debt_waiver->save();
                 } else {
-
+                    
                     // We are local
-                    // $this->dispute->status = ReturnStatus::CN_GENERATED;
-                    $this->dispute->save();
+                    // $this->debt_waiver->status = ReturnStatus::CN_GENERATED;
+                    $this->debt_waiver->save();
+                    $this->assessment->update([
+                        'penalty_amount' => $this->penaltyAmountDue,
+                        'interest_amount' => $this->interestAmountDue,
+                        'total_amount' => $this->total,
+                        'status' => ReturnStatus::CN_GENERATED
+                    ]);
 
                     // Simulate successful control no generation
                     $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -211,12 +249,12 @@ class ObjectionApprovalProcessing extends Component
                     $zmBill->save();
 
                     $this->subject->verified_at = Carbon::now()->toDateTimeString();
-                    $this->subject->app_status = DisputeStatus::APPROVED;
+                    $this->subject->status = WaiverStatus::APPROVED;
                     $this->subject->save();
                     // event(new SendSms('business-registration-approved', $this->subject->id));
                     // event(new SendMail('business-registration-approved', $this->subject->id));
 
-                    $this->flash('success', 'A control number for this dispute has been generated successfull and approved');
+                    $this->flash('success', 'A control number for this debt_waiver has been generated successfull and approved');
                 }
 
                 DB::commit();
@@ -244,7 +282,7 @@ class ObjectionApprovalProcessing extends Component
 
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->app_status = DisputeStatus::CORRECTION;
+                $this->subject->status = WaiverStatus::CORRECTION;
                 // event(new SendSms('business-registration-correction', $this->subject->id));
                 // event(new SendMail('business-registration-correction', $this->subject->id));
             }
@@ -274,7 +312,7 @@ class ObjectionApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.objection-approval-processing');
+        return view('livewire.approval.debt-waiver-approval-processing');
     }
 
 }

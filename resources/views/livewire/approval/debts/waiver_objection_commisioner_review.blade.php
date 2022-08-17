@@ -38,7 +38,7 @@
                                         <div class="input-group @error($interestPercent) is-invalid @enderror">
                                             <input class="form-control @error($interestPercent) is-invalid @enderror"
                                                 wire:model="interestPercent" type="number" min=0 max=50
-                                                 />
+                                                {{-- wire:change="calculatePenalty()" --}} />
                                             @error($interestPercent)
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -55,13 +55,13 @@
                                     </td>
 
                                     <td>
-                                        {{ $this->assessment->penalty_amount }}
+                                        {{ $this->waiverObjection->taxVerificationAssesment->penalty_amount }}
                                     </td>
                                     <td>
                                         Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->assessment->interest_amount }}
+                                        {{ $this->waiverObjection->taxVerificationAssesment->interest_amount }}
                                     </td>
 
                                 </tr>
@@ -86,34 +86,22 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $this->assessment->penalty_amount - $penaltyAmount }}
+                                        {{ $this->waiverObjection->taxVerificationAssesment->penalty_amount - $penaltyAmount }}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->assessment->interest_amount - $interestAmount }}
+                                        {{ $this->waiverObjection->taxVerificationAssesment->interest_amount - $interestAmount }}
                                     </td>
 
                                 </tr>
 
 
-                                <tr>
-                                    <td class="card-footer text-center">
-                                        Principal Amount
-                                    </td>
-                                    <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($assessment->principal_amount) }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="card-footer text-center">
-                                        Tax Deposited
-                                    </td>
-                                    <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($dispute->tax_deposit) }}
-                                    </td>
-                                </tr>
+
+
+                            </tbody>
+                            <tfoot>
                                 <tr>
                                     <td class="card-footer text-center">
                                         Total Amount Due
@@ -122,7 +110,7 @@
                                         {{ number_format($total) }}
                                     </td>
                                 </tr>
-                            </tbody>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

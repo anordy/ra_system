@@ -33,11 +33,8 @@ use App\Http\Controllers\Claims\ClaimFilesController;
 use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Debt\AuditDebtController;
-use App\Http\Controllers\Debt\DebtController;
-use App\Http\Controllers\Debt\InvestigationDebtController;
+use App\Http\Controllers\Debt\AssessmentDebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
-use App\Http\Controllers\Debt\VerificationDebtController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\HomeController;
@@ -67,7 +64,6 @@ use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
-use App\Http\Controllers\Returns\ReturnController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
@@ -317,9 +313,14 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('debts.')->prefix('/debts')->group(function () {
-        // Verification Assesments
-        Route::get('/verifications', [VerificationDebtController::class, 'index'])->name('verifications.index');
-        Route::get('/verifications/{id}', [VerificationDebtController::class,'show'])->name('verifications.show');
+        // Assesments
+        Route::get('/waivers', [AssessmentDebtController::class, 'waivers'])->name('waivers.index');
+        Route::get('/waivers/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('waivers.approval');
+
+        Route::get('/audits', [AssessmentDebtController::class, 'audit'])->name('audits.index');
+        Route::get('/verifications', [AssessmentDebtController::class, 'verification'])->name('verifications.index');
+        Route::get('/investigations', [AssessmentDebtController::class, 'investigation'])->name('investigations.index');
+        
         // Return debts
         Route::get('/returns/hotel/{taxType}', [ReturnDebtController::class, 'index'])->name('hotel.index');
         Route::get('/returns/tour/{taxType}', [ReturnDebtController::class, 'index'])->name('tour.index');
@@ -335,11 +336,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/returns/sea/{taxType}', [ReturnDebtController::class, 'index'])->name('sea.index');
         Route::get('/returns/airport/{taxType}', [ReturnDebtController::class, 'index'])->name('airport.index');
 
-        Route::get('/audits', [AuditDebtController::class, 'index'])->name('audits.index');
-        Route::get('/audits/{id}', [AuditDebtController::class,'show'])->name('audits.show');
-
-        Route::get('/objection/{id}', [DebtController::class, 'showObjection'])->name('objection');
-        Route::resource('/investigation', InvestigationDebtController::class);
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {

@@ -9,6 +9,7 @@ use App\Models\BusinessLocation;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Verification\TaxVerification;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -57,5 +58,9 @@ class TaxAssessment extends Model
     public function scopeInvestigation($query)
     {
         return $query->where('assessment_type', TaxInvestigation::class);
+    }
+
+       public function bill(){
+        return $this->morphOne(ZmBill::class, 'billable');
     }
 }
