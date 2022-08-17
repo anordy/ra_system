@@ -106,7 +106,7 @@ class VerifyAction extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $amount,
                     'currency' => $used_currency,
-                    'gfs_code' => '116101',
+                    'gfs_code' => $tax_type->gfs_code,
                     'tax_type_id' => $tax_type->id
                 ]
             ];
