@@ -16,4 +16,8 @@ class ZmBillItem extends Model
     {
         return $this->belongsTo(ZmBill::class, 'zm_bill_id');
     }
+
+    public function taxType(){
+        return $this->belongsTo(TaxType::class);
+    }
 }

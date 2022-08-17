@@ -152,28 +152,28 @@ class WorkflowSubscriber implements EventSubscriberInterface
                         $subject->taxReturn->application_status = DisputeStatus::SELF_ASSESSMENT;
                     }
                     $subject->status = TaxVerificationStatus::APPROVED;
-                    $subject->approved_date = Carbon::now()->toDateTimeString();
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
 
                     $subject->taxReturn->save();
                 }
             } elseif ($placeName == 'TAX_AUDIT') {
                 if (key($places) == 'completed') {
                     $subject->status = TaxAuditStatus::APPROVED;
-                    $subject->approved_date = Carbon::now()->toDateTimeString();
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
             } elseif ($placeName == 'TAX_INVESTIGATION') {
                 if (key($places) == 'completed') {
                     $subject->status = TaxInvestigationStatus::APPROVED;
-                    $subject->approved_date = Carbon::now()->toDateTimeString();
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
             } else {
                 if (key($place) == 'completed') {
                     $subject->status = TaxAuditStatus::APPROVED;
-                    $subject->approved_date = Carbon::now()->toDateTimeString();
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
 
                 } elseif (key($place) == 'rejected') {
                     $subject->status = TaxAuditStatus::REJECTED;
-                    $subject->approved_date = Carbon::now()->toDateTimeString();
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
                   
                 }
             }

@@ -2,7 +2,6 @@
 
 namespace App\Services\LivewireModal;
 
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Modals extends Component

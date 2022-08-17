@@ -19,10 +19,6 @@ class Business extends Model implements Auditable
 
     protected $guarded = [];
 
-    protected $casts = [
-        'date_of_commencing' => 'datetime',
-    ];
-
     // Scopes
     public function scopeApproved($query)
     {
@@ -180,5 +176,9 @@ class Business extends Model implements Auditable
 
     public function QuantityCertificates(){
         return $this->hasMany(QuantityCertificate::class);
+    }
+
+    public function taxClearanceRequest(){
+        return $this->hasMany(TaxClearanceRequest::class);
     }
 }

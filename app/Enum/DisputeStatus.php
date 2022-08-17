@@ -16,6 +16,7 @@ class DisputeStatus implements Status
     const DISPUTE = 'dispute';
     const CLAIM = 'claim';
     const ADJUSTED = 'adjusted';
+    const DEBT = 'debt';
 
     static function getConstants(): array
     {

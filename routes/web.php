@@ -33,11 +33,8 @@ use App\Http\Controllers\Claims\ClaimFilesController;
 use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Debt\AuditDebtController;
-use App\Http\Controllers\Debt\DebtController;
-use App\Http\Controllers\Debt\InvestigationDebtController;
+use App\Http\Controllers\Debt\AssessmentDebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
-use App\Http\Controllers\Debt\VerificationDebtController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\HomeController;
@@ -68,7 +65,6 @@ use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
-use App\Http\Controllers\Returns\ReturnController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
@@ -79,6 +75,7 @@ use App\Http\Controllers\Setting\InterestRateController;
 use App\Http\Controllers\Setting\TaxRegionController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
+use App\Http\Controllers\TaxClearance\TaxClearanceController;
 use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\TaxTypeController;
@@ -92,11 +89,9 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
-use App\Http\Livewire\Reports\Returns\ReturnReport;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Maatwebsite\Excel\Row;
 
 Auth::routes();
 
@@ -311,13 +306,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('/files', TaxAuditFilesController::class);
-
-    //Managerial Reports
-    Route::name('reports.')->prefix('reports')->group(function () {
-        Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
-        Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
-        Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
-    });
 });
 
 Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -356,27 +344,24 @@ Route::name('debts.')->prefix('/debts')->group(function () {
     Route::resource('/investigation', InvestigationDebtController::class);
 });
 
-Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
-    Route::resource('/approvals', TaxInvestigationApprovalController::class);
-    Route::resource('/assessments', TaxInvestigationAssessmentController::class);
-    Route::resource('/verified', TaxInvestigationVerifiedController::class);
-    Route::resource('/files', TaxInvestigationFilesController::class);
-});
+    Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
+        Route::resource('/approvals', TaxInvestigationApprovalController::class);
+        Route::resource('/assessments', TaxInvestigationAssessmentController::class);
+        Route::resource('/verified', TaxInvestigationVerifiedController::class);
+        Route::resource('/files', TaxInvestigationFilesController::class);
+    });
 
-Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
+    Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
 
-Route::name('land-lease.')->prefix('land-lease')->group(function () {
-    Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
-    Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
-    Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
-    Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
-    // Route::post('/report-preview', [LandLeaseController::class, 'reportPreview'])->name('report.preview');
-});
+    Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+    });
 
 //Electronic Money Transaction Return
 Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
     Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
     Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
 });
-
-

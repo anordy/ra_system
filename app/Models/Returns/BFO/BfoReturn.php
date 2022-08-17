@@ -54,4 +54,14 @@ class BfoReturn extends Model
     public function bfoPenalties(){
         return $this->hasMany(BfoPenalty::class, 'return_id');
     }
+
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
+    }
 }

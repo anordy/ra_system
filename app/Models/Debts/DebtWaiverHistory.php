@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Models\Returns;
+namespace App\Models\Debts;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PortReturn extends Model
+class DebtWaiverHistory extends Model
 {
     use HasFactory;
 
-     protected $guarded = [];
+    protected $guarded = [];
 
 }
