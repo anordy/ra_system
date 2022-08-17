@@ -14,81 +14,88 @@ use App\TaxAgentFee;
 
 class TaxAgentFeeModal extends Component
 {
-	use LivewireAlert;
+    use LivewireAlert;
 
-	public $category, $duration, $amount, $no_of_days;
+    public $category, $duration, $amount, $currency, $no_of_days;
 
-	public function submit()
-	{
-		if ($this->category == 'registration fee')
-		{
-			$validate = $this->validate([
-			  'category'=>'required',
-			  'amount'=>'required|numeric',
-			]
-			);
-		}
+    public function submit()
+    {
+        if ($this->category == 'registration fee') {
+            $validate = $this->validate([
+                    'category' => 'required',
+                    'amount' => 'required|numeric',
+                    'currency' => 'required'
+                ]
+            );
+        } else {
+            $validate = $this->validate([
+                'category' => 'required',
+                'amount' => 'required|numeric',
+                'duration' => 'required',
+                'no_of_days' => 'required',
+                'currency' => 'required'
+            ],
+                [
+                    'no_of_days.required' => 'This field is required'
+                ]
+            );
+        }
+        DB::beginTransaction();
+        try {
+            $fee = TaPaymentConfiguration::where('category', '=', $this->category)->first();
 
-		else
-		{
-			$validate = $this->validate([
-			  'category'=>'required',
-			  'amount'=>'required|numeric',
-			  'duration'=>'required',
-			  'no_of_days'=>'required'
-			],
-			  [
-				'no_of_days.required'=>'This field is required'
-			  ]
-			);
-		}
-		DB::beginTransaction();
-		try {
-			$fee = TaPaymentConfiguration::where('category', '=', $this->category)->first();
+            if ($fee == null) {
+                TaxAgentFee::saveFee(
+                    $this->category,
+                    $this->duration,
+                    $this->no_of_days,
+                    $this->amount,
+                    $this->currency,
+                    Auth::id()
+                );
+            } else {
+                $cat = $fee->category;
+                $id = $fee->id;
+                $du = $fee->duration;
+                $no = $fee->no_of_days;
+                $am = $fee->amount;
+                $cur = $fee->currency;
+                $cr = $fee->created_by;
+                TaPaymentConfiguration::where('category', $this->category)->delete();
 
-			if ($fee == null)
-			{
-				TaxAgentFee::saveFee($this->category, $this->duration, $this->no_of_days, $this->amount, Auth::id());
+                TaxAgentFee::saveFee(
+                    $this->category,
+                    $this->duration,
+                    $this->no_of_days,
+                    $this->amount,
+                    $this->currency,
+                    Auth::id()
+                );
 
-			}
+                $hist = new TaPaymentConfigurationHistory();
+                $hist->tapc_id = $id;
+                $hist->category = $cat;
+                $hist->duration = $du;
+                $hist->no_of_days = $no;
+                $hist->amount = $am;
+                $hist->currency = $cur;
+                $hist->created_by = $cr;
+                $hist->save();
 
-			else
-			{
-				$cat = $fee->category;
-				$id = $fee->id;
-				$du = $fee->duration;
-				$no = $fee->no_of_days;
-				$am = $fee->amount;
-				$cr = $fee->created_by;
-				TaPaymentConfiguration::where('category', $this->category)->delete();
+            }
 
-				TaxAgentFee::saveFee($this->category, $this->duration, $this->no_of_days, $this->amount, Auth::id());
+            DB::commit();
+            $this->flash('success', 'Saved successfully', [], redirect()->back()->getTargetUrl());
 
-				$hist = new TaPaymentConfigurationHistory();
-				$hist->tapc_id = $id;
-				$hist->category = $cat;
-				$hist->duration = $du;
-				$hist->no_of_days = $no;
-				$hist->amount = $am;
-				$hist->created_by = $cr;
-				$hist->save();
+        } catch (\Throwable $exception) {
+            Log::error($exception);
 
-			}
+            $this->flash('warning', 'Internal server error', [], redirect()->back()->getTargetUrl());
 
-			DB::commit();
-			$this->flash('success', 'Saved successfully', [], redirect()->back()->getTargetUrl());
+        }
+    }
 
-		}
-
-		catch (\Throwable $exception)
-		{
-			Log::error($exception);
-
-			$this->flash('warning', 'Internal server error', [], redirect()->back()->getTargetUrl());
-
-		}
-	}
-	public function render()
+    public function render()
     {
         return view('livewire.tax-agent-fee-modal');
     }
