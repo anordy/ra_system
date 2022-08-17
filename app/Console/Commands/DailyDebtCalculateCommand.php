@@ -67,7 +67,7 @@ class DailyDebtCalculateCommand extends Command
             MmTransferReturn::class,
             HotelReturn::class,
             PetroleumReturn::class,
-            PortReturn::class,
+            // PortReturn::class,
             EmTransactionReturn::class,
             BfoReturn::class,
             LumpSumReturn::class
