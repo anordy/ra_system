@@ -6,14 +6,10 @@
     {{-- @if ($business->status === \App\Models\BusinessStatus::CORRECTION)
         <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business->id }}" />
     @endif --}}
-    <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
+    {{-- <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Complainant</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="dispute-tab" data-toggle="tab" href="#dispute" role="tab" aria-controls="dispute"
-                aria-selected="false">Tax In Dispute</a>
         </li>
 
         <li class="nav-item" role="presentation">
@@ -109,42 +105,6 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="dispute" role="tabpanel" aria-labelledby="dispute-tab">
-            {{-- @if ($dispute = $business->headquarter) --}}
-            <div class="col-md-12 mt-1">
-                <h6 class="pt-3 mb-0 font-weight-bold">Assesment</h6>
-                <hr class="mt-2 mb-3" />
-            </div>
-            <div class="row m-2">
-                {{-- <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Assesment No</span>
-                    <p class="my-1"></p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Assesment Date</span>
-                    <p class="my-1">{{ $dispute->owner_name }}</p>
-                </div> --}}
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_not_in_dispute }} Tzs</p>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount Objected</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute + $waiver->tax_not_in_dispute  }} TZS</p>
-                </div>
-
-
-            </div>
-            {{-- @endif --}}
-
-        </div>
-
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
@@ -207,6 +167,6 @@
 
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection

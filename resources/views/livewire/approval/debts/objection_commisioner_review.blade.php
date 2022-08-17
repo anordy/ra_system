@@ -3,7 +3,6 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-
                     <div class="col-md-12">
                         <table class="table table-bordered">
                             <tbody>
@@ -23,6 +22,9 @@
                                         <div class="input-group @error($penaltyPercent) is-invalid @enderror">
                                             <input class="form-control @error($penaltyPercent) is-invalid @enderror"
                                                 wire:model="penaltyPercent" type="number" min=0 max=100
+                                                @if ($debt_waiver->category == 'interest')
+                                                    disabled
+                                                @endif
                                                 {{-- wire:change="calculatePenalty()" --}} />
                                             @error($penaltyPercent)
                                                 <div class="invalid-feedback">
@@ -38,6 +40,9 @@
                                         <div class="input-group @error($interestPercent) is-invalid @enderror">
                                             <input class="form-control @error($interestPercent) is-invalid @enderror"
                                                 wire:model="interestPercent" type="number" min=0 max=50
+                                                @if ($debt_waiver->category == 'penalty')
+                                                    disabled
+                                                @endif
                                                  />
                                             @error($interestPercent)
                                                 <div class="invalid-feedback">

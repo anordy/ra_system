@@ -28,8 +28,8 @@ class DebtWaiverApprovalProcessing extends Component
     public $comments;
     public $waiverReport;
     public $taxTypes;
-    public $penaltyPercent, $penaltyAmount, $penaltyAmountDue, $interestAmountDue;
-    public $interestPercent, $interestAmount, $debt_waiver, $assesment, $total;
+    public $penaltyPercent = 0, $penaltyAmount, $penaltyAmountDue, $interestAmountDue;
+    public $interestPercent = 0, $interestAmount, $debt_waiver, $assesment, $total;
     public $natureOfAttachment, $noticeReport, $settingReport;
 
     public function mount($modelName, $modelId)

@@ -1,12 +1,8 @@
-<div>
+<div class="mt-4 mx-4">
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Complainant</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="waiver-tab" data-toggle="tab" href="#waiver" role="tab"
-                aria-controls="waiver" aria-selected="false">Tax In waiver</a>
         </li>
 
         <li class="nav-item" role="presentation">
@@ -128,36 +124,17 @@
                         @endif
                     </p>
                 </div>
-
-            </div>
-        </div>
-
-        <div class="tab-pane fade" id="waiver" role="tabpanel" aria-labelledby="waiver-tab">
-            {{-- @if ($waiver = $business->headquarter) --}}
-            <div class="col-md-12 mt-1">
-                <h6 class="pt-3 mb-0 font-weight-bold">Disputes</h6>
-                <hr class="mt-2 mb-3" />
-            </div>
-            <div class="row m-2">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount In waiver</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
+                    <span class="font-weight-bold text-uppercase">Waiver Type</span>
+                    <p class="my-1">
+                            <span class="badge badge-success py-1 px-2"
+                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                {{ $waiver->category }}
+                            </span>
+                    </p>
                 </div>
 
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount Not in waiver</span>
-                    <p class="my-1">{{ $waiver->tax_not_in_dispute }} Tzs</p>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Assesed Amount</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute + $waiver->tax_not_in_dispute }} TZS</p>
-                </div>
-
-
             </div>
-            {{-- @endif --}}
-
         </div>
 
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
@@ -227,64 +204,6 @@
                         <span class="font-weight-bold text-uppercase">Total Amount Due</span>
                         <p class="my-1">{{ $assesment->total_amount ?? '' }}</p>
                     </div>
-
-                </div>
-            </div>
-        </div>
-    @endif
-
-
-    @if ($waiver->dispute_report)
-        <div class="card my-4 rounded-0">
-            <div class="card-header font-weight-bold bg-white">
-               waiver REPORT
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                            <a target="_blank"
-                                href="{{ route('assesments.waiver.files', encrypt($waiver->dispute_report)) }}"
-                                style="font-weight: 500;" class="ml-1">
-                                waiver Report
-                                <i class="bi bi-arrow-up-right-square ml-1"></i>
-                            </a>
-                        </div>
-                    </div>
-
-
-                    @if ($waiver->notice_report)
-                        <div class="col-md-3">
-                            <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
-                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                <a target="_blank"
-                                    href="{{ route('assesments.waiver.files', encrypt($waiver->notice_report)) }}"
-                                    style="font-weight: 500;" class="ml-1">
-                                    Notice Report
-                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                </a>
-                            </div>
-                        </div>
-                    @endif
-
-                    
-                    @if ($waiver->setting_report)
-                        <div class="col-md-3">
-                            <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
-                                class="p-2 mb-3 d-flex rounded-sm align-items-center">
-                                <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                <a target="_blank"
-                                    href="{{ route('assesments.waiver.files', encrypt($waiver->setting_report)) }}"
-                                    style="font-weight: 500;" class="ml-1">
-                                    Setting Report
-                                    <i class="bi bi-arrow-up-right-square ml-1"></i>
-                                </a>
-                            </div>
-                        </div>
-                    @endif
 
                 </div>
             </div>

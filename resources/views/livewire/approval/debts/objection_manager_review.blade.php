@@ -5,13 +5,13 @@
                 <div class="row">
                     <div class="form-group col-lg-4">
                         <label class="control-label">Objection Report</label>
-                        <input type="file" class="form-control  @error('disputeReport') is-invalid @enderror"
-                            wire:model.lazy="disputeReport">
-                        @error('disputeReport')
+                        <input type="file" class="form-control  @error('waiverReport') is-invalid @enderror"
+                            wire:model.lazy="waiverReport">
+                        @error('waiverReport')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                       <div class="form-group col-lg-4">
+                    <div class="form-group col-lg-4">
                         <label>Finalizing Assesment</label>
                         <select class="form-control" wire:model.lazy="natureOfAttachment">
                             <option value="">Select Attachment</option>

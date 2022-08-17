@@ -1,5 +1,5 @@
 @if (count($this->getEnabledTranstions()) > 1)
-    <div class="card shadow-sm mb-2 bg-white">
+    <div class="card shadow-sm mb-2 bg-white mx-4">
         <div class="card-header font-weight-bold">
             Approval
         </div>
@@ -7,7 +7,7 @@
             @include('livewire.approval.transitions')
 
             @if ($this->checkTransition('objection_manager_review'))
-                @include('livewire.approval.debts.objection_manager_review')
+                {{-- @include('livewire.approval.debts.objection_manager_review') --}}
             @elseif ($this->checkTransition('commisioner_review'))
                 @include('livewire.approval.debts.objection_commisioner_review')
             @endif
