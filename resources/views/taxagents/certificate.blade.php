@@ -102,20 +102,34 @@
             font-weight: bold;
             letter-spacing: 2px;
         }
+        .commissioner-signature {
+            top: 86%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            left: 30px;
+        }
     </style>
 </head>
 
-<body>d
-
-<span class="taxpayerName">{{implode(" ", array($taxagent->taxpayer->first_name,$taxagent->taxpayer->middle_name,$taxagent->taxpayer->last_name))}}</span>
-<span class="registrationNumber">{{$taxagent->reference_no}}</span>
-<span class="period">@if($taxagent->is_first_application == 1) 1 year @endif</span>
-<span class="startDay">{{date('d', strtotime($taxagent->app_first_date))}}<sup class="sup">{{$superStart}}</sup></span>
-<span class="startYear">{{date('M Y', strtotime($taxagent->app_first_date))}}</span>
-<span class="endday">{{date('d', strtotime($taxagent->app_expire_date))}}<sup class="sup">{{$superEnd}}</sup></span>
-<span class="endyear">{{date('M Y', strtotime($taxagent->app_expire_date))}}</span>
-<span class="location">{{$taxagent->district->name.', '.$taxagent->region->name}}</span>
-
+<body>
+    <span class="taxpayerName">{{ $taxagent->taxpayer->fullName }}</span>
+    <span class="registrationNumber">{{$taxagent->reference_no}}</span>
+    <span class="period">@if($taxagent->is_first_application == 1) 1 year @endif</span>
+    <span class="startDay">{{date('d', strtotime($taxagent->app_first_date))}}<sup class="sup">{{$superStart}}</sup></span>
+    <span class="startYear">{{date('M Y', strtotime($taxagent->app_first_date))}}</span>
+    <span class="endday">{{date('d', strtotime($taxagent->app_expire_date))}}<sup class="sup">{{$superEnd}}</sup></span>
+    <span class="endyear">{{date('M Y', strtotime($taxagent->app_expire_date))}}</span>
+    <span class="location">{{$taxagent->district->name.', '.$taxagent->region->name}}</span>
+    <span class="commissioner-signature">
+        <img src="{{ public_path()}}/sign/commissioner.png">
+    </span>
+    <div style="overflow: hidden; position:absolute; top: 81%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
+        <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+    </div>
 </body>
 
 </html>
