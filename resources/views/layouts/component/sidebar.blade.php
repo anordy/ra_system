@@ -405,39 +405,39 @@
                     <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
                 </li>
 
-        </ul>
-    </li>
-    <li class="{{ request()->is('managerial-reports*') ? 'active' : '' }}">
-        <a href="#managerialReportSubmenu" data-toggle="collapse"
-            aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">
-            Managerial reports
-        </a>
-        <ul class="collapse list-unstyled {{ request()->is('managerial-reports*') ? 'show' : '' }}"
-            id="landLeaseSubmenu">
+            </ul>
+        </li>
+        <li class="{{ request()->is('reports*') ? 'active' : '' }}">
+            <a href="#reportSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                Managerial reports
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}"
+                id="reportSubmenu">
+                <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.returns') }}">Return Reports</a>
+                </li>
+                
+            </ul>
+        </li>
 
-            <li class="{{ request()->is('managerial-reports/list*') ? 'active' : '' }}">
-                <a href="{{ route('land-lease.list') }}">Lump Sum Payments Reports</a>
-            </li>
-        </ul>
-    </li>
 
+        <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
+            <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
+                <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
+                    <a href="{{ route('system.audits.index') }}">Audit Trail</a>
+                </li>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
+                </li>
 
-    <li class="{{ request()->is('system*') ? 'active' : '' }}">
-        <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
-        <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
-            <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
-                <a href="{{ route('system.audits.index') }}">Audit Trail</a>
-            </li>
-            <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
-            </li>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('pdf.all') }}">All PDF's</a>
+                </li>
 
-            <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                <a href="{{ route('pdf.all') }}">All PDF's</a>
-            </li>
-
-        </ul>
-    </li>
+            </ul>
+        </li>
 
     </ul>
 
