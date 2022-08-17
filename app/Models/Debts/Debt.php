@@ -34,8 +34,8 @@ class Debt extends Model
         return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
     }
 
-    public function assesment(){
-        return $this->belongsTo(TaxAssessment::class, 'debt_type_id');
+    public function debtType(){
+        return $this->morphTo();
     }
     
 }
