@@ -2,11 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class DailyDebtCalculateCommand extends Command
@@ -42,26 +45,64 @@ class DailyDebtCalculateCommand extends Command
      */
     public function handle()
     {
+        Log::info('Daily Debt calculation process started');
         /**
          * Get current return month
          * Get current return month due date
          * Select data from return with current due date
          * Insert into debt all unpaid and update status of return to debt
          */
-        $financialYear = FinancialYear::firstWhere('code' ,date('Y'));
-        $month = Carbon::now()->month;
-        $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
-            ->where('number', $month)->first();
+        DB::beginTransaction();
+        try {
+            $financialYear = FinancialYear::firstWhere('code', date('Y'));
+            $month = Carbon::now()->month;
+            $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
+                ->where('number', $month)->first();
 
-         $hoteReturn = HotelReturn::where('status', '!=', 'complete')
-            ->where('financial_month_id', $financialMonth->id)
-            ->where('submitted_at', '>', $financialMonth->due_date)
-            ->get();
+            $hoteReturn = HotelReturn::select(
+                'id as debt_type_id',
+                'business_location_id',
+                'business_id',
+                'currency',
+                'tax_type_id',
+                'total_amount_due as principal_amount',
+                'total_amount_due as original_principal_amount',
+                'total_amount_due_with_penalties as original_total_amount',
+                'total_amount_due_with_penalties as total_amount',
+                'total_amount_due_with_penalties as outstanding_amount',
+                'penalty',
+                'penalty as original_penalty',
+                'interest',
+                'interest as original_interest',
+                'submitted_at',
+                'filing_due_date',
+                'payment_due_date as last_due_date',
+                'payment_due_date as curr_due_date'
+            )
+                ->doesntHave('payments')
+                ->where('status', '!=', 'complete')
+                ->whereIn('application_status', ['self_assessment', 'adjusted', 'submitted'])
+                ->where('filing_due_date', '<', $financialMonth->due_date)
+                ->orWhere('payment_due_date', '<', $financialMonth->due_date)
+                ->get();
 
-        dd($hoteReturn);
 
-        
+            $data = $hoteReturn->map(function ($return) {
+                $return->debt_type = HotelReturn::class;
+                $return->origin = 'job';
+                $return->logged_date = Carbon::now()->toDateTimeString();
+                return $return;
+            });
 
-        Log::info('Calculate penalty');
+            $dataToInsert = $data->toArray();
+
+            Debt::upsert($dataToInsert, ['debt_type_id', 'dept_type']);
+            DB::commit();
+            Log::info('Daily Debt calculation process ended');
+        } catch (Exception $e) {
+            Log::info('Daily Debt calculation process ended with error');
+            Log::error($e);
+            DB::rollBack();
+        }
     }
 }
