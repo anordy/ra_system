@@ -23,6 +23,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->unsignedBigInteger('region_id');
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('ward_id');
+            $table->dateTime('date_of_commencing');
             $table->string('latitude');
             $table->string('longitude');
             $table->enum('nature_of_possession',['Owned','Rented']);
@@ -33,7 +34,6 @@ class CreateBusinessLocationsTable extends Migration
             $table->string('owner_phone_no')->nullable();
             $table->string('meter_no');
             $table->string('marking')->nullable();
-            $table->dateTime('date_of_commencing')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->dateTime('verified_at')->nullable();
             $table->boolean('is_headquarter')->default(false);
