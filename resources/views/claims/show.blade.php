@@ -29,7 +29,6 @@
                     <span class="font-weight-bold text-uppercase">Claimed Amount</span>
                     <p class="my-1">{{ number_format($claim->amount, 2) }} {{ $claim->currency }}</p>
                 </div>
-
                 <div class="col-md-12 mt-3">
                     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
                         @if($claim->oldReturn)
