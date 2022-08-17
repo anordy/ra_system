@@ -22,7 +22,7 @@
         @livewire('reports.returns.previews.bfo-preview-table',['parameters'=>$parameters])
         @break
         @case('hotel-levy')
-        this is hotel levy
+        @livewire('reports.returns.previews.bfo-preview-table',['parameters'=>$parameters])
         @break
 
         @case('restaurant-levy')
