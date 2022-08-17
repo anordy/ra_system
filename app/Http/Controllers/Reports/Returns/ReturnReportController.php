@@ -32,15 +32,16 @@ class ReturnReportController extends Controller
         $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
         $for = str_replace('-', ' ', $for);
         // dd($records);
-        if ($parameters['year'] == 'all') {
-            $fileName = 'Return Records (' . $for . ').pdf';
-            $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
-        } else {
-            $fileName = 'Return Records (' . $for . ') - ' . $parameters['year'] . '.pdf';
-            $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
-        }
-        $records = $records->get();
-        $pdf = PDF::loadView('exports.returns.reports.pdf.stamp-duty', compact('records', 'title', 'parameters'));
+        if($parameters['year']=='all'){
+            $fileName = 'Return Records ('.$for.').pdf';
+            $title = $modelData['returnName'].' Return Records ('.$for.')';
+        }else{
+            $fileName = 'Return Records ('.$for.') - '.$parameters['year'].'.pdf';
+            $title = $modelData['returnName'].' Return Records ('.$for.')';
+        } 
+        $records = $records->get(); 
+        $viewName = str_replace(' ','-',strtolower($modelData['returnName']));
+        $pdf = PDF::loadView('exports.returns.reports.pdf.'.$viewName, compact('records', 'title', 'parameters'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download($fileName);
