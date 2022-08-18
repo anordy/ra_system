@@ -19,11 +19,15 @@
                             {{ $this->getTaxNameById($type['tax_type_id']) }} - {{ $type['currency'] }}<br>
                         @endforeach
                     </td>
-                    @if ($taxchange->old_taxtype == $taxchange->new_taxtype)
-                        <td class="table-primary">Unchanged</td>
-                    @else
-                        <td class="table-success">Changed</td>
-                    @endif
+                    <td>
+                        @foreach ($oldTaxTypes as $key => $type)
+                            @if ($type['tax_type_id'] == $selectedTaxTypes[$key]['tax_type_id'])
+                                <span class="table-primary" style="font-size: 13px">Unchanged</span><br>
+                            @else
+                                <span class="table-success" style="font-size: 13px">Changed</span><br>
+                            @endif
+                        @endforeach
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -33,6 +37,7 @@
 
             <div class="row mt-4 mb-4">
                 @foreach ($selectedTaxTypes as $key => $value)
+                    @if ($value['tax_type_id'] !== $oldTaxTypes[$key]['tax_type_id'])
                     <div class="col-4">
                         <div class="form-group">
                             <label class="form-label">Current Tax Type</label>
@@ -73,6 +78,8 @@
                             @enderror
                         </div>
                     </div>
+                    @endif
+
                 @endforeach
             </div>
 
@@ -84,20 +91,20 @@
 
     </div>
     @if ($this->checkTransition('registration_manager_review'))
-    <div class="row mt-2">
-        <div class="col-md-12 mb-3">
-            <div class="form-group">
-                <label for="exampleFormControlTextarea1">Comments</label>
-                <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments' rows="3"></textarea>
+        <div class="row mt-2">
+            <div class="col-md-12 mb-3">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Comments</label>
+                    <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments' rows="3"></textarea>
 
-                @error('comments')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
+                    @error('comments')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
             </div>
         </div>
-    </div>
         <div class="modal-footer p-2 m-0">
             <button type="button" class="btn btn-danger"
                 wire:click="reject('registration_manager_reject')">Reject</button>
