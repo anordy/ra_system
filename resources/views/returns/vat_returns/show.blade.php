@@ -104,30 +104,18 @@
                                 <div class="col-md-3 mb-3">
                                     <span class="font-weight-bold text-uppercase">Return Application Status</span>
                                     <p class="my-1">
-                                        @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
-                                            <span class="badge badge-success py-1 px-2"
-                                                  style="border-radius: 1rem; background: #35dcb5; color: #0a9e99; font-size: 100%"><i
-                                                        class="bi bi bi-check-circle-fill mr-1"></i>
-                                            Claiming
-                                            </span>
-
-                                        @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::SUBMITTED)
+                                        @if($return->application_status == \App\Enum\ReturnApplicationStatus::SUBMITTED)
                                             <span class="badge badge-success py-1 px-2"
                                                   style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
                                                 Submitted
                                             </span>
-                                        @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::ADJUSTED)
-                                            <span class="badge badge-success py-1 px-2"
-                                                  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
-                                                        class="bi bi-check-circle-fill mr-1"></i>
-                                                Adjusted
-                                            </span>
+
                                         @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::DISPUTE)
                                             <span class="badge badge-danger py-1 px-2"
                                                   style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
-                                                On Dispute
+                                                Adjusted
                                             </span>
                                         @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::SELF_ASSESSMENT)
                                             <span class="badge badge-success py-1 px-2"
@@ -256,7 +244,7 @@
 
                                         <tr>
                                             <th>
-                                                @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
+                                                @if($return->claim_status == \App\Enum\TaxClaimStatus::CLAIM)
                                                     Vat To Claim
                                                 @else
                                                     Vat Payable
@@ -264,7 +252,7 @@
                                             </th>
                                             <td colspan="2" class="table-active"></td>
                                             <th class="text-right">
-                                                @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
+                                                @if($return->claim_status == \App\Enum\TaxClaimStatus::CLAIM)
                                                     ({{number_format($return->total_vat_payable, 2, '.',',')}})
                                                 @else
                                                     {{number_format($return->total_vat_payable, 2, '.',',')}}
@@ -291,7 +279,7 @@
 
                                         <tr>
                                             <th>
-                                                @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
+                                                @if($return->claim_status == \App\Enum\TaxClaimStatus::CLAIM)
                                                     Net Vat To Claim
                                                 @else
                                                     Net Vat Payable
@@ -299,7 +287,7 @@
                                             </th>
                                             <td colspan="2" class="table-active"></td>
                                             <th class="text-right">
-                                                @if($return->application_status == \App\Enum\ReturnApplicationStatus::CLAIM)
+                                                @if($return->claim_status == \App\Enum\TaxClaimStatus::CLAIM)
                                                     ({{number_format($return->total_amount_due, 2, '.',',')}})
                                                 @else
                                                     {{number_format($return->total_amount_due, 2, '.',',')}}
@@ -448,7 +436,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="tab-pane p-2" id="payment-summary" role="tabpanel" aria-labelledby="payment-summary-tab">
                             @if($return->bill)
                                 <x-bill-structure :bill="$return->bill" />
