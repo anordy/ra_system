@@ -148,11 +148,11 @@
                         </div>
                         @endif
 
-{{--                        @if($agent->request->status == \App\Models\TaxAgentStatus::VERIFIED)--}}
-{{--                            <div class="d-flex justify-content-end">--}}
-{{--                                <livewire:tax-agent.renew.verify-action :agent="$agent"/>--}}
-{{--                            </div>--}}
-{{--                        @endif--}}
+                        @if($agent->request->status == \App\Models\TaxAgentStatus::VERIFIED)
+                            <div class="d-flex justify-content-end">
+                                <livewire:tax-agent.renew.approve-action :agent="$agent"/>
+                            </div>
+                        @endif
                     </div>
                 </div>
 

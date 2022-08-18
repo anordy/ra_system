@@ -74,13 +74,24 @@ class ApproveAction extends Component
             $data = (object)$value['data'];
             $req = RenewTaxAgentRequest::query()->find($data->id);
             $req->status = TaxAgentStatus::APPROVED;
-            $req->app_true_comment = 'The payment is valid';
-            $req->approved_by_id = Auth::id();
             $req->approved_at = now();
             $req->save();
 
+            $req->tax_agent->app_first_date = Carbon::now();
+            $req->tax_agent->app_expire_date = Carbon::now()->addYear()->toDateTimeString();
+            $req->tax_agent->save();
+
+            $taxpayer = Taxpayer::query()->find($req->tax_agent->id);
+            $taxpayer->notify(new DatabaseNotification(
+                $message = 'Tax agent renew ',
+                $type = 'info',
+                $messageLong = 'Your request for tax agent renew has been rejected',
+                $href = '/taxagent/apply',
+                $hrefText = 'View'
+            ));
+
             DB::commit();
-            $this->flash('success', 'saved successfully');
+            $this->flash('success', 'Request approved successfully');
             return redirect()->route('taxagents.renew');
 
         } catch (Exception $e) {
@@ -111,9 +122,6 @@ class ApproveAction extends Component
                 $href = '/taxagent/apply',
                 $hrefText = 'View'
             ));
-
-//			event(new SendMail('tax-agent-renew-approval', $req->tax_agent->taxpayer_id));
-//			event(new SendSms('tax-agent-renew-approval', $req->tax_agent->taxpayer_id));
 
             DB::commit();
             $this->flash('success', 'Request rejected successfully');

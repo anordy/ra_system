@@ -25,7 +25,7 @@
     <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
 
         <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
-            <div class="row">
+            <div class="row pt-3">
                 <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">TIN No</span>
                     <p class="my-1">{{ $agent->tin_no }}</p>
@@ -79,8 +79,8 @@
                 <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">Registration Payment</span>
 
-                    <p>@if(!empty($agent->bill->payment))
-                            @if ($agent->bill->payment->status == \App\Models\PaymentStatus::PAID)
+                    <p>@if(!empty($agent->bill))
+                            @if ($agent->bill->status == \App\Models\PaymentStatus::PAID)
                                 <span class="badge badge-success py-1 px-2"
                                       style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
                                             class="bi bi-check-circle-fill mr-1"></i>Paid</span>
@@ -108,6 +108,7 @@
 
                 </div>
 
+                @if(!empty($agent->request))
                 <div class="col-md-3 mb-2">
                         <span class="font-weight-bold text-uppercase">Renew Payment</span>
                         <p>
@@ -125,10 +126,11 @@
                             @endif
                         </p>
                 </div>
+                @endif
             </div>
         </div>
         <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered ">
                 <thead>
                 <tr>
                     <th>No:</th>
