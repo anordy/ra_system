@@ -74,6 +74,7 @@ class ObjectionApprovalProcessing extends Component
     public function approve($transtion)
     {
         $taxType = $this->subject->taxType;
+        $this->taxTypes = TaxType::where('code', 'disputes')->first();
 
         if ($this->checkTransition('objection_manager_review')) {
 
@@ -132,7 +133,6 @@ class ObjectionApprovalProcessing extends Component
             DB::beginTransaction();
 
             try {
-
                 $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->assessment->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
 
                 // Generate control number for waived application
@@ -143,10 +143,11 @@ class ObjectionApprovalProcessing extends Component
                         'use_item_ref_on_pay' => 'N',
                         'amount' => $this->total,
                         'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id,
+                        'gfs_code' => $this->taxTypes->code,
+                        'tax_type_id' => $this->taxTypes->id,
                     ],
                 ];
+
 
                 $taxpayer = $this->subject->business->taxpayer;
 
