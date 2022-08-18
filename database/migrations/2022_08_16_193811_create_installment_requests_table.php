@@ -16,8 +16,10 @@ class CreateInstallmentRequestsTable extends Migration
     {
         Schema::create('installment_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('return_id');
-            $table->string('return_type');
+            $table->unsignedBigInteger('debt_id');
+            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('taxpayer_id');
             $table->text('reasons');
             $table->text('ground');
             $table->string('attachment')->nullable();
