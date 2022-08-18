@@ -34,12 +34,12 @@
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
                             </span>
-                        @elseif($dispute->app_status ===  \App\Enum\DisputeStatus::REJECTED)
+                        @elseif($dispute->app_status === \App\Enum\DisputeStatus::REJECTED)
                             <span class="font-weight-bold text-danger">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Rejected
                             </span>
-                        @elseif($dispute->app_status ===  \App\Enum\DisputeStatus::CORRECTION)
+                        @elseif($dispute->app_status === \App\Enum\DisputeStatus::CORRECTION)
                             <span class="font-weight-bold text-warning">
                                 <i class="bi bi-pen-fill mr-1"></i>
                                 Requires Correction
@@ -52,16 +52,16 @@
                         @endif
                     </p>
                 </div>
-            @if($dispute->bill)
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Tax Deposit</span>
-                    <p class="my-1">{{ $dispute->bill->amount }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Control No</span>
-                    <p class="my-1">{{ $dispute->bill->control_number }}</p>
-                </div>
-            @endif
+                @if ($dispute->bill)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Tax Deposit</span>
+                        <p class="my-1">{{ $dispute->bill->amount }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Control No</span>
+                        <p class="my-1">{{ $dispute->bill->control_number }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>
                     <p class="my-1">{{ $business->name }}</p>
@@ -174,7 +174,7 @@
                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <a target="_blank"
-                                href="{{ route('assesments.dispute.files', encrypt($file['file_path'])) }}"
+                                href="{{ route('assesments.waiver.files', encrypt($file['file_path'])) }}"
                                 style="font-weight: 500;" class="ml-1">
                                 {{ $file['file_name'] }}
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -221,7 +221,7 @@
     @if ($dispute->dispute_report)
         <div class="card my-4 rounded-0">
             <div class="card-header font-weight-bold bg-white">
-               DISPUTE REPORT
+                DISPUTE REPORT
             </div>
             <div class="card-body">
                 <div class="row">
@@ -254,7 +254,7 @@
                         </div>
                     @endif
 
-                    
+
                     @if ($dispute->setting_report)
                         <div class="col-md-3">
                             <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
