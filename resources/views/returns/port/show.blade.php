@@ -27,12 +27,6 @@
                         <a class="nav-link" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
                             aria-controls="profile" aria-selected="false">Return Items</a>
                     </li>
-                    @if ($return->application_status != App\Enum\ReturnApplicationStatus::CLAIM)
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="penalty-tab" data-toggle="tab" href="#penalty" role="tab"
-                                aria-controls="penalty" aria-selected="false">Penalties</a>
-                        </li>
-                    @endif
                 </ul>
                 <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
 
