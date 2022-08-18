@@ -25,7 +25,6 @@ class PortReturnTable extends DataTableComponent
         return PortReturn::query()->where('filed_by_id', auth()->user()->id);
     }
 
-    
     public function columns(): array
     {
         return [
@@ -50,6 +49,8 @@ class PortReturnTable extends DataTableComponent
                 ->searchable(),
             Column::make('Total VAT (US$)', 'total_vat_payable_usd')
                 ->sortable(),
+            Column::make('Payment Status', 'status')
+                ->hideif(true),
             Column::make('Status', 'id')->view('returns.port.includes.status'),
             Column::make("Action", "id")
                 ->view('returns.port.includes.actions'),

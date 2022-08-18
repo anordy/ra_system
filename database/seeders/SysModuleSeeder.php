@@ -29,6 +29,7 @@ class SysModuleSeeder extends Seeder
             ['id' => 12, 'code' => 'tax-clearance-management', 'name' => 'Tax Clearance Management'],
             ['id' => 13, 'code' => 'debt-management', 'name' => 'Debt Management'],
             ['id' => 14, 'code' => 'managerial-report', 'name' => 'Manageria Report'],
+            ['id' => 15, 'code' => 'land-lease', 'name' => 'Land Lease'],
 
 
         ];

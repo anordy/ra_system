@@ -2,17 +2,20 @@
 
 namespace App\Exports;
 
+
 use App\Models\LandLease;
+
+use Maatwebsite\Excel\Concerns\FromView;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Carbon\Carbon;
+
 // use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class LandLeaseExport implements FromQuery, WithMapping, WithHeadings
+class LandLeaseExport implements FromView, WithEvents,ShouldAutoSize
 {
-    use Exportable;
-
     public $startDate;
     public $endDate;
 
@@ -23,71 +26,42 @@ class LandLeaseExport implements FromQuery, WithMapping, WithHeadings
         $this->endDate = $endDate;
     }
 
-    // public function collection()
-    // {
-    //     if ($this->startDate == null && $this->endDate == null) {
-    //         return LandLease::all();
-    //     } else {
-    //         // return LandLease::whereBetween('created_at', [$this->startDate, $this->endDate])->get();
-    //         return LandLease::with('taxpayer', 'region', 'district', 'ward')->whereBetween('created_at', [$this->startDate, $this->endDate])->get();
-    //     }
-    // }
+    /**
+     * registerEvents
+     *
+     * @return array
+     */
+    public function registerEvents(): array
+    {
 
-    public function query()
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+            ],
+            'text-align' => 'center'
+        ];
+
+
+        return [
+
+            AfterSheet::class => function (AfterSheet $event) use ($headerStyle) {
+                $event->sheet->getDelegate()->getStyle('A1')->applyFromArray($headerStyle);
+            }
+
+        ];
+    }
+
+    public function view(): View
     {
         if ($this->startDate == null && $this->endDate == null) {
-            return LandLease::query();
+            $landLeases =  LandLease::query()->get();
         } else {
-            return LandLease::query()->with('taxpayer', 'region', 'district', 'ward')->whereBetween('land_leases.created_at', [$this->startDate, $this->endDate]);
+            $landLeases = LandLease::query()->with('taxpayer', 'region', 'district', 'ward')->whereBetween('land_leases.created_at', [$this->startDate, $this->endDate])->get();
         }
+        $startDate = date('d/m/Y', strtotime($this->startDate));
+        $endDate = date('d/m/Y', strtotime($this->endDate));
+        // $startDate = $this->startDate;
+        // $endDate = $this->endDate;
+        return view('exports.land-lease.excel.land-lease-report',compact('landLeases','startDate','endDate'));
     }
-
-    //map the data to the columns
-    public function map($landLease): array
-    {
-        return [
-            $landLease->created_at->format('d/m/Y'),
-            $landLease->dp_number,
-            $landLease->is_registered==1?$landLease->taxpayer->first_name.' '.$landLease->taxpayer->last_name:$landLease->name,
-            //format the date from string
-            date('d/m/Y', strtotime($landLease->commence_date)),
-            // $landLease->commence_date,
-            $landLease->payment_month,
-            $landLease->payment_amount,
-            $landLease->review_schedule.' years',
-            $landLease->valid_period_term.' years',
-            $landLease->region->name,
-            $landLease->district->name,
-            $landLease->ward->name,
-            $landLease->is_registered==1?$landLease->taxpayer->mobile:$landLease->phone,
-            $landLease->is_registered==1?$landLease->taxpayer->email:$landLease->email,
-            $landLease->is_registered==1?$landLease->taxpayer->physical_address:$landLease->address,
-            $landLease->is_registered==1?'Registered':'Unregistered',
-            $landLease->taxpayer->reference_no,
-        ];
-    }
-
-    //heading for the columns
-    public function headings(): array
-    {
-        return [
-            'Registered Date',
-            'DP Number',
-            'Name',
-            'Commence Date',
-            'Payment Month',
-            'Payment Amount (USD)',
-            'Review Schedule',
-            'Valid Period Term',
-            'Region',
-            'District',
-            'Ward',
-            'Phone',
-            'Email',
-            'Address',
-            'Applicant Type',
-            'ZRB No',   
-        ];
-    }
-
 }
