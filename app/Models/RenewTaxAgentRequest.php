@@ -16,9 +16,17 @@ class RenewTaxAgentRequest extends Model
 		return $this->belongsTo(TaxAgent::class, 'tax_agent_id');
 	}
 
-    public function bill()
+    public function approved_by()
     {
-        return $this->hasOne(ZmBillItem::class, 'billable_id')->where('billable_type', get_class($this));
+        return $this->belongsTo(User::class, 'approved_by_id');
+    }
+    public function rejected_by()
+    {
+        return $this->belongsTo(User::class, 'rejected_by_id');
+    }
+
+    public function bill(){
+        return $this->morphOne(ZmBill::class, 'billable');
     }
 
 }

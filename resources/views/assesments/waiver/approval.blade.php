@@ -17,7 +17,6 @@
                         aria-controls="approvalHistory" aria-selected="false">Approval History</a>
                 </li>
             </ul>
-
             <div class="tab-content bg-white border shadow-sm" id="waiverContent">
                 <div class="tab-pane fade show active" id="waiverInfo" role="tabpanel" aria-labelledby="waiverInfo-tab">
                     @include('assesments.waiver.includes.objection_info')

@@ -375,11 +375,14 @@ Route::middleware(['auth'])->group(function () {
 
     //Tax Clearance
     Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {
-        Route::get('/tax-clearances/request', [TaxClearanceController::class, 'requestList'])->name('list');
+        Route::get('/tax-clearance/index', [TaxClearanceController::class, 'index'])->name('index');
         Route::get('/tax-clearance/view/{id}', [TaxClearanceController::class, 'viewRequest'])->name('request.view');
+        Route::get('/tax-clearance/approval/{id}', [TaxClearanceController::class, 'approval'])->name('request.approval');
+        Route::get('/tax-clearance/certificate/{location}', [TaxClearanceController::class, 'certificate'])->name('certificate');
     });
 
     Route::name('payments.')->prefix('payments')->group(function () {
         Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
     });
+    
 });

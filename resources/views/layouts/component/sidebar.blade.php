@@ -257,12 +257,8 @@
                 aria-expanded="{{ request()->is('tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
                 Tax Clearance Management
             </a>
-            <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
-                id="taxClearance">
-
-                <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
-                    {{-- <a href="{{ route('tax-clearance.index') }}">Requests</a> --}}
-                </li>
+            <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}" id="taxClearance">
+                <li class="{{ request()->is('tax-clearance/index*') ? 'active' : '' }}">
             </ul>
         </li>
 
