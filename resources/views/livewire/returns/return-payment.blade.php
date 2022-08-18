@@ -7,11 +7,26 @@
     </div>
     @if ($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
         $return->status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
-
-        @if ($return->bill)
-            <div class="col-md-4" wire:poll.visible.10000ms="refresh">
+        
+        @if($return->bill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS)
+            <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
                 <span class="font-weight-bold text-uppercase">Control No.</span>
-                <p class="my-1">{{ $return->bill->control_number }}</p>
+                <p class="my-1">{{ $return->tzsBill->control_number }}</p>
+            </div>
+            <div class="col-md-4">
+                <span class="font-weight-bold text-uppercase"> </span>
+                <p class="my-1">
+                    <a target="_blank" href="{{ route('bill.invoice', encrypt($return->tzsBill->id)) }}" class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                        <i class="bi bi-download mr-3"></i><u>Download Bill</u>
+                    </a>
+                </p>
+            </div>
+        @else
+            <div class="col-md-4">
+                <span class="font-weight-bold text-uppercase">Control No. Generation Failed</span>
+                <p class="my-1 text-danger">
+                    Generation Failed
+                </p>
             </div>
         @endif
     @elseif($return->status === \App\Models\Returns\ReturnStatus::COMPLETE)

@@ -4,6 +4,7 @@ namespace App\Models\Returns\ExciseDuty;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\returns\ExciseDuty\MnoReturnItem;
@@ -55,6 +56,9 @@ class MnoReturn extends Model
         return $this->belongsTo(FinancialYear::class, 'financial_year_id');
     }
 
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
+    }
 
     //to be replaced
     public function bill(){
