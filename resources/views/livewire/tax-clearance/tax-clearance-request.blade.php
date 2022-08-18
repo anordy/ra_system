@@ -96,6 +96,12 @@
                     </div>
                 </div>
             @endif
+            <div class="col-md-8 mb-3">
+                <span class="font-weight-bold text-uppercase">Reason</span>
+                <p class="my-1">
+                    {{ $taxClearence->reason }}.
+                </p>
+            </div>
         </div>
 
     </div>
