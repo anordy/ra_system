@@ -143,6 +143,7 @@
                 </li>
             </ul>
         </li>
+
         <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">
             <a href="#petroleum" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Petroleum
                 Management</a>
@@ -396,30 +397,6 @@
             <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
                 <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
                     <a href="{{ route('payments.complete') }}">Complete Payments</a>
-                </li>
-            </ul>
-        </li>
-
-        <li  class="{{ request()->is('mvr*') ? 'active':'' }}">
-            <a href="#mvrSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle Registration</a>
-            <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
-                <li class="{{ request()->is('mvr/register') ? 'active': '' }}">
-                    <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
-                </li>
-                <li class="{{ request()->is('mvr/plate-numbers') ? 'active': '' }}">
-                    <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
-                </li>
-                <li class="{{ request()->is('mvr/reg-change-requests') ? 'active': '' }}">
-                    <a href="{{route('mvr.reg-change-requests')}}">Status Change Request</a>
-                </li>
-                <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active': '' }}">
-                    <a href="{{route('mvr.register')}}">Transfer Ownership</a>
-                </li>
-                <li class="{{ request()->is('mvr/de-register-requests*') ? 'active': '' }}">
-                    <a href="{{route('mvr.de-register-requests')}}">De-registration</a>
-                </li>
-                <li class="{{ request()->is('mvr/registered') ? 'active': '' }}">
-                    <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
                 </li>
             </ul>
         </li>
