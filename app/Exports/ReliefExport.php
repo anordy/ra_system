@@ -8,8 +8,6 @@ use App\Models\Relief\ReliefProject;
 
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -98,7 +96,7 @@ class ReliefExport implements FromView, WithEvents,ShouldAutoSize
             }
         }
         $reliefs = $reliefs->get();
-        return view('Exports.relief-report',compact('reliefs','months','projectSections','projectSectionsArray','data','dates'));
+        return view('exports.relief.reports.relief-report',compact('reliefs','months','projectSections','projectSectionsArray','data','dates'));
        
     }
 }

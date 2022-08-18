@@ -13,6 +13,12 @@ class RenewTaxAgentRequest extends Model
 
 	public function tax_agent()
 	{
-		return $this->belongsTo(TaxAgent::class);
+		return $this->belongsTo(TaxAgent::class, 'tax_agent_id');
 	}
+
+    public function bill()
+    {
+        return $this->hasOne(ZmBillItem::class, 'billable_id')->where('billable_type', get_class($this));
+    }
+
 }
