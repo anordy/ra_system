@@ -74,6 +74,8 @@ class ApproveAction extends Component
             $data = (object)$value['data'];
             $req = RenewTaxAgentRequest::query()->find($data->id);
             $req->status = TaxAgentStatus::APPROVED;
+            $req->renew_first_date = Carbon::now();
+            $req->renew_expire_date = Carbon::now()->addYear()->toDateTimeString();
             $req->approved_at = now();
             $req->save();
 
