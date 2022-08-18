@@ -10,7 +10,9 @@ use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\ReturnStatus;
+use App\Models\Returns\StampDuty\StampDutyConfig;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\StampDuty\StampDutyReturnItem;
 use App\Models\TaxType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,13 +33,14 @@ class UpgradeTaxtypeController extends Controller
             ->where('business_tax_type.tax_type_id','=', $hotel_tax_type_id)
             ->groupBy(['business_location_id','hotel_returns.id','hotel_returns.business_id'])->get();
 
+        $stampConfigs = StampDutyConfig::query()->where('heading_type', ['supplies'])->get()->pluck('id');
         $stamp_tax_type_id = TaxType::query()->where('code', TaxType::STAMP_DUTY)->value('id');
         $stamp_duty_return = StampDutyReturn::query()
             ->selectRaw(' SUM(stamp_duty_return_items.value) as total_sales, stamp_duty_returns.id, business_location_id, stamp_duty_returns.business_id')
             ->leftJoin('stamp_duty_return_items', 'stamp_duty_returns.id', 'stamp_duty_return_items.return_id')
             ->leftJoin('business_tax_type', 'business_tax_type.business_id', 'stamp_duty_returns.business_id')
             ->where('stamp_duty_returns.status', ReturnStatus::COMPLETE)
-            ->whereIn('stamp_duty_return_items.config_id', $salesConfigs)
+            ->whereIn('stamp_duty_return_items.config_id', $stampConfigs)
             ->where('business_tax_type.status', '=','current-used')
             ->where('business_tax_type.tax_type_id','=', $stamp_tax_type_id)
             ->groupBy(['business_location_id','stamp_duty_returns.id','stamp_duty_returns.business_id'])->get();

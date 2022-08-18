@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 use App\Enum\PaymentStatus;
 use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
+use App\Models\RenewTaxAgentRequest;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
@@ -16,6 +17,7 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\TaxAgent;
 use App\Models\ZmBill;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -42,7 +44,9 @@ class ZanMalipoController extends Controller
         BfoReturn::class,
         LumpSumReturn::class,
         TaxAssessment::class,
-        Dispute::class
+        Dispute::class,
+        TaxAgent::class,
+        RenewTaxAgentRequest::class,
     ];
 
     private $multipleBillsReturnable = [
@@ -82,7 +86,7 @@ class ZanMalipoController extends Controller
 
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
-                $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
+                $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
                 if (in_array(array_merge($bill->billable_type, $this->multipleBillsReturnable, $this->debtReturnable), $this->returnable)) {
                     try {
