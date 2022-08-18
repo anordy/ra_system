@@ -6,6 +6,7 @@ use App\Models\GenericSettingModel;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
 use App\Models\MvrModel;
+use App\Models\MvrTransferFee;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -111,6 +112,11 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("GFS Code", "gfs_code")->sortable(),
                 Column::make("Fee Category", "fee_type.type")->sortable(),
                 Column::make("Registration Type", "registration_type.name")->sortable(),
+            ],
+            MvrTransferFee::class => [
+                Column::make("Amount", "amount")->sortable()->format(fn($value)=>number_format($value).' TZS'),
+                Column::make("GFS Code", "gfs_code")->sortable(),
+                Column::make("Transfer Category", "transfer_category.name")->sortable(),
             ]
         ];
 

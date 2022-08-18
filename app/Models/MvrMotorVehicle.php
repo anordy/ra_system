@@ -95,6 +95,9 @@ class MvrMotorVehicle extends Model
 		'inspection_report_path',
 		'certificate_of_worth_path',
 		'agent_taxpayer_id',
+		'mileage',
+		'inspection_date',
+		'certificate_number',
 		'mvr_registration_status_id'
 	];
 
@@ -140,7 +143,7 @@ class MvrMotorVehicle extends Model
 
     public function current_registration()
     {
-        return $this->hasOne(MvrMotorVehicleRegistration::class,'mvr_motor_vehicle_id')->latest();
+        return $this->hasOne(MvrMotorVehicleRegistration::class,'mvr_motor_vehicle_id')->latest('registration_date');
     }
 
 	public function transmission_type()
@@ -161,7 +164,7 @@ class MvrMotorVehicle extends Model
     public function current_owner()
     {
         return $this->hasOne(MvrMotorVehicleOwner::class,'mvr_motor_vehicle_id')
-            ->where(['mvr_ownership_status_id'=>MvrOwnershipStatus::query()->where(['name'=>'CURRENT OWNER'])->first()->id??null]);
+            ->where(['mvr_ownership_status_id'=>MvrOwnershipStatus::query()->firstOrCreate(['name'=>MvrOwnershipStatus::STATUS_CURRENT_OWNER])->id]);
     }
 
     public function agent()

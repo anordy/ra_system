@@ -37,7 +37,10 @@
                     </div>
                 </div>
 
-                @if($registration_type_id==\App\Models\MvrRegistrationType::query()->where(['name'=>\App\Models\MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED])->first()->id)
+                @if(\App\Models\MvrRegistrationType::query()->whereIn('name',[
+                   \App\Models\MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED,
+                   \App\Models\MvrRegistrationType::TYPE_DIPLOMATIC
+                   ])->where(['id'=>$registration_type_id])->exists() || (\App\Models\MvrRegistrationType::query()->find($registration_type_id)->external_defined ?? null)==1)
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Plate Number</label>
@@ -47,6 +50,21 @@
                         @enderror
                     </div>
                 </div>
+                @elseif(\App\Models\MvrRegistrationType::query()->whereIn('name',[\App\Models\MvrRegistrationType::TYPE_PRIVATE_GOLDEN])->where(['id'=>$registration_type_id])->exists())
+                    <div class="row pr-3 pl-3">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Golden Plate Number</label>
+                            <select class="form-control" wire:model.lazy="plate_number" id="plate_number">
+                                <option value="" selected>Choose option</option>
+                                @foreach (\App\Models\MvrMotorVehicleRegistration::getGoldenPlateNumbers() as $row)
+                                    <option value="{{$row}}">{{ $row}}</option>
+                                @endforeach
+                            </select>
+                            @error('plate_number')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
                 @endif
 
             </div>

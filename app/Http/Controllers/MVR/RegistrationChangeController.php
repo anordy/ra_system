@@ -7,6 +7,7 @@ use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
+use App\Models\MvrPersonalizedPlateNumberRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationChangeRequest;
 use App\Models\MvrRegistrationStatus;
@@ -19,6 +20,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class RegistrationChangeController extends Controller
 {
@@ -54,6 +56,7 @@ class RegistrationChangeController extends Controller
 
 
     public function approve($id){
+        Gate::authorize('mvr_approve_registration_change');
         $id = decrypt($id);
         //Generate control number
         $change_req = MvrRegistrationChangeRequest::query()->find($id);
@@ -73,6 +76,9 @@ class RegistrationChangeController extends Controller
         $gfs_code = $fee->gfs_code;
 
         ZmCore::createBill(
+            $change_req->id,
+            get_class($change_req),
+            null,
             $change_req->agent->id,
             get_class($change_req->agent),
             $change_req->agent->fullname(),
@@ -91,6 +97,7 @@ class RegistrationChangeController extends Controller
                     'billable_type' => get_class($change_req),
                     'fee_id' => $fee->id,
                     'fee_type' => get_class($fee),
+                    'tax_type_id' => null,
                     'amount' => $amount,
                     'currency' => 'TZS',
                     'exchange_rate' => $exchange_rate,
@@ -105,10 +112,10 @@ class RegistrationChangeController extends Controller
 
 
     public function simulatePayment($id){
+        Gate::authorize('mvr_approve_registration_change');
         $id = decrypt($id);
         $change_req = MvrRegistrationChangeRequest::query()
             ->find($id);
-
 
         $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_GENERATED]);
 
@@ -119,20 +126,43 @@ class RegistrationChangeController extends Controller
             $bill->update(['status'=>'Paid']);
 
             $change_req->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
-            if ($reg_type->name==MvrRegistrationType::TYPE_DIPLOMATIC || $reg_type->name === MvrRegistrationType::TYPE_PRIVATE_GOLDEN){
+            if ($reg_type->external_defined == 1){
                 $plate_number = $change_req->custom_plate_number;
             }else{
-                $plate_number = MvrMotorVehicleRegistration::getNexPlateNumber($reg_type);
+                $plate_number = MvrMotorVehicleRegistration::getNexPlateNumber($reg_type,$change_req->current_registration->motor_vehicle->class);
             }
-            $mvr = MvrMotorVehicleRegistration::query()->create([
-                'plate_number'=>$plate_number,
-                'mvr_registration_type_id'=>$reg_type->id,
-                'mvr_plate_size_id' => $change_req->mvr_plate_size_id,
-                'mvr_motor_vehicle_id' => $change_req->current_registration->mvr_motor_vehicle_id,
-                'mvr_plate_number_status_id'=>$plate_status->id
-            ]);
+            if ($reg_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED &&
+                !empty($change_req->current_registration) &&
+                ($change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_GOLDEN  ||
+                $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_ORDINARY  ||
+                $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED)){
+                //In this case we do not need to insert a new registration
+                $mvr_id = $change_req->current_registration->id;
+            }else{
+                $change_req->current_registration->update([
+                    'mvr_plate_number_status_id'=>MvrPlateNumberStatus::query()->where(['name' => MvrPlateNumberStatus::STATUS_RETIRED])->first()->id
+                ]);
+                $mvr_id = MvrMotorVehicleRegistration::query()->insertGetId([
+                    'plate_number'=>$plate_number,
+                    'mvr_registration_type_id'=>$reg_type->id,
+                    'mvr_plate_size_id' => $change_req->mvr_plate_size_id,
+                    'mvr_motor_vehicle_id' => $change_req->current_registration->mvr_motor_vehicle_id,
+                    'mvr_plate_number_status_id'=>$plate_status->id,
+                    'registration_date'=>date('Y-m-d')
+                ]);
+            }
+
+
+            if ($reg_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED){
+                MvrPersonalizedPlateNumberRegistration::query()->where(['mvr_motor_vehicle_registration_id'=>$mvr_id])->update(['status'=>'RETIRED']);
+                MvrPersonalizedPlateNumberRegistration::query()->create([
+                    'plate_number'=>$change_req->custom_plate_number,
+                    'status'=>'ACTIVE',
+                    'mvr_motor_vehicle_registration_id'=>$mvr_id
+                ]);
+            }
             DB::commit();
-            return redirect()->route('mvr.show',encrypt($mvr->mvr_motor_vehicle_id));
+            return redirect()->route('mvr.reg-change-requests.show',encrypt($mvr_id));
         }catch (\Exception $e){
             session()->flash('error', 'Could not update status');
             DB::rollBack();

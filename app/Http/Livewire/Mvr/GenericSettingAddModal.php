@@ -10,6 +10,8 @@ use App\Models\MvrFeeType;
 use App\Models\MvrMake;
 use App\Models\MvrModel;
 use App\Models\MvrRegistrationType;
+use App\Models\MvrTransferCategory;
+use App\Models\MvrTransferFee;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -24,17 +26,20 @@ class GenericSettingAddModal extends Component
 
     private array $relations = [
         MvrModel::class=>[['title'=>'Motor vehicle Make','class'=>MvrMake::class,'field'=>'mvr_make_id']],
+        MvrTransferFee::class=>[['title'=>'Transfer Category','class'=>MvrTransferCategory::class,'field'=>'mvr_transfer_category_id']],
         MvrFee::class=>[
             ['title'=>'Motor vehicle Registration Status','class'=>MvrRegistrationType::class,'field'=>'mvr_registration_type_id'],
             ['title'=>'Fee Type/Category','class'=>MvrFeeType::class,'field'=>'mvr_fee_type_id']]
     ];
     private $fields = [
         MvrColor::class=>[['title'=>'Hex Value','field'=>'hex_value']],
-        MvrFee::class=>[['title'=>'Amount','field'=>'amount'],['title'=>'GFS Code','field'=>'gfs_code']]
+        MvrFee::class=>[['title'=>'Amount','field'=>'amount'],['title'=>'GFS Code','field'=>'gfs_code']],
+        MvrTransferFee::class=>[['title'=>'Amount','field'=>'amount'],['title'=>'GFS Code','field'=>'gfs_code']],
     ];
 
     private $rules = [
-        MvrFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required']
+        MvrFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required'],
+        MvrTransferFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required']
     ];
 
     /**

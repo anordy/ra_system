@@ -38,6 +38,8 @@ class UploadInspectionReport extends Component
      * @var  TemporaryUploadedFile
      */
     public $inspection_report;
+    public $mileage;
+    public $inspection_date;
     private ?string $inspection_report_path = null;
 
 
@@ -49,7 +51,9 @@ class UploadInspectionReport extends Component
     protected function rules()
     {
         return [
-            'inspection_report'=>'required|mimes:pdf'
+            'inspection_report'=>'required|mimes:pdf',
+            'inspection_date'=>'required|date',
+            'mileage'=>'required|Numeric',
         ];
     }
 
@@ -80,7 +84,7 @@ class UploadInspectionReport extends Component
             MvrMotorVehicleOwner::query()->create([
                 'mvr_motor_vehicle_id'=>$id,
                 'taxpayer_id'=>$taxpayer->id,
-                'mvr_ownership_status_id'=>$this->getForeignKey('CURRENT OWNER',MvrOwnershipStatus::class,true),
+                'mvr_ownership_status_id'=>$this->getForeignKey(MvrOwnershipStatus::STATUS_CURRENT_OWNER,MvrOwnershipStatus::class,true),
             ]);
             DB::commit();
             $this->flash('success', 'Inspection Report Uploaded', [], redirect()->route('mvr.show',encrypt($id))->getTargetUrl());
@@ -106,11 +110,27 @@ class UploadInspectionReport extends Component
         if ($result['status']!='success'){
             throw new \Exception("Could not fetch motor vehicle details");
         }
+
+
+        $cert_number = 'ZBSIQC-0001-'.date('y');
+
+        $last_mv = MvrMotorVehicle::query()->orderBy('certificate_number','desc')->first();
+        if (!empty($last_mv) && !empty($last_mv->certificate_number)){
+            $yy = explode('-',$last_mv->certificate_number)[2] ?? null;
+            $n = explode('-',$last_mv->certificate_number)[1] ?? null;
+            if ($yy == date('y')){
+                $cert_number = 'ZBSIQC-'.str_pad($n,4,'0',STR_PAD_LEFT).'-'.date('y');
+            }
+        }
+
         $motor_vehicle = $result['data'];
         $inspection_report_path = $this->inspection_report->storePubliclyAs('MVR', "Inspection-Report-{$this->chassis}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->inspection_report->extension());
         $mv_data = [
-            'registration_number'=>'Z-'.rand(100000000,999999999),
+            'registration_number'=>'Z-'.str_pad(MvrMotorVehicle::query()->count().rand(10,99),9,'0',STR_PAD_LEFT),
             'number_of_axle'=>$motor_vehicle['number_of_axle'],
+            'mileage'=>$this->mileage,
+            'certificate_number'=>$cert_number,
+            'inspection_date'=>$this->inspection_date,
             'chassis_number'=>$motor_vehicle['chassis_number'],
             'year_of_manufacture'=>$motor_vehicle['year'],
             'engine_number'=>$motor_vehicle['engine_number'],

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMvrRequestStatus extends Migration
+class CreateMvrTransferCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateMvrRequestStatus extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_request_status', function (Blueprint $table) {
+        Schema::create('mvr_transfer_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50);
+            $table->string('name',100);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ class CreateMvrRequestStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_request_status');
+        Schema::dropIfExists('mvr_transfer_categories');
     }
 }

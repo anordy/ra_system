@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Mvr;
 
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrRegistrationStatus;
+use App\Models\MvrRequestStatus;
 use App\Models\TaxAgentStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -15,14 +16,21 @@ class MotorVehiclesTable extends DataTableComponent
 {
 	use LivewireAlert;
 
-	public function builder(): Builder
+    public $status_id;
+
+    public function builder(): Builder
 	{
-        $in_statuses = MvrRegistrationStatus::query()
-            ->whereIn('name',[MvrRegistrationStatus::STATUS_REGISTERED])
-            ->pluck('id')
-            ->toArray();
-		return MvrMotorVehicle::query()->whereNotIn('mvr_registration_status_id',$in_statuses);
+        if (empty($this->status_id)){
+            return MvrMotorVehicle::query();
+        }else{
+            return MvrMotorVehicle::query()->where(['mvr_registration_status_id'=>$this->status_id]);
+        }
 	}
+
+    public function mount($status){
+        $rq_status = MvrRegistrationStatus::where(['name'=>$status])->first();
+        $this->status_id = $rq_status->id ?? '';
+    }
 
 	public function configure(): void
     {

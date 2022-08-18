@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMvrRequestStatus extends Migration
+class CreateMvrTransferFeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateMvrRequestStatus extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_request_status', function (Blueprint $table) {
+        Schema::create('mvr_transfer_fees', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50);
+            $table->string('name',100);
+            $table->decimal('amount',10);
+            $table->string('gfs_code',15);
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateMvrRequestStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_request_status');
+        Schema::dropIfExists('mvr_trasfer_fees');
     }
 }

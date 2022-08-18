@@ -28,6 +28,7 @@ class MvrRequestStatus extends Model
     const STATUS_RC_PENDING_PAYMENT = 'Pending Payment';
     const STATUS_RC_MANAGER_APPROVAL = 'Registration Manager Approval';
     const STATUS_RC_PENDING_APPROVAL = 'Pending Approval';
+    const STATUS_RC_REJECTED = 'Rejected';
     const STATUS_RC_ACCEPTED = 'Accepted';
     protected $table = 'mvr_request_status';
 

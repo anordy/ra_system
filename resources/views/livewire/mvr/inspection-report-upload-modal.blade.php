@@ -11,8 +11,32 @@
                     <div class="form-group col-lg-12">
                         <label class="control-label">Inspection Report</label>
                         <input type="file" class="form-control" wire:model.lazy="inspection_report" id="inspection_report">
-                        @error('name')
+                        @error('inspection_report')
                             <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="row pr-3 pl-3">
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Inspection Date</label>
+                        <input type="date" class="form-control" wire:model.lazy="inspection_date" id="inspection_date">
+                        @error('inspection_date')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="row pr-3 pl-3">
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Inspected mileage (Km)</label>
+                        <input type="number" class="form-control" wire:model.lazy="mileage" id="mileage">
+                        @error('mileage')
+                        <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>

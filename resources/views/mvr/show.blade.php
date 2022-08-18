@@ -8,6 +8,14 @@
         <div class="card mt-3">
             <div class="card-header">
                 <h5>Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate #: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
+                <div class="card-tools">
+                    @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_REGISTERED)
+                    <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
+                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                                class="fa fa-print text-white"></i>
+                        Certificate of Registration</a><!--- todo: Missing format for cert fo registration-->
+                    @endif
+                </div>
             </div>
             <div class="card-body">
                 @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_PENDING_PAYMENT)
@@ -30,8 +38,7 @@
                                     @endif
                                     <br>
                                     @if($motor_vehicle->current_registration->get_latest_bill()->zan_trx_sts_code != \App\Services\ZanMalipo\ZmResponse::SUCCESS)
-                                        <button class="btn btn-secondary btn-sm btn-rounded"
-                                                onclick="Livewire.emit('showModal', 'mvr.approve-registration','x')">
+                                        <button class="btn btn-secondary btn-sm btn-rounded">
                                             Request Control Number</button>
                                     @elseif($motor_vehicle->current_registration->get_latest_bill()->is_waiting_callback())
                                         <div>Refresh after 30 seconds to get control number</div>
@@ -59,12 +66,25 @@
                         <span class="font-weight-bold text-uppercase">Plate Number</span>
                         <p class="my-1">{{ $motor_vehicle->current_registration->plate_number??' - ' }}</p>
                     </div>
+                    @if(!empty($motor_vehicle->current_registration->current_personalized_registration))
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Personalize plate Number</span>
+                            <p class="my-1">{{ $motor_vehicle->current_registration->current_personalized_registration->plate_number??' - ' }}</p>
+                        </div>
+                    @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Plate Number Status</span>
                         <p class="my-1">
                             <span class="badge badge-info">{{ $motor_vehicle->current_registration->plate_number_status->name }}</span>
                         </p>
                     </div>
+
+                    @if(!empty($motor_vehicle->current_registration->registration_date))
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Registration Date</span>
+                            <p class="my-1">{{ $motor_vehicle->current_registration->registration_date??' - ' }}</p>
+                        </div>
+                    @endif
 
                 </div>
 
@@ -78,15 +98,27 @@
             <h5>Motor Vehicle Details - Chassis #: {{$motor_vehicle->chassis_number}}</h5>
             <div class="card-tools">
                 @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_INSPECTION)
-                    <a href="{{route('mvr.submit-inspection',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
+                    <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
                        data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
-                                class="fa fa-upload text-white"></i>
-                        Submit</a>
+                                class="fa fa-print text-white"></i>
+                        Certificate of Worth</a>
+                    @can('mvr_initiate_registration')
+                        <a href="{{route('mvr.submit-inspection',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
+                           data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                                    class="fa fa-upload text-white"></i>
+                            Submit</a>
+                    @endcan
                 @elseif($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_REVENUE_OFFICER_APPROVAL)
-                    <button class="btn btn-info btn-sm"
-                            onclick="Livewire.emit('showModal', 'mvr.approve-registration',{{$motor_vehicle->id}})"><i
-                                class="fa fa-check"></i>
-                        Approve</button>
+                    @can('mvr_approve_registration')
+                        <button class="btn btn-info btn-sm"
+                                onclick="Livewire.emit('showModal', 'mvr.approve-registration',{{$motor_vehicle->id}})"><i
+                                    class="fa fa-check"></i>
+                            Approve</button>
+                    @endcan
+                    <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
+                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                                class="fa fa-print text-white"></i>
+                        Certificate of Worth</a>
                 @endif
             </div>
         </div>

@@ -1,46 +1,61 @@
 @extends('layouts.master')
 
-@section('title', 'Motor Vehicle - Registration Change')
+@section('title', 'Motor Vehicle - Ownership Transfer')
 
 @section('content')
 
     <div class="card mt-3">
         <div class="card-header">
-            <h5>Registration Change Request</h5>
+            <h5>Ownership Transfer Request</h5>
             <div class="card-tools">
-                @can('mvr_approve_registration_change')
-                @if($change_req->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_PENDING_APPROVAL)
-                    <a href="{{route('mvr.reg-change-requests.approve',encrypt($change_req->id))}}">
-                        <button class="btn btn-info btn-sm"><i class="fa fa-check"></i>Approve</button>
+                @if($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_PENDING_APPROVAL)
+                    <button class="btn btn-primary   btn-sm"
+                            onclick="Livewire.emit('showModal', 'mvr.approve-ownership-transfer','{{$request->id}}')">
+                        <i class="fa fa-check"></i> Approve
+                    </button>
+                    <a href="{{route('mvr.transfer-ownership.reject',encrypt($request->id))}}">
+                        <button class="btn btn-danger btn-sm">
+                            <i class="fa fa-stop"></i> Approve
+                        </button>
                     </a>
+                @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_INITIATED)
+                    <button class="btn btn-info btn-sm"
+                            onclick="Livewire.emit('showModal', 'mvr.upload-sale-agreement-modal','{{$request->id}}')"><i
+                                class="fa fa-upload"></i>
+                        Upload Agreement Contract</button>
+                @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED && \Illuminate\Support\Facades\Gate::has())
+                    <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
+                       data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
+                                class="fa fa-print text-white"></i>
+                        New Certificate of Registration</a><!--- todo: Missing format for cert fo registration - NCR -->
                 @endif
-                @endcan
+
             </div>
         </div>
         <div class="card-body">
-            @if($change_req->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_PENDING_PAYMENT)
+            @if($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_PENDING_PAYMENT)
                 <div class="row my-2">
                     <div class="col-md-12 mb-3">
                         <div class="alert alert-info">
-                            <div>Pending Payment for registration change to <strong>'{{$change_req->requested_registration_type->name}}'</strong> </div>
+                            <div>Pending Payment for transfer ownership to: <strong>{{$request->new_owner->fullname()}}</strong> </div>
                             <br>
                             <div>
                                 <div>
-                                    Registration Fee: <strong> {{number_format($change_req->get_latest_bill()->amount)}} TZS</strong><br>
+                                    Transfer Fee: <strong> {{number_format($request->get_latest_bill()->amount)}} TZS</strong><br>
                                 </div>
                                 <div>
-                                    Control Number: <strong>{!! $change_req->get_latest_bill()->control_number ?? ' <span class="text-danger">Not available</span>' !!}</strong>
+                                    Control Number: <strong>{!! $request->get_latest_bill()->control_number ?? ' <span class="text-danger">Not available</span>' !!}</strong>
                                 </div>
-                                @if($change_req->get_latest_bill()->control_number)
+                                @if($request->get_latest_bill()->control_number)
                                     <div>
-                                        Control Number Expiry: <strong>{!! $change_req->get_latest_bill()->expiry_date ?? ' <span class="text-danger"></span>' !!}</strong>
+                                        Control Number Expiry: <strong>{!! $request->get_latest_bill()->expiry_date ?? ' <span class="text-danger"></span>' !!}</strong>
                                     </div>
                                 @endif
                                 <br>
-                                @if($change_req->get_latest_bill()->zan_trx_sts_code != \App\Services\ZanMalipo\ZmResponse::SUCCESS)
+                                @if($request->get_latest_bill()->zan_trx_sts_code != \App\Services\ZanMalipo\ZmResponse::SUCCESS)
                                     <button class="btn btn-secondary btn-sm btn-rounded">
                                         Request Control Number</button>
-                                @elseif($change_req->get_latest_bill()->is_waiting_callback())
+                                @elseif($request->get_latest_bill()->is_waiting_callback())
                                     <div>Refresh after 30 seconds to get control number</div>
                                 @endif
                             </div>
@@ -51,25 +66,41 @@
             @endif
             <div class="row my-2">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Requested Registration Type</span>
-                    <p class="my-1">{{ $change_req->requested_registration_type->name }}</p>
+                    <span class="font-weight-bold text-uppercase">Reason for transfer</span>
+                    <p class="my-1">{{ $request->ownership_transfer_reason->name }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Plate Number Color</span>
-                    <p class="my-1">{{ $change_req->requested_registration_type->plate_number_color }}</p>
+                    <span class="font-weight-bold text-uppercase"> Reason Description </span>
+                    <p class="my-1">{{ $request->transfer_reason }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Plate Number Size</span>
-                    <p class="my-1">{{ $change_req->plate_size->name }}</p>
+                    <span class="font-weight-bold text-uppercase">New Owner/Z-number</span>
+                    <p class="my-1">{{ $request->new_owner->fullname() }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Requested Plate Number</span>
-                    <p class="my-1">{{ $change_req->custom_plate_number??' N/A ' }}</p>
+                    <span class="font-weight-bold text-uppercase">Transfer Category</span>
+                    <p class="my-1">{{ $request->transfer_category->name}}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Market Value</span>
+                    <p class="my-1">{{ $request->market_value }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Sale Date</span>
+                    <p class="my-1">{{ $request->sale_date }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Delivered Date</span>
+                    <p class="my-1">{{ $request->delivered_date }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Date Received</span>
+                    <p class="my-1">{{ $request->application_date ??' N/A ' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Request Status</span>
                     <p class="my-1">
-                        <span class="badge badge-info">{{ $change_req->request_status->name }}</span>
+                        <span class="badge badge-info">{{$request->request_status->name }}</span>
                     </p>
                 </div>
 
@@ -247,28 +278,28 @@
             <div class="row my-2">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $change_req->agent->fullname() }}</p>
+                    <p class="my-1">{{ $request->agent->fullname() }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Z-Number</span>
-                    <p class="my-1">{{ $change_req->agent->reference_no }}</p>
+                    <p class="my-1">{{ $request->agent->reference_no }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">TIN</span>
-                    <p class="my-1">{{ $change_req->agent->reference_no }}</p>
+                    <p class="my-1">{{ $request->agent->reference_no }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">State/City</span>
-                    <p class="my-1">{{ $change_req->agent->location }}</p>
+                    <p class="my-1">{{ $request->agent->location }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Mobile</span>
-                    <p class="my-1">{{ $change_req->agent->mobile }}/{{ $motor_vehicle->agent->alt_mobile }}</p>
+                    <p class="my-1">{{ $request->agent->mobile }}/{{ $request->agent->alt_mobile }}</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Email</span>
-                    <p class="my-1">{{ $change_req->agent->email }}</p>
+                    <p class="my-1">{{ $request->agent->email }}</p>
                 </div>
             </div>
 

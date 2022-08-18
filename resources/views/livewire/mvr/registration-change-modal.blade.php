@@ -23,7 +23,10 @@
                 </div>
 
 
-                @if(\App\Models\MvrRegistrationType::query()->whereIn('name',[\App\Models\MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED,\App\Models\MvrRegistrationType::TYPE_DIPLOMATIC])->where(['id'=>$registration_type_id])->exists())
+                @if(\App\Models\MvrRegistrationType::query()->whereIn('name',[
+                    \App\Models\MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED,
+                    \App\Models\MvrRegistrationType::TYPE_DIPLOMATIC
+                    ])->where(['id'=>$registration_type_id])->exists() || (\App\Models\MvrRegistrationType::query()->find($registration_type_id)->external_defined ?? null)==1)
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Plate Number</label>
@@ -39,7 +42,7 @@
                             <label class="control-label">Golden Plate Number</label>
                             <select class="form-control" wire:model.lazy="custom_plate_number" id="custom_plate_number">
                                 <option value="" selected>Choose option</option>
-                                @foreach (\App\Models\MvrMotorVehicleRegistration::getGoldenPlateNumbers($registration_type_id) as $row)
+                                @foreach (\App\Models\MvrMotorVehicleRegistration::getGoldenPlateNumbers() as $row)
                                     <option value="{{$row}}">{{ $row}}</option>
                                 @endforeach
                             </select>

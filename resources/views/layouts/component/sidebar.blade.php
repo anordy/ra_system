@@ -125,14 +125,16 @@
                 <li class="{{ request()->is('mvr/register') ? 'active': '' }}">
                     <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
                 </li>
+                @canany(['receive_plate_number','print_plate_number'])
                 <li class="{{ request()->is('mvr/plate-numbers') ? 'active': '' }}">
                     <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
                 </li>
+                @endcanany
                 <li class="{{ request()->is('mvr/reg-change-requests') ? 'active': '' }}">
-                    <a href="{{route('mvr.reg-change-requests')}}">Status Change Request</a>
+                    <a href="{{route('mvr.reg-change-requests')}}">Status Change Requests</a>
                 </li>
                 <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active': '' }}">
-                    <a href="{{route('mvr.register')}}">Transfer Ownership</a>
+                    <a href="{{route('mvr.transfer-ownership')}}">Transfer Ownership</a>
                 </li>
                 <li class="{{ request()->is('mvr/de-register-requests*') ? 'active': '' }}">
                     <a href="{{route('mvr.de-register-requests')}}">De-registration</a>
@@ -266,9 +268,17 @@
                     <li class="{{ request()->is('settings/mvr-generic/MvrFee') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index','MvrFee') }}">Motor Vehicle Fees</a>
                     </li>
-
                     <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index','MvrDeRegistrationReason') }}">De Registration Reasons</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index','MvrOwnershipTransferReason') }}">Transfer Reasons</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index','MvrTransferCategory') }}">Transfer Categories</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index','MvrTransferFee') }}">Transfer Fees</a>
                     </li>
             </ul>
         </li>

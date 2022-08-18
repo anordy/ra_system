@@ -7,12 +7,14 @@ use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
+use App\Models\MvrPersonalizedPlateNumberRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
 use App\Models\ZmBill;
 use App\Services\TRA\ServiceRequest;
 use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +54,16 @@ class ApproveRegistration extends Component
     {
         $this->validate();
         $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_NOT_ASSIGNED]);
+        $personalized = null;
+        if($this->registration_type_id == MvrRegistrationType::query()->where(['name'=> MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED])->first()->id){
+            $personalized = $this->plate_number;
+            $this->plate_number = null;
+        }elseif(!(MvrRegistrationType::query()->whereIn('name',[
+                MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED,
+                MvrRegistrationType::TYPE_DIPLOMATIC
+            ])->where(['id'=>$this->registration_type_id])->exists() || MvrRegistrationType::query()->find($this->registration_type_id)->external_defined==1)) {
+            $this->plate_number = null;
+        }
         try {
             DB::beginTransaction();
             $registration_id = MvrMotorVehicleRegistration::query()->insertGetId([
@@ -62,6 +74,13 @@ class ApproveRegistration extends Component
                 'mvr_registration_type_id' => $this->registration_type_id
             ]);
 
+            if (!empty($personalized)){
+                MvrPersonalizedPlateNumberRegistration::query()->create([
+                    'plate_number'=>$personalized,
+                    'status'=>'PENDING',
+                    'mvr_motor_vehicle_registration_id'=>$registration_id
+                ]);
+            }
             /** @var MvrMotorVehicle $mv */
             $mv = MvrMotorVehicle::query()->find($this->motor_vehicle_id);
             $mv->update([
@@ -88,7 +107,10 @@ class ApproveRegistration extends Component
             $amount = $fee->amount;
             $gfs_code = $fee->gfs_code;
 
-            ZmCore::createBill(
+            $zmBill = ZmCore::createBill(
+                $registration->id,
+                get_class($registration),
+                null,
                 $mv->agent->id,
                 get_class($mv->agent),
                 $mv->agent->fullname(),
@@ -107,6 +129,7 @@ class ApproveRegistration extends Component
                         'billable_type' => get_class($registration),
                         'fee_id' => $fee->id,
                         'fee_type' => get_class($fee),
+                        'tax_type_id' => null,
                         'amount' => $amount,
                         'currency' => 'TZS',
                         'exchange_rate' => $exchange_rate,
@@ -115,6 +138,14 @@ class ApproveRegistration extends Component
                     ]
                 ]
             );
+            if (config('app.env') != 'local') {
+                $response = ZmCore::sendBill($zmBill->id);
+                if ($response->status === ZmResponse::SUCCESS) {
+                    $this->flash('success', 'A control number request was sent successful.');
+                } else {
+                    session()->flash('error', 'Control number generation failed, try again later');
+                }
+            }
 
             DB::commit();
             return redirect()->to(route('mvr.show', encrypt($this->motor_vehicle_id)));

@@ -27,7 +27,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class MvrOwnershipStatus extends Model
 {
 	use SoftDeletes;
-	protected $table = 'mvr_ownership_status';
+
+    const STATUS_CURRENT_OWNER = 'CURRENT OWNER';
+    const STATUS_PREVIOUS_OWNER = 'PREVIOUS OWNER';
+    protected $table = 'mvr_ownership_status';
 
 	protected $fillable = [
 		'name'

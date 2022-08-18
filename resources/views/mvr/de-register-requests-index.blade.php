@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Motor Vehicle Registration')
+@section('title', 'Motor Vehicle De-registration')
 
 @section('content')
     <div class="card mt-3">

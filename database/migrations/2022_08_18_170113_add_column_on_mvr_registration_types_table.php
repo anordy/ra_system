@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMvrRequestStatus extends Migration
+class AddColumnOnMvrRegistrationTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateMvrRequestStatus extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_request_status', function (Blueprint $table) {
-            $table->id();
-            $table->string('name',50);
-            $table->timestamps();
+        Schema::table('mvr_registration_types', function (Blueprint $table) {
+            $table->tinyInteger('external_defined')
+                ->comment('Externally defined plate numbers')
+                ->default(0)
+                ->after('initial_plate_number');
         });
     }
 
@@ -27,6 +28,6 @@ class CreateMvrRequestStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_request_status');
+        //
     }
 }

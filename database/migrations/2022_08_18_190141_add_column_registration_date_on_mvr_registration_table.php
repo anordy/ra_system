@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMvrRequestStatus extends Migration
+class AddColumnRegistrationDateOnMvrRegistrationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateMvrRequestStatus extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_request_status', function (Blueprint $table) {
-            $table->id();
-            $table->string('name',50);
-            $table->timestamps();
+        Schema::table('mvr_motor_vehicle_registration', function (Blueprint $table) {
+            $table->date('registration_date')->nullable()->after('mvr_motor_vehicle_id');
         });
     }
 
@@ -27,6 +25,6 @@ class CreateMvrRequestStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_request_status');
+        //
     }
 }

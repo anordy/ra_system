@@ -48,7 +48,10 @@ class PlateNumbersTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Plate Number", "plate_number")
+            Column::make("Plate Number", "id")->format(function ($id){
+                $mvr = MvrMotorVehicleRegistration::query()->find($id);
+                return $mvr->current_personalized_registration ? $mvr->current_personalized_registration->plate_number: $mvr->plate_number;
+            })
                 ->sortable(),
             Column::make("Size", "plate_size.name")
                 ->sortable(),

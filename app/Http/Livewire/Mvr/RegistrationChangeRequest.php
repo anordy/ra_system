@@ -68,7 +68,7 @@ class RegistrationChangeRequest extends Component
                 'requested_registration_type_id' => $this->registration_type_id,
                 'date' => Carbon::now(),
                 'mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate([
-                    'name'=>MvrRequestStatus::STATUS_RC_INITIATED
+                    'name'=>MvrRequestStatus::STATUS_RC_PENDING_APPROVAL
                 ])->id,
                 'agent_taxpayer_id' => $this->agent_taxpayer_id
             ]);

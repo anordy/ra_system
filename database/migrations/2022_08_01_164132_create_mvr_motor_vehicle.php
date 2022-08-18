@@ -34,7 +34,10 @@ class CreateMvrMotorVehicle extends Migration
             $table->unsignedBigInteger('agent_taxpayer_id');
             $table->string('inspection_report_path',200)->nullable();
             $table->string('certificate_of_worth_path',200)->nullable();
+            $table->date('inspection_date')->nullable();
+            $table->string('certificate_number',30)->nullable();
             $table->date('registration_date')->nullable();
+            $table->integer('mileage')->nullable();
             $table->unsignedBigInteger('mvr_registration_status_id');
             $table->timestamps();
             $table->softDeletes();

@@ -19,6 +19,7 @@ class SysModuleSeeder extends Seeder
             ['name' => 'WithholdingAgents'],
             ['name' => 'BusinessManagement'],
             ['name' => 'ChangeTaxType'],
+            ['name' => 'Motor Vehicle Registration'],
         ];
         foreach ($data as $row) {
             SysModule::updateOrCreate($row);
