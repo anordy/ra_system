@@ -16,7 +16,17 @@ class CreateRenewTaxAgentRequestsTable extends Migration
         Schema::create('renew_tax_agent_requests', function (Blueprint $table) {
             $table->id();
 			$table->bigInteger('tax_agent_id');
-			$table->enum('status', ['pending', 'processed', 'rejected'])->default('pending');
+            $table->boolean('is_paid')->default(false);
+            $table->dateTime('renew_first_date')->nullable();
+            $table->dateTime('renew_expire_date')->nullable();
+			$table->enum('status', ['pending', 'verified', 'rejected','approved'])->default('pending');
+            $table->enum('billing_status', ['control-number-generating','control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->nullable();
+            $table->text('app_true_comment')->nullable();
+            $table->text('app_reject_comment')->nullable();
+            $table->unsignedBigInteger('approved_by_id')->nullable();
+            $table->unsignedBigInteger('rejected_by_id')->nullable();
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('rejected_at')->nullable();
             $table->timestamps();
         });
     }

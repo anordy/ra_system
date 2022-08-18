@@ -28,9 +28,9 @@ class TaxAgent extends Model implements Auditable
 		return $this->hasMany('App\Models\TaxAgentTrainingExperience');
 	}
 
-	public function requests()
+	public function request()
 	{
-		return $this->hasMany(RenewTaxAgentRequest::class);
+		return $this->hasOne(RenewTaxAgentRequest::class);
 	}
 
 	// Scopes
@@ -49,12 +49,12 @@ class TaxAgent extends Model implements Auditable
 
     public function region()
     {
-        return $this->belongsTo(Region::class);
+        return $this->belongsTo(Region::class,'region_id');
     }
 
     public function district()
     {
-        return $this->belongsTo(District::class);
+        return $this->belongsTo(District::class,'district_id');
     }
 
     public function taxpayer(){
