@@ -146,5 +146,10 @@ trait ReturnReportTrait
                 ]; 
                 break;
         }
-    }    
+    }  
+    
+    public function test()
+    {
+        
+    }
 }
