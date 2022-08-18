@@ -38,21 +38,21 @@ class ZmFeeHelper
         $equivalent_amount = $bill_amount * $exchangeRate;
 
         $fee = 0;
-        switch ($equivalent_amount){
+        switch ($equivalent_amount) {
             case $equivalent_amount >= 0.00 && $equivalent_amount <= 100000.00:
-                $fee = $bill_amount * 0.025;
+                $fee = $equivalent_amount * 0.025;
                 break;
             case $equivalent_amount >= 100001.00 && $equivalent_amount <= 500000.00:
-                $fee = $bill_amount * 0.02;
+                $fee = $equivalent_amount * 0.02;
                 break;
             case $equivalent_amount >= 500001.00 && $equivalent_amount <= 1000000.00:
-                $fee = $bill_amount * 0.013;
+                $fee = $equivalent_amount * 0.013;
                 break;
             case $equivalent_amount >= 1000001.00 && $equivalent_amount <= 5000000.00:
-                $fee = $bill_amount * 0.003;
+                $fee = $equivalent_amount * 0.003;
                 break;
             case $equivalent_amount >= 5000001.00 && $equivalent_amount <= 10000000.00:
-                $fee = $bill_amount * 0.0015;
+                $fee = $equivalent_amount * 0.0015;
                 break;
             case $equivalent_amount >= 10000001.00:
                 $fee = 20000;
@@ -60,6 +60,7 @@ class ZmFeeHelper
             default:
                 throw new \Exception('Bill amount out of range.');
         }
+
 
         if ($currency != 'TZS'){
             $fee = round($fee / $exchangeRate, 2);
