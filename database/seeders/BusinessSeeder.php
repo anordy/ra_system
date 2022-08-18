@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\BusinessBank;
 use App\Models\BusinessLocation;
 use App\Models\BusinessTaxType;
+use App\Models\TaxType;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -84,8 +85,10 @@ class BusinessSeeder extends Seeder
             $business->headquarter()->create($location);
             $business->banks()->create($bank);
 
-            for ($i=1; $i < 26; $i++) {
-                BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $i, "currency" => "TZS"]);
+            $taxTypes = TaxType::where('category', 'main')->pluck('id')->toArray();
+
+            foreach ($taxTypes as $tax) {
+                BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax, "currency" => "TZS"]);
             }
 
             DB::commit();
