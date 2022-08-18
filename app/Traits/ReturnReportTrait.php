@@ -2,7 +2,10 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\EmTransactionReturn;
 use App\Models\Returns\LumpSum\LumpSumReturn;
+use App\Models\Returns\MmTransferReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxType;
@@ -67,16 +70,29 @@ trait ReturnReportTrait
                 dd('restaurant-levy');
                 break;
             case 'petroleum-levy':
-                dd('petroleum-levy');
+                return [
+                    'returnName'=> 'Petroleum Levy',
+                    'model' => PetroleumReturn::query(),
+                ];
                 break;
             case 'airport-service-safety-fee':
-                dd('airport-service-safety-fee');
+                $taxType = TaxType::where('code', 'airport-service-safety-fee')->first();
+                return [
+                    'returnName' => 'Airport Service Safety Fee',
+                    'model' => PortReturn::query()->where('tax_type_id', $taxType->id),
+                ];
                 break;
             case 'mobile-money-transfer':
-                dd('mobile-money-transfer');
+                return [
+                    'returnName'=> 'Mobile Money Transfer',
+                    'model' => MmTransferReturn::query(),
+                ];
                 break;
             case 'electronic-money-transaction':
-                dd('electronic-money-transaction');
+                return [
+                    'returnName'=> 'Electronic Money Transaction',
+                    'model' => EmTransactionReturn::query(),
+                ];
                 break;
             case 'lumpsum-payment':
                 return [

@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Reports\Returns\Previews;
 
-use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\MmTransferReturn;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -10,7 +10,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 use App\Traits\ReturnReportTrait;
 
-class StampDutyPreviewTable extends DataTableComponent
+class MmTransferPreviewTable extends DataTableComponent
 {
     use LivewireAlert, ReturnReportTrait;
 
@@ -24,7 +24,7 @@ class StampDutyPreviewTable extends DataTableComponent
     
     public function builder(): Builder
     {
-        $stampDuties =$this->getRecords(StampDutyReturn::query(), $this->parameters); 
+        $stampDuties =$this->getRecords(MmTransferReturn::query(), $this->parameters); 
         return $stampDuties;
     }
 
@@ -35,7 +35,7 @@ class StampDutyPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['stamp_duty_returns.business_id', 'stamp_duty_returns.business_location_id', 'stamp_duty_returns.financial_month_id', 'stamp_duty_returns.financial_year_id', 'stamp_duty_returns.created_at', 'stamp_duty_returns.filed_by_id', 'stamp_duty_returns.filed_by_type']);
+        $this->setAdditionalSelects(['mm_transfer_returns.business_id', 'mm_transfer_returns.business_location_id', 'mm_transfer_returns.financial_month_id', 'mm_transfer_returns.financial_year_id', 'mm_transfer_returns.created_at', 'mm_transfer_returns.filed_by_id', 'mm_transfer_returns.filed_by_type']);
     }
 
     public function columns(): array

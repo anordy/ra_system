@@ -30,23 +30,23 @@
         @break
 
         @case('petroleum-levy')
-        this is restaurant levy
+        @livewire('reports.returns.previews.petroleum-levy-preview-table',['parameters'=>$parameters])
         @break
 
         @case('airport-service-safety-fee')
-        this is airport services
+        @livewire('reports.returns.previews.air-port-preview-table',['parameters'=>$parameters])
         @break
         
         @case('mobile-money-transfer')
-        this is airport services
+        @livewire('reports.returns.previews.mm-transfer-preview-table',['parameters'=>$parameters])
         @break
 
         @case('electronic-money-transaction')
-        this is airport services
+        @livewire('reports.returns.previews.em-transaction-preview-table',['parameters'=>$parameters])
         @break
 
         @case('lumpsum-payment')
-        this is airport services
+        @livewire('reports.returns.previews.lump-sum-preview-table',['parameters'=>$parameters])
         @break
 
         @case('sea-service-transport-charge')
@@ -58,7 +58,6 @@
         @break
         {{-- @default --}}
         @endswitch
-        {{-- @livewire('reports.returns.preview-table',['parameters'=>$parameters]) --}}
     </div>
 </div>
 @endsection

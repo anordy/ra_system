@@ -104,6 +104,7 @@ class ReturnReport extends Component
             $fileName = 'Return Records ('.$for.') - '.$parameters['year']. '.xlsx';
             $title = $modelData['returnName'].' Return Records ('.$for.')';
         }  
+        $this->alert('success', 'Exporting Excel File');
         return Excel::download(new ReturnReportExport($records,$title,$parameters), $fileName);
     }
 
@@ -117,6 +118,7 @@ class ReturnReport extends Component
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
+        $this->alert('success', 'Exporting Pdf File');
         return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
     }
 

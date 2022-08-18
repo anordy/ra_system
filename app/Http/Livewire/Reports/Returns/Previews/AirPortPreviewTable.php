@@ -2,7 +2,8 @@
 
 namespace App\Http\Livewire\Reports\Returns\Previews;
 
-use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -10,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 use App\Traits\ReturnReportTrait;
 
-class StampDutyPreviewTable extends DataTableComponent
+class AirPortPreviewTable extends DataTableComponent
 {
     use LivewireAlert, ReturnReportTrait;
 
@@ -24,8 +25,9 @@ class StampDutyPreviewTable extends DataTableComponent
     
     public function builder(): Builder
     {
-        $stampDuties =$this->getRecords(StampDutyReturn::query(), $this->parameters); 
-        return $stampDuties;
+        $taxType = TaxType::where('code', 'sea-service-transport-charge')->first();
+        $seaPorts =$this->getRecords(PortReturn::query()->where('tax_type_id', $taxType->id), $this->parameters); 
+        return $seaPorts;
     }
 
     public function configure(): void
@@ -35,7 +37,7 @@ class StampDutyPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['stamp_duty_returns.business_id', 'stamp_duty_returns.business_location_id', 'stamp_duty_returns.financial_month_id', 'stamp_duty_returns.financial_year_id', 'stamp_duty_returns.created_at', 'stamp_duty_returns.filed_by_id', 'stamp_duty_returns.filed_by_type']);
+        $this->setAdditionalSelects(['port_returns.business_id', 'port_returns.business_location_id', 'port_returns.financial_month_id', 'port_returns.financial_year_id', 'port_returns.created_at', 'port_returns.filed_by_id', 'port_returns.filed_by_type']);
     }
 
     public function columns(): array
@@ -58,7 +60,7 @@ class StampDutyPreviewTable extends DataTableComponent
             Column::make("Business Location", "business_location_id")
                 ->format(
                     function ($value, $row) {
-                        return $row->businessLocation->name;
+                        return $row->branch->name;
                     }
                 )
                 ->searchable()
@@ -93,19 +95,49 @@ class StampDutyPreviewTable extends DataTableComponent
             Column::make("Currency", "currency")
                 ->searchable()
                 ->sortable(),
-            //total_amount_due
-            Column::make("Total Amount Due", "total_amount_due")
+            //total_vat_payable_tzs
+            Column::make("Vat Amount (TZS)", "total_vat_payable_tzs")
                 ->format(
                     function ($value, $row) {
+                        if($value == null){
+                            return '-';
+                        }
                         return number_format($value, 2);
                     }
                 )
                 ->searchable()
                 ->sortable(),
-            //total_amount_due_with_penalties
-            Column::make("Total Amount Due With Penalties", "total_amount_due_with_penalties")
+            //total_vat_payable_usd
+            Column::make("Vat Amount (USD)", "total_vat_payable_usd")
                 ->format(
                     function ($value, $row) {
+                        if($value == null){
+                            return '-';
+                        }
+                        return number_format($value, 2);
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+            //total_amount_due_with_penalties_tzs
+            Column::make("Amount Due With Penalties(TZS)", "total_amount_due_with_penalties_tzs")
+                ->format(
+                    function ($value, $row) {
+                        if($value == null){
+                            return '-';
+                        }
+                        return number_format($value, 2);
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+             //total_amount_due_with_penalties_usd
+            Column::make("Amount Due With Penalties(USD)", "total_amount_due_with_penalties_usd")
+                ->format(
+                    function ($value, $row) {
+                        if($value == null){
+                            return '-';
+                        }
                         return number_format($value, 2);
                     }
                 )
@@ -156,22 +188,17 @@ class StampDutyPreviewTable extends DataTableComponent
             Column::make("Payment Status", "id")
                 ->format(
                     function ($value, $row) {
-                        if($row->created_at == null || $row->paid_at == null){
-                              return '-';  
-                        }else{
-                            if ($row->paid_at < $row->payment_due_date) {
-                                return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                <i class="bi bi-check-circle"></i>
-                                    In-Time
-                                        </span>';
-                            } else {
-                                return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
-                                <i class="bi bi-clock"></i>
-                                            Late
-                                        </span>';
-                            }
+                        if ($row->created_at < $row->payment_due_date) {
+                            return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                            <i class="bi bi-check-circle"></i>
+                                        Not Late
+                                    </span>';
+                        } else {
+                            return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
+                            <i class="bi bi-clock"></i>
+                                        Late
+                                    </span>';
                         }
-                        
                     }
                 )
                 ->searchable()
