@@ -39,7 +39,6 @@ class LumpSumReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Quarter', 'installment')
-
                ->sortable()
                 ->searchable(),
             Column::make('Quarter Of', 'quarter_name')
@@ -48,8 +47,9 @@ class LumpSumReturnsTable extends DataTableComponent
             Column::make('Amount', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->searchable(),
-            Column::make('Control No', 'control_no')
-                ->searchable(),
+            Column::make('Control No', 'id')
+            ->label(fn ($row) => $row->bill->control_number ?? '')
+            ->searchable(),
             Column::make('Status', 'status')
             ->view('returns.lump-sum.status')
                 ->searchable()

@@ -185,7 +185,7 @@ class SeaPortPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             //payment status
-            Column::make("Payment Status", "id")
+            Column::make("Payment Status", "paid_at")
                 ->format(
                     function ($value, $row) {
                         if ($row->paid_at < $row->payment_due_date) {
