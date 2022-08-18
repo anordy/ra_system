@@ -79,7 +79,7 @@
             {{ $location->street }}, {{ $location->district->name }}, {{ $location->region->name }}
         </span>
         <span class="embed commencing-date">
-            {{ $location->business->date_of_commencing->toFormattedDateString() }}
+            {{ $location->date_of_commencing->toFormattedDateString() }}
         </span>
         <span class="commissioner-signature">
             <img src="{{ public_path()}}/sign/commissioner.png">

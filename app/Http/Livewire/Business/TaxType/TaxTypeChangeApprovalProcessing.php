@@ -10,7 +10,6 @@ use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\BusinessStatus;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\BusinessTaxTypeChange;
@@ -78,9 +77,19 @@ class TaxTypeChangeApprovalProcessing extends Component
 
                 $old_taxtypes_list = "";
                 $new_taxtypes_list = "";
+                $changed_tax_types = [];
 
-                foreach ($this->oldTaxTypes as $data) {
+
+                foreach ($this->oldTaxTypes as $key => $data) {
                     $old_taxtypes_list .= "{$this->getTaxNameById($data['tax_type_id'])}, ";
+                    if ($data['tax_type_id'] !== $this->selectedTaxTypes[$key]['tax_type_id']) {
+                        $changed_tax_types[] = [
+                            'old' => $this->getTaxNameById($data['tax_type_id']),
+                            'new' => $this->getTaxNameById($this->selectedTaxTypes[$key]['tax_type_id']),
+                            'new_tax_id' => $this->selectedTaxTypes[$key]['tax_type_id']
+                        ];
+                    }
+
                 }
 
                 foreach ($business->taxTypes as $type) {
@@ -90,12 +99,15 @@ class TaxTypeChangeApprovalProcessing extends Component
                 $notification_payload = [
                     'old_taxtypes' => $old_taxtypes_list,
                     'new_taxtypes' => $new_taxtypes_list,
+                    'new_taxes' =>$changed_tax_types,
                     'business' => $business,
                     'time' => Carbon::now()->format('d-m-Y')
                 ];
+
                 DB::commit();
                 event(new SendMail('change-tax-type-approval', $notification_payload));
                 event(new SendSms('change-tax-type-approval', $notification_payload));
+
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());

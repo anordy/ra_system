@@ -48,12 +48,13 @@ use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
 use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Payments\PaymentsController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
-use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
@@ -89,6 +90,8 @@ use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
+use App\Http\Livewire\Reports\Returns\ReturnReport;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -221,6 +224,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/active', [TaxAgentController::class, 'activeAgents'])->name('active');
         Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
         Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
+        Route::get('/renew/show/{id}', [TaxAgentController::class, 'renewalShow'])->name('renew-show');
         Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
         Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
@@ -306,6 +310,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('/files', TaxAuditFilesController::class);
 
+    //Managerial Reports
+    Route::name('reports.')->prefix('reports')->group(function () {
+        Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
+        Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
+        Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
+    });
+
+
+
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
         Route::get('/', [ClaimsController::class, 'index'])->name('index');
         Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
@@ -316,7 +329,6 @@ Route::middleware(['auth'])->group(function () {
     Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-types')->group(function () {
         Route::get('/', [UpgradeTaxtypeController::class, 'index'])->name('index');
         Route::get('/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('show');
-
     });
 
 
@@ -343,7 +355,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/returns/emt/{taxType}', [ReturnDebtController::class, 'index'])->name('emt.index');
         Route::get('/returns/sea/{taxType}', [ReturnDebtController::class, 'index'])->name('sea.index');
         Route::get('/returns/airport/{taxType}', [ReturnDebtController::class, 'index'])->name('airport.index');
-
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
@@ -368,6 +379,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tax-clearance/view/{id}', [TaxClearanceController::class, 'viewRequest'])->name('request.view');
         Route::get('/tax-clearance/approval/{id}', [TaxClearanceController::class, 'approval'])->name('request.approval');
         Route::get('/tax-clearance/certificate/{location}', [TaxClearanceController::class, 'certificate'])->name('certificate');
+    });
+
+    Route::name('payments.')->prefix('payments')->group(function () {
+        Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
     });
     
 });

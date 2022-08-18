@@ -18,7 +18,6 @@ class ReliefGenerateReportController extends Controller
         return view('relief.reports.index');
     }
     
-    
     public function downloadReliefReportPdf($datesJson)
     {
         $dates = decrypt($datesJson);
@@ -60,7 +59,7 @@ class ReliefGenerateReportController extends Controller
         }
 
         $reliefs = $reliefs->get();
-        $pdf = PDF::loadView('Exports.relief-report-pdf',compact('reliefs','months','projectSections','projectSectionsArray','data','dates'));
+        $pdf = PDF::loadView('exports.relief.reports.relief-report-pdf',compact('reliefs','months','projectSections','projectSectionsArray','data','dates'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download('Relief applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.pdf');

@@ -62,10 +62,11 @@ class TaxClaimApprovalProcessing extends Component
         }
     }
 
-    public function calcMoney(){
+    public function calcMoney()
+    {
         try {
             return $this->subject->amount / $this->installmentCount;
-        } catch (Exception $exception){
+        } catch (Exception $exception) {
             return 0;
         }
     }
@@ -86,6 +87,12 @@ class TaxClaimApprovalProcessing extends Component
                     'teamMember.not_in' => 'Duplicate already exists as team leader'
                 ]
             );
+
+            $officers = $this->subject->officers()->exists();
+
+            if ($officers) {
+                $this->subject->officers()->delete();
+            }
 
             TaxClaimOfficer::create([
                 'claim_id' => $this->subject->id,
@@ -126,7 +133,7 @@ class TaxClaimApprovalProcessing extends Component
             }
         }
 
-        if ($this->checkTransition('method_of_payment')){
+        if ($this->checkTransition('method_of_payment')) {
             $this->validate([
                 'paymentType' => 'required',
                 'installmentCount' => 'required_if:paymentType,installment|exclude_if:paymentType,full|exclude_if:paymentType,cash|numeric|max:12'
@@ -148,7 +155,7 @@ class TaxClaimApprovalProcessing extends Component
             $this->subject->save();
         }
 
-        if ($this->checkTransition('accepted')){
+        if ($this->checkTransition('accepted')) {
             $this->subject->status = TaxClaimStatus::APPROVED;
             $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
             $credit->status = TaxClaimStatus::APPROVED;
@@ -172,7 +179,7 @@ class TaxClaimApprovalProcessing extends Component
             'comments' => 'required|string',
         ]);
 
-        if ($this->checkTransition('rejected')){
+        if ($this->checkTransition('rejected')) {
             $this->subject->status = TaxClaimStatus::APPROVED;
             $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
             $credit->status = TaxClaimStatus::REJECTED;
