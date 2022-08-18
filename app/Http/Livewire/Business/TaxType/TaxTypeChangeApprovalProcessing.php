@@ -104,11 +104,10 @@ class TaxTypeChangeApprovalProcessing extends Component
                     'time' => Carbon::now()->format('d-m-Y')
                 ];
 
-                // DB::commit();
+                DB::commit();
                 event(new SendMail('change-tax-type-approval', $notification_payload));
                 event(new SendSms('change-tax-type-approval', $notification_payload));
 
-                dd('djskds');
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
