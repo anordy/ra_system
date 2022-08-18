@@ -18,7 +18,7 @@ use Illuminate\Validation\Rules\NotIn;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class TaxClaimApprovalProcessing extends Component
+class InstallmentRequestApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
 
@@ -157,7 +157,6 @@ class TaxClaimApprovalProcessing extends Component
 
         if ($this->checkTransition('accepted')) {
             $this->subject->status = TaxClaimStatus::APPROVED;
-            $this->subject->save();
             $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
             $credit->status = TaxClaimStatus::APPROVED;
             $credit->save();
@@ -181,8 +180,7 @@ class TaxClaimApprovalProcessing extends Component
         ]);
 
         if ($this->checkTransition('rejected')) {
-            $this->subject->status = TaxClaimStatus::REJECTED;
-            $this->subject->save();
+            $this->subject->status = TaxClaimStatus::APPROVED;
             $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
             $credit->status = TaxClaimStatus::REJECTED;
             $credit->save();
@@ -199,6 +197,6 @@ class TaxClaimApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.tax_claim');
+        return view('livewire.approval.installment-request  ');
     }
 }
