@@ -44,7 +44,7 @@ class MnoReturn extends Model
     }
 
     public function taxpayer() {
-        return $this->belongsTo(Taxpayer::class, 'filed_by');
+        return $this->belongsTo(Taxpayer::class, 'filed_by_id');
     }
 
     public function taxType() {

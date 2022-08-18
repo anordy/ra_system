@@ -27,6 +27,10 @@ class StampDutyReturn extends Model
         return $this->belongsTo(Business::class);
     }
 
+    public function businessLocation(){
+        return $this->belongsTo(BusinessLocation::class,'business_location_id');
+    }
+
     public function taxpayer(){
         return $this->morphTo('filed_by');
     }
