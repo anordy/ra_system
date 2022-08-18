@@ -1,6 +1,8 @@
 <?php
 
 use App\Enum\DisputeStatus;
+use App\Enum\ReturnApplicationStatus;
+use App\Enum\ReturnCategory;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -40,7 +42,8 @@ class CreateLumpSumReturnsTable extends Migration
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
             $table->enum('status', ReturnStatus::getConstants());
-            $table->enum('application_status', DisputeStatus::getConstants());
+            $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->timestamps();
         });
     }
