@@ -43,7 +43,7 @@
                     <td> {{ number_format($return->assignedPayments->annual_estimate, 2, '.', ',') }}</td>
                 </tr>
                 <tr>
-                    <td>Payable after every Months <br> <small> Inalipwa Kila baada ya miezi</small> </td>
+                    <td>Payment Quaters per year <br> <small> Awamu zinazolipwa kwa mwaka</small> </td>
                     <td>{{ $return->assignedPayments->payment_quarters }}</td>
                 </tr>
                 @if ($penalties->count() > 0)
@@ -56,7 +56,7 @@
                     </tr>
                 @else
                     <tr>
-                        <td>Quater <br> <small> Awamu</small> </td>
+                        <td>Current Quater <br> <small> Awamu ya sasa hivi</small> </td>
                         <td> {{ $return->quarter }} </td>
                     </tr>
                 @endif
