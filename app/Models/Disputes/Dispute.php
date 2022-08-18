@@ -3,6 +3,7 @@
 namespace App\Models\Disputes;
 
 use App\Models\Business;
+use App\Models\Debts\Debt;
 use App\Models\Taxpayer;
 use App\Models\WaiverStatus;
 use App\Models\ZmBill;
@@ -32,7 +33,10 @@ class Dispute extends Model
         return $this->belongsTo(Taxpayer::class);
     }
 
-    
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
+    }
+
     public function bill()
     {
         return $this->morphOne(ZmBill::class, 'billable');

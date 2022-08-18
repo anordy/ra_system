@@ -2,6 +2,7 @@
 
 namespace App\Models\Returns\LumpSum;
 
+use App\Models\Debts\Debt;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\BusinessLocation;
@@ -23,6 +24,10 @@ class LumpSumReturn extends Model
     public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function businessLocation()
