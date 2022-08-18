@@ -157,6 +157,7 @@ class TaxClaimApprovalProcessing extends Component
 
         if ($this->checkTransition('accepted')) {
             $this->subject->status = TaxClaimStatus::APPROVED;
+            $this->subject->save();
             $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
             $credit->status = TaxClaimStatus::APPROVED;
             $credit->save();
@@ -180,7 +181,8 @@ class TaxClaimApprovalProcessing extends Component
         ]);
 
         if ($this->checkTransition('rejected')) {
-            $this->subject->status = TaxClaimStatus::APPROVED;
+            $this->subject->status = TaxClaimStatus::REJECTED;
+            $this->subject->save();
             $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
             $credit->status = TaxClaimStatus::REJECTED;
             $credit->save();
