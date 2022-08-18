@@ -149,7 +149,8 @@ class VerifyAction extends Component
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
-                    $agent->status = BillingStatus::CN_GENERATING;
+                    $agent->status = TaxAgentStatus::VERIFIED;
+                    $agent->billing_status = BillingStatus::CN_GENERATING;
                     $agent->save();
                     $taxpayer->notify(new DatabaseNotification(
                         $subject = 'TAX CONSULTANT VERIFICATION',
@@ -160,7 +161,7 @@ class VerifyAction extends Component
                     $this->alert('success', 'Request verified successfully.');
                 } else {
                     session()->flash('error', 'Control number generation failed, try again later');
-                    $agent->status = BillingStatus::CN_GENERATION_FAILED;
+                    $agent->billing_status = BillingStatus::CN_GENERATION_FAILED;
                 }
 
                 $agent->save();
