@@ -153,7 +153,7 @@ class EmTransactionPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             //payment status
-            Column::make("Payment Status", "id")
+            Column::make("Payment Status", "paid_at")
                 ->format(
                     function ($value, $row) {
                         if($row->created_at == null || $row->paid_at == null){
