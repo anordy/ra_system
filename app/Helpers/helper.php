@@ -21,3 +21,11 @@ function getOperators($owner, $operator_type, $operators)
 function fmCurrency($amount){
     return number_format(floatval($amount), 2);
 }
+
+function getNumberOrdinal($number) {
+    $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+    if ((($number % 100) >= 11) && (($number % 100) <= 13))
+        return $number. 'th';
+    else
+        return $number. $ends[$number % 10];
+}
