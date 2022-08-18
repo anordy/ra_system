@@ -59,7 +59,6 @@ trait ReturnReportTrait
 
     public function getModelData($parameters)
     {
-        // $parameters = $this->getParameters();
         switch ($parameters['tax_type_code']) {
             case 'excise-duty-mno':
                 return [
@@ -146,10 +145,5 @@ trait ReturnReportTrait
                 ]; 
                 break;
         }
-    }  
-    
-    public function test()
-    {
-        
     }
 }
