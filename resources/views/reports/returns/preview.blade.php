@@ -33,6 +33,10 @@
         @livewire('reports.returns.previews.tour-operator-levy-preview-table',['parameters'=>$parameters])
         @break
 
+        @case('vat')
+        @livewire('reports.returns.previews.vat-preview-table',['parameters'=>$parameters])
+        @break
+
         @case('petroleum-levy')
         this is restaurant levy
         @break

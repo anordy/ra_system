@@ -7,6 +7,7 @@ use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\Vat\VatReturn;
 use App\Models\TaxType;
 
 trait ReturnReportTrait
@@ -87,6 +88,13 @@ trait ReturnReportTrait
                 return [
                     'returnName' => 'Tour Operator Levy',
                     'model' => HotelReturn::query()->where('tax_type_id',$taxType->id),
+                ];
+            break;
+            case 'vat':
+                $taxType = TaxType::where('code',TaxType::VAT)->first();
+                return [
+                    'returnName' => 'Vat Return',
+                    'model' => VatReturn::query(),
                 ];
             break;
             case 'petroleum-levy':
