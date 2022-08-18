@@ -10,8 +10,8 @@
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
             <a href="{{ route('notifications') }}">Notifications
                 @if (auth()->user()->unreadNotifications->count() > 0)
-                    <span class="badge badge-light">
-                        <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                <span class="badge badge-light">
+                    <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
                 @endif
             </a>
         </li>
@@ -340,6 +340,93 @@
             Lease</a>
         <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}"
             id="landLeaseSubmenu">
+=======
+        <li class="{{ request()->is('tax-clearance*') ? 'active' : '' }}">
+            <a href="#taxClearance" data-toggle="collapse"
+                aria-expanded="{{ request()->is('tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                Tax Clearance Management
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}" id="taxClearance">
+
+                {{-- <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
+                    <a href="{{ route('tax-clearance.index') }}">Requests</a>
+                </li> --}}
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('debts*') ? 'active' : '' }}">
+            <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
+                Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
+                </li>
+                <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
+                </li>
+                <li class="{{ request()->is('debts/hotel*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.hotel.index', encrypt(App\Models\TaxType::HOTEL)) }}">Hotel
+                        Levy</a>
+                </li>
+                <li class="{{ request()->is('debts/restaurant*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.restaurant.index', encrypt(App\Models\TaxType::RESTAURANT)) }}">Restaurant
+                        Levy</a>
+                </li>
+                <li class="{{ request()->is('debts/tour*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour
+                        Operation
+                        Levy</a>
+                </li>
+                <li class="{{ request()->is('debts/petroleum*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.petroleum.index', encrypt(App\Models\TaxType::PETROLEUM)) }}">Petroleum
+                        Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/vat*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.vat.index', encrypt(App\Models\TaxType::VAT)) }}">VAT
+                        Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/stamp-duty*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp
+                        Duty
+                        Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/lump-sum*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.lump-sum.index', encrypt(App\Models\TaxType::LUMPSUM_PAYMENT)) }}">Lump
+                        Sum Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/emt*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.emt.index', encrypt(App\Models\TaxType::ELECTRONIC_MONEY_TRANSACTION)) }}">Electronic
+                        Money Transaction</a>
+                </li>
+                <li class="{{ request()->is('debts/sea*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea
+                        Service Transport
+                    </a>
+                </li>
+                <li class="{{ request()->is('debts/airport*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport
+                        Service Safety Fee
+                    </a>
+                </li>
+                <li class="{{ request()->is('debts/bfo*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">BFO
+                        Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/mno*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">MNO
+                        Returns</a>
+                </li>
+          
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
+            <a href="#landLeaseSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
+                Lease</a>
+            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
+>>>>>>> efa6653a05f52c474caa7519636de0c208bcd2c2
 
             <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
                 <a href="{{ route('land-lease.list') }}">Land Lease List</a>
