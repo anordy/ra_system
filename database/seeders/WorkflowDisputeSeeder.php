@@ -48,6 +48,11 @@ class WorkflowDisputeSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2, 3],
             ],
+            'rejected' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => [],
+            ],
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -87,7 +92,7 @@ class WorkflowDisputeSeeder extends Seeder
             ],
             'commisioner_reject' => [
                 'from' => 'commisioner',
-                'to' => 'chief_assurance',
+                'to' => 'rejected',
                 'condition' => '',
             ],
             'commisioner_review' => [
