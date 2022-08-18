@@ -12,8 +12,19 @@ class TaxClearanceRequestTable extends DataTableComponent
 {
 
     public $requested = false;
-    public $denied = false;
-    public $approved = true;
+    public $rejected = false;
+    public $approved = false;
+
+    public function mount($status){
+
+        if($status == TaxClearanceStatus::APPROVED){
+            $this->approved = true;
+        } elseif($status == TaxClearanceStatus::REJECTED){
+            
+            $this->rejected = true;
+        }
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -34,8 +45,8 @@ class TaxClearanceRequestTable extends DataTableComponent
             return TaxClearanceRequest::with('business')->where('tax_clearance_requests.status', TaxClearanceStatus::APPROVED)->with('businessLocation')->orderBy('tax_clearance_requests.created_at', 'desc');
         }
 
-        if ($this->denied) {
-            return TaxClearanceRequest::with('business')->where('tax_clearance_requests.status', TaxClearanceStatus::DENIED)->with('businessLocation')->orderBy('tax_clearance_requests.created_at', 'desc');
+        if ($this->rejected) {
+            return TaxClearanceRequest::with('business')->where('tax_clearance_requests.status', TaxClearanceStatus::REJECTED)->with('businessLocation')->orderBy('tax_clearance_requests.created_at', 'desc');
         }
 
 

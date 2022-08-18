@@ -29,7 +29,7 @@
      
         @if ($this->checkTransition('crdm_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('crdm_review')">Reject
+                <button type="button" class="btn btn-danger" wire:click="reject('crdm_reject')">Reject
                     </button>
                 <button type="button" class="btn btn-primary" wire:click="approve('crdm_review')">Approve &
                     Complete</button>

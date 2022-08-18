@@ -39,7 +39,6 @@ class TaxClearanceRequestApprovalTable extends DataTableComponent
                 ->searchable(),
             Column::make('Status', 'status')->view('tax-clearance.includes.status'),
             Column::make('Action', 'id')->view('tax-clearance.includes.actions')
-            // ->hideIf()
         ];
     }
 }

@@ -48,6 +48,7 @@ use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
 use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Payments\PaymentsController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
@@ -373,18 +374,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
     });
 
-
-//Tax Clearance
+    //Tax Clearance
     Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {
-        Route::get('/tax-clearances/index', [TaxClearanceController::class, 'index'])->name('index');
         Route::get('/tax-clearances/request', [TaxClearanceController::class, 'requestList'])->name('list');
         Route::get('/tax-clearance/view/{id}', [TaxClearanceController::class, 'viewRequest'])->name('request.view');
-        Route::get('/tax-clearance/approval/{id}', [TaxClearanceController::class, 'approval'])->name('request.approval');
     });
 
-    //Electronic Money Transaction Return
-    Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
-        Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
-        Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
+    Route::name('payments.')->prefix('payments')->group(function(){
+       Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
     });
-
+});
