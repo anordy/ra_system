@@ -18,7 +18,7 @@ class CreateTaxAgentHistoryTable extends Migration
 			$table->unsignedBigInteger('tax_agent_id');
 	        $table->dateTime('app_first_date');
 			$table->dateTime('app_expire_date');
-			$table->enum('status', ['first', 'renew']);
+			$table->enum('application_status', ['registration', 'renew']);
             $table->timestamps();
         });
     }

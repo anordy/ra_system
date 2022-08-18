@@ -52,8 +52,8 @@ class ReturnReport extends Component
             'type' => 'required',
             'year' => 'required',
             'period' => 'required',
-            'filing_report_type' => $this->type == 'filing' ? 'required' : '',
-            'payment_report_type' => $this->type == 'payment' ? 'required' : '',
+            'filing_report_type' => $this->type == 'Filing' ? 'required' : '',
+            'payment_report_type' => $this->type == 'Payment' ? 'required' : '',
             'period' => $this->year != 'all' ? 'required' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',
             'quater' => $this->period == 'Quarterly' ? 'required' : '',
@@ -83,8 +83,16 @@ class ReturnReport extends Component
             $this->reset('month','quater','semiAnnual','period');
         }
 
+        if($propertyName == 'payment_report_type'){
+            $this->reset('month','quater','semiAnnual','period','year');
+        }
+
+        if($propertyName == 'filing_report_type'){
+            $this->reset('month','quater','semiAnnual','period','year');
+        }
+
         if($propertyName == 'type'){
-            $this->reset('filing_report_type','payment_report_type');
+            $this->reset('filing_report_type','payment_report_type','month','quater','semiAnnual','period','year');
         }
     }
 
@@ -102,10 +110,10 @@ class ReturnReport extends Component
         $for = str_replace('-', ' ', $for);
         // dd($parameters);
         if($parameters['year']=='all'){
-            $fileName = 'Return Records ('.$for.').xlsx';
+            $fileName = $modelData['returnName'].' Return Records ('.$for.').xlsx';
             $title = $modelData['returnName'].' Return Records ('.$for.')';
         }else{
-            $fileName = 'Return Records ('.$for.') - '.$parameters['year']. '.xlsx';
+            $fileName = $modelData['returnName'].' Return Records ('.$for.') - '.$parameters['year']. '.xlsx';
             $title = $modelData['returnName'].' Return Records ('.$for.')';
         }  
         $this->alert('success', 'Exporting Excel File');

@@ -74,7 +74,7 @@
                 </span>
             </label>
             <select wire:model="payment_report_type" class="form-control {{ $errors->has('payment_report_type') ? 'is-invalid' : '' }}">
-                <option value="">Select Filing Type</option>
+                <option value="">Select Payment Type</option>
                 @if($type)
                 @foreach ($optionPaymentTypes as $payment)
                 <option value={{ $payment }}>

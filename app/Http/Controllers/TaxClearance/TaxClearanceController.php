@@ -20,6 +20,7 @@ use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxClearanceRequest;
 use App\Models\Verification\TaxVerification;
 use Carbon\Carbon;
+use PDF;
 
 class TaxClearanceController extends Controller
 {
@@ -145,5 +146,21 @@ class TaxClearanceController extends Controller
         }
 
         return $return_debts;
+    }
+
+    public function certificate($clearanceId){
+
+        $taxClearanceRequestId = decrypt($clearanceId);
+        $taxClearanceRequest = TaxClearanceRequest::find($taxClearanceRequestId);
+
+        $location = $taxClearanceRequest->businessLocation;
+
+
+        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('location', 'taxClearanceRequest'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return $pdf->stream();
+
     }
 }
