@@ -40,7 +40,7 @@ class CreatePetroleumReturnsTable extends Migration
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
-            $table->enum('category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
+            $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->integer('edited_count')->default(0);
             $table->timestamps();
         });

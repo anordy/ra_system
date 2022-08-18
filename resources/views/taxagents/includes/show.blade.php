@@ -84,13 +84,13 @@
                                 <span class="badge badge-success py-1 px-2"
                                       style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
                                             class="bi bi-check-circle-fill mr-1"></i>Paid</span>
-                            @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PENDING)
+                            @elseif($agent->bill->status == \App\Models\PaymentStatus::PENDING)
                                 <span class="badge badge-danger py-1 px-2"
                                       style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
                                             class="bi bi-clock-history mr-1"></i>Not Paid</span>
-                    @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PARTIALLY)
+                    @elseif($agent->bill->status == \App\Models\PaymentStatus::PARTIALLY)
                         <span style="font-weight: 900; color: #319e0a; font-size: 85%">Partially Paid</span>
-                    @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::CANCELLED)
+                    @elseif($agent->bill->status == \App\Models\PaymentStatus::CANCELLED)
                         <span class="badge badge-danger py-1 px-2"
                               style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
                                     class="bi bi-x-circle-fill mr-1"></i>Canceled</span>
