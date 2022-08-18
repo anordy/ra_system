@@ -33,10 +33,10 @@ class ReturnReportController extends Controller
         $for = str_replace('-', ' ', $for);
         // dd($records);
         if($parameters['year']=='all'){
-            $fileName = 'Return Records ('.$for.').pdf';
+            $fileName = $modelData['returnName'].' Return Records ('.$for.').pdf';
             $title = $modelData['returnName'].' Return Records ('.$for.')';
         }else{
-            $fileName = 'Return Records ('.$for.') - '.$parameters['year'].'.pdf';
+            $fileName = $modelData['returnName'].' Return Records ('.$for.') - '.$parameters['year'].'.pdf';
             $title = $modelData['returnName'].' Return Records ('.$for.')';
         } 
         $records = $records->get(); 
