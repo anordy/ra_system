@@ -317,7 +317,6 @@ Route::middleware(['auth'])->group(function () {
     Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-types')->group(function () {
         Route::get('/', [UpgradeTaxtypeController::class, 'index'])->name('index');
         Route::get('/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('show');
-
     });
 
 
@@ -344,7 +343,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/returns/emt/{taxType}', [ReturnDebtController::class, 'index'])->name('emt.index');
         Route::get('/returns/sea/{taxType}', [ReturnDebtController::class, 'index'])->name('sea.index');
         Route::get('/returns/airport/{taxType}', [ReturnDebtController::class, 'index'])->name('airport.index');
-
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
@@ -369,7 +367,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tax-clearance/view/{id}', [TaxClearanceController::class, 'viewRequest'])->name('request.view');
     });
 
-    Route::name('payments.')->prefix('payments')->group(function(){
-       Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
+    Route::name('payments.')->prefix('payments')->group(function () {
+        Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
     });
 });
