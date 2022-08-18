@@ -33,7 +33,7 @@ class LumpSumPreviewTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm text-center',
         ]);
         $this->setAdditionalSelects(['lump_sum_returns.business_id', 'lump_sum_returns.business_location_id', 'lump_sum_returns.financial_month_id', 'lump_sum_returns.financial_year_id', 'lump_sum_returns.created_at', 'lump_sum_returns.filed_by_id', 'lump_sum_returns.filed_by_type']);
     }
@@ -47,7 +47,7 @@ class LumpSumPreviewTable extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make('Business', 'business_id')
+            Column::make('Business Name', 'business_id')
                 ->format(
                     function ($value, $row) {
                         return $row->business->name;
@@ -85,7 +85,7 @@ class LumpSumPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             //currency
-            Column::make('Currency', 'currency')
+            Column::make('Paymemnt Currency', 'currency')
                 ->searchable()
                 ->sortable(),
             //total_amount_due
@@ -149,7 +149,7 @@ class LumpSumPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             //payment status
-            Column::make("Payment Status", "paid_at")
+            Column::make('Payment Status', 'paid_at')
                 ->format(
                     function ($value, $row) {
                         if ($row->created_at == null || $row->paid_at == null) {
