@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BusinessStatus;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Traits\ReturnSummaryCardTrait;
-use Carbon\Carbon;
+use App\Traits\ReturnCardReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,11 +15,15 @@ class PetroleumReturnController extends Controller
 {
     use ReturnSummaryCardTrait;
     
+    use ReturnCardReport;
+
     public function index()
     {
         $vars = $this->getSummaryData(PetroleumReturn::query());
 
-        return view('returns.petroleum.filing.index', compact('vars'));
+        $data = $this->returnCardReport(PetroleumReturn::class, 'petroleum', 'petroleum');
+
+        return view('returns.petroleum.filing.index', compact('vars', 'data'));
     }
 
     public function create(Request $request)
