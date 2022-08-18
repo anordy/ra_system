@@ -2,6 +2,8 @@
 
 use App\Models\Returns\ReturnStatus;
 use App\Enum\DisputeStatus;
+use App\Enum\ReturnApplicationStatus;
+use App\Enum\ReturnCategory;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -27,7 +29,8 @@ class CreateHotelReturnsTable extends Migration
             $table->unsignedBigInteger('financial_year_id');
             $table->integer('edited_count')->default(0);
             $table->enum('status', ReturnStatus::getConstants());
-            $table->enum('application_status', DisputeStatus::getConstants());
+            $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->decimal('hotel_infrastructure_tax', 20, 2)->nullable();
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 20, 2)->default(0);

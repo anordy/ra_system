@@ -53,8 +53,9 @@
                             </div>
 
                             <div class="col-md-3 mb-2">
-                                <span class="font-weight-bold text-uppercase">Status</span>
+                                <span class="font-weight-bold text-uppercase">Request Status</span>
                                 <p class="my-1">
+
                                     @if($agent->request->status == \App\Models\TaxAgentStatus::PENDING)
                                         <span class="badge badge-danger py-1 px-2"
                                               style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
@@ -77,25 +78,81 @@
                             </div>
 
                             <div class="col-md-3 mb-2">
-                                <span class="font-weight-bold text-uppercase">Approved By</span>
-                                <p class="my-1">{{ $agent->request->approved_by_id }}</p>
+                                <span class="font-weight-bold text-uppercase">Renew Payment</span>
+                                <p>
+                                    @if ($agent->request->bill != null)
+                                        @if ($agent->request->bill->status == 'paid')
+                                            <span style=" background: #72DC3559; color: #319e0a; font-size: 85%"
+                                                  class="badge badge-success p-2">Paid</span>
+                                        @else
+                                            <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
+                                                  class="badge badge-danger p-2">Not Paid</span>
+                                        @endif
+                                    @else
+                                        <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
+                                              class="badge badge-danger p-2">Not Paid</span>
+                                    @endif
+                                </p>
                             </div>
 
-                            <div class="col-md-3 mb-2">
-                                <span class="font-weight-bold text-uppercase">Approved At</span>
-                                <p class="my-1">{{ date('D, Y-m-d',strtotime($agent->request->approved_at)) }}</p>
-                            </div>
+                            @if(!empty($agent->request->approved_by_id))
+                                <div class="col-md-3 mb-2">
+                                    <span class="font-weight-bold text-uppercase">Approved By</span>
+                                    <p class="my-1">{{$agent->request->approved_by->fname}} {{$agent->request->approved_by->lname}}</p>
+                                </div>
+                            @endif
 
-                            <div class="col-md-3 mb-2">
-                                <span class="font-weight-bold text-uppercase">Approve Comment</span>
-                                <p class="my-1">{{ $agent->request->app_true_comment }}</p>
-                            </div>
+                            @if(!empty($agent->request->approved_at))
+                                <div class="col-md-3 mb-2">
+                                    <span class="font-weight-bold text-uppercase">Rejected At</span>
+                                    <p class="my-1">{{$agent->request->approved_at}} </p>
+                                </div>
+                            @endif
+
+                            @if(!empty($agent->request->app_true_comment))
+                                <div class="col-md-3 mb-2">
+                                    <span class="font-weight-bold text-uppercase">Approval Comment</span>
+                                    <p class="my-1">{{$agent->request->app_true_comment}} </p>
+                                </div>
+                            @endif
+
+                            @if(!empty($agent->request->rejected_by_id))
+                                <div class="col-md-3 mb-2">
+                                    <span class="font-weight-bold text-uppercase">Rejected By</span>
+                                    <p class="my-1">{{$agent->request->rejected_by->fname}} {{$agent->request->approved_by->lname}}</p>
+                                </div>
+                            @endif
+
+                            @if(!empty($agent->request->rejected_at))
+                                <div class="col-md-3 mb-2">
+                                    <span class="font-weight-bold text-uppercase">Rejected At</span>
+                                    <p class="my-1">{{$agent->request->rejected_at}} </p>
+                                </div>
+                            @endif
+
+                            @if(!empty($agent->request->app_reject_comment))
+                                <div class="col-md-3 mb-2">
+                                    <span class="font-weight-bold text-uppercase">Comment Reject</span>
+                                    <p class="my-1">{{ $agent->request->app_reject_comment }}</p>
+                                </div>
+                            @endif
+
+
+
 
                         </div>
 
+                        @if($agent->request->status == \App\Models\TaxAgentStatus::PENDING)
                         <div class="d-flex justify-content-end">
                             <livewire:tax-agent.renew.verify-action :agent="$agent"/>
                         </div>
+                        @endif
+
+                        @if($agent->request->status == \App\Models\TaxAgentStatus::VERIFIED)
+                            <div class="d-flex justify-content-end">
+                                <livewire:tax-agent.renew.approve-action :agent="$agent"/>
+                            </div>
+                        @endif
                     </div>
                 </div>
 

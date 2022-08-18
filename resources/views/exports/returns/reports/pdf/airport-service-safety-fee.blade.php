@@ -61,7 +61,7 @@
         <thead>
             <tr>
                 <th style="text-align:center;" colspan="17" height="70">
-                    <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
+                    <strong class="zrb">ZANZIBAR REVENUE BOARD</strong><br>
                     <strong class="subTitle">{{ $title }}</strong><br>
 
                     @if ($parameters['period'] == 'Annual')
