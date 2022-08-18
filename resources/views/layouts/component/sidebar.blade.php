@@ -266,9 +266,9 @@
             <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
                 id="taxClearance">
 
-                <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
                     <a href="{{ route('tax-clearance.index') }}">Requests</a>
-                </li>
+                </li> --}}
             </ul>
         </li>
 
