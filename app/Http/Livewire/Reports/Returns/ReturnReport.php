@@ -68,7 +68,7 @@ class ReturnReport extends Component
         $this->optionSemiAnnuals = ["1st-Semi-Annual", "2nd-Semi-Annual"];
         $this->optionQuarters = ["1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter"];
         $this->optionMonths = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
-        $this->optionTaxTypes = TaxType::all();
+        $this->optionTaxTypes = TaxType::where('category','main')->get();
         $this->optionReportTypes = ['Filing', 'Payment'];
         $this->optionFilingTypes = ['On-Time-Filings','Late-Filings', 'All-Filings'];
         $this->optionPaymentTypes = ['All-Paid-Returns','On-Time-Paid-Returns','Late-Paid-Returns', 'Unpaid-Returns'];
