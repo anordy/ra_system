@@ -50,9 +50,10 @@ class TaxClearenceApprovalProcessing extends Component
             $this->subject->save();
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+
             $payload = [
                 $this->tax_clearence->businessLocation,
-                $this->tax_clearence,
+                $this->subject,
             ];
 
             event(new SendMail('tax-clearance-approved', $payload));
