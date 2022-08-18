@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Approval;
 
 use App\Enum\DisputeStatus;
 use App\Enum\TaxClearanceStatus;
+use App\Events\SendMail;
 use App\Models\TaxClearanceRequest;
 use App\Models\TaxType;
 use App\Traits\PaymentsTrait;
@@ -49,6 +50,13 @@ class TaxClearenceApprovalProcessing extends Component
             $this->subject->save();
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $payload = [
+                $this->tax_clearence->businessLocation,
+                $this->tax_clearence,
+            ];
+
+            event(new SendMail('tax-clearance-approved', $payload));
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
@@ -60,15 +68,20 @@ class TaxClearenceApprovalProcessing extends Component
 
     public function reject($transtion)
     {
+        
         $this->validate([
             'comments' => 'required',
         ]);
 
         try {
+
+            $payload = $this->tax_clearence->business;
+            event(new SendMail('tax-clearance-rejected', $payload));
             $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            
         } catch (Exception $e) {
             Log::error($e);
-
+            $this->alert('error', 'Something went wrong.');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());

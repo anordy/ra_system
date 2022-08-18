@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\TaxClearance;
 
+use App\Enum\TaxClearanceStatus;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\TaxClearanceRequest;
@@ -24,7 +25,7 @@ class TaxClearanceRequestApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxClearanceRequest::with('business')->with('businessLocation');
+        return TaxClearanceRequest::where('tax_clearance_requests.status', TaxClearanceStatus::REQUESTED)->with('business')->with('businessLocation');
     }
 
     

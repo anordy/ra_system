@@ -5,8 +5,6 @@
 @section('content')
 
     <div class="card p-0 m-0">
-        hello
-
         <div class="card-body mt-0 p-2">
             <ul class="nav nav-tabs shadow-sm" id="waiverContent" role="tablist" style="margin-bottom: 0;">
                 <li class="nav-item" role="presentation">

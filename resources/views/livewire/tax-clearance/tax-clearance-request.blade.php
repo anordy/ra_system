@@ -39,7 +39,7 @@
                             Requested
                         </span>
                     @elseif($taxClearence->status === 'rejected')
-                        <span class="font-weight-bold text-warning">
+                        <span class="font-weight-bold text-danger">
                             <i class="bi bi-pen-fill mr-1"></i>
                             Rejected
                         </span>
@@ -84,10 +84,18 @@
                     {{ $taxClearence->businessLocation->ward->name }}
                 </p>
             </div>
-            <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Physical Address</span>
-                <p class="my-1">{{ $taxClearence->businessLocation->physical_address }}</p>
-            </div>
+            @if ($taxClearence->status === App\Enum\TaxClearanceStatus::APPROVED)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Tax Clearance Pdf</span>
+                    <div class="my-1">
+                        <a href="{{ route('tax-clearance.certificate', encrypt($taxClearence->id)) }}"
+                            class="btn btn-info btn-sm">
+                            <i class="bi bi-download mr-1"></i>
+                            Download
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
 
     </div>

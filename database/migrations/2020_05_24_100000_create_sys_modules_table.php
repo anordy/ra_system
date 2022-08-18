@@ -15,6 +15,7 @@ class CreateSysModulesTable extends Migration
     {
         Schema::create('sys_modules', function (Blueprint $table) {
             $table->id('id');
+            $table->string('code')->unique();
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();

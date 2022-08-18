@@ -22,7 +22,7 @@ class CreateZmBillsTable extends Migration
             $table->decimal('misc_amount',20,2)->default(0);
             $table->decimal('paid_amount',20,2)->default(0);
             $table->enum('currency', ['TZS', 'USD', 'EUR']);
-            $table->decimal('exchange_rate',5,2);
+            $table->decimal('exchange_rate',20,2);
             $table->decimal('equivalent_amount',20,2)->default(0);
             $table->string('control_number')->nullable();
             $table->dateTime('expire_date');

@@ -74,6 +74,10 @@
                                 <p class="my-1">{{ $location->physical_address }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Date of Commencing</span>
+                                <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">House No.</span>
                                 <p class="my-1">{{ $location->house_no }}</p>
                             </div>
@@ -110,6 +114,18 @@
                                         </span>
                                     @endif
                                 </p>
+                            </div>
+                            <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
+                                @if ($location->status === \App\Models\BusinessStatus::APPROVED)
+                                    <div>
+                                        @foreach($location->business->taxTypes as $type)
+                                            <a target="_blank" href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}" class="btn btn-success btn-sm mt-1 text-white">
+                                                <i class="bi bi-patch-check"></i>
+                                                {{ $type->name }} Certificate
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

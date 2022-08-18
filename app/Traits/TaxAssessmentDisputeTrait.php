@@ -37,8 +37,6 @@ trait TaxAssessmentDisputeTrait
                 'app_status' => $app_status,
             ];
 
-
-
             try {
                 TaxAssessmentHistory::create([
                     'tax_assessment_id' => $assessment->id,
