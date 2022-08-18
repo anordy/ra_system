@@ -2,10 +2,10 @@
 <table style="border-collapse:collapse;">
     <thead>
         <tr>
-            <th style="text-align:center;" colspan="17" height="70">
+            <th style="text-align:center;" colspan="15" height="70">
                 <strong>ZANZIBAR REVENUE AUTHORITY</strong><br>
                 <strong>{{ $title }}</strong><br>
-                
+                {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
                 @if ($parameters['period'] == 'Annual')
                     <strong>{{ $parameters['year'] }}</strong>
                 @elseif ($parameters['period'] != null)
@@ -41,16 +41,10 @@
                 <strong>Currency</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>VAT Amount Due (TZS)</strong>
+                <strong>Total Amount Due</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>VAT Amount Due (USD)</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Amount Due With Penalties (TZS)</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Amount Due With Penalties (USD)</strong>
+                <strong>Total Amount Due With Penalties</strong>
             </th>
             <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
                 <strong>Filing Date</strong>
@@ -82,7 +76,7 @@
                     {{ $record->business->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->branch->name ?? '-' }}
+                    {{ $record->businessLocation->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->financialMonth->name ?? '-' }}
@@ -97,20 +91,11 @@
                     {{ $record->currency ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->total_vat_payable_tzs===null?'-':number_format($record->total_vat_payable_tzs, 2) }}
+                    {{ $record->total_amount_due===null?'-':number_format($record->total_amount_due, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->total_vat_payable_usd===null?'-':number_format($record->total_vat_payable_usd, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->total_amount_due_with_penalties_tzs===null?'-':number_format($record->total_amount_due_with_penalties_tzs, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->total_amount_due_with_penalties_usd===null?'-':number_format($record->total_amount_due_with_penalties_usd, 2) }}
-                </td>
-                {{-- <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{$record->total_amount_due_with_penalties===null?'-':number_format($record->total_amount_due_with_penalties, 2) }}
-                </td> --}}
+                </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ date('d/m/Y', strtotime($record->created_at)) }}
                 </td>

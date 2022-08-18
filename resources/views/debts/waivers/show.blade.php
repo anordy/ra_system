@@ -1,38 +1,31 @@
-@extends('layouts.master')
-
-@section('title', 'View Waiver')
-
-@section('content')
-    {{-- @if ($business->status === \App\Models\BusinessStatus::CORRECTION)
-        <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business->id }}" />
-    @endif --}}
+<div class="mt-4 mx-4">
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Complainant</a>
         </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="dispute-tab" data-toggle="tab" href="#dispute" role="tab" aria-controls="dispute"
-                aria-selected="false">Tax In Dispute</a>
-        </li>
 
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
-                aria-selected="false">Ground Weaver</a>
+                aria-selected="false">Ground waiver</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="reason-tab" data-toggle="tab" href="#reason" role="tab" aria-controls="reason"
                 aria-selected="false">Reason for Ground</a>
         </li>
-
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="attachment-tab" data-toggle="tab" href="#attachment" role="tab"
+                aria-controls="attachment" aria-selected="false">Attachments</a>
+        </li>
     </ul>
     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
             <div class="row m-2 pt-3">
-                     <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Weaver Status</span>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">waiver Status</span>
                     <p class="my-1">
-                        @if($waiver->status === \App\Models\WaiverStatus::APPROVED)
+                        @if ($waiver->status === \App\Models\WaiverStatus::APPROVED)
                             <span class="font-weight-bold text-success">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
@@ -55,7 +48,8 @@
                         @endif
                     </p>
                 </div>
-                   <div class="col-md-4 mb-3">
+
+                <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>
                     <p class="my-1">{{ $business->name }}</p>
                 </div>
@@ -63,7 +57,7 @@
                     <span class="font-weight-bold text-uppercase">Business Category</span>
                     <p class="my-1">{{ $business->category->name }}</p>
                 </div>
-                @if($business->business_type === \App\Models\BusinessType::HOTEL)
+                @if ($business->business_type === \App\Models\BusinessType::HOTEL)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Business Type</span>
                         <p class="my-1">Hotel</p>
@@ -105,54 +99,25 @@
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $business->physical_address }}</p>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Waiver Type</span>
+                    <p class="my-1">
+                            <span class="badge badge-success py-1 px-2"
+                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                {{ $waiver->category }}
+                            </span>
+                    </p>
+                </div>
 
             </div>
-        </div>
-
-        <div class="tab-pane fade" id="dispute" role="tabpanel" aria-labelledby="dispute-tab">
-            {{-- @if ($dispute = $business->headquarter) --}}
-            <div class="col-md-12 mt-1">
-                <h6 class="pt-3 mb-0 font-weight-bold">Assesment</h6>
-                <hr class="mt-2 mb-3" />
-            </div>
-            <div class="row m-2">
-                {{-- <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Assesment No</span>
-                    <p class="my-1"></p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Assesment Date</span>
-                    <p class="my-1">{{ $dispute->owner_name }}</p>
-                </div> --}}
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_not_in_dispute }} Tzs</p>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount Objected</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute + $waiver->tax_not_in_dispute  }} TZS</p>
-                </div>
-
-
-            </div>
-            {{-- @endif --}}
-
         </div>
 
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Grounds for Waiver</span>
-                    <p class="my-1">{{ $waiver->ground_waiver }}</p>
-
+                    <span class="font-weight-bold text-uppercase">Grounds for waiver</span>
+                    <p class="my-1">{{ $waiver->ground }}</p>
                 </div>
-
             </div>
         </div>
 
@@ -160,53 +125,61 @@
         <div class="tab-pane fade" id="reason" role="tabpanel" aria-labelledby="reason-tab">
             <div class="row m-2 pt-3">
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Reason for Waiver</span>
-                    <p class="my-1">{{ $waiver->reason_waiver }}</p>
+                    <span class="font-weight-bold text-uppercase">Reason for waiver</span>
+                    <p class="my-1">{{ $waiver->reason }}</p>
                 </div>
 
             </div>
         </div>
- 
-    </div>
 
-    <div class="card shadow-sm my-4 rounded-0">
-        <div class="card-header font-weight-bold bg-white">
-            Waiver Attachments
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-4">
-                    <a class="file-item" target="_blank" href="">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                        <div style="font-weight: 500;" class="ml-1">
-                            Ground
-
+        <div class="tab-pane fade" id="attachment" role="tabpanel" aria-labelledby="attachment-tab">
+            <div class="row m-2 pt-3">
+                @foreach ($files as $file)
+                    <div class="col-md-3">
+                        <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            {{-- <a target="_blank"
+                                href="{{ route('debts.assesment.files', encrypt($file['file_path'])) }}"
+                                style="font-weight: 500;" class="ml-1">
+                                {{ $file['file_name'] }}
+                                <i class="bi bi-arrow-up-right-square ml-1"></i>
+                            </a> --}}
                         </div>
-                    </a>
-                </div>
-
-                  <div class="col-md-4">
-                    <a class="file-item" target="_blank" href="">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                        <div style="font-weight: 500;" class="ml-1">
-                            Ground
-
-                        </div>
-                    </a>
-                </div>
-
-                  <div class="col-md-4">
-                    <a class="file-item" target="_blank" href="">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                        <div style="font-weight: 500;" class="ml-1">
-                            Ground
-
-                        </div>
-                    </a>
-                </div>
+                    </div>
+                @endforeach
 
             </div>
         </div>
     </div>
 
-@endsection
+
+    @if ($debt)
+        <div class="card my-4 rounded-0">
+            <div class="card-header text-uppercase font-weight-bold bg-white">
+                Assessment Details
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Principal Amount</span>
+                        <p class="my-1">{{ number_format($debt->principal_amount, 2) ?? '' }}</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Penalty Amount</span>
+                        <p class="my-1">{{ number_format($debt->penalty, 2) ?? '' }}</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                        <p class="my-1">{{ number_format($debt->interest, 2) ?? '' }}</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Total Amount Due</span>
+                        <p class="my-1">{{ number_format($debt->total_amount, 2) ?? '' }}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endif
+</div>

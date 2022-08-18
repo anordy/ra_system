@@ -27,7 +27,7 @@ class AuditsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id','debt_type_id']);
+        $this->setAdditionalSelects(['business_id','debt_id']);
 
     }
 
