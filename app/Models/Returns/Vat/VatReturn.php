@@ -4,6 +4,7 @@ namespace App\Models\Returns\Vat;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Taxpayer;
@@ -49,6 +50,10 @@ class VatReturn extends Model
     public function financialMonth()
     {
         return $this->belongsTo(FinancialMonth::class, 'financial_month_id', 'id');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function bill()

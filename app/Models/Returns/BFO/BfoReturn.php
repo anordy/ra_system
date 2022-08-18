@@ -4,6 +4,7 @@ namespace App\Models\Returns\BFO;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Returns\Vat\VatReturnItem;
@@ -22,6 +23,10 @@ class BfoReturn extends Model
 
     public function items(){
         return $this->hasMany(BFOReturnItems::class, 'bfo_return_id');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function configReturns(){
