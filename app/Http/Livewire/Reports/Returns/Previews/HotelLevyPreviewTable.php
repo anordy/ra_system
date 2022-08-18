@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Reports\Returns\Previews;
 
-use App\Models\Returns\Port\PortReturn;
+use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -11,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 use App\Traits\ReturnReportTrait;
 
-class SeaPortPreviewTable extends DataTableComponent
+class HotelLevyPreviewTable extends DataTableComponent
 {
     use LivewireAlert, ReturnReportTrait;
 
@@ -22,12 +22,12 @@ class SeaPortPreviewTable extends DataTableComponent
         // dd($parameters);
         $this->parameters = $parameters;
     }
-    
+
     public function builder(): Builder
     {
-        $taxType = TaxType::where('code', 'sea-service-transport-charge')->first();
-        $seaPorts =$this->getRecords(PortReturn::query()->where('tax_type_id', $taxType->id), $this->parameters); 
-        return $seaPorts;
+        $taxtype = TaxType::where('code',TaxType::HOTEL)->first();
+        $hotelLevies = $this->getRecords(HotelReturn::query()->where('tax_type_id',$taxtype->id), $this->parameters);
+        return $hotelLevies;
     }
 
     public function configure(): void
@@ -37,7 +37,7 @@ class SeaPortPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['port_returns.business_id', 'port_returns.business_location_id', 'port_returns.financial_month_id', 'port_returns.financial_year_id', 'port_returns.created_at', 'port_returns.filed_by_id', 'port_returns.filed_by_type']);
+        $this->setAdditionalSelects(['hotel_returns.business_id', 'hotel_returns.business_location_id', 'hotel_returns.financial_month_id', 'hotel_returns.financial_year_id', 'hotel_returns.created_at', 'hotel_returns.filed_by_id', 'hotel_returns.filed_by_type']);
     }
 
     public function columns(): array
@@ -60,7 +60,7 @@ class SeaPortPreviewTable extends DataTableComponent
             Column::make("Business Location", "business_location_id")
                 ->format(
                     function ($value, $row) {
-                        return $row->branch->name;
+                        return $row->businessLocation->name;
                     }
                 )
                 ->searchable()
@@ -73,7 +73,7 @@ class SeaPortPreviewTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            //financial year
+            // //financial year
             Column::make("Financial Year", "financial_year_id")
                 ->format(
                     function ($value, $row) {
@@ -82,7 +82,7 @@ class SeaPortPreviewTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            //filed by
+            // //filed by
             Column::make("Filed By", "id")
                 ->format(
                     function ($value, $row) {
@@ -95,49 +95,19 @@ class SeaPortPreviewTable extends DataTableComponent
             Column::make("Currency", "currency")
                 ->searchable()
                 ->sortable(),
-            //total_vat_payable_tzs
-            Column::make("Vat Amount (TZS)", "total_vat_payable_tzs")
+            //total_amount_due
+            Column::make("Total Amount Due", "total_amount_due")
                 ->format(
                     function ($value, $row) {
-                        if($value == null){
-                            return '-';
-                        }
                         return number_format($value, 2);
                     }
                 )
                 ->searchable()
                 ->sortable(),
-            //total_vat_payable_usd
-            Column::make("Vat Amount (USD)", "total_vat_payable_usd")
+            //total_amount_due_with_penalties
+            Column::make("Total Amount Due With Penalties", "total_amount_due_with_penalties")
                 ->format(
                     function ($value, $row) {
-                        if($value == null){
-                            return '-';
-                        }
-                        return number_format($value, 2);
-                    }
-                )
-                ->searchable()
-                ->sortable(),
-            //total_amount_due_with_penalties_tzs
-            Column::make("Amount Due With Penalties(TZS)", "total_amount_due_with_penalties_tzs")
-                ->format(
-                    function ($value, $row) {
-                        if($value == null){
-                            return '-';
-                        }
-                        return number_format($value, 2);
-                    }
-                )
-                ->searchable()
-                ->sortable(),
-             //total_amount_due_with_penalties_usd
-            Column::make("Amount Due With Penalties(USD)", "total_amount_due_with_penalties_usd")
-                ->format(
-                    function ($value, $row) {
-                        if($value == null){
-                            return '-';
-                        }
                         return number_format($value, 2);
                     }
                 )
@@ -147,7 +117,7 @@ class SeaPortPreviewTable extends DataTableComponent
             Column::make("Filing Due Date", "filing_due_date")
                 ->format(
                     function ($value, $row) {
-                        if(!$value){
+                        if (!$value) {
                             return '-';
                         }
                         return date('d/m/Y', strtotime($value));

@@ -4,8 +4,12 @@ namespace App\Http\Livewire\Reports\Returns;
 
 use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\Vat\VatReturn;
 use App\Models\TaxType;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -220,5 +224,65 @@ class ReturnReport extends Component
         ];
     }
 
-   
+    public function getModel()
+    {
+        $parameters = $this->getParameters();
+        switch ($parameters['tax_type_code']) {
+            case 'excise-duty-mno':
+                $modelData['returnName'] = 'Excise Duty MNO';
+                return MnoReturn::query();
+                break;
+            case 'excise-duty-bfo':
+                $modelData['returnName'] = 'Excise Duty BFO';
+                return BfoReturn::query();
+                break;
+            case 'hotel-levy':
+                $taxType = TaxType::where('code',TaxType::HOTEL)->first();
+                $modelData['returnName'] = 'Hotel Levy';
+                return HotelReturn::query()->where('tax_type_id',$taxType->id);
+                break;
+            case 'restaurant-levy':
+                $taxType = TaxType::where('code',TaxType::RESTAURANT)->first();
+                $modelData['returnName'] = 'Restaurant Levy';
+                return HotelReturn::query()->where('tax_type_id',$taxType->id);
+                break;
+            case 'restaurant-levy':
+                $taxType = TaxType::where('code',TaxType::RESTAURANT)->first();
+                $modelData['returnName'] = 'Restaurant Levy';
+                return HotelReturn::query()->where('tax_type_id',$taxType->id);
+                break;
+            case 'tour-operator-levy':
+                $taxType = TaxType::where('code',TaxType::TOUR_OPERATOR)->first();
+                $modelData['returnName'] = 'Tour Operator Levy';
+                return HotelReturn::query()->where('tax_type_id',$taxType->id);
+                break;
+            case 'tour-operator-levy':
+                $taxType = TaxType::where('code',TaxType::VAT)->first();
+                $modelData['returnName'] = 'Vat Return';
+                return VatReturn::query();
+                break;
+            case 'petroleum-levy':
+                dd('petroleum-levy');
+                break;
+            case 'airport-service-safety-fee':
+                dd('airport-service-safety-fee');
+                break;
+            case 'mobile-money-transfer':
+                dd('mobile-money-transfer');
+                break;
+            case 'electronic-money-transaction':
+                dd('electronic-money-transaction');
+                break;
+            case 'lumpsum-payment':
+                dd('lumpsum-payment');
+                break;
+            case 'sea-service-transport-charge':
+                dd('sea-service-transport-charge');
+                break;
+            case 'stamp-duty':
+                $modelData['returnName'] = 'Stamp Duty';
+                return StampDutyReturn::query();
+                break;
+        }
+    }
 }

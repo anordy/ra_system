@@ -50,7 +50,6 @@ use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
-use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
@@ -374,12 +373,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
     });
 
-// <<<<<<< HEAD
-    //Electronic Money Transaction Return
-    Route::name('em-transaction.')->prefix('em-transaction')->group(function () {
-        Route::get('/em-transactions', [EmTransactionController::class, 'index'])->name('index');
-        Route::get('/view/{return_id}', [EmTransactionController::class, 'show'])->name('show');
-    });
 
 //Tax Clearance
     Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {
