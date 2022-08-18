@@ -16,8 +16,8 @@ class CreateExchangeRatesTable extends Migration
         Schema::create('exchange_rates', function (Blueprint $table) {
             $table->id();
             $table->decimal('spot_buying');
-            $table->decimal('mean');
-            $table->decimal('spot_selling');
+            $table->decimal('mean', 20, 2);
+            $table->decimal('spot_selling', 20, 2);
             $table->dateTime('exchange_date');
             $table->timestamps();
         });
