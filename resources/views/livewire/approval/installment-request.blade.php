@@ -1,44 +1,28 @@
 @if (count($this->getEnabledTranstions()) >= 1)
     <div class="card shadow-sm mb-2 bg-white rounded-0">
         <div class="card-header text-uppercase font-weight-bold bg-white">
-            Tax Verification Approval
+            Installment Request Approval
         </div>
         <div class="card-body p-4">
             @include('livewire.approval.transitions')
 
-            @if ($this->checkTransition('assign_officers'))
+            @if ($this->checkTransition('debt_manager'))
                 <div class="row">
                     <div class="form-group col-lg-12">
-                        <label class="control-label h6 text-uppercase">Assign Compliance officers</label>
+                        <label class="control-label h6 text-uppercase">Provide extension time</label>
                     </div>
                     <div class="form-group col-lg-6">
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Team Leader</label>
-                            <select class="form-control @error('teamLeader') is-invalid @enderror"
-                                    wire:model="teamLeader">
-                                <option value='null' disabled selected>Select</option>
-                                @foreach ($staffs as $row)
-                                    <option value="{{ $row->id }}">{{ $row->full_name }}</option>
-                                @endforeach
-                            </select>
-                            @error('teamLeader')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
+                            <label>From</label>
+                            <input disabled class="form-control" value="{{ \Carbon\Carbon::now()->toFormattedDateString() }}" />
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Team Member</label>
-                            <select class="form-control @error('teamMember') is-invalid @enderror"
-                                    wire:model="teamMember">
-                                <option value='null' disabled selected>Select</option>
-                                @foreach ($staffs as $row)
-                                    <option value="{{ $row->id }}">{{ $row->full_name }}</option>
-                                @endforeach
-                            </select>
-                            @error('teamMember')
+                            <label>Installment Phases (Months)</label>
+                            <input min="1" max="12" type="number" class="form-control @error('installmentPhases') is-invalid @enderror"
+                                   wire:model="installmentPhases" />
+                            @error('installmentPhases')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -47,50 +31,7 @@
                     </div>
                 </div>
             @endif
-            @if ($this->checkTransition('verification_results'))
-                <div class="row">
-                    <div class="form-group col-lg-12">
-                        <label class="control-label font-weight-bold text-uppercase">Tax Claim Verification Assessment</label>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label">Assessment Report</label>
-                        <input type="file" class="form-control-file border p-1  @error('assessmentReport') is-invalid @enderror"
-                               wire:model.lazy="assessmentReport">
-                        @error('assessmentReport')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            @endif
-            @if($this->checkTransition('method_of_payment'))
-                <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label>Payment Type</label>
-                        <select wire:model="paymentType" class="form-control">
-                            <option></option>
-                            <option value="cash">Cash</option>
-                            <option value="installment">Installment</option>
-                            <option value="full">Full Payment</option>
-                        </select>
-                    </div>
 
-                    @if($paymentType === 'installment')
-                        <div class="col-md-4 form-group">
-                            <label>Installment Phases</label>
-                            <input class="form-control @error('installmentCount') is-invalid @enderror" wire:model="installmentCount" placeholder="E.g. 2 phases" max="12" type="number">
-                            @error('installmentCount')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="col-md-4">
-                            <label>Payment per month</label>
-                            <input class="form-control" disabled value="{{ $this->calcMoney() }} {{ $this->subject->currency }}">
-                        </div>
-                    @endif
-                </div>
-            @endif
             <div class="row">
                 <div class="col-md-12 mb-3">
                     <div class="form-group">
@@ -110,35 +51,20 @@
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-primary" wire:click="approve('start')">Initiate Approval</button>
             </div>
-        @elseif ($this->checkTransition('assign_officers'))
+        @elseif ($this->checkTransition('debt_manager'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('assign_officers')">Assign &
+                <button type="button" class="btn btn-primary" wire:click="approve('debt_manager')">Approve &
                     Forward</button>
             </div>
-        @elseif ($this->checkTransition('verification_results'))
+        @elseif ($this->checkTransition('crdm'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('verification_results')">
-                    Approve & Continue
-                </button>
-            </div>
-        @elseif ($this->checkTransition('method_of_payment'))
-            <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('method_of_payment')">
+                <button type="button" class="btn btn-primary" wire:click="approve('crdm')">
                     Approve & Continue
                 </button>
             </div>
         @elseif ($this->checkTransition('accepted'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger" wire:click="reject('rejected')">
-                    Reject & Return Back
-                </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('accepted')">
-                    Approve & Complete
-                </button>
-            </div>
-        @elseif ($this->checkTransition('correct_reviewed_report'))
-            <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('correct_reviewed_report')">
                     Reject & Return Back
                 </button>
                 <button type="button" class="btn btn-primary" wire:click="approve('accepted')">

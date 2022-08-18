@@ -59,6 +59,28 @@
                     <span class="font-weight-bold text-uppercase">Statement of facts in support of the reasons for the application for the extension of time to lodge an objection</span>
                     <p class="my-1">{{ $installment->ground }}</p>
                 </div>
+                @if($installment->installment_from)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Request to pay with installment from</span>
+                        <p class="my-1 text-uppercase">{{ $installment->installment_from->toFormattedDateString() }}</p>
+                    </div>
+                @endif
+                @if($installment->installment_to)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase"> To</span>
+                        <p class="my-1 text-uppercase">{{ $installment->installment_to->toFormattedDateString() }}</p>
+                    </div>
+                @endif
+                @if($installment->installment_count)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Installment Phases (Months)</span>
+                        <p class="my-1 text-uppercase">{{ $installment->installment_count }} </p>
+                    </div>
+                @endif
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Status</span>
+                    <p class="my-1 text-uppercase">{{ $installment->status }}</p>
+                </div>
                 <div class="col-md-4 mb-3">
                     <a class="file-item"  target="_blank"  href="{{ route('installment.file', encrypt($installment->attachment)) }}">
                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
@@ -66,10 +88,6 @@
                             <span class="font-weight-bold text-uppercase">Attachment</span>
                         </div>
                     </a>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Status</span>
-                    <p class="my-1 text-uppercase">{{ $installment->status }}</p>
                 </div>
             </div>
         </div>

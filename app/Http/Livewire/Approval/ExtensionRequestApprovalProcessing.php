@@ -3,20 +3,13 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\ExtensionStatus;
-use App\Enum\TaxClaimStatus;
-use App\Models\Claims\TaxClaimAssessment;
-use App\Models\Claims\TaxClaimOfficer;
-use App\Models\Claims\TaxCredit;
 use Carbon\Carbon;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\TaxType;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\NotIn;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 

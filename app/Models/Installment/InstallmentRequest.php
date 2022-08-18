@@ -16,6 +16,11 @@ class InstallmentRequest extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'installment_from' => 'datetime',
+        'installment_to' => 'datetime',
+    ];
+
     public function debt(){
         return $this->belongsTo(Debt::class);
     }
