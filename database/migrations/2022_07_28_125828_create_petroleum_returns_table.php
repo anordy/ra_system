@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\ReturnApplicationStatus;
+use App\Enum\ReturnCategory;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -39,6 +40,7 @@ class CreatePetroleumReturnsTable extends Migration
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->integer('edited_count')->default(0);
             $table->timestamps();
         });
