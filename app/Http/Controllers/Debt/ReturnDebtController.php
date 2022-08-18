@@ -107,7 +107,7 @@ class ReturnDebtController extends Controller
             return array(
                 'tax_type_id' => $return_debts['tax_type_id'],
                 'debt_type' => get_class($return_debts),
-                'debt_type_id' => $return_debts['id'],
+                'debt_id' => $return_debts['id'],
                 'business_id' => $return_debts['business_id'],
                 'location_id' => $return_debts['business_location_id'],
                 'category' => 'return',

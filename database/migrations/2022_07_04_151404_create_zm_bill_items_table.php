@@ -21,7 +21,7 @@ class CreateZmBillItemsTable extends Migration
             $table->unsignedBigInteger('fee_id')->nullable();
             $table->string('fee_type')->nullable();
             $table->decimal('amount',20,2);
-            $table->decimal('exchange_rate',5,2);
+            $table->decimal('exchange_rate',20,2);
             $table->decimal('equivalent_amount',20,2);
             $table->enum('currency', ['TZS', 'USD']);
             $table->boolean('paid')->default(false);

@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
     <li class="nav-item" role="presentation">
         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-            aria-selected="true">Business Information</a>
+            aria-selected="true">Tax Clearence Information</a>
     </li>
     <li class="nav-item" role="presentation">
         <a class="nav-link" id="return-debts-tab" data-toggle="tab" href="#return-debts" role="tab"
@@ -19,28 +19,29 @@
         <a class="nav-link" id="investigation-debts-tab" data-toggle="tab" href="#investigation-debts" role="tab"
             aria-controls="investigation-debts" aria-selected="false">Investigation Debts</a>
     </li>
+
 </ul>
 
 <div class="tab-content bg-white border shadow-sm" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div class="row m-2 pt-3">
             <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Business Status</span>
+                <span class="font-weight-bold text-uppercase">Tax Clearence Status</span>
                 <p class="my-1">
-                    @if ($businessLocation->business->status === \App\Models\BusinessStatus::APPROVED)
+                    @if ($taxClearence->status === 'approved')
                         <span class="font-weight-bold text-success">
                             <i class="bi bi-check-circle-fill mr-1"></i>
                             Approved
                         </span>
-                    @elseif($businessLocation->business->status === \App\Models\BusinessStatus::REJECTED)
-                        <span class="font-weight-bold text-danger">
+                    @elseif($taxClearence->status === 'requested')
+                        <span class="font-weight-bold text-warning">
                             <i class="bi bi-check-circle-fill mr-1"></i>
-                            Rejected
+                            Requested
                         </span>
-                    @elseif($businessLocation->business->status === \App\Models\BusinessStatus::CORRECTION)
+                    @elseif($taxClearence->status === 'rejected')
                         <span class="font-weight-bold text-warning">
                             <i class="bi bi-pen-fill mr-1"></i>
-                            Requires Correction
+                            Rejected
                         </span>
                     @else
                         <span class="font-weight-bold text-info">
@@ -53,39 +54,39 @@
 
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Business Name</span>
-                <p class="my-1">{{ $businessLocation->business->name }}</p>
+                <p class="my-1">{{ $taxClearence->businessLocation->business->name }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Branch Name</span>
-                <p class="my-1">{{ $businessLocation->name }}</p>
+                <p class="my-1">{{ $taxClearence->businessLocation->name }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Business Category</span>
-                <p class="my-1">{{ $businessLocation->business->category->name }}</p>
+                <p class="my-1">{{ $taxClearence->businessLocation->business->category->name }}</p>
             </div>
-            @if ($businessLocation->business->alt_mobile)
+            @if ($taxClearence->businessLocation->business->alt_mobile)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Alternative Mobile No.</span>
-                    <p class="my-1">{{ $businessLocation->business->alt_mobile }}</p>
+                    <p class="my-1">{{ $taxClearence->businessLocation->business->alt_mobile }}</p>
                 </div>
             @endif
-            @if ($businessLocation->business->email_address)
+            @if ($taxClearence->businessLocation->business->email_address)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Email Address</span>
-                    <p class="my-1">{{ $businessLocation->business->email }}</p>
+                    <p class="my-1">{{ $taxClearence->businessLocation->business->email }}</p>
                 </div>
             @endif
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Place of Business</span>
                 <p class="my-1">
-                    {{ $businessLocation->region->name }},
-                    {{ $businessLocation->district->name }},
-                    {{ $businessLocation->ward->name }}
+                    {{ $taxClearence->businessLocation->region->name }},
+                    {{ $taxClearence->businessLocation->district->name }},
+                    {{ $taxClearence->businessLocation->ward->name }}
                 </p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Physical Address</span>
-                <p class="my-1">{{ $businessLocation->physical_address }}</p>
+                <p class="my-1">{{ $taxClearence->businessLocation->physical_address }}</p>
             </div>
         </div>
 
@@ -213,7 +214,8 @@
                                             <td>{{ number_format($verification->principal_amount + $verification->penalty_amount + $verification->interest_amount, 2) }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('debts.verification.waive', 2) }}" class="btn btn-primary">
+                                                <a href="{{ route('debts.verification.waive', 2) }}"
+                                                    class="btn btn-primary">
                                                     Waive
                                                 </a>
                                             </td>
@@ -226,7 +228,7 @@
                                         </td>
                                     </tr>
                                 @endif
-            
+
                             </tbody>
                         </table>
                     </div>
@@ -271,7 +273,7 @@
                                         </td>
                                     </tr>
                                 @endif
-            
+
                             </tbody>
                         </table>
                     </div>
@@ -316,7 +318,7 @@
                                         </td>
                                     </tr>
                                 @endif
-            
+
                             </tbody>
                         </table>
                     </div>
@@ -324,4 +326,8 @@
             </div>
         </div>
     </div>
+
+
+
+
 </div>

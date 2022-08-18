@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\DisputeStatus;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -26,8 +27,9 @@ class CreateLumpSumReturnsTable extends Migration
             $table->decimal('total_amount_due', 40, 2)->default(0);
             $table->decimal('total_amount_due_with_penalties', 40, 2)->default(0);
             $table->integer('quarter');
-            $table->string('quarter_name')->nullable();
-            $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
+            $table->integer('installment');
+            $table->string('quarter_name');
+            $table->enum('currency', ['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->integer('amount')->default(0);
             $table->integer('edited_count')->default(0);
             $table->bigInteger('control_no')->nullable();
@@ -37,7 +39,7 @@ class CreateLumpSumReturnsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
-            $table->string('status');
+            $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', DisputeStatus::getConstants());
             $table->timestamps();
         });

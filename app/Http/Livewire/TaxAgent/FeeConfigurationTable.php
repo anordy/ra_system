@@ -15,35 +15,36 @@ class FeeConfigurationTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
 
-	    $this->setTableWrapperAttributes([
-	      'default' => true,
-	      'class' => 'table-bordered table-sm',
-	    ]);
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
 
     }
 
-	public function builder(): Builder
-	{
-		return TaPaymentConfiguration::orderBy('id', 'desc');
-	}
+    public function builder(): Builder
+    {
+        return TaPaymentConfiguration::orderBy('id', 'desc');
+    }
 
 
-	public function columns(): array
+    public function columns(): array
     {
 
-	    return [
-
+        return [
             Column::make("Category", "category")
-                ->sortable(),
+                ->sortable()->searchable(),
             Column::make("duration", "duration")
-              ->view('taxagents.includes.duration'),
-	        Column::make('Amount', 'amount')
-	          ->format(
-		        fn($value, $row, Column $column) =>number_format($row->amount, '2', '.', ','). '<strong> Tsh</strong>'
-	          )
-	          ->html(),
+                ->view('taxagents.includes.duration'),
+            Column::make('Amount', 'amount')
+                ->format(
+                    fn($value, $row, Column $column) => number_format($row->amount, '2', '.', ',') . '<strong> Tsh</strong>'
+                )
+                ->html()->searchable(),
+            Column::make("Currency", "currency")
+                ->sortable()->searchable(),
             Column::make("No of days/months/years", "no_of_days")
-              ->view('taxagents.includes.no_of_days'),
+                ->view('taxagents.includes.no_of_days'),
         ];
     }
 }

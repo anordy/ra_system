@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\TaxAgent;
 
+use App\Models\ExchangeRate;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
@@ -83,6 +84,17 @@ class VerifyAction extends Component
 
             $fee = TaPaymentConfiguration::query()->where('category', 'registration fee')->first();
             $amount = $fee->amount;
+            $used_currency = $fee->currency;
+
+            if ($used_currency != 'TZS')
+            {
+                $rate = ExchangeRate::query()->where('currency', $used_currency)
+                    ->first();
+                $rate = $rate->mean;
+            }
+            else{
+                $rate = 1;
+            }
 
             $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
             $billitems = [
@@ -93,8 +105,8 @@ class VerifyAction extends Component
                     'fee_type' => get_class($fee),
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $amount,
-                    'currency' => 'TZS',
-                    'gfs_code' => '116101',
+                    'currency' => $used_currency,
+                    'gfs_code' => $tax_type->gfs_code,
                     'tax_type_id' => $tax_type->id
                 ]
             ];
@@ -103,11 +115,11 @@ class VerifyAction extends Component
             $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
             $payer_email = $taxpayer->email;
             $payer_phone = $taxpayer->mobile;
-            $description = 'Tax Consultant registration fee';
+            $description = 'Tax Consultant Registration Fee';
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-            $currency = 'TZS';
+            $currency = $used_currency;
             $createdby_type = get_class(User::query()->findOrFail(Auth::id()));
-            $exchange_rate = 0;
+            $exchange_rate = $rate;
             $createdby_id = Auth::id();
             $payer_id = $taxpayer->id;
             $expire_date = Carbon::now()->addMonth()->toDateTimeString();

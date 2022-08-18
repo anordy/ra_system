@@ -32,7 +32,7 @@ class DebtWaiverApprovalTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['assessment_id']);
+        $this->setAdditionalSelects(['debt_id']);
     }
 
     public function columns(): array
@@ -46,7 +46,7 @@ class DebtWaiverApprovalTable extends DataTableComponent
                 ->searchable(),
             Column::make("Mobile", "business.mobile")
                 ->sortable(),
-            Column::make("Assesment Type", "assesment.assessment_type")
+            Column::make("Debt Type", "debt.debt_type")
                 ->sortable()
                 ->format(function($value, $row) {
                     return preg_split('[\\\]', $value)[2];

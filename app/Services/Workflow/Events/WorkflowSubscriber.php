@@ -73,26 +73,26 @@ class WorkflowSubscriber implements EventSubscriberInterface
     public function leaveEvent(Event $event)
     {
 
-        $places       = $event->getTransition()->getFroms();
+        $places = $event->getTransition()->getFroms();
         $workflowName = $event->getWorkflowName();
     }
 
     public function transitionEvent(Event $event)
     {
-        $workflowName   = $event->getWorkflowName();
+        $workflowName = $event->getWorkflowName();
         $transitionName = $event->getTransition()->getName();
     }
 
     public function enterEvent(Event $event)
     {
-        $places       = $event->getTransition()->getTos();
+        $places = $event->getTransition()->getTos();
         $workflowName = $event->getWorkflowName();
     }
 
     public function enteredEvent(Event $event)
     {
         $workflowName = $event->getWorkflowName();
-        $transition   = $event->getTransition();
+        $transition = $event->getTransition();
     }
 
     public function completedEvent(Event $event)
@@ -104,7 +104,6 @@ class WorkflowSubscriber implements EventSubscriberInterface
         $transition = $event->getTransition();
         $context = $event->getContext();
         $placeName = $event->getWorkflowName();
-
 
         $task = $subject->pinstancesActive;
         if ($task) {
@@ -123,7 +122,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $operators = json_encode($context['operators']);
                 }
 
-                $task =  new WorkflowTask([
+                $task = new WorkflowTask([
                     'workflow_id' => $workflow->id,
                     'name' => $transition->getName(),
                     'from_place' => $transition->getFroms()[0],
@@ -135,7 +134,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
                     'status' => $key == 'completed' ? 'completed' : 'running',
-                    'remarks' => $context['comment']
+                    'remarks' => $context['comment'],
                 ]);
 
                 DB::transaction(function () use ($task, $subject) {
@@ -146,9 +145,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
                 if (key($places) == 'completed') {
                     $assessmentExists = $subject->assessment()->exists();
-                    if($assessmentExists){
+                    if ($assessmentExists) {
                         $subject->taxReturn->application_status = DisputeStatus::ADJUSTED;
-                    }else{
+                    } else {
                         $subject->taxReturn->application_status = DisputeStatus::SELF_ASSESSMENT;
                     }
                     $subject->status = TaxVerificationStatus::APPROVED;
@@ -166,15 +165,32 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->status = TaxInvestigationStatus::APPROVED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
+            } elseif ($placeName == 'TAX_CLEARENCE') {
+                if (key($places) == 'completed') {
+                    $subject->status = TaxInvestigationStatus::APPROVED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                    $subject->expire_on = Carbon::now()->addYear(1)->toDateTimeString();
+                }
+                if (key($places) == 'rejected') {
+                    $subject->status = TaxInvestigationStatus::REJECTED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
+            } elseif ($placeName == 'DISPUTE') {
+                if (key($places) == 'completed') {
+                    $subject->app_status = DisputeStatus::APPROVED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
+                if (key($places) == 'rejected') {
+                    $subject->app_status = DisputeStatus::REJECTED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
             } else {
                 if (key($place) == 'completed') {
                     $subject->status = TaxAuditStatus::APPROVED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
-
                 } elseif (key($place) == 'rejected') {
                     $subject->status = TaxAuditStatus::REJECTED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
-                  
                 }
             }
 
@@ -223,18 +239,11 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 $hrefAdmin = 'business.branches.index';
             }
 
-
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
-                if (key($placesCurrent) == 'completed') {
-                   
-                }
             } elseif ($placeName == 'TAX_AUDIT') {
-                if (key($placesCurrent) == 'completed') {
-                   
-                }
             } elseif ($placeName == 'TAX_INVESTIGATION') {
-                if (key($placesCurrent) == 'completed') {
-                }
+            } elseif ($placeName == 'TAX_CLEARENCE') {
+            } elseif ($placeName == 'DISPUTE') {
             } else {
                 if (key($placesCurrent) == 'completed') {
                     $event->getSubject()->taxpayer->notify(new DatabaseNotification(
@@ -278,13 +287,13 @@ class WorkflowSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'workflow.guard'      => ['guardEvent'],
-            'workflow.leave'      => ['leaveEvent'],
+            'workflow.guard' => ['guardEvent'],
+            'workflow.leave' => ['leaveEvent'],
             'workflow.transition' => ['transitionEvent'],
-            'workflow.enter'      => ['enterEvent'],
-            'workflow.entered'    => ['enteredEvent'],
-            'workflow.completed'  => ['completedEvent'],
-            'workflow.announce'  => ['announceEvent'],
+            'workflow.enter' => ['enterEvent'],
+            'workflow.entered' => ['enteredEvent'],
+            'workflow.completed' => ['completedEvent'],
+            'workflow.announce' => ['announceEvent'],
         ];
     }
 }

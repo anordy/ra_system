@@ -16,14 +16,15 @@ class TaxClearanceRequest extends Component
     public $verificationDebts;
     public $auditDebts;
     public $investigationDebts;
-    public $businessLocation;
+    public $taxClearence;
 
-    public function mount($returnDebts, $verificationDebts, $auditDebts, $investigationDebts, $businessLocation){
+    public function mount($taxClearence, $returnDebts, $verificationDebts, $auditDebts, $investigationDebts){
         $this->returnDebts = $returnDebts;
         $this->verificationDebts = $verificationDebts;
         $this->auditDebts = $auditDebts;
         $this->investigationDebts = $investigationDebts;
-        $this->businessLocation = $businessLocation;
+        $this->taxClearence = $taxClearence;
+
 
     }
 

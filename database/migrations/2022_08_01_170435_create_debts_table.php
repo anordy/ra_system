@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateDebtsTable extends Migration
 {
@@ -16,7 +17,7 @@ class CreateDebtsTable extends Migration
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
             $table->string('debt_type');
-            $table->unsignedBigInteger('debt_type_id');
+            $table->unsignedBigInteger('debt_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_location_id');
@@ -35,10 +36,12 @@ class CreateDebtsTable extends Migration
             $table->dateTime('filing_due_date')->nullable();
             $table->dateTime('last_due_date')->nullable();
             $table->dateTime('curr_due_date')->nullable();
+            $table->dateTime('approved_on')->nullable();
             $table->integer('demand_notice_count')->nullable();
             $table->enum('app_step', ['waiver', 'extension', 'normal'])->default('normal');
+            $table->enum('status', ReturnStatus::getConstants())->default('submitted');
             $table->enum('origin', ['job', 'manual'])->nullable();
-            $table->unique(['debt_type', 'debt_type_id'], 'debt_type_unique');
+            $table->unique(['debt_type', 'debt_id'], 'debt_type_unique');
             $table->timestamps();
         });
     }

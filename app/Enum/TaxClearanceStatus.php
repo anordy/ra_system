@@ -8,7 +8,7 @@ class TaxClearanceStatus implements Status
 {
     const REQUESTED = 'requested';
     const APPROVED = 'approved';
-    const DENIED = 'DENIED';
+    const REJECTED = 'rejected';
 
     static function getConstants(): array
     {

@@ -22,7 +22,7 @@ class CreateTaxCreditsTable extends Migration
             $table->enum('payment_method', ['cash', 'full', 'installment']);
             $table->decimal('amount', 20, 2);
             $table->enum('currency', ['TZS', 'USD', 'EUR'])->default('TZS');
-            $table->unsignedInteger('installments_count')->default(0);
+            $table->unsignedInteger('installments_count')->nullable();
             $table->string('status')->nullable(); // Change to enum
             $table->softDeletes();
             $table->timestamps();

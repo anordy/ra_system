@@ -3,6 +3,7 @@
 namespace App\Models\Returns\Vat;
 
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Taxpayer;
@@ -37,9 +38,12 @@ class VatReturn extends Model
         return $this->belongsTo(Taxpayer::class, 'filed_by_id', 'id');
     }
 
-    public function financialYear()
-    {
-        return $this->belongsTo(FinancialYear::class, 'financial_year_id', 'id');
+    public function businessLocation() {
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
+    }
+
+    public function financialYear() {
+        return $this->belongsTo(FinancialYear::class, 'financial_year_id','id');
     }
 
     public function financialMonth()
@@ -50,6 +54,10 @@ class VatReturn extends Model
     public function bill()
     {
         return $this->morphOne(ZmBill::class, 'billable');
+    }
+
+    public function getBillAttribute(){
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
     public function bills()
     {

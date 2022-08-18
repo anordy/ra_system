@@ -54,6 +54,19 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Currency</label>
+                            <select wire:model="currency" class="form-control">
+                                <option value="">select currency</option>
+                                <option value="TZS">TZS</option>
+                                <option value="USD">USD</option>
+
+                            </select>
+                            @error('currency')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>

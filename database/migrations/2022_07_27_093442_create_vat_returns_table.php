@@ -38,7 +38,7 @@ class CreateVatReturnsTable extends Migration
             $table->string('has_exemption');
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
-            $table->enum('claim_status',TaxClaimStatus::getConstants())->default(TaxClaimStatus::PENDING);
+            $table->enum('claim_status',TaxClaimStatus::getConstants())->default(TaxClaimStatus::NO_CLAIM);
             $table->integer('editing_count',0);
             $table->string('method_used')->nullable();
             $table->unsignedBigInteger('filed_by_id');
