@@ -2,6 +2,7 @@
 
 use App\Enum\DisputeStatus;
 use App\Enum\ReturnApplicationStatus;
+use App\Enum\ReturnCategory;
 use App\Enum\TaxClaimStatus;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
@@ -36,9 +37,6 @@ class CreateVatReturnsTable extends Migration
             $table->decimal('interest',20,2);
             $table->decimal('total_amount_due_with_penalties', 20,2);
             $table->string('has_exemption');
-            $table->enum('status', ReturnStatus::getConstants());
-            $table->enum('application_status', ReturnApplicationStatus::getConstants());
-            $table->enum('claim_status',TaxClaimStatus::getConstants())->default(TaxClaimStatus::NO_CLAIM);
             $table->integer('editing_count',0);
             $table->string('method_used')->nullable();
             $table->unsignedBigInteger('filed_by_id');
@@ -47,6 +45,10 @@ class CreateVatReturnsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
+            $table->enum('claim_status',TaxClaimStatus::getConstants())->default(TaxClaimStatus::NO_CLAIM);
+            $table->enum('status', ReturnStatus::getConstants());
+            $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->timestamps();
         });
     }
