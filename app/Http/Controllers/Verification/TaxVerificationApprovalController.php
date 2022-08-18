@@ -80,6 +80,7 @@ class TaxVerificationApprovalController extends Controller
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof HotelReturn) {
             $viewRender = 'returns.hotel.details';
+
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof StampDutyReturn) {
             $viewRender = 'returns.stamp-duty.details';
@@ -87,12 +88,15 @@ class TaxVerificationApprovalController extends Controller
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof VatReturn) {
             $viewRender = 'returns.vat_returns.details';
+
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof MmTransferReturn) {
             $viewRender = 'returns.excise-duty.mobile-money-transfer.details';
+
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof PortReturn) {
             $viewRender = 'returns.port.details';
+
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
     }
