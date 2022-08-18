@@ -11,6 +11,7 @@ class TaxVerificationFilesController extends Controller
 {
     public function show($path)
     {
+        
         if ($path) {
             try {
                 return Storage::disk('local-admin')->response(decrypt($path));

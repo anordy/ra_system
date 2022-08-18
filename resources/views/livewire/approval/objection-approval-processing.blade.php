@@ -42,7 +42,7 @@
             </div>
         @elseif ($this->checkTransition('commisioner_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('commisioner_review')">Reject &
+                <button type="button" class="btn btn-danger" wire:click="reject('commisioner_reject')">Reject &
                     Return</button>
                 <button type="button" class="btn btn-primary" wire:click="approve('commisioner_review')">Approve &
                     Complete</button>

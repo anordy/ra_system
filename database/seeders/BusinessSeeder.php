@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\BusinessBank;
 use App\Models\BusinessLocation;
 use App\Models\BusinessTaxType;
+use App\Models\TaxType;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,6 @@ class BusinessSeeder extends Seeder
             "email" => "goodman@mailinator.com",
             "place_of_business" => "Mazizini",
             "physical_address" => "PO BOX 456 Mazizini",
-            "date_of_commencing" => "2022-01-01",
             "pre_estimated_turnover" => "12000000",
             "post_estimated_turnover" => "0",
             "goods_and_services_types" => "Food and drinks",
@@ -66,7 +66,8 @@ class BusinessSeeder extends Seeder
             "is_headquarter" => 1,
             "status" => "approved",
             "tax_region_id" => 1,
-            "zin" => 1
+            "zin" => 1,
+            "date_of_commencing" => "2022-01-01",
         ];
 
         $bank = [
@@ -84,8 +85,10 @@ class BusinessSeeder extends Seeder
             $business->headquarter()->create($location);
             $business->banks()->create($bank);
 
-            for ($i=1; $i < 16; $i++) { 
-                BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $i, "currency" => "TZS"]);
+            $taxTypes = TaxType::where('category', 'main')->pluck('id')->toArray();
+
+            foreach ($taxTypes as $tax) {
+                BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax, "currency" => "TZS"]);
             }
 
             DB::commit();

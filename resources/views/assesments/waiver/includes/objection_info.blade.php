@@ -29,17 +29,17 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">dispute Status</span>
                     <p class="my-1">
-                        @if ($dispute->status === \App\Models\WaiverStatus::APPROVED)
+                        @if ($dispute->app_status === \App\Enum\DisputeStatus::APPROVED)
                             <span class="font-weight-bold text-success">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Approved
                             </span>
-                        @elseif($dispute->status === \App\Models\WaiverStatus::REJECTED)
+                        @elseif($dispute->app_status === \App\Enum\DisputeStatus::REJECTED)
                             <span class="font-weight-bold text-danger">
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Rejected
                             </span>
-                        @elseif($dispute->status === \App\Models\WaiverStatus::CORRECTION)
+                        @elseif($dispute->app_status === \App\Enum\DisputeStatus::CORRECTION)
                             <span class="font-weight-bold text-warning">
                                 <i class="bi bi-pen-fill mr-1"></i>
                                 Requires Correction
@@ -52,16 +52,16 @@
                         @endif
                     </p>
                 </div>
-            @if($dispute->bill)
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Tax Deposit</span>
-                    <p class="my-1">{{ $dispute->bill->amount }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Control No</span>
-                    <p class="my-1">{{ $dispute->bill->control_number }}</p>
-                </div>
-            @endif
+                @if ($dispute->bill)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Tax Deposit</span>
+                        <p class="my-1">{{ $dispute->bill->amount }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Control No</span>
+                        <p class="my-1">{{ $dispute->bill->control_number }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>
                     <p class="my-1">{{ $business->name }}</p>
@@ -111,22 +111,6 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $business->physical_address }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Payment Status</span>
-                    <p class="my-1">
-                        @if ($dispute->status === 'completed')
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                Paid
-                            </span>
-                        @else
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
-                                Not Paid
-                            </span>
-                        @endif
-                    </p>
                 </div>
 
             </div>
@@ -237,7 +221,7 @@
     @if ($dispute->dispute_report)
         <div class="card my-4 rounded-0">
             <div class="card-header font-weight-bold bg-white">
-               DISPUTE REPORT
+                DISPUTE REPORT
             </div>
             <div class="card-body">
                 <div class="row">
@@ -270,7 +254,7 @@
                         </div>
                     @endif
 
-                    
+
                     @if ($dispute->setting_report)
                         <div class="col-md-3">
                             <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"

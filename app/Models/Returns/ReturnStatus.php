@@ -14,6 +14,8 @@ class ReturnStatus implements Status
     const PAID_PARTIALLY = 'paid-partially';
     const COMPLETED_PARTIALLY = 'completed-partially';
     const COMPLETE = 'complete';
+    public const ON_CLAIM = 'on-claim';
+    public const PAID_BY_DEBT = 'paid-by-debt';
 
     static function getConstants(): array
     {

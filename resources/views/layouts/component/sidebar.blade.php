@@ -34,11 +34,9 @@
                 aria-expanded="{{ request()->is('business*') ? 'true' : 'false' }}" class="dropdown-toggle">Business
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('business*') ? 'show' : '' }}" id="businessMenu">
-                @can('business_registrations_view')
-                    <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
-                        <a href="{{ route('business.registrations.index') }}">Registrations</a>
-                    </li>
-                @endcan
+                <li class="{{ request()->is('business/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('business.registrations.index') }}">Registrations</a>
+                </li>
                 <li class="{{ request()->is('business/branches*') ? 'active' : '' }}">
                     <a href="{{ route('business.branches.index') }}">Branches</a>
                 </li>
@@ -50,11 +48,9 @@
                 </li>
                 <li class="{{ request()->is('business/updates*') ? 'active' : '' }}">
                     <a href="{{ route('business.updatesRequests') }}">Business Updates Requests</a>
-                    @can('change_tax_type_view')
-                    <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
-                        <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
-                    </li>
-                @endcan
+                <li class="{{ request()->is('business/taxTypeRequests*') ? 'active' : '' }}">
+                    <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
+                </li>
             </ul>
         </li>
         <li class="{{ request()->is('taxagents*') ? 'active' : '' }}">
@@ -74,6 +70,20 @@
                 <li class="{{ request()->is('taxagents/fee*') ? 'active' : '' }}">
                     <a href="{{ route('taxagents.fee') }}">Fee Configuration</a>
                 </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('upgrade-tax-type*') ? 'active' : '' }}">
+            <a href="#upgrade-tax-typeSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('upgrade-tax-types*') ? 'true' : 'false' }}"
+                class="dropdown-toggle">Upgrade Tax Types
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('upgrade-tax-types*') ? 'show' : '' }}"
+                id="upgrade-tax-typeSubmenu">
+                <li class="{{ request()->is('upgrade-tax-types*') ? 'active' : '' }}">
+                    <a href="{{ route('upgrade-tax-types.index') }}">Qualified Tax Types</a>
+                </li>
+
             </ul>
         </li>
 
@@ -119,6 +129,211 @@
             </ul>
         </li>
 
+        <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
+            <a href="#withholdingAgentsMenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}"
+                class="dropdown-toggle">Withholding Agents</a>
+            <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
+                id="withholdingAgentsMenu">
+                <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
+                    <a href="{{ route('withholdingAgents.register') }}">Registration</a>
+                </li>
+                <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
+                    <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
+                </li>
+            </ul>
+        </li>
+        <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">
+            <a href="#petroleum" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Petroleum
+                Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('petroleum*') ? 'show' : '' }}" id="petroleum">
+                <li class="{{ request()->is('petroleum/certificateOfQuantity*') ? 'active' : '' }}">
+                    <a href="{{ route('petroleum.certificateOfQuantity.index') }}">Certificate of Quantity</a>
+                </li>
+                <li class="{{ request()->is('petroleum/filling*') ? 'active' : '' }}">
+                    <a href="{{ route('petroleum.filling.index') }}">Petroleum Return</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('tax_verifications*') ? 'active' : '' }}">
+            <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                Returns Verifications
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}"
+                id="tax_verifications">
+                <li class="{{ request()->is('tax_verifications/approvals*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_verifications.approvals.index') }}">Approvals</a>
+                </li>
+                <li class="{{ request()->is('tax_verifications/assessments*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_verifications.assessments.index') }}">Assessments</a>
+                </li>
+                <li class="{{ request()->is('tax_verifications/verified*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_verifications.verified.index') }}">Approved Returns</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
+            <a href="{{ route('claims.index') }}">Tax Claims</a>
+        </li>
+        <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
+            <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                Tax Auditing
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
+                <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
+                </li>
+                <li class="{{ request()->is('tax_auditing/assessments*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_auditing.assessments.index') }}">Assessments</a>
+                </li>
+                <li class="{{ request()->is('tax_auditing/verified*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_auditing.verified.index') }}">Approved Audits</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('tax_investigation*') ? 'active' : '' }}">
+            <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                Tax Investigations
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax_investigation*') ? 'show' : '' }}"
+                id="tax_investigation">
+                <li class="{{ request()->is('tax_investigation/approvals*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_investigation.approvals.index') }}">Approvals</a>
+                </li>
+                <li class="{{ request()->is('tax_investigation/assessments*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
+                </li>
+                <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
+                    <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('assesments*') ? 'active' : '' }}">
+            <a href="#assesmentsSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('assesments*') ? 'true' : 'false' }}"
+                class="dropdown-toggle">Disputes Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('assesments*') ? 'show' : '' }}"
+                id="assesmentsSubmenu">
+                <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.waiver.index') }}">Waiver</a>
+                </li>
+                <li class="{{ request()->is('assesments/objection*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.objection.index') }}">Objection</a>
+                </li>
+                <li class="{{ request()->is('assesments/waiverobjection*') ? 'active' : '' }}">
+                    <a href="{{ route('assesments.waiverobjection.index') }}">Waiver & Objection</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('reliefs*') ? 'active' : '' }}">
+            <a href="#reliefs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reliefs
+                Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('reliefs*') ? 'show' : '' }}" id="reliefs">
+                <li class="{{ request()->is('reliefs/ministries*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.ministries.index') }}">Ministries</a>
+                </li>
+                <li class="{{ request()->is('reliefs/projects*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.projects.index') }}">Projects</a>
+                </li>
+                <li class="{{ request()->is('reliefs/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.registrations.index') }}">Register Relief</a>
+                </li>
+                <li class="{{ request()->is('reliefs/applications*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.applications.index') }}">Relief Applications</a>
+                </li>
+                <li class="{{ request()->is('reliefs/generate-report*') ? 'active' : '' }}">
+                    <a href="{{ route('reliefs.generate.report') }}">Generate Report</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('tax-clearance*') ? 'active' : '' }}">
+            <a href="#taxClearance" data-toggle="collapse"
+                aria-expanded="{{ request()->is('tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                Tax Clearance Management
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
+                id="taxClearance">
+
+                <li class="{{ request()->is('tax-clearance/request*') ? 'active' : '' }}">
+                    <a href="{{ route('tax-clearance.index') }}">Requests</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('debts*') ? 'active' : '' }}">
+            <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
+                Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
+                </li>
+                <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
+                </li>
+                <li class="{{ request()->is('debts/hotel*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.hotel.index', encrypt(App\Models\TaxType::HOTEL)) }}">Hotel
+                        Levy</a>
+                </li>
+                <li class="{{ request()->is('debts/restaurant*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.restaurant.index', encrypt(App\Models\TaxType::RESTAURANT)) }}">Restaurant
+                        Levy</a>
+                </li>
+                <li class="{{ request()->is('debts/tour*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour
+                        Operation
+                        Levy</a>
+                </li>
+                <li class="{{ request()->is('debts/petroleum*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.petroleum.index', encrypt(App\Models\TaxType::PETROLEUM)) }}">Petroleum
+                        Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/vat*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.vat.index', encrypt(App\Models\TaxType::VAT)) }}">VAT
+                        Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/stamp-duty*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp
+                        Duty
+                        Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/lump-sum*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.lump-sum.index', encrypt(App\Models\TaxType::LUMPSUM_PAYMENT)) }}">Lump
+                        Sum Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/emt*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('debts.emt.index', encrypt(App\Models\TaxType::ELECTRONIC_MONEY_TRANSACTION)) }}">Electronic
+                        Money Transaction</a>
+                </li>
+                <li class="{{ request()->is('debts/sea*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea
+                        Service Transport
+                    </a>
+                </li>
+                <li class="{{ request()->is('debts/airport*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport
+                        Service Safety Fee
+                    </a>
+                </li>
+                <li class="{{ request()->is('debts/bfo*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">BFO
+                        Returns</a>
+                </li>
+                <li class="{{ request()->is('debts/mno*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">MNO
+                        Returns</a>
+                </li>
+            </ul>
+        </li>
+
         <li  class="{{ request()->is('mvr*') ? 'active':'' }}">
             <a href="#mvrSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle Registration</a>
             <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
@@ -126,9 +341,9 @@
                     <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
                 </li>
                 @canany(['receive_plate_number','print_plate_number'])
-                <li class="{{ request()->is('mvr/plate-numbers') ? 'active': '' }}">
-                    <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
-                </li>
+                    <li class="{{ request()->is('mvr/plate-numbers') ? 'active': '' }}">
+                        <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
+                    </li>
                 @endcanany
                 <li class="{{ request()->is('mvr/reg-change-requests') ? 'active': '' }}">
                     <a href="{{route('mvr.reg-change-requests')}}">Status Change Requests</a>
@@ -145,53 +360,79 @@
             </ul>
         </li>
 
-        @can('withholding_agents_view')
-            <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
-                <a href="#withholdingAgentsMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}"
-                    class="dropdown-toggle">Withholding Agents</a>
-                <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
-                    id="withholdingAgentsMenu">
-                    @can('withholding_agents_add')
-                        <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
-                            <a href="{{ route('withholdingAgents.register') }}">Registration</a>
-                        </li>
-                    @endcan
-                    <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
-                        <a href="{{ route('withholdingAgents.list') }}">Withholding Agents</a>
-                    </li>
-                </ul>
-            </li>
-        @endcan
-        <li class="{{ request()->is('assesments*') ? 'active' : '' }}">
-            <a href="#assesmentsSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('assesments*') ? 'true' : 'false' }}"
-                class="dropdown-toggle">Assesments</a>
-            <ul class="collapse list-unstyled {{ request()->is('assesments*') ? 'show' : '' }}" id="assesmentsSubmenu">
-                <li class="{{ request()->is('assesments/objection*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.objection.index') }}">Objection</a>
+        <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
+            <a href="#landLeaseSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
+                Lease</a>
+            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}"
+                id="landLeaseSubmenu">
+
+                <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
+                    <a href="{{ route('land-lease.list') }}">Land Lease List</a>
                 </li>
-                <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.waiver.index') }}">Weaver</a>
+                <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
+                    <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
                 </li>
-                <li class="{{ request()->is('assesments/waiver*') ? 'active' : '' }}">
-                    <a href="{{ route('assesments.waiverobjection.index') }}">Weaver & Objection</a>
+
+            </ul>
+
+        <li class="{{ request()->is('reports*') ? 'active' : '' }}">
+            <a href="#reportSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                Managerial reports
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}" id="reportSubmenu">
+                <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.returns') }}">Return Reports</a>
                 </li>
             </ul>
         </li>
+
+
+        <li class="{{ request()->is('payments*') ? 'active' : '' }}">
+            <a href="#payments" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                Manage Payments
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
+                <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
+                    <a href="{{ route('payments.complete') }}">Complete Payments</a>
+                </li>
+            </ul>
+        </li>
+
+        <li  class="{{ request()->is('mvr*') ? 'active':'' }}">
+            <a href="#mvrSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle Registration</a>
+            <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
+                <li class="{{ request()->is('mvr/register') ? 'active': '' }}">
+                    <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
+                </li>
+                <li class="{{ request()->is('mvr/plate-numbers') ? 'active': '' }}">
+                    <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
+                </li>
+                <li class="{{ request()->is('mvr/reg-change-requests') ? 'active': '' }}">
+                    <a href="{{route('mvr.reg-change-requests')}}">Status Change Request</a>
+                </li>
+                <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active': '' }}">
+                    <a href="{{route('mvr.register')}}">Transfer Ownership</a>
+                </li>
+                <li class="{{ request()->is('mvr/de-register-requests*') ? 'active': '' }}">
+                    <a href="{{route('mvr.de-register-requests')}}">De-registration</a>
+                </li>
+                <li class="{{ request()->is('mvr/registered') ? 'active': '' }}">
+                    <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
+                </li>
+            </ul>
+        </li>
+
         <li class="{{ request()->is('settings*') ? 'active' : '' }}">
             <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
             <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
-                @can('roles_add')
-                    <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.users.index') }}">Users</a>
-                    </li>
-                @endcan
-                @can('roles_add')
-                    <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.roles.index') }}">Roles</a>
-                    </li>
-                @endcan
+                <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.users.index') }}">Users</a>
+                </li>
+                <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
+                    <a href="{{ route('settings.roles.index') }}">Roles</a>
+                </li>
                 <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
                     <a href="{{ route('settings.country.index') }}">Countries</a>
                 </li>
@@ -237,255 +478,69 @@
                 <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
                     <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
                 </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrMake') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrMake') }}">Motor Vehicle Make</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrModel') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrModel') }}">Motor Vehicle Model</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrTransmissionType') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrTransmissionType') }}">Motor Vehicle Transmission</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrFuelType') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrFuelType') }}">Motor vehicle Fuel Type</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrClass') }}">Motor Vehicle Class</a>
-                    </li>
 
-                    <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrColor') }}">Motor Vehicle Color</a>
-                    </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrMake') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrMake') }}">Motor Vehicle Make</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrModel') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrModel') }}">Motor Vehicle Model</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrTransmissionType') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrTransmissionType') }}">Motor Vehicle Transmission</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrFuelType') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrFuelType') }}">Motor vehicle Fuel Type</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrClass') }}">Motor Vehicle Class</a>
+                </li>
 
-                    <li class="{{ request()->is('settings/mvr-generic/MvrBodyType') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrBodyType') }}">Motor Vehicle Body Type</a>
-                    </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrColor') }}">Motor Vehicle Color</a>
+                </li>
 
-                    <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrPlateSize') }}">Motor Vehicle Plate Size</a>
-                    </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrBodyType') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrBodyType') }}">Motor Vehicle Body Type</a>
+                </li>
 
-                    <li class="{{ request()->is('settings/mvr-generic/MvrFee') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrFee') }}">Motor Vehicle Fees</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrDeRegistrationReason') }}">De Registration Reasons</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrOwnershipTransferReason') }}">Transfer Reasons</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrTransferCategory') }}">Transfer Categories</a>
-                    </li>
-                    <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','MvrTransferFee') }}">Transfer Fees</a>
-                    </li>
-            </ul>
-        </li>
-        <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">
-            <a href="#petroleum" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Petroleum
-                Management</a>
-            <ul class="collapse list-unstyled {{ request()->is('petroleum*') ? 'show' : '' }}" id="petroleum">
-                <li class="{{ request()->is('petroleum/certificateOfQuantity*') ? 'active' : '' }}">
-                    <a href="{{ route('petroleum.certificateOfQuantity.index') }}">Certificate of Quantity</a>
+                <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrPlateSize') }}">Motor Vehicle Plate Size</a>
                 </li>
-                <li class="{{ request()->is('petroleum/filling*') ? 'active' : '' }}">
-                    <a href="{{ route('petroleum.filling.index') }}">Petroleum Return</a>
+
+                <li class="{{ request()->is('settings/mvr-generic/MvrFee') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrFee') }}">Motor Vehicle Fees</a>
                 </li>
-            </ul>
-        </li>
-        <li class="{{ request()->is('tax_verifications*') ? 'active' : '' }}">
-            <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                Returns Verifications
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('tax_verifications*') ? 'show' : '' }}"
-                id="tax_verifications">
-                <li class="{{ request()->is('tax_verifications/approvals*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_verifications.approvals.index') }}">Approvals</a>
+                <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrDeRegistrationReason') }}">De Registration Reasons</a>
                 </li>
-                <li class="{{ request()->is('tax_verifications/assessments*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_verifications.assessments.index') }}">Assessments</a>
+                <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrOwnershipTransferReason') }}">Transfer Reasons</a>
                 </li>
-                <li class="{{ request()->is('tax_verifications/verified*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_verifications.verified.index') }}">Approved Returns</a>
+                <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrTransferCategory') }}">Transfer Categories</a>
                 </li>
-            </ul>
-        </li>
-        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
-            <a href="{{ route('claims.index') }}">Tax Claims</a>
-        </li>
-        <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
-            <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                Tax Auditing
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
-                <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
-                </li>
-                <li class="{{ request()->is('tax_auditing/assessments*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_auditing.assessments.index') }}">Assessments</a>
-                </li>
-                <li class="{{ request()->is('tax_auditing/verified*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_auditing.verified.index') }}">Approved Audits</a>
+                <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrTransferFee') }}">Transfer Fees</a>
                 </li>
             </ul>
         </li>
 
-        <li class="{{ request()->is('tax_investigation*') ? 'active' : '' }}">
-            <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                Tax Investigations
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('tax_investigation*') ? 'show' : '' }}"
-                id="tax_investigation">
-                <li class="{{ request()->is('tax_investigation/approvals*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_investigation.approvals.index') }}">Approvals</a>
+        <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
+            <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
+                <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
+                    <a href="{{ route('system.audits.index') }}">Audit Trail</a>
                 </li>
-                <li class="{{ request()->is('tax_investigation/assessments*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                 </li>
-                <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
-                    <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
+
+                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                    <a href="{{ route('pdf.all') }}">All PDF's</a>
                 </li>
+
             </ul>
         </li>
-
-        <li class="{{ request()->is('reliefs*') ? 'active' : '' }}">
-            <a href="#reliefs" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reliefs
-                Management</a>
-            <ul class="collapse list-unstyled {{ request()->is('reliefs*') ? 'show' : '' }}" id="reliefs">
-                <li class="{{ request()->is('reliefs/ministries*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.ministries.index') }}">Ministries</a>
-                </li>
-                <li class="{{ request()->is('reliefs/projects*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.projects.index') }}">Projects</a>
-                </li>
-                <li class="{{ request()->is('reliefs/registrations*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.registrations.index') }}">Register Relief</a>
-                </li>
-                <li class="{{ request()->is('reliefs/applications*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.applications.index') }}">Relief Applications</a>
-                </li>
-                <li class="{{ request()->is('reliefs/generate-report*') ? 'active' : '' }}">
-                    <a href="{{ route('reliefs.generate.report') }}">Generate Report</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="{{ request()->is('debts*') ? 'active' : '' }}">
-            <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
-                Management</a>
-            <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
-                <li class="{{ request()->is('debts/verifications*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.verifications.index') }}">Assesments</a>
-                </li>
-                <li class="{{ request()->is('debts/hotel*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.hotel.index', encrypt(App\Models\TaxType::HOTEL)) }}">Hotel
-                        Levy</a>
-                </li>
-                <li class="{{ request()->is('debts/restaurant*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.restaurant.index', encrypt(App\Models\TaxType::RESTAURANT)) }}">Restaurant
-                        Levy</a>
-                </li>
-                <li class="{{ request()->is('debts/tour*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour Operation
-                        Levy</a>
-                </li>
-                <li class="{{ request()->is('debts/petroleum*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.petroleum.index', encrypt(App\Models\TaxType::PETROLEUM)) }}">Petroleum
-                        Returns</a>
-                </li>
-                <li class="{{ request()->is('debts/vat*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.vat.index', encrypt(App\Models\TaxType::VAT)) }}">VAT
-                        Returns</a>
-                </li>
-                <li class="{{ request()->is('debts/stamp-duty*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp Duty
-                        Returns</a>
-                </li>
-                <li class="{{ request()->is('debts/lump-sum*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.lump-sum.index', encrypt(App\Models\TaxType::LUMPSUM_PAYMENT)) }}">Lump
-                        Sum Returns</a>
-                </li>
-                <li class="{{ request()->is('debts/emt*') ? 'active' : '' }}">
-                    <a
-                        href="{{ route('debts.emt.index', encrypt(App\Models\TaxType::ELECTRONIC_MONEY_TRANSACTION)) }}">Electronic
-                        Money Transaction</a>
-                </li>
-                <li class="{{ request()->is('debts/sea*') ? 'active' : '' }}">
-                    <a
-                        href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea Service Transport
-                    </a>
-                </li>
-                <li class="{{ request()->is('debts/airport*') ? 'active' : '' }}">
-                    <a
-                        href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport Service Safety Fee
-                    </a>
-                </li>
-                <li class="{{ request()->is('debts/bfo*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">BFO
-                        Returns</a>
-                </li>
-                <li class="{{ request()->is('debts/mno*') ? 'active' : '' }}">
-                    <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">MNO
-                        Returns</a>
-                </li>
-        </li>
-        <li class="{{ request()->is('debts/audits*') ? 'active' : '' }}">
-            <a href="{{ route('debts.audits.index') }}">Auditing</a>
-        </li>
-        <li class="{{ request()->is('debts/investigation*') ? 'active' : '' }}">
-            <a href="{{ route('debts.investigation.index') }}">Investigations</a>
-        </li>
-    </ul>
-    </li>
-
-
-    <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
-        <a href="#landLeaseSubmenu" data-toggle="collapse"
-            aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
-            Lease</a>
-        <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
-
-            <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
-                <a href="{{ route('land-lease.list') }}">Land Lease List</a>
-            </li>
-            <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
-                <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
-            </li>
-
-        </ul>
-    </li>
-    <li class="{{ request()->is('managerial-reports*') ? 'active' : '' }}">
-        <a href="#managerialReportSubmenu" data-toggle="collapse"
-            aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">
-            Managerial reports
-        </a>
-        <ul class="collapse list-unstyled {{ request()->is('managerial-reports*') ? 'show' : '' }}"
-            id="landLeaseSubmenu">
-
-            <li class="{{ request()->is('managerial-reports/list*') ? 'active' : '' }}">
-                <a href="{{ route('land-lease.list') }}">Lump Sum Payments Reports</a>
-            </li>
-        </ul>
-    </li>
-
-
-    <li class="{{ request()->is('system*') ? 'active' : '' }}">
-        <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
-        <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
-            <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
-                <a href="{{ route('system.audits.index') }}">Audit Trail</a>
-            </li>
-            <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
-            </li>
-
-            <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                <a href="{{ route('pdf.all') }}">All PDF's</a>
-            </li>
-
-        </ul>
-    </li>
 
     </ul>
 

@@ -44,7 +44,7 @@ class MnoReturn extends Model
     }
 
     public function taxpayer() {
-        return $this->belongsTo(Taxpayer::class, 'filed_by');
+        return $this->belongsTo(Taxpayer::class, 'filed_by_id');
     }
 
     public function taxType() {
@@ -64,6 +64,11 @@ class MnoReturn extends Model
     //replacer
     public function bills(){
         return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
     }
 
     public function penalties(){

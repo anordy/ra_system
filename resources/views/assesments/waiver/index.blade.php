@@ -10,17 +10,21 @@
             Application for Waiver
         </div>
         <div class="card-body mt-0 p-2">
-            <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">All Waivers</a>
-                <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Pending Approval</a>
+            <nav class="nav nav-tabs mt-0 border-top-0 mb-3">
+                <a href="#approved-approval" class="nav-item nav-link font-weight-bold active">Approved Waivers</a>
+                <a href="#paid-approval" class="nav-item nav-link font-weight-bold">Paid Waivers</a>
+                <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Unpaid Waivers</a>
             </nav>
 
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
-                <div id="all-businesses" class="tab-pane fade active show">
-                    <livewire:assesments.waiver.waiver-table category="waiver" />
+                <div id="approved-approval" class="tab-pane fade active show">
+                    @livewire('assesments.waiver.waiver-table', ['category' => 'waiver'])
                 </div>
-                <div id="pending-approval" class="tab-pane fade">
-                    <livewire:assesments.waiver-approval-table category="waiver"/>
+                <div id="paid-approval" class="tab-pane fade">
+                    @livewire('assesments.waiver-approval-table', ['category' => 'waiver', 'payment' => 'complete'])
+                </div>
+                 <div id="pending-approval" class="tab-pane fade">
+                    @livewire('assesments.waiver-approval-table', ['category' => 'waiver', 'payment' => 'unpaid'])
                 </div>
             </div>
         </div>

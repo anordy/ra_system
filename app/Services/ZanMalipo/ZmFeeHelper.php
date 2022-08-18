@@ -14,6 +14,10 @@ class ZmFeeHelper
      * @throws \Exception
      */
     public static function addTransactionFee(array $billItems, $currency, $exchangeRate): array {
+        if (!is_numeric($exchangeRate) || $exchangeRate <= 0){
+            throw new \Exception("Exchange rate can not be zero or null.");
+        }
+
         $bill_amount = 0;
         foreach ($billItems as $item) {
             if (!isset($item['amount']) || !isset($item['gfs_code'])) {
@@ -26,10 +30,14 @@ class ZmFeeHelper
                 $bill_amount += $item['amount'];
             }
         }
+
+        if (!is_numeric($bill_amount) || $bill_amount <= 0){
+            throw new \Exception("Bill amount can not be zero, null or not a number.");
+        }
+
         $equivalent_amount = $bill_amount * $exchangeRate;
 
         $fee = 0;
-
         switch ($equivalent_amount){
             case $equivalent_amount >= 0.00 && $equivalent_amount <= 100000.00:
                 $fee = $bill_amount * 0.025;
@@ -47,14 +55,14 @@ class ZmFeeHelper
                 $fee = $bill_amount * 0.0015;
                 break;
             case $equivalent_amount >= 10000001.00:
-                if ($currency == 'TZS'){
-                    $fee = 20000;
-                } else {
-                    $fee = round(20000 / $exchangeRate, 2);
-                }
+                $fee = 20000;
                 break;
             default:
                 throw new \Exception('Bill amount out of range.');
+        }
+
+        if ($currency != 'TZS'){
+            $fee = round($fee / $exchangeRate, 2);
         }
 
         $billItems[] = [

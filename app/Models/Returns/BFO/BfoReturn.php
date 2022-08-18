@@ -3,6 +3,7 @@
 namespace App\Models\Returns\BFO;
 
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Returns\Vat\VatReturnItem;
@@ -53,5 +54,15 @@ class BfoReturn extends Model
 
     public function bfoPenalties(){
         return $this->hasMany(BfoPenalty::class, 'return_id');
+    }
+
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
     }
 }

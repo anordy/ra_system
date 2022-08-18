@@ -19,14 +19,14 @@
             <div class="tab-content card" id="myTabContent">
 
                 <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
-                    <div class=" disp-Info text-center">
+                    <div class=" disp-Info text-center mb-2">
                         Requests needed for verification
                     </div>
                     <livewire:tax-agent.verification-requests-table/>
 
                 </div>
                 <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
-                    <div class="disp-Info text-center">
+                    <div class="disp-Info text-center mb-2">
                         Requests needed for approval
                     </div>
 

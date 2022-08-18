@@ -17,13 +17,17 @@ class BusinessLocation extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'date_of_commencing' => 'datetime',
+    ];
+
     public function business(){
         return $this->belongsTo(Business::class);
     }
 
     public function taxRegion()
     {
-        return $this->belongsTo(TaxRegion::class);
+        return $this->belongsTo(TaxRegion::class, 'tax_region_id');
     }
 
     public function generateZin(){
@@ -113,5 +117,9 @@ class BusinessLocation extends Model
     public function reliefs()
     {
         return $this->hasMany(Relief::class,'location_id');
+    }
+
+    public function taxClearanceRequest(){
+        return $this->hasMany(TaxClearanceRequest::class);
     }
 }

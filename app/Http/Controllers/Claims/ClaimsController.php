@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Claims;
 use App\Enum\TaxClaimStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Claims\TaxClaim;
+use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
 
@@ -26,6 +27,11 @@ class ClaimsController extends Controller
 
         if ($return instanceof VatReturn){
             $returnView = 'returns.vat_returns.details';
+            return view('claims.show', compact('claim', 'returnView'));
+        }
+
+        if ($return instanceof HotelReturn){
+            $returnView = 'returns.hotel.details';
             return view('claims.show', compact('claim', 'returnView'));
         }
     }

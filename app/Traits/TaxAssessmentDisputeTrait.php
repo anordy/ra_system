@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\TaxAssessments\TaxAssessmentHistory;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -16,11 +17,12 @@ trait TaxAssessmentDisputeTrait
      * @param  $event ie. created, updated, deleted
      * @param  $tags ie. Password
      * @param  $auditable_id ie. 1 id of the operated process
-     * 
+     *
      * @return array
      */
     public function addDisputeToAssessment($assessment, $app_status, $principal_amount, $penalty, $interest, $paid_amount)
     {
+
         if ($app_status == null || $app_status == null) {
             throw new Exception('Assessment Object can not be null');
         } else {
@@ -30,9 +32,9 @@ trait TaxAssessmentDisputeTrait
                 'interest_amount' => $interest,
                 'penalty_amount' => $penalty,
                 'total_amount' => $principal_amount + $penalty + $interest,
-                'payment_due_date' => $payment_due_date ?? null,
+                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString() ?? null,
                 'paid_amount' => $paid_amount,
-                'app_status' => $app_status
+                'app_status' => $app_status,
             ];
 
             try {
@@ -41,10 +43,10 @@ trait TaxAssessmentDisputeTrait
                     'principal_amount' => $assessment->principal_amount,
                     'interest_amount' => $assessment->interest_amount,
                     'penalty_amount' => $assessment->penalty_amount,
-                    'total_amount' => $assessment->total_amoount,
-                    'payment_due_date' => $assessment->payment_due_date ?? null,
+                    'total_amount' => $assessment->total_amount,
+                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString() ?? null,
                     'paid_amount' => $assessment->paid_amount,
-                    'status' => $assessment->status
+                    'app_status' => $assessment->app_status,
                 ]);
 
                 $assessment->update($data);
@@ -54,5 +56,4 @@ trait TaxAssessmentDisputeTrait
         }
     }
 
-    
 }

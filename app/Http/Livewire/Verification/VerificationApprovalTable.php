@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Verification;
 
+use App\Enum\ReturnApplicationStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Verification\TaxVerification;
@@ -29,15 +30,18 @@ class VerificationApprovalTable extends DataTableComponent
         if ($this->paymentStatus == 'paid') {
             return TaxVerification::query()
                 ->with('business', 'location', 'taxType', 'taxReturn')
-                ->with('pinstancesActive')
-                ->whereHas('taxReturn', function(Builder $builder){
-                    $builder->where('status', ReturnStatus::COMPLETE);
+                ->whereHas('taxReturn', function (Builder $builder) {
+                    $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
+                        ->where('status', ReturnStatus::COMPLETE);
                 })
                 ->where('tax_verifications.status', TaxVerificationStatus::PENDING);
         } elseif ($this->paymentStatus == 'unpaid') {
             return TaxVerification::query()
                 ->with('business', 'location', 'taxType', 'taxReturn')
-                ->with('pinstancesActive')
+                ->whereHas('taxReturn', function (Builder $builder) {
+                    $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
+                        ->where('status', '!=', ReturnStatus::COMPLETE);
+                })
                 ->where('tax_verifications.status', TaxVerificationStatus::PENDING);
         } else {
             return [];

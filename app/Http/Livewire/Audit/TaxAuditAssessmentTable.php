@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Audit;
 
+use App\Enum\TaxAuditStatus;
 use App\Models\TaxAudit\TaxAudit;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +20,8 @@ class TaxAuditAssessmentTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxAudit::query()->with('business', 'location', 'taxType')
-            ->has('assessment');
+            ->has('assessment')
+            ->where('tax_audits.status', TaxAuditStatus::APPROVED);
     }
 
     public function configure(): void

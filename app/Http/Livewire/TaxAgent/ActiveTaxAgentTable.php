@@ -15,7 +15,8 @@ class ActiveTaxAgentTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-        return TaxAgent::query()->where('status', '=', TaxAgentStatus::APPROVED)->with('region', 'district');
+        return TaxAgent::query()->where('status', '=', TaxAgentStatus::APPROVED)
+            ->with('region', 'district','taxpayer');
 	}
 
 	public function configure(): void
@@ -26,11 +27,18 @@ class ActiveTaxAgentTable extends DataTableComponent
 			'default' => true,
 			'class' => 'table-bordered table-sm',
 		]);
+        $this->setAdditionalSelects(['taxpayer_id']);
 	}
 
 	public function columns(): array
 	{
 		return [
+            Column::make("Tax Payer", "taxpayer.first_name")
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->taxpayer->first_name} {$row->taxpayer->middle_name} {$row->taxpayer->last_name}";
+                }),
 			Column::make("Reference No", "reference_no")
 				->sortable(),
 			Column::make("TIN No", "tin_no")
@@ -39,7 +47,7 @@ class ActiveTaxAgentTable extends DataTableComponent
 				->sortable(),
 			Column::make("Block", "block")
 				->sortable(),
-            Column::make("Town", "district.name")
+            Column::make("District", "district.name")
                 ->sortable(),
             Column::make("Region", "region.name")
                 ->sortable(),

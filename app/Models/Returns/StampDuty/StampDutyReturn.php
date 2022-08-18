@@ -3,6 +3,7 @@
 namespace App\Models\Returns\StampDuty;
 
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Taxpayer;
@@ -26,6 +27,10 @@ class StampDutyReturn extends Model
         return $this->belongsTo(Business::class);
     }
 
+    public function businessLocation(){
+        return $this->belongsTo(BusinessLocation::class,'business_location_id');
+    }
+
     public function taxpayer(){
         return $this->morphTo('filed_by');
     }
@@ -44,6 +49,10 @@ class StampDutyReturn extends Model
 
     public function bills(){
         return $this->morphMany(ZmBill::class, 'billable');
+    }
+    public function payments()
+    {
+        return $this->bills()->where('status', 'paid');
     }
 
     public function claimable(){
