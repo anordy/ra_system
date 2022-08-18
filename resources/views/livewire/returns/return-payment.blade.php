@@ -7,7 +7,7 @@
     </div>
     @if ($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
         $return->status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
-        
+
         @if($return->bill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS)
             <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
                 <span class="font-weight-bold text-uppercase">Control No.</span>
