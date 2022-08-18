@@ -141,17 +141,16 @@ class ApproveRegistration extends Component
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
-                    $this->flash('success', 'A control number request was sent successful.');
+                    session()->flash('success', 'A control number request was sent successful.');
                 } else {
                     session()->flash('error', 'Control number generation failed, try again later');
                 }
             }
-
             DB::commit();
             return redirect()->to(route('mvr.show', encrypt($this->motor_vehicle_id)));
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
+            report($e);
             $this->alert('error', 'Something went wrong');
         }
     }

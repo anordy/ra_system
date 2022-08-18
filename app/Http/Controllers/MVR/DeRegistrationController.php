@@ -16,6 +16,7 @@ use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
 use App\Services\TRA\ServiceRequest;
 use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -82,38 +83,53 @@ class DeRegistrationController extends Controller
         $exchange_rate = 1;
         $amount = $fee->amount;
 
-        ZmCore::createBill(
-            $request->id,
-            get_class($request),
-            null,
-            $request->agent->id,
-            get_class($request->agent),
-            $request->agent->fullname(),
-            $request->agent->email,
-            ZmCore::formatPhone($request->agent->mobile),
-            Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
-            $fee->description,
-            ZmCore::PAYMENT_OPTION_EXACT,
-            'TZS',
-            1,
-            auth()->user()->id,
-            get_class(auth()->user()),
-            [
+        try{
+            DB::beginTransaction();
+            $bill = ZmCore::createBill(
+                $request->id,
+                get_class($request),
+                null,
+                $request->agent->id,
+                get_class($request->agent),
+                $request->agent->fullname(),
+                $request->agent->email,
+                ZmCore::formatPhone($request->agent->mobile),
+                Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
+                $fee->description,
+                ZmCore::PAYMENT_OPTION_EXACT,
+                'TZS',
+                1,
+                auth()->user()->id,
+                get_class(auth()->user()),
                 [
-                    'billable_id' => $request->id,
-                    'billable_type' => get_class($request),
-                    'fee_id' => $fee->id,
-                    'fee_type' => get_class($fee),
-                    'tax_type_id' => null,
-                    'amount' => $amount,
-                    'currency' => 'TZS',
-                    'exchange_rate' => $exchange_rate,
-                    'equivalent_amount' => $exchange_rate * $amount,
-                    'gfs_code' =>  $fee->gfs_code
+                    [
+                        'billable_id' => $request->id,
+                        'billable_type' => get_class($request),
+                        'fee_id' => $fee->id,
+                        'fee_type' => get_class($fee),
+                        'tax_type_id' => null,
+                        'amount' => $amount,
+                        'currency' => 'TZS',
+                        'exchange_rate' => $exchange_rate,
+                        'equivalent_amount' => $exchange_rate * $amount,
+                        'gfs_code' =>  $fee->gfs_code
+                    ]
                 ]
-            ]
-        );
-        $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
+            );
+            $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
+            DB::commit();
+
+            $response = ZmCore::sendBill($bill);
+            if ($response->status != ZmResponse::SUCCESS){
+                session()->flash("success",'Request Approved!');
+                session()->flash("error",'Control Number request failed');
+            }else{
+                session()->flash("success",'Request Approved, Control Number request sent');
+            }
+        }catch (\Exception $e){
+            session()->flash("error",'Approval failed,  could not update data!');
+            DB::rollBack();
+        }
         return redirect()->route('mvr.de-register-requests.show',encrypt($id));
     }
 

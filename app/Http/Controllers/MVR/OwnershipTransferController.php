@@ -20,6 +20,7 @@ use App\Models\MvrRequestStatus;
 use App\Models\MvrTransferFee;
 use App\Services\TRA\ServiceRequest;
 use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -78,7 +79,7 @@ class OwnershipTransferController extends Controller
         $gfs_code = $fee->gfs_code;
         try{
             DB::beginTransaction();
-            ZmCore::createBill(
+            $bill = ZmCore::createBill(
                 $request->id,
                 $request->id,
                 null,
@@ -110,9 +111,17 @@ class OwnershipTransferController extends Controller
             );
             $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
             DB::commit();
-            (new SMSController())->sendSMS('255753387833','ZanMalipo','Request approved,Control Number generated,pending Payment');
+
+            $response = ZmCore::sendBill($bill);
+            if ($response->status != ZmResponse::SUCCESS){
+                session()->flash("success",'Request Approved!');
+                session()->flash("error",'Control Number request failed');
+            }else{
+                session()->flash("success",'Request Approved, Control Number request sent');
+            }
         }catch (\Exception $e){
-            session()->flash('warning',$e->getMessage());
+            report($e);
+            session()->flash('warning','Approval failed, could not update data');
             DB::rollBack();
         }
         return redirect()->route('mvr.transfer-ownership.show',encrypt($id));
