@@ -4,6 +4,7 @@ namespace App\Models\Returns;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Taxpayer;
@@ -21,6 +22,10 @@ class MmTransferReturn extends Model
 
     public function mmTransferReturnItems(){
         return $this->hasMany(MmTransferReturnItem::class, 'return_id');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function configReturns(){

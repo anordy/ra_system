@@ -33,9 +33,8 @@ class LumpSumReturnController extends Controller
 
     public function view($row)
     {
-        $row = decrypt($row);
-        $id  = $row->id;
-
+        $id = decrypt($row);
+       
         $return = LumpSumReturn::findOrFail($id);
 
         return view('returns.lump-sum.view', compact('return'));
