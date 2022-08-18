@@ -158,17 +158,22 @@ class TourOperatorLevyPreviewTable extends DataTableComponent
             Column::make("Payment Status", "id")
                 ->format(
                     function ($value, $row) {
-                        if ($row->paid_at < $row->payment_due_date) {
-                            return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                            <i class="bi bi-check-circle"></i>
-                                        Not Late
-                                    </span>';
-                        } else {
-                            return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
-                            <i class="bi bi-clock"></i>
-                                        Late
-                                    </span>';
+                        if($row->created_at == null || $row->paid_at == null){
+                              return '-';  
+                        }else{
+                            if ($row->paid_at < $row->payment_due_date) {
+                                return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                <i class="bi bi-check-circle"></i>
+                                    In-Time
+                                        </span>';
+                            } else {
+                                return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
+                                <i class="bi bi-clock"></i>
+                                            Late
+                                        </span>';
+                            }
                         }
+                        
                     }
                 )
                 ->searchable()

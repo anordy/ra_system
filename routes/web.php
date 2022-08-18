@@ -315,7 +315,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
         Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
     });
-});
+
 
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
