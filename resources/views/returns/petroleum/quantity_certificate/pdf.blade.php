@@ -162,6 +162,7 @@
             of 2009)</p>
     </div>
     <div>
+        <p><b>Certificate Number: </b> {{ $data->certificate_no ?? '' }}</p>
         <p>Name of the Importer/Market: {{ $data->business->name ?? '' }}</p>
         <p>Name of the Ship: {{ $data->ship ?? '' }}</p>
         <p>Port of Disembarkation: {{ $data->port ?? '' }}</p>
