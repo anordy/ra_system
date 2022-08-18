@@ -25,7 +25,7 @@
     <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
 
         <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
-            <div class="row">
+            <div class="row pt-3">
                 <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">TIN No</span>
                     <p class="my-1">{{ $agent->tin_no }}</p>
@@ -77,10 +77,10 @@
 
                 </div>
                 <div class="col-md-3 mb-2">
-                    <span class="font-weight-bold text-uppercase">Payment</span>
+                    <span class="font-weight-bold text-uppercase">Registration Payment</span>
 
-                    <p>@if(!empty($agent->bill->payment))
-                            @if ($agent->bill->payment->status == \App\Models\PaymentStatus::PAID)
+                    <p>@if(!empty($agent->bill))
+                            @if ($agent->bill->status == \App\Models\PaymentStatus::PAID)
                                 <span class="badge badge-success py-1 px-2"
                                       style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
                                             class="bi bi-check-circle-fill mr-1"></i>Paid</span>
@@ -88,9 +88,8 @@
                                 <span class="badge badge-danger py-1 px-2"
                                       style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
                                             class="bi bi-clock-history mr-1"></i>Not Paid</span>
-                    <p style="font-weight: 900; color: #cf1c2d; font-size: 85%"></p>
                     @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::PARTIALLY)
-                        <p style="font-weight: 900; color: #319e0a; font-size: 85%">Partially Paid</p>
+                        <span style="font-weight: 900; color: #319e0a; font-size: 85%">Partially Paid</span>
                     @elseif($agent->bill->payment->status == \App\Models\PaymentStatus::CANCELLED)
                         <span class="badge badge-danger py-1 px-2"
                               style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
@@ -104,13 +103,34 @@
                         <span class="badge badge-danger py-1 px-2"
                               style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
                                     class="bi bi-x-circle-fill mr-1"></i>Not Paid</span>
-                        @endif</p>
+                        @endif
+                        </p>
 
                 </div>
+
+                @if(!empty($agent->request))
+                <div class="col-md-3 mb-2">
+                        <span class="font-weight-bold text-uppercase">Renew Payment</span>
+                        <p>
+                            @if ($agent->request->bill != null)
+                                @if ($agent->request->bill->status == 'paid')
+                                    <span style=" background: #72DC3559; color: #319e0a; font-size: 85%"
+                                          class="badge badge-success p-2">Paid</span>
+                                @else
+                                    <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
+                                          class="badge badge-danger p-2">Not Paid</span>
+                                @endif
+                            @else
+                                <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
+                                      class="badge badge-danger p-2">Not Paid</span>
+                            @endif
+                        </p>
+                </div>
+                @endif
             </div>
         </div>
         <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered ">
                 <thead>
                 <tr>
                     <th>No:</th>

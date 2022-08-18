@@ -35,7 +35,7 @@ class TaxTypeChangeApprovalProcessing extends Component
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
         $this->taxchange = BusinessTaxTypeChange::findOrFail($this->modelId);
-        $this->taxTypes   = TaxType::all();
+        $this->taxTypes   = TaxType::where('category', 'main')->get();
 
         foreach (json_decode($this->taxchange->old_taxtype) as $value) {
             $this->oldTaxTypes[] = [

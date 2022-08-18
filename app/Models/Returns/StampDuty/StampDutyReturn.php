@@ -59,10 +59,6 @@ class StampDutyReturn extends Model
         $this->morphTo('old_return');
     }
 
-    public function businessLocation() {
-        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
-    }
-
     /*
      * Model attributes
      */

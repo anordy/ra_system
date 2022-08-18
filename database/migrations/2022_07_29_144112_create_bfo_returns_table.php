@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\ReturnApplicationStatus;
+use App\Enum\ReturnCategory;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -26,6 +27,7 @@ class CreateBFOReturnsTable extends Migration
             $table->integer('edited_count')->default(0);
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 40, 2)->default(0);

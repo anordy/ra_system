@@ -37,7 +37,17 @@ class SendTaxTypeSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->payload['business']->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "According to your tax type request submission, from {$this->payload['time']} you have been changed from {$this->payload['old_taxtypes']} to {$this->payload['new_taxtypes']}";
+        $from = "";
+        $to = "";
+
+
+        foreach ($this->payload['new_taxes'] as $tax) {
+            $from .= "{$tax['new']}";
+            $to .= "{$tax['old']}";
+        }
+
+        $customer_message = "According to your tax type request submission, from {$this->payload['time']} you have been changed from {$from} to {$to} respectively";
+        
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

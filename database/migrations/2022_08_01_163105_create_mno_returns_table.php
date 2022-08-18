@@ -1,6 +1,8 @@
 <?php
 
 use App\Enum\ReturnApplicationStatus;
+use App\Enum\ReturnCategory;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,7 +27,6 @@ class CreateMnoReturnsTable extends Migration
             $table->unsignedBigInteger('tax_type_id');
             $table->decimal('total_amount_due', 40, 2);
             $table->decimal('total_amount_due_with_penalties', 40, 2);
-            $table->string('status');
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->decimal('penalty', 20,2);
             $table->decimal('interest',20,2);
@@ -33,7 +34,9 @@ class CreateMnoReturnsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
+            $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->timestamps();
             $table->softDeletes();
         });
