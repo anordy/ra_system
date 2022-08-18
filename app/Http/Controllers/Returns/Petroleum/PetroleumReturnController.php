@@ -6,12 +6,15 @@ namespace App\Http\Controllers\Returns\Petroleum;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessStatus;
 use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Traits\ReturnCardReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PetroleumReturnController extends Controller
 {
+    use ReturnCardReport;
+
     public function index()
     {
         //last day of last month
@@ -59,7 +62,10 @@ class PetroleumReturnController extends Controller
             ->where('petroleum_returns.status', 'complete')
             ->where('petroleum_returns.created_at', '>', 'zm_payments.trx_time')
             ->count();
-        return view('returns.petroleum.filing.index', compact('vars'));
+
+        $data = $this->returnCardReport(PetroleumReturn::class, 'petroleum', 'petroleum');
+
+        return view('returns.petroleum.filing.index', compact('vars', 'data'));
     }
 
     public function create(Request $request)
