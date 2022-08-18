@@ -81,9 +81,11 @@ class DeRegistrationController extends Controller
         }
         $exchange_rate = 1;
         $amount = $fee->amount;
-        $gfs_code = $fee->gfs_code;
 
         ZmCore::createBill(
+            $request->id,
+            get_class($request),
+            null,
             $request->agent->id,
             get_class($request->agent),
             $request->agent->fullname(),
@@ -102,15 +104,15 @@ class DeRegistrationController extends Controller
                     'billable_type' => get_class($request),
                     'fee_id' => $fee->id,
                     'fee_type' => get_class($fee),
+                    'tax_type_id' => null,
                     'amount' => $amount,
                     'currency' => 'TZS',
                     'exchange_rate' => $exchange_rate,
                     'equivalent_amount' => $exchange_rate * $amount,
-                    'gfs_code' => $gfs_code
+                    'gfs_code' =>  $fee->gfs_code
                 ]
             ]
         );
-        (new SMSController())->sendSMS('255753387833','ZanMalipo','Request approved,Control Number generated,pending Payment');
         $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
         return redirect()->route('mvr.de-register-requests.show',encrypt($id));
     }
