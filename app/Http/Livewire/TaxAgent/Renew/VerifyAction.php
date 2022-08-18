@@ -77,8 +77,6 @@ class VerifyAction extends Component
             $req->app_true_comment = 'The request is valid';
             $req->approved_by_id = Auth::id();
             $req->approved_at = now();
-            $req->renew_first_date = Carbon::now();
-            $req->renew_expire_date = Carbon::now()->addYear()->toDateTimeString();
             $req->save();
 
             $taxpayer = Taxpayer::query()->find($req->tax_agent->taxpayer_id);
