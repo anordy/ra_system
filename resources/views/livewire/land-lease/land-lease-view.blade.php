@@ -6,6 +6,15 @@
             Back
         </a>
     </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <livewire:returns.return-payment :return="$landLease" />
+            </div>
+        </div>
+    </div>
+
     <div class="card">
 
         <div class="card-header text-uppercase font-weight-bold bg-white pt-1">
