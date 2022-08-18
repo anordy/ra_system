@@ -19,7 +19,7 @@ class CreateHotelReturnConfigsTable extends Migration
             $table->integer('order')->default(0);
             $table->string('code');
             $table->string('name');
-            $table->unsignedBigInteger('taxtype_id')->nullable();
+            $table->unsignedBigInteger('tax_type_id')->nullable();
             $table->enum('row_type',['dynamic', 'unremovable'])->default('dynamic');
             $table->enum('heading_type',['supplies', 'purchases'])->nullable();
             $table->boolean('value_calculated')->default(false);
@@ -30,9 +30,10 @@ class CreateHotelReturnConfigsTable extends Migration
             $table->decimal('rate')->unsigned()->default(0);
             $table->decimal('rate_usd')->nullable();
             $table->string('formular')->nullable();
+            $table->string('value_formular')->nullable();
             $table->boolean('active')->default(false);
 
-            $table->foreign('taxtype_id')->references('id')->on('tax_types');
+            $table->foreign('tax_type_id')->references('id')->on('tax_types');
 
             $table->timestamps();
         });

@@ -24,7 +24,7 @@ class ResetPasswordController extends Controller
     */
 
     use ResetsPasswords;
-    protected $redirectTo = RouteServiceProvider::ROOT_URL;
+    protected $redirectTo = '/login';
 
     /**
      * Overriden Method: Reset the given user's password.

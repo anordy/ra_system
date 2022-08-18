@@ -17,8 +17,11 @@ class CreatePetroleumReturnItemsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('return_id');
             $table->unsignedBigInteger('config_id');
-            $table->decimal('value');
-            $table->decimal('vat');
+            $table->decimal('value', 40, 2);
+            $table->decimal('vat', 40, 2);
+            $table->enum('status',['submitted', 'complete'])->default('submitted');
+            $table->string('currency');
+            $table->integer('edited_count')->default(0);
             $table->timestamps();
         });
     }

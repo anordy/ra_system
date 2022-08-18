@@ -15,12 +15,15 @@ class CreateZmBillsTable extends Migration
     {
         Schema::create('zm_bills', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount');
-            $table->decimal('misc_amount')->default(0);
-            $table->decimal('paid_amount')->default(0);
-            $table->enum('currency', ['TZS', 'USD']);
-            $table->decimal('exchange_rate');
-            $table->decimal('equivalent_amount')->default(0);
+            $table->unsignedBigInteger('billable_id');
+            $table->string('billable_type');
+            $table->unsignedBigInteger('tax_type_id')->nullable();
+            $table->decimal('amount',20,2);
+            $table->decimal('misc_amount',20,2)->default(0);
+            $table->decimal('paid_amount',20,2)->default(0);
+            $table->enum('currency', ['TZS', 'USD', 'EUR']);
+            $table->decimal('exchange_rate',20,2);
+            $table->decimal('equivalent_amount',20,2)->default(0);
             $table->string('control_number')->nullable();
             $table->dateTime('expire_date');
             $table->unsignedBigInteger('payer_id');
@@ -30,7 +33,7 @@ class CreateZmBillsTable extends Migration
             $table->string('payer_email')->nullable();
             $table->string('description')->nullable();
             $table->integer('payment_option');
-            $table->enum('status',['pending', 'paid', 'partially' , 'failed', 'cancelled']);
+            $table->enum('status', ['pending', 'paid', 'partially' , 'failed', 'cancelled']);
             $table->string('cancellation_reason')->nullable();
             $table->string('zan_status')->nullable();
             $table->string('zan_trx_sts_code')->nullable();

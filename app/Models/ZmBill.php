@@ -35,4 +35,7 @@ class ZmBill extends Model
             && empty($this->control_number)
             && abs(Carbon::parse($this->updated_at)->diffInMinutes(Carbon::now()))<5; //Assumption: request sent less than 5 mins ago
     }
+    public function billable(){
+        return $this->morphTo();
+    }
 }

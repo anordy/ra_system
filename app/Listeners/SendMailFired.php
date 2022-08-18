@@ -10,6 +10,8 @@ use App\Models\Business;
 use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Events\SendMail;
+use App\Jobs\Business\Branch\SendBranchApprovedMail;
+use App\Jobs\Business\Branch\SendBranchCorrectionMail;
 use App\Jobs\Business\SendBusinessClosureApprovedMail;
 use App\Jobs\Business\SendBusinessClosureCorrectionMail;
 use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
@@ -18,6 +20,8 @@ use App\Jobs\Business\Taxtype\SendTaxTypeMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateMail;
 use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\SendOTPEmail;
+use App\Jobs\TaxClearance\SendTaxClearanceApprovedEmail;
+use App\Jobs\TaxClearance\SendTaxClearanceRejectedEmail;
 use App\Models\WaResponsiblePerson;
 
 class SendMailFired
@@ -91,6 +95,18 @@ class SendMailFired
         } else if ($event->service === 'change-business-information'){
             // Token ID is payload data having all notification details
             SendBusinessUpdateMail::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-approval'){
+            // Token ID is payload data having all notification details
+            SendBranchApprovedMail::dispatch($event->tokenId);
+        } else if ($event->service === 'branch-correction'){
+            // Token ID is payload data having all notification details
+            SendBranchCorrectionMail::dispatch($event->tokenId);
+        } else if ($event->service === 'tax-clearance-approved'){
+            // Token ID is payload data having all notification details
+            SendTaxClearanceApprovedEmail::dispatch($event->tokenId);
+        } else if ($event->service === 'tax-clearance-rejected'){
+            // Token ID is payload data having all notification details
+            SendTaxClearanceRejectedEmail::dispatch($event->tokenId);
         }
     }
 }

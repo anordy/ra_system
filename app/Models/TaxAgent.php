@@ -28,9 +28,9 @@ class TaxAgent extends Model implements Auditable
 		return $this->hasMany('App\Models\TaxAgentTrainingExperience');
 	}
 
-	public function requests()
+	public function request()
 	{
-		return $this->hasMany(RenewTaxAgentRequest::class);
+		return $this->hasOne(RenewTaxAgentRequest::class);
 	}
 
 	// Scopes
@@ -42,19 +42,18 @@ class TaxAgent extends Model implements Auditable
 		return $query->where('status', TaxAgentStatus::PENDING);
 	}
 
-	public function bill()
-    {
-        return $this->hasOne(ZmBillItem::class, 'billable_id')->where('billable_type', get_class($this));
+    public function bill(){
+        return $this->morphOne(ZmBill::class, 'billable');
     }
 
     public function region()
     {
-        return $this->belongsTo(Region::class);
+        return $this->belongsTo(Region::class,'region_id');
     }
 
     public function district()
     {
-        return $this->belongsTo(District::class);
+        return $this->belongsTo(District::class,'district_id');
     }
 
     public function taxpayer(){

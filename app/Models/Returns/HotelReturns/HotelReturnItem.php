@@ -11,5 +11,16 @@ class HotelReturnItem extends Model
 
     protected $guarded = [];
 
+    public function config() {
+        return $this->belongsTo(HotelReturnConfig::class, 'config_id');
+    }
+
+    public function configuration() {
+        return $this->hasOne(HotelReturnConfig::class, 'config_id');
+    }
+
+    public function return() {
+        return $this->belongsTo(HotelReturn::class, 'return_id');
+    }
 
 }

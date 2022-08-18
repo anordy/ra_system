@@ -32,7 +32,7 @@ class Taxpayer extends Model implements Auditable
     }
 
     public function getFullNameAttribute(){
-        return "{$this->first_name} {$this->last_name}";
+        return "{$this->first_name} {$this->middle_name} {$this->last_name}";
     }
 
 
@@ -43,4 +43,9 @@ class Taxpayer extends Model implements Auditable
 	public function bill(){
 		return $this->morphMany(ZmBill::class, 'user');
 	}
+
+    public function createdLeases()
+    {
+        return $this->hasMany(LandLease::class, 'created_by');
+    }
 }

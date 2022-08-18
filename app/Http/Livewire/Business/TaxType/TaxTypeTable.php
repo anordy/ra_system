@@ -52,7 +52,7 @@ class TaxTypeTable extends DataTableComponent
                     $datas = json_decode($value);
                     $taxtypes = "";
                     foreach ($datas as $data) {
-                        $taxtypes .= "{$data->name}, ";
+                        $taxtypes .= "{$this->getTaxNameById($data->tax_type_id)}, ";
                     }
                     return $taxtypes;
                 }),

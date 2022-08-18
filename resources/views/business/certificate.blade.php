@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Certificate of Registration - {{ $business->name }}</title>
+    <title>Certificate of Registration - {{ $location->business->name }}</title>
     <style>
         body {
             background-image: url("{{ public_path()}}/images/certificate/business_reg.jpg");
@@ -11,7 +11,7 @@
             background-size: cover;
             margin: -70px;
         }
-        .embed-text {
+        .embed {
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
@@ -43,6 +43,17 @@
         .commencing-date {
             font-size: 1.2em;
             top: 80%;
+            padding-left: 90px;
+        }
+        .commissioner-signature {
+            top: 86%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            left: 30px;
         }
         .watermark {
             -webkit-transform: rotate(331deg);
@@ -59,29 +70,22 @@
         }
     </style>
 </head>
-
-<body>
-<p class="watermark">Online Copy</p>
-<span class="embed-text business-name">{{ $business->name ?? '' }}</span>
-<span class="embed-text taxpayer-name">{{ $business->tin ?? '' }}</span>
-<span class="embed-text reg-no">{{ $business->reg_no ?? '' }}</span>
-<span class="embed-text tax-types">
-        @foreach($business->taxTypes as $type)
-        @if ($loop->last)
-            AND {{ $type->name }}.
-        @elseif($loop->remaining > 1)
-            {{ $type->name }},
-        @else
-            {{ $type->name }}
-        @endif
-    @endforeach
-    </span>
-<span class="embed-text location">
-        {{ $business->location->street }}, {{ $business->location->district->name }}, {{ $business->location->region->name }}
-    </span>
-<span class="embed-text commencing-date">
-        {{ $business->date_of_commencing->toFormattedDateString() }}
-    </span>
-</body>
-
+    <body>
+        <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
+        <span class="embed taxpayer-name">{{ $location->zin ?? '' }}</span>
+        <span class="embed reg-no">{{ $location->business->zin ?? '' }}</span>
+        <span class="embed tax-types">{{ $tax->name }}</span>
+        <span class="embed location">
+            {{ $location->street }}, {{ $location->district->name }}, {{ $location->region->name }}
+        </span>
+        <span class="embed commencing-date">
+            {{ $location->date_of_commencing->toFormattedDateString() }}
+        </span>
+        <span class="commissioner-signature">
+            <img src="{{ public_path()}}/sign/commissioner.png">
+        </span>
+        <div style="overflow: hidden; position:absolute; top: 83%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
+            <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+        </div>
+    </body>
 </html>

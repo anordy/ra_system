@@ -45,17 +45,20 @@ class ApprovalHistoryTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Name', 'name'),
-            Column::make('From', 'from_place'),
-            Column::make('To', 'to_place'),
+            Column::make('Name', 'name')
+                ->format(fn ($value) => ucfirst(str_replace('_', ' ', $value))),
+            Column::make('From', 'from_place')
+                ->format(fn ($value) => ucfirst(str_replace('_', ' ', $value))),
+            Column::make('To', 'to_place')
+                ->format(fn ($value) => ucfirst(str_replace('_', ' ', $value))),
             Column::make('Comment', 'remarks'),
             Column::make('Approved By', 'user_id')
-                ->format(function ($value, $row) {
-                    return $row->user->full_name ?? null;
-                }),
+                ->format(
+                    fn ($value, $row) => $row->user->full_name ?? null
+                ),
             Column::make('Approved On', 'approved_on')
                 ->format(function ($value) {
-                    return Carbon::make($value)->toDateString();
+                    return Carbon::make($value)->toDateTimeString();
                 }),
         ];
     }

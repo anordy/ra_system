@@ -19,10 +19,9 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('taxpayer_id'); // Main owner
             $table->string('bpra_no')->nullable();
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed', 'temp_closed', 'deregistered'])->default('draft');
-            $table->enum('business_type', ['hotel', 'other'])->default('other');
+            $table->enum('business_type', ['hotel', 'other','electricity'])->default('other');
             $table->unsignedBigInteger('business_activities_type_id'); // Wholesale or Retail
             $table->unsignedBigInteger('currency_id');
-
 
             $table->string('name');
             $table->string('tin');
@@ -33,7 +32,6 @@ class CreateBusinessesTable extends Migration
             $table->string('email')->nullable();
             $table->string('place_of_business');
             $table->string('physical_address');
-            $table->dateTime('date_of_commencing');
             $table->string('pre_estimated_turnover');
             $table->string('post_estimated_turnover');
             $table->string('goods_and_services_types');
@@ -47,8 +45,8 @@ class CreateBusinessesTable extends Migration
 
             // Not sure
             $table->dateTime('reg_date')->nullable();
-            $table->string('z_no')->nullable();
             $table->string('marking')->nullable();
+            $table->dateTime('approved_on')->nullable();
 
             $table->unsignedBigInteger('isiic_i')->nullable();
             $table->unsignedBigInteger('isiic_ii')->nullable();
