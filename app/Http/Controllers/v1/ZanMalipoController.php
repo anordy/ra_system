@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Enum\PaymentStatus;
+use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
@@ -16,6 +17,7 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\ZmBill;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
@@ -45,6 +47,10 @@ class ZanMalipoController extends Controller
 
     private $multipleBillsReturnable = [
         PortReturn::class,
+    ];
+
+    private $debtReturnable = [
+        Debt::class
     ];
 
     /**
@@ -78,7 +84,7 @@ class ZanMalipoController extends Controller
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                 $message = "Your control number for ZRB is {$bill->control_number} for {{ $bill->description }}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
-                if (in_array($bill->billable_type, $this->returnable) || in_array($bill->billable_type, $this->multipleBillsReturnable)) {
+                if (in_array(array_merge($bill->billable_type, $this->multipleBillsReturnable, $this->debtReturnable), $this->returnable)) {
                     try {
                         $billable         = $bill->billable;
                         $billable->status = ReturnStatus::CN_GENERATED;
@@ -92,7 +98,7 @@ class ZanMalipoController extends Controller
             } else {
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
 
-                if (in_array($bill->billable_type, $this->returnable) || in_array($bill->billable_type, $this->multipleBillsReturnable)) {
+                if (in_array(array_merge($bill->billable_type, $this->multipleBillsReturnable, $this->debtReturnable), $this->returnable)) {
                     try {
                         $billable         = $bill->billable;
                         $billable->status = ReturnStatus::CN_GENERATION_FAILED;
@@ -162,6 +168,9 @@ class ZanMalipoController extends Controller
             // Check and update return
             $this->updateReturn($bill);
 
+            // Check and update debts
+            $this->updateDebt($bill);
+
             //TODO: we should send sms to customer here to notify payment reception
 
             return $this->ackResp('gepgPmtSpInfoAck', '7101');
@@ -225,6 +234,7 @@ class ZanMalipoController extends Controller
                     if ($altBill->status === PaymentStatus::PAID) {
                         $billable         = $bill->billable;
                         $billable->status = ReturnStatus::COMPLETE;
+                        $billable->paid_at = Carbon::now()->toDateTimeString();
                         $billable->save();
                     } else {
                         $billable         = $bill->billable;
@@ -239,6 +249,26 @@ class ZanMalipoController extends Controller
             }
         } catch (\Exception $exception){
             Log::error($exception);
+        }
+    }
+
+    private function updateDebt($bill){
+        try {
+            if (in_array($bill->billable_type, $this->debtReturnable)) {
+                if ($bill->paidAmount() >= $bill->amount) {
+                    $debt         = $bill->billable;
+                    $debt->status = ReturnStatus::COMPLETE;
+                    $debt->outstanding_amount = 0;
+                    $debt->save();
+                } else {
+                    $debt         = $bill->billable;
+                    $debt->status = ReturnStatus::PAID_PARTIALLY;
+                    $debt->outstanding_amount = $bill->amount - $bill->paidAmount();
+                    $debt->save();
+                }
+            }
+        } catch(\Exception $e){
+            Log::error($e);
         }
     }
 }
