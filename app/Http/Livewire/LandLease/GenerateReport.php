@@ -85,7 +85,7 @@ class GenerateReport extends Component
             $exists = LandLease::exists();
             if($exists){
                 $this->alert('success', 'Downloading file');
-                return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'land-leases All Records.xlsx');
+                return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'Land Leases All Records.xlsx');
             }else{
                 $this->alert('error', "No data found.");
             } 
@@ -94,7 +94,7 @@ class GenerateReport extends Component
         $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
         if ($exists) {
             $this->alert('success', 'Downloading file');
-            return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'land-leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
+            return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'Land Leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
         } else {
             // $this->flash('error', 'No records found.');
             // return redirect()->back()->with('error', 'No data found for the selected period.');
