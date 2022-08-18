@@ -9,10 +9,10 @@ trait ReturnSummaryCardTrait
     public function getSummaryData($model)
     {
         //first day of the month
-        $from = Carbon::now()->lastOfMonth()->toDateTimeString();
+        $to = Carbon::now()->lastOfMonth()->toDateTimeString();
 
         //last day of the month
-        $to = Carbon::now()->firstOfMonth()->toDateTimeString();
+        $from = Carbon::now()->firstOfMonth()->toDateTimeString();
 
         //All Filings
         $vars['totalSubmittedReturns'] = $model->whereBetween('created_at', [$from, $to])->count();
