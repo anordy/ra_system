@@ -21,6 +21,11 @@ class LumpSumReturn extends Model
     protected $fillable   = [];
     protected $guarded    = [];
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');

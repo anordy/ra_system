@@ -11,6 +11,11 @@ class BfoPenalty extends Model
     protected $guarded = [];
     protected $table = 'bfo_penalties';
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function BfoReturn(){
         return $this->belongsTo(BfoReturn::class);
     }

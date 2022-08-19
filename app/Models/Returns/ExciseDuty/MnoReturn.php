@@ -20,6 +20,12 @@ class MnoReturn extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+    protected $table = 'mno_returns';
+
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 
     public function financialMonth()
     {

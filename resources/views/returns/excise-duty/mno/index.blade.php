@@ -12,7 +12,7 @@
         MNO Excise Duty Returns
     </div>
     
-    @livewire('returns.return-card-report', ['data' => $data])
+    @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
     <div class="card-body mt-0">
         @livewire('returns.excise-duty.mno-returns-table')
     </div>

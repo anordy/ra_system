@@ -16,7 +16,7 @@
     <div class="card-header text-uppercase font-weight-bold bg-white">
         VAT Return
     </div>
-    @livewire('returns.return-card-report', ['data' => $data])
+    @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
     <div class="card-body">
         <livewire:returns.vat.vat-return-table />
     </div>

@@ -20,6 +20,12 @@ class PortReturn extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function configReturns()
     {
         return $this->hasMany(PortReturnItem::class, 'return_id');

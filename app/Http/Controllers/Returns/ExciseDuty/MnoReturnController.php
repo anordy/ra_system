@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use App\Models\BusinessTaxType;
+use App\Models\Returns\ExciseDuty\MnoPenalty;
 use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\TaxType;
 use App\Traits\ReturnCardReport;
@@ -21,11 +22,13 @@ class MnoReturnController extends Controller
     public function index()
     {
 
-        $data = $this->returnCardReport(MnoReturn::class, 'mno', 'mno');
+        $paidData = $this->returnCardReportForPaidReturns(MnoReturn::class, MnoReturn::getTableName(), MnoPenalty::getTableName());
+
+        $unpaidData = $this->returnCardReportForUnpaidReturns(MnoReturn::class, MnoReturn::getTableName(), MnoPenalty::getTableName());
 
         $vars = $this->getSummaryData(MnoReturn::query());
 
-        return view('returns.excise-duty.mno.index', compact('vars', 'data'));
+        return view('returns.excise-duty.mno.index', compact('vars', 'paidData', 'unpaidData'));
     }
 
     public function show($id)

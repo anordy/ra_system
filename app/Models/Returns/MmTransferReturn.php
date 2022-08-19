@@ -20,6 +20,11 @@ class MmTransferReturn extends Model
     protected $guarded = [];
     protected $table = 'mm_transfer_returns';
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function mmTransferReturnItems(){
         return $this->hasMany(MmTransferReturnItem::class, 'return_id');
     }

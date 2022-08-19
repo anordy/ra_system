@@ -19,6 +19,11 @@ class PetroleumReturn extends Model
 
     protected $guarded = [];
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function configReturns()
     {
         return $this->hasMany(PetroleumReturnItem::class, 'return_id');

@@ -13,7 +13,7 @@
     </div>
 
     <div class="card">
-        @livewire('returns.return-card-report', ['data' => $data])
+        @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
 
         <div class="card-body">
             @livewire('returns.hotel.tour-operator-returns-table')
