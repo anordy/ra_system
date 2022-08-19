@@ -22,7 +22,7 @@ class BfoReturn extends Model
     protected $table = 'bfo_returns';
 
     public function items(){
-        return $this->hasMany(BFOReturnItems::class, 'bfo_return_id');
+        return $this->hasMany(BfoReturnItems::class, 'bfo_return_id');
     }
 
     public function debt(){
@@ -30,7 +30,7 @@ class BfoReturn extends Model
     }
 
     public function configReturns(){
-        return $this->hasMany(BFOReturnItems::class, 'bfo_return_id');
+        return $this->hasMany(BfoReturnItems::class, 'bfo_return_id');
     }
 
     public function business() {
