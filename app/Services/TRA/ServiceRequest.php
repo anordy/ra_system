@@ -52,7 +52,7 @@ class ServiceRequest
             'body_type'=>['Sedan','Saloon'][rand(0,1)],
             'make'=>$make,
             'model'=>['Toyota'=>['Alion','IST','Prado','RAV4','Probox'],'Subaru'=>['Forester','Legacy','Forester XT'],'Nissan'=>['XTrail','Tiida','Dualis']][$make][rand(0,2)],
-            'imported_from'=>'Japan',
+            'imported_from'=>'Kenya',
             'fuel_type'=>['Petrol','Diesel'][rand(0,1)],
             'custom_number'=>$faker->randomAscii,
             'color'=>['White','Red','Blue','Silver'][rand(0,3)],
@@ -61,7 +61,7 @@ class ServiceRequest
             'usage'=>'Commercial'
         ];
 
-        cache()->put($chassis,$data,1000);
+        cache()->put($chassis,$data,100000);
         return ['data'=>$data,'status'=>'success'];
     }
 }

@@ -37,7 +37,7 @@ class MvrPersonalizedPlateNumberRegistration extends Model
 		'mvr_motor_vehicle_registration_id'
 	];
 
-	public function mvr_motor_vehicle_registration()
+	public function motor_vehicle_registration()
 	{
 		return $this->belongsTo(MvrMotorVehicleRegistration::class);
 	}
