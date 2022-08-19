@@ -33,7 +33,8 @@ class TaxClearanceApproved extends Mailable
     {
         $location = $this->payload[0];
         $taxClearanceRequest = $this->payload[1];
-        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('location', 'taxClearanceRequest'));
+        
+        $pdf = PDF::loadView('tax-clearance.includes.online-certificate', compact('location', 'taxClearanceRequest'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 

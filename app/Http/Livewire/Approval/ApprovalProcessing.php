@@ -12,6 +12,7 @@ use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
+use App\Models\LumpSumPayment;
 use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
@@ -230,7 +231,12 @@ class ApprovalProcessing extends Component
             $location = BusinessLocation::where('business_id', $this->subject->id)
                 ->where('is_headquarter', true)
                 ->firstOrFail();
-
+            LumpSumPayment::where('business_id', $this->subject->id)
+                ->latest()
+                ->first()
+                ->update(['business_location_id'=> $location->id]);
+            // dd($location);
+    
             if (!$location->generateZin()) {
                 $this->alert('error', 'Something went wrong.');
 

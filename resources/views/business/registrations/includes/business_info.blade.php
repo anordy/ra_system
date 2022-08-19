@@ -90,7 +90,7 @@
                         </span>
                     @endif
                 @else
-                    <a href="{{ route('verification.tin', encrypt($business)) }}">
+                    <a href="{{ route('verification.tin', encrypt($business->id)) }}">
                         <button class="btn btn-info">Verify TIN Number</button>
                     </a>
                 @endif
@@ -272,8 +272,10 @@
                 <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
                     @if ($location->status === \App\Models\BusinessStatus::APPROVED)
                         <div>
-                            @foreach($business->taxTypes as $type)
-                                <a target="_blank" href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}" class="btn btn-success btn-sm mt-1 text-white">
+                            @foreach ($business->taxTypes as $type)
+                                <a target="_blank"
+                                    href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
+                                    class="btn btn-success btn-sm mt-1 text-white">
                                     <i class="bi bi-patch-check"></i>
                                     {{ $type->name }} Certificate
                                 </a>
@@ -391,8 +393,10 @@
                     <div class="col-md-12 mt-1 d-flex justify-content-end mb-4">
                         @if ($location->status === \App\Models\BranchStatus::APPROVED)
                             <div>
-                                @foreach($business->taxTypes as $type)
-                                    <a target="_blank" href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}" class="btn btn-success btn-sm mt-1 text-white">
+                                @foreach ($business->taxTypes as $type)
+                                    <a target="_blank"
+                                        href="{{ route('business.certificate', ['location' => encrypt($location->id), 'type' => encrypt($type->id)]) }}"
+                                        class="btn btn-success btn-sm mt-1 text-white">
                                         <i class="bi bi-patch-check"></i>
                                         {{ $type->name }} Certificate
                                     </a>
