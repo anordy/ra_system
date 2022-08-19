@@ -24,10 +24,10 @@ trait ReturnSummaryCardTrait
         $vars['totalSubmittedReturns'] = $m1->whereBetween('created_at', [$from, $to])->count();
 
         //late filings
-        $vars['totalLateFiledReturns'] = $m2->whereBetween('created_at', [$from, $to])->where('filing_due_date', '<', 'created_at')->count();
+        $vars['totalLateFiledReturns'] = $m2->whereBetween('created_at', [$from, $to])->where('created_at', '>', 'filing_due_date')->count();
 
         //In-Time filings
-        $vars['totalInTimeFiledReturns'] = $m3->whereBetween('created_at', [$from, $to])->where('filing_due_date', '>=', 'created_at')->count();
+        $vars['totalInTimeFiledReturns'] = $m3->whereBetween('created_at', [$from, $to])->where('created_at', '<=', 'filing_due_date')->count();
 
         //All paid returns
         $vars['totalPaidReturns'] = $m4->whereBetween('created_at', [$from, $to])->whereNotNull('paid_at')->count();
@@ -36,7 +36,7 @@ trait ReturnSummaryCardTrait
         $vars['totalUnpaidReturns'] = $m5->whereBetween('created_at', [$from, $to])->whereNull('paid_at')->count();
 
         //total late paid returns
-        $vars['totalLatePaidReturns'] = $m6->whereBetween('created_at', [$from, $to])->where('payment_due_date', '<', 'paid_at')->count();
+        $vars['totalLatePaidReturns'] = $m6->whereBetween('created_at', [$from, $to])->where('paid_at', '>', 'payment_due_date')->count();
 
         return $vars;
     }
