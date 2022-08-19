@@ -77,7 +77,6 @@
                             </div>
                         </div>
 
-                        {{-- @if ($return->application_status != App\Enum\ReturnApplicationStatus::CLAIM) --}}
                         <div class="row m-2 pt-3">
                             <h6>Payment Structure</h6>
                         </div>
@@ -136,18 +135,7 @@
                         </div>
                     </div>
 
-                    @if ($return->application_status != App\Enum\ReturnApplicationStatus::CLAIM)
-                        <div class="tab-pane p-2" id="penalty" role="tabpanel" aria-labelledby="penalty-tab">
-                            <div class="row">
-                                <div class="col-md-12">PAYMENT STRUCTURE</div>
-                                <div class="col-md-12">
-                                    <livewire:returns.port.returns-port-penalty
-                                        modelName='App\Models\Returns\Port\PortReturn' modelId="{{ $return->id }}" />
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
+                  
                 </div>
             </div>
         </div>

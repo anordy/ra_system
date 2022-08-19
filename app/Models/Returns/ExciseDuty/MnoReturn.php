@@ -7,7 +7,7 @@ use App\Models\BusinessLocation;
 use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
-use App\Models\returns\ExciseDuty\MnoReturnItem;
+use App\Models\Returns\ExciseDuty\MnoReturnItem;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Models\ZmBill;

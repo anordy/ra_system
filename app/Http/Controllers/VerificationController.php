@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
+use App\Models\BusinessLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class VerificationController extends Controller
 {
-    public function tin($business)
+    public function tin($businessId)
     {
-        $business =  decrypt($business);
-        $tin      = $business->tin;
+        $businessId =  decrypt($businessId);
 
+        $business = Business::findOrFail($businessId);
+        $tin      = $business->tin;
+        
         // $response = Http::get('https://<ipaddress>:<port>/api/taxpayer', [
         //     'apiKey' => 'YOUR_API_KEY_HERE',
         //     'limit'  => 10,

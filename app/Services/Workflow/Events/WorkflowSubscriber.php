@@ -3,6 +3,7 @@
 namespace App\Services\Workflow\Events;
 
 use App\Enum\DisputeStatus;
+use App\Enum\ReturnApplicationStatus;
 use App\Enum\TaxAuditStatus;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
@@ -146,9 +147,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 if (key($places) == 'completed') {
                     $assessmentExists = $subject->assessment()->exists();
                     if ($assessmentExists) {
-                        $subject->taxReturn->application_status = DisputeStatus::ADJUSTED;
+                        $subject->taxReturn->application_status = ReturnApplicationStatus::ADJUSTED;
                     } else {
-                        $subject->taxReturn->application_status = DisputeStatus::SELF_ASSESSMENT;
+                        $subject->taxReturn->application_status = ReturnApplicationStatus::SELF_ASSESSMENT;
                     }
                     $subject->status = TaxVerificationStatus::APPROVED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();

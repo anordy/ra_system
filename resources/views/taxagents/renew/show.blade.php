@@ -104,7 +104,7 @@
 
                         @if(!empty($agent->request->approved_at))
                             <div class="col-md-3 mb-2">
-                                <span class="font-weight-bold text-uppercase">Rejected At</span>
+                                <span class="font-weight-bold text-uppercase">Approved At</span>
                                 <p class="my-1">{{$agent->request->approved_at}} </p>
                             </div>
                         @endif
