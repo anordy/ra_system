@@ -111,7 +111,7 @@
                                                 Submitted
                                             </span>
 
-                                        @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::DISPUTE)
+                                        @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::ADJUSTED)
                                             <span class="badge badge-danger py-1 px-2"
                                                   style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
                                                         class="bi bi-check-circle-fill mr-1"></i>
