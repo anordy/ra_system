@@ -88,7 +88,7 @@ class ZanMalipoController extends Controller
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                 $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
-                if (in_array(array_merge($this->returnable, $this->multipleBillsReturnable, $this->debtReturnable), $bill->billable_type)) {
+                if (in_array($bill->billable_type, array_merge($this->returnable, $this->multipleBillsReturnable, $this->debtReturnable))) {
                     try {
                         $billable         = $bill->billable;
                         $billable->status = ReturnStatus::CN_GENERATED;
@@ -102,7 +102,7 @@ class ZanMalipoController extends Controller
             } else {
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
 
-                if (in_array(array_merge($bill->billable_type, $this->multipleBillsReturnable, $this->debtReturnable), $this->returnable)) {
+                if (in_array($bill->billable_type, array_merge($this->returnable, $this->multipleBillsReturnable, $this->debtReturnable))) {
                     try {
                         $billable         = $bill->billable;
                         $billable->status = ReturnStatus::CN_GENERATION_FAILED;
