@@ -8,7 +8,7 @@ use App\Models\Returns\BFO\BfoReturnItems;
 use App\Models\Returns\EmTransactionConfig;
 use App\Models\Returns\EmTransactionReturnItem;
 use App\Models\Returns\ExciseDuty\MnoConfig;
-use App\Models\returns\ExciseDuty\MnoReturnItem;
+use App\Models\Returns\ExciseDuty\MnoReturnItem;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\LumpSum\LumpSumReturn;

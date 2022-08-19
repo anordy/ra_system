@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\returns\ExciseDuty;
+namespace App\Models\Returns\ExciseDuty;
 
 use App\Models\Returns\ExciseDuty\MnoConfig;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
