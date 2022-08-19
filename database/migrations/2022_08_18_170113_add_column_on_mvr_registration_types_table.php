@@ -14,6 +14,15 @@ class AddColumnOnMvrRegistrationTypesTable extends Migration
     public function up()
     {
         Schema::table('mvr_registration_types', function (Blueprint $table) {
+            $table->string('plate_number_color')
+                ->nullable()
+                ->after('name');
+            $table->string('plate_number_pattern')
+                ->nullable()
+                ->after('plate_number_color');
+            $table->string('initial_plate_number')
+                ->nullable()
+                ->after('plate_number_pattern');
             $table->tinyInteger('external_defined')
                 ->comment('Externally defined plate numbers')
                 ->default(0)

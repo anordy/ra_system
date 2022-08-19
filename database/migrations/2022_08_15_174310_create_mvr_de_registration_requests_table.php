@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class MvrDeRegistrationRequestsTable extends Migration
+class CreateMvrDeRegistrationRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -29,7 +29,7 @@ class MvrDeRegistrationRequestsTable extends Migration
 
             $table->foreign('mvr_request_status_id')->references('id')->on('mvr_request_status');
             $table->foreign('mvr_motor_vehicle_id')->references('id')->on('mvr_motor_vehicles');
-            $table->foreign('mvr_de_registration_reason_id')->references('id')->on('mvr_de_registration_reasons');
+            $table->foreign('mvr_de_registration_reason_id','mvr_de_reg_requests_reg_reason_id_foreign')->references('id')->on('mvr_de_registration_reasons');
             $table->foreign('agent_taxpayer_id')->references('id')->on('taxpayers');
         });
     }

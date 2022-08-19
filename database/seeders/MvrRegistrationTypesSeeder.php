@@ -31,7 +31,7 @@ class MvrRegistrationTypesSeeder extends Seeder
            ['name'=>MvrRegistrationType::TYPE_MILITARY,'plate_number_color'=>'Black and White','initial_plate_number'=>'','external_defined'=>1],
         ];
         foreach ($data as $row) {
-            Permission::updateOrCreate($row);
+            MvrRegistrationType::updateOrCreate($row);
         }
     }
 }

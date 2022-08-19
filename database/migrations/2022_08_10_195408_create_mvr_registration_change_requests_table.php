@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMvrRegistrationChangeRequests extends Migration
+class CreateMvrRegistrationChangeRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,7 +16,7 @@ class CreateMvrRegistrationChangeRequests extends Migration
         Schema::create('mvr_registration_change_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('agent_taxpayer_id');
-            $table->unsignedBigInteger('current_registration_type_id');
+            $table->unsignedBigInteger('current_registration_id');
             $table->unsignedBigInteger('requested_registration_type_id');
             $table->unsignedBigInteger('mvr_plate_size_id');
             $table->string('custom_plate_number',20);

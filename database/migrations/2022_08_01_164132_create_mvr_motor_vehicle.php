@@ -42,7 +42,6 @@ class CreateMvrMotorVehicle extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('mvr_plate_size_id')->references('id')->on('mvr_plate_sizes');
             $table->foreign('mvr_vehicle_status_id')->references('id')->on('mvr_vehicle_status');
             $table->foreign('imported_from_country_id')->references('id')->on('countries');
             $table->foreign('mvr_color_id')->references('id')->on('mvr_colors');
