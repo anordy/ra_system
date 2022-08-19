@@ -9,7 +9,7 @@ class ReturnApplicationStatus implements Status
     const DRAFT = 'draft';
     const SUBMITTED = 'submitted';
     const SELF_ASSESSMENT = 'self-assessment';
-    const DISPUTE = 'adjusted';
+    const ADJUSTED = 'adjusted';
 
     static function getConstants(): array
     {

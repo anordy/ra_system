@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Returns\StampDuty;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class StampDutyReturnController extends Controller
 {
-    use ReturnCardReport,ReturnSummaryCardTrait;
+    use ReturnCardReport, ReturnSummaryCardTrait;
 
     public function index()
     {
