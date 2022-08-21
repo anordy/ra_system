@@ -78,11 +78,13 @@ class TaxVerificationApprovalController extends Controller
             $viewRender = 'returns.lump-sum.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
-        } elseif ($return instanceof HotelReturn) {
+        }
+         elseif ($return instanceof HotelReturn) {
             $viewRender = 'returns.hotel.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
-        } elseif ($return instanceof StampDutyReturn) {
+        } 
+        elseif ($return instanceof StampDutyReturn) {
             $viewRender = 'returns.stamp-duty.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
