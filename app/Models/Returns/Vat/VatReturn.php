@@ -19,6 +19,11 @@ class VatReturn extends Model
     protected $table = 'vat_returns';
     protected $guarded = [];
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function business()
     {
         return $this->belongsTo(Business::class);

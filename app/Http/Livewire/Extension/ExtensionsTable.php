@@ -17,8 +17,7 @@ class ExtensionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $businessIds = Business::where('taxpayer_id', Auth::id())->get()->pluck('id')->toArray();
-        return ExtensionRequest::whereIn('extension_requests.business_id', $businessIds)->orderBy('extension_requests.created_at', 'desc');
+        return ExtensionRequest::query()->orderBy('extension_requests.created_at', 'desc');
     }
 
     public function columns(): array

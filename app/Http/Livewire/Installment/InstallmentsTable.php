@@ -17,8 +17,7 @@ class InstallmentsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $businessIds = Business::where('taxpayer_id', Auth::id())->get()->pluck('id')->toArray();
-        return InstallmentRequest::whereIn('installment_requests.business_id', $businessIds)->orderBy('installment_requests.created_at', 'desc');
+        return InstallmentRequest::query()->orderBy('installment_requests.created_at', 'desc');
     }
 
     public function columns(): array

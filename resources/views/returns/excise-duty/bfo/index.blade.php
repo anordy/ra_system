@@ -18,8 +18,7 @@
             BFO Excise Duty Return
         </div>
         
-        {{-- <livewire:returns.return-card-report ['return_id' => $returnId] /> --}}
-        @livewire('returns.return-card-report', ['data' => $data])
+        @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
         <div class="card-body">
             <livewire:returns.bfo-excise-duty.bfo-excise-duty-table />
         </div>

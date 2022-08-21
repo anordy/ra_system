@@ -20,6 +20,11 @@ class StampDutyReturn extends Model
 
     protected $guarded = [];
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function taxType(){
         return $this->belongsTo(TaxType::class);
     }

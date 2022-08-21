@@ -10,4 +10,9 @@ class VatReturnPenalty extends Model
     use HasFactory;
     protected $table = 'vat_return_penalties';
     protected $guarded = [];
+
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 }

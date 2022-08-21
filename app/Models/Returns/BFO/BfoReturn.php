@@ -21,6 +21,11 @@ class BfoReturn extends Model
     protected $guarded = [];
     protected $table = 'bfo_returns';
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function items(){
         return $this->hasMany(BfoReturnItems::class, 'bfo_return_id');
     }

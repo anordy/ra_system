@@ -4,27 +4,40 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\DB;
 
-
 trait HotelLevyCardReport
 {
-
-    public function hotelLevyCardReport($returnClass, $return, $penalty, $tax_type_id)
+    public function hotelLevyCardReportForPaidReturns($returnClass, $returnTableName, $penaltyTableName, $tax_type_id)
     {
+        $penaltyData = $returnClass::where('tax_type_id', $tax_type_id)
+            ->where("{$returnTableName}.status", 'complete')
+            ->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+            ->select(DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totalLateFiling'), DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totalLatePayment'), DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalRate'))
+            ->groupBy('return_id')
+            ->get();
 
-        $penaltyData = $returnClass::where('tax_type_id', $tax_type_id)->where("{$return}_returns.status", '!=', 'complete')->leftJoin("{$penalty}_penalties", "{$return}_returns.id", '=', "{$penalty}_penalties.return_id")
-            ->select(
-                DB::raw("SUM(" . $penalty . "_penalties.late_filing) as totalLateFiling"),
-                DB::raw("SUM(" . $penalty . "_penalties.late_payment) as totalLatePayment"),
-                DB::raw("SUM(" . $penalty . "_penalties.rate_amount) as totalRate"),
-            )
+        $returnQuery = $returnClass::where('tax_type_id', $tax_type_id)->where('status', 'complete');
+
+        return [
+            'totalTaxAmount' => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
+            'totalLateFiling' => $penaltyData->sum('totalLateFiling'),
+            'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
+            'totalRate' => $penaltyData->sum('totalRate'),
+        ];
+    }
+
+    public function hotelLevyCardReportForUnpaidReturns($returnClass, $returnTableName, $penaltyTableName, $tax_type_id)
+    {
+        $penaltyData = $returnClass::where('tax_type_id', $tax_type_id)
+            ->where("{$returnTableName}.status", '!=', 'complete')
+            ->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+            ->select(DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totalLateFiling'), DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totalLatePayment'), DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalRate'))
             ->groupBy('return_id')
             ->get();
 
         $returnQuery = $returnClass::where('tax_type_id', $tax_type_id)->where('status', '!=', 'complete');
 
-        return  [
-            'totalTaxAmount' => $returnQuery->sum("{$return}_returns.total_amount_due_with_penalties"),
-            // 'totalPrincipalAmount' => $return->sum("{$return}_returns.total_amount_due"),
+        return [
+            'totalTaxAmount' => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
             'totalLateFiling' => $penaltyData->sum('totalLateFiling'),
             'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
             'totalRate' => $penaltyData->sum('totalRate'),

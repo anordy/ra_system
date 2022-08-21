@@ -22,6 +22,11 @@ class HotelReturn extends Model implements Auditable
 
     protected $guarded = [];
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function items(){
         return $this->hasMany(HotelReturnItem::class, 'return_id');
     }

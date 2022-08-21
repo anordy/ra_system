@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Returns\Petroleum;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessStatus;
+use App\Models\Returns\Petroleum\PetroleumPenalty;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Traits\ReturnSummaryCardTrait;
 use App\Traits\ReturnCardReport;
@@ -21,9 +22,11 @@ class PetroleumReturnController extends Controller
     {
         $vars = $this->getSummaryData(PetroleumReturn::query());
 
-        $data = $this->returnCardReport(PetroleumReturn::class, 'petroleum', 'petroleum');
+        $paidData = $this->returnCardReportForPaidReturns(PetroleumReturn::class, PetroleumReturn::getTableName(), PetroleumPenalty::getTableName());
 
-        return view('returns.petroleum.filing.index', compact('vars', 'data'));
+        $unpaidData = $this->returnCardReportForUnpaidReturns(PetroleumReturn::class, PetroleumReturn::getTableName(), PetroleumPenalty::getTableName());
+
+        return view('returns.petroleum.filing.index', compact('vars', 'paidData', 'unpaidData'));
     }
 
     public function create(Request $request)

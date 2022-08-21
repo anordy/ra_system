@@ -17,7 +17,7 @@
             <div>Payments History</div>
         </div>
 
-        @livewire('returns.return-card-report', ['data' => $data])
+        @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
         <div class="card-body">
             <livewire:returns.lump-sum.lump-sum-returns-table />
 

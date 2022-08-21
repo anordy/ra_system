@@ -2,6 +2,7 @@
 
 @section('title','Payment Summary')
 
+
 @section('content')
     @include('payments.includes.summary')
 

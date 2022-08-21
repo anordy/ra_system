@@ -20,6 +20,11 @@ class EmTransactionReturn extends Model
     protected $guarded = [];
     protected $table = 'em_transaction_returns';
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function emTransactionReturnItems(){
         return $this->hasMany(EmTransactionReturnItem::class, 'return_id');
     }
