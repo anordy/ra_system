@@ -59,10 +59,6 @@
                             <td class="my-1">{{$return->taxtype->name }}</td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold text-uppercase">Currency</td>
-                            <td class="my-1">{{ $currency }}</td>
-                        </tr>
-                        <tr>
                             <td class="font-weight-bold text-uppercase">Phone</td>
                             <td class="my-1">{{ $return->business->mobile }}</td>
                         </tr>
@@ -72,7 +68,7 @@
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Current Turnover</td>
-                            <td class="my-1">{{ number_format($sales,2) }}</td>
+                            <td class="my-1">{{ number_format($sales,2) }} <strong>{{$currency}}</strong></td>
                         </tr>
                         </tbody>
                     </table>

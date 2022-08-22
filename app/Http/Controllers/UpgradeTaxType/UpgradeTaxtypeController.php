@@ -75,20 +75,18 @@ class UpgradeTaxtypeController extends Controller
         {
             case TaxType::HOTEL:
                 $return = HotelReturn::query()->findOrFail($return_id);
-            $currency = $this->getCurrency($return->business_id, $return->tax_type_id);
                 break;
             case TaxType::STAMP_DUTY:
                 $return = StampDutyReturn::query()->findOrFail($return_id);
-                $currency = $this->getCurrency($return->business_id, $return->tax_type_id);
                 break;
             case TaxType::LUMPSUM_PAYMENT:
                 $return = LumpSumReturn::query()->findOrFail($return_id);
-                $currency = $this->getCurrency($return->business_id, $return->tax_type_id);
                 break;
             default:
                 abort(404);
         }
 
+        $currency = $this->getCurrency($return->business_id, $return->tax_type_id);
 
         return view('upgrade-tax-type.show', compact('return', 'return_id', 'sales','currency'));
     }
