@@ -360,7 +360,7 @@ class TaxInvestigationApprovalProcessing extends Component
 
         try {
             $operators = [];
-            if ($this->checkTransition('conduct_investigation')) {
+            if ($this->checkTransition('investigation_report')) {
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
             $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments, 'operators' => $operators]);
