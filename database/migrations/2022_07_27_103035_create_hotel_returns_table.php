@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\Returns\ReturnStatus;
 use App\Enum\DisputeStatus;
-use App\Enum\ReturnApplicationStatus;
 use App\Enum\ReturnCategory;
+use App\Enum\TaxClaimStatus;
+use App\Models\Returns\ReturnStatus;
+use App\Enum\ReturnApplicationStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -21,7 +22,6 @@ class CreateHotelReturnsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('business_id');
-
             $table->string('filed_by_type');
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->unsignedBigInteger('filed_by_id');
@@ -30,6 +30,7 @@ class CreateHotelReturnsTable extends Migration
             $table->integer('edited_count')->default(0);
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
+            $table->enum('claim_status',TaxClaimStatus::getConstants())->default(TaxClaimStatus::NO_CLAIM);
             $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->decimal('hotel_infrastructure_tax', 20, 2)->nullable();
             $table->string('financial_month_id');

@@ -4,6 +4,7 @@ namespace App\Models\Returns\StampDuty;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Taxpayer;
@@ -18,6 +19,11 @@ class StampDutyReturn extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 
     public function taxType(){
         return $this->belongsTo(TaxType::class);
@@ -57,6 +63,10 @@ class StampDutyReturn extends Model
 
     public function claimable(){
         $this->morphTo('old_return');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     /*

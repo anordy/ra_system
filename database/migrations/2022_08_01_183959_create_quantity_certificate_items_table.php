@@ -18,9 +18,9 @@ class CreateQuantityCertificateItemsTable extends Migration
             $table->unsignedBigInteger('certificate_id');
             $table->unsignedBigInteger('config_id');
             $table->string('cargo_name')->nullable();
-            $table->decimal('liters_observed');
-            $table->decimal('liters_at_20');
-            $table->decimal('metric_tons')->nullable();
+            $table->decimal('liters_observed', 20, 2);
+            $table->decimal('liters_at_20', 20, 2);
+            $table->decimal('metric_tons', 20, 2)->nullable();
             $table->string('voyage_no')->nullable();
             $table->integer('download_count')->default(0);
             $table->timestamps();

@@ -6,11 +6,9 @@ use ReflectionClass;
 
 class InstallmentStatus implements Status
 {
-    public const DRAFT = 'draft';
-    public const PENDING = 'pending';
-    public const APPROVED = 'approved';
-    public const CORRECTION = 'correction';
-    public const REJECTED = 'rejected';
+    public const ACTIVE = 'active';
+    public const COMPLETE = 'complete';
+    public const CANCELLED = 'cancelled';
 
     static function getConstants(): array
     {

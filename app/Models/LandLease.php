@@ -43,4 +43,11 @@ class LandLease extends Model
     {
         return $this->morphMany(ZmBill::class, 'billable');
     }
+
+    public function bill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable');
+    }
+
+
 }

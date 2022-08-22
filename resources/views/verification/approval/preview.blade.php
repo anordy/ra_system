@@ -98,15 +98,15 @@
                                 <p class="my-1">{{ $verification->assessment->principal_amount ?? '' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ $verification->assessment->interest_amount ?? '' }}</p>
-                            </div>
-                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                 <p class="my-1">{{ $verification->assessment->penalty_amount ?? '' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <span class="font-weight-bold text-uppercase">Total Amount Due</span>
+                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                                <p class="my-1">{{ $verification->assessment->interest_amount ?? '' }}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase"> Total Amount Due</span>
                                 <p class="my-1">{{ $verification->assessment->total_amount ?? '' }}</p>
                             </div>
                             @if ($verification->assessment->report_path)

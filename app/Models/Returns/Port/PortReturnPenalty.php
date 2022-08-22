@@ -9,6 +9,11 @@ class PortReturnPenalty extends Model
 {
     use HasFactory;
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     protected $guarded = [];
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Enum\ExtensionStatus;
+use App\Enum\ExtensionRequestStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,12 +19,14 @@ class CreateExtensionRequestsTable extends Migration
             $table->unsignedBigInteger('debt_id');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('taxpayer_id');
+            $table->unsignedBigInteger('tax_type_id');
             $table->text('reasons');
             $table->text('ground');
             $table->string('attachment')->nullable();
+            $table->dateTime('extend_from')->nullable();
+            $table->dateTime('extend_to')->nullable();
             $table->string('marking')->nullable();
-            $table->enum('status', ExtensionStatus::getConstants());
+            $table->enum('status', ExtensionRequestStatus::getConstants());
             $table->softDeletes();
             $table->timestamps();
         });

@@ -37,7 +37,9 @@ use App\Http\Controllers\Debt\AssessmentDebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\EducationLevelController;
+use App\Http\Controllers\Extension\ExtensionController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Installment\InstallmentController;
 use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
@@ -59,6 +61,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Payments\PaymentsController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
+use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
@@ -331,13 +334,23 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
     });
 
-
-
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
         Route::get('/', [ClaimsController::class, 'index'])->name('index');
         Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
         Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
+    });
+
+    Route::name('extension.')->prefix('/extensions-e-filling')->group(function () {
+        Route::get('/', [ExtensionController::class, 'index'])->name('index');
+        Route::get('show/{debtId}', [ExtensionController::class, 'show'])->name('show');
+        Route::get('file/{file}', [ExtensionController::class, 'file'])->name('file');
+    });
+
+    Route::name('installment.')->prefix('/installments-e-filling')->group(function () {
+        Route::get('/', [InstallmentController::class, 'index'])->name('index');
+        Route::get('show/{debtId}', [InstallmentController::class, 'show'])->name('show');
+        Route::get('file/{file}', [InstallmentController::class, 'file'])->name('file');
     });
 
     Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-types')->group(function () {
@@ -380,12 +393,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
 
-    Route::name('land-lease.')->prefix('land-lease')->group(function () {
-        Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
-        Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
-        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
-        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
-    });
+        Route::name('land-lease.')->prefix('land-lease')->group(function () {
+            Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+            Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+            Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+            Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        });
 
     //Tax Clearance
     Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {

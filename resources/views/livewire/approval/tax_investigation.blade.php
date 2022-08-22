@@ -118,14 +118,6 @@
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
-                            <label class="control-label">Interest Amount</label>
-                            <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
-                                wire:model.lazy="interestAmount">
-                            @error('interestAmount')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-lg-6">
                             <label class="control-label">Penalty Amount</label>
                             <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
                                 wire:model.lazy="penaltyAmount">
@@ -133,6 +125,15 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Interest Amount</label>
+                            <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
+                                wire:model.lazy="interestAmount">
+                            @error('interestAmount')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <div class="form-group col-lg-6">
                             <label class="control-label">Workings</label>
                             <input type="file" class="form-control  @error('workingsReport') is-invalid @enderror"
@@ -211,4 +212,6 @@
         @endif
 
     </div>
+@else
+    <div></div>
 @endif

@@ -40,17 +40,17 @@ class ActiveTaxAgentTable extends DataTableComponent
                     return "{$row->taxpayer->first_name} {$row->taxpayer->middle_name} {$row->taxpayer->last_name}";
                 }),
 			Column::make("Reference No", "reference_no")
-				->sortable(),
+				->sortable()->searchable(),
 			Column::make("TIN No", "tin_no")
 				->sortable(),
 			Column::make("Plot No.", "plot_no")
-				->sortable(),
+				->sortable()->searchable(),
 			Column::make("Block", "block")
-				->sortable(),
+				->sortable()->searchable(),
             Column::make("District", "district.name")
-                ->sortable(),
+                ->sortable()->searchable(),
             Column::make("Region", "region.name")
-                ->sortable(),
+                ->sortable()->searchable(),
 		  Column::make('Status', 'status')
 			->view('taxagents.includes.status'),
 			Column::make('Action', 'id')

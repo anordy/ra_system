@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Livewire\Returns\LumpSum\LumpSumReturns;
 use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
+use App\Models\Returns\LumpSum\LumpSumPenalties;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
@@ -19,11 +20,13 @@ class LumpSumReturnController extends Controller
 
     public function index()
     {
-        $data = $this->returnCardReport(LumpSumReturn::class, 'lump_sum', 'lump_sum');
+        $paidData = $this->returnCardReportForPaidReturns(LumpSumReturn::class, LumpSumReturn::getTableName(), LumpSumPenalties::getTableName());
+
+        $unpaidData = $this->returnCardReportForUnpaidReturns(LumpSumReturn::class, LumpSumReturn::getTableName(), LumpSumPenalties::getTableName());
 
         $vars = $this->getSummaryData(LumpSumReturn::query());
 
-        return view('returns.lump-sum.history', compact('vars', 'data'));
+        return view('returns.lump-sum.history', compact('vars', 'paidData', 'unpaidData'));
     }
 
     public function history()
@@ -33,9 +36,8 @@ class LumpSumReturnController extends Controller
 
     public function view($row)
     {
-        $row = decrypt($row);
-        $id  = $row->id;
-
+        $id = decrypt($row);
+       
         $return = LumpSumReturn::findOrFail($id);
 
         return view('returns.lump-sum.view', compact('return'));

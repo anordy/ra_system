@@ -11,6 +11,11 @@ class MmTransferPenalty extends Model
     protected $guarded = [];
     protected $table = 'mm_transfer_penalties';
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function mmTransferPenalties(){
         return $this->belongsTo(MmTransferReturn::class);
     }

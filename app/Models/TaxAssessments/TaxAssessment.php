@@ -2,6 +2,7 @@
 
 namespace App\Models\TaxAssessments;
 
+use App\Models\Debts\Debt;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Models\FinancialMonth;
@@ -23,6 +24,10 @@ class TaxAssessment extends Model
     public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function location()

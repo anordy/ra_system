@@ -50,8 +50,9 @@
                     <tr>
                         <td>Payment For <br> <small> Malipo Kwa Ajili Ya</small> </td>
                         <td>
-                            {{ $return->quarter }} Quater plus Late Payments Penalties <br>
-                            <small>Awamu ya {{ $return->quarter }} na Adhabu ya kuchelewesha malipo</small>
+                            {{ getNumberOrdinal($return->quarter) }} Quater plus Late Payments Penalties <br>
+                            <small>Awamu ya {{ $return->quarter }} na Adhabu ya kuchelewesha malipo
+                            </small>
                         </td>
                     </tr>
                 @else

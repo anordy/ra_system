@@ -4,7 +4,7 @@ namespace App\Enum;
 
 use ReflectionClass;
 
-class ExtensionStatus implements Status
+class InstallmentRequestStatus implements Status
 {
     public const DRAFT = 'draft';
     public const PENDING = 'pending';

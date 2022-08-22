@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Returns\EmTransaction;
 
 use App\Http\Controllers\Controller;
+use App\Models\Returns\EmTransactionPenalty;
 use App\Models\Returns\EmTransactionReturn;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
@@ -13,11 +14,13 @@ class EmTransactionController extends Controller
 
     public function index()
     {
-        $data = $this->returnCardReport(EmTransactionReturn::class, 'em_transaction', 'em_transaction');
+        $paidData = $this->returnCardReportForPaidReturns(EmTransactionReturn::class, EmTransactionReturn::getTableName(), EmTransactionPenalty::getTableName());
+
+        $unpaidData = $this->returnCardReportForUnpaidReturns(EmTransactionReturn::class, EmTransactionReturn::getTableName(), EmTransactionPenalty::getTableName());
 
         $vars = $this->getSummaryData(EmTransactionReturn::query());
 
-        return view('returns.em-transaction.index', compact('vars', 'data'));
+        return view('returns.em-transaction.index', compact('vars', 'paidData', 'unpaidData'));
     }
 
     public function show($return_id)

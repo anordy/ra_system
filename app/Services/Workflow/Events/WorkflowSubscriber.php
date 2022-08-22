@@ -3,6 +3,7 @@
 namespace App\Services\Workflow\Events;
 
 use App\Enum\DisputeStatus;
+use App\Enum\ReturnApplicationStatus;
 use App\Enum\TaxAuditStatus;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
@@ -118,8 +119,14 @@ class WorkflowSubscriber implements EventSubscriberInterface
             foreach ($places as $key => $place) {
 
                 $operators = json_encode($place['operators']);
+
                 if (array_key_exists('operators', $context) && $context['operators'] != []) {
                     $operators = json_encode($context['operators']);
+                } else {
+                    if ($place['operator_type'] == "role") {
+                        $users = User::whereIn('role_id', $place['operators'])->get()->pluck('id')->toArray();
+                        $operators = json_encode($users);
+                    }
                 }
 
                 $task = new WorkflowTask([
@@ -134,7 +141,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
                     'status' => $key == 'completed' ? 'completed' : 'running',
-                    'remarks' => $context['comment'],
+                    'remarks' => $context['comment'] ?? null,
                 ]);
 
                 DB::transaction(function () use ($task, $subject) {
@@ -146,9 +153,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 if (key($places) == 'completed') {
                     $assessmentExists = $subject->assessment()->exists();
                     if ($assessmentExists) {
-                        $subject->taxReturn->application_status = DisputeStatus::ADJUSTED;
+                        $subject->taxReturn->application_status = ReturnApplicationStatus::ADJUSTED;
                     } else {
-                        $subject->taxReturn->application_status = DisputeStatus::SELF_ASSESSMENT;
+                        $subject->taxReturn->application_status = ReturnApplicationStatus::SELF_ASSESSMENT;
                     }
                     $subject->status = TaxVerificationStatus::APPROVED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
@@ -244,6 +251,11 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'TAX_INVESTIGATION') {
             } elseif ($placeName == 'TAX_CLEARENCE') {
             } elseif ($placeName == 'DISPUTE') {
+            } elseif ($placeName == 'INSTALLMENT_REQUESTS') {
+            } elseif ($placeName == 'PAYMENTS_EXTENSION_REQUEST') {
+            } elseif ($placeName == 'TAX_CLAIM_VERIFICATION') {
+            } elseif ($placeName == 'INSTALLMENT_REQUESTS') {
+            } elseif ($placeName == 'PAYMENTS_EXTENSION_REQUEST') {
             } else {
                 if (key($placesCurrent) == 'completed') {
                     $event->getSubject()->taxpayer->notify(new DatabaseNotification(

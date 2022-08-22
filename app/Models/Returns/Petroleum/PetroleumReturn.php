@@ -4,6 +4,7 @@ namespace App\Models\Returns\Petroleum;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
 use App\Models\FinancialYear;
 use App\Models\SevenDaysFinancialMonth;
 use App\Models\Taxpayer;
@@ -18,9 +19,18 @@ class PetroleumReturn extends Model
 
     protected $guarded = [];
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function configReturns()
     {
         return $this->hasMany(PetroleumReturnItem::class, 'return_id');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function business(){

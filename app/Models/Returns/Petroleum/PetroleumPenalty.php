@@ -11,6 +11,11 @@ class PetroleumPenalty extends Model
     protected $guarded = [];
     protected $table = 'petroleum_penalties';
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function petroleumReturn(){
         return $this->belongsTo(PetroleumReturn::class);
     }

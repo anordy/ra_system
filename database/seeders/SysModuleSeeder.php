@@ -15,22 +15,27 @@ class SysModuleSeeder extends Seeder
     public function run()
     {
         $data = [
-            ['id' => 1, 'code' => 'taxpayer-management' ,'name' => 'Taxpayer Management'],
-            ['id' => 2, 'code' => 'tax-consultant', 'name' => 'Tax Consultant'],
-            ['id' => 3, 'code' => 'upgrade-tax-types', 'name' => 'UpgradTax Types'],
-            ['id' => 4, 'code' => 'tax-return', 'name' => 'Tax Return'],
-            ['id' => 5, 'code' => 'withholding-agent', 'name' => 'Withholding Agent'],
-            ['id' => 6, 'code' => 'petroleum-management', 'name' => 'Petroleum Management'],
-            ['id' => 7, 'code' => 'return-verification', 'name' => 'Return Verification'],
-            ['id' => 8, 'code' => 'tax-claim', 'name' => 'Tax Claim'],
-            ['id' => 9, 'code' => 'auditing', 'name' => 'Auditing'],
-            ['id' => 10, 'code' => 'investigation', 'name' => 'Investigation'],
-            ['id' => 11, 'code' => 'dispute-management', 'name' => 'Dispute Management'],
-            ['id' => 12, 'code' => 'tax-clearance-management', 'name' => 'Tax Clearance Management'],
-            ['id' => 13, 'code' => 'debt-management', 'name' => 'Debt Management'],
-            ['id' => 14, 'code' => 'managerial-report', 'name' => 'Manageria Report'],
+            ['id' => 1, 'code' => 'taxpayer-management', 'name' => 'Taxpayer Management'],
+            ['id' => 2, 'code' => 'business-management', 'name' => 'Business Management'],
+            ['id' => 3, 'code' => 'tax-consultant', 'name' => 'Tax Consultant'],
+            ['id' => 4, 'code' => 'upgrade-tax-types', 'name' => 'UpgradTax Types'],
+            ['id' => 5, 'code' => 'tax-return', 'name' => 'Tax Return'],
+            ['id' => 6, 'code' => 'withholding-agent', 'name' => 'Withholding Agent'],
+            ['id' => 7, 'code' => 'petroleum-management', 'name' => 'Petroleum Management'],
+            ['id' => 8, 'code' => 'return-verification', 'name' => 'Return Verification'],
+            ['id' => 9, 'code' => 'tax-claim', 'name' => 'Tax Claim'],
+            ['id' => 10, 'code' => 'auditing', 'name' => 'Auditing'],
+            ['id' => 11, 'code' => 'investigation', 'name' => 'Investigation'],
+            ['id' => 12, 'code' => 'dispute-management', 'name' => 'Dispute Management'],
+            ['id' => 13, 'code' => 'tax-clearance-management', 'name' => 'Tax Clearance Management'],
+            ['id' => 14, 'code' => 'debt-management', 'name' => 'Debt Management'],
             ['id' => 15, 'code' => 'land-lease', 'name' => 'Land Lease'],
-            ['id'=>16,'code'=>'mvr','name' => 'Motor Vehicle Registration'],
+            ['id' => 16, 'code' => 'mvr', 'name' => 'Motor Vehicle Registration'],
+            ['id' => 17, 'code' => 'manage-payment', 'name' => 'Manage Payment'],
+            ['id' => 18, 'code' => 'setting', 'name' => 'Setting'],
+            ['id' => 19, 'code' => 'system', 'name' => 'System'],
+            ['id' => 20, 'code' => 'managerial-report', 'name' => 'Manageria Report'],
+
 
 
         ];

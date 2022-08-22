@@ -8,13 +8,37 @@ use Illuminate\Support\Facades\DB;
 trait ReturnCardReport
 {
 
-    public function returnCardReport($returnClass, $return, $penalty){
+    public function returnCardReportForPaidReturns($returnClass, $returnTableName, $penaltyTableName){
 
-        $penaltyData = $returnClass::where("{$return}_returns.status", '!=', 'complete')->leftJoin("{$penalty}_penalties", "{$return}_returns.id", '=', "{$penalty}_penalties.return_id")
+        $penaltyData = $returnClass::where("{$returnTableName}.status", 'complete')->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
-            DB::raw("SUM(".$penalty."_penalties.late_filing) as totalLateFiling"),
-            DB::raw("SUM(".$penalty."_penalties.late_payment) as totalLatePayment"),
-            DB::raw("SUM(".$penalty."_penalties.rate_amount) as totalRate"),
+            DB::raw("SUM(".$penaltyTableName.".late_filing) as totalLateFiling"),
+            DB::raw("SUM(".$penaltyTableName.".late_payment) as totalLatePayment"),
+            DB::raw("SUM(".$penaltyTableName.".rate_amount) as totalRate"),
+        )
+        ->groupBy('return_id')
+        ->get();
+
+        $returnQuery = $returnClass::where('status', 'complete');
+
+        return  [
+            'totalTaxAmount' => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
+            'totalLateFiling' => $penaltyData->sum('totalLateFiling'),
+            'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
+            'totalRate' => $penaltyData->sum('totalRate'),
+        ];
+
+    }
+
+
+    public function returnCardReportForUnpaidReturns($returnClass, $returnTableName, $penaltyTableName){
+
+        
+        $penaltyData = $returnClass::where("{$returnTableName}.status", '!=', 'complete')->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+        ->select(
+            DB::raw("SUM(".$penaltyTableName.".late_filing) as totalLateFiling"),
+            DB::raw("SUM(".$penaltyTableName.".late_payment) as totalLatePayment"),
+            DB::raw("SUM(".$penaltyTableName.".rate_amount) as totalRate"),
         )
         ->groupBy('return_id')
         ->get();
@@ -22,13 +46,13 @@ trait ReturnCardReport
         $returnQuery = $returnClass::where('status', '!=', 'complete');
 
         return  [
-            'totalTaxAmount' => $returnQuery->sum("{$return}_returns.total_amount_due_with_penalties"),
-            // 'totalPrincipalAmount' => $return->sum("{$return}_returns.total_amount_due"),
+            'totalTaxAmount' => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
             'totalLateFiling' => $penaltyData->sum('totalLateFiling'),
             'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
             'totalRate' => $penaltyData->sum('totalRate'),
         ];
 
     }
+
     
 }

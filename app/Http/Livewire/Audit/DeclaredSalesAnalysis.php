@@ -8,7 +8,7 @@ use App\Models\Returns\BFO\BfoReturnItems;
 use App\Models\Returns\EmTransactionConfig;
 use App\Models\Returns\EmTransactionReturnItem;
 use App\Models\Returns\ExciseDuty\MnoConfig;
-use App\Models\returns\ExciseDuty\MnoReturnItem;
+use App\Models\Returns\ExciseDuty\MnoReturnItem;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\LumpSum\LumpSumReturn;
@@ -82,7 +82,6 @@ class DeclaredSalesAnalysis extends Component
             case TaxType::ELECTRONIC_MONEY_TRANSACTION:
                 $this->returnTypeTable = TaxType::ELECTRONIC_MONEY_TRANSACTION;
                 $this->emTransaction();
-
                 break;
             case TaxType::LUMPSUM_PAYMENT:
                 $this->returnTypeTable = TaxType::LUMPSUM_PAYMENT;
@@ -92,7 +91,8 @@ class DeclaredSalesAnalysis extends Component
             case TaxType::MOBILE_MONEY_TRANSFER:
                 $this->returnTypeTable = TaxType::MOBILE_MONEY_TRANSFER;
                 $this->mmTransfer();
-                // no break
+                
+                break;
             case TaxType::STAMP_DUTY:
                 $this->stampDuty();
 
