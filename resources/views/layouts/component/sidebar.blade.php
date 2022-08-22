@@ -143,6 +143,7 @@
                 </li>
             </ul>
         </li>
+
         <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">
             <a href="#petroleum" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Petroleum
                 Management</a>
@@ -359,6 +360,38 @@
             </ul>
         </li>
 
+        <li  class="{{ request()->is('mvr*') ? 'active':'' }}">
+            <a href="#mvrSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle Registration</a>
+            <ul class="collapse list-unstyled {{ request()->is('mvr*') ? 'show' : '' }}" id="mvrSubmenu">
+                <li class="{{ request()->is('mvr/register') ? 'active': '' }}">
+                    <a href="{{ route('mvr.register') }}">Motor Vehicle Registration</a>
+                </li>
+                @canany(['receive_plate_number','print_plate_number'])
+                    <li class="{{ request()->is('mvr/plate-numbers') ? 'active': '' }}">
+                        <a href="{{ route('mvr.plate-numbers') }}">Plate Number Printing</a>
+                    </li>
+                @endcanany
+                <li class="{{ request()->is('mvr/reg-change-requests') ? 'active': '' }}">
+                    <a href="{{route('mvr.reg-change-requests')}}">Status Change Requests</a>
+                </li>
+                <li class="{{ request()->is('mvr/transfer-ownership*') ? 'active': '' }}">
+                    <a href="{{route('mvr.transfer-ownership')}}">Transfer Ownership</a>
+                </li>
+                <li class="{{ request()->is('mvr/de-register-requests*') ? 'active': '' }}">
+                    <a href="{{route('mvr.de-register-requests')}}">De-registration</a>
+                </li>
+                <li class="{{ request()->is('mvr/written-off') ? 'active': '' }}">
+                    <a href="{{ route('mvr.written-off') }}">Written-off Vehicles</a>
+                </li>
+                <li class="{{ request()->is('mvr/registered') ? 'active': '' }}">
+                    <a href="{{ route('mvr.registered') }}">Registered Motor Vehicles</a>
+                </li>
+                <li class="{{ request()->is('mvr/agent') ? 'active': '' }}">
+                    <a href="{{ route('mvr.agent') }}">Transport Agents</a>
+                </li>
+            </ul>
+        </li>
+
         <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
             <a href="#landLeaseSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
@@ -468,6 +501,50 @@
                 </li>
                 <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
                     <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
+                </li>
+
+                <li class="{{ request()->is('settings/mvr-generic/MvrMake') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrMake') }}">Motor Vehicle Make</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrModel') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrModel') }}">Motor Vehicle Model</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrTransmissionType') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrTransmissionType') }}">Motor Vehicle Transmission</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrFuelType') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrFuelType') }}">Motor vehicle Fuel Type</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrClass') }}">Motor Vehicle Class</a>
+                </li>
+
+                <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrColor') }}">Motor Vehicle Color</a>
+                </li>
+
+                <li class="{{ request()->is('settings/mvr-generic/MvrBodyType') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrBodyType') }}">Motor Vehicle Body Type</a>
+                </li>
+
+                <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrPlateSize') }}">Motor Vehicle Plate Size</a>
+                </li>
+
+                <li class="{{ request()->is('settings/mvr-generic/MvrFee') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrFee') }}">Motor Vehicle Fees</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrDeRegistrationReason') }}">De Registration Reasons</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrOwnershipTransferReason') }}">Transfer Reasons</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrTransferCategory') }}">Transfer Categories</a>
+                </li>
+                <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
+                    <a href="{{ route('settings.mvr-generic.index','MvrTransferFee') }}">Transfer Fees</a>
                 </li>
             </ul>
         </li>

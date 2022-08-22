@@ -5,6 +5,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
+            @livewire('returns.return-summary',['vars'=>$vars])
             @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
             @livewire('returns.petroleum.petroleum-return-table')
         </div>

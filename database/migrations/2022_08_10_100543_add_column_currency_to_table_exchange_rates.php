@@ -14,7 +14,6 @@ class AddColumnCurrencyToTableExchangeRates extends Migration
     public function up()
     {
         Schema::table('exchange_rates', function (Blueprint $table) {
-            //
             $table->string('currency')->after('id');
             $table->softDeletes();
         });

@@ -16,10 +16,10 @@ class PermissionSeeder extends Seeder
     {
         $data = [
 
-             # KYC Data
-             ['name' => 'taxpayer_view', 'sys_module_id' => 1],
-             ['name' => 'kyc_view', 'sys_module_id' => 1],
-             ['name' => 'kyc_complete', 'sys_module_id' => 1],
+            # KYC Data
+            ['name' => 'taxpayer_view', 'sys_module_id' => 1],
+            ['name' => 'kyc_view', 'sys_module_id' => 1],
+            ['name' => 'kyc_complete', 'sys_module_id' => 1],
 
             # Business Management
             ['name' => 'registration', 'sys_module_id' => 2],
@@ -60,38 +60,38 @@ class PermissionSeeder extends Seeder
             ['name' => 'withholding_agents_disable', 'sys_module_id' => 6],
 
             # Petroleum Management
-            ['name' => 'quantity-of-certificate-view', 'sys_module_id' => 7], 
-            ['name' => 'petroleum-return-view', 'sys_module_id' => 7], 
-           
+            ['name' => 'quantity-of-certificate-view', 'sys_module_id' => 7],
+            ['name' => 'petroleum-return-view', 'sys_module_id' => 7],
+
             # Return Verifications
-            ['name' => 'verification-approval-view', 'sys_module_id' => 7], 
-            ['name' => 'verification-assessment-view', 'sys_module_id' => 7], 
-            ['name' => 'verification-approved-view', 'sys_module_id' => 7], 
+            ['name' => 'verification-approval-view', 'sys_module_id' => 8],
+            ['name' => 'verification-assessment-view', 'sys_module_id' => 8],
+            ['name' => 'verification-approved-view', 'sys_module_id' => 8],
 
 
             # Tax Claim
-            ['name' => 'tax-claim-view', 'sys_module_id' => 8],
-            
+            ['name' => 'tax-claim-view', 'sys_module_id' => 9],
+
             # Auditing
-            ['name' => 'auditing-approval-view', 'sys_module_id' => 9], 
-            ['name' => 'auditing-assessment-view', 'sys_module_id' => 9], 
-            ['name' => 'auditing-approved-view', 'sys_module_id' => 9], 
+            ['name' => 'auditing-approval-view', 'sys_module_id' => 10],
+            ['name' => 'auditing-assessment-view', 'sys_module_id' => 10],
+            ['name' => 'auditing-approved-view', 'sys_module_id' => 10],
 
             # Investigation
-            ['name' => 'investigation-approval-view', 'sys_module_id' => 10], 
-            ['name' => 'investigation-assessment-view', 'sys_module_id' => 10], 
-            ['name' => 'investigation-approved-view', 'sys_module_id' => 10], 
+            ['name' => 'investigation-approval-view', 'sys_module_id' => 11],
+            ['name' => 'investigation-assessment-view', 'sys_module_id' => 11],
+            ['name' => 'investigation-approved-view', 'sys_module_id' => 11],
 
 
             # Disputes Management
-            ['name' => 'dispute-waiver-view', 'sys_module_id' => 11], 
-            ['name' => 'dispute-objection-view', 'sys_module_id' => 11], 
-            ['name' => 'dispute-waiver-objection-view', 'sys_module_id' => 11], 
+            ['name' => 'dispute-waiver-view', 'sys_module_id' => 12],
+            ['name' => 'dispute-objection-view', 'sys_module_id' => 12],
+            ['name' => 'dispute-waiver-objection-view', 'sys_module_id' => 12],
 
             # Relief Management
-            ['name' => 'relief-ministries-view', 'sys_module_id' => 12], 
-            ['name' => 'relief-projects-view', 'sys_module_id' => 12], 
-            ['name' => 'relief-register-view', 'sys_module_id' => 12], 
+            ['name' => 'relief-ministries-view', 'sys_module_id' => 12],
+            ['name' => 'relief-projects-view', 'sys_module_id' => 12],
+            ['name' => 'relief-register-view', 'sys_module_id' => 12],
             ['name' => 'relief-generate-report-view', 'sys_module_id' => 12],
 
             # Tax Clearance Management
@@ -121,8 +121,100 @@ class PermissionSeeder extends Seeder
             # Manageria Report
             ['name' => 'managerial-report-view', 'sys_module_id' => 14],
 
+            ['name' => 'mvr_initiate_registration', 'sys_module_id' => 15],
+            ['name' => 'mvr_approve_registration', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_initiate_registration_change', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_approve_registration_change', 'sys_module_id' => 15 ],
+            ['name' => 'receive_plate_number', 'sys_module_id' => 15 ],
+            ['name' => 'print_plate_number', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_register_agent', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_initiate_transfer', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_approve_transfer', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15 ],
+            # Managerial Report
+            ['name' => 'managerial-report-view', 'sys_module_id' => 16],
 
+            # Manage Payments
+            ['name' => 'complete-payments-view', 'sys_module_id' => 17],
+
+            # Setting
+            ['name' => 'setting-user-view', 'sys_module_id' => 18],
+            ['name' => 'setting-user-add', 'sys_module_id' => 18],
+            ['name' => 'setting-user-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-user-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-role-view', 'sys_module_id' => 18],
+            ['name' => 'setting-role-add', 'sys_module_id' => 18],
+            ['name' => 'setting-role-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-role-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-country-view', 'sys_module_id' => 18],
+            ['name' => 'setting-country-add', 'sys_module_id' => 18],
+            ['name' => 'setting-country-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-country-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-region-view', 'sys_module_id' => 18],
+            ['name' => 'setting-region-add', 'sys_module_id' => 18],
+            ['name' => 'setting-region-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-region-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-district-view', 'sys_module_id' => 18],
+            ['name' => 'setting-district-add', 'sys_module_id' => 18],
+            ['name' => 'setting-district-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-district-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-ward-view', 'sys_module_id' => 18],
+            ['name' => 'setting-ward-add', 'sys_module_id' => 18],
+            ['name' => 'setting-ward-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-ward-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-bank-view', 'sys_module_id' => 18],
+            ['name' => 'setting-bank-add', 'sys_module_id' => 18],
+            ['name' => 'setting-bank-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-bank-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-exchange-rate-view', 'sys_module_id' => 18],
+            ['name' => 'setting-exchange-rate-add', 'sys_module_id' => 18],
+            ['name' => 'setting-exchange-rate-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-exchange-rate-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-education-level-view', 'sys_module_id' => 18],
+            ['name' => 'setting-education-level-add', 'sys_module_id' => 18],
+            ['name' => 'setting-education-level-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-education-level-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-business-category-view', 'sys_module_id' => 18],
+            ['name' => 'setting-business-category-add', 'sys_module_id' => 18],
+            ['name' => 'setting-business-category-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-business-category-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-tax-type-view', 'sys_module_id' => 18],
+            ['name' => 'setting-tax-type-add', 'sys_module_id' => 18],
+            ['name' => 'setting-tax-type-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-tax-type-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-1-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-1-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-1-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-1-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-2-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-2-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-2-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-2-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-3-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-3-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-3-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-3-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-4-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-4-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-4-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-4-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-business-file-view', 'sys_module_id' => 18],
+            ['name' => 'setting-business-file-add', 'sys_module_id' => 18],
+            ['name' => 'setting-business-file-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-business-file-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-tax-region-view', 'sys_module_id' => 18],
+            ['name' => 'setting-tax-region-add', 'sys_module_id' => 18],
+            ['name' => 'setting-tax-region-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-tax-region-delete', 'sys_module_id' => 18],
+
+            # System
+            ['name' => 'system-audit-trail-view', 'sys_module_id' => 19],
+            ['name' => 'system-workflow-view', 'sys_module_id' => 19],
+            ['name' => 'system-workflow-configure', 'sys_module_id' => 19],
+            ['name' => 'system-all-pdfs-view', 'sys_module_id' => 19],
         ];
+
         foreach ($data as $row) {
             Permission::updateOrCreate($row);
         }
