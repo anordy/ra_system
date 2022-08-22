@@ -85,7 +85,7 @@
                         </div>
                     </td>
                     <td>
-                        <div><span style="width: 100px">Make:</span> <span>{{strtoupper($motor_vehicle->model->name)}}</span></div>
+                        <div><span style="width: 100px">Modal: </span> <span>{{strtoupper($motor_vehicle->model->name)}}</span></div>
                         <div><span style="width: 100px">Capacity: </span> <span>{{$motor_vehicle->engine_capacity}} cc</span></div>
                         <div><span style="width: 100px">Engine: </span> <span>{{$motor_vehicle->engine_number}}</span></div>
                         <div><span style="width: 100px">Type: </span> <span>{{$motor_vehicle->body_type->name}}</span></div>

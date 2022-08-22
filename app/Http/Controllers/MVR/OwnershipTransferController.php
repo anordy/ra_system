@@ -21,6 +21,7 @@ use App\Models\MvrTransferFee;
 use App\Services\TRA\ServiceRequest;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\MotorVehicleSearchTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -30,7 +31,9 @@ use Illuminate\Support\Facades\DB;
 class OwnershipTransferController extends Controller
 {
 
-	public function index(){
+    use MotorVehicleSearchTrait;
+
+    public function index(){
 		return view('mvr.ownership-transfer-index');
 	}
 
@@ -48,13 +51,7 @@ class OwnershipTransferController extends Controller
     }
 
     public function search($type,$number){
-        if ($type=='chassis'){
-            $motor_vehicle = MvrMotorVehicle::query()->where(['chassis_number'=>$number])->first();
-        }else{
-            $motor_vehicle = MvrMotorVehicleRegistration::query()
-                    ->where(['plate_number'=>$number])
-                    ->first()->motor_vehicle ?? null;
-        }
+        $motor_vehicle = $this->searchRegistered($type,$number);
         $search_type = ucwords(preg_replace('/-/',' ',$type));
         $action = 'mvr.ownership-transfer-request';
         $result_route = 'mvr.internal-search-ot';
@@ -82,12 +79,12 @@ class OwnershipTransferController extends Controller
             $bill = ZmCore::createBill(
                 $request->id,
                 $request->id,
-                null,
+                1,//todo: remove
                 $request->agent->id,
                 get_class($request->agent),
-                $request->agent->fullname(),
-                $request->agent->email,
-                ZmCore::formatPhone($request->agent->mobile),
+                $request->agent->taxpayer->fullname(),
+                $request->agent->taxpayer->email,
+                ZmCore::formatPhone($request->agent->taxpayer->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,
@@ -99,7 +96,7 @@ class OwnershipTransferController extends Controller
                         'billable_id' => $request->id,
                         'billable_type' => get_class($request),
                         'fee_id' => $fee->id,
-                        'tax_type_id' => null,
+                        'tax_type_id' => 1, //todo: remove
                         'fee_type' => get_class($fee),
                         'amount' => $amount,
                         'currency' => 'TZS',
@@ -110,7 +107,6 @@ class OwnershipTransferController extends Controller
                 ]
             );
             $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
-            DB::commit();
 
             $response = ZmCore::sendBill($bill);
             if ($response->status != ZmResponse::SUCCESS){
@@ -119,9 +115,10 @@ class OwnershipTransferController extends Controller
             }else{
                 session()->flash("success",'Request Approved, Control Number request sent');
             }
+            DB::commit();
         }catch (\Exception $e){
             report($e);
-            session()->flash('warning','Approval failed, could not update data');
+            session()->flash('error','Approval failed, could not update data');
             DB::rollBack();
         }
         return redirect()->route('mvr.transfer-ownership.show',encrypt($id));

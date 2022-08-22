@@ -127,6 +127,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'mvr_approve_registration_change', 'sys_module_id' => 15 ],
             ['name' => 'receive_plate_number', 'sys_module_id' => 15 ],
             ['name' => 'print_plate_number', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_register_agent', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_initiate_transfer', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_approve_transfer', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15 ],
         ];
         foreach ($data as $row) {
             Permission::updateOrCreate($row);

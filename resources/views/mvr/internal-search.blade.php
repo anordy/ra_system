@@ -41,7 +41,10 @@
                        </div>
                        <div class="col-md-4 mb-3">
                            <span class="font-weight-bold text-uppercase">Plate Number</span>
-                           <p class="my-1">{{ $motor_vehicle->current_registration->plate_number??' - ' }}</p>
+                           <p class="my-1">
+                               {{ $motor_vehicle->current_registration->plate_number??' - ' }}
+                               {{!empty($motor_vehicle->current_registration->current_active_personalized_registration->plate_number)? '/ Personalized: '.$motor_vehicle->current_registration->current_active_personalized_registration->plate_number : ''}}
+                           </p>
                        </div>
                        <div class="col-md-4 mb-3">
                            <span class="font-weight-bold text-uppercase">Plate Number Status</span>

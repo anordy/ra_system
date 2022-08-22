@@ -78,7 +78,14 @@
                         <br>
                         <div class="row">
                             <div class="col-6">
-                                <button type="button" class="btn btn-sm btn-primary" wire:click='agentLookup'>Lookup</button>
+                                <button wire:click="agentLookup" wire:loading.attr="disabled" class="btn btn-primary">
+                                    <div wire:loading wire:target="submit">
+                                        <div class="spinner-border mr-1 spinner-border-sm text-light">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                    Lookup
+                                </button>
                             </div>
                             <div class="col-6">
                                 <span class="p-1">

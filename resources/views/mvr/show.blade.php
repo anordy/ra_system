@@ -10,7 +10,7 @@
                 <h5>Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate #: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
                 <div class="card-tools">
                     @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_REGISTERED)
-                    <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
+                    <a href="{{route('mvr.certificate-of-registration',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
                        data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
                                 class="fa fa-print text-white"></i>
                         Certificate of Registration</a><!--- todo: Missing format for cert fo registration-->
@@ -250,28 +250,24 @@
             <div class="row my-2">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $motor_vehicle->agent->fullname() }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Z-Number</span>
-                    <p class="my-1">{{ $motor_vehicle->agent->reference_no }}</p>
+                    <p class="my-1">{{ $motor_vehicle->agent->taxpayer->fullname() }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">TIN</span>
-                    <p class="my-1">{{ $motor_vehicle->agent->reference_no }}</p>
+                    <p class="my-1">{{ $motor_vehicle->agent->taxpayer->reference_no }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">State/City</span>
-                    <p class="my-1">{{ $motor_vehicle->agent->location }}</p>
+                    <p class="my-1">{{ $motor_vehicle->agent->taxpayer->location }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Mobile</span>
-                    <p class="my-1">{{ $motor_vehicle->agent->mobile }}/{{ $motor_vehicle->agent->alt_mobile }}</p>
+                    <p class="my-1">{{ $motor_vehicle->agent->taxpayer->mobile }}/{{ $motor_vehicle->agent->taxpayer->alt_mobile }}</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Email</span>
-                    <p class="my-1">{{ $motor_vehicle->agent->email }}</p>
+                    <p class="my-1">{{ $motor_vehicle->agent->taxpayer->email }}</p>
                 </div>
             </div>
 

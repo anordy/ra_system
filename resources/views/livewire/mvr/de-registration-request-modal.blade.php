@@ -52,7 +52,13 @@
                         <br>
                         <div class="row">
                             <div class="col-6">
-                                <button type="button" class="btn btn-sm btn-primary" wire:click='agentLookup'>Lookup</button>
+                                <button wire:click="agentLookup" wire:loading.attr="disabled" class="btn btn-primary">
+                                    <div wire:loading wire:target="submit">
+                                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>Lookup
+                                </button>
                             </div>
                             <div class="col-6">
                                 <span class="p-1">
@@ -67,7 +73,7 @@
                     <div class="form-group col-lg-12">
                         <label class="control-label">Inspection Report</label>
                         <input type="file" class="form-control" wire:model.lazy="inspection_report" id="inspection_report">
-                        @error('name')
+                        @error('inspection_report')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -76,7 +82,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" wire:click='submit'>Submit</button>
+                <button wire:click="submit" wire:loading.attr="disabled" class="btn btn-primary">
+                    <div wire:loading wire:target="submit">
+                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>Submit
+                </button>
             </div>
         </div>
     </div>

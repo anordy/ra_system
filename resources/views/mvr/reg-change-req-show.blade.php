@@ -13,6 +13,11 @@
                     <a href="{{route('mvr.reg-change-requests.approve',encrypt($change_req->id))}}">
                         <button class="btn btn-info btn-sm"><i class="fa fa-check"></i>Approve</button>
                     </a>
+                        <a href="{{route('mvr.transfer-ownership.reject',encrypt($change_req->id))}}">
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fa fa-times"></i> Reject
+                            </button>
+                        </a>
                 @endif
                 @endcan
             </div>
@@ -99,7 +104,10 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Plate Number</span>
-                        <p class="my-1">{{ $motor_vehicle->current_registration->plate_number??' - ' }}</p>
+                        <p class="my-1">
+                            {{ $motor_vehicle->current_registration->plate_number??' - ' }}
+                            {{!empty($motor_vehicle->current_registration->current_active_personalized_registration->plate_number)? '/ Personalized: '.$motor_vehicle->current_registration->current_active_personalized_registration->plate_number : ''}}
+                        </p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Plate Number Status</span>
@@ -247,28 +255,24 @@
             <div class="row my-2">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $change_req->agent->fullname() }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Z-Number</span>
-                    <p class="my-1">{{ $change_req->agent->reference_no }}</p>
+                    <p class="my-1">{{ $change_req->agent->taxpayer->fullname() }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">TIN</span>
-                    <p class="my-1">{{ $change_req->agent->reference_no }}</p>
+                    <p class="my-1">{{ $change_req->agent->taxpayer->tin }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">State/City</span>
-                    <p class="my-1">{{ $change_req->agent->location }}</p>
+                    <p class="my-1">{{ $change_req->agent->taxpayer->location }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Mobile</span>
-                    <p class="my-1">{{ $change_req->agent->mobile }}/{{ $motor_vehicle->agent->alt_mobile }}</p>
+                    <p class="my-1">{{ $change_req->agent->taxpayer->mobile }}/{{ $motor_vehicle->agent->taxpayer->alt_mobile }}</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Email</span>
-                    <p class="my-1">{{ $change_req->agent->email }}</p>
+                    <p class="my-1">{{ $change_req->agent->taxpayer->email }}</p>
                 </div>
             </div>
 

@@ -38,7 +38,7 @@ class MvrDeRegistrationRequest extends Model
 	protected $table = 'mvr_de_registration_requests';
 
 	protected $casts = [
-		'agent_taxpayer_id' => 'int',
+		'mvr_agent_id' => 'int',
 		'mvr_motor_vehicle_id' => 'int',
 		'mvr_de_registration_reason_id' => 'int',
 		'mvr_request_status_id' => 'int'
@@ -50,7 +50,7 @@ class MvrDeRegistrationRequest extends Model
 	];
 
 	protected $fillable = [
-		'agent_taxpayer_id',
+		'mvr_agent_id',
 		'mvr_motor_vehicle_id',
 		'mvr_de_registration_reason_id',
 		'description',
@@ -63,7 +63,7 @@ class MvrDeRegistrationRequest extends Model
 
 	public function agent()
 	{
-		return $this->belongsTo(Taxpayer::class, 'agent_taxpayer_id');
+		return $this->belongsTo(MvrAgent::class, 'mvr_agent_id');
 	}
 
 	public function motor_vehicle()

@@ -77,6 +77,10 @@ class MvrMotorVehicleRegistration extends Model
         return $this->hasOne(MvrPersonalizedPlateNumberRegistration::class,'mvr_motor_vehicle_registration_id')->latest();
     }
 
+    public function current_active_personalized_registration()
+    {
+        return $this->hasOne(MvrPersonalizedPlateNumberRegistration::class,'mvr_motor_vehicle_registration_id')->where(['status'=>'ACTIVE'])->latest();
+    }
 
     public function get_latest_bill()
     {
@@ -136,11 +140,13 @@ class MvrMotorVehicleRegistration extends Model
                 ->lockForUpdate()
                 ->first();
 
+
             if (empty($last_reg)) {
                 $plate_number = $reg_type->initial_plate_number;
             } else {
                 $number = preg_replace('/Z(\d{3})([A-Z]{2})/', '$1', $last_reg->plate_number);
                 $alpha = preg_replace('/Z(\d{3})([A-Z]{2})/', '$2', $last_reg->plate_number);
+                $alpha = !empty($alpha) ? $alpha : 'AA';
                 if ($number==998 || $number==999){
                     $number = 1;
                     $alpha = preg_match('/[A-Z]Z/',$alpha) ? chr(ord(substr($alpha,0,1))+1).'A' : substr($alpha,0,1).chr(ord(substr($alpha,1,1))+1);

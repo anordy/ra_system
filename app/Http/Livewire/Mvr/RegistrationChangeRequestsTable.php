@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Mvr;
 
+use App\Models\MvrAgent;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrRegistrationChangeRequest;
 use App\Models\MvrRegistrationStatus;
@@ -47,9 +48,7 @@ class RegistrationChangeRequestsTable extends DataTableComponent
                 ->sortable(),
             Column::make("Request Date", "date")
                 ->sortable(),
-            Column::make("Agent Z-Number", "agent.reference_no")
-                ->sortable(),
-	        Column::make("Agent Name", "agent_taxpayer_id")->format(fn($id)=>Taxpayer::query()->find($id)->fullname())
+	        Column::make("Agent Name", "mvr_agent_id")->format(fn($id)=>MvrAgent::query()->find($id)->taxpayer->fullname())
 	          ->sortable(),
             Column::make("Status", "request_status.name")
                 ->sortable(),
@@ -57,7 +56,7 @@ class RegistrationChangeRequestsTable extends DataTableComponent
                 ->format(function ($value) {
                     $url = route('mvr.reg-change-requests.show',encrypt($value));
                     return <<< HTML
-                    <a class="btn btn-info btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
+                    <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
                 HTML;})
                 ->html()
         ];

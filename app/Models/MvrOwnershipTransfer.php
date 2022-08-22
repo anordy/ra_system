@@ -69,7 +69,7 @@ class MvrOwnershipTransfer extends Model
 		'certificate_path',
 		'transfer_reason',
 		'agreement_contract_path',
-		'agent_taxpayer_id',
+		'mvr_agent_id',
 		'owner_taxpayer_id',
 		'mvr_request_status_id'
 	];
@@ -81,7 +81,7 @@ class MvrOwnershipTransfer extends Model
 
     public function agent()
     {
-        return $this->belongsTo(Taxpayer::class, 'agent_taxpayer_id');
+        return $this->belongsTo(MvrAgent::class, 'mvr_agent_id');
     }
 
 	public function motor_vehicle()

@@ -2,11 +2,14 @@
 
 namespace App\Http\Livewire\Mvr;
 
+use App\Models\MvrAgent;
 use App\Models\MvrDeRegistrationRequest;
 use App\Models\MvrMotorVehicle;
+use App\Models\MvrOwnershipTransfer;
 use App\Models\MvrRegistrationChangeRequest;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
+use App\Models\MvrRequestStatus;
 use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,10 +22,22 @@ class DeRegisterRequestsTable extends DataTableComponent
 {
     use LivewireAlert;
 
+    public $status_id;
+
     public function builder(): Builder
     {
-        return MvrDeRegistrationRequest::query();
+        if (empty($this->status_id)){
+            return MvrDeRegistrationRequest::query();
+        }else{
+            return MvrDeRegistrationRequest::query()->whereIn('mvr_request_status_id',[$this->status_id]);
+        }
     }
+
+    public function mount($status){
+        $rq_status = MvrRequestStatus::query()->where(['name'=>$status])->first();
+        $this->status_id = $rq_status->id ?? '';
+    }
+
 
     public function configure(): void
     {
@@ -47,9 +62,7 @@ class DeRegisterRequestsTable extends DataTableComponent
                 ->sortable(),
             Column::make("Received Date", "date_received")
                 ->sortable(),
-            Column::make("Agent Z-Number", "agent.reference_no")
-                ->sortable(),
-            Column::make("Agent Name", "agent_taxpayer_id")->format(fn($id)=>Taxpayer::query()->find($id)->fullname())
+            Column::make("Agent Name", "mvr_agent_id")->format(fn($id)=>MvrAgent::query()->find($id)->taxpayer->fullname())
                 ->sortable(),
             Column::make("Status", "request_status.name")
                 ->sortable(),
@@ -57,7 +70,7 @@ class DeRegisterRequestsTable extends DataTableComponent
                 ->format(function ($value) {
                     $url = route('mvr.de-register-requests.show',encrypt($value));
                     return <<< HTML
-                    <a class="btn btn-info btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
+                    <a class="btn btn-outline-primary btn-sm" href="$url"><i class="fa fa-eye"></i>View</a>
                 HTML;})
                 ->html()
         ];

@@ -64,7 +64,7 @@ class MvrMotorVehicle extends Model
 		'gross_weight' => 'float',
 		'seating_capacity' => 'int',
 		'mvr_vehicle_status_id' => 'int',
-		'agent_taxpayer_id' => 'int',
+		'mvr_agent_id' => 'int',
 		'imported_from_country_id' => 'int',
 		'mvr_color_id' => 'int',
 		'mvr_class_id' => 'int',
@@ -94,7 +94,7 @@ class MvrMotorVehicle extends Model
 		'mvr_body_type_id',
 		'inspection_report_path',
 		'certificate_of_worth_path',
-		'agent_taxpayer_id',
+		'mvr_agent_id',
 		'mileage',
 		'inspection_date',
 		'certificate_number',
@@ -167,8 +167,14 @@ class MvrMotorVehicle extends Model
             ->where(['mvr_ownership_status_id'=>MvrOwnershipStatus::query()->firstOrCreate(['name'=>MvrOwnershipStatus::STATUS_CURRENT_OWNER])->id]);
     }
 
+    public function last_owner()
+    {
+        return $this->hasOne(MvrMotorVehicleOwner::class,'mvr_motor_vehicle_id')
+            ->latest();
+    }
+
     public function agent()
     {
-        return $this->belongsTo(Taxpayer::class,'agent_taxpayer_id');
+        return $this->belongsTo(MvrAgent::class,'mvr_agent_id');
     }
 }

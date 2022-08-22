@@ -110,12 +110,12 @@ class ApproveRegistration extends Component
             $zmBill = ZmCore::createBill(
                 $registration->id,
                 get_class($registration),
-                null,
+                1,//todo: remove, why is it mandatory
                 $mv->agent->id,
                 get_class($mv->agent),
-                $mv->agent->fullname(),
-                $mv->agent->email,
-                ZmCore::formatPhone($mv->agent->mobile),
+                $mv->agent->taxpayer->fullname(),
+                $mv->agent->taxpayer->email,
+                ZmCore::formatPhone($mv->agent->taxpayer->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,
@@ -129,7 +129,7 @@ class ApproveRegistration extends Component
                         'billable_type' => get_class($registration),
                         'fee_id' => $fee->id,
                         'fee_type' => get_class($fee),
-                        'tax_type_id' => null,
+                        'tax_type_id' => 1, //todo: remove, why is it mandatory
                         'amount' => $amount,
                         'currency' => 'TZS',
                         'exchange_rate' => $exchange_rate,

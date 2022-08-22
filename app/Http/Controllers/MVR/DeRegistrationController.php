@@ -17,6 +17,7 @@ use App\Models\MvrRequestStatus;
 use App\Services\TRA\ServiceRequest;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\MotorVehicleSearchTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 
 class DeRegistrationController extends Controller
 {
+    use MotorVehicleSearchTrait;
 
 	public function index(){
 		return view('mvr.de-register-requests-index');
@@ -44,13 +46,7 @@ class DeRegistrationController extends Controller
     }
 
     public function search($type,$number){
-        if ($type=='chassis'){
-            $motor_vehicle = MvrMotorVehicle::query()->where(['chassis_number'=>$number])->first();
-        }else{
-            $motor_vehicle = MvrMotorVehicleRegistration::query()
-                    ->where(['plate_number'=>$number])
-                    ->first()->motor_vehicle ?? null;
-        }
+        $motor_vehicle = $this->searchRegistered($type,$number);
         $search_type = ucwords(preg_replace('/-/',' ',$type));
         $action = 'mvr.de-registration-request';
         $result_route = 'mvr.internal-search-dr';
@@ -88,12 +84,12 @@ class DeRegistrationController extends Controller
             $bill = ZmCore::createBill(
                 $request->id,
                 get_class($request),
-                null,
+                1, //todo: remove
                 $request->agent->id,
                 get_class($request->agent),
-                $request->agent->fullname(),
-                $request->agent->email,
-                ZmCore::formatPhone($request->agent->mobile),
+                $request->agent->taxpayer->fullname(),
+                $request->agent->taxpayer->email,
+                ZmCore::formatPhone($request->agent->taxpayer->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,
@@ -107,7 +103,7 @@ class DeRegistrationController extends Controller
                         'billable_type' => get_class($request),
                         'fee_id' => $fee->id,
                         'fee_type' => get_class($fee),
-                        'tax_type_id' => null,
+                        'tax_type_id' => 1, //todo: remove
                         'amount' => $amount,
                         'currency' => 'TZS',
                         'exchange_rate' => $exchange_rate,
@@ -117,8 +113,6 @@ class DeRegistrationController extends Controller
                 ]
             );
             $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
-            DB::commit();
-
             $response = ZmCore::sendBill($bill);
             if ($response->status != ZmResponse::SUCCESS){
                 session()->flash("success",'Request Approved!');
@@ -126,13 +120,14 @@ class DeRegistrationController extends Controller
             }else{
                 session()->flash("success",'Request Approved, Control Number request sent');
             }
+            DB::commit();
         }catch (\Exception $e){
             session()->flash("error",'Approval failed,  could not update data!');
             DB::rollBack();
+            report($e);
         }
         return redirect()->route('mvr.de-register-requests.show',encrypt($id));
     }
-
 
     public function simulatePayment($id){
         $id = decrypt($id);
@@ -143,7 +138,7 @@ class DeRegistrationController extends Controller
             DB::beginTransaction();
             $bill = $request->get_latest_bill();
             $bill->update(['status'=>'Paid']);
-            $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
+            $request->update(['certificate_date'=>date('Y-m-d'),'mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
             $request->motor_vehicle->update(['mvr_registration_status_id'=>MvrRegistrationStatus::query()->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_DE_REGISTERED])->id]);
             $mvr_reg = $request->motor_vehicle->current_registration;
             $mvr_reg->update(['mvr_plate_number_status_id'=>$plate_status->id]);

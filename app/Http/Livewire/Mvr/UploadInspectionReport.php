@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Mvr;
 
 
+use App\Models\BusinessLocation;
 use App\Models\Country;
 use App\Models\MvrBodyType;
 use App\Models\MvrClass;
@@ -64,7 +65,7 @@ class UploadInspectionReport extends Component
         DB::beginTransaction();
         try{
             $data = $this->prepareMotorVehicleData();
-            $taxpayer = Taxpayer::query()->where(['reference_no'=>$data['owner']['z_number']])->first();
+            $taxpayer = BusinessLocation::query()->where(['zin'=>$data['owner']['z_number']])->first()->taxpayer ?? null;
             if (empty($taxpayer)){
                 $this->alert('error', "Could not find owner/taxpayer with Z number {$data['owner']['z_number']}");
                 Storage::delete($this->inspection_report_path);
@@ -72,15 +73,15 @@ class UploadInspectionReport extends Component
                 return;
             }
 
-            $taxpayer_agent = Taxpayer::query()->where(['reference_no'=>$data['agent']['z_number']])->first();
-            if (empty($taxpayer_agent)){
+            $taxpayer_agent = BusinessLocation::query()->where(['zin'=>$data['agent']['z_number']])->first()->taxpayer ?? null;
+            if (empty($taxpayer_agent->transport_agent)){
                 $this->alert('error', "Could not find agent/taxpayer with Z number {$data['agent']['z_number']}");
                 Storage::delete($this->inspection_report_path);
                 DB::rollBack();
                 return;
             }
-            $data['motor_vehicle']['agent_taxpayer_id'] = $taxpayer_agent->id;
-            $id = MvrMotorVehicle::query()->insertGetId($data['motor_vehicle']);
+            $data['motor_vehicle']['mvr_agent_id'] = $taxpayer_agent->transport_agent->id;
+            $id = MvrMotorVehicle::query()->create($data['motor_vehicle'])->id;
             MvrMotorVehicleOwner::query()->create([
                 'mvr_motor_vehicle_id'=>$id,
                 'taxpayer_id'=>$taxpayer->id,
@@ -156,7 +157,7 @@ class UploadInspectionReport extends Component
     {
         $item = $class::query()->where(['name'=>$value])->first();
         if (empty($item) && $auto_create){
-            return $class::query()->insertGetId(['name'=>$value]);
+            return $class::query()->create(['name'=>$value])->id;
         }else if (empty($item)){
             $class = preg_replace('/(.+\\\\)(\S+)/','$2',$class);
             throw new \Exception("Field value {$value} returned from API does not exist on {$class} Table");

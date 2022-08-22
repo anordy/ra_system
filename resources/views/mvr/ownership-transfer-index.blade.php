@@ -8,10 +8,12 @@
             <div class="card-header">
                 <h5>Requests</h5>
                 <div class="card-tools">
-                    <button class="btn btn-info btn-sm"
-                            onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','mvr.internal-search-ot')"><i
-                                class="fa fa-plus-circle"></i>
-                        New Requests</button>
+                    @can('mvr_initiate_transfer')
+                        <button class="btn btn-info btn-sm"
+                                onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','mvr.internal-search-ot')"><i
+                                    class="fa fa-plus-circle"></i>
+                            New Requests</button>
+                    @endcan
                 </div>
             </div>
             <ul class="nav nav-tabs" id="myTab" role="tablist">

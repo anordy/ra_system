@@ -46,6 +46,7 @@ use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
+use App\Http\Controllers\MVR\AgentsController;
 use App\Http\Controllers\MVR\DeRegistrationController;
 use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
 use App\Http\Controllers\MVR\MvrGenericSettingController;
@@ -53,6 +54,7 @@ use App\Http\Controllers\MVR\OwnershipTransferController;
 use App\Http\Controllers\MVR\RegistrationChangeController;
 use App\Http\Controllers\MVR\TRAChassisSearchController;
 use App\Http\Controllers\LandLease\LandLeaseController;
+use App\Http\Controllers\MVR\WrittenOffVehiclesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Payments\PaymentsController;
 use App\Http\Controllers\RegionController;
@@ -403,7 +405,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');
         Route::get('/change-status', [MotorVehicleRegistrationController::class, 'index'])->name('change-status');
         Route::get('/view/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('show');
+        Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
         Route::get('/certificate-of-worth/{id}', [MotorVehicleRegistrationController::class, 'printCertificateOfWorth'])->name('certificate-of-worth');
+        Route::get('/de-registration-certificate/{id}', [MotorVehicleRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration-certificate');
         Route::get('/submit-inspection/{id}', [MotorVehicleRegistrationController::class, 'submitInspection'])->name('submit-inspection');
         Route::get('/transfer-ownership', [OwnershipTransferController::class, 'index'])->name('transfer-ownership');
         Route::get('/transfer-ownership/approve/{id}', [OwnershipTransferController::class, 'approve'])->name('transfer-ownership.approve');
@@ -418,13 +422,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/reg-change-requests/approve/{id}', [RegistrationChangeController::class, 'approve'])->name('reg-change-requests.approve');
         Route::get('/reg-change-requests/reject/{id}', [RegistrationChangeController::class, 'reject'])->name('reg-change-requests.reject');
         Route::get('/reg-change-requests/{id}', [RegistrationChangeController::class, 'show'])->name('reg-change-requests.show');
+        Route::get('/written-off', [WrittenOffVehiclesController::class, 'index'])->name('written-off');
         Route::get('/chassis-search/{chassis}', [TRAChassisSearchController::class, 'search'])->name('chassis-search');
+        Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
+        Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
         Route::get('/reg-change-chassis-search/{type}/{number}', [RegistrationChangeController::class, 'search'])
             ->name('internal-search')->where('type','plate-number|chassis');
         Route::get('/de-registration-chassis-search/{type}/{number}', [DeRegistrationController::class, 'search'])
             ->name('internal-search-dr')->where('type','plate-number|chassis');
         Route::get('/ownership-transfer-chassis-search/{type}/{number}', [OwnershipTransferController::class, 'search'])
             ->name('internal-search-ot')->where('type','plate-number|chassis');
+        Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
+            ->name('internal-search-wo')->where('type','plate-number|chassis');
         Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']);//todo: remove
         Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']);//todo: remove
         Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']);//todo: remove

@@ -47,7 +47,7 @@ class MvrRegistrationChangeRequest extends Model
 	];
 
 	protected $fillable = [
-		'agent_taxpayer_id',
+		'mvr_agent_id',
 		'current_registration_id',
 		'mvr_plate_size_id',
 		'requested_registration_type_id',
@@ -59,7 +59,7 @@ class MvrRegistrationChangeRequest extends Model
 
 	public function agent()
 	{
-		return $this->belongsTo(Taxpayer::class, 'agent_taxpayer_id');
+		return $this->belongsTo(MvrAgent::class, 'mvr_agent_id');
 	}
 
 	public function requested_registration_type()

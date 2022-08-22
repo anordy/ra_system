@@ -48,4 +48,9 @@ class Taxpayer extends Model implements Auditable
     {
         return $this->hasMany(LandLease::class, 'created_by');
     }
+
+    public function transport_agent()
+    {
+        return $this->hasOne(MvrAgent::class, 'taxpayer_id');
+    }
 }

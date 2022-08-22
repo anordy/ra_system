@@ -36,7 +36,7 @@ class CreateMvrMotorVehicle extends Migration
             $table->string('certificate_of_worth_path',200)->nullable();
             $table->date('inspection_date')->nullable();
             $table->string('certificate_number',30)->nullable();
-            $table->date('registration_date')->nullable();
+            $table->date('registration_date')->useCurrent();
             $table->integer('mileage')->nullable();
             $table->unsignedBigInteger('mvr_registration_status_id');
             $table->timestamps();

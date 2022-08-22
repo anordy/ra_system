@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\MVR;
 
 use App\Http\Controllers\Controller;
+use App\Http\Livewire\Mvr\DeRegistrationRequest;
+use App\Models\MvrDeRegistrationRequest;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
+use App\Models\MvrRequestStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -104,6 +107,32 @@ class MotorVehicleRegistrationController extends Controller
         header('Content-Type: application/pdf' );
 
         $pdf = PDF::loadView('mvr.pdfs.certificate-of-worth', compact('motor_vehicle' ));
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        return $pdf->stream();
+    }
+
+    public function registrationCertificate($id){
+        $id = decrypt($id);
+        $motor_vehicle = MvrMotorVehicle::query()->find($id);
+
+        header('Content-Type: application/pdf' );
+
+        $pdf = PDF::loadView('mvr.pdfs.certificate-of-registration', compact('motor_vehicle' ));
+        $pdf->setPaper('legal', 'landscape');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        return $pdf->stream();
+    }
+
+    public function deRegistrationCertificate($id){
+        $id = decrypt($id);
+        $motor_vehicle = MvrMotorVehicle::query()->find($id);
+        $request = MvrDeRegistrationRequest::query()
+            ->where(['mvr_request_status_id'=>MvrRequestStatus::query()->where(['name'=>MvrRequestStatus::STATUS_RC_ACCEPTED])->first()->id,'mvr_motor_vehicle_id'=>$id])
+        ->first();
+
+        header('Content-Type: application/pdf' );
+
+        $pdf = PDF::loadView('mvr.pdfs.certificate-of-de-registration', compact('motor_vehicle','request' ));
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->stream();
     }

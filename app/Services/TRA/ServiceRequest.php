@@ -2,6 +2,8 @@
 
 namespace App\Services\TRA;
 
+use App\Models\BusinessLocation;
+use App\Models\MvrAgent;
 use App\Models\Taxpayer;
 use Faker\Factory;
 
@@ -21,7 +23,7 @@ class ServiceRequest
         $make = ['Toyota','Subaru','Nissan'][rand(0,2)];
 
         $owner = [
-          'z_number'=> Taxpayer::query()->inRandomOrder()->first()->reference_no??'INVALID-Z-NUMBER',
+          'z_number'=> BusinessLocation::query()->first()->zin ??'INVALID-Z-NUMBER',
           'name'=> $faker->name,
           'city'=> $faker->city,
           'tin'=> $faker->randomNumber(9),
@@ -33,7 +35,7 @@ class ServiceRequest
           'email'=> $faker->email,
         ];
         $agent = [
-            'z_number'=> Taxpayer::query()->first()->reference_no??'INVALID-Z-NUMBER',
+            'z_number'=>  BusinessLocation::query()->where(['taxpayer_id'=>MvrAgent::query()->first()->taxpayer_id])->first()->zin ??'INVALID-Z-NUMBER',
             'name'=> $faker->name,
             'phone_number'=> '0719906669',
             'agent_id'=> 'AAAAA',

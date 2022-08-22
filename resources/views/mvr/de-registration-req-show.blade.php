@@ -9,16 +9,27 @@
             <h5>De-Registration Request</h5>
             <div class="card-tools">
                 @if($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_PENDING_APPROVAL)
-                    <a class="btn btn-info btn-sm"
-                            href="{{route('mvr.de-register-requests.approve',encrypt($request->id))}}"><i
-                                class="fa fa-check"></i>
-                        Approve</a>
+                    @can('mvr_approve_de_registration')
+                    <a href="{{route('mvr.de-register-requests.approve',encrypt($request->id))}}">
+                       <button class="btn btn-info btn-sm">
+                           <i class="fa fa-check"></i>Approve
+                        </button>
+                    </a>
+                    @endcan
                 @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_INITIATED)
-                    <a class="btn btn-info btn-sm"
-                       href="{{route('mvr.de-register-requests.submit',encrypt($request->id))}}"><i
-                                class="fa fa-check"></i>
-                        Submit</a>
+                    @can('mvr_initiate_de_registration')
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'upload-de-registration-inspection-report',{{$request->id}})">
+                            <i class="fa fa-check"></i>Submit
+                        </button>
+                    @endcan
+                @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED)
+                    <a href="{{route('mvr.de-registration-certificate',encrypt($request->mvr_motor_vehicle_id))}}">
+                        <button class="btn btn-info btn-sm">
+                            <i class="fa fa-print"></i> Certificate of De-registration
+                        </button>
+                    </a>
                 @endif
+
             </div>
         </div>
         <div class="card-body">
@@ -255,28 +266,24 @@
             <div class="row my-2">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $request->agent->fullname() }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Z-Number</span>
-                    <p class="my-1">{{ $request->agent->reference_no }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->fullname() }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">TIN</span>
-                    <p class="my-1">{{ $request->agent->reference_no }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->tin }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">State/City</span>
-                    <p class="my-1">{{ $request->agent->location }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->location }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Mobile</span>
-                    <p class="my-1">{{ $request->agent->mobile }}/{{ $request->agent->alt_mobile }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->mobile }}/{{ $request->agent->taxpayer->alt_mobile }}</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Email</span>
-                    <p class="my-1">{{ $request->agent->email }}</p>
+                    <span class="font-weight-bold text-uppercase">E-mail</span>
+                    <p class="my-1">{{ $request->agent->taxpayer->email }}</p>
                 </div>
             </div>
 

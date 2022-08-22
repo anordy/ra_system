@@ -71,15 +71,15 @@ class PlateNumbersTable extends DataTableComponent
                     $mvr =   MvrMotorVehicleRegistration::query()->find($value);
                     if (MvrPlateNumberStatus::STATUS_GENERATED==$mvr->plate_number_status->name){
                         return <<< HTML
-                            <button class="btn btn-primary btn-sm" wire:click="updateToPrinted($value)"><i class="fa fa-edit"></i> Update Status</button>
+                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToPrinted($value)"><i class="fa fa-edit"></i> Update Status</button>
                         HTML;
                     }elseif (MvrPlateNumberStatus::STATUS_PRINTED==$mvr->plate_number_status->name){
                         return <<< HTML
-                            <button class="btn btn-primary btn-sm" wire:click="updateToReceived($value)"><i class="fa fa-edit"></i> Update Status</button>
+                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToReceived($value)"><i class="fa fa-edit"></i> Update Status</button>
                         HTML;
                     }elseif(MvrPlateNumberStatus::STATUS_RECEIVED==$mvr->plate_number_status->name){
                         return <<< HTML
-                            <button class="btn btn-primary btn-sm" wire:click="updateToCollected($value)"><i class="fa fa-edit"></i> Update Status</button>
+                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToCollected($value)"><i class="fa fa-edit"></i> Update Status</button>
                         HTML;
                     }
                     return '';

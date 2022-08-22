@@ -9,22 +9,26 @@
             <h5>Ownership Transfer Request</h5>
             <div class="card-tools">
                 @if($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_PENDING_APPROVAL)
+                    @can('mvr_approve_transfer')
                     <button class="btn btn-primary   btn-sm"
                             onclick="Livewire.emit('showModal', 'mvr.approve-ownership-transfer','{{$request->id}}')">
                         <i class="fa fa-check"></i> Approve
                     </button>
                     <a href="{{route('mvr.transfer-ownership.reject',encrypt($request->id))}}">
                         <button class="btn btn-danger btn-sm">
-                            <i class="fa fa-stop"></i> Approve
+                            <i class="fa fa-times"></i> Reject
                         </button>
                     </a>
-                @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_INITIATED)
+                    @endcan
+                @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_INITIATED && \Illuminate\Support\Facades\Gate::has('mvr_initiate_transfer'))
+                    @can('mvr_initiate_transfer')
                     <button class="btn btn-info btn-sm"
                             onclick="Livewire.emit('showModal', 'mvr.upload-sale-agreement-modal','{{$request->id}}')"><i
                                 class="fa fa-upload"></i>
                         Upload Agreement Contract</button>
-                @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED && \Illuminate\Support\Facades\Gate::has())
-                    <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
+                    @endcan
+                @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_ACCEPTED)
+                    <a href="{{route('mvr.certificate-of-registration',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
                        data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
                                 class="fa fa-print text-white"></i>
                         New Certificate of Registration</a><!--- todo: Missing format for cert fo registration - NCR -->
@@ -74,8 +78,8 @@
                     <p class="my-1">{{ $request->transfer_reason }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">New Owner/Z-number</span>
-                    <p class="my-1">{{ $request->new_owner->fullname() }}</p>
+                    <span class="font-weight-bold text-uppercase">New Owner/TIN</span>
+                    <p class="my-1">{{ $request->new_owner->fullname().'/'.$request->new_owner->tin }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Transfer Category</span>
@@ -130,7 +134,9 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Plate Number</span>
-                        <p class="my-1">{{ $motor_vehicle->current_registration->plate_number??' - ' }}</p>
+                        <p class="my-1">
+                            {{ $motor_vehicle->current_registration->plate_number }}
+                            {{!empty($motor_vehicle->current_registration->current_active_personalized_registration->plate_number)? '/ Personalized: '.$motor_vehicle->current_registration->current_active_personalized_registration->plate_number : ''}}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Plate Number Status</span>
@@ -278,28 +284,28 @@
             <div class="row my-2">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $request->agent->fullname() }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Z-Number</span>
-                    <p class="my-1">{{ $request->agent->reference_no }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->fullname() }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">TIN</span>
-                    <p class="my-1">{{ $request->agent->reference_no }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->tin }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">TIN</span>
+                    <p class="my-1">{{ $request->agent->taxpayer->reference_no }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">State/City</span>
-                    <p class="my-1">{{ $request->agent->location }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->location }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Mobile</span>
-                    <p class="my-1">{{ $request->agent->mobile }}/{{ $request->agent->alt_mobile }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->mobile }}/{{ $request->agent->taxpayer->alt_mobile }}</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Email</span>
-                    <p class="my-1">{{ $request->agent->email }}</p>
+                    <p class="my-1">{{ $request->agent->taxpayer->email }}</p>
                 </div>
             </div>
 

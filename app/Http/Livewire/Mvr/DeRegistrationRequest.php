@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Mvr;
 
+use App\Models\BusinessLocation;
 use App\Models\MvrDeRegistrationRequest;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrRequestStatus;
@@ -24,7 +25,7 @@ class DeRegistrationRequest extends Component
     public $description;
     public $agent_z_number;
     public $agent_name;
-    public $agent_taxpayer_id;
+    public $agent_id;
     public $inspection_report;
     private ?string $inspection_report_path = null;
 
@@ -35,7 +36,7 @@ class DeRegistrationRequest extends Component
             'reason_id' => 'required',
             'description' => 'required',
             'date_received' => 'required|date',
-            'agent_taxpayer_id' => 'required',
+            'agent_id' => 'required',
             'inspection_report'=>'required|mimes:pdf'
         ];
     }
@@ -58,7 +59,7 @@ class DeRegistrationRequest extends Component
                 'mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate([
                     'name'=>MvrRequestStatus::STATUS_RC_PENDING_APPROVAL
                 ])->id,
-                'agent_taxpayer_id' => $this->agent_taxpayer_id,
+                'mvr_agent_id' => $this->agent_id,
                 'mvr_motor_vehicle_id'=>$this->motor_vehicle_id,
                 'mvr_de_registration_reason_id'=>$this->reason_id,
                 'description'=>$this->description,
@@ -75,13 +76,13 @@ class DeRegistrationRequest extends Component
     }
 
     public function agentLookup(){
-        $agent = Taxpayer::query()->where(['reference_no'=>$this->agent_z_number])->first();
-        if (!empty($agent)){
-            $this->agent_name = $agent->fullname();
-            $this->agent_taxpayer_id = $agent->id;
+        $agent = BusinessLocation::query()->where(['zin'=>$this->agent_z_number])->first();
+        if (!empty($agent->taxpayer)){
+            $this->agent_name = $agent->taxpayer->fullname();
+            $this->agent_id = $agent->taxpayer_id;
         }else{
             $this->agent_name = null;
-            $this->agent_taxpayer_id = null;
+            $this->agent_id = null;
         }
     }
 
