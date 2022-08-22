@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\WaiverStatus;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -29,7 +30,8 @@ class CreateDebtWaiversTable extends Migration
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();
-            $table->enum('status', ReturnStatus::getConstants());
+            // $table->enum('status', ReturnStatus::getConstants());
+            $table->enum('status', WaiverStatus::getConstants());
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->timestamps();

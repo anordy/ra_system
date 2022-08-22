@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use ReflectionClass;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class WaiverStatus extends Model
 {
@@ -25,5 +26,11 @@ class WaiverStatus extends Model
     public function waiver()
     {
         return $this->belongsTo(Waiver::class, 'waiver_id');
+    }
+
+    static function getConstants(): array
+    {
+        $oClass = new ReflectionClass(__CLASS__);
+        return $oClass->getConstants();
     }
 }
