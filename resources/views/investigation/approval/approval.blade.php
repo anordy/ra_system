@@ -109,13 +109,27 @@
                                 <span class="font-weight-bold text-uppercase">Total Amount Due</span>
                                 <p class="my-1">{{ $investigation->assessment->total_amount ?? '' }}</p>
                             </div>
-                            @if ($investigation->assessment->report_path)
+                            @if ($investigation->investigation_report)
                                 <div class="col-md-4">
                                     <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
                                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                         <a target="_blank"
-                                            href="{{ route('tax_investigation.files.show', encrypt($investigation->assessment->report_path)) }}"
+                                            href="{{ route('tax_investigation.files.show', encrypt($investigation->investigation_report)) }}"
+                                            style="font-weight: 500;" class="ml-1">
+                                            Investigation Report
+                                            <i class="bi bi-arrow-up-right-square ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                            @if ($investigation->working_report)
+                                <div class="col-md-4">
+                                    <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                                        class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                        <a target="_blank"
+                                            href="{{ route('tax_investigation.files.show', encrypt($investigation->working_report)) }}"
                                             style="font-weight: 500;" class="ml-1">
                                             Investigation Report
                                             <i class="bi bi-arrow-up-right-square ml-1"></i>

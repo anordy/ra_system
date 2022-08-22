@@ -12,6 +12,7 @@ use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Verification\TaxVerification;
 
 class TaxVerificationApprovalController extends Controller
@@ -61,7 +62,12 @@ class TaxVerificationApprovalController extends Controller
         } elseif ($return instanceof PortReturn) {
             $return_ = PortReturn::where('parent',$return->id)->first();
             $viewRender = 'returns.port.details';
-            return view('verification.approval.approval', compact('return','return_', 'verification', 'viewRender'));
+
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        }elseif ($return instanceof MnoReturn) {
+            $viewRender = 'returns.excise-duty.mno.details';
+
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         }
     }
 
@@ -98,6 +104,11 @@ class TaxVerificationApprovalController extends Controller
             $viewRender = 'returns.port.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        }elseif ($return instanceof MnoReturn) {
+            $viewRender = 'returns.excise-duty.mno.details';
+
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
+
     }
 }

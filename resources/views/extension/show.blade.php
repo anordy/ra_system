@@ -75,19 +75,29 @@
                     <span class="font-weight-bold text-uppercase">Status</span>
                     <p class="my-1 text-uppercase">{{ $extension->status }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase mb-2 d-block">Attachment</span>
-                    <a class="file-item"  target="_blank"  href="{{ route('extension.file', encrypt($extension->attachment)) }}">
-                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                        <div style="font-weight: 500;" class="ml-1">
-                            <span class="font-weight-bold text-uppercase">Attachment</span>
-                        </div>
-                    </a>
-                </div>
+                @if($extension->attachment)
+                    <div class="col-md-4 mb-3 mt-3">
+                        <span class="font-weight-bold text-uppercase mb-2 d-block">Attachment</span>
+                        <a class="file-item"  target="_blank"  href="{{ route('extension.file', encrypt($extension->attachment)) }}">
+                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                            <div style="font-weight: 500;" class="ml-1">
+                                <span class="font-weight-bold text-uppercase">Attachment</span>
+                            </div>
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
 
     <livewire:approval.extension-request-approval-processing modelName="{{ get_class($extension) }}" modelId="{{ $extension->id }}" />
 
+    <div class="card rounded-0">
+        <div class="card-header bg-white font-weight-bold">
+            Approval History
+        </div>
+        <div class="card-body">
+            <livewire:approval.approval-history-table modelName='App\Models\Extension\ExtensionRequest' modelId="{{ $extension->id }}" />
+        </div>
+    </div>
 @endsection

@@ -12,7 +12,7 @@
                     <th style="width: 20%">VAT</th>
                     </thead>
                     <tbody>
-                    @foreach ($return->mmTransferReturnItems as $item)
+                    @foreach ($return->emTransactionReturnItems as $item)
                         <tr>
                             <td>{{ $item->config->name ?? 'name' }}</td>
                             <td>{{ number_format($item->value) }}</td>
@@ -34,7 +34,6 @@
                 </table>
 
             </div>
-
             <div class="col-md-12">
                 <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
                 <hr>
@@ -52,8 +51,8 @@
                     </thead>
             
                     <tbody>
-                        @if(count($return->mmTransferPenalties))
-                            @foreach ($return->mmTransferPenalties as $penalty)
+                        @if(count($return->emTransactionPenalties))
+                            @foreach ($return->emTransactionPenalties as $penalty)
                             <tr>
                                 <td>{{ $penalty['financial_month_name'] }}</td>
                                 <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>

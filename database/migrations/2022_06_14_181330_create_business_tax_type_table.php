@@ -19,6 +19,7 @@ class CreateBusinessTaxTypeTable extends Migration
             $table->unsignedBigInteger('tax_type_id');
             $table->enum('currency',['TZS','USD']);
             $table->enum('status',['current-used','upgraded']);
+            $table->unique(['business_id', 'tax_type_id'], 'unique_business_tax_type_composite');
             $table->timestamps();
         });
 	}

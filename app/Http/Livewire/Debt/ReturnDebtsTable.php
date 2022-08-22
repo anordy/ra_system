@@ -61,6 +61,10 @@ class ReturnDebtsTable extends DataTableComponent
                     return "{$row->business->taxpayer->first_name} {$row->business->taxpayer->last_name}";
                 }),
             Column::make('Tax Type', 'taxtype.name'),
+            Column::make('Principal Amount', 'principal_amount')
+            ->format(function ($value, $row) {
+                return number_format($row->principal_amount, 2);
+            }),
             Column::make('Penalty', 'penalty')
                 ->format(function ($value, $row) {
                     return number_format($row->penalty, 2);
@@ -73,7 +77,7 @@ class ReturnDebtsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount, 2);
                 }),
-            Column::make('Status', 'app_step')->view('debts.includes.status'),
+            Column::make('Status', 'status')->view('debts.includes.status'),
         ];
     }
 }
