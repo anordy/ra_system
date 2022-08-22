@@ -120,14 +120,14 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
                 $operators = json_encode($place['operators']);
 
-                if ($place['operator_type'] == "role") {
-                    dd('here');
-                }
-
                 if (array_key_exists('operators', $context) && $context['operators'] != []) {
                     $operators = json_encode($context['operators']);
+                } else {
+                    if ($place['operator_type'] == "role") {
+                        $users = User::whereIn('role_id', $place['operators'])->get()->pluck('id')->toArray();
+                        $operators = json_encode($users);
+                    }
                 }
-                
 
                 $task = new WorkflowTask([
                     'workflow_id' => $workflow->id,
