@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\ExtensionStatus;
+use App\Enum\ExtensionRequestStatus;
 use App\Models\Debts\Debt;
 use Carbon\Carbon;
 use Exception;
@@ -53,7 +53,7 @@ class ExtensionRequestApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('accepted')) {
-                $this->subject->status = ExtensionStatus::APPROVED;
+                $this->subject->status = ExtensionRequestStatus::APPROVED;
                 $debt = Debt::findOrFail($this->subject->debt_id);
                 $debt->update([
                     'curr_due_date' => $this->subject->extend_to
@@ -81,7 +81,7 @@ class ExtensionRequestApprovalProcessing extends Component
         try {
             DB::beginTransaction();
             if ($this->checkTransition('rejected')) {
-                $this->subject->status = ExtensionStatus::REJECTED;
+                $this->subject->status = ExtensionRequestStatus::REJECTED;
                 $this->subject->save();
             }
 

@@ -119,8 +119,14 @@ class WorkflowSubscriber implements EventSubscriberInterface
             foreach ($places as $key => $place) {
 
                 $operators = json_encode($place['operators']);
+
                 if (array_key_exists('operators', $context) && $context['operators'] != []) {
                     $operators = json_encode($context['operators']);
+                } else {
+                    if ($place['operator_type'] == "role") {
+                        $users = User::whereIn('role_id', $place['operators'])->get()->pluck('id')->toArray();
+                        $operators = json_encode($users);
+                    }
                 }
 
                 $task = new WorkflowTask([
@@ -248,6 +254,8 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'INSTALLMENT_REQUESTS') {
             } elseif ($placeName == 'PAYMENTS_EXTENSION_REQUEST') {
             } elseif ($placeName == 'TAX_CLAIM_VERIFICATION') {
+            } elseif ($placeName == 'INSTALLMENT_REQUESTS') {
+            } elseif ($placeName == 'PAYMENTS_EXTENSION_REQUEST') {
             } else {
                 if (key($placesCurrent) == 'completed') {
                     $event->getSubject()->taxpayer->notify(new DatabaseNotification(
