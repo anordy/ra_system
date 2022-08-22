@@ -136,6 +136,7 @@
         </div>
         <div class="tab-pane fade" id="profile card p-2" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
+            
                 @php echo view($viewRender, compact('return'))->render() @endphp
             @else
                 <div class="card">

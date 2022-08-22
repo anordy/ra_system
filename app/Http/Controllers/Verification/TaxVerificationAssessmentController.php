@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\EmTransactionReturn;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
@@ -42,6 +44,14 @@ class TaxVerificationAssessmentController extends Controller
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof VatReturn) {
             $viewRender = 'returns.vat_returns.details';
+
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        } elseif ($return instanceof EmTransactionReturn) {
+            $viewRender = 'returns.em-transaction.details';
+
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        } elseif ($return instanceof BfoReturn) {
+            $viewRender = 'returns.excise-duty.bfo.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof MmTransferReturn) {
