@@ -178,13 +178,13 @@
             <a href="{{ route('claims.index') }}">Tax Claims</a>
         </li>
 
-        <li class="{{ request()->is('e-filling-extension*') ? 'active' : '' }}">
+        <li class="{{ request()->is('extensions-e-filling*') ? 'active' : '' }}">
             <a href="#extension-menu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('e-filling-extension*') ? 'true' : 'false' }}"
+               aria-expanded="{{ request()->is('extensions-e-filling*') ? 'true' : 'false' }}"
                class="dropdown-toggle">Payment Extensions</a>
-            <ul class="collapse list-unstyled {{ request()->is('e-filling-extension*') ? 'show' : '' }}"
+            <ul class="collapse list-unstyled {{ request()->is('extensions-e-filling*') ? 'show' : '' }}"
                 id="extension-menu">
-                <li class="{{ request()->is('e-filling-extension*') ? 'active' : '' }}">
+                <li class="{{ request()->is('extensions-e-filling*') ? 'active' : '' }}">
                     <a href="{{ route('extension.index') }}">Extensions Requests</a>
                 </li>
             </ul>
