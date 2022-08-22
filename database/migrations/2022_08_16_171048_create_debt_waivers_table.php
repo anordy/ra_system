@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateDebtWaiversTable extends Migration
 {
@@ -28,7 +29,7 @@ class CreateDebtWaiversTable extends Migration
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();
-            $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'closed'])->default('draft');
+            $table->enum('status', ReturnStatus::getConstants());
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->timestamps();

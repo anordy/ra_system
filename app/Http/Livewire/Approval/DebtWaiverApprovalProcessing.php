@@ -195,7 +195,6 @@ class DebtWaiverApprovalProcessing extends Component
                 );
 
                 if (config('app.env') != 'local') {
-                    dd('de');
                     $response = ZmCore::sendBill($zmBill->id);
                     
 
@@ -245,7 +244,7 @@ class DebtWaiverApprovalProcessing extends Component
                     $zmBill->save();
 
                     $this->subject->verified_at = Carbon::now()->toDateTimeString();
-                    $this->subject->status = WaiverStatus::APPROVED;
+                    $this->subject->status = WaiverStatus::APPROVED; // Check this
                     $this->subject->save();
                     // event(new SendSms('business-registration-approved', $this->subject->id));
                     // event(new SendMail('business-registration-approved', $this->subject->id));
