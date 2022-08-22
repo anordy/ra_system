@@ -75,7 +75,7 @@ class Actions extends Component
 		DB::beginTransaction();
 		try {
 			$data = (object) $value['data'];
-			$agent = TaxAgent::find($data->id);
+			$agent = TaxAgent::query()->find($data->id);
 			$agent->status = TaxAgentStatus::APPROVED;
 			$agent->app_true_comment = $value['value'];
 			$agent->reference_no = "ZRB10" . rand(0, 9999);
