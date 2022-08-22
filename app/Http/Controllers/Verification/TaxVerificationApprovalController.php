@@ -11,6 +11,7 @@ use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\HotelReturns\HotelReturn;
 
@@ -62,6 +63,10 @@ class TaxVerificationApprovalController extends Controller
             $viewRender = 'returns.port.details';
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        }elseif ($return instanceof MnoReturn) {
+            $viewRender = 'returns.excise-duty.mno.details';
+
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         }
     }
 
@@ -98,6 +103,11 @@ class TaxVerificationApprovalController extends Controller
             $viewRender = 'returns.port.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
+        }elseif ($return instanceof MnoReturn) {
+            $viewRender = 'returns.excise-duty.mno.details';
+
+            return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
+
     }
 }
