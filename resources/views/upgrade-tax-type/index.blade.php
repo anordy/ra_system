@@ -39,7 +39,11 @@
                                         <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
                                         <td>{{$return->business->name}}</td>
                                         <td>{{$return->businessLocation->name}}</td>
-                                        <td>{{$return->total_sales}}</td>
+                                        <td>{{number_format($return->total_sales,2)}}
+                                        <strong>
+                                            {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
+                                        </strong>
+                                        </td>
                                         <td>
                                             <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($hotel_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                data-placement="right" title="View">
@@ -78,7 +82,11 @@
                                             <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
                                             <td>{{$return->business->name}}</td>
                                             <td>{{$return->businessLocation->name}}</td>
-                                            <td>{{$return->total_sales}}</td>
+                                            <td>{{number_format($return->total_sales,2)}}
+                                                <strong>
+                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
+                                                </strong>
+                                            </td>
                                             <td>
                                                 <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($stamp_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                    data-placement="right" title="View">
@@ -117,7 +125,11 @@
                                             <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
                                             <td>{{$return->business->name}}</td>
                                             <td>{{$return->businessLocation->name}}</td>
-                                            <td>{{$return->total_sales}}</td>
+                                            <td>{{number_format($return->total_sales,2)}}
+                                                <strong>
+                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
+                                                </strong>
+                                            </td>
                                             <td>
                                                 <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($lump_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                    data-placement="right" title="View">

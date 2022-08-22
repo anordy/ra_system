@@ -333,7 +333,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('file/{file}', [ExtensionController::class, 'file'])->name('file');
     });
 
-    Route::name('installment.')->prefix('/e-filling-installment')->group(function () {
+    Route::name('installment.')->prefix('/installments-e-filling')->group(function () {
         Route::get('/', [InstallmentController::class, 'index'])->name('index');
         Route::get('show/{debtId}', [InstallmentController::class, 'show'])->name('show');
         Route::get('file/{file}', [InstallmentController::class, 'file'])->name('file');
