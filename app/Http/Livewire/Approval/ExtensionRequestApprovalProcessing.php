@@ -3,19 +3,18 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\ExtensionStatus;
+use App\Models\Debts\Debt;
 use Carbon\Carbon;
 use Exception;
-use App\Models\Role;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Log;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ExtensionRequestApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
+    use WorkflowProcesssingTrait, LivewireAlert;
 
     public $modelId;
     public $modelName;
@@ -23,9 +22,6 @@ class ExtensionRequestApprovalProcessing extends Component
 
     public $extendTo;
     public $taxTypes;
-
-    public $staffs = [];
-    public $subRoles = [];
 
     public $task;
 
@@ -37,47 +33,43 @@ class ExtensionRequestApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $modelId);
 
         $this->task = $this->subject->pinstancesActive;
-
-        if ($this->task != null) {
-            $operators = json_decode($this->task->operators);
-            if (gettype($operators) != "array") {
-                $operators = [];
-            }
-            $roles = Role::whereIn('id', $operators)->get()->pluck('id')->toArray();
-
-            $this->subRoles = Role::whereIn('report_to', $roles)->get();
-
-            $this->staffs = User::whereIn('role_id', $this->subRoles->pluck('id')->toArray())->get();
-        }
     }
 
     public function approve($transtion)
     {
-        $operators = [];
         if ($this->checkTransition('debt_manager')) {
             $this->validate([
                 'extendTo' => ['required'],
             ]);
-
-            $this->subject->extend_from = Carbon::now()->toDateTimeString();
-            $this->subject->extend_to = $this->extendTo;
-            $this->subject->save();
         }
 
-        if ($this->checkTransition('accepted')) {
-            $this->subject->status = ExtensionStatus::APPROVED;
-            $this->subject->save();
-        }
+        DB::beginTransaction();
 
         try {
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
+            if ($this->checkTransition('debt_manager')) {
+                $this->subject->extend_from = Carbon::now()->toDateTimeString();
+                $this->subject->extend_to = $this->extendTo;
+                $this->subject->save();
+            }
+
+            if ($this->checkTransition('accepted')) {
+                $this->subject->status = ExtensionStatus::APPROVED;
+                $debt = Debt::findOrFail($this->subject->debt_id);
+                $debt->update([
+                    'curr_due_date' => $this->subject->extend_to
+                ]);
+                $this->subject->save();
+            }
+
+            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            DB::commit();
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-            $this->alert('error', $e->getMessage());
+            $this->alert('error', 'Something went wrong, please try again later.');
             return;
         }
-
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function reject($transtion)
@@ -86,18 +78,22 @@ class ExtensionRequestApprovalProcessing extends Component
             'comments' => 'required|string',
         ]);
 
-        if ($this->checkTransition('rejected')) {
-            $this->subject->status = ExtensionStatus::REJECTED;
-            $this->subject->save();
-        }
-
         try {
+            DB::beginTransaction();
+            if ($this->checkTransition('rejected')) {
+                $this->subject->status = ExtensionStatus::REJECTED;
+                $this->subject->save();
+            }
+
             $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            DB::commit();
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
+            $this->alert('error', 'Something went wrong, please try again later.');
             return;
         }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function render()
