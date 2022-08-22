@@ -21,7 +21,6 @@ class CreateHotelReturnsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('business_id');
-
             $table->string('filed_by_type');
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->unsignedBigInteger('filed_by_id');

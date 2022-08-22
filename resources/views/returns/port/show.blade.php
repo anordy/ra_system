@@ -15,7 +15,7 @@
                 {{ $return->financialMonth->name }},
                 {{ $return->financialMonth->year->code }}</h6>
             <hr>
-       
+
 
             <div>
                 <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
@@ -81,13 +81,13 @@
                             <h6>Payment Structure</h6>
                         </div>
 
-                     <div class="row">
-                <div class="col-md-12">PAYMENT STRUCTURE</div>
-                <div class="col-md-12">
-                    <livewire:returns.port.returns-port-penalty modelName='App\Models\Returns\Port\PortReturn'
-                        modelId="{{ $return->id }}" />
-                </div>
-            </div>
+                        <div class="row">
+                            <div class="col-md-12">PAYMENT STRUCTURE</div>
+                            <div class="col-md-12">
+                                <livewire:returns.port.returns-port-penalty modelName='App\Models\Returns\Port\PortReturn'
+                                    modelId="{{ $return->id }}" />
+                            </div>
+                        </div>
 
                         {{-- @endif --}}
 
@@ -135,7 +135,7 @@
                         </div>
                     </div>
 
-                  
+
                 </div>
             </div>
         </div>
