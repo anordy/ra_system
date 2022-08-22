@@ -327,7 +327,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
     });
 
-    Route::name('extension.')->prefix('/e-filling-extension')->group(function () {
+    Route::name('extension.')->prefix('/extensions-e-filling')->group(function () {
         Route::get('/', [ExtensionController::class, 'index'])->name('index');
         Route::get('show/{debtId}', [ExtensionController::class, 'show'])->name('show');
         Route::get('file/{file}', [ExtensionController::class, 'file'])->name('file');
