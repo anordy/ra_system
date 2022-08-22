@@ -77,7 +77,7 @@ class ReturnDebtsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount, 2);
                 }),
-            Column::make('Status', 'app_step')->view('debts.includes.status'),
+            Column::make('Status', 'status')->view('debts.includes.status'),
         ];
     }
 }

@@ -123,36 +123,36 @@ class DebtWaiverApprovalProcessing extends Component
 
                 // Generate control number for waived application
                 $billitems[] = [
-                        'billable_id' => $this->debt_waiver->id,
-                        'billable_type' => get_class($this->debt_waiver),
+                        'billable_id' => $this->debt->id,
+                        'billable_type' => get_class($this->debt),
                         'use_item_ref_on_pay' => 'N',
                         'amount' => $this->debt->principal_amount,
                         'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id,
+                        'gfs_code' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
+                        'tax_type_id' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->id,
                 ];
 
                 if ($this->penaltyAmountDue > 0) {
                     $billitems[] = [
-                        'billable_id' => $this->debt_waiver->id,
-                        'billable_type' => get_class($this->debt_waiver),
+                        'billable_id' => $this->debt->id,
+                        'billable_type' => get_class($this->debt),
                         'use_item_ref_on_pay' => 'N',
                         'amount' => $this->penaltyAmountDue,
                         'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id,
+                        'gfs_code' => $this->taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
+                        'tax_type_id' => $this->taxTypes->where('code', TaxType::PENALTY)->first()->id,
                     ];
                 }
   
                 if ($this->interestAmountDue > 0) {
                     $billitems[] = [
-                        'billable_id' => $this->debt_waiver->id,
-                        'billable_type' => get_class($this->debt_waiver),
+                        'billable_id' => $this->debt->id,
+                        'billable_type' => get_class($this->debt),
                         'use_item_ref_on_pay' => 'N',
                         'amount' => $this->interestAmountDue,
                         'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id,
+                        'gfs_code' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
+                        'tax_type_id' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->id,
                     ];
                 }
        
@@ -163,7 +163,7 @@ class DebtWaiverApprovalProcessing extends Component
                 $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
                 $payer_email = $taxpayer->email;
                 $payer_phone = $taxpayer->mobile;
-                $description = "Debt Waiver for assessment";
+                $description = "Debt Waiver";
                 $payment_option = ZmCore::PAYMENT_OPTION_FULL;
                 $currency = $this->debt->currency;
                 $createdby_type = get_class(Auth::user());
@@ -178,7 +178,7 @@ class DebtWaiverApprovalProcessing extends Component
                 $zmBill = ZmCore::createBill(
                     $billableId,
                     $billableType,
-                    $this->taxTypes->where('code', 'verification')->first()->id,
+                    $this->taxTypes->where('code', TaxType::DEBTS)->first()->id,
                     $payer_id,
                     $payer_type,
                     $payer_name,
@@ -199,8 +199,6 @@ class DebtWaiverApprovalProcessing extends Component
                     
 
                     if ($response->status === ZmResponse::SUCCESS) {
-                        $this->debt_waiver->status = ReturnStatus::CN_GENERATING;
-                        $this->debt_waiver->save();
                         $this->debt->update([
                             'penalty' => $this->penaltyAmountDue,
                             'interest' => $this->interestAmountDue,
@@ -220,9 +218,8 @@ class DebtWaiverApprovalProcessing extends Component
                             'status' => ReturnStatus::CN_GENERATION_FAILED
                         ]);
                         session()->flash('error', 'Control number generation failed, try again later');
-                        $this->debt_waiver->status = ReturnStatus::CN_GENERATION_FAILED;
                     }
-
+                    $this->debt_waiver->status = WaiverStatus::APPROVED;
                     $this->debt_waiver->save();
                 } else {
                     
@@ -234,7 +231,8 @@ class DebtWaiverApprovalProcessing extends Component
                         'interest' => $this->interestAmountDue,
                         'total_amount' => $this->total,
                         'outstanding_amount' => $this->total,
-                        'app_step' => 'waiver'
+                        'app_step' => 'waiver',
+                        'status' => ReturnStatus::CN_GENERATED
                     ]);
 
                     // Simulate successful control no generation
@@ -244,7 +242,7 @@ class DebtWaiverApprovalProcessing extends Component
                     $zmBill->save();
 
                     $this->subject->verified_at = Carbon::now()->toDateTimeString();
-                    $this->subject->status = WaiverStatus::APPROVED; // Check this
+                    $this->subject->status = WaiverStatus::APPROVED;
                     $this->subject->save();
                     // event(new SendSms('business-registration-approved', $this->subject->id));
                     // event(new SendMail('business-registration-approved', $this->subject->id));

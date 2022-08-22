@@ -4,11 +4,10 @@ namespace App\Enum;
 
 use ReflectionClass;
 
-class InstallmentStatus implements Status
+class DebtPaymentMethod implements Status
 {
-    public const ACTIVE = 'active';
-    public const COMPLETE = 'complete';
-    public const CANCELLED = 'cancelled';
+    public const NORMAL = 'normal';
+    public const INSTALLMENT = 'installment';
 
     static function getConstants(): array
     {

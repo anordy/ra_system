@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\DebtPaymentMethod;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -40,6 +41,7 @@ class CreateDebtsTable extends Migration
             $table->integer('demand_notice_count')->nullable();
             $table->enum('app_step', ['waiver', 'extension', 'normal'])->default('normal');
             $table->enum('status', ReturnStatus::getConstants())->default('submitted');
+            $table->enum('payment_method', DebtPaymentMethod::getConstants())->default(DebtPaymentMethod::NORMAL);
             $table->enum('origin', ['job', 'manual'])->nullable();
             $table->unique(['debt_type', 'debt_id'], 'debt_type_unique');
             $table->timestamps();
