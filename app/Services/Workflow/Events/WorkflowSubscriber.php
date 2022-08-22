@@ -119,9 +119,15 @@ class WorkflowSubscriber implements EventSubscriberInterface
             foreach ($places as $key => $place) {
 
                 $operators = json_encode($place['operators']);
+
+                if ($place['operator_type'] == "role") {
+                    dd('here');
+                }
+
                 if (array_key_exists('operators', $context) && $context['operators'] != []) {
                     $operators = json_encode($context['operators']);
                 }
+                
 
                 $task = new WorkflowTask([
                     'workflow_id' => $workflow->id,
