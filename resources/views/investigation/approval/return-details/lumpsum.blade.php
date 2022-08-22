@@ -4,7 +4,7 @@
         <hr>
 
         @foreach ($returns as $year => $return)
-            <strong>{{ $year }}</strong>
+            <strong class="px-2">{{ $year }}</strong>
             @php
                 $PM = 0;
                 $AWP = 0;
