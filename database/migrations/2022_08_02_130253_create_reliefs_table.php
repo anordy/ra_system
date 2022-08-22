@@ -22,10 +22,10 @@ class CreateReliefsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->decimal('rate');
             $table->decimal('vat');
-            $table->decimal('total_amount',15,2);
-            $table->decimal('vat_amount',15,2);
-            $table->decimal('relieved_amount',15,2);
-            $table->decimal('amount_payable',15,2);
+            $table->decimal('total_amount',40,2);
+            $table->decimal('vat_amount',40,2);
+            $table->decimal('relieved_amount',40,2);
+            $table->decimal('amount_payable',40,2);
             $table->date('expire');
             $table->enum('status', ['pending','draft', 'approved', 'rejected']);
             $table->boolean('active')->default(true);

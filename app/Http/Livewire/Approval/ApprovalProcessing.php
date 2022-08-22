@@ -137,7 +137,7 @@ class ApprovalProcessing extends Component
                     'quarters'        => '',
                 ];
             } else {
-                $this->showLumpsumOptions =false;
+                $this->showLumpsumOptions = false;
             }
         }
     }
@@ -180,7 +180,7 @@ class ApprovalProcessing extends Component
             ]);
 
             $business = Business::findOrFail($this->subject->id);
-            
+
             $business->headquarter->tax_region_id = $this->selectedTaxRegion;
             $business->headquarter->save();
             $business->taxTypes()->detach();
@@ -202,11 +202,11 @@ class ApprovalProcessing extends Component
                         'selectedTaxTypes.*.quarters.between'           => 'Please enter Quaters between 1 to 12',
                     ]
                 );
-                
+
                 DB::table('lump_sum_payments')->insert([
                     'filed_by_id'         => auth()->user()->id,
                     'business_id'         => $this->subject->id,
-                    'business_location_id'=> $business->id,
+                    'business_location_id' => $business->id,
                     'annual_estimate'     => $annualEstimate[0],
                     'payment_quarters'    => $quarters[0],
                     'currency'            => $currency[0],
@@ -231,12 +231,14 @@ class ApprovalProcessing extends Component
             $location = BusinessLocation::where('business_id', $this->subject->id)
                 ->where('is_headquarter', true)
                 ->firstOrFail();
-            LumpSumPayment::where('business_id', $this->subject->id)
+            $lumpsum = LumpSumPayment::where('business_id', $this->subject->id)
                 ->latest()
-                ->first()
-                ->update(['business_location_id'=> $location->id]);
-            // dd($location);
-    
+                ->first();
+
+            if ($lumpsum != null) {
+                $lumpsum->update(['business_location_id' => $location->id]);
+            }
+
             if (!$location->generateZin()) {
                 $this->alert('error', 'Something went wrong.');
 
