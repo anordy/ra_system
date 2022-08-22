@@ -68,6 +68,8 @@ use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
+use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
+use App\Http\Controllers\Returns\Queries\SalesPurchasesController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
@@ -285,6 +287,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/filling', PetroleumReturnController::class);
         Route::resource('/certificateOfQuantity', QuantityCertificateController::class);
         Route::get('/certificateOfQuantityFile/{id}', [QuantityCertificateController::class, 'certificate'])->name('certificateOfQuantity.certificate');
+    });
+
+    Route::name('queries.')->prefix('queries')->group(function () {
+        Route::get('/sales-purchases', [SalesPurchasesController::class, 'index'])->name('sales-purchases');
+        Route::get('/all-credit-returns', [AllCreditReturnsController::class, 'index'])->name('all-credit-returns');
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
