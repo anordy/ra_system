@@ -190,13 +190,13 @@
             </ul>
         </li>
 
-        <li class="{{ request()->is('e-filling-installment*') ? 'active' : '' }}">
+        <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
             <a href="#installment-menu" data-toggle="collapse"
-               aria-expanded="{{ request()->is('e-filling-installment*') ? 'true' : 'false' }}"
+               aria-expanded="{{ request()->is('installments-e-filling*') ? 'true' : 'false' }}"
                class="dropdown-toggle">Installments</a>
-            <ul class="collapse list-unstyled {{ request()->is('e-filling-installment*') ? 'show' : '' }}"
+            <ul class="collapse list-unstyled {{ request()->is('installments-e-filling*') ? 'show' : '' }}"
                 id="installment-menu">
-                <li class="{{ request()->is('e-filling-installment*') ? 'active' : '' }}">
+                <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
                     <a href="{{ route('installment.index') }}">Installment Requests</a>
                 </li>
             </ul>
