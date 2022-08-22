@@ -15,7 +15,6 @@ class CreateMvrAgentsTable extends Migration
     {
         Schema::create('mvr_agents', function (Blueprint $table) {
             $table->id();
-            $table->string('tin',15);
             $table->unsignedBigInteger('taxpayer_id');
             $table->string('agent_number',20);
             $table->date('registration_date');
