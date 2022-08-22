@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\ZanMalipo\ZmResponse;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,6 +30,11 @@ class ZmBill extends Model
 		return $this->morphTo();
 	}
 
+    public function is_waiting_callback(){
+        return $this->zan_trx_sts_code == ZmResponse::SUCCESS
+            && empty($this->control_number)
+            && abs(Carbon::parse($this->updated_at)->diffInMinutes(Carbon::now()))<5; //Assumption: request sent less than 5 mins ago
+    }
     public function billable(){
         return $this->morphTo();
     }

@@ -118,6 +118,20 @@ class PermissionSeeder extends Seeder
             ['name' => 'land-lease-view', 'sys_module_id' => 15],
             ['name' => 'land-lease-generate-report', 'sys_module_id' => 15],
 
+            # Manageria Report
+            ['name' => 'managerial-report-view', 'sys_module_id' => 14],
+
+            ['name' => 'mvr_initiate_registration', 'sys_module_id' => 15],
+            ['name' => 'mvr_approve_registration', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_initiate_registration_change', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_approve_registration_change', 'sys_module_id' => 15 ],
+            ['name' => 'receive_plate_number', 'sys_module_id' => 15 ],
+            ['name' => 'print_plate_number', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_register_agent', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_initiate_transfer', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_approve_transfer', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15 ],
+            ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15 ],
             # Managerial Report
             ['name' => 'managerial-report-view', 'sys_module_id' => 16],
 

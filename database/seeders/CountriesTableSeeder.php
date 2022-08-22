@@ -32,5 +32,11 @@ class CountriesTableSeeder extends Seeder
             'nationality' => 'Ugandan',
             'code' => 'UG'
         ]);
+
+        Country::updateOrCreate([
+            'name' => 'Japan',
+            'nationality' => 'Japanese',
+            'code' => 'JP'
+        ]);
     }
 }

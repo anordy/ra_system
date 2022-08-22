@@ -15,8 +15,8 @@ class SysModuleSeeder extends Seeder
     public function run()
     {
         $data = [
-            ['id' => 1, 'code' => 'taxpayer-management' ,'name' => 'Taxpayer Management'],
-            ['id' => 2, 'code' => 'business-management' ,'name' => 'Business Management'],
+            ['id' => 1, 'code' => 'taxpayer-management', 'name' => 'Taxpayer Management'],
+            ['id' => 2, 'code' => 'business-management', 'name' => 'Business Management'],
             ['id' => 3, 'code' => 'tax-consultant', 'name' => 'Tax Consultant'],
             ['id' => 4, 'code' => 'upgrade-tax-types', 'name' => 'UpgradTax Types'],
             ['id' => 5, 'code' => 'tax-return', 'name' => 'Tax Return'],
@@ -30,10 +30,12 @@ class SysModuleSeeder extends Seeder
             ['id' => 13, 'code' => 'tax-clearance-management', 'name' => 'Tax Clearance Management'],
             ['id' => 14, 'code' => 'debt-management', 'name' => 'Debt Management'],
             ['id' => 15, 'code' => 'land-lease', 'name' => 'Land Lease'],
-            ['id' => 16, 'code' => 'managerial-report', 'name' => 'Manageria Report'],
+            ['id' => 16, 'code' => 'mvr', 'name' => 'Motor Vehicle Registration'],
             ['id' => 17, 'code' => 'manage-payment', 'name' => 'Manage Payment'],
             ['id' => 18, 'code' => 'setting', 'name' => 'Setting'],
             ['id' => 19, 'code' => 'system', 'name' => 'System'],
+            ['id' => 20, 'code' => 'managerial-report', 'name' => 'Manageria Report'],
+
 
 
         ];
