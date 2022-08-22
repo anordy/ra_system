@@ -133,11 +133,11 @@ class TaxInvestigationApprovalProcessing extends Component
             $this->validate(
                 [
                     'hasAssessment' => ['required', 'boolean'],
-                    'workingsReport' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'mimes:pdf'],
+                    'investigationReport' => ['required'],
+                    'workingsReport' => [new RequiredIf($this->hasAssessment == "1"), 'nullable'],
                     'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
                     'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
                     'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
-                    'investigationReport' => 'required|mimes:pdf|max:1024',
                 ]
             );
 
@@ -219,12 +219,12 @@ class TaxInvestigationApprovalProcessing extends Component
 
 
                 $investigationReport = "";
-                if ($this->investigationReport) {
+                if ($this->investigationReport != $this->subject->investigation_report) {
                     $investigationReport = $this->investigationReport->store('investigation', 'local-admin');
                 }
 
                 $workingsReport = "";
-                if ($this->workingsReport) {
+                if ($this->workingsReport != $this->subject->working_report) {
                     $workingsReport = $this->investigationReport->store('investigation', 'local-admin');
                 }
 
