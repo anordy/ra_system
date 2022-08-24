@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Enum\InstallmentStatus;
 use App\Enum\PaymentStatus;
 use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
@@ -47,8 +48,7 @@ class ZanMalipoController extends Controller
         TaxAssessment::class,
         Dispute::class,
         TaxAgent::class,
-        RenewTaxAgentRequest::class,
-        InstallmentItem::class
+        RenewTaxAgentRequest::class
     ];
 
     private $multipleBillsReturnable = [
@@ -57,6 +57,10 @@ class ZanMalipoController extends Controller
 
     private $debtReturnable = [
         Debt::class
+    ];
+
+    private $installable = [
+        InstallmentItem::class
     ];
 
     /**
@@ -90,7 +94,11 @@ class ZanMalipoController extends Controller
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                 $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
-                if (in_array($bill->billable_type, array_merge($this->returnable, $this->multipleBillsReturnable, $this->debtReturnable))) {
+                if (in_array($bill->billable_type, array_merge(
+                    $this->returnable,
+                    $this->multipleBillsReturnable,
+                    $this->debtReturnable,
+                    $this->installable))) {
                     try {
                         $billable         = $bill->billable;
                         $billable->status = ReturnStatus::CN_GENERATED;
@@ -104,7 +112,11 @@ class ZanMalipoController extends Controller
             } else {
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
 
-                if (in_array($bill->billable_type, array_merge($this->returnable, $this->multipleBillsReturnable, $this->debtReturnable))) {
+                if (in_array($bill->billable_type, array_merge(
+                    $this->returnable,
+                    $this->multipleBillsReturnable,
+                    $this->debtReturnable,
+                    $this->installable))) {
                     try {
                         $billable         = $bill->billable;
                         $billable->status = ReturnStatus::CN_GENERATION_FAILED;
@@ -176,6 +188,9 @@ class ZanMalipoController extends Controller
 
             // Check and update debts
             $this->updateDebt($bill);
+
+            // Update installments
+            $this->updateInstallment($bill);
 
             //TODO: we should send sms to customer here to notify payment reception
 
@@ -272,6 +287,46 @@ class ZanMalipoController extends Controller
                     $debt->status = ReturnStatus::PAID_PARTIALLY;
                     $debt->outstanding_amount = $bill->amount - $bill->paidAmount();
                     $debt->save();
+                }
+            }
+        } catch(\Exception $e){
+            Log::error($e);
+        }
+    }
+
+    private function updateInstallment($bill){
+        try {
+            if ($bill->billable_type == InstallmentItem::class) {
+                if ($bill->paidAmount() >= $bill->amount) {
+                    $item = $bill->billable;
+                    $item->update([
+                        'status' => ReturnStatus::COMPLETE
+                    ]);
+
+                    $debt = $item->installment->debt;
+                    $debt->update([
+                        'outstanding_amount' => $debt->outstanding_amount - $bill->amount
+                    ]);
+
+                    if ($item->installment->getNextPaymentDate()){
+                        $debt->update([
+                            'curr_due_date' => $item->installment->getNextPaymentDate()
+                        ]);
+                    } elseif(!$item->installment->getNextPaymentDate() && ($item->installment->status == InstallmentStatus::ACTIVE)) {
+                        $item->installment->update([
+                            'status' => InstallmentStatus::COMPLETE
+                        ]);
+                    }
+                } else {
+                    $item = $bill->billable;
+                    $item->update([
+                        'status' => ReturnStatus::PAID_PARTIALLY
+                    ]);
+
+                    $debt = $item->installment->debt;
+                    $debt->update([
+                        'outstanding_amount' => $debt->outstanding_amount - $bill->amount
+                    ]);
                 }
             }
         } catch(\Exception $e){

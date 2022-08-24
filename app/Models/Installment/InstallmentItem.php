@@ -16,4 +16,8 @@ class InstallmentItem extends Model
     public function bill(){
         return $this->morphOne(ZmBill::class, 'billable');
     }
+
+    public function installment(){
+        return $this->belongsTo(Installment::class);
+    }
 }
