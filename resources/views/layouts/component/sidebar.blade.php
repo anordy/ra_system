@@ -299,6 +299,12 @@
             <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                <li class="{{ request()->is('debts/debt*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.debt.index') }}">Debts</a>
+                </li>
+                <li class="{{ request()->is('debts/debt*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.debt.overdue') }}">Overdue Debts</a>
+                </li>
                 <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
                     <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
                 </li>
