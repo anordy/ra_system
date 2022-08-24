@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\BillStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +19,10 @@ class CreateInstallmentItemsTable extends Migration
             $table->unsignedBigInteger('installment_id');
             $table->decimal('amount', 20, 2);
             $table->enum('currency', ['TZS', 'USD', 'EUR']);
+            $table->dateTime('paid_at')->nullable();
+            $table->dateTime('due_date')->nullable();
+            $table->enum('status', BillStatus::getConstants())->default(BillStatus::SUBMITTED);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

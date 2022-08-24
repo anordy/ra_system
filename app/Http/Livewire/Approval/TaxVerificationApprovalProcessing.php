@@ -233,7 +233,6 @@ class TaxVerificationApprovalProcessing extends Component
         DB::beginTransaction();
 
         try {
-
             $billitems = [
                 [
                     'billable_id' => $assessment->id,

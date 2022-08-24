@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 use App\Enum\PaymentStatus;
 use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
+use App\Models\Installment\InstallmentItem;
 use App\Models\RenewTaxAgentRequest;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
@@ -47,6 +48,7 @@ class ZanMalipoController extends Controller
         Dispute::class,
         TaxAgent::class,
         RenewTaxAgentRequest::class,
+        InstallmentItem::class
     ];
 
     private $multipleBillsReturnable = [
@@ -132,9 +134,9 @@ class ZanMalipoController extends Controller
             $arrayToXml    = new ArrayToXml($xml['gepgPmtSpInfo'], 'gepgPmtSpInfo');
             $signedContent = $arrayToXml->dropXmlDeclaration()->toXml();
 
-            if (!!ZmSignatureHelper::verifySignature($xml['gepgSignature'], $signedContent)) {
-                return $this->ackResp('gepgPmtSpInfoAck', '7303');
-            }
+//            if (!!ZmSignatureHelper::verifySignature($xml['gepgSignature'], $signedContent)) {
+//                return $this->ackResp('gepgPmtSpInfoAck', '7303');
+//            }
 
             $tx_info = $xml['gepgPmtSpInfo']['PymtTrxInf'];
 
@@ -217,6 +219,7 @@ class ZanMalipoController extends Controller
                 if ($bill->paidAmount() >= $bill->amount) {
                     $billable         = $bill->billable;
                     $billable->status = ReturnStatus::COMPLETE;
+                    $billable->paid_at = Carbon::now()->toDateTimeString();
                     $billable->save();
                 } else {
                     $billable         = $bill->billable;
