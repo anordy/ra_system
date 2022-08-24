@@ -1,5 +1,5 @@
 <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
-    <div class="col-md-3" wire:poll.visible.10000ms="refresh">
+    <div class="col-md-3">
         <span class="font-weight-bold text-uppercase">Payment Due Date</span>
         <p class="my-1">{{ $installment->getNextPaymentDate()->toDayDateTimeString() }}</p>
     </div>
@@ -12,10 +12,17 @@
             <span class="font-weight-bold text-uppercase">Control No</span>
             <p class="my-1">{{ $activeItem->bill->control_number }}</p>
         </div>
-        <div class="col-md-3">
-            <span class="font-weight-bold text-uppercase">Status</span>
-            <p class="my-1">{{ ucwords(str_replace('-', ' ', $activeItem->status)) }}</p>
-        </div>
+        @if($activeItem->status === \App\Enum\BillStatus::COMPLETE)
+            <div class="col-md-3">
+                <span class="font-weight-bold text-uppercase">Status</span>
+                <p class="my-1">Paid</p>
+            </div>
+        @else
+            <div class="col-md-3" wire:poll.visible.10000ms="refresh">
+                <span class="font-weight-bold text-uppercase">Status</span>
+                <p class="my-1">{{ ucwords(str_replace('-', ' ', $activeItem->status)) }}</p>
+            </div>
+        @endif
         <div class="col-md-2 d-flex justify-content-end">
             <span class="font-weight-bold text-uppercase"> </span>
             <p class="my-1">
