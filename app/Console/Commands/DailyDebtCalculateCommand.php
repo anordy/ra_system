@@ -69,11 +69,11 @@ class DailyDebtCalculateCommand extends Command
     protected function returnsDebts($financialMonth)
     {
         $returnModels = [
+            HotelReturn::class,
             StampDutyReturn::class,
             MnoReturn::class,
             VatReturn::class,
             MmTransferReturn::class,
-            HotelReturn::class,
             PetroleumReturn::class,
             // PortReturn::class,
             EmTransactionReturn::class,
@@ -108,9 +108,7 @@ class DailyDebtCalculateCommand extends Command
                 )
                     ->doesntHave('payments')
                     ->whereNotIn('status', ['complete', 'paid-by-debt'])
-                    ->whereIn('application_status', ['self_assessment', 'adjusted', 'submitted'])
                     ->where('filing_due_date', '<', $financialMonth->due_date)
-                    ->orWhere('payment_due_date', '<', $financialMonth->due_date)
                     ->get();
 
 
@@ -133,7 +131,6 @@ class DailyDebtCalculateCommand extends Command
             }
         }
 
-        // dd($datas);
     }
 
     protected function assessmentDebt($financialMonth)

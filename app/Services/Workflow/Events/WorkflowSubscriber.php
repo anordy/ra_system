@@ -141,7 +141,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'user_id' => $user->id,
                     'user_type' => get_class($user),
                     'status' => $key == 'completed' ? 'completed' : 'running',
-                    'remarks' => $context['comment'],
+                    'remarks' => $context['comment'] ?? null,
                 ]);
 
                 DB::transaction(function () use ($task, $subject) {

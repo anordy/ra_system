@@ -24,7 +24,7 @@
                     Tax Returns Verified
                 </div>
                 <div class="card-body">
-                   
+
                     <div class="row m-2 pt-3">
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
@@ -100,13 +100,14 @@
                                 <p class="my-1">{{ $verification->assessment->principal_amount ?? '' }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ $verification->assessment->interest_amount ?? '' }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                 <p class="my-1">{{ $verification->assessment->penalty_amount ?? '' }}</p>
                             </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                                <p class="my-1">{{ $verification->assessment->interest_amount ?? '' }}</p>
+                            </div>
+
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Total Amount Due</span>
                                 <p class="my-1">{{ $verification->assessment->total_amount ?? '' }}</p>
@@ -122,7 +123,7 @@
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
-                @php echo view($viewRender, compact('return'))->render() @endphp
+                @php echo view($viewRender, compact('return','return_'))->render() @endphp
             @else
                 <div class="card">
                     <div class="card-body">

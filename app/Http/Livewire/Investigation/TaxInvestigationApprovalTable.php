@@ -20,13 +20,11 @@ class TaxInvestigationApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        // return TaxInvestigation::query()->with('business', 'location', 'taxType', 'taxReturn')
-        //     ->where('tax_investigations.status', TaxInvestigationStatus::PENDING);
-
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', TaxInvestigation::class)
             ->where('status', 'running')
-            ->whereJsonContains('operators', auth()->user()->id);
+            ->whereJsonContains('operators', auth()->user()->id)
+            ->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
@@ -43,8 +41,10 @@ class TaxInvestigationApprovalTable extends DataTableComponent
     {
         return [
             Column::make('pinstance_id')->hideIf(true),
-            Column::make('Z_Number', 'pinstance_id')
+            Column::make('ZRB No', 'pinstance_id')
                 ->label(fn ($row) => $row->pinstance->location->zin ?? ''),
+            Column::make('TIN', 'pinstance_id')
+                ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance_id')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
             Column::make('Business Location', 'pinstance_id')
@@ -53,7 +53,7 @@ class TaxInvestigationApprovalTable extends DataTableComponent
                 ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
             Column::make('Period From', 'pinstance_id')
                 ->label(fn ($row) => $row->pinstance->period_from ?? ''),
-            Column::make('Period From', 'pinstance_id')
+            Column::make('Period To', 'pinstance_id')
                 ->label(fn ($row) => $row->pinstance->period_to ?? ''),
             Column::make('Created By', 'pinstance_id')
                 ->label(fn ($row) => $row->pinstance->createdBy->full_name ?? ''),

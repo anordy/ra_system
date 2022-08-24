@@ -21,7 +21,7 @@
             <div class="row mx-2">
 
                 @foreach ($returns as $year => $return)
-                    <strong>{{ $year }}</strong>
+                <strong class="px-2">{{ $year }}</strong>
                     <table class="table table-sm table-bordered">
                         <thead>
                             <tr>

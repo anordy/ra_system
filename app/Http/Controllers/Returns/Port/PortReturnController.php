@@ -52,6 +52,7 @@ class PortReturnController extends Controller
     {
         $returnId = decrypt($return_id);
         $return = PortReturn::findOrFail($returnId);
-        return view('returns.port.show', compact('return'));
+        $return_ = PortReturn::where('parent',$return->id)->first();
+        return view('returns.port.show', compact('return','return_'));
     }
 }

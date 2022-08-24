@@ -90,13 +90,14 @@
                                 <p class="my-1">{{ $investigation->assessment->principal_amount ?? '' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ $investigation->assessment->interest_amount ?? '' }}</p>
-                            </div>
-                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                 <p class="my-1">{{ $investigation->assessment->penalty_amount ?? '' }}</p>
                             </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                                <p class="my-1">{{ $investigation->assessment->interest_amount ?? '' }}</p>
+                            </div>
+
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Total Amount Due</span>
                                 <p class="my-1">{{ $investigation->assessment->total_amount ?? '' }}</p>
@@ -136,6 +137,7 @@
         </div>
         <div class="tab-pane fade" id="profile card p-2" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
+            
                 @php echo view($viewRender, compact('return'))->render() @endphp
             @else
                 <div class="card">
