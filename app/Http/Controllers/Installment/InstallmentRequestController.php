@@ -3,24 +3,21 @@
 namespace App\Http\Controllers\Installment;
 
 use App\Http\Controllers\Controller;
-use App\Models\Installment\Installment;
 use App\Models\Installment\InstallmentRequest;
-use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class InstallmentController extends Controller
+class InstallmentRequestController extends Controller
 {
     public function index(){
-        return view('installment.index');
+        return view('installment.requests.index');
     }
 
-
     public function show($installmentId){
-
-        $installment = Installment::findOrFail(decrypt($installmentId));
+        $installment = InstallmentRequest::findOrFail(decrypt($installmentId));
         $debt = $installment->debt;
 
-        return view('installment.show', compact('installment', 'debt'));
+        return view('installment.requests.show', compact('installment', 'debt'));
     }
 
     public function file($file){

@@ -215,7 +215,6 @@
                                     <th>Penalty</th>
                                     <th>Interest</th>
                                     <th>Total Debt</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -226,12 +225,6 @@
                                             <td>{{ number_format($verification->penalty_amount, 2) }}</td>
                                             <td>{{ number_format($verification->interest_amount, 2) }}</td>
                                             <td>{{ number_format($verification->principal_amount + $verification->penalty_amount + $verification->interest_amount, 2) }}
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('debts.verification.waive', 2) }}"
-                                                    class="btn btn-primary">
-                                                    Waive
-                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

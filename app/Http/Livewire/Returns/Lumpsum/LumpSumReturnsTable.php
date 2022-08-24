@@ -26,7 +26,7 @@ class LumpSumReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return LumpSumReturn::query()->where('filed_by_id', auth()->user()->id);
+        return LumpSumReturn::query();
     }
 
     public function columns(): array

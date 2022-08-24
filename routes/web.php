@@ -40,6 +40,7 @@ use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Extension\ExtensionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Installment\InstallmentController;
+use App\Http\Controllers\Installment\InstallmentRequestController;
 use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
@@ -351,8 +352,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('installment.')->prefix('/installments-e-filling')->group(function () {
         Route::get('/', [InstallmentController::class, 'index'])->name('index');
-        Route::get('show/{debtId}', [InstallmentController::class, 'show'])->name('show');
-        Route::get('file/{file}', [InstallmentController::class, 'file'])->name('file');
+        Route::get('/show/{installmentId}', [InstallmentController::class, 'show'])->name('show');
+
+        Route::prefix('/requests')->as('requests.')->group(function (){
+            Route::get('/', [InstallmentRequestController::class, 'index'])->name('index');
+            Route::get('create/{debtId}', [InstallmentRequestController::class, 'create'])->name('create');
+            Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
+            Route::get('file/{file}', [InstallmentRequestController::class, 'file'])->name('file');
+        });
     });
 
     Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-types')->group(function () {

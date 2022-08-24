@@ -105,6 +105,11 @@ return [
             'path' => storage_path('logs/debt/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
+        'installment' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/installment/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
     ],
 
 ];
