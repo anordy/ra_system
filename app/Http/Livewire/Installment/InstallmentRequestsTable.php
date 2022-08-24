@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Installment;
 
 use App\Models\Business;
-use App\Models\Installment\Installment;
 use App\Models\Installment\InstallmentRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -11,14 +10,15 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class InstallmentsTable extends DataTableComponent
+class InstallmentRequestsTable extends DataTableComponent
 {
 
     use LivewireAlert;
 
     public function builder(): Builder
     {
-        return Installment::query()->orderBy('installments.created_at', 'desc');
+        $businessIds = Business::where('taxpayer_id', Auth::id())->get()->pluck('id')->toArray();
+        return InstallmentRequest::whereIn('installment_requests.business_id', $businessIds)->orderBy('installment_requests.created_at', 'desc');
     }
 
     public function columns(): array
@@ -42,9 +42,9 @@ class InstallmentsTable extends DataTableComponent
                     return $value->toDateString();
                 }),
             Column::make('Status', 'status')
-                ->view('installment.includes.status'),
+                ->view('installment.requests.includes.status'),
             Column::make('Action', 'id')
-                ->view('installment.includes.actions')
+                ->view('installment.requests.includes.actions')
         ];
     }
 

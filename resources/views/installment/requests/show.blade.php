@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Extension Details')
+@section('title', 'Installment Requests Details')
 
 @section('content')
     <div class="card rounded-0">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Due Date</span>
-                    <p class="my-1">{{ $debt->curr_due_date }}</p>
+                    <p class="my-1">{{ $debt->last_due_date }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Principal Amount</span>
@@ -47,38 +47,46 @@
 
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold">
-            Extension Request Details
+            Installment Request Details
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12 mb-4">
                     <span class="font-weight-bold text-uppercase">Reasons for the application for extension of time to lodge objection</span>
-                    <p class="my-1">{{ $extension->reasons }}</p>
+                    <p class="my-1">{{ $installment->reasons }}</p>
                 </div>
                 <div class="col-md-12 mb-4">
                     <span class="font-weight-bold text-uppercase">Statement of facts in support of the reasons for the application for the extension of time to lodge an objection</span>
-                    <p class="my-1">{{ $extension->ground }}</p>
+                    <p class="my-1">{{ $installment->ground }}</p>
                 </div>
-                @if($extension->extend_from)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Request to Extend From</span>
-                        <p class="my-1 text-uppercase">{{ $extension->extend_from->toFormattedDateString() }}</p>
-                    </div>
-                @endif
-                @if($extension->extend_to)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase"> To</span>
-                        <p class="my-1 text-uppercase">{{ $extension->extend_to->toFormattedDateString() }}</p>
-                    </div>
+                @if($installment->status === \App\Enum\InstallmentRequestStatus::APPROVED)
+                    @if($installment->installment_from)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Request to pay with installment from</span>
+                            <p class="my-1 text-uppercase">{{ $installment->installment_from->toFormattedDateString() }}</p>
+                        </div>
+                    @endif
+                    @if($installment->installment_to)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase"> To</span>
+                            <p class="my-1 text-uppercase">{{ $installment->installment_to->toFormattedDateString() }}</p>
+                        </div>
+                    @endif
+                    @if($installment->installment_count)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Installment Phases (Months)</span>
+                            <p class="my-1 text-uppercase">{{ $installment->installment_count }} </p>
+                        </div>
+                    @endif
                 @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Status</span>
-                    <p class="my-1 text-uppercase">{{ $extension->status }}</p>
+                    <p class="my-1 text-uppercase">{{ $installment->status }}</p>
                 </div>
-                @if($extension->attachment)
-                    <div class="col-md-4 mb-3 mt-3">
-                        <span class="font-weight-bold text-uppercase mb-2 d-block">Attachment</span>
-                        <a class="file-item"  target="_blank"  href="{{ route('extension.file', encrypt($extension->attachment)) }}">
+                @if($installment->attachment)
+                    <div class="col-md-4 mb-3">
+                        <a class="file-item" target="_blank"
+                           href="{{ route('installment.file', encrypt($installment->attachment)) }}">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <div style="font-weight: 500;" class="ml-1">
                                 <span class="font-weight-bold text-uppercase">Attachment</span>
@@ -90,14 +98,4 @@
         </div>
     </div>
 
-    <livewire:approval.extension-request-approval-processing modelName="{{ get_class($extension) }}" modelId="{{ $extension->id }}" />
-
-    <div class="card rounded-0">
-        <div class="card-header bg-white font-weight-bold">
-            Approval History
-        </div>
-        <div class="card-body">
-            <livewire:approval.approval-history-table modelName='App\Models\Extension\ExtensionRequest' modelId="{{ $extension->id }}" />
-        </div>
-    </div>
 @endsection
