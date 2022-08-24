@@ -134,9 +134,9 @@ class ZanMalipoController extends Controller
             $arrayToXml    = new ArrayToXml($xml['gepgPmtSpInfo'], 'gepgPmtSpInfo');
             $signedContent = $arrayToXml->dropXmlDeclaration()->toXml();
 
-//            if (!!ZmSignatureHelper::verifySignature($xml['gepgSignature'], $signedContent)) {
-//                return $this->ackResp('gepgPmtSpInfoAck', '7303');
-//            }
+            if (!!ZmSignatureHelper::verifySignature($xml['gepgSignature'], $signedContent)) {
+                return $this->ackResp('gepgPmtSpInfoAck', '7303');
+            }
 
             $tx_info = $xml['gepgPmtSpInfo']['PymtTrxInf'];
 
