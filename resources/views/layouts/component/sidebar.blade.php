@@ -417,6 +417,9 @@
                 <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
                     <a href="{{ route('reports.returns') }}">Return Reports</a>
                 </li>
+                <li class="{{ request()->is('reports/registrations*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.registrations.index') }}">Registration Reports</a>
+                </li>
             </ul>
         </li>
 

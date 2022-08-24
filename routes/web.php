@@ -65,6 +65,7 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Reports\Registrations\RegistrationReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -332,6 +333,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
         Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
         Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
+        Route::get('/registrations',[RegistrationReportController::class,'index'])->name('registrations.index');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {

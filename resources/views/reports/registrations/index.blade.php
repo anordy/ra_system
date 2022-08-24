@@ -5,10 +5,10 @@
 @section('content')
 <div class="card">
     <div class="card-header text-uppercase font-weight-bold">
-        Retrun Reports
+        Registration Reports
     </div>
     <div class="card-body mt-0">
-        @livewire('reports.returns.return-report')
+        @livewire('reports.registrations.registration-report')
     </div>
 </div>
 @endsection
