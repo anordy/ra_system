@@ -63,7 +63,7 @@ class TaxVerificationApprovalController extends Controller
             $return_ = PortReturn::where('parent',$return->id)->first();
             $viewRender = 'returns.port.details';
 
-            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+           return view('verification.approval.approval', compact('return','return_', 'verification', 'viewRender'));
         }elseif ($return instanceof MnoReturn) {
             $viewRender = 'returns.excise-duty.mno.details';
 

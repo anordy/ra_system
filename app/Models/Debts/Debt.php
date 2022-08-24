@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Debt extends Model
 {
     use HasFactory;
-
+    protected $table = 'debts';
     protected $guarded = [];
 
     
@@ -41,4 +41,7 @@ class Debt extends Model
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
     
+    public function debtPenalties(){
+        return $this->hasMany(DebtPenalty::class);
+    }
 }

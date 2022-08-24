@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Waiver Details')
+@section('title', 'Tax Clearance Details')
 
 @section('content')
 
