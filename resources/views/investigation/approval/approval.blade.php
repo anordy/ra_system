@@ -28,11 +28,11 @@
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
                             <p class="my-1">{{ $investigation->business->tin ?? '' }}</p>
-                        </div> 
+                        </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">ZIN</span>
                             <p class="my-1">{{ $investigation->location->zin ?? '' }}</p>
-                        </div> 
+                        </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
                             <p class="my-1">{{ $investigation->taxtype->name ?? '' }}</p>
@@ -97,13 +97,14 @@
                                 <p class="my-1">{{ $investigation->assessment->principal_amount ?? '' }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ $investigation->assessment->interest_amount ?? '' }}</p>
-                            </div>
-                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
                                 <p class="my-1">{{ $investigation->assessment->penalty_amount ?? '' }}</p>
                             </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                                <p class="my-1">{{ $investigation->assessment->interest_amount ?? '' }}</p>
+                            </div>
+
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Total Amount Due</span>
                                 <p class="my-1">{{ $investigation->assessment->total_amount ?? '' }}</p>

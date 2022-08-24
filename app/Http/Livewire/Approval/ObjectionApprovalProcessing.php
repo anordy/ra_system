@@ -16,7 +16,6 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\RequiredIf;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -127,8 +126,8 @@ class ObjectionApprovalProcessing extends Component
             $this->complete = "1";
 
             $this->validate([
-                'interestPercent' => [ 'required', 'numeric'],
-                'penaltyPercent' => [ 'required','numeric'],
+                'interestPercent' => ['required', 'numeric'],
+                'penaltyPercent' => ['required', 'numeric'],
             ]);
             DB::beginTransaction();
 
@@ -143,11 +142,10 @@ class ObjectionApprovalProcessing extends Component
                         'use_item_ref_on_pay' => 'N',
                         'amount' => $this->total,
                         'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->code,
+                        'gfs_code' => $this->taxTypes->gfs_code,
                         'tax_type_id' => $this->taxTypes->id,
                     ],
                 ];
-
 
                 $taxpayer = $this->subject->business->taxpayer;
 
@@ -253,12 +251,11 @@ class ObjectionApprovalProcessing extends Component
 
             if ($this->checkTransition('commisioner_reject')) {
 
-
                 DB::beginTransaction();
 
                 try {
 
-                    $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal_amount_due, $this->assessment->penalty_amount,$this->assessment->interest_amount, $this->dispute->tax_deposit);
+                    $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal_amount_due, $this->assessment->penalty_amount, $this->assessment->interest_amount, $this->dispute->tax_deposit);
                     $total_deposit = $this->principal_amount_due + $this->assessment->interest_amount + $this->assessment->penalty_amount;
 
                     // Generate control number for waived application
@@ -269,11 +266,10 @@ class ObjectionApprovalProcessing extends Component
                             'use_item_ref_on_pay' => 'N',
                             'amount' => $total_deposit,
                             'currency' => 'TZS',
-                            'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
-                            'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id,
+                            'gfs_code' => $this->taxTypes->gfs_code,
+                            'tax_type_id' => $this->taxTypes->id,
                         ],
                     ];
-
 
                     $taxpayer = $this->subject->business->taxpayer;
 
@@ -311,7 +307,6 @@ class ObjectionApprovalProcessing extends Component
                         $billitems
                     );
 
-
                     if (config('app.env') != 'local') {
                         $response = ZmCore::sendBill($zmBill->id);
                         if ($response->status === ZmResponse::SUCCESS) {
@@ -348,7 +343,6 @@ class ObjectionApprovalProcessing extends Component
                 }
 
             }
-
 
             $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {

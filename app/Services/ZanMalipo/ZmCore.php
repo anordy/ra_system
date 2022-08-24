@@ -71,7 +71,7 @@ class ZmCore
             $bill_amount = 0;
             foreach ($bill_items as $item) {
                 if (!isset($item['amount']) || !isset($item['gfs_code'])) {
-                    throw new \Exception('Bill item must contain item_amount and gfs_code');
+                    throw new \Exception('Bill item must contain amount and gfs_code');
                 }
                 if ($item['currency'] != 'TZS') {
                     $bill_amount = $exchange_rate * $item['amount'];

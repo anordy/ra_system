@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Verification;
 
 use App\Http\Controllers\Controller;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
+use App\Models\Returns\MmTransferReturn;
+use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\Vat\VatReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Verification\TaxVerification;
-use App\Models\Returns\HotelReturns\HotelReturn;
 
 class TaxVerificationApprovalController extends Controller
 {
@@ -60,6 +60,7 @@ class TaxVerificationApprovalController extends Controller
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
         } elseif ($return instanceof PortReturn) {
+            $return_ = PortReturn::where('parent',$return->id)->first();
             $viewRender = 'returns.port.details';
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));

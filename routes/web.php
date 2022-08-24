@@ -48,7 +48,15 @@ use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
+use App\Http\Controllers\MVR\AgentsController;
+use App\Http\Controllers\MVR\DeRegistrationController;
+use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
+use App\Http\Controllers\MVR\MvrGenericSettingController;
+use App\Http\Controllers\MVR\OwnershipTransferController;
+use App\Http\Controllers\MVR\RegistrationChangeController;
+use App\Http\Controllers\MVR\TRAChassisSearchController;
 use App\Http\Controllers\LandLease\LandLeaseController;
+use App\Http\Controllers\MVR\WrittenOffVehiclesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Payments\PaymentsController;
 use App\Http\Controllers\RegionController;
@@ -98,6 +106,7 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
@@ -133,6 +142,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/assesment-files', AssesmentFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
+        Route::name('mvr-generic.')->prefix('mvr-generic')->group(function(){
+            Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
+                ->name('index')
+                ->where('model','MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
+        });
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -397,5 +411,45 @@ Route::middleware(['auth'])->group(function () {
     Route::name('payments.')->prefix('payments')->group(function () {
         Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
     });
-    
+
+    Route::prefix('mvr')->as('mvr.')->group(function () {
+        Route::get('/register', [MotorVehicleRegistrationController::class, 'index'])->name('register');
+        Route::get('/registered', [MotorVehicleRegistrationController::class, 'registeredIndex'])->name('registered');
+        Route::get('/plate-numbers', [MotorVehicleRegistrationController::class, 'plateNumbers'])->name('plate-numbers');
+        Route::get('/change-status', [MotorVehicleRegistrationController::class, 'index'])->name('change-status');
+        Route::get('/view/{id}', [MotorVehicleRegistrationController::class, 'show'])->name('show');
+        Route::get('/certificate-of-registration/{id}', [MotorVehicleRegistrationController::class, 'registrationCertificate'])->name('certificate-of-registration');
+        Route::get('/certificate-of-worth/{id}', [MotorVehicleRegistrationController::class, 'printCertificateOfWorth'])->name('certificate-of-worth');
+        Route::get('/de-registration-certificate/{id}', [MotorVehicleRegistrationController::class, 'deRegistrationCertificate'])->name('de-registration-certificate');
+        Route::get('/submit-inspection/{id}', [MotorVehicleRegistrationController::class, 'submitInspection'])->name('submit-inspection');
+        Route::get('/transfer-ownership', [OwnershipTransferController::class, 'index'])->name('transfer-ownership');
+        Route::get('/transfer-ownership/approve/{id}', [OwnershipTransferController::class, 'approve'])->name('transfer-ownership.approve');
+        Route::get('/transfer-ownership/reject/{id}', [OwnershipTransferController::class, 'reject'])->name('transfer-ownership.reject');
+        Route::get('/transfer-ownership/{id}', [OwnershipTransferController::class, 'show'])->name('transfer-ownership.show');
+        Route::get('/de-register-requests', [DeRegistrationController::class, 'index'])->name('de-register-requests');
+        Route::get('/de-register-requests/approve/{id}', [DeRegistrationController::class, 'approve'])->name('de-register-requests.approve');
+        Route::get('/de-register-requests/reject/{id}', [DeRegistrationController::class, 'reject'])->name('de-register-requests.reject');
+        Route::get('/de-register-requests/submit/{id}', [DeRegistrationController::class, 'zbsSubmit'])->name('de-register-requests.submit');
+        Route::get('/de-register-requests/{id}', [DeRegistrationController::class, 'show'])->name('de-register-requests.show');
+        Route::get('/reg-change-requests', [RegistrationChangeController::class, 'index'])->name('reg-change-requests');
+        Route::get('/reg-change-requests/approve/{id}', [RegistrationChangeController::class, 'approve'])->name('reg-change-requests.approve');
+        Route::get('/reg-change-requests/reject/{id}', [RegistrationChangeController::class, 'reject'])->name('reg-change-requests.reject');
+        Route::get('/reg-change-requests/{id}', [RegistrationChangeController::class, 'show'])->name('reg-change-requests.show');
+        Route::get('/written-off', [WrittenOffVehiclesController::class, 'index'])->name('written-off');
+        Route::get('/chassis-search/{chassis}', [TRAChassisSearchController::class, 'search'])->name('chassis-search');
+        Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
+        Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
+        Route::get('/reg-change-chassis-search/{type}/{number}', [RegistrationChangeController::class, 'search'])
+            ->name('internal-search')->where('type','plate-number|chassis');
+        Route::get('/de-registration-chassis-search/{type}/{number}', [DeRegistrationController::class, 'search'])
+            ->name('internal-search-dr')->where('type','plate-number|chassis');
+        Route::get('/ownership-transfer-chassis-search/{type}/{number}', [OwnershipTransferController::class, 'search'])
+            ->name('internal-search-ot')->where('type','plate-number|chassis');
+        Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
+            ->name('internal-search-wo')->where('type','plate-number|chassis');
+        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']);//todo: remove
+        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']);//todo: remove
+        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']);//todo: remove
+        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']);//todo: remove
+    });
 });
