@@ -196,8 +196,11 @@
                class="dropdown-toggle">Installments</a>
             <ul class="collapse list-unstyled {{ request()->is('installments-e-filling*') ? 'show' : '' }}"
                 id="installment-menu">
-                <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
-                    <a href="{{ route('installment.index') }}">Installment Requests</a>
+                <li class="{{ request()->is('installments-e-filling') ? 'active' : '' }}">
+                    <a href="{{ route('installment.index') }}">Installments</a>
+                </li>
+                <li class="{{ request()->is('installments-e-filling/requests*') ? 'active' : '' }}">
+                    <a href="{{ route('installment.requests.index') }}">Installment Requests</a>
                 </li>
             </ul>
         </li>
