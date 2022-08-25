@@ -66,14 +66,12 @@ class MnoReturn extends Model
         return $this->morphOne(Debt::class, 'debt');
     }
 
-    //to be replaced
-    public function bill(){
-        return $this->morphOne(ZmBill::class, 'billable');
-    }
-
-    //replacer
     public function bills(){
         return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function getBillAttribute(){
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
     public function payments()

@@ -60,14 +60,12 @@ class LumpSumReturn extends Model
         return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
     }
 
-    public function bill()
-    {
-        return $this->morphOne(ZmBill::class, 'billable');
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
     }
 
-    public function bills()
-    {
-        return $this->morphMany(ZmBill::class, 'billable');
+    public function getBillAttribute(){
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
     public function payments()
