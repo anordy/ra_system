@@ -22,13 +22,13 @@ class PortReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PortReturn::query()->where('filed_by_id', auth()->user()->id)->orderBy('port_returns.created_at', 'desc');
+        return PortReturn::query();
     }
 
     public function columns(): array
     {
         return [
-            Column::make('TIN', 'business.tin')
+           Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
             Column::make('Business Name', 'business.name')
@@ -38,17 +38,15 @@ class PortReturnTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Infrastructure', 'infrastructure')
+            Column::make('Infrastructure', 'infrastructure_tax')
                 ->sortable(),
             Column::make('Infrastructure(ZNZ-TM)', 'infrastructure_znz_tm')
                 ->sortable(),
             Column::make('Infrastructure(ZNZ-ZNZ)', 'infrastructure_znz_znz')
                 ->sortable(),
-            Column::make('Total VAT (TZS)', 'total_vat_payable_tzs')
+            Column::make('Total VAT', 'total_amount_due')
                 ->sortable()
                 ->searchable(),
-            Column::make('Total VAT (US$)', 'total_vat_payable_usd')
-                ->sortable(),
             Column::make('Payment Status', 'status')
                 ->hideif(true),
             Column::make('Status', 'id')->view('returns.port.includes.status'),
