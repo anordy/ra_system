@@ -34,6 +34,7 @@ use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
+use App\Http\Controllers\Debt\DebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\EducationLevelController;
@@ -369,6 +370,12 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::name('debts.')->prefix('/debts')->group(function () {
+        // General debts
+        Route::get('/all', [DebtController::class, 'index'])->name('debt.index');
+        Route::get('/overdue', [DebtController::class, 'overdue'])->name('debt.overdue');
+        Route::get('/recovery-measure/{debtId}', [DebtController::class, 'recovery'])->name('debt.recovery');
+        Route::get('/show/{debtId}', [DebtController::class, 'show'])->name('debt.show');
+
         // Assesments
         Route::get('/waivers', [AssessmentDebtController::class, 'waivers'])->name('waivers.index');
         Route::get('/waivers/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('waivers.approval');
