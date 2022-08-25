@@ -197,8 +197,11 @@
                class="dropdown-toggle">Installments</a>
             <ul class="collapse list-unstyled {{ request()->is('installments-e-filling*') ? 'show' : '' }}"
                 id="installment-menu">
-                <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
-                    <a href="{{ route('installment.index') }}">Installment Requests</a>
+                <li class="{{ request()->is('installments-e-filling') ? 'active' : '' }}">
+                    <a href="{{ route('installment.index') }}">Installments</a>
+                </li>
+                <li class="{{ request()->is('installments-e-filling/requests*') ? 'active' : '' }}">
+                    <a href="{{ route('installment.requests.index') }}">Installment Requests</a>
                 </li>
             </ul>
         </li>
@@ -296,6 +299,12 @@
             <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
                 Management</a>
             <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                <li class="{{ request()->is('debts/debt*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.debt.index') }}">Debts</a>
+                </li>
+                <li class="{{ request()->is('debts/debt*') ? 'active' : '' }}">
+                    <a href="{{ route('debts.debt.overdue') }}">Overdue Debts</a>
+                </li>
                 <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
                     <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
                 </li>

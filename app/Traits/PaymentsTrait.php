@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enum\BillStatus;
 use App\Enum\PaymentStatus;
 use App\Models\BusinessTaxType;
 use App\Models\ExchangeRate;
@@ -187,5 +188,40 @@ trait PaymentsTrait {
         }
 
         return $fee;
+    }
+
+    /**
+     * @param $bill
+     * @param $billable
+     * @return void
+     * @throws \DOMException
+     */
+    public function sendBill($bill, $billable){
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($bill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                $billable->status = BillStatus::CN_GENERATING;
+                $billable->save();
+
+                session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+                $billable->status = BillStatus::CN_GENERATION_FAILED;
+            }
+
+            $billable->save();
+        } else {
+            // We are local
+            $billable->status = BillStatus::CN_GENERATED;
+            $billable->save();
+
+            // Simulate successful control no generation
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status       = 'pending';
+            $bill->control_number   = '90909919991909';
+            $bill->save();
+
+            session()->flash('success', 'Your request was submitted, you will receive your payment information shortly - test');
+        }
     }
 }

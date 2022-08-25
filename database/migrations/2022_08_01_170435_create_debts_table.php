@@ -1,6 +1,7 @@
 <?php
 
 use App\Enum\DebtPaymentMethod;
+use App\Enum\RecoveryMeasureStatus;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -38,10 +39,12 @@ class CreateDebtsTable extends Migration
             $table->dateTime('last_due_date')->nullable();
             $table->dateTime('curr_due_date')->nullable();
             $table->dateTime('approved_on')->nullable();
-            $table->integer('demand_notice_count')->nullable();
+            $table->integer('demand_notice_count')->nullable()->default(0);
+            $table->dateTime('next_demand_notice_date')->nullable();
             $table->enum('app_step', ['waiver', 'extension', 'normal'])->default('normal');
             $table->enum('status', ReturnStatus::getConstants())->default('submitted');
             $table->enum('payment_method', DebtPaymentMethod::getConstants())->default(DebtPaymentMethod::NORMAL);
+            $table->enum('recovery_measure_status', RecoveryMeasureStatus::getConstants())->default(RecoveryMeasureStatus::PENDING);
             $table->enum('origin', ['job', 'manual'])->nullable();
             $table->unique(['debt_type', 'debt_id'], 'debt_type_unique');
             $table->timestamps();

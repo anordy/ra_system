@@ -19,7 +19,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Due Date</span>
-                    <p class="my-1">{{ $debt->last_due_date }}</p>
+                    <p class="my-1">{{ $debt->curr_due_date }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Principal Amount</span>

@@ -34,12 +34,14 @@ use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
+use App\Http\Controllers\Debt\DebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Extension\ExtensionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Installment\InstallmentController;
+use App\Http\Controllers\Installment\InstallmentRequestController;
 use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
@@ -360,8 +362,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('installment.')->prefix('/installments-e-filling')->group(function () {
         Route::get('/', [InstallmentController::class, 'index'])->name('index');
-        Route::get('show/{debtId}', [InstallmentController::class, 'show'])->name('show');
-        Route::get('file/{file}', [InstallmentController::class, 'file'])->name('file');
+        Route::get('/show/{installmentId}', [InstallmentController::class, 'show'])->name('show');
+
+        Route::prefix('/requests')->as('requests.')->group(function (){
+            Route::get('/', [InstallmentRequestController::class, 'index'])->name('index');
+            Route::get('create/{debtId}', [InstallmentRequestController::class, 'create'])->name('create');
+            Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
+            Route::get('file/{file}', [InstallmentRequestController::class, 'file'])->name('file');
+        });
     });
 
     Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-types')->group(function () {
@@ -371,6 +379,15 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::name('debts.')->prefix('/debts')->group(function () {
+        // General debts
+        Route::get('/all', [DebtController::class, 'index'])->name('debt.index');
+        Route::get('/overdue', [DebtController::class, 'overdue'])->name('debt.overdue');
+        Route::get('/recovery-measure/{debtId}', [DebtController::class, 'recovery'])->name('debt.recovery');
+        Route::get('/show/{debtId}', [DebtController::class, 'show'])->name('debt.show');
+        Route::get('/overdue/show/{debtId}', [DebtController::class, 'showOverdue'])->name('debt.showOverdue');
+        Route::get('/demand-notice/send/{debtId}', [DebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
+
+
         // Assesments
         Route::get('/waivers', [AssessmentDebtController::class, 'waivers'])->name('waivers.index');
         Route::get('/waivers/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('waivers.approval');

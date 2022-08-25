@@ -10,7 +10,7 @@
                 <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Pending Approval</a>
                 <a href="#rejected" class="nav-item nav-link font-weight-bold">Rejected</a>
             </nav>
-            <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
+            <div class="tab-content px-2 pt-3 pb-2 border">
                 <div id="all-claims" class="tab-pane fade active show  p-2">
                     <livewire:claims.claims-table />
                 </div>

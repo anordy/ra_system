@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Installment;
 
+use App\Enum\InstallmentStatus;
 use App\Models\Business;
+use App\Models\Installment\Installment;
 use App\Models\Installment\InstallmentRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +17,22 @@ class InstallmentsTable extends DataTableComponent
 
     use LivewireAlert;
 
+    public $active;
+    public $cancelled;
+
     public function builder(): Builder
     {
-        return InstallmentRequest::query()->orderBy('installment_requests.created_at', 'desc');
+        $builder = Installment::query()->orderBy('installments.created_at', 'desc');
+
+        if ($this->active){
+            return $builder->where('installments.status', InstallmentStatus::ACTIVE);
+        }
+
+        if ($this->cancelled){
+            return $builder->where('installments.status', InstallmentStatus::CANCELLED);
+        }
+
+        return $builder;
     }
 
     public function columns(): array

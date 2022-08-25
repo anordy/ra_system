@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Business;
 use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
@@ -75,7 +76,7 @@ class DailyDebtCalculateCommand extends Command
             VatReturn::class,
             MmTransferReturn::class,
             PetroleumReturn::class,
-            // PortReturn::class,
+            PortReturn::class,
             EmTransactionReturn::class,
             BfoReturn::class,
             LumpSumReturn::class
@@ -110,7 +111,6 @@ class DailyDebtCalculateCommand extends Command
                     ->whereNotIn('status', ['complete', 'paid-by-debt'])
                     ->where('filing_due_date', '<', $financialMonth->due_date)
                     ->get();
-
 
                 $data = $hoteReturn->map(function ($return) use ($model) {
                     $return->debt_type = $model;
@@ -164,7 +164,7 @@ class DailyDebtCalculateCommand extends Command
                     'payment_due_date as curr_due_date'
                 )
                     ->doesntHave('payments')
-                    ->where('status', '!=', 'complete')
+                    ->whereNotIn('status', ['complete', 'paid-by-debt'])
                     ->orWhere('payment_due_date', '<', $financialMonth->due_date)
                     ->get();
 
@@ -176,7 +176,6 @@ class DailyDebtCalculateCommand extends Command
                     return $return;
                 });
 
-                // dd($data);
 
                 $dataToInsert = $data->toArray();
 
@@ -190,4 +189,5 @@ class DailyDebtCalculateCommand extends Command
             }
         }
     }
+
 }

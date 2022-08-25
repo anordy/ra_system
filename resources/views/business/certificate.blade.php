@@ -20,6 +20,12 @@
             padding-left: 70px;
             padding-right: 70px;
         }
+        .rc-number {
+            font-size: 1.15em;
+            top: 3.3%;
+            text-align: right;
+            right: 20px;
+        }
         .business-name {
             font-size: 1.15em;
             top: 33.5%;
@@ -55,6 +61,17 @@
             padding-right: 70px;
             left: 30px;
         }
+        .qr-code {
+            overflow: hidden;
+            position:absolute;
+            top: 83%;
+            left: 44%;
+            background: white;
+            border-radius: 5px;
+            height: 180px;
+            width: 180px;
+            padding: 5px;
+        }
         .watermark {
             -webkit-transform: rotate(331deg);
             -moz-transform: rotate(331deg);
@@ -71,6 +88,7 @@
     </style>
 </head>
     <body>
+        <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
         <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
         <span class="embed taxpayer-name">{{ $location->zin ?? '' }}</span>
         <span class="embed reg-no">{{ $location->business->zin ?? '' }}</span>
@@ -84,7 +102,7 @@
         <span class="commissioner-signature">
             <img src="{{ public_path()}}/sign/commissioner.png">
         </span>
-        <div style="overflow: hidden; position:absolute; top: 83%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
+        <div class="qr-code">
             <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
         </div>
     </body>
