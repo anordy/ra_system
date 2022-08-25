@@ -59,25 +59,23 @@
                     <span class="font-weight-bold text-uppercase">Statement of facts in support of the reasons for the application for the extension of time to lodge an objection</span>
                     <p class="my-1">{{ $installment->ground }}</p>
                 </div>
-                @if($installment->status === \App\Enum\InstallmentRequestStatus::APPROVED)
-                    @if($installment->installment_from)
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Request to pay with installment from</span>
-                            <p class="my-1 text-uppercase">{{ $installment->installment_from->toFormattedDateString() }}</p>
-                        </div>
-                    @endif
-                    @if($installment->installment_to)
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase"> To</span>
-                            <p class="my-1 text-uppercase">{{ $installment->installment_to->toFormattedDateString() }}</p>
-                        </div>
-                    @endif
-                    @if($installment->installment_count)
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Installment Phases (Months)</span>
-                            <p class="my-1 text-uppercase">{{ $installment->installment_count }} </p>
-                        </div>
-                    @endif
+                @if($installment->installment_from)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Request to pay with installment from</span>
+                        <p class="my-1 text-uppercase">{{ $installment->installment_from->toFormattedDateString() }}</p>
+                    </div>
+                @endif
+                @if($installment->installment_to)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase"> To</span>
+                        <p class="my-1 text-uppercase">{{ $installment->installment_to->toFormattedDateString() }}</p>
+                    </div>
+                @endif
+                @if($installment->installment_count)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Installment Phases (Months)</span>
+                        <p class="my-1 text-uppercase">{{ $installment->installment_count }} </p>
+                    </div>
                 @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Status</span>
@@ -86,7 +84,7 @@
                 @if($installment->attachment)
                     <div class="col-md-4 mb-3">
                         <a class="file-item" target="_blank"
-                           href="{{ route('installment.file', encrypt($installment->attachment)) }}">
+                           href="{{ route('installment.requests.file', encrypt($installment->attachment)) }}">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <div style="font-weight: 500;" class="ml-1">
                                 <span class="font-weight-bold text-uppercase">Attachment</span>
@@ -98,4 +96,15 @@
         </div>
     </div>
 
+
+    <livewire:approval.installment-request-approval-processing modelName="{{ get_class($installment) }}" modelId="{{ $installment->id }}" />
+
+    <div class="card rounded-0">
+        <div class="card-header bg-white font-weight-bold">
+            Approval History
+        </div>
+        <div class="card-body">
+            <livewire:approval.approval-history-table modelName='App\Models\Installment\InstallmentRequest' modelId="{{ $installment->id }}" />
+        </div>
+    </div>
 @endsection

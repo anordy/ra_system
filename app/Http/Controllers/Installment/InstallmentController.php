@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Installment;
 
 use App\Http\Controllers\Controller;
+use App\Models\Installment\Installment;
 use App\Models\Installment\InstallmentRequest;
 use Exception;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +16,8 @@ class InstallmentController extends Controller
 
 
     public function show($installmentId){
-        $installment = InstallmentRequest::findOrFail(decrypt($installmentId));
+
+        $installment = Installment::findOrFail(decrypt($installmentId));
         $debt = $installment->debt;
 
         return view('installment.show', compact('installment', 'debt'));

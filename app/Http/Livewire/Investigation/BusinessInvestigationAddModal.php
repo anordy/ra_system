@@ -62,6 +62,19 @@ class BusinessInvestigationAddModal extends Component
 
     public function submit()
     {
+        $check = TaxInvestigation::where('business_id', $this->business_id)
+            ->where('location_id', $this->location_id)
+            ->where('tax_type_id', $this->tax_type_id)
+            ->whereIn('status', ['draft', 'pending'])
+            ->first();
+
+        if ($check) {
+            $this->validate(
+                ['business_id' => 'required|email'],
+                ['business_id.email' => 'Business with the given tax type is already on auditing']
+            );
+        }
+
         $this->validate();
         try {
             TaxInvestigation::create([

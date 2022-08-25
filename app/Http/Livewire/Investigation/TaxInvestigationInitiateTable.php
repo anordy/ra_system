@@ -30,7 +30,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['created_by_id']);
+        $this->setAdditionalSelects(['created_by_type', 'created_by_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -38,8 +38,10 @@ class TaxInvestigationInitiateTable extends DataTableComponent
     }
 
     protected $listeners = [
-        'initiateApproval',
+        'approve',
         'confirmed',
+        'initiateApproval',
+        'delete',
     ];
 
     public function columns(): array
@@ -59,7 +61,8 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             Column::make('Action', 'id')
                 ->format(function ($value) {
                     return <<<HTML
-                           <button class="btn btn-info btn-sm" wire:click="initiateApproval($value)"><i class="fa fa-arrow-right"></i> Initiate Approval</button>
+                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-arrow-right"></i> Initiate Approval</button>
+                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                     HTML;
                 })
                 ->html(true),
@@ -68,14 +71,14 @@ class TaxInvestigationInitiateTable extends DataTableComponent
     }
 
 
-    public function initiateApproval($id)
+    public function approve($id)
     {
         $this->alert('warning', 'Are you sure you want to initiate Approvals ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
             'confirmButtonText' => 'Yes',
-            'onConfirmed' => 'confirmed',
+            'onConfirmed' => 'initiateApproval',
             'showCancelButton' => true,
             'cancelButtonText' => 'Cancel',
             'timer' => null,
@@ -86,7 +89,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
         ]);
     }
 
-    public function confirmed($value)
+    public function initiateApproval($value)
     {
         try {
             $data = (object) $value['data'];
@@ -96,6 +99,36 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             $investigation->status = TaxVerificationStatus::PENDING;
             $investigation->save();
             $this->flash('success', 'Approval initiated successfully', [], redirect()->back()->getTargetUrl());
+        } catch (Exception $e) {
+            report($e);
+            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+        }
+    }
+
+    public function delete($id)
+    {
+        $this->alert('warning', 'Are you sure you want to delete ?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Delete',
+            'onConfirmed' => 'confirmed',
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'id' => $id
+            ],
+
+        ]);
+    }
+
+    public function confirmed($value)
+    {
+        try {
+            $data = (object) $value['data'];
+            TaxInvestigation::find($data->id)->delete();
+            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
             $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);

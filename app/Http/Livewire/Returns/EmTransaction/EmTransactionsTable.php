@@ -21,7 +21,7 @@ class EmTransactionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return EmTransactionReturn::query();
+        return EmTransactionReturn::query()->orderBy('em_transaction_returns.created_at', 'desc');
     }
 
     public function columns(): array

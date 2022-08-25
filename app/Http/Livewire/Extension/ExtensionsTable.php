@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Extension;
 
+use App\Enum\ExtensionRequestStatus;
 use App\Models\Business;
 use App\Models\Extension\ExtensionRequest;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,9 +16,22 @@ class ExtensionsTable extends DataTableComponent
 
     use LivewireAlert;
 
+    public $pending;
+    public $rejected;
+
     public function builder(): Builder
     {
-        return ExtensionRequest::query()->orderBy('extension_requests.created_at', 'desc');
+        $builder = ExtensionRequest::query()->orderBy('extension_requests.created_at', 'desc');
+
+        if ($this->pending){
+            return $builder->where('extension_requests.status', ExtensionRequestStatus::PENDING);
+        }
+
+        if ($this->rejected){
+            return $builder->where('extension_requests.status', ExtensionRequestStatus::REJECTED);
+        }
+
+        return $builder;
     }
 
     public function columns(): array
