@@ -25,7 +25,7 @@ class PortReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PortReturn::query()->where('tax_type_id', $this->tax->id)->where('port_returns.status', '!=', ReturnStatus::COMPLETE);
+        return PortReturn::query()->where('tax_type_id', $this->tax->id)->where('port_returns.status', '!=', ReturnStatus::COMPLETE)->orderBy('port_returns.created_at', 'desc');
     }
 
     public function configure(): void

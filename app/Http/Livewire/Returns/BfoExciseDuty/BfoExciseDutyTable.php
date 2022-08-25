@@ -19,7 +19,7 @@ class BfoExciseDutyTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BfoReturn::query()->with('business', 'business.taxpayer');
+        return BfoReturn::query()->with('business', 'business.taxpayer')->orderBy('bfo_returns.created_at', 'desc');
     }
 
     public function columns(): array

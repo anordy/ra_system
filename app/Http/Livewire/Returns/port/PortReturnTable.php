@@ -22,7 +22,7 @@ class PortReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PortReturn::query()->where('filed_by_id', auth()->user()->id);
+        return PortReturn::query()->where('filed_by_id', auth()->user()->id)->orderBy('port_returns.created_at', 'desc');
     }
 
     public function columns(): array
