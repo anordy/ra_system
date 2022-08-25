@@ -51,9 +51,11 @@ class DailyReOpenTempBusinessCommand extends Command
     protected function reopenTempClosedBusinesses()
     {
         $now = Carbon::now();
-     
-        $closed_businesses = BusinessTempClosure::where('status', 'approved')
-                ->where('business_temp_closures.opening_date', '<', $now)->get();
+
+        $closed_businesses = BusinessTempClosure::selectRaw('id, created_at, business_id')->whereIn('id', function ($query) use($now) {
+            $query->from('business_temp_closures')->where('status', 'approved')
+            ->where('business_temp_closures.opening_date', '<', $now)->groupBy('business_id')->selectRaw('MAX(id)');
+        })->get();
 
         foreach ($closed_businesses as $closed) {
             Log::channel('reopenBusiness')->info("Daily Reopen business process started");
@@ -69,9 +71,5 @@ class DailyReOpenTempBusinessCommand extends Command
                 DB::rollBack();
             }
         }
-
     }
-
-
-
 }
