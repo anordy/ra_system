@@ -49,5 +49,8 @@ class LandLease extends Model
         return $this->morphOne(ZmBill::class, 'billable');
     }
 
-
+    public function businessLocation()
+    {
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
+    }
 }

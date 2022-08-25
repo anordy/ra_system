@@ -122,4 +122,9 @@ class BusinessLocation extends Model
     public function taxClearanceRequest(){
         return $this->hasMany(TaxClearanceRequest::class);
     }
+
+    public function landLeases()
+    {
+        return $this->hasMany(LandLease::class, 'business_location_id');
+    }
 }
