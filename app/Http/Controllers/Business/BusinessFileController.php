@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Business;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessFile;
 use App\Models\BusinessLocation;
+use App\Models\BusinessTaxType;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use Endroid\QrCode\Builder\Builder;
@@ -51,6 +52,7 @@ class BusinessFileController extends Controller
         $taxTypeId = decrypt($taxTypeId);
         $location = BusinessLocation::with('business', 'business.taxpayer')->find($locationId);
         $tax = TaxType::find($taxTypeId);
+        $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
 
         $code = 'ZIN: ' . $location->zin . ", " .
             'Business Name: ' . $location->business->name . ", " .
@@ -77,7 +79,7 @@ class BusinessFileController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri'));
+        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 

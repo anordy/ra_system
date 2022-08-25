@@ -31,7 +31,10 @@ class InstallmentItemsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Paid at', 'paid_at')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value){
+                    return $value ?? '-';
+                }),
         ];
     }
 

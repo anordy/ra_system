@@ -47,7 +47,7 @@ class ExtensionRequestApprovalProcessing extends Component
 
         try {
             if ($this->checkTransition('debt_manager')) {
-                $this->subject->extend_from = Carbon::now()->toDateTimeString();
+                $this->subject->extend_from = $this->subject->debt->curr_due_date;
                 $this->subject->extend_to = $this->extendTo;
                 $this->subject->save();
             }

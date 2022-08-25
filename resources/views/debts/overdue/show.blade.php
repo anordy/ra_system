@@ -7,6 +7,7 @@
         <nav class="nav nav-tabs mt-0 border-top-0">
             <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
             <a href="#tab2" class="nav-item nav-link font-weight-bold">Demand Notices</a>
+            <a href="#tab3" class="nav-item nav-link font-weight-bold">Approval History</a>
         </nav>
         <div class="tab-content px-2 card pt-3 pb-2">
             <div id="tab1" class="tab-pane fade active show">
@@ -14,16 +15,16 @@
                     <div>
                         <div class="card-body">
                             <div>
-                                <h6 class="text-uppercase mt-2 ml-2">Debt Details</h6>
+                                <h6 class="text-uppercase mt-2 ml-2">Overdue Debt Details</h6>
                                 <hr>
-                                {{-- @if ($debt->recovery_measure_status == 'approved')
+                                @if ($debt->recovery_measure_status == 'approved')
                                     <div class="card-tools">
                                         <a href="{{ route('debts.debt.sendDemandNotice', encrypt($debt->id)) }}"
                                             class="btn btn-info btn-sm text-white" style="color: white !important;"><i
                                                 class="fa fa-plus text-white"></i>
                                             Send Demand Notice Email</a>
                                     </div>
-                                @endif --}}
+                                @endif
                             </div>
 
                             <div class="row m-2 pt-3">
@@ -69,24 +70,6 @@
                             </div>
                         </div>
 
-                        <div class="card-body">
-                            <div>
-                                <h6 class="text-uppercase mt-2 ml-2">Demand Notice Details</h6>
-                                <hr>
-                            </div>
-
-                            <div class="row m-2 pt-3">
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Sent Demand Notice Count</span>
-                                    <p class="my-1">{{ $debt->demand_notice_count }}</p>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Next Demand Notice Date</span>
-                                    <p class="my-1">{{ $debt->next_demand_notice_date }}</p>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
@@ -94,6 +77,10 @@
             </div>
             <div id="tab2" class="tab-pane fade m-4">
                 <livewire:debt.demand-notice.demand-notice-table debtId="{{ $debt->id }}" />
+            </div>
+            <div id="tab3" class="tab-pane fade m-4">
+                <livewire:approval.approval-history-table modelName='App\Models\Debts\Debt'
+                    modelId="{{ $debt->id }}" />
             </div>
         </div>
 

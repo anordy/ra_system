@@ -29,7 +29,7 @@ class OverdueDebtsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id','tax_type_id', 'business_location_id']);
+        $this->setAdditionalSelects(['business_id','tax_type_id', 'business_location_id', 'recovery_measure_status']);
     }
 
     public function columns(): array
@@ -65,9 +65,9 @@ class OverdueDebtsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return Carbon::create($value)->format('d M Y');
                 }),
+            Column::make('Payment Method', 'payment_method'),
             Column::make('Status', 'status')->view('debts.includes.status'),
             Column::make('Actions', 'id')->view('debts.overdue.actions'),
-
         ];
     }
 }

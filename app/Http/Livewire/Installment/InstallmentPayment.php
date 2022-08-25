@@ -28,18 +28,23 @@ class InstallmentPayment extends Component
     public $activeItem;
 
     public function mount(){
-        $this->activeItem = InstallmentItem::whereBetween('due_date', [
-            Carbon::now()->toDateTimeString(),
-            $this->installment->getNextPaymentDate()->toDateTimeString()
-        ])->first();
-
+        $this->activeItem = $this->installment
+            ->items()
+            ->whereBetween('due_date', [
+                Carbon::now()->toDateTimeString(),
+                $this->installment->getNextPaymentDate()->toDateTimeString()
+            ])
+            ->first();
     }
 
     public function refresh(){
-        $this->activeItem = InstallmentItem::whereBetween('due_date', [
-            Carbon::now()->toDateTimeString(),
-            $this->installment->getNextPaymentDate()->toDateTimeString()
-        ])->first();
+        $this->activeItem = $this->installment
+            ->items()
+            ->whereBetween('due_date', [
+                Carbon::now()->toDateTimeString(),
+                $this->installment->getNextPaymentDate()->toDateTimeString()
+            ])
+            ->first();
     }
 
     public function generateItem(){

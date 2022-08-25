@@ -33,11 +33,6 @@ class WorkflowRecoveryMeasureSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 10]
             ],
-            'assignment_corrected' => [
-                'from' => 'correct_assignment',
-                'to'   => 'commissioner',
-                'condition' => '',
-            ],
             'commissioner' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -60,14 +55,14 @@ class WorkflowRecoveryMeasureSeeder extends Seeder
                 'to'   => 'commissioner',
                 'condition' => '',
             ],
-            'assignment_incorrect' => [
+            'assignment_filled_incorrect' => [
                 'from' => 'commissioner',
                 'to'   => 'correct_assignment',
                 'condition' => '',
             ],
             'assignment_corrected' => [
-                'from' => 'crdm',
-                'to'   => 'assignment_corrected',
+                'from' => 'correct_assignment',
+                'to'   => 'commissioner',
                 'condition' => '',
             ],
             'commissioner_review' => [
@@ -79,7 +74,7 @@ class WorkflowRecoveryMeasureSeeder extends Seeder
 
         Workflow::updateOrCreate([
             'code' => 'DEBT_RECOVERY_MEASURE',
-            'summary' => 'Debt Recovery Measure.',
+            'summary' => 'Debt Recovery Measure',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,

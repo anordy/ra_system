@@ -9,19 +9,19 @@
             @if ($this->checkTransition('debt_manager'))
                 <div class="row">
                     <div class="form-group col-lg-12">
-                        <label class="control-label h6 text-uppercase">Provide extension time</label>
+                        <label class="control-label text-uppercase font-weight-bold">Provide extension time</label>
                     </div>
                     <div class="form-group col-lg-6">
                         <div class="form-group">
-                            <label>From</label>
-                            <input disabled class="form-control" value="{{ \Carbon\Carbon::now()->toFormattedDateString() }}" />
+                            <label>From (Current debt due date)</label>
+                            <input disabled class="form-control" value="{{ \Carbon\Carbon::make($subject->debt->curr_due_date)->toFormattedDateString() }}" />
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
                         <div class="form-group">
                             <label>Extend to</label>
-                            <input min="{{ \Carbon\Carbon::now()->toDateString() }}"
-                                   max="{{ \Carbon\Carbon::now()->addYear()->toDateString() }}"
+                            <input min="{{ \Carbon\Carbon::make($subject->debt->curr_due_date)->toDateString() }}"
+                                   max="{{ \Carbon\Carbon::make($subject->debt->curr_due_date)->addYear()->toDateString() }}"
                                    type="date" class="form-control @error('extendTo') is-invalid @enderror"
                                    wire:model="extendTo" />
                             @error('extendTo')
