@@ -71,6 +71,7 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowTaxClearenceSeeder::class);
         $this->call(TaxRegionsSeeder::class);
         $this->call(ReliefProjectSeeder::class);
+        $this->call(DateConfigurationSeeder::class);
         $this->call(MvrRegistrationTypesSeeder::class);
         $this->call(MvrPlateNumberColorsTableSeeder::class);
         $this->call(MvrBodyTypeTableSeeder::class);
@@ -79,5 +80,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MvrMakeTableSeeder::class);
         $this->call(MvrModelTableSeeder::class);
         $this->call(MvrTransmissionTypeTableSeeder::class);
+        $this->call(RecoveryMeasureCategoriesSeeder::class);
+        $this->call(WorkflowRecoveryMeasureSeeder::class);
     }
 }

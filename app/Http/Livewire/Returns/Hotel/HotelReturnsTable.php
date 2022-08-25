@@ -34,9 +34,9 @@ class HotelReturnsTable extends DataTableComponent
     {
         if ($this->status == 'all') {
             $tax = TaxType::where('code', TaxType::HOTEL)->first();
-            return HotelReturn::where('tax_type_id', $tax->id)->orderBy('created_at', 'desc');
+            return HotelReturn::where('tax_type_id', $tax->id)->orderBy('hotel_returns.created_at', 'desc');
         } else if ($this->status == 'submitted') {
-            return HotelReturn::where('hotel_returns.status', $this->status);
+            return HotelReturn::where('hotel_returns.status', $this->status)->orderBy('hotel_returns.created_at', 'desc');
         }
     }
 

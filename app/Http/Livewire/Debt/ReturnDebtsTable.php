@@ -35,7 +35,7 @@ class ReturnDebtsTable extends DataTableComponent
     {
 
         $tax = TaxType::where('code', $this->taxType)->first();
-        return Debt::query()->where('tax_type_id', $tax->id);
+        return Debt::query()->where('tax_type_id', $tax->id)->orderBy('debts.created_at', 'desc');
     }
 
     public function configure(): void

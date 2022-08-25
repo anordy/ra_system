@@ -37,8 +37,11 @@ class Dispute extends Model
         return $this->morphOne(Debt::class, 'debt');
     }
 
-    public function bill()
-    {
-        return $this->morphOne(ZmBill::class, 'billable');
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function getBillAttribute(){
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 }

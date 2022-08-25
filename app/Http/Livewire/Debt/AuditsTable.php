@@ -17,7 +17,7 @@ class AuditsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Debt::query()->where('debts.category', 'audit');
+        return Debt::query()->where('debts.category', 'audit')->orderBy('debts.created_at', 'desc');
     }
 
     public function configure(): void
