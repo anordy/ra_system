@@ -66,13 +66,13 @@ class WorkflowBusinessClosureSeeder extends Seeder
                 'condition' => '',
             ],
             'application_filled_incorrect' => [
-                'from' => 'compliance_officer',
+                'from' => 'compliance_manager',
                 'to'   => 'correct_application',
                 'condition' => '',
             ],
             'application_corrected' => [
                 'from' => 'correct_application',
-                'to'   => 'compliance_officer',
+                'to'   => 'compliance_manager',
                 'condition' => '',
             ],
         ];
