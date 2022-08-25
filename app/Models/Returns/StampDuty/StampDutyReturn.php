@@ -53,11 +53,7 @@ class StampDutyReturn extends Model
         return $this->hasMany(StampDutyReturnItem::class, 'return_id');
     }
 
-    public function bills(){
-        return $this->morphMany(ZmBill::class, 'billable');
-    }
-    public function payments()
-    {
+    public function payments(){
         return $this->bills()->where('status', 'paid');
     }
 
@@ -69,9 +65,10 @@ class StampDutyReturn extends Model
         return $this->morphOne(Debt::class, 'debt');
     }
 
-    /*
-     * Model attributes
-     */
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
     public function getBillAttribute(){
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }

@@ -74,7 +74,7 @@ class BusinessAuditAddModal extends Component
                 'period_to' => $this->period_to,
                 'created_by_id' => auth()->user()->id,
                 'created_by_type' => get_class(auth()->user()),
-                'status' => 'pending',
+                'status' => 'draft',
                 'origin' => 'manual'
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());

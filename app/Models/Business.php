@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\BusinessStatus;
+use App\Models\Disputes\Objection;
+use App\Models\Disputes\Waiver;
 use App\Models\Returns\Vat\VatReturn;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
@@ -20,43 +22,35 @@ class Business extends Model implements Auditable
     protected $guarded = [];
 
     // Scopes
-    public function scopeApproved($query)
-    {
+    public function scopeApproved($query){
         $query->where('status', BusinessStatus::APPROVED);
     }
 
-    public function scopeClosed($query)
-    {
+    public function scopeClosed($query){
         $query->where('status', BusinessStatus::TEMP_CLOSED);
     }
 
-    public function taxpayer()
-    {
+    public function taxpayer(){
         return $this->belongsTo(Taxpayer::class);
     }
 
-    public function partners()
-    {
+    public function partners(){
         return $this->hasMany(BusinessPartner::class);
     }
 
-    public function category()
-    {
+    public function category(){
         return $this->belongsTo(BusinessCategory::class, 'business_category_id');
     }
 
-    public function currency()
-    {
+    public function currency(){
         return $this->belongsTo(Currency::class);
     }
 
-    public function taxTypes()
-    {
+    public function taxTypes(){
         return $this->belongsToMany(TaxType::class)->withPivot('currency');
     }
 
-    public function activityType()
-    {
+    public function activityType(){
         return $this->belongsTo(BusinessActivity::class, 'business_activities_type_id');
     }
 
@@ -69,23 +63,19 @@ class Business extends Model implements Auditable
         return $this->hasMany(BusinessLocation::class, 'business_id');
     }
 
-    public function headquarter()
-    {
+    public function headquarter(){
         return $this->hasOne(BusinessLocation::class)->where('is_headquarter', true);
     }
 
-    public function branches()
-    {
+    public function branches(){
         return $this->hasMany(BusinessLocation::class)->where('is_headquarter', false);
     }
 
-    public function banks()
-    {
+    public function banks(){
         return $this->hasMany(BusinessBank::class);
     }
 
-    public function isici()
-    {
+    public function isici(){
         return $this->belongsTo(ISIC1::class, 'isiic_i');
     }
 
@@ -122,56 +112,45 @@ class Business extends Model implements Auditable
         return $this->hasMany(TemporaryBusinessClosure::class);
     }
 
-    public function taxTypeChanges()
-    {
+    public function taxTypeChanges(){
         return $this->hasMany(BusinessTaxTypeChange::class);
     }
 
-    public function openBusiness()
-    {
+    public function openBusiness(){
         return $this->hasOne(TemporaryBusinessClosure::class)->latest()->open();
     }
 
-    public function businessStatus()
-    {
+    public function businessStatus(){
         return $this->hasOne(BusinessStatus::class);
     }
 
-    public function businessUpdate()
-    {
+    public function businessUpdate(){
         return $this->hasOne(BusinessUpdate::class);
     }
+
     // Files Relation
-    public function files()
-    {
+    public function files(){
         return $this->hasMany(BusinessFile::class);
     }
 
-    public function vatReturn()
-    {
+    public function vatReturn(){
         return $this->hasMany(VatReturn::class);
     }
 
-    public function reliefs()
-    {
+    public function reliefs(){
         return $this->hasMany(Relief::class,'business_id');
     }
 
-    public function waiver()
-    {
+    public function waiver(){
         return $this->hasMany(Waiver::class);
-
     }
 
-    public function objection()
-    {
+    public function objection(){
         return $this->hasMany(Objection::class);
-
     }
-        public function dispute()
-    {
-        return $this->hasMany(Waiver::class);
 
+    public function dispute(){
+        return $this->hasMany(Waiver::class);
     }
 
     public function QuantityCertificates(){

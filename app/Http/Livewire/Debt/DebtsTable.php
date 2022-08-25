@@ -17,7 +17,10 @@ class DebtsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Debt::query()->whereNotIn('debts.status',  [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT, ReturnStatus::ON_CLAIM]);
+        return Debt::query()
+            ->whereNotIn('debts.status',  [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT, ReturnStatus::ON_CLAIM])
+            ->whereRaw("TIMESTAMPDIFF(DAY, debts.curr_due_date, CURDATE()) < 30")
+            ->orderBy('debts.created_at', 'desc');
     }
 
     public function configure(): void
@@ -63,6 +66,7 @@ class DebtsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return Carbon::create($value)->format('d M Y');
                 }),
+            Column::make('Payment Method', 'payment_method'),
             Column::make('Status', 'status')->view('debts.includes.status'),
             Column::make('Actions', 'id')->view('debts.includes.actions'),
 

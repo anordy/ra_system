@@ -4,7 +4,7 @@
 
 @section('content')
 @livewire('returns.return-summary',['vars'=>$vars])
-@include('returns.port.includes.payment-cards')
+{{-- @include('returns.port.includes.payment-cards') --}}
 
 <div class="card">
     <div class="card-body">

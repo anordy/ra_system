@@ -25,12 +25,26 @@ class DebtController extends Controller
         return view('debts.recovery-measure.assign-recovery-measure', compact('debtId'));
     }
 
+    public function sendDemandNotice($debtId)
+    {
+        $debtId = decrypt($debtId);
+        return view('debts.demand-notice.send-demand-notice', compact('debtId'));
+    }
+
     public function show($debtId)
     {
         $debtId = decrypt($debtId);
         $debt = Debt::findOrFail($debtId);
         $recovery_measures = RecoveryMeasure::where('debt_id', $debtId)->get();
         return view('debts.show', compact('debt', 'recovery_measures'));
+    }
+
+    public function showOverdue($debtId)
+    {
+        $debtId = decrypt($debtId);
+        $debt = Debt::findOrFail($debtId);
+        $recovery_measures = RecoveryMeasure::where('debt_id', $debtId)->get();
+        return view('debts.overdue.show', compact('debt', 'recovery_measures'));
     }
 
 }
