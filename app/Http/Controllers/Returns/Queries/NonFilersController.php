@@ -137,7 +137,7 @@ class NonFilersController extends Controller
         }
 
         $returnTableName = (new $modelName())->getTable();
-        $returns = $modelName::selectRaw('MAX(financial_month_id) as month, created_at, financial_year_id, id, business_location_id, filed_by_id')
+        $returns = $modelName::selectRaw('MAX(financial_month_id) as month, financial_month_id, created_at, financial_year_id, id, business_location_id, filed_by_id')
             ->whereIn('business_location_id', $business_lo)
             ->orderByDesc('financial_month_id')
             ->groupBy(['business_location_id', 'filed_by_id'])
