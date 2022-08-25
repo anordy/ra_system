@@ -19,7 +19,8 @@ class DebtsTable extends DataTableComponent
     {
         return Debt::query()
             ->whereNotIn('debts.status',  [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT, ReturnStatus::ON_CLAIM])
-            ->whereRaw("TIMESTAMPDIFF(DAY, debts.curr_due_date, CURDATE()) < 30");
+            ->whereRaw("TIMESTAMPDIFF(DAY, debts.curr_due_date, CURDATE()) < 30")
+            ->orderBy('debts.created_at', 'desc');
     }
 
     public function configure(): void

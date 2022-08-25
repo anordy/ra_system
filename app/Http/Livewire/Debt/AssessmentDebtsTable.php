@@ -16,7 +16,7 @@ class AssessmentDebtsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Debt::query()->where('debt_type', 'App\Models\TaxAssessments\TaxAssessment');
+        return Debt::query()->where('debt_type', 'App\Models\TaxAssessments\TaxAssessment')->orderBy('debts.created_at', 'desc');
     }
 
     public function configure(): void

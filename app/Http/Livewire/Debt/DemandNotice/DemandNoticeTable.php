@@ -23,7 +23,7 @@ class DemandNoticeTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return SentDemandNotice::where('debt_id', $this->debtId);
+        return SentDemandNotice::where('debt_id', $this->debtId)->orderBy('sent_demand_notices.created_at', 'desc');
     }
 
     public function configure(): void
