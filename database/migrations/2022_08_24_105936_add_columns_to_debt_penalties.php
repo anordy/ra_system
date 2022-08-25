@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\Currencies;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,8 +24,8 @@ class AddColumnsToDebtPenalties extends Migration
             $table->decimal('late_payment', 20, 2)->after('debt_id');
             $table->decimal('late_filing', 20, 2)->after('debt_id');
             $table->decimal('tax_amount', 20, 2)->after('debt_id');
-            $table->decimal('currency_rate', 20, 2)->default(1)->after('debt_id');;
-            $table->enum('currency',['TZS', 'USD', 'GBP'])->default('TZS')->after('debt_id');
+            $table->decimal('currency_rate_in_tz', 20, 2)->default(1)->after('debt_id');;
+            $table->enum('currency',Currencies::getConstants())->default('TZS')->after('debt_id');
             $table->string('financial_month_name')->after('debt_id');
             
         });

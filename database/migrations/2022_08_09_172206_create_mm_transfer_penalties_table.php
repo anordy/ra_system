@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\Currencies;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,8 +18,8 @@ class CreateMmTransferPenaltiesTable extends Migration
             $table->id();
             $table->string('return_id');
             $table->string('financial_month_name');
-            $table->enum('currency',['TZS', 'USD', 'GBP'])->default('TZS');
-            $table->decimal('currency_rate', 20, 2)->default(1);
+            $table->enum('currency', Currencies::getConstants())->default('TZS');
+            $table->decimal('currency_rate_in_tz', 20, 2)->default(1);
             $table->decimal('tax_amount', 20, 2);
             $table->decimal('late_filing', 20, 2);
             $table->decimal('late_payment', 20, 2);
