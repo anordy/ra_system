@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Livewire\Investigation;
+namespace App\Http\Livewire\Audit;
 
-use App\Enum\TaxInvestigationStatus;
+use App\Enum\TaxAuditStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\TaxAudit\TaxAudit;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -13,18 +14,18 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class TaxInvestigationInitiateTable extends DataTableComponent
+class TaxAuditInitiateTable extends DataTableComponent
 {
 
     use LivewireAlert, WorkflowProcesssingTrait;
 
-    public $model = TaxInvestigation::class;
+    public $model = TaxAudit::class;
 
     public function builder(): Builder
     {
-        return TaxInvestigation::query()
+        return TaxAudit::query()
             ->with('business', 'location', 'taxType', 'createdBy')
-            ->where('tax_investigations.status', TaxInvestigationStatus::DRAFT);
+            ->where('tax_audits.status', TaxAuditStatus::DRAFT);
     }
 
     public function configure(): void
@@ -93,11 +94,11 @@ class TaxInvestigationInitiateTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            $investigation = TaxInvestigation::find($data->id);
-            $this->registerWorkflow(get_class($investigation), $investigation->id);
+            $audit = TaxAudit::find($data->id);
+            $this->registerWorkflow(get_class($audit), $audit->id);
             $this->doTransition('start', []);
-            $investigation->status = TaxVerificationStatus::PENDING;
-            $investigation->save();
+            $audit->status = TaxAuditStatus::PENDING;
+            $audit->save();
             $this->flash('success', 'Approval initiated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
@@ -127,7 +128,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TaxInvestigation::find($data->id)->delete();
+            TaxAudit::find($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
