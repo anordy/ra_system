@@ -256,6 +256,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'TAX_CLAIM_VERIFICATION') {
             } elseif ($placeName == 'INSTALLMENT_REQUESTS') {
             } elseif ($placeName == 'PAYMENTS_EXTENSION_REQUEST') {
+            } elseif ($placeName == 'DEBT_RECOVERY_MEASURE') {
             } else {
                 if (key($placesCurrent) == 'completed') {
                     $event->getSubject()->taxpayer->notify(new DatabaseNotification(

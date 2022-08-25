@@ -72,7 +72,6 @@ class InstallmentRequestApprovalProcessing extends Component
                 $debt->update([
                     'curr_due_date' => $this->subject->installment_to,
                     'payment_method' => DebtPaymentMethod::INSTALLMENT
-                    // TODO: Maybe update debt to indicate installment ? 🤷
                 ]);
 
                 // Create installment record

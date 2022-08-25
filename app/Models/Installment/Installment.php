@@ -2,6 +2,7 @@
 
 namespace App\Models\Installment;
 
+use App\Enum\InstallmentStatus;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Debts\Debt;
@@ -55,6 +56,10 @@ class Installment extends Model
      * @return bool|Carbon
      */
     public function getNextPaymentDate(){
+        if (!$this->status == InstallmentStatus::ACTIVE){
+            return false;
+        }
+
         if ($this->items()->count() >= $this->installment_count){
             return false;
         }

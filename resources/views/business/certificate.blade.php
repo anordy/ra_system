@@ -55,6 +55,17 @@
             padding-right: 70px;
             left: 30px;
         }
+        .qr-code {
+            overflow: hidden;
+            position:absolute;
+            top: 83%;
+            left: 44%;
+            background: white;
+            border-radius: 5px;
+            height: 180px;
+            width: 180px;
+            padding: 5px;
+        }
         .watermark {
             -webkit-transform: rotate(331deg);
             -moz-transform: rotate(331deg);
@@ -84,7 +95,7 @@
         <span class="commissioner-signature">
             <img src="{{ public_path()}}/sign/commissioner.png">
         </span>
-        <div style="overflow: hidden; position:absolute; top: 83%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
+        <div class="qr-code">
             <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
         </div>
     </body>
