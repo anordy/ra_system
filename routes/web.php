@@ -373,6 +373,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/overdue', [DebtController::class, 'overdue'])->name('debt.overdue');
         Route::get('/recovery-measure/{debtId}', [DebtController::class, 'recovery'])->name('debt.recovery');
         Route::get('/show/{debtId}', [DebtController::class, 'show'])->name('debt.show');
+        Route::get('/overdue/show/{debtId}', [DebtController::class, 'showOverdue'])->name('debt.showOverdue');
+        Route::get('/demand-notice/send/{debtId}', [DebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
+
 
         // Assesments
         Route::get('/waivers', [AssessmentDebtController::class, 'waivers'])->name('waivers.index');
