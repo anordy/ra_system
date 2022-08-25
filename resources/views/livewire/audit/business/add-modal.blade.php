@@ -65,9 +65,7 @@
                             @endif
                         </select>
                         @error('tax_type_id')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            {{ $message }}
                         @enderror
                     </div>
                     <div class="form-group col-lg-6">
@@ -90,18 +88,14 @@
                         <label for="intension">Intension</label>
                         <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
                         @error('intension')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="periodTo">Scope</label>
                         <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
                         @error('scope')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>

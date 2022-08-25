@@ -65,6 +65,7 @@ class BusinessAuditAddModal extends Component
         $check = TaxAudit::where('business_id', $this->business_id)
             ->where('location_id', $this->location_id)
             ->where('tax_type_id', $this->tax_type_id)
+            ->whereIn('status', ['draft', 'pending'])
             ->first();
 
         if ($check) {
