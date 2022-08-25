@@ -39,7 +39,7 @@ class BusinessAuditAddModal extends Component
             'intension' => 'required',
             'scope' => 'required',
             'period_from' => 'required',
-            'period_to' => 'required',
+            'period_to' => 'required|before:today',
         ];
     }
 
@@ -62,7 +62,19 @@ class BusinessAuditAddModal extends Component
 
     public function submit()
     {
+        $check = TaxAudit::where('business_id', $this->business_id)
+            ->where('location_id', $this->location_id)
+            ->where('tax_type_id', $this->tax_type_id)
+            ->first();
+
+        if ($check) {
+            $this->validate(
+                ['business_id' => 'required|email'],
+                ['business_id.email' => 'Business with the given tax type is already on auditing']
+            );
+        }
         $this->validate();
+
         try {
             TaxAudit::create([
                 'business_id' => $this->business_id,
