@@ -20,6 +20,12 @@
             padding-left: 70px;
             padding-right: 70px;
         }
+        .rc-number {
+            font-size: 1.15em;
+            top: 3.3%;
+            text-align: right;
+            right: 20px;
+        }
         .business-name {
             font-size: 1.15em;
             top: 33.5%;
@@ -82,6 +88,7 @@
     </style>
 </head>
     <body>
+        <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
         <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
         <span class="embed taxpayer-name">{{ $location->zin ?? '' }}</span>
         <span class="embed reg-no">{{ $location->business->zin ?? '' }}</span>
