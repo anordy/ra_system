@@ -4,7 +4,7 @@
     <link href="{{ asset('plugins/datatables/datatables.min.css') }}" rel="stylesheet" />
 @endsection
 
-@section('title','Queries')
+@section('title','Return Queries')
 
 @section('content')
     <div class="card">
@@ -33,7 +33,7 @@
                                 <tbody>
 
                                 @foreach($hotel_returns as $index=>$return)
-                                    @if($return->total_sales = 0)
+                                    @if($return->total_sales == 0)
                                         <tr>
 
                                             <td>{{$index + 1}}</td>
@@ -45,13 +45,13 @@
                                                     {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
                                                 </strong>
                                             </td>
-{{--                                            <td>--}}
-{{--                                                <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($hotel_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"--}}
-{{--                                                   data-placement="right" title="View">--}}
-{{--                                                    <i class="bi bi-eye-fill"></i>--}}
-{{--                                                    View--}}
-{{--                                                </a>--}}
-{{--                                            </td>--}}
+                                            <td>
+                                                <a href="{{route('queries.all-credit-returns.show', [encrypt($return->id), encrypt($hotel_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                   data-placement="right" title="View">
+                                                    <i class="bi bi-eye-fill"></i>
+                                                    View
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endif
                                 @endforeach
@@ -75,30 +75,30 @@
                                     <th>Action</th>
                                 </tr>
                                 </thead>
-{{--                                <tbody>--}}
-{{--                                @foreach($stamp_duty_return as $index=>$return)--}}
-{{--                                    @if($return->total_sales > 50000000)--}}
-{{--                                        <tr>--}}
-{{--                                            <td>{{$index + 1}}</td>--}}
-{{--                                            <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>--}}
-{{--                                            <td>{{$return->business->name}}</td>--}}
-{{--                                            <td>{{$return->businessLocation->name}}</td>--}}
-{{--                                            <td>{{number_format($return->total_sales,2)}}--}}
-{{--                                                <strong>--}}
-{{--                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}--}}
-{{--                                                </strong>--}}
-{{--                                            </td>--}}
-{{--                                            <td>--}}
-{{--                                                <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($stamp_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"--}}
-{{--                                                   data-placement="right" title="View">--}}
-{{--                                                    <i class="bi bi-eye-fill"></i>--}}
-{{--                                                    View--}}
-{{--                                                </a>--}}
-{{--                                            </td>--}}
-{{--                                        </tr>--}}
-{{--                                    @endif--}}
-{{--                                @endforeach--}}
-{{--                                </tbody>--}}
+                                <tbody>
+                                @foreach($stamp_duty_returns as $index=>$return)
+                                    @if($return->total_sales == 0)
+                                        <tr>
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
+                                            <td>{{$return->business->name}}</td>
+                                            <td>{{$return->businessLocation->name}}</td>
+                                            <td>{{number_format($return->total_sales,2)}}
+                                                <strong>
+                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <a href="{{route('queries.all-credit-returns.show', [encrypt($return->id), encrypt($stamp_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                   data-placement="right" title="View">
+                                                    <i class="bi bi-eye-fill"></i>
+                                                    View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -118,30 +118,30 @@
                                     <th>Action</th>
                                 </tr>
                                 </thead>
-{{--                                <tbody>--}}
-{{--                                @foreach($vat_return as $index=>$return)--}}
-{{--                                    @if($return->total_sales < 15000000)--}}
-{{--                                        <tr>--}}
-{{--                                            <td>{{$index + 1}}</td>--}}
-{{--                                            <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>--}}
-{{--                                            <td>{{$return->business->name}}</td>--}}
-{{--                                            <td>{{$return->businessLocation->name}}</td>--}}
-{{--                                            <td>{{number_format($return->total_sales,2)}}--}}
-{{--                                                <strong>--}}
-{{--                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}--}}
-{{--                                                </strong>--}}
-{{--                                            </td>--}}
-{{--                                            <td>--}}
-{{--                                                <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($lump_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"--}}
-{{--                                                   data-placement="right" title="View">--}}
-{{--                                                    <i class="bi bi-eye-fill"></i>--}}
-{{--                                                    View--}}
-{{--                                                </a>--}}
-{{--                                            </td>--}}
-{{--                                        </tr>--}}
-{{--                                    @endif--}}
-{{--                                @endforeach--}}
-{{--                                </tbody>--}}
+                                <tbody>
+                                @foreach($vat_returns as $index=>$return)
+                                    @if($return->total_sales == 0)
+                                        <tr>
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
+                                            <td>{{$return->business->name}}</td>
+                                            <td>{{$return->businessLocation->name}}</td>
+                                            <td>{{number_format($return->total_sales,2)}}
+                                                <strong>
+                                                    {{\App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController::getCurrency($return->business_id, $return->tax_type_id)}}
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <a href="{{route('queries.all-credit-returns.show', [encrypt($return->id), encrypt($vat_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                   data-placement="right" title="View">
+                                                    <i class="bi bi-eye-fill"></i>
+                                                    View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>

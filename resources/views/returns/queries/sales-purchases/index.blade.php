@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Queries')
+@section('title','Return Queries')
 
 @section('content')
     <div class="card">

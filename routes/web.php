@@ -77,6 +77,7 @@ use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
 use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
+use App\Http\Controllers\Returns\Queries\NonFilersController;
 use App\Http\Controllers\Returns\Queries\SalesPurchasesController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
@@ -306,6 +307,9 @@ Route::middleware(['auth'])->group(function () {
     Route::name('queries.')->prefix('queries')->group(function () {
         Route::get('/sales-purchases', [SalesPurchasesController::class, 'index'])->name('sales-purchases');
         Route::get('/all-credit-returns', [AllCreditReturnsController::class, 'index'])->name('all-credit-returns');
+        Route::get('/all-credit-returns/show/{id}/{return_id}/{sales}', [AllCreditReturnsController::class, 'show'])->name('all-credit-returns.show');
+        Route::get('/non-filers', [NonFilersController::class, 'index'])->name('non-filers');
+        Route::get('/non-filers/show/{id}', [NonFilersController::class, 'show'])->name('non-filers.show');
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
