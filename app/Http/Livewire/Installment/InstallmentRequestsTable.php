@@ -2,10 +2,9 @@
 
 namespace App\Http\Livewire\Installment;
 
-use App\Models\Business;
+use App\Enum\InstallmentRequestStatus;
 use App\Models\Installment\InstallmentRequest;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -15,10 +14,22 @@ class InstallmentRequestsTable extends DataTableComponent
 
     use LivewireAlert;
 
+    public $pending;
+    public $rejected;
+
     public function builder(): Builder
     {
-        $businessIds = Business::where('taxpayer_id', Auth::id())->get()->pluck('id')->toArray();
-        return InstallmentRequest::whereIn('installment_requests.business_id', $businessIds)->orderBy('installment_requests.created_at', 'desc');
+        $builder = InstallmentRequest::orderBy('installment_requests.created_at', 'desc');
+
+        if ($this->pending){
+            return $builder->where('installment_requests.status', InstallmentRequestStatus::PENDING);
+        }
+
+        if ($this->rejected){
+            return $builder->where('installment_requests.status', InstallmentRequestStatus::REJECTED);
+        }
+
+        return $builder;
     }
 
     public function columns(): array
