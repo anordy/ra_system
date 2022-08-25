@@ -163,24 +163,7 @@
                     </div>
                 </div>
                 <div class="flex-container">
-                    <div class="zrb-no">ZRB NO.
-                        <table class="table-bordered">
-                            <tr>
-                                <td class="table-width">Z</td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-                                <td class="table-width"></td>
-
-                            </tr>
-                        </table>
-                    </div>
+                    ZRB NO. <span class="dot">{{ $debt->location->zin }}</span>
                     <div class="txt-area">
                         <textarea name="" id="" cols="30" rows="10"></textarea>
                     </div>
@@ -230,14 +213,14 @@
                     <tbody>
                         <tr>
                             <td class="w-20">{{ $debt->taxtype->name }}</td>
-                            <td class="w-20"></td>
-                            <td class="w-20">{{ $debt->last_due_date }}</td>
+                            <td class="w-20">N/A</td>
+                            <td class="w-20">{{ Carbon\Carbon::create($debt->last_due_date)->format('m Y') }}</td>
                             <td class="w-20">{{ number_format($debt->principal_amount, 2) }}</td>
                             <td class="w-20">{{ number_format($debt->penalty, 2) }}</td>
                             <td class="w-20">{{ number_format($debt->interest, 2) }}</td>
-                            <td class="w-20"></td>
+                            <td class="w-20">N/A</td>
                             <td class="w-20">{{ number_format($debt->total_amount, 2) }}</td>
-                            <td class="w-20"></td>
+                            <td class="w-20">{{ number_format($debt->total_amount - $debt->outstanding_amount, 2) }}</td>
                             <td class="w-20">{{ number_format($debt->outstanding_amount, 2) }}</td>
                         </tr>
 
@@ -248,19 +231,19 @@
 
             <div class="body-section">
                 <p>
-                    Payment of the amount owing should be made within 7 working days, failure of which recovery
+                    Payment of the amount owing should be made within {{ $paid_within_days }} working days, failure of which recovery
                     proceeding
                     will be instated upon you without further notice. If you disagree with the above figure(s) you are
                     advised to contact the under signed officer immediately for reconciliation..
                 </p><br>
-                <p>
+                {{-- <p>
                     Name: ................................................................
                     Designation: ..........................................................
                 </p><br>
                 <p>
                     Signature: ...........................................................
                     Date: ................................................................
-                </p>
+                </p> --}}
             </div>
         </div>
 

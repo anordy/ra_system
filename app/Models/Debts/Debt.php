@@ -5,8 +5,9 @@ namespace App\Models\Debts;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\BusinessLocation;
 use App\Traits\WorkflowTrait;
+use App\Models\BusinessLocation;
+use App\Models\Debts\RecoveryMeasure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -23,7 +24,7 @@ class Debt extends Model
     }
 
     public function location() {
-        return $this->belongsTo(BusinessLocation::class, 'location_id');
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
     }
 
     public function taxtype() {
@@ -40,5 +41,9 @@ class Debt extends Model
     
     public function debtPenalties(){
         return $this->hasMany(DebtPenalty::class);
+    }
+
+    public function recoveryMeasures() {
+        return $this->hasMany(RecoveryMeasure::class);
     }
 }
