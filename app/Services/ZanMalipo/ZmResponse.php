@@ -39,7 +39,8 @@ class ZmResponse
     const ZM_WRONG_BILL_GENERATION_DATE = 7230;
     const ZM_WRONG_BILL_EXPIRY_DATE = 7231;
     const ZM_WRONG_BILL_PAYMENT_OPTION = 7234;
-    const ZM_INVALID_BILLED_AMOUNT = 7255;//Invalid item billed amount
+    const ZM_INVALID_BILLED_AMOUNT = 7255;
+    //Invalid item billed amount
     const ZM_INVALID_ITEM_EQUIVALENT_AMOUNT = 7256;
     const ZM_INVALID_ITEM_MISC_AMOUNT = 7257;
     const ZM_INVALID_EMAIL = 7267;

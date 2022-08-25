@@ -30,37 +30,12 @@
             @endif
 
 
-            @if ($return_->configReturns)
-                <div class="col-md-12">
-                    <table class="table table-bordered table-sm">
-                        <thead>
-                            <th style="width: 30%">Item Name(USD)</th>
-                            <th style="width: 20%">Value</th>
-                            <th style="width: 10%">Rate</th>
-                            <th style="width: 20%">VAT</th>
-                        </thead>
-                        <tbody>
-                            @foreach ($return_->configReturns as $item)
-                                <tr>
-                                    <td>{{ $item->config->name ?? 'name' }}</td>
-                                    <td>{{ number_format($item->value) }}</td>
-                                    <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' : $item->config->rate_usd ?? '' }}
-                                    </td>
-                                    <td>{{ number_format($item->vat) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                </div>
-            @endif
-
 
             <div class="col-md-12">
                 <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
                 <hr>
                 <table class="table table-bordered table-sm normal-text">
-                    <label>TZS Penalties</label>
+                    <label>Penalties</label>
                     <thead>
                         <tr>
                             <th>Month</th>
@@ -75,7 +50,7 @@
 
                     <tbody>
                         @if (count($return->penalties))
-                            @foreach ($return->penalties->where('currency', 'TZS') as $penalty)
+                            @foreach ($return->penalties as $penalty)
                                 <tr>
                                     <td>{{ $penalty['financial_month_name'] }}</td>
                                     <td>{{ number_format($penalty['tax_amount'], 2) }}
@@ -96,6 +71,28 @@
                                     </td>
                                 </tr>
                             @endforeach
+
+                             {{-- @foreach ($return->penalties->where('currency', 'USD') as $penalty)
+                                <tr>
+                                    <td>{{ $penalty['financial_month_name'] }}</td>
+                                    <td>{{ number_format($penalty['tax_amount'], 2) }}
+                                        <strong>{{ $penalty->currency }}</strong>
+                                    </td>
+                                    <td>{{ number_format($penalty['late_filing'], 2) }}
+                                        <strong>{{ $penalty->currency }}</strong>
+                                    </td>
+                                    <td>{{ number_format($penalty['late_payment'], 2) }}
+                                        <strong>{{ $penalty->currency }}</strong>
+                                    </td>
+                                    <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                                    <td>{{ number_format($penalty['rate_amount'], 2) }}
+                                        <strong>{{ $penalty->currency }}</strong>
+                                    </td>
+                                    <td>{{ number_format($penalty['penalty_amount'], 2) }}
+                                        <strong>{{ $penalty->currency }}</strong>
+                                    </td>
+                                </tr>
+                            @endforeach --}}
                         @else
                             <tr>
                                 <td colspan="7" class="text-center py-3">
@@ -106,7 +103,7 @@
                     </tbody>
                 </table>
 
-                <table class="table table-bordered table-sm normal-text">
+                {{-- <table class="table table-bordered table-sm normal-text">
                     <label>USD Penalties</label>
                     <thead>
                         <tr>
@@ -151,7 +148,7 @@
                             </tr>
                         @endif
                     </tbody>
-                </table>
+                </table> --}}
             </div>
         </div>
     </div>
