@@ -23,6 +23,8 @@ class AddColumnsToDebtPenalties extends Migration
             $table->decimal('late_payment', 20, 2)->after('debt_id');
             $table->decimal('late_filing', 20, 2)->after('debt_id');
             $table->decimal('tax_amount', 20, 2)->after('debt_id');
+            $table->decimal('currency_rate', 20, 2)->default(1)->after('debt_id');;
+            $table->enum('currency',['TZS', 'USD', 'GBP'])->default('TZS')->after('debt_id');
             $table->string('financial_month_name')->after('debt_id');
             
         });

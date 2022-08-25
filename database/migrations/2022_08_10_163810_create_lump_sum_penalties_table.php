@@ -17,6 +17,8 @@ class CreateLumpSumPenaltiesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('return_id');
             $table->string('return_quater');
+            $table->enum('currency',['TZS', 'USD', 'GBP'])->default('TZS');
+            $table->decimal('currency_rate', 20, 2)->default(1);
             $table->decimal('tax_amount', 20, 2);
             $table->integer('late_filing')->default(0);
             $table->decimal('late_payment', 20, 2);
