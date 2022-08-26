@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Upgrade Tax Type')
+@section('title','Return Queries')
 
 @section('css')
     <style>
@@ -15,7 +15,7 @@
         <div class="card-header d-flex justify-content-between">
             <div>Return Details</div>
             <div>
-                <a class="btn btn-info" href="{{ route('upgrade-tax-types.index') }}">
+                <a class="btn btn-info" href="{{ route('queries.all-credit-returns') }}">
                     <i class="bi bi-arrow-return-left mr-2"></i>
                     Back
                 </a>
@@ -67,16 +67,11 @@
                             <td class="my-1">{{ $return->business->email }}</td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold text-uppercase">Current Turnover</td>
+                            <td class="font-weight-bold text-uppercase">Total Sales</td>
                             <td class="my-1">{{ number_format($sales,2) }} <strong>{{$currency}}</strong></td>
                         </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="col-md-12">
-                    <div class="d-flex justify-content-end">
-                        <livewire:upgrade-tax-type.create :return="$return"/>
-                    </div>
                 </div>
             </div>
 

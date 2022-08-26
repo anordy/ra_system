@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Upgrade Tax Type')
+@section('title','Return Queries')
 
 @section('css')
     <style>
@@ -15,7 +15,7 @@
         <div class="card-header d-flex justify-content-between">
             <div>Return Details</div>
             <div>
-                <a class="btn btn-info" href="{{ route('upgrade-tax-types.index') }}">
+                <a class="btn btn-info" href="{{ route('queries.non-filers') }}">
                     <i class="bi bi-arrow-return-left mr-2"></i>
                     Back
                 </a>
@@ -28,24 +28,24 @@
                         <tbody>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Payer Name</td>
-                            <td class="my-1">{{$return->business->taxpayer->first_name}} {{$return->business->taxpayer->last_name}}</td>
+                            <td class="my-1">{{$non_filer->business->taxpayer->first_name}} {{$non_filer->business->taxpayer->last_name}}</td>
                         </tr>
 
                         <tr>
                             <td class="font-weight-bold text-uppercase">Business Name</td>
-                            <td class="my-1">{{ $return->business->name  }}</td>
+                            <td class="my-1">{{ $non_filer->business->name  }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Business Location Name</td>
-                            <td class="my-1">{{ $return->businessLocation->name  }}</td>
+                            <td class="my-1">{{ $non_filer->businessLocation->name  }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Region</td>
-                            <td class="my-1">{{ $return->businessLocation->taxRegion->name }}</td>
+                            <td class="my-1">{{ $non_filer->businessLocation->taxRegion->name }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Date of Business Commencement</td>
-                            <td class="my-1">{{date('D, Y-m-d',strtotime($return->businessLocation->date_of_commencing)) }}</td>
+                            <td class="my-1">{{date('D, Y-m-d',strtotime($non_filer->businessLocation->date_of_commencing)) }}</td>
                         </tr>
 
                         </tbody>
@@ -56,27 +56,18 @@
                         <tbody>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Tax Type</td>
-                            <td class="my-1">{{$return->taxtype->name }}</td>
+                            <td class="my-1">{{$non_filer->taxType->name }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Phone</td>
-                            <td class="my-1">{{ $return->business->mobile }}</td>
+                            <td class="my-1">{{ $non_filer->business->mobile }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Email</td>
-                            <td class="my-1">{{ $return->business->email }}</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold text-uppercase">Current Turnover</td>
-                            <td class="my-1">{{ number_format($sales,2) }} <strong>{{$currency}}</strong></td>
+                            <td class="my-1">{{ $non_filer->business->email }}</td>
                         </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="col-md-12">
-                    <div class="d-flex justify-content-end">
-                        <livewire:upgrade-tax-type.create :return="$return"/>
-                    </div>
                 </div>
             </div>
 

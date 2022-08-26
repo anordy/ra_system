@@ -1,5 +1,4 @@
 @if ($withoutPurchases)
-
     @if ($returnTypeTable == App\Models\TaxType::EXCISE_DUTY_BFO)
         @include('investigation.approval.return-details.bfo')
     @elseif($returnTypeTable == App\Models\TaxType::EXCISE_DUTY_MNO)
@@ -12,6 +11,10 @@
         @include('investigation.approval.return-details.petroleum')
     @elseif ($returnTypeTable == App\Models\TaxType::LUMPSUM_PAYMENT)
         @include('investigation.approval.return-details.lumpsum')
+    @elseif ($returnTypeTable == App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)
+        @include('investigation.approval.return-details.air_port')
+     @elseif ($returnTypeTable == App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)
+        @include('investigation.approval.return-details.sea_port')
     @endif
 @else
     <div class="card">
@@ -21,7 +24,7 @@
             <div class="row mx-2">
 
                 @foreach ($returns as $year => $return)
-                <strong class="px-2">{{ $year }}</strong>
+                    <strong class="px-2">{{ $year }}</strong>
                     <table class="table table-sm table-bordered">
                         <thead>
                             <tr>
