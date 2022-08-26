@@ -414,7 +414,9 @@
                 <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
                     <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
                 </li>
-
+                <li class="{{ request()->is('land-lease/agents*') ? 'active' : '' }}">
+                    <a href="{{ route('land-lease.agents') }}">Land Lease Agents</a>
+                </li>
             </ul>
 
         <li class="{{ request()->is('reports*') ? 'active' : '' }}">
