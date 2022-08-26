@@ -25,8 +25,11 @@ class RenewTaxAgentRequest extends Model
         return $this->belongsTo(User::class, 'rejected_by_id');
     }
 
-    public function bill(){
-        return $this->morphOne(ZmBill::class, 'billable');
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
     }
 
+    public function getBillAttribute(){
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
+    }
 }

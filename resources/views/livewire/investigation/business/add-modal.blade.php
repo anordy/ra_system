@@ -7,6 +7,15 @@
                         class="fa fa-times-circle"></i></button>
             </div>
             <div class="modal-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Select Business</label>
@@ -46,7 +55,8 @@
 
                     <div class="col-md-6 form-group">
                         <label>Tax Type</label>
-                        <select wire:model="tax_type_id" class="form-control @error('tax_type_id') is-invalid @enderror">
+                        <select wire:model="tax_type_id"
+                            class="form-control @error('tax_type_id') is-invalid @enderror">
                             <option value="">Select Tax Type</option>
                             @if ($taxTypes)
                                 @foreach ($taxTypes as $taxType)
@@ -80,18 +90,14 @@
                         <label for="intension">Intension</label>
                         <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
                         @error('intension')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="periodTo">Scope</label>
                         <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
                         @error('scope')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>

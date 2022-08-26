@@ -123,7 +123,7 @@
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if (view()->exists($viewRender))
-                @php echo view($viewRender, compact('return','return_'))->render() @endphp
+                @php echo view($viewRender, compact('return'))->render() @endphp
             @else
                 <div class="card">
                     <div class="card-body">

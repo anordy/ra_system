@@ -41,7 +41,7 @@ class OwnershipTransferController extends Controller
      * @param $id
      * @return Application|Factory|View
      */
-    public function show($id): View|Factory|Application
+    public function show($id)
     {
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */

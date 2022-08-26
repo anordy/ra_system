@@ -17,12 +17,22 @@ class InstallmentItemsTable extends DataTableComponent
     public function builder(): Builder
     {
         return InstallmentItem::where('installment_id', $this->installment->id)
+            ->whereHas('bill.bill_payments')
+            ->with('bill.bill_payments')
             ->orderBy('created_at', 'DESC');
     }
 
     public function columns(): array
     {
         return [
+            Column::make('Payment Ref', 'id')
+                ->format(function($value, $row){
+                    return $row->bill->bill_payments->first()->pay_ref_id;
+                }),
+            Column::make('PSP Receipt No', 'id')
+                ->format(function($value, $row){
+                    return $row->bill->bill_payments->first()->psp_receipt_number;
+                }),
             Column::make('Amount', 'amount')
                 ->sortable()
                 ->searchable(),
@@ -31,7 +41,10 @@ class InstallmentItemsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Paid at', 'paid_at')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value){
+                    return $value ?? '-';
+                }),
         ];
     }
 
