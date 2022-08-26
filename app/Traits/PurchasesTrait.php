@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\Queries;
+namespace App\Traits;
 
 use Exception;
 use Carbon\Carbon;

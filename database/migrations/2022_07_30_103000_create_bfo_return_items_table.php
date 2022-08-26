@@ -16,7 +16,7 @@ class CreateBFOReturnItemsTable extends Migration
         Schema::create('bfo_return_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('config_id');
-            $table->unsignedBigInteger('bfo_return_id');
+            $table->unsignedBigInteger('return_id');
             $table->decimal('value', 40,2); 
             $table->decimal('vat', 40,2);
             $table->softDeletes();

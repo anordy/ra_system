@@ -15,10 +15,10 @@ class CreateVatReturnItemsTable extends Migration
     {
         Schema::create('vat_return_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('vat_return_id');
-            $table->unsignedBigInteger('vat_return_config_id');
-            $table->decimal('input_amount',40,2);
-            $table->decimal('vat_amount',40,2);
+            $table->unsignedBigInteger('return_id');
+            $table->unsignedBigInteger('config_id');
+            $table->decimal('value',20,2);
+            $table->decimal('vat',20,2);
             $table->timestamps();
         });
     }

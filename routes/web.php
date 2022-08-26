@@ -79,6 +79,7 @@ use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
 use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
+use App\Http\Controllers\Returns\Queries\NilReturnsController;
 use App\Http\Controllers\Returns\Queries\NonFilersController;
 use App\Http\Controllers\Returns\Queries\SalesPurchasesController;
 use App\Http\Controllers\Returns\ReturnsController;
@@ -98,6 +99,7 @@ use App\Http\Controllers\TaxTypeController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\v1\ZanMalipoController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
@@ -115,6 +117,8 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
+
+Route::get('pay', [ZanMalipoController::class, 'pay']); // TODO: remove on production
 
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
@@ -312,6 +316,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/all-credit-returns/show/{id}/{return_id}/{sales}', [AllCreditReturnsController::class, 'show'])->name('all-credit-returns.show');
         Route::get('/non-filers', [NonFilersController::class, 'index'])->name('non-filers');
         Route::get('/non-filers/show/{id}', [NonFilersController::class, 'show'])->name('non-filers.show');
+        Route::get('/nil-returns', [NilReturnsController::class, 'index'])->name('nil-returns');
+        Route::get('/nil-returns/show/{id}', [NilReturnsController::class, 'show'])->name('nil-returns.show');
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
@@ -426,6 +432,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
             Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
             Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+            Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');
+            Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
+            Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
         });
 
     //Tax Clearance

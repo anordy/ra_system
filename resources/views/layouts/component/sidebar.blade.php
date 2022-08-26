@@ -414,7 +414,9 @@
                 <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
                     <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
                 </li>
-
+                <li class="{{ request()->is('land-lease/agents*') ? 'active' : '' }}">
+                    <a href="{{ route('land-lease.agents') }}">Land Lease Agents</a>
+                </li>
             </ul>
 
         <li class="{{ request()->is('reports*') ? 'active' : '' }}">
@@ -435,6 +437,11 @@
                 Return Queries
             </a>
             <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
+
+                <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
+                    <a href="{{ route('queries.nil-returns') }}">Nil Returns</a>
+                </li>
+
                 <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
                     <a href="{{ route('queries.non-filers') }}">Non Filers</a>
                 </li>

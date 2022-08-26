@@ -44,9 +44,14 @@ class LandLease extends Model
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
     public function bill()
     {
-        return $this->morphOne(ZmBill::class, 'billable');
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
     public function businessLocation()

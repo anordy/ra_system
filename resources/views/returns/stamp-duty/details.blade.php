@@ -12,7 +12,7 @@
             <td>{{ number_format($item->value) }}</td>
             <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' : $item->config->rate_usd ?? '' }}
             </td>
-            <td>{{ number_format($item->vat) }}</td>
+            <td>{{ number_format($item->tax) }}</td>
         </tr>
     @endforeach
     </tbody>

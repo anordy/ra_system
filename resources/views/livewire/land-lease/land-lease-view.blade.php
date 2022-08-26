@@ -10,7 +10,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <livewire:returns.return-payment :return="$landLease" />
+                @livewire('land-lease.land-lease-payment', ['landLease' => $landLease])
+                {{-- <livewire:returns.land-lease-payment :return="$landLease" /> --}}
             </div>
         </div>
     </div>
@@ -20,119 +21,134 @@
         <div class="card-header text-uppercase font-weight-bold bg-white pt-1">
             Applicant Profile
         </div>
-
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">
-                        @if ($landLease->is_registered)
-                            {{ $landLease->taxpayer->first_name }} {{ $landLease->taxpayer->last_name }}
-                        @else
-                            {{ $landLease->name }}
-                        @endif
-                    </p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Phone Number</span>
-                    <p class="my-1">
-                        @if ($landLease->is_registered)
-                            {{ $landLease->taxpayer->mobile }}
-                        @else
-                            {{ $landLease->phone }}
-                        @endif
-                    </p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Email</span>
-                    <p class="my-1">
-                        @if ($landLease->is_registered)
-                            {{ $landLease->taxpayer->email }}
-                        @else
-                            {{ $landLease->email }}
-                        @endif
-                    </p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Address</span>
-                    <p class="my-1">
-                        @if ($landLease->is_registered)
-                            {{ $landLease->taxpayer->physical_address }}
-                        @else
-                            {{ $landLease->address }}
-                        @endif
-                    </p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Applicant Type</span>
-                    <p class="my-1">
-                        @if ($landLease->is_registered)
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-
-                                Registered
-                            </span>
-                        @else
-                            <span class="badge badge-danger py-1 px-2"
-                                style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
-
-                                Not Registered
-                            </span>
-                        @endif
-                    </p>
-                </div>
-                @if ($landLease->is_registered)
+    
+        @if ($landLease->category == 'business')
+            <div class="card-body">
+                <div class="row">
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">ZRB reference no.</span>
+                        <span class="font-weight-bold text-uppercase">Business Name</span>
                         <p class="my-1">
-                            {{ $landLease->taxpayer->reference_no }}
-                        </p>
-                    </div>
-                @endif
-                
-                @if ($landLease->status == 'control-number-generated'||$landLease->status == 'paid-partially'||$landLease->status == 'complete')
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Control Number</span>
-                        <p class="my-1">
-                            {{ $landLease->zmBills->first()->control_number }}
+                            {{ $landLease->businessLocation->business->name }}
                         </p>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Payment Status</span>
+                        <span class="font-weight-bold text-uppercase">Business Location Name</span>
                         <p class="my-1">
-                            {{ $landLease->zmBills->first()->status }}
+                            {{ $landLease->businessLocation->business->name }}
                         </p>
                     </div>
-                @endif
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Physical Address</span>
+                        <p class="my-1">
+                            {{ $landLease->businessLocation->physical_address }}
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Region</span>
+                        <p class="my-1">
+                            {{ $landLease->businessLocation->region->name }}
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">District</span>
+                        <p class="my-1">
+                            {{ $landLease->businessLocation->district->name }}
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Ward</span>
+                        <p class="my-1">
+                            {{ $landLease->businessLocation->ward->name }}
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Street</span>
+                        <p class="my-1">
+                            {{ $landLease->businessLocation->street }}
+                        </p>
+                    </div>
+                </div>
             </div>
-
-
-        </div>
-        @if ($landLease->status == 'submitted')
-        <div class="row pt-1 mr-4">
-            <div class="col-12 text-right">
-                <button class="btn btn-primary btn-lg" wire:click="controlNumber()">
-                    <i class="bi bi-arrow-return-right mr-2"></i>
-                    Generate Control Number
-                </button>
+        @else
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Name</span>
+                        <p class="my-1">
+                            @if ($landLease->is_registered)
+                                {{ $landLease->taxpayer->first_name }} {{ $landLease->taxpayer->last_name }}
+                            @else
+                                {{ $landLease->name }}
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Phone Number</span>
+                        <p class="my-1">
+                            @if ($landLease->is_registered)
+                                {{ $landLease->taxpayer->mobile }}
+                            @else
+                                {{ $landLease->phone }}
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Email</span>
+                        <p class="my-1">
+                            @if ($landLease->is_registered)
+                                {{ $landLease->taxpayer->email }}
+                            @else
+                                {{ $landLease->email }}
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Address</span>
+                        <p class="my-1">
+                            @if ($landLease->is_registered)
+                                {{ $landLease->taxpayer->physical_address }}
+                            @else
+                                {{ $landLease->address }}
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Applicant Type</span>
+                        <p class="my-1">
+                            @if ($landLease->is_registered)
+                                <span class="badge badge-success py-1 px-2"
+                                    style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+    
+                                    Registered
+                                </span>
+                            @else
+                                <span class="badge badge-danger py-1 px-2"
+                                    style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+    
+                                    Not Registered
+                                </span>
+                            @endif
+                        </p>
+                    </div>
+                    @if ($landLease->is_registered)
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">ZRB reference no.</span>
+                            <p class="my-1">
+                                {{ $landLease->taxpayer->reference_no }}
+                            </p>
+                        </div>
+                    @endif
+                </div>
+    
+    
             </div>
-        </div>
-        @elseif($landLease->status == 'control-number-generating-failed')
-        <div class="row pt-1 mr-4">
-            <div class="col-12 text-right">
-                <button class="btn btn-warning btn-lg" wire:click="controlNumber()">
-                    <i class="bi bi-arrow-return-right mr-2"></i>
-                    Re-Generate Control Number
-                </button>
-            </div>
-        </div>
         @endif
-        
-        <div class="pt-2"></div>
+    
+        <div class="pt-5"></div>
         <div class="card-header text-uppercase font-weight-bold bg-white pt-1">
             Lease Information
         </div>
-
+    
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3 mb-3">
@@ -152,12 +168,8 @@
                     <p class="my-1">{{ $landLease->ward->name }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Lease Commencement Date</span>
+                    <span class="font-weight-bold text-uppercase">Commence Date</span>
                     <p class="my-1">{{ date('d/m/Y', strtotime($landLease->commence_date)) }}</p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Register Date</span>
-                    <p class="my-1">{{ date('d/m/Y', strtotime($landLease->created_at)) }}</p>
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Payment Month</span>
@@ -176,6 +188,7 @@
                     <p class="my-1">{{ $landLease->valid_period_term }} years</p>
                 </div>
             </div>
+    
             <div class="row">
                 <div class="col-4">
                     <a class="file-item" target="_blank"
@@ -187,7 +200,32 @@
                     </a>
                 </div>
             </div>
-
+    
+            <div class="card-footer">
+                <div class="row" style="background-color: #f5f2f2">
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Registered By</span>
+                        <p class="my-1">{{ $landLease->createdBy->first_name ?? '' }}
+                            {{ $landLease->createdBy->middle_name ?? '' }} {{ $landLease->createdBy->last_name ?? '' }}</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Register At</span>
+                        <p class="my-1">{{ $landLease->created_at }}</p>
+                    </div>
+                    @if ($landLease->edited_by != null)
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Edited By</span>
+                            <p class="my-1">{{ $landLease->editedBy->first_name ?? '' }}
+                                {{ $landLease->createdBy->middle_name ?? '' }} {{ $landLease->editedBy->last_name ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Edited At</span>
+                            <p class="my-1">{{ $landLease->updated_at }}</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+    
         </div>
     </div>
 </div>

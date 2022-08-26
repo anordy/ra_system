@@ -10,13 +10,14 @@ use App\Models\FinancialYear;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Models\ZmBill;
+use App\Traits\ReturnTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StampDutyReturn extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ReturnTrait;
 
     protected $guarded = [];
 
@@ -71,5 +72,9 @@ class StampDutyReturn extends Model
 
     public function getBillAttribute(){
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
+    }
+
+    public function stampDutyPenalties(){
+        return $this->hasMany(StampDutyReturnPenalty::class, 'return_id');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\LandLease;
 
+use App\Models\BusinessLocation;
 use App\Models\LandLease;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,8 +11,6 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LandLeaseList extends DataTableComponent
 {
-    // protected $model = LandLease::class;
-
     //create builder function
     public function builder(): builder
     {
@@ -35,16 +34,26 @@ class LandLeaseList extends DataTableComponent
             Column::make("DP Number", "dp_number")
                 ->searchable()
                 ->sortable(),
-            Column::make("Name", "name")
+            Column::make("Name", "category")
                 ->format(
                     function ($value, $row) {
-                        if ($row->is_registered == 1) {
-                            return $this->getApplicantName($row->taxpayer_id);
+                        if ($row->category == 'business') {
+                            return $this->getBusinessName($row->business_location_id);
                         } else {
-                            return $value;
+                            if ($row->is_registered == 1) {
+                                return $this->getApplicantName($row->taxpayer_id);
+                            } else {
+                                return $row->name;
+                            }
                         }
                     }
                 )
+                ->sortable(),
+            Column::make("Applicant Type", "category")
+                ->format(function ($value) {
+                    return ucwords($value);
+                })
+                ->searchable()
                 ->sortable(),
 
             Column::make("Commence Date", "commence_date")
@@ -61,22 +70,16 @@ class LandLeaseList extends DataTableComponent
                     return number_format($value);
                 })
                 ->sortable(),
-            // Column::make('Review Shedule', 'review_schedule')
-            //     ->format(function ($value, $row) {
-            //         return $value . ' years';
-            //     })
-            //     ->searchable()
-            //     ->sortable(),
-            // Column::make("Region", "region.name")
-            //     ->searchable()
-            //     ->sortable(),
-            // Column::make("District", "district.name")
-            //     ->searchable()
-            //     ->sortable(),
-            // Column::make("Ward", "ward.name")
-            //     ->searchable()
-            //     ->sortable(),
-            Column::make("Applicant Type", "id")->view("land-lease.includes.applicant-status"),
+            Column::make("Region", "region.name")
+                ->searchable()
+                ->sortable(),
+            Column::make("District", "district.name")
+                ->searchable()
+                ->sortable(),
+            Column::make("Ward", "ward.name")
+                ->searchable()
+                ->sortable(),
+            Column::make("Applicant Status", "id")->view("land-lease.includes.applicant-status"),
             Column::make("Actions", "id")->view("land-lease.includes.actions"),
         ];
     }
@@ -87,13 +90,10 @@ class LandLeaseList extends DataTableComponent
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
-    public function getMonthLeases()
+    public function getBusinessName($id)
     {
-        //get this month leases
-        $month_leases = LandLease::where('created_by', auth()->user()->id)
-            ->whereMonth('commence_date', date('m'))
-            ->whereYear('commence_date', date('Y'))
-            ->get();
-        return $month_leases;
+        $businessLocation = BusinessLocation::find(1);
+        // dd($businessLocation);
+        return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 }

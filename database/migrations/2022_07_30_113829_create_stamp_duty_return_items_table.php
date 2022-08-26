@@ -18,7 +18,7 @@ class CreateStampDutyReturnItemsTable extends Migration
             $table->unsignedBigInteger('config_id');
             $table->unsignedBigInteger('return_id');
             $table->string('value');
-            $table->string('tax');
+            $table->string('vat');
             $table->softDeletes();
             $table->timestamps();
         });
