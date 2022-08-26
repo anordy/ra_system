@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Traits\Queries\SalesTrait;
-use App\Traits\Queries\ShowReturnTrait;
+use App\Traits\SalesTrait;
+use App\Traits\ShowReturnTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
