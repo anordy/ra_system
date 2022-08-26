@@ -11,7 +11,7 @@ use Illuminate\Contracts\View\View;
 class MvrGenericSettingController extends Controller
 {
 
-    public function index($model): Factory|View|Application
+    public function index($model)
     {
         $class = 'App\Models\\'.$model;
         abort_if(!class_exists($class),404);
