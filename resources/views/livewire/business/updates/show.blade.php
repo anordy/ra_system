@@ -334,7 +334,7 @@
                         </tbody>
                     </table>
                     <br>
-                    @if ($agent_contract)
+                    @if ($agent_contract && $new_values->is_own_consultant == 0)
                     <div class="col-md-3">
                         <a class="file-item" target="_blank"
                            href="{{ route('business.contract.file', encrypt($business_update->id)) }}">

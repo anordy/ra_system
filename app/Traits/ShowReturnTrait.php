@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\Queries;
+namespace App\Traits;
 
 use App\Models\BusinessTaxType;
 use App\Models\Returns\HotelReturns\HotelReturn;

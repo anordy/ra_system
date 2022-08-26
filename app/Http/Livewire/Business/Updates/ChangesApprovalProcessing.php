@@ -15,6 +15,7 @@ use App\Models\BusinessLocation;
 use App\Models\BusinessConsultant;
 use Illuminate\Support\Facades\DB;
 use App\Traits\WorkflowProcesssingTrait;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ChangesApprovalProcessing extends Component
@@ -116,7 +117,7 @@ class ChangesApprovalProcessing extends Component
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
         }
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }

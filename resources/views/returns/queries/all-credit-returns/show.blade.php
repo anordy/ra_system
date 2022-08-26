@@ -67,6 +67,10 @@
                             <td class="my-1">{{ $return->business->email }}</td>
                         </tr>
                         <tr>
+                            <td class="font-weight-bold text-uppercase">Return Month</td>
+                            <td class="my-1">{{ $return->financialMonth->name }}, {{ $return->financialYear->code }}</td>
+                        </tr>
+                        <tr>
                             <td class="font-weight-bold text-uppercase">Total Sales</td>
                             <td class="my-1">{{ number_format($sales,2) }} <strong>{{$currency}}</strong></td>
                         </tr>
