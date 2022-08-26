@@ -13,7 +13,7 @@ class TaxpayersController extends Controller
     }
 
     public function show($taxPayerId){
-        $taxPayer = Taxpayer::findOrFail($taxPayerId);
+        $taxPayer = Taxpayer::findOrFail(decrypt($taxPayerId));
 
         return view('taxpayers.show', compact('taxPayer'));
     }

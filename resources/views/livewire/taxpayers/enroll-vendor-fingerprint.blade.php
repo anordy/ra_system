@@ -166,7 +166,7 @@
                     </tbody>
                 </table>
 
-                <a href="{{ route('taxpayers.verify-user', $kyc->id) }}" class="btn btn-primary rounded-0"><i
+                <a href="{{ route('taxpayers.verify-user', encrypt($kyc->id)) }}" class="btn btn-primary rounded-0"><i
                         class="bi bi-check2-all mr-1"></i> Complete Verification</a>
             </div>
         @endif
