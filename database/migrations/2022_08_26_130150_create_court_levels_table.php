@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCaseProceedings extends Migration
+class CreateCourtLevelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateCaseProceedings extends Migration
      */
     public function up()
     {
-        Schema::create('case_proceedings', function (Blueprint $table) {
+        Schema::create('court_levels', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('level');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreateCaseProceedings extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('case_proceedings');
+        Schema::dropIfExists('court_levels');
     }
 }

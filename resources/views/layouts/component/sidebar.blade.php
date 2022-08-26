@@ -367,7 +367,7 @@
             </ul>
         </li>
 
-        <li  class="{{ request()->is('dl*') ? 'active':'' }}">
+        <li  class="{{ request()->is('drivers-license*') ? 'active':'' }}">
             <a href="#dlSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('drivers-license*') ? 'true' : 'false' }}" class="dropdown-toggle">Driver's Licenses</a>
             <ul class="collapse list-unstyled {{ request()->is('drivers-license*') ? 'show' : '' }}" id="dlSubmenu">
                 <li class="{{ request()->is('drivers-license/applications') ? 'active': '' }}">
@@ -375,6 +375,18 @@
                 </li>
                 <li class="{{ request()->is('drivers-license/applications') ? 'active': '' }}">
                     <a href="{{ route('rio.register') }}">Offences</a>
+                </li>
+            </ul>
+        </li>
+
+        <li  class="{{ request()->is('cases*') ? 'active':'' }}">
+            <a href="#lcmSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('cases*') ? 'true' : 'false' }}" class="dropdown-toggle">Legal Cases Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('cases*') ? 'show' : '' }}" id="lcmSubmenu">
+                <li class="{{ request()->is('cases') ? 'active': '' }}">
+                    <a href="{{ route('cases.index') }}">Cases</a>
+                </li>
+                <li class="{{ request()->is('cases/appeals') ? 'active': '' }}">
+                    <a href="{{ route('cases.appeals') }}">Appeals</a>
                 </li>
             </ul>
         </li>

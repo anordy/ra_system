@@ -29,6 +29,7 @@ use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\BusinessUpdateFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\Cases\CasesController;
 use App\Http\Controllers\Claims\ClaimFilesController;
 use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
@@ -457,5 +458,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/register/create', [RegisterController::class, 'create'])->name('register.create');
         Route::get('/register/remove-restriction/{id}', [RegisterController::class, 'removeRestriction'])->name('register.remove-restriction');
         Route::get('/register/{id}', [RegisterController::class, 'show'])->name('register.show');
+    });
+
+    Route::prefix('cases')->as('cases.')->group(function () {
+        Route::get('/', [CasesController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [CasesController::class, 'show'])->name('show');
+        Route::get('/appeals', [CasesController::class, 'appealsIndex'])->name('appeals');
+        Route::get('/appeals/{id}', [CasesController::class, 'appealShow'])->name('appeal.show');
     });
 });
