@@ -30,6 +30,7 @@ use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmSignatureHelper;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\ArrayToXml\ArrayToXml;
 
@@ -331,6 +332,69 @@ class ZanMalipoController extends Controller
             }
         } catch(\Exception $e){
             Log::error($e);
+        }
+    }
+
+    public function pay(Request $request){
+        if (config('app.env') != 'local'){
+            return abort(404);
+        }
+
+        $request->validate([
+            'bill_id' => 'required',
+            'amount' => 'required'
+        ]);
+
+        $bill = ZmBill::findOrFail($request->bill_id);
+
+        try {
+            DB::beginTransaction();
+            $payment = ZmPayment::query()->insert([
+                'zm_bill_id'         => $request->bill_id,
+                'trx_id'             => rand(100000, 1000000),
+                'sp_code'            => 'SP20007',
+                'pay_ref_id'         => rand(100000, 1000000),
+                'control_number'     => $bill->control_number,
+                'bill_amount'        => $request->amount,
+                'paid_amount'        => $request->amount,
+                'bill_pay_opt'       => $bill->payment_option,
+                'currency'           => $bill->currency,
+                'trx_time'           => Carbon::now()->toDateTimeString(),
+                'usd_pay_channel'    => 'BANK',
+                'payer_phone_number' => '0753' . rand(100000, 900000),
+                'payer_email'        => 'meshackf1@gmail.com',
+                'payer_name'         => 'John Doe',
+                'psp_receipt_number' => 'RST' . rand(10000, 90000),
+                'psp_name'           => 'BANK 1',
+                'ctr_acc_num'        => rand(100000000, 900000000),
+                'created_at' => Carbon::now()->toDateTimeString()
+            ]);
+
+            if ($bill->paidAmount() >= $bill->amount) {
+                $bill->status = 'paid';
+            } else {
+                $bill->status = 'partially';
+            }
+
+            $bill->paid_amount = $bill->paidAmount();
+            $bill->save();
+
+            // Check and update return
+            $this->updateReturn($bill);
+
+            // Check and update debts
+            $this->updateDebt($bill);
+
+            // Update installments
+            $this->updateInstallment($bill);
+
+            DB::commit();
+
+            return $payment;
+
+        } catch (\Exception $e){
+            DB::rollBack();
+            return $e->getMessage();
         }
     }
 }

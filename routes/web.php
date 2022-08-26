@@ -98,6 +98,7 @@ use App\Http\Controllers\TaxTypeController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\v1\ZanMalipoController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
@@ -115,6 +116,8 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
+
+Route::get('pay', [ZanMalipoController::class, 'pay']); // TODO: remove on production
 
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
