@@ -429,6 +429,26 @@
             </ul>
         </li>
 
+        <li class="{{ request()->is('queries*') ? 'active' : '' }}">
+            <a href="#queriesSubmenu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                Return Queries
+            </a>
+            <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
+                <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
+                    <a href="{{ route('queries.non-filers') }}">Non Filers</a>
+                </li>
+
+                <li class="{{ request()->is('queries/sales-purchases*') ? 'active' : '' }}">
+                    <a href="{{ route('queries.sales-purchases') }}">Sales Vs Purchases</a>
+                </li>
+
+                <li class="{{ request()->is('queries/all-credit-returns*') ? 'active' : '' }}">
+                    <a href="{{ route('queries.all-credit-returns') }}">All Credit Returns</a>
+                </li>
+            </ul>
+        </li>
+
 
         <li class="{{ request()->is('payments*') ? 'active' : '' }}">
             <a href="#payments" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
