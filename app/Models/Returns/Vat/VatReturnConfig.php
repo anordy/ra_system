@@ -13,6 +13,6 @@ class VatReturnConfig extends Model
 
     public function items()
     {
-        return $this->hasMany(VatReturnItem::class, 'vat_return_config_id', 'id');
+        return $this->hasMany(VatReturnItem::class, 'config_id', 'id');
     }
 }

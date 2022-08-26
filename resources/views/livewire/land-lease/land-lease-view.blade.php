@@ -10,7 +10,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <livewire:returns.return-payment :return="$landLease" />
+                @livewire('land-lease.land-lease-payment', ['landLease' => $landLease])
+                {{-- <livewire:returns.land-lease-payment :return="$landLease" /> --}}
             </div>
         </div>
     </div>
