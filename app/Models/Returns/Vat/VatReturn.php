@@ -36,7 +36,7 @@ class VatReturn extends Model
 
     public function items()
     {
-        return $this->hasMany(VatReturnItem::class, 'vat_return_id');
+        return $this->hasMany(VatReturnItem::class, 'return_id');
     }
 
     public function taxpayer()

@@ -437,6 +437,11 @@
                 Return Queries
             </a>
             <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
+
+                <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
+                    <a href="{{ route('queries.nil-returns') }}">Nil Returns</a>
+                </li>
+
                 <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
                     <a href="{{ route('queries.non-filers') }}">Non Filers</a>
                 </li>

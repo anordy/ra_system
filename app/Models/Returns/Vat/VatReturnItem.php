@@ -11,6 +11,6 @@ class VatReturnItem extends Model
 
     public function config()
     {
-        return $this->belongsTo(VatReturnConfig::class,'vat_return_config_id','id');
+        return $this->belongsTo(VatReturnConfig::class,'config_id','id');
     }
 }

@@ -24,10 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('daily:penalty')->everyMinute();
-
-
-        $schedule->command('daily:penalty')->everyMinute();
+        $schedule->command('daily:notice')->everyMinute()->runInBackground();
+        $schedule->command('daily:debt')->everyMinute()->runInBackground();
+        $schedule->command('daily:reopen-business')->everyMinute()->runInBackground();
+        $schedule->command('daily:debt-penalty')->everyMinute()->runInBackground();
     }
 
     /**

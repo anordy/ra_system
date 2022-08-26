@@ -162,10 +162,10 @@
                                             @if ($item->config->rate == 0 && $item->config->col_type != 'exemptedMethodOne')
                                                 <tr>
                                                     <td>{{ $item->config->name }}</td>
-                                                    <td class="text-right">{{ number_format($item->input_amount) }}
+                                                    <td class="text-right">{{ number_format($item->value) }}
                                                         <strong>  {{ $item->config->currency}}</strong></td>
                                                     <td class="table-active"></td>
-                                                    <td class="text-right">{{ number_format($item->vat_amount,2) }}
+                                                    <td class="text-right">{{ number_format($item->vat,2) }}
                                                         <strong>{{$return->currency}}</strong></td>
                                                 </tr>
                                             @else
@@ -173,7 +173,7 @@
                                                     @if($return->business->business_type =='hotel')
                                                         <tr>
                                                             <td>{{ $item->config->name }}</td>
-                                                            <td class="text-right">{{ number_format($item->input_amount) }} <strong>(No.
+                                                            <td class="text-right">{{ number_format($item->value) }} <strong>(No.
                                                                     of bed nights)</strong></td>
                                                             <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
                                                                 @if($item->config->rate_type =='percentage')
@@ -190,7 +190,7 @@
                                                     @if($return->business->business_type =='electricity')
                                                         <tr>
                                                             <td>{{ $item->config->name }}</td>
-                                                            <td class="text-right">{{ number_format($item->input_amount) }}
+                                                            <td class="text-right">{{ number_format($item->value) }}
                                                                 <strong>{{$item->config->currency}}</strong></td>
                                                             <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
                                                                 @if($item->config->rate_type =='percentage')
@@ -207,14 +207,14 @@
                                                 @elseif($item->config->code != 'TIT' && $item->config->code != 'TITM1')
                                                     <tr>
                                                         <td>{{ $item->config->name }}</td>
-                                                        <td class="text-right">{{ number_format($item->input_amount) }}
+                                                        <td class="text-right">{{ number_format($item->value) }}
                                                             <strong>  {{ $item->config->currency}}</strong></td>
                                                         <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
                                                             @if($item->config->rate_type =='percentage')
                                                                 %
                                                             @endif
                                                         </td>
-                                                        <td class="text-right">{{ number_format($item->vat_amount,2) }}
+                                                        <td class="text-right">{{ number_format($item->vat,2) }}
                                                             <strong>{{$return->currency}}</strong></td>
                                                     </tr>
                                                 @endif
