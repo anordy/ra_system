@@ -3,19 +3,9 @@
 namespace App\Http\Controllers\Returns\Queries;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessTaxType;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\HotelReturns\HotelReturnConfig;
-use App\Models\Returns\HotelReturns\HotelReturnItem;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\StampDuty\StampDutyConfig;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\Returns\Vat\VatReturnConfig;
 use App\Models\TaxType;
-use App\Traits\Queries\SalesTrait;
-use App\Traits\Queries\ShowReturnTrait;
+use App\Traits\SalesTrait;
+use App\Traits\ShowReturnTrait;
 use Illuminate\Http\Request;
 
 class AllCreditReturnsController extends Controller

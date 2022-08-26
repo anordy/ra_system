@@ -14,7 +14,7 @@
                     <div class="form-group col-lg-6">
                         <div class="form-group">
                             <label>From</label>
-                            <input disabled class="form-control" value="{{ \Carbon\Carbon::now()->toFormattedDateString() }}" />
+                            <input disabled class="form-control" value="{{ \Carbon\Carbon::make($subject->debt->curr_due_date)->toFormattedDateString() }}" />
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
@@ -23,9 +23,9 @@
                             <input min="1" max="12" type="number" class="form-control @error('installmentPhases') is-invalid @enderror"
                                    wire:model="installmentPhases" />
                             @error('installmentPhases')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </div>
