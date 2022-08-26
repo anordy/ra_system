@@ -60,8 +60,8 @@ class InstallmentRequestApprovalProcessing extends Component
             DB::beginTransaction();
 
             if ($this->checkTransition('debt_manager')) {
-                $this->subject->installment_from = Carbon::now()->toDateTimeString();
-                $this->subject->installment_to = Carbon::now()->addMonths($this->installmentPhases);
+                $this->subject->installment_from = $this->subject->debt->curr_due_date;
+                $this->subject->installment_to = Carbon::make($this->subject->debt->curr_due_date)->addMonths($this->installmentPhases);
                 $this->subject->installment_count = $this->installmentPhases;
                 $this->subject->save();
             }
@@ -131,6 +131,6 @@ class InstallmentRequestApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.installment-request  ');
+        return view('livewire.approval.installment-request');
     }
 }
