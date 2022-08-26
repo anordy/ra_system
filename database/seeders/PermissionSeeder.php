@@ -104,14 +104,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'debt-management-bfo-returns-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-mno-returns-view', 'sys_module_id' => 14],
 
-
-            # Land Lease
-            ['name' => 'land-lease-view', 'sys_module_id' => 15],
-            ['name' => 'land-lease-generate-report', 'sys_module_id' => 15],
-
-            # Manageria Report
-            ['name' => 'managerial-report-view', 'sys_module_id' => 14],
-
             ['name' => 'mvr_initiate_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_approve_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_initiate_registration_change', 'sys_module_id' => 15],
@@ -123,12 +115,18 @@ class PermissionSeeder extends Seeder
             ['name' => 'mvr_approve_transfer', 'sys_module_id' => 15],
             ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15],
+
+
+            # Land Lease
+            ['name' => 'land-lease-view', 'sys_module_id' => 16],
+            ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
+
             
             # Managerial Report
-            ['name' => 'managerial-report-view', 'sys_module_id' => 16],
+            ['name' => 'managerial-report-view', 'sys_module_id' => 20],
 
             # Manage Payments
-            ['name' => 'complete-payments-view', 'sys_module_id' => 17],
+            ['name' => 'manage-payments-view', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],
@@ -175,22 +173,22 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-tax-type-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-delete', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-1-view', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-1-add', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-1-edit', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-1-delete', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-2-view', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-2-add', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-2-edit', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-2-delete', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-3-view', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-3-add', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-3-edit', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-3-delete', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-4-view', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-4-add', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-4-edit', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-4-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-one-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-one-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-one-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-one-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-two-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-two-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-two-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-two-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-three-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-three-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-three-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-three-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-four-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-four-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-four-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-four-delete', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-view', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-add', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-edit', 'sys_module_id' => 18],
@@ -199,6 +197,19 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-tax-region-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-make-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-model-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-transmission-type-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-fuel-type-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-class-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-color-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-body-type-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-plate-size-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-fee-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-deregistration-reason-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-transfer-free-view', 'sys_module_id' => 18],
 
             # System
             ['name' => 'system-audit-trail-view', 'sys_module_id' => 19],

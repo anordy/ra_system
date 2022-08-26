@@ -546,33 +546,39 @@
             </ul>
         </li>
 
-        <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
-            <a href="#landLeaseSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
-                Lease</a>
-            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}"
-                id="landLeaseSubmenu">
+        @can('land-lease-management')
+            <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
+                <a href="#landLeaseSubmenu" data-toggle="collapse"
+                    aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
+                    Lease</a>
+                <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}"
+                    id="landLeaseSubmenu">
 
-                <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
-                    <a href="{{ route('land-lease.list') }}">Land Lease List</a>
-                </li>
-                <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
-                    <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
-                </li>
+                    <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
+                        <a href="{{ route('land-lease.list') }}">Land Lease List</a>
+                    </li>
+                    <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
+                        <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
+                    </li>
 
-            </ul>
-
-        <li class="{{ request()->is('reports*') ? 'active' : '' }}">
-            <a href="#reportSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                Managerial reports
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}" id="reportSubmenu">
-                <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
-                    <a href="{{ route('reports.returns') }}">Return Reports</a>
-                </li>
-            </ul>
-        </li>
+                </ul>
+            </li>
+        @endcan
+        @can('managerial-report-management')
+            <li class="{{ request()->is('reports*') ? 'active' : '' }}">
+                <a href="#reportSubmenu" data-toggle="collapse"
+                    aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                    Managerial reports
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}" id="reportSubmenu">
+                    @can('managerial-report-view')
+                        <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.returns') }}">Return Reports</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
 
         <li class="{{ request()->is('queries*') ? 'active' : '' }}">
             <a href="#queriesSubmenu" data-toggle="collapse"
@@ -594,139 +600,204 @@
             </ul>
         </li>
 
+        @can('manage-payment-management')
+            <li class="{{ request()->is('payments*') ? 'active' : '' }}">
+                <a href="#payments" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    Manage Payments
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
+                    @can('manage-payments-view')
+                        <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.complete') }}">Complete Payments</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
 
-        <li class="{{ request()->is('payments*') ? 'active' : '' }}">
-            <a href="#payments" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                Manage Payments
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
-                <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
-                    <a href="{{ route('payments.complete') }}">Complete Payments</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="{{ request()->is('settings*') ? 'active' : '' }}">
-            <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
-            <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
-                <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.users.index') }}">Users</a>
-                </li>
-                <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.roles.index') }}">Roles</a>
-                </li>
-                <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.country.index') }}">Countries</a>
-                </li>
-                <li class="{{ request()->is('settings/region*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.region.index') }}">Region</a>
-                </li>
-                <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.district.index') }}">District</a>
-                </li>
-                <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.ward.index') }}">Ward</a>
-                </li>
-                <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.banks.index') }}">Banks</a>
-                </li>
-                <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
-                </li>
-                <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.education-level.index') }}">Education Level</a>
-                </li>
-                <li class="{{ request()->is('settings/business-categories*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.business-categories.index') }}">Business categories</a>
-                </li>
-                <li class="{{ request()->is('settings/taxtypes*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.taxtypes.index') }}">Tax Types</a>
-                </li>
-                <li class="{{ request()->is('settings/isic1*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.isic1.index') }}">ISIC Level 1</a>
-                </li>
-                <li class="{{ request()->is('settings/isic2*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.isic2.index') }}">ISIC Level 2</a>
-                </li>
-                <li class="{{ request()->is('settings/isic3*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.isic3.index') }}">ISIC Level 3</a>
-                </li>
-                <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
-                </li>
-                <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.business-files.index') }}">Business Files</a>
-                </li>
-                <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
-                    <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
-                </li>
-
-                <li class="{{ request()->is('settings/mvr-generic/MvrMake') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrMake') }}">Motor Vehicle Make</a>
-                </li>
-                <li class="{{ request()->is('settings/mvr-generic/MvrModel') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrModel') }}">Motor Vehicle Model</a>
-                </li>
-                <li class="{{ request()->is('settings/mvr-generic/MvrTransmissionType') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrTransmissionType') }}">Motor Vehicle
-                        Transmission</a>
-                </li>
-                <li class="{{ request()->is('settings/mvr-generic/MvrFuelType') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrFuelType') }}">Motor vehicle Fuel Type</a>
-                </li>
-                <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrClass') }}">Motor Vehicle Class</a>
-                </li>
-
-                <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Color</a>
-                </li>
-
-                <li class="{{ request()->is('settings/mvr-generic/MvrBodyType') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrBodyType') }}">Motor Vehicle Body Type</a>
-                </li>
-
-                <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate Size</a>
-                </li>
-
-                <li class="{{ request()->is('settings/mvr-generic/MvrFee') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrFee') }}">Motor Vehicle Fees</a>
-                </li>
-                <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrDeRegistrationReason') }}">De Registration
-                        Reasons</a>
-                </li>
-                <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrOwnershipTransferReason') }}">Transfer
-                        Reasons</a>
-                </li>
-                <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
-                        Categories</a>
-                </li>
-                <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
-                    <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Transfer Fees</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="{{ request()->is('system*') ? 'active' : '' }}">
-            <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
-            <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
-                <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
-                    <a href="{{ route('system.audits.index') }}">Audit Trail</a>
-                </li>
-                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                    <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
-                </li>
-
-                <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
-                    <a href="{{ route('pdf.all') }}">All PDF's</a>
-                </li>
-
-            </ul>
-        </li>
+        @can('setting')
+            <li class="{{ request()->is('settings*') ? 'active' : '' }}">
+                <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
+                <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
+                    @can('setting-user-view')
+                        <li class="{{ request()->is('settings/users*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.users.index') }}">Users</a>
+                        </li>
+                    @endcan
+                    @can('setting-role-view')
+                        <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.roles.index') }}">Roles</a>
+                        </li>
+                    @endcan
+                    @can('setting-country-view')
+                        <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.country.index') }}">Countries</a>
+                        </li>
+                    @endcan
+                    @can('setting-region-view')
+                        <li class="{{ request()->is('settings/region*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.region.index') }}">Region</a>
+                        </li>
+                    @endcan
+                    @can('setting-district-view')
+                        <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.district.index') }}">District</a>
+                        </li>
+                    @endcan
+                    @can('setting-ward-view')
+                        <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.ward.index') }}">Ward</a>
+                        </li>
+                    @endcan
+                    @can('setting-banks-view')
+                        <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.banks.index') }}">Banks</a>
+                        </li>
+                    @endcan
+                    @can('setting-exchange-rate-view')
+                        <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
+                        </li>
+                    @endcan
+                    @can('setting-education-level-view')
+                        <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.education-level.index') }}">Education Level</a>
+                        </li>
+                    @endcan
+                    @can('setting-business-categories-view')
+                        <li class="{{ request()->is('settings/business-categories*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.business-categories.index') }}">Business categories</a>
+                        </li>
+                    @endcan
+                    @can('setting-tax-type-view')
+                        <li class="{{ request()->is('settings/taxtypes*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.taxtypes.index') }}">Tax Types</a>
+                        </li>
+                    @endcan
+                    @can('setting-isic-level-one-view')
+                        <li class="{{ request()->is('settings/isic1*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.isic1.index') }}">ISIC Level 1</a>
+                        </li>
+                    @endcan
+                    @can('setting-isic-level-two-view')
+                        <li class="{{ request()->is('settings/isic2*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.isic2.index') }}">ISIC Level 2</a>
+                        </li>
+                    @endcan
+                    @can('setting-isic-level-three-view')
+                        <li class="{{ request()->is('settings/isic3*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.isic3.index') }}">ISIC Level 3</a>
+                        </li>
+                    @endcan
+                    @can('setting-isic-level-four-view')
+                        <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
+                        </li>
+                    @endcan
+                    @can('setting-country-view')
+                        <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.business-files.index') }}">Business Files</a>
+                        </li>
+                    @endcan
+                    @can('setting-region-view')
+                        <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-make-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrMake') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrMake') }}">Motor Vehicle Make</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-model-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrModel') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrModel') }}">Motor Vehicle Model</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-transmission-type-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrTransmissionType') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransmissionType') }}">Motor Vehicle
+                                Transmission</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-fuel-type-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrFuelType') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrFuelType') }}">Motor vehicle Fuel Type</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-class-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrClass') }}">Motor Vehicle Class</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-color-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Color</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-body-type-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrBodyType') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrBodyType') }}">Motor Vehicle Body Type</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-plate-size-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate Size</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-fee-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrFee') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrFee') }}">Motor Vehicle Fees</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-deregistration-reason-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrDeRegistrationReason') }}">De Registration
+                                Reasons</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-ownership-transfer-reason-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrOwnershipTransferReason') }}">Transfer
+                                Reasons</a>
+                        </li>
+                    @endcan
+                    @can('setting-transfer-category-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
+                                Categories</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-transfer-fee-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Transfer Fees</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+        @can('system')
+            <li class="{{ request()->is('system*') ? 'active' : '' }}">
+                <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
+                <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
+                    @can('system-audit-trail-view')
+                        <li class="{{ request()->is('system/audits*') ? 'active' : '' }}">
+                            <a href="{{ route('system.audits.index') }}">Audit Trail</a>
+                        </li>
+                    @endcan
+                    @can('system-workflow-view')
+                        <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                            <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
+                        </li>
+                    @endcan
+                    @can('system-all-pdfs-view')
+                        <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
+                            <a href="{{ route('pdf.all') }}">All PDF's</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
 
     </ul>
 
