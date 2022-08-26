@@ -36,7 +36,7 @@ class PermissionServiceProvider extends ServiceProvider
 
             // Module
             SysModule::get()->map(function ($module) {
-                Gate::define($module->name, function ($user) use ($module) {
+                Gate::define($module->code, function ($user) use ($module) {
                     return $user->hasModuleTo($module);
                 });
             });

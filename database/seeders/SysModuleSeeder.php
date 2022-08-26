@@ -24,8 +24,8 @@ class SysModuleSeeder extends Seeder
             ['id' => 7, 'code' => 'petroleum-management', 'name' => 'Petroleum Management'],
             ['id' => 8, 'code' => 'return-verification', 'name' => 'Return Verification'],
             ['id' => 9, 'code' => 'tax-claim', 'name' => 'Tax Claim'],
-            ['id' => 10, 'code' => 'auditing', 'name' => 'Auditing'],
-            ['id' => 11, 'code' => 'investigation', 'name' => 'Investigation'],
+            ['id' => 10, 'code' => 'tax-auditing', 'name' => 'Auditing'],
+            ['id' => 11, 'code' => 'tax-investigation', 'name' => 'Investigation'],
             ['id' => 12, 'code' => 'dispute-management', 'name' => 'Dispute Management'],
             ['id' => 13, 'code' => 'tax-clearance-management', 'name' => 'Tax Clearance Management'],
             ['id' => 14, 'code' => 'debt-management', 'name' => 'Debt Management'],
@@ -35,6 +35,9 @@ class SysModuleSeeder extends Seeder
             ['id' => 18, 'code' => 'setting', 'name' => 'Setting'],
             ['id' => 19, 'code' => 'system', 'name' => 'System'],
             ['id' => 20, 'code' => 'managerial-report', 'name' => 'Manageria Report'],
+            ['id' => 21, 'code' => 'payment-extension', 'name' => 'Payment Extension'],
+            ['id' => 22, 'code' => 'payment-installments', 'name' => 'Payment By Installment'],
+            ['id' => 23, 'code' => 'relief-managements', 'name' => 'Relief Management'],
 
 
 
