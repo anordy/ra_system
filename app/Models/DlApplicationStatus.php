@@ -24,9 +24,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DlApplicationStatus extends Model
 {
-	protected $table = 'dl_application_status';
+    const STATUS_COMPLETED = 'Completed';
+    protected $table = 'dl_application_status';
+    const STATUS_PENDING_APPROVAL = 'Pending Approval';
+    const STATUS_INITIATED = 'Initiated';
+    const STATUS_DETAILS_CORRECTION = 'Details Correction';
+    const STATUS_PENDING_PAYMENT = 'Pending Payment';
+    const STATUS_TAKING_PICTURE = 'Taking Picture';
+    const STATUS_LICENSE_PRINTING = 'License Printing';
 
-	protected $fillable = [
+    protected $fillable = [
 		'name'
 	];
 

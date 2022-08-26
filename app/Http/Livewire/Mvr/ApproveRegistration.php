@@ -110,7 +110,7 @@ class ApproveRegistration extends Component
             $zmBill = ZmCore::createBill(
                 $registration->id,
                 get_class($registration),
-                1,//todo: remove, why is it mandatory
+                6,
                 $mv->agent->id,
                 get_class($mv->agent),
                 $mv->agent->taxpayer->fullname(),
@@ -129,7 +129,7 @@ class ApproveRegistration extends Component
                         'billable_type' => get_class($registration),
                         'fee_id' => $fee->id,
                         'fee_type' => get_class($fee),
-                        'tax_type_id' => 1, //todo: remove, why is it mandatory
+                        'tax_type_id' => 6,
                         'amount' => $amount,
                         'currency' => 'TZS',
                         'exchange_rate' => $exchange_rate,

@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DlLicenseApplication extends Model
 {
+
+    use WorkflowTrait;
+
 	protected $table = 'dl_license_applications';
 
 	protected $casts = [
@@ -69,24 +73,24 @@ class DlLicenseApplication extends Model
 		'dl_application_status_id'
 	];
 
-	public function dl_application_status()
+	public function application_status()
 	{
-		return $this->belongsTo(DlApplicationStatus::class);
+		return $this->belongsTo(DlApplicationStatus::class,'dl_application_status_id');
 	}
 
-	public function dl_blood_group()
+	public function blood_group()
 	{
-		return $this->belongsTo(DlBloodGroup::class);
+		return $this->belongsTo(DlBloodGroup::class,'dl_blood_group_id');
 	}
 
-	public function dl_drivers_license_owner()
+	public function drivers_license_owner()
 	{
-		return $this->belongsTo(DlDriversLicenseOwner::class);
+		return $this->belongsTo(DlDriversLicenseOwner::class,'dl_drivers_license_owner_id');
 	}
 
-	public function dl_license_duration()
+	public function license_duration()
 	{
-		return $this->belongsTo(DlLicenseDuration::class);
+		return $this->belongsTo(DlLicenseDuration::class,'dl_license_duration_id');
 	}
 
 	public function taxpayer()
@@ -94,8 +98,19 @@ class DlLicenseApplication extends Model
 		return $this->belongsTo(Taxpayer::class);
 	}
 
-	public function dl_application_license_classes()
+    public function drivers_license()
+    {
+        return $this->hasOne(DlDriversLicense::class,'dl_license_application_id');
+    }
+
+	public function application_license_classes()
 	{
-		return $this->hasMany(DlApplicationLicenseClass::class);
+		return $this->hasMany(DlApplicationLicenseClass::class,'dl_license_application_id');
 	}
+
+    public function get_latest_bill()
+    {
+        $bill_item = $this->morphOne(ZmBillItem::class,'billable')->latest()->first();
+        return $bill_item->bill ??  null;
+    }
 }

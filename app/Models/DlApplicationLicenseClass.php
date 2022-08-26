@@ -37,13 +37,13 @@ class DlApplicationLicenseClass extends Model
 		'dl_license_class_id'
 	];
 
-	public function dl_license_application()
+	public function license_application()
 	{
-		return $this->belongsTo(DlLicenseApplication::class);
+		return $this->belongsTo(DlLicenseApplication::class,'dl_license_application_id');
 	}
 
-	public function dl_license_class()
+	public function license_class()
 	{
-		return $this->belongsTo(DlLicenseClass::class);
+		return $this->belongsTo(DlLicenseClass::class,'dl_license_class_id');
 	}
 }

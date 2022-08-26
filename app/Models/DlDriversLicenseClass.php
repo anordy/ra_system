@@ -37,13 +37,13 @@ class DlDriversLicenseClass extends Model
 		'dl_license_class_id'
 	];
 
-	public function dl_drivers_license()
+	public function drivers_license()
 	{
-		return $this->belongsTo(DlDriversLicense::class);
+		return $this->belongsTo(DlDriversLicense::class,'dl_drivers_license_id');
 	}
 
-	public function dl_license_class()
+	public function license_class()
 	{
-		return $this->belongsTo(DlLicenseClass::class);
+		return $this->belongsTo(DlLicenseClass::class,'dl_license_class_id');
 	}
 }

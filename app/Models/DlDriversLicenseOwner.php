@@ -64,9 +64,9 @@ class DlDriversLicenseOwner extends Model
 		return $this->belongsTo(Taxpayer::class);
 	}
 
-	public function dl_drivers_licenses()
+	public function drivers_licenses()
 	{
-		return $this->hasMany(DlDriversLicense::class);
+		return $this->hasMany(DlDriversLicense::class,'dl_drivers_license_owner_id');
 	}
 
 	public function dl_license_applications()

@@ -36,6 +36,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Investigation\TaxInvestigationApprovalController;
@@ -77,6 +78,7 @@ use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
+use App\Http\Controllers\RoadInspectionOffence\RegisterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Setting\ExchangeRateController;
 use App\Http\Controllers\Setting\InterestRateController;
@@ -142,7 +144,7 @@ Route::middleware(['auth'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function(){
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model','MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
+                ->where('model','DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
         });
     });
 
@@ -438,5 +440,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']);//todo: remove
         Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']);//todo: remove
         Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']);//todo: remove
+    });
+
+    Route::prefix('drivers-license')->as('drivers-license.')->group(function () {
+        Route::get('/applications', [LicenseApplicationsController::class, 'index'])->name('applications');
+        Route::get('/applications/create', [LicenseApplicationsController::class, 'create'])->name('applications.create');
+        Route::get('/applications/submit/{id}', [LicenseApplicationsController::class, 'submit'])->name('applications.submit');
+        Route::get('/applications/approve/{id}', [LicenseApplicationsController::class, 'approve'])->name('applications.approve');
+        Route::get('/applications/printed/{id}', [LicenseApplicationsController::class, 'printed'])->name('applications.printed');
+        Route::get('/applications/{id}', [LicenseApplicationsController::class, 'show'])->name('applications.show');
+        Route::get('/applications/sp/{id}', [LicenseApplicationsController::class, 'simulatePayment'])->name('applications.sp');
+    });
+
+    Route::prefix('rio')->as('rio.')->group(function () {
+        Route::get('/register', [RegisterController::class, 'index'])->name('register');
+        Route::get('/register/create', [RegisterController::class, 'create'])->name('register.create');
+        Route::get('/register/remove-restriction/{id}', [RegisterController::class, 'removeRestriction'])->name('register.remove-restriction');
+        Route::get('/register/{id}', [RegisterController::class, 'show'])->name('register.show');
     });
 });

@@ -20,12 +20,14 @@ class CreateDlDriversLicensesTable extends Migration
             $table->unsignedBigInteger('dl_license_duration_id');
             $table->date('issued_date');
             $table->date('expiry_date');
-            $table->unsignedBigInteger('dl_license_class_id');
+            $table->unsignedBigInteger('dl_license_application_id');
             $table->string('license_restrictions');
+            $table->enum('status',['ACTIVE','EXPIRED','LOST/DAMAGED'])->default('ACTIVE');
             $table->timestamps();
 
             $table->foreign('dl_license_duration_id')->references('id')->on('dl_license_durations');
             $table->foreign('dl_drivers_license_owner_id')->references('id')->on('dl_drivers_license_owners');
+            $table->foreign('dl_license_application_id')->references('id')->on('dl_license_applications');
         });
     }
 

@@ -25,6 +25,7 @@ class CreateDlLicenseApplicationsTable extends Migration
             $table->string('confirmation_number',50)->nullable();
             $table->string('photo_path',100)->nullable();
             $table->string('license_restrictions')->nullable();
+            $table->string('marking')->nullable();
             $table->enum('type',['FRESH','DUPLICATE','RENEW'])->default('FRESH');
             $table->unsignedBigInteger('dl_application_status_id');
             $table->timestamps();
