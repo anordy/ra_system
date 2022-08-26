@@ -66,7 +66,7 @@ class InstallmentPayment extends Component
             $payer_name     = Auth::user()->fullName;
             $payer_email    = Auth::user()->email;
             $payer_phone    = Auth::user()->mobile;
-            $description    = "Debt ayment for {$this->installment->business->name}";
+            $description    = "Installment payment for {$this->installment->business->name} Debt";
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency       = $this->installment->currency;
             $createdby_type = get_class(Auth::user());
