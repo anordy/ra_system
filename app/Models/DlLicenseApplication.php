@@ -120,7 +120,7 @@ class DlLicenseApplication extends Model
         $fee = DlFee::query()->where(['type' => $this->type])->first();
         $exchange_rate = 1;
         $amount = $fee->amount;
-        $tax_type = TaxType::query()->where(['name'=>TaxType::PUBLIC_SERVICE])->first();
+        $tax_type = TaxType::query()->where(['code'=>TaxType::PUBLIC_SERVICE])->first();
         return ZmCore::createBill(
             $this->id,
             get_class($this),
