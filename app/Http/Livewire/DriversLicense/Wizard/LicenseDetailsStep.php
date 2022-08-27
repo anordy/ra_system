@@ -45,10 +45,13 @@ class LicenseDetailsStep extends StepComponent
         $dl = DlDriversLicense::query()->where(['license_number'=>$init_step['number']])->latest()->first();
         if (strtolower($init_step['type'])!='fresh'){
             $this->editable = false;
-            $this->type = strtolower($init_step['type']);
             $this->classes = $dl->drivers_license_classes;
             $this->restrictions = $dl->license_restrictions;
+            foreach ($this->classes as $class){
+                $this->license_class_ids[$class->dl_license_class_id] = $class->dl_license_class_id;
+            }
         }
+        $this->type = strtolower($init_step['type']);
     }
 
     public function stepinfo(): array
