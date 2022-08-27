@@ -2,8 +2,10 @@
 
 namespace App\Models\Returns\HotelReturns;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\HotelReturns\HotelReturnConfig;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class HotelReturnItem extends Model
 {

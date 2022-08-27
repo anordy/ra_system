@@ -2,16 +2,18 @@
 
 namespace App\Models\Returns\Petroleum;
 
+use App\Models\ZmBill;
+use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\BusinessLocation;
+use App\Models\Taxpayer;
 use App\Models\Debts\Debt;
 use App\Models\FinancialYear;
+use App\Models\BusinessLocation;
 use App\Models\SevenDaysFinancialMonth;
-use App\Models\Taxpayer;
-use App\Models\TaxType;
-use App\Models\ZmBill;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Returns\Petroleum\PetroleumPenalty;
+use App\Models\Returns\Petroleum\PetroleumReturnItem;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PetroleumReturn extends Model
 {
