@@ -39,7 +39,7 @@ class AgentsTable extends DataTableComponent
             Column::make("Phone Numbers", "taxpayer_id")
                 ->format(function ($taxpayer_id) {
                     $taxpayer = Taxpayer::query()->find($taxpayer_id);
-                    return $taxpayer->mobile . '/' . $taxpayer->alt_mobile;
+                    return $taxpayer->mobile . ' / ' . $taxpayer->alt_mobile;
                 })
                 ->sortable(),
             Column::make("email", "taxpayer.email")
