@@ -23,23 +23,23 @@
                 </thead>
                 <tbody>
 
-                @foreach($non_filers as $index=>$non_filer)
-                    <tr>
-                        <td>{{$index + 1}}</td>
-                        <td>{{$non_filer->business->taxpayer->first_name}} {{$non_filer->business->taxpayer->last_name}}</td>
-                        <td>{{$non_filer->business->name}}</td>
-                        <td>{{$non_filer->businessLocation->name}}</td>
-                        <td>{{$non_filer->taxType->name}}</td>
-                        <td>
-                            <a href="{{route('queries.non-filers.show',[encrypt($non_filer->id)])}}"
-                               class="btn btn-info btn-sm" data-toggle="tooltip"
-                               data-placement="right" title="View">
-                                <i class="bi bi-eye-fill"></i>
-                                View
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
+{{--                @foreach($non_filers as $index=>$non_filer)--}}
+{{--                    <tr>--}}
+{{--                        <td>{{$index + 1}}</td>--}}
+{{--                        <td>{{$non_filer->business->taxpayer->first_name}} {{$non_filer->business->taxpayer->last_name}}</td>--}}
+{{--                        <td>{{$non_filer->business->name}}</td>--}}
+{{--                        <td>{{$non_filer->businessLocation->name}}</td>--}}
+{{--                        <td>{{$non_filer->taxType->name}}</td>--}}
+{{--                        <td>--}}
+{{--                            <a href="{{route('queries.non-filers.show',[encrypt($non_filer->id)])}}"--}}
+{{--                               class="btn btn-info btn-sm" data-toggle="tooltip"--}}
+{{--                               data-placement="right" title="View">--}}
+{{--                                <i class="bi bi-eye-fill"></i>--}}
+{{--                                View--}}
+{{--                            </a>--}}
+{{--                        </td>--}}
+{{--                    </tr>--}}
+{{--                @endforeach--}}
                 </tbody>
             </table>
         </div>
