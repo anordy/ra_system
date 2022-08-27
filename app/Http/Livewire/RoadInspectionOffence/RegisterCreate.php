@@ -75,7 +75,7 @@ class RegisterCreate extends Component
                 ]);
             }
             DB::commit();
-            redirect()->to(route('mvr.reg-change-requests.show', encrypt($register->id)));
+            redirect()->to(route('rio.register.show', encrypt($register->id)));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);

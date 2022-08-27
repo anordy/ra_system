@@ -139,6 +139,7 @@
             <div class="form-group">
                 <label for="block_type">Apply Restrictions</label>
                 <select class="form-control"  wire:model.lazy="block_type" >
+                    <option>Choose Option</option>
                     <option value="NONE">None</option>
                     <option value="PLATE NUMBER">Plate Number</option>
                     <option value="LICENSE">Drivers License</option>

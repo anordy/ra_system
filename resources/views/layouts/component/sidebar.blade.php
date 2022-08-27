@@ -553,7 +553,7 @@
                     <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
                 </li>
                 <li class="{{ request()->is('drivers-license/applications') ? 'active': '' }}">
-                    <a href="{{ route('rio.register') }}">Offences</a>
+                    <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
                 </li>
             </ul>
         </li>

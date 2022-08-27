@@ -41,9 +41,9 @@ class RegisterTable extends DataTableComponent
                 ->sortable(),
             Column::make("Offences Count", "id")->format(fn($id)=>RioRegister::query()->find($id)->register_offences()->count())
                 ->sortable(),
-            Column::make("Block Type", "block_type")
+            Column::make("Restriction On", "block_type")
                 ->sortable(),
-            Column::make("Block Status", "block_status")
+            Column::make("Restriction Status", "block_status")
                 ->sortable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
