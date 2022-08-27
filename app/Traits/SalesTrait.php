@@ -58,7 +58,7 @@ trait SalesTrait
         $returnTableName = (new $modelName())->getTable();
         $returnItems = (new $itemModel())->getTable();
         $return = $modelName::query()
-            ->selectRaw(' SUM('.$returnItems.'.value) as total_sales, financial_month_id, '.$returnTableName.'.id, 
+            ->selectRaw(' SUM('.$returnItems.'.value) as total_sales, financial_month_id,  financial_year_id, '.$returnTableName.'.currency, '.$returnTableName.'.id, 
             business_location_id, '.$returnTableName.'.business_id, '.$returnTableName.'.tax_type_id')
             ->leftJoin(''.$returnItems.'', ''.$returnTableName.'.id', ''.$returnItems.'.return_id')
             ->leftJoin('business_tax_type', 'business_tax_type.business_id', ''.$returnTableName.'.business_id')
