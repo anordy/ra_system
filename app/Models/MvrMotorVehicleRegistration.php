@@ -93,7 +93,7 @@ class MvrMotorVehicleRegistration extends Model
      * @param mixed $reg_type
      * @return array|mixed|string|string[]|null
      */
-    public static function getNexPlateNumber(mixed $reg_type,$class): mixed
+    public static function getNexPlateNumber($reg_type,$class)
     {
         $last_reg = MvrMotorVehicleRegistration::query()
             ->join('mvr_motor_vehicles','mvr_motor_vehicles.id','=','mvr_motor_vehicle_id')
@@ -142,7 +142,7 @@ class MvrMotorVehicleRegistration extends Model
 
 
             if (empty($last_reg)) {
-                $plate_number = $reg_type->initial_plate_number;
+                $plate_number = empty($reg_type->initial_plate_number)?'Z001AA':$reg_type->initial_plate_number;
             } else {
                 $number = preg_replace('/Z(\d{3})([A-Z]{2})/', '$1', $last_reg->plate_number);
                 $alpha = preg_replace('/Z(\d{3})([A-Z]{2})/', '$2', $last_reg->plate_number);
@@ -155,7 +155,6 @@ class MvrMotorVehicleRegistration extends Model
                 }
                 //check special number
                 if ($number%111==0) $number++;
-
                 $number = str_pad($number, 3, '0', STR_PAD_LEFT);
                 $plate_number = 'Z'.$number.$alpha;
             }

@@ -46,4 +46,12 @@ class Debt extends Model
     public function recoveryMeasures() {
         return $this->hasMany(RecoveryMeasure::class);
     }
+
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function debt(){
+        return $this->morphTo();
+    }
 }

@@ -84,6 +84,7 @@
             top: 830px;
             left: 1350px;
             background: #cecdc7;
+            padding-right: 30px;
         }
         #capacity{
             position: fixed;
