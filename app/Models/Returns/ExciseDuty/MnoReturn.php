@@ -4,9 +4,10 @@ namespace App\Models\Returns\ExciseDuty;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
-use App\Models\returns\ExciseDuty\MnoReturnItem;
+use App\Models\Returns\ExciseDuty\MnoReturnItem;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Models\ZmBill;
@@ -19,6 +20,12 @@ class MnoReturn extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+    protected $table = 'mno_returns';
+
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 
     public function financialMonth()
     {
@@ -55,6 +62,9 @@ class MnoReturn extends Model
         return $this->belongsTo(FinancialYear::class, 'financial_year_id');
     }
 
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
+    }
 
     //to be replaced
     public function bill(){

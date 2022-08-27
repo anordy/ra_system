@@ -178,6 +178,31 @@
         <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
             <a href="{{ route('claims.index') }}">Tax Claims</a>
         </li>
+
+        <li class="{{ request()->is('extensions-e-filling*') ? 'active' : '' }}">
+            <a href="#extension-menu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('extensions-e-filling*') ? 'true' : 'false' }}"
+               class="dropdown-toggle">Payment Extensions</a>
+            <ul class="collapse list-unstyled {{ request()->is('extensions-e-filling*') ? 'show' : '' }}"
+                id="extension-menu">
+                <li class="{{ request()->is('extensions-e-filling*') ? 'active' : '' }}">
+                    <a href="{{ route('extension.index') }}">Extensions Requests</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
+            <a href="#installment-menu" data-toggle="collapse"
+               aria-expanded="{{ request()->is('installments-e-filling*') ? 'true' : 'false' }}"
+               class="dropdown-toggle">Installments</a>
+            <ul class="collapse list-unstyled {{ request()->is('installments-e-filling*') ? 'show' : '' }}"
+                id="installment-menu">
+                <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
+                    <a href="{{ route('installment.index') }}">Installment Requests</a>
+                </li>
+            </ul>
+        </li>
+
         <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
             <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                 Tax Auditing

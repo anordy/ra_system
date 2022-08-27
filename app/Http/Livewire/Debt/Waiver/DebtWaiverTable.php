@@ -31,7 +31,7 @@ class DebtWaiverTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['debt_id']);
+        $this->setAdditionalSelects(['debt_waivers.debt_id']);
 
     }
 

@@ -11,4 +11,10 @@ class MnoPenalty extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+    protected $table = 'mno_penalties';
+    
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 }

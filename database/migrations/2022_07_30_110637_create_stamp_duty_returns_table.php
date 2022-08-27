@@ -40,6 +40,7 @@ class CreateStampDutyReturnsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
 
             $table->enum('status', ReturnStatus::getConstants());
+            $table->enum('return_category', ['normal', 'debt']);
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->softDeletes();
             $table->timestamps();

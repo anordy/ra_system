@@ -7,13 +7,14 @@ use App\Models\Returns\BFO\BfoReturnItems;
 use App\Models\Returns\EmTransactionConfig;
 use App\Models\Returns\EmTransactionReturnItem;
 use App\Models\Returns\ExciseDuty\MnoConfig;
-use App\Models\returns\ExciseDuty\MnoReturnItem;
+use App\Models\Returns\ExciseDuty\MnoReturnItem;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\MmTransferConfig;
 use App\Models\Returns\MmTransferReturnItem;
 use App\Models\Returns\Petroleum\PetroleumConfig;
+use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Petroleum\PetroleumReturnItem;
 use App\Models\Returns\StampDuty\StampDutyConfig;
 use App\Models\Returns\StampDuty\StampDutyReturnItem;
@@ -60,6 +61,7 @@ class DeclaredSalesAnalysis extends Component
 
                 break;
             case TaxType::PETROLEUM:
+                $this->returnTypeTable = TaxType::PETROLEUM;
                 $this->petroleum();
 
                 break;
@@ -185,48 +187,23 @@ class DeclaredSalesAnalysis extends Component
 
     protected function petroleum()
     {
-        $purchaseConfigs = PetroleumConfig::whereIn('code', ['LP', 'IP'])->get()->pluck('id');
+        $salesConfigs = PetroleumConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
+        $headers      = PetroleumConfig::where('code', '!=', 'TOTAL')->get()->pluck('name');
 
-        $this->purchases = PetroleumReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_purchases, SUM(vat) as total_purchases_vat')
-            ->leftJoin('hotel_return_configs', 'hotel_return_configs.id', 'hotel_return_items.config_id')
-            ->leftJoin('hotel_returns', 'hotel_returns.id', 'hotel_return_items.return_id')
-            ->leftJoin('financial_months', 'financial_months.id', 'hotel_returns.financial_month_id')
+        $yearReturnGroup = PetroleumReturnItem::select('petroleum_configs.code', 'petroleum_return_items.value', 'petroleum_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+            ->leftJoin('petroleum_configs', 'petroleum_configs.id', 'petroleum_return_items.config_id')
+            ->leftJoin('petroleum_returns', 'petroleum_returns.id', 'petroleum_return_items.return_id')
+            ->leftJoin('financial_months', 'financial_months.id', 'petroleum_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
-            ->where('hotel_returns.tax_type_id', $this->taxType->id)
-            ->where('hotel_returns.business_location_id', $this->branch->id)
-            ->whereIn('config_id', $purchaseConfigs)
-            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
-
-        $salesConfigs = PetroleumConfig::whereIn('code', ['HS', 'RS', 'TOS', 'OS'])->get()->pluck('id');
-
-        $this->sales = PetroleumReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
-            ->leftJoin('hotel_return_configs', 'hotel_return_configs.id', 'hotel_return_items.config_id')
-            ->leftJoin('hotel_returns', 'hotel_returns.id', 'hotel_return_items.return_id')
-            ->leftJoin('financial_months', 'financial_months.id', 'hotel_returns.financial_month_id')
-            ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
-            ->where('hotel_returns.tax_type_id', $this->taxType->id)
-            ->where('hotel_returns.business_location_id', $this->branch->id)
             ->whereIn('config_id', $salesConfigs)
-            ->groupBy(['financial_years.code', 'financial_months.name'])->get();
+            ->get()->groupBy(['year', 'month']);
 
-        $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
+        $yearData = $this->formatDataArray($yearReturnGroup);
 
-        $calculations = collect(array_map(function ($returns) {
-            return [
-                'year'            => $returns['year'],
-                'month'           => $returns['month'],
-                'financial_month' => "{$returns['month']} {$returns['year']}",
-                'total_sales'     => $returns['total_sales'],
-                'total_purchases' => $returns['total_purchases'],
-                'output_vat'      => $returns['total_sales_vat'],
-                'input_tax'       => $returns['total_purchases_vat'],
-                'tax_paid'        => ($returns['total_sales_vat']) - $returns['total_purchases_vat'],
-            ];
-        }, $returns));
+        $this->withoutPurchases = true;
+        $this->returns          = $yearData;
+        $this->headersPetroleum = $headers;
 
-        dd($calculations, 'here');
-
-        $this->returns = $calculations ?? [];
     }
 
     public function vat()
@@ -270,7 +247,7 @@ class DeclaredSalesAnalysis extends Component
             ];
         }, $returns));
 
-        $this->returns = $calculations;
+        $this->returns = $calculations->sortByDesc('month')->groupBy('year');
     }
 
     protected function bfo()
@@ -391,8 +368,6 @@ class DeclaredSalesAnalysis extends Component
             $yearData[$keyYear] = $quarterData;
         }
 
-        // dd($yearData);
-    
         return $yearData;
     }
 

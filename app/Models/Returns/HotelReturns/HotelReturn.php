@@ -2,6 +2,7 @@
 
 namespace App\Models\Returns\HotelReturns;
 
+use App\Models\Debts\Debt;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
@@ -21,8 +22,17 @@ class HotelReturn extends Model implements Auditable
 
     protected $guarded = [];
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function items(){
         return $this->hasMany(HotelReturnItem::class, 'return_id');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function configReturns(){

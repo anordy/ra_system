@@ -2,6 +2,7 @@
 
 namespace App\Models\Returns\Port;
 
+use App\Models\Debts\Debt;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Models\Taxpayer;
@@ -19,6 +20,12 @@ class PortReturn extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function configReturns()
     {
         return $this->hasMany(PortReturnItem::class, 'return_id');
@@ -47,6 +54,10 @@ class PortReturn extends Model
     public function financialYear()
     {
         return $this->belongsTo(FinancialYear::class, 'financial_year_id');
+    }
+
+    public function debt(){
+        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function financialMonth()

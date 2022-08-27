@@ -5,7 +5,7 @@ namespace App\Traits;
 use Illuminate\Support\Facades\DB;
 
 
-trait ReturnCardReport
+trait PortReturnCardReport
 {
 
     public function returnCardReport($returnClass, $return, $penalty){

@@ -10,10 +10,11 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WaiverTable extends DataTableComponent
 {
-    public $rejected = false;
-    public $pending = false;
-    public $approved = true;
+    public $rejected = 'rejected';
+    public $pending = 'pending';
+    public $approved = 'approved';
     public $category;
+    public $status;
 
     // protected $model = Waiver::class;
 
@@ -27,22 +28,22 @@ class WaiverTable extends DataTableComponent
 
     }
 
-    public function mount($category)
+    public function mount($category,$status)
     {
         $this->category = $category;
     }
 
     public function builder(): Builder
     {
-        if ($this->rejected) {
+        if ($this->rejected == $this->status) {
             return Dispute::where('disputes.app_status', DisputeStatus::REJECTED)->where('disputes.category', $this->category)->orderBy('disputes.created_at', 'desc');
         }
 
-        if ($this->approved) {
+        if ($this->approved == $this->status) {
             return Dispute::where('disputes.app_status', DisputeStatus::APPROVED)->where('disputes.category', $this->category)->orderBy('disputes.created_at', 'desc');
         }
 
-        if ($this->pending) {
+        if ($this->pending == $this->status) {
             return Dispute::where('disputes.app_status', DisputeStatus::PENDING)->where('disputes.category', $this->category)->orderBy('disputes.created_at', 'desc');
         }
 

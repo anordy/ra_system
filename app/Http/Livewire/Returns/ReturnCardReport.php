@@ -6,16 +6,22 @@ use Livewire\Component;
 
 class ReturnCardReport extends Component
 {
-    public $totalTaxAmount;
-    public $totalLateFiling;
-    public $totalLatePayment;
-    public $totalRate;
+    public $totalTaxAmountUnpaid;
+    public $totalLateFilingUnpaid;
+    public $totalLatePaymentUnpaid;
+    public $totalRateUnpaid;
 
-    public function mount($data){
-        $this->totalTaxAmount = $data['totalTaxAmount'];
-        $this->totalLateFiling = $data['totalLateFiling'];
-        $this->totalLatePayment = $data['totalLatePayment'];
-        $this->totalRate = $data['totalRate'];
+    public function mount($paidData, $unpaidData){
+        
+        $this->totalTaxAmountPaid = $paidData['totalTaxAmount'];
+        $this->totalLateFilingPaid = $paidData['totalLateFiling'];
+        $this->totalLatePaymentPaid = $paidData['totalLatePayment'];
+        $this->totalRatePaid = $paidData['totalRate'];
+
+        $this->totalTaxAmountUnpaid = $unpaidData['totalTaxAmount'];
+        $this->totalLateFilingUnpaid = $unpaidData['totalLateFiling'];
+        $this->totalLatePaymentUnpaid = $unpaidData['totalLatePayment'];
+        $this->totalRateUnpaid = $unpaidData['totalRate'];
     }
 
     public function render()

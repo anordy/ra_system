@@ -2,6 +2,7 @@
 
 namespace App\Models\Debts;
 
+use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Models\FinancialMonth;
@@ -34,6 +35,10 @@ class Debt extends Model
 
     public function debtType(){
         return $this->morphTo();
+    }
+
+    public function getBillAttribute(){
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
     
 }

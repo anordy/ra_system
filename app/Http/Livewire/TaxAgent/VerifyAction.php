@@ -78,24 +78,20 @@ class VerifyAction extends Component
         try {
             $comment = $value['value'];
             $data = (object)$value['data'];
-            $agent = TaxAgent::query()->find($data->id);
-
-            $taxpayer = Taxpayer::query()->find($agent->taxpayer_id);
-
+            $agent = TaxAgent::query()->findOrFail($data->id);
+            $taxpayer = Taxpayer::query()->findOrFail($agent->taxpayer_id);
             $fee = TaPaymentConfiguration::query()->where('category', 'registration fee')->first();
             $amount = $fee->amount;
             $used_currency = $fee->currency;
-
             if ($used_currency != 'TZS')
             {
                 $rate = ExchangeRate::query()->where('currency', $used_currency)
-                    ->first();
+                    ->first(); //letter will be fetched from BOT API
                 $rate = $rate->mean;
             }
             else{
                 $rate = 1;
             }
-
             $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
             $billitems = [
                 [
@@ -149,7 +145,8 @@ class VerifyAction extends Component
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
-                    $agent->status = BillingStatus::CN_GENERATING;
+                    $agent->status = TaxAgentStatus::VERIFIED;
+                    $agent->billing_status = BillingStatus::CN_GENERATING;
                     $agent->save();
                     $taxpayer->notify(new DatabaseNotification(
                         $subject = 'TAX CONSULTANT VERIFICATION',
@@ -160,7 +157,7 @@ class VerifyAction extends Component
                     $this->alert('success', 'Request verified successfully.');
                 } else {
                     session()->flash('error', 'Control number generation failed, try again later');
-                    $agent->status = BillingStatus::CN_GENERATION_FAILED;
+                    $agent->billing_status = BillingStatus::CN_GENERATION_FAILED;
                 }
 
                 $agent->save();

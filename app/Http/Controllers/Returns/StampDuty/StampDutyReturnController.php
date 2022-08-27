@@ -3,26 +3,25 @@
 namespace App\Http\Controllers\Returns\StampDuty;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\StampDuty\StampDutyReturnPenalty;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class StampDutyReturnController extends Controller
 {
-    use ReturnCardReport,ReturnSummaryCardTrait;
+    use ReturnCardReport, ReturnSummaryCardTrait;
 
     public function index()
     {
 
-        $data = $this->returnCardReport(StampDutyReturn::class, 'stamp_duty', 'stamp_duty_return');
+        $paidData = $this->returnCardReportForPaidReturns(StampDutyReturn::class, StampDutyReturn::getTableName(), StampDutyReturnPenalty::getTableName());
+
+        $unpaidData = $this->returnCardReportForUnpaidReturns(StampDutyReturn::class, StampDutyReturn::getTableName(), StampDutyReturnPenalty::getTableName());
 
         $vars = $this->getSummaryData(StampDutyReturn::query());
 
-        return view('returns.stamp-duty.index', compact('vars', 'data'));
+        return view('returns.stamp-duty.index', compact('vars', 'paidData', 'unpaidData'));
     }
 
     public function show($returnId)

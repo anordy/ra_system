@@ -11,6 +11,11 @@ class EmTransactionPenalty extends Model
     protected $guarded = [];
     protected $table = 'em_transaction_penalties';
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function emTransactionReturn(){
         return $this->belongsTo(EmTransactionReturn::class);
     }

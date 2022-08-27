@@ -9,4 +9,9 @@ class LumpSumPenalties extends Model
 {
     use HasFactory;
     public $table  = 'lump_sum_penalties';
+
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 }
