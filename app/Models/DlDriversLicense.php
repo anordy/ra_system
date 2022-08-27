@@ -61,11 +61,11 @@ class DlDriversLicense extends Model
 
     public static function getNextLicenseNumber()
     {
-        $last = self::query()->orderBy('license_number')->first();
+        $last = self::query()->orderBy('license_number','DESC')->first();
         if (empty($last)){
             return '1000000001';
         }
-        return intval($last->license_number)+1;
+        return $last->license_number+1;
     }
 
     public function drivers_license_owner()

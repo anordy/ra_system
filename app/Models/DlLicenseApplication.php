@@ -118,6 +118,9 @@ class DlLicenseApplication extends Model
 
     public function generateBill(){
         $fee = DlFee::query()->where(['type' => $this->type])->first();
+        if (empty($fee)){
+           throw new \Exception("Fee for Drivers license application ({$this->type}) is not configured");
+        }
         $exchange_rate = 1;
         $amount = $fee->amount;
         $tax_type = TaxType::query()->where(['code'=>TaxType::PUBLIC_SERVICE])->first();
