@@ -75,22 +75,6 @@ class TaxClearanceController extends Controller
             ->with('businessLocation.business')
             ->first();
 
-        // $returnDebts = $this->generateReturnsDebts($taxClearence->business_location_id);
-
-        // $verificationDebts = TaxAssessment::query()
-        //     ->where('assessment_type', TaxVerification::class)
-        //     ->where('location_id', $taxClearence->business_location_id)
-        //     ->get();
-        // $auditDebts = TaxAssessment::query()
-        //     ->where('assessment_type', TaxAudit::class)
-        //     ->where('location_id', $taxClearence->business_location_id)
-        //     ->get();
-
-        // $investigationDebts = TaxAssessment::query()
-        //     ->where('assessment_type', TaxInvestigation::class)
-        //     ->where('location_id', $taxClearence->business_location_id)
-        //     ->get();
-
             $debts = Debt::get();
             // return $debts;
 
@@ -109,7 +93,7 @@ class TaxClearanceController extends Controller
             MmTransferReturn::class,
             HotelReturn::class,
             PetroleumReturn::class,
-            // PortReturn::class,
+            PortReturn::class,
             EmTransactionReturn::class,
             BfoReturn::class,
             LumpSumReturn::class,

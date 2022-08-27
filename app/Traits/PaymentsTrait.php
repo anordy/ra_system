@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\TaxType;
 
 trait PaymentsTrait {
 
@@ -141,6 +142,73 @@ trait PaymentsTrait {
         } else {
             $bill->status = PaymentStatus::CANCELLED;
             $bill->save();
+        }
+    }
+
+    public function landLeaseGenerateControlNo($landLease, $billItems)
+    {
+        $taxpayer      = $landLease->taxpayer;
+        $tax_type      = TaxType::where('code','land-lease')->first();
+        $exchange_rate  = ExchangeRate::where('currency', 'USD')->first()->mean; 
+
+        $payer_type     = get_class($taxpayer);
+        $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
+        $payer_email    = $taxpayer->email;
+        $payer_phone    = $taxpayer->mobile;
+        $description    = "Payment for Land Lease with DP number {$landLease->dp_number}";
+        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $currency       = "USD";
+        $createdby_type = get_class(Auth::user());
+        $createdby_id   = Auth::id();
+        $payer_id       = $taxpayer->id;
+        $expire_date    = Carbon::now()->addMonth()->toDateTimeString();
+        $billableId     = $landLease->id;
+        $billableType   = get_class($landLease);
+
+        $bill = ZmCore::createBill(
+            $billableId,
+            $billableType,
+            $tax_type->id,
+            $payer_id,
+            $payer_type,
+            $payer_name,
+            $payer_email,
+            $payer_phone,
+            $expire_date,
+            $description,
+            $payment_option,
+            $currency,
+            $exchange_rate,
+            $createdby_id,
+            $createdby_type,
+            $billItems
+        );
+
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($bill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                $landLease->status = ReturnStatus::CN_GENERATING;
+                $landLease->save();
+
+                $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+                $landLease->status = ReturnStatus::CN_GENERATION_FAILED;
+            }
+
+            $landLease->save();
+        } else {
+            // We are local
+            $landLease->status = ReturnStatus::CN_GENERATED;
+            $landLease->save();
+
+            // Simulate successful control no generation
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status       = 'pending';
+            $bill->control_number   = '90909919991909';
+            $bill->save();
+
+            // $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly - test');
         }
     }
 

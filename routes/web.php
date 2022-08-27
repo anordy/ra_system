@@ -223,6 +223,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/business-file/{file}', [BusinessFileController::class, 'getBusinessFile'])->name('file');
         Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
         Route::get('/business-certificate/{location}/taxType/{type}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
+
+        Route::get('/upgrade-tax-types/', [UpgradeTaxtypeController::class, 'index'])->name('upgrade-tax-types.index');
+        Route::get('/upgrade-tax-types/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('upgrade-tax-types.show');
+
     });
 
     // assesments
@@ -379,12 +383,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::name('upgrade-tax-types.')->prefix('/upgrade-tax-types')->group(function () {
-        Route::get('/', [UpgradeTaxtypeController::class, 'index'])->name('index');
-        Route::get('/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('show');
-    });
-
-
+  
     Route::name('debts.')->prefix('/debts')->group(function () {
         // General debts
         Route::get('/all', [DebtController::class, 'index'])->name('debt.index');
@@ -433,6 +432,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
             Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
             Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+            Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');
+            Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
+            Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
         });
 
     //Tax Clearance

@@ -53,4 +53,9 @@ class Taxpayer extends Model implements Auditable
     {
         return $this->hasOne(MvrAgent::class, 'taxpayer_id');
     }
+    
+    public function landLeaseAgent()
+    {
+        return $this->hasOne(LandLeaseAgent::class, 'taxpayer_id');
+    }
 }

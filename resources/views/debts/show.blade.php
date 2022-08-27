@@ -28,6 +28,18 @@
 
                             <div class="row m-2 pt-3">
                                 <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Business Name</span>
+                                    <p class="my-1">{{ $debt->business->name }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Business Location</span>
+                                    <p class="my-1">{{ $debt->location->name ?? 'Head Quarter' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">ZIN No.</span>
+                                    <p class="my-1">{{ $debt->location->zin }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Status</span>
                                     <p class="my-1"><span class="badge badge-info">{{ $debt->app_step }}</span></p>
                                 </div>
