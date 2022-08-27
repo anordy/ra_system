@@ -39,7 +39,6 @@ class NilReturnsController extends Controller
             $locations[] = $vat->business_location_id;
         }
         $check = VatReturn::query()->whereIn('business_location_id', $locations);
-        dd($locations);
         return view('returns.queries.nil-returns.index');
     }
 
