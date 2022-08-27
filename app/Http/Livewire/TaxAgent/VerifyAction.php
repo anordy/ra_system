@@ -44,6 +44,7 @@ class VerifyAction extends Component
             'cancelButtonText' => 'Cancel',
             'confirmButtonColor' => '#3085d6',
             'cancelButtonColor' => '#d33',
+            'showLoaderOnConfirm'=> true,
             'timer' => null,
             'input' => 'textarea',
             'data' => [
@@ -64,6 +65,7 @@ class VerifyAction extends Component
             'cancelButtonText' => 'Cancel',
             'confirmButtonColor' => '#3085d6',
             'cancelButtonColor' => '#d33',
+            'showLoaderOnConfirm'=> true,
             'timer' => null,
             'input' => 'textarea',
             'data' => [
