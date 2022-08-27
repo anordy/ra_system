@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\DateConfiguration;
 use App\Models\Debts\Debt;
+use App\Models\Returns\ReturnStatus;
 use App\Traits\PenaltyForDebt;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -51,7 +52,9 @@ class DailyDebtPenaltyInterest extends Command
     }
 
     public function getDebtAfterDueDate(){
-        $debts = Debt::where('curr_due_date', '<', Carbon::now())->get();
+        $debts = Debt::where('curr_due_date', '<', Carbon::now())
+                        ->whereNotIn('status', ['complete', 'paid-by-debt'])
+                        ->get();
 
         if ($debts) {
             
