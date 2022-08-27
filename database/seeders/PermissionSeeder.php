@@ -22,46 +22,41 @@ class PermissionSeeder extends Seeder
             ['name' => 'kyc_complete', 'sys_module_id' => 1],
 
             # Business Management
-            ['name' => 'registration', 'sys_module_id' => 2],
-            ['name' => 'branches-view', 'sys_module_id' => 2],
+            ['name' => 'business-registration-view', 'sys_module_id' => 2],
+            ['name' => 'business-branches-view', 'sys_module_id' => 2],
             ['name' => 'de-registration-view', 'sys_module_id' => 2],
             ['name' => 'temporary-closures-view', 'sys_module_id' => 2],
             ['name' => 'business-update-request-view', 'sys_module_id' => 2],
             ['name' => 'taxtype-change-request-view', 'sys_module_id' => 2],
+            ['name' => 'qualified-tax-types-upgrade-view', 'sys_module_id' => 2],
 
             # Tax Consultant
-            ['name' => 'registration-request-view', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-view', 'sys_module_id' => 3],
             ['name' => 'active-tax-consultant-view', 'sys_module_id' => 3],
-            ['name' => 'renewal-requests-view', 'sys_module_id' => 3],
-            ['name' => 'fee-configuration-view', 'sys_module_id' => 3],
-
-            # Upgrade Tax Types
-            ['name' => 'qualified-tax-types', 'sys_module_id' => 4],
-
+            ['name' => 'tax-consultant-renewal-requests-view', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-fee-configuration-view', 'sys_module_id' => 3],
 
             # Tax Returns
-            ['name' => 'hotel-levy-view', 'sys_module_id' => 5],
-            ['name' => 'tour-operation-view', 'sys_module_id' => 5],
-            ['name' => 'hotel-levy-view', 'sys_module_id' => 5],
-            ['name' => 'restaurant-levy-view', 'sys_module_id' => 5],
-            ['name' => 'vat-return-view', 'sys_module_id' => 5],
-            ['name' => 'port-return-view', 'sys_module_id' => 5],
-            ['name' => 'stamp-duty-return-view', 'sys_module_id' => 5],
-            ['name' => 'bfo-excise-duty-return-view', 'sys_module_id' => 5],
-            ['name' => 'mno-excise-duty-return-view', 'sys_module_id' => 5],
-            ['name' => 'lump-sum-payment-return-view', 'sys_module_id' => 5],
-            ['name' => 'mobile-money-transfer-view', 'sys_module_id' => 5],
-            ['name' => 'electronic-money-transaction-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-hotel-levy-view', 'sys_module_id' => 5],
+            ['name' => 'return-tour-operation-view', 'sys_module_id' => 5],
+            ['name' => 'return-restaurant-levy-view', 'sys_module_id' => 5],
+            ['name' => 'return-vat-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-port-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-stamp-duty-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-bfo-excise-duty-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-mno-excise-duty-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-lump-sum-payment-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-mobile-money-transfer-view', 'sys_module_id' => 5],
+            ['name' => 'return-electronic-money-transaction-return-view', 'sys_module_id' => 5],
 
             # Withholding Agent
-            ['name' => 'withholding_agents_add', 'sys_module_id' => 6],
-            ['name' => 'withholding_agents_edit', 'sys_module_id' => 6],
-            ['name' => 'withholding_agents_view', 'sys_module_id' => 6],
+            ['name' => 'withholding-agents-registration', 'sys_module_id' => 6],
+            ['name' => 'withholding-agents-list', 'sys_module_id' => 6],
             ['name' => 'withholding_agents_disable', 'sys_module_id' => 6],
 
             # Petroleum Management
             ['name' => 'quantity-of-certificate-view', 'sys_module_id' => 7],
-            ['name' => 'petroleum-return-view', 'sys_module_id' => 7],
+            ['name' => 'return-petroleum-return-view', 'sys_module_id' => 7],
 
             # Return Verifications
             ['name' => 'verification-approval-view', 'sys_module_id' => 8],
@@ -73,14 +68,14 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-claim-view', 'sys_module_id' => 9],
 
             # Auditing
-            ['name' => 'auditing-approval-view', 'sys_module_id' => 10],
-            ['name' => 'auditing-assessment-view', 'sys_module_id' => 10],
-            ['name' => 'auditing-approved-view', 'sys_module_id' => 10],
+            ['name' => 'tax-auditing-approval-view', 'sys_module_id' => 10],
+            ['name' => 'tax-auditing-assessment-view', 'sys_module_id' => 10],
+            ['name' => 'tax-auditing-approved-view', 'sys_module_id' => 10],
 
             # Investigation
-            ['name' => 'investigation-approval-view', 'sys_module_id' => 11],
-            ['name' => 'investigation-assessment-view', 'sys_module_id' => 11],
-            ['name' => 'investigation-approved-view', 'sys_module_id' => 11],
+            ['name' => 'tax-investigation-approval-view', 'sys_module_id' => 11],
+            ['name' => 'tax-investigation-assessment-view', 'sys_module_id' => 11],
+            ['name' => 'tax-investigation-approved-view', 'sys_module_id' => 11],
 
 
             # Disputes Management
@@ -88,16 +83,12 @@ class PermissionSeeder extends Seeder
             ['name' => 'dispute-objection-view', 'sys_module_id' => 12],
             ['name' => 'dispute-waiver-objection-view', 'sys_module_id' => 12],
 
-            # Relief Management
-            ['name' => 'relief-ministries-view', 'sys_module_id' => 12],
-            ['name' => 'relief-projects-view', 'sys_module_id' => 12],
-            ['name' => 'relief-register-view', 'sys_module_id' => 12],
-            ['name' => 'relief-generate-report-view', 'sys_module_id' => 12],
-
             # Tax Clearance Management
             ['name' => 'tax-clearance-view', 'sys_module_id' => 13],
 
             # Debt Management
+            ['name' => 'debt-management-debts-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-debts-overdue-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-waiver-debt-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-assessment-debt-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-hotel-levy-view', 'sys_module_id' => 14],
@@ -113,30 +104,29 @@ class PermissionSeeder extends Seeder
             ['name' => 'debt-management-bfo-returns-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-mno-returns-view', 'sys_module_id' => 14],
 
+            ['name' => 'mvr_initiate_registration', 'sys_module_id' => 15],
+            ['name' => 'mvr_approve_registration', 'sys_module_id' => 15],
+            ['name' => 'mvr_initiate_registration_change', 'sys_module_id' => 15],
+            ['name' => 'mvr_approve_registration_change', 'sys_module_id' => 15],
+            ['name' => 'receive_plate_number', 'sys_module_id' => 15],
+            ['name' => 'print_plate_number', 'sys_module_id' => 15],
+            ['name' => 'mvr_register_agent', 'sys_module_id' => 15],
+            ['name' => 'mvr_initiate_transfer', 'sys_module_id' => 15],
+            ['name' => 'mvr_approve_transfer', 'sys_module_id' => 15],
+            ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15],
+            ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15],
+
 
             # Land Lease
-            ['name' => 'land-lease-view', 'sys_module_id' => 15],
-            ['name' => 'land-lease-generate-report', 'sys_module_id' => 15],
+            ['name' => 'land-lease-view', 'sys_module_id' => 16],
+            ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
 
-            # Manageria Report
-            ['name' => 'managerial-report-view', 'sys_module_id' => 14],
-
-            ['name' => 'mvr_initiate_registration', 'sys_module_id' => 15],
-            ['name' => 'mvr_approve_registration', 'sys_module_id' => 15 ],
-            ['name' => 'mvr_initiate_registration_change', 'sys_module_id' => 15 ],
-            ['name' => 'mvr_approve_registration_change', 'sys_module_id' => 15 ],
-            ['name' => 'receive_plate_number', 'sys_module_id' => 15 ],
-            ['name' => 'print_plate_number', 'sys_module_id' => 15 ],
-            ['name' => 'mvr_register_agent', 'sys_module_id' => 15 ],
-            ['name' => 'mvr_initiate_transfer', 'sys_module_id' => 15 ],
-            ['name' => 'mvr_approve_transfer', 'sys_module_id' => 15 ],
-            ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15 ],
-            ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15 ],
+            
             # Managerial Report
-            ['name' => 'managerial-report-view', 'sys_module_id' => 16],
+            ['name' => 'managerial-report-view', 'sys_module_id' => 20],
 
             # Manage Payments
-            ['name' => 'complete-payments-view', 'sys_module_id' => 17],
+            ['name' => 'manage-payments-view', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],
@@ -183,22 +173,22 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-tax-type-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-delete', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-1-view', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-1-add', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-1-edit', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-1-delete', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-2-view', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-2-add', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-2-edit', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-2-delete', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-3-view', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-3-add', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-3-edit', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-3-delete', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-4-view', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-4-add', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-4-edit', 'sys_module_id' => 18],
-            ['name' => 'setting-isic-level-4-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-one-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-one-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-one-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-one-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-two-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-two-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-two-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-two-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-three-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-three-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-three-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-three-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-four-view', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-four-add', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-four-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-isic-level-four-delete', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-view', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-add', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-edit', 'sys_module_id' => 18],
@@ -207,12 +197,44 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-tax-region-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-make-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-model-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-transmission-type-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-fuel-type-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-class-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-color-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-body-type-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-plate-size-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-fee-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-deregistration-reason-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
+            ['name' => 'setting-mvr-transfer-free-view', 'sys_module_id' => 18],
 
             # System
             ['name' => 'system-audit-trail-view', 'sys_module_id' => 19],
             ['name' => 'system-workflow-view', 'sys_module_id' => 19],
             ['name' => 'system-workflow-configure', 'sys_module_id' => 19],
             ['name' => 'system-all-pdfs-view', 'sys_module_id' => 19],
+
+            # Managerial Report
+            ['name' => 'managerial-report-view', 'sys_module_id' => 20],
+
+            # Extenstion
+            ['name' => 'payment-extension-view', 'sys_module_id' => 21],
+
+            # Installment
+            ['name' => 'payment-installment-view', 'sys_module_id' => 22],
+            ['name' => 'payment-installment-request-view', 'sys_module_id' => 22],
+
+
+            # Relief Management
+            ['name' => 'relief-ministries-view', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-view', 'sys_module_id' => 23],
+            ['name' => 'relief-registration-view', 'sys_module_id' => 23],
+            ['name' => 'relief-applications-view', 'sys_module_id' => 23],
+            ['name' => 'relief-generate-report-view', 'sys_module_id' => 23],
+
         ];
 
         foreach ($data as $row) {
