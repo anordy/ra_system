@@ -45,24 +45,29 @@ class TaxClearanceController extends Controller
             ->with('businessLocation')
             ->with('businessLocation.business')
             ->first();
+        // $taxClearence = TaxClearanceRequest::where('id', $request_id)
+        //     ->with('businessLocation')
+        //     ->with('businessLocation.business')
+        //     ->first();
 
-        $returnDebts = $this->generateReturnsDebts($taxClearence->business_location_id);
+        // $returnDebts = $this->generateReturnsDebts($taxClearence->business_location_id);
 
-        $verificationDebts = TaxAssessment::query()
-            ->where('assessment_type', TaxVerification::class)
-            ->where('location_id', $taxClearence->business_location_id)
-            ->get();
-        $auditDebts = TaxAssessment::query()
-            ->where('assessment_type', TaxAudit::class)
-            ->where('location_id', $taxClearence->business_location_id)
-            ->get();
+        // $verificationDebts = TaxAssessment::query()
+        //     ->where('assessment_type', TaxVerification::class)
+        //     ->where('location_id', $taxClearence->business_location_id)
+        //     ->get();
+        // $auditDebts = TaxAssessment::query()
+        //     ->where('assessment_type', TaxAudit::class)
+        //     ->where('location_id', $taxClearence->business_location_id)
+        //     ->get();
 
-        $investigationDebts = TaxAssessment::query()
-            ->where('assessment_type', TaxInvestigation::class)
-            ->where('location_id', $taxClearence->business_location_id)
-            ->get();
+        // $investigationDebts = TaxAssessment::query()
+        //     ->where('assessment_type', TaxInvestigation::class)
+        //     ->where('location_id', $taxClearence->business_location_id)
+        //     ->get();
         // return $investigationDebts;
-        return view('tax-clearance.clearance-request', compact('taxClearence', 'returnDebts', 'verificationDebts', 'auditDebts', 'investigationDebts'));
+            $debts = Debt::get();
+            return view('tax-clearance.clearance-request', compact('debts','taxClearence'));
 
     }
 
@@ -74,6 +79,22 @@ class TaxClearanceController extends Controller
             ->with('businessLocation')
             ->with('businessLocation.business')
             ->first();
+
+        // $returnDebts = $this->generateReturnsDebts($taxClearence->business_location_id);
+
+        // $verificationDebts = TaxAssessment::query()
+        //     ->where('assessment_type', TaxVerification::class)
+        //     ->where('location_id', $taxClearence->business_location_id)
+        //     ->get();
+        // $auditDebts = TaxAssessment::query()
+        //     ->where('assessment_type', TaxAudit::class)
+        //     ->where('location_id', $taxClearence->business_location_id)
+        //     ->get();
+
+        // $investigationDebts = TaxAssessment::query()
+        //     ->where('assessment_type', TaxInvestigation::class)
+        //     ->where('location_id', $taxClearence->business_location_id)
+        //     ->get();
 
             $debts = Debt::get();
             // return $debts;
@@ -93,7 +114,7 @@ class TaxClearanceController extends Controller
             MmTransferReturn::class,
             HotelReturn::class,
             PetroleumReturn::class,
-            PortReturn::class,
+            // PortReturn::class,
             EmTransactionReturn::class,
             BfoReturn::class,
             LumpSumReturn::class,
