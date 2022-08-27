@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="tab-pane p-2" id="pending-approval" role="tabpanel" aria-labelledby="printed-tab">
-                    <livewire:drivers-license.license-applications-table :status="App\Models\DlApplicationStatus::STATUS_APPROVAL"/>
+                    <livewire:drivers-license.license-applications-table :status="App\Models\DlApplicationStatus::STATUS_PENDING_APPROVAL"/>
                 </div>
             </div>
 

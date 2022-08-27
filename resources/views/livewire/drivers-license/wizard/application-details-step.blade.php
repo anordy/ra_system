@@ -10,7 +10,7 @@
             <div  class="p-1">
                 <div>
                     <label for="dob">Date of Birth</label>
-                    <input wire:model.lazy="dob" {{$editable ? '':'disabled'}}  {{$editable ? 'type="date"':('value="'.$dob.'"')}}
+                    <input wire:model.lazy="dob" {{$editable ? '':'disabled'}}  {{$editable ? 'type=date':('value="'.$dob.'"')}}
                            class="form-control {{ $errors->has('dob') ? 'is-invalid' : '' }}">
                     @error('dob')
                     <div class="invalid-feedback">

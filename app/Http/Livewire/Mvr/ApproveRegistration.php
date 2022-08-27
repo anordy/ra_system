@@ -66,13 +66,13 @@ class ApproveRegistration extends Component
         }
         try {
             DB::beginTransaction();
-            $registration_id = MvrMotorVehicleRegistration::query()->insertGetId([
+            $registration_id = MvrMotorVehicleRegistration::query()->create([
                 'mvr_plate_size_id' => $this->plate_number_size_id,
                 'mvr_plate_number_status_id' => $plate_status->id,
                 'mvr_motor_vehicle_id' => $this->motor_vehicle_id,
                 'plate_number' => $this->plate_number,
                 'mvr_registration_type_id' => $this->registration_type_id
-            ]);
+            ])->id;
 
             if (!empty($personalized)){
                 MvrPersonalizedPlateNumberRegistration::query()->create([

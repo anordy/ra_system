@@ -228,12 +228,12 @@
 
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">Issued Date</span>
-                                        <p class="my-1">{{ $application->drivers_license->issued_date }}</p>
+                                        <p class="my-1">{{ $application->drivers_license->issued_date->format('Y-m-d') }}</p>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">Expire Date</span>
-                                        <p class="my-1">{{ $application->drivers_license->expiry_date }}</p>
+                                        <p class="my-1">{{ $application->drivers_license->expiry_date->format('Y-m-d') }}</p>
                                     </div>
                                 </div>
                             </div>
