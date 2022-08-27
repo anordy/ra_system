@@ -312,6 +312,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('queries.')->prefix('queries')->group(function () {
         Route::get('/sales-purchases', [SalesPurchasesController::class, 'index'])->name('sales-purchases');
+        Route::get('/sales-purchases/show/{id}', [SalesPurchasesController::class, 'show'])->name('sales-purchases.show');
         Route::get('/all-credit-returns', [AllCreditReturnsController::class, 'index'])->name('all-credit-returns');
         Route::get('/all-credit-returns/show/{id}/{return_id}/{sales}', [AllCreditReturnsController::class, 'show'])->name('all-credit-returns.show');
         Route::get('/non-filers', [NonFilersController::class, 'index'])->name('non-filers');
