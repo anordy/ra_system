@@ -3,10 +3,8 @@
 namespace App\Http\Livewire\DriversLicense;
 
 use App\Models\DlApplicationStatus;
-use App\Models\DlFee;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -40,42 +38,8 @@ class ApprovalProcessing extends Component
             $this->subject->dl_license_duration_id = $this->duration_id;
             $this->subject->save();
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-            $fee = DlFee::query()->where(['type' => $this->subject->type])->first();
-            $exchange_rate = 1;
-            $amount = $fee->amount;
-
-            $zmBill = ZmCore::createBill(
-                $this->subject->id,
-                get_class($this->subject),
-                6,
-                $this->subject->taxpayer->id,
-                get_class($this->subject->taxpayer),
-                $this->subject->taxpayer->fullname(),
-                $this->subject->taxpayer->email,
-                ZmCore::formatPhone($this->subject->taxpayer->mobile),
-                Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
-                $fee->name,
-                ZmCore::PAYMENT_OPTION_EXACT,
-                'TZS',
-                1,
-                auth()->user()->id,
-                get_class(auth()->user()),
-                [
-                    [
-                        'billable_id' => $this->subject->id,
-                        'billable_type' => get_class($this->subject),
-                        'fee_id' => $fee->id,
-                        'fee_type' => get_class($fee),
-                        'tax_type_id' => 6,
-                        'amount' => $amount,
-                        'currency' => 'TZS',
-                        'exchange_rate' => $exchange_rate,
-                        'equivalent_amount' => $exchange_rate * $amount,
-                        'gfs_code' => $fee->gfs_code
-                    ]
-                ]
-            );
-            $response = ZmCore::sendBill($zmBill->id);
+            $bill = $this->subject->generateBill();
+            $response = ZmCore::sendBill($bill->id);
             if ($response->status === ZmResponse::SUCCESS) {
                 session()->flash('success', 'A control number request was sent successful.');
             } else {

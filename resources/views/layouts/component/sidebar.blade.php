@@ -546,13 +546,13 @@
             </ul>
         </li>
 
-        <li  class="{{ request()->is('drivers-license*') ? 'active':'' }}">
-            <a href="#dlSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('drivers-license*') ? 'true' : 'false' }}" class="dropdown-toggle">Driver's Licenses</a>
-            <ul class="collapse list-unstyled {{ request()->is('drivers-license*') ? 'show' : '' }}" id="dlSubmenu">
-                <li class="{{ request()->is('drivers-license/applications') ? 'active': '' }}">
+        <li  class="{{ (request()->is('drivers-license*') || request()->is('rio*')) ? 'active':'' }}">
+            <a href="#dlSubmenu" data-toggle="collapse" aria-expanded="{{ (request()->is('drivers-license*') || request()->is('rio*'))? 'true' : 'false' }}" class="dropdown-toggle">Driver's Licenses</a>
+            <ul class="collapse list-unstyled {{ (request()->is('drivers-license*') || request()->is('drivers-license*')) ? 'show' : '' }}" id="dlSubmenu">
+                <li class="{{ (request()->is('drivers-license/applications') || request()->is('drivers-license*')) ? 'active': '' }}">
                     <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
                 </li>
-                <li class="{{ request()->is('drivers-license/applications') ? 'active': '' }}">
+                <li class="{{ request()->is('rio*') ? 'active': '' }}">
                     <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
                 </li>
             </ul>

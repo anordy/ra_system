@@ -8,6 +8,7 @@ use App\Models\DlDriversLicense;
 use App\Models\DlDriversLicenseClass;
 use App\Models\DlFee;
 use App\Models\DlLicenseApplication;
+use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\WorkflowProcesssingTrait;
@@ -57,41 +58,8 @@ class LicenseApplicationsController extends Controller
             try {
                 DB::beginTransaction();
                 $application->update(['dl_application_status_id'=>DlApplicationStatus::query()->firstOrCreate(['name'=>DlApplicationStatus::STATUS_PENDING_PAYMENT])->id]);
-                $fee = DlFee::query()->where(['type' => $application->type])->first();
-                $exchange_rate = 1;
-                $amount = $fee->amount;
-                $zmBill = ZmCore::createBill(
-                    $application->id,
-                    get_class($application),
-                    6,
-                    $application->taxpayer->id,
-                    get_class($application->taxpayer),
-                    $application->taxpayer->fullname(),
-                    $application->taxpayer->email,
-                    ZmCore::formatPhone($application->taxpayer->mobile),
-                    Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
-                    $fee->name,
-                    ZmCore::PAYMENT_OPTION_EXACT,
-                    'TZS',
-                    1,
-                    auth()->user()->id,
-                    get_class(auth()->user()),
-                    [
-                        [
-                            'billable_id' => $application->id,
-                            'billable_type' => get_class($application),
-                            'fee_id' => $fee->id,
-                            'fee_type' => get_class($fee),
-                            'tax_type_id' => 6,
-                            'amount' => $amount,
-                            'currency' => 'TZS',
-                            'exchange_rate' => $exchange_rate,
-                            'equivalent_amount' => $exchange_rate * $amount,
-                            'gfs_code' => $fee->gfs_code
-                        ]
-                    ]
-                );
-                $response = ZmCore::sendBill($zmBill->id);
+                $bill = $application->generateBill();
+                $response = ZmCore::sendBill($bill->id);
                 DB::commit();
                 if ($response->status === ZmResponse::SUCCESS) {
                     session()->flash('success', 'A control number request was sent successful.');

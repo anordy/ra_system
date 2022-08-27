@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Services\ZanMalipo\ZmCore;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -112,5 +113,44 @@ class DlLicenseApplication extends Model
     {
         $bill_item = $this->morphOne(ZmBillItem::class,'billable')->latest()->first();
         return $bill_item->bill ??  null;
+    }
+
+
+    public function generateBill(){
+        $fee = DlFee::query()->where(['type' => $this->type])->first();
+        $exchange_rate = 1;
+        $amount = $fee->amount;
+        $tax_type = TaxType::query()->where(['name'=>TaxType::PUBLIC_SERVICE])->first();
+        return ZmCore::createBill(
+            $this->id,
+            get_class($this),
+            $tax_type->id,
+            $this->taxpayer->id,
+            get_class($this->taxpayer),
+            $this->taxpayer->fullname(),
+            $this->taxpayer->email,
+            ZmCore::formatPhone($this->taxpayer->mobile),
+            Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
+            $fee->name,
+            ZmCore::PAYMENT_OPTION_EXACT,
+            'TZS', //All fees are paid in tzs
+            1,
+            auth()->user()->id,
+            get_class(auth()->user()),
+            [
+                [
+                    'billable_id' => $this->id,
+                    'billable_type' => get_class($this),
+                    'fee_id' => $fee->id,
+                    'fee_type' => get_class($fee),
+                    'tax_type_id' => $tax_type->id,
+                    'amount' => $amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => $exchange_rate,
+                    'equivalent_amount' => $exchange_rate * $amount,
+                    'gfs_code' => $fee->gfs_code
+                ]
+            ]
+        );
     }
 }

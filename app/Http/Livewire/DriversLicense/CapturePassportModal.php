@@ -3,32 +3,12 @@
 namespace App\Http\Livewire\DriversLicense;
 
 
-use App\Models\Country;
-use App\Models\DlApplicationLicenseClass;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlDriversLicenseClass;
 use App\Models\DlDriversLicenseOwner;
 use App\Models\DlLicenseApplication;
-use App\Models\MvrBodyType;
-use App\Models\MvrClass;
-use App\Models\MvrColor;
-use App\Models\MvrFuelType;
-use App\Models\MvrMake;
-use App\Models\MvrModel;
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrMotorVehicleOwner;
-use App\Models\MvrOwnershipStatus;
-use App\Models\MvrOwnershipTransfer;
-use App\Models\MvrOwnershipTransferReason;
-use App\Models\MvrRegistrationStatus;
-use App\Models\MvrRequestStatus;
-use App\Models\MvrTransmissionType;
-use App\Models\MvrVehicleStatus;
-use App\Models\Taxpayer;
-use App\Services\TRA\ServiceRequest;
 use App\Traits\WorkflowProcesssingTrait;
-use App\Traits\WorkflowTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
