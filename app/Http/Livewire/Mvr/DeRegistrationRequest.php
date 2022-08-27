@@ -77,9 +77,9 @@ class DeRegistrationRequest extends Component
 
     public function agentLookup(){
         $agent = BusinessLocation::query()->where(['zin'=>$this->agent_z_number])->first();
-        if (!empty($agent->taxpayer)){
+        if (!empty($agent->taxpayer->transport_agent)){
             $this->agent_name = $agent->taxpayer->fullname();
-            $this->agent_id = $agent->taxpayer_id;
+            $this->agent_id = $agent->taxpayer->transport_agent->id;
         }else{
             $this->agent_name = null;
             $this->agent_id = null;

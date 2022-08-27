@@ -3,6 +3,9 @@
 namespace App\Http\Livewire\Mvr;
 
 use App\Models\Bank;
+use App\Models\DlDriversLicenseClass;
+use App\Models\DlLicenseClass;
+use App\Models\DlLicenseDuration;
 use App\Models\GenericSettingModel;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
@@ -34,12 +37,18 @@ class GenericSettingAddModal extends Component
     private $fields = [
         MvrColor::class=>[['title'=>'Hex Value','field'=>'hex_value']],
         MvrFee::class=>[['title'=>'Amount','field'=>'amount'],['title'=>'GFS Code','field'=>'gfs_code']],
-        MvrTransferFee::class=>[['title'=>'Amount','field'=>'amount'],['title'=>'GFS Code','field'=>'gfs_code']],
+        MvrTransferFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number'],['title'=>'GFS Code','field'=>'gfs_code','type'=>'number']],
+        DlLicenseDuration::class=>[['title'=>'Years','field'=>'number_of_years','type'=>'number'],['title'=>'Description','field'=>'description']],
+        DlLicenseClass::class=>[['title'=>'Description','field'=>'description']],
+    ];
+
+    private $no_name_column = [
+        DlLicenseDuration::class=>true,
     ];
 
     private $rules = [
-        MvrFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required'],
-        MvrTransferFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required']
+        MvrFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric'],
+        MvrTransferFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric']
     ];
 
     /**
@@ -68,7 +77,9 @@ class GenericSettingAddModal extends Component
         if (array_search(GenericSettingModel::class,class_parents($model))){
             $this->setting_title = $model::settingTitle();
         }else {
-            $this->setting_title = preg_replace('/^.*\\\\Mvr/','',$model);
+            $this->setting_title = preg_replace('/^(.*\\\\(Mvr|Dl))/','',$model);
+            $this->setting_title = preg_replace('/^(Mvr|Dl)/','',$this->setting_title);
+            $this->setting_title = preg_replace('/([a-z]+)([A-Z])/','$1 $2',$this->setting_title);
         }
 
         $this->prepareRelations();
@@ -85,7 +96,11 @@ class GenericSettingAddModal extends Component
             }
             return !$exist;
         });
-        $rules = ['name' => 'required|gs_unique'];
+
+        if ($this->hasNameColumn()) {
+            $rules = ['name' => 'required|gs_unique'];
+        }
+
         if (!empty($this->relations[$this->model])){
             foreach ($this->relations[$this->model] as $foreign){
                 $rules['relation_data.'.$foreign['field']] = 'required';
@@ -109,7 +124,10 @@ class GenericSettingAddModal extends Component
     {
         $this->validate();
         try{
-            $data = ['name' => $this->name];
+            if ($this->hasNameColumn()) {
+                $data = ['name' => $this->name];
+            }
+
             if (!empty($this->relations[$this->model])){
                 foreach ($this->relations[$this->model] as $foreign){
                     $data[$foreign['field']] = $this->relation_data[$foreign['field']];
@@ -157,5 +175,20 @@ class GenericSettingAddModal extends Component
             $this->field_options[$field['field']] = ['title'=>$field['title']];
             $this->data[$field['field']] = $this->instance[$field['field']]??null;
         }
+    }
+
+    private function hasNameColumn(){
+        return empty($this->no_name_column[$this->model]);
+    }
+
+    private function getFieldInputType($field){
+        if (!empty($this->fields[$this->model])) {
+            foreach ($this->fields[$this->model] as $_field){
+                if($_field['field'] == $field){
+                    return $_field['type'] ?? 'text';
+                }
+            }
+        }
+        return 'text';
     }
 }
