@@ -17,13 +17,16 @@ use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class TaxAgentController extends Controller
 {
 
 	public function index(){
-
+        if (Gate::allows('tax-consultant-registration-view')) {
+            abort(403);
+        }
 		return view('taxagents.index');
 	}
 
