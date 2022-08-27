@@ -2,19 +2,20 @@
 
 namespace App\Traits;
 
-use App\Enum\BillStatus;
-use App\Enum\PaymentStatus;
-use App\Models\BusinessTaxType;
-use App\Models\ExchangeRate;
-use App\Models\Returns\ReturnStatus;
-use App\Models\ZmBill;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ZmBill;
+use App\Models\TaxType;
+use App\Enum\BillStatus;
+use App\Models\Debts\Debt;
+use App\Enum\PaymentStatus;
+use App\Models\ExchangeRate;
+use App\Models\BusinessTaxType;
+use App\Services\ZanMalipo\ZmCore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\TaxType;
+use App\Models\Returns\ReturnStatus;
+use Illuminate\Support\Facades\Auth;
+use App\Services\ZanMalipo\ZmResponse;
 
 trait PaymentsTrait {
 
@@ -141,6 +142,7 @@ trait PaymentsTrait {
             ZmCore::cancelBill($bill->id, $cancellationReason); // Works ?
         } else {
             $bill->status = PaymentStatus::CANCELLED;
+            $bill->cancellation_reason = $cancellationReason ?? '';
             $bill->save();
         }
     }
@@ -290,6 +292,107 @@ trait PaymentsTrait {
             $bill->save();
 
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly - test');
+        }
+    }
+
+    public function generateDebtControlNo($debt)
+    {
+        $taxTypes = TaxType::all();
+        $billItems[] = [
+            'billable_id' => $debt->id,
+            'billable_type' => get_class($debt),
+            'use_item_ref_on_pay' => 'N',
+            'amount' => $debt->principal_amount,
+            'currency' => $debt->currency,
+            'gfs_code' => $taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
+            'tax_type_id' => $taxTypes->where('code', TaxType::DEBTS)->first()->id
+        ];
+
+        $billItems[] = [
+            'billable_id' => $debt->id,
+            'billable_type' => get_class($debt),
+            'use_item_ref_on_pay' => 'N',
+            'amount' => $debt->penalty,
+            'currency' => $debt->currency,
+            'gfs_code' => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
+            'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->first()->id
+        ];
+
+        $billItems[] = [
+            'billable_id' => $debt->id,
+            'billable_type' => get_class($debt),
+            'use_item_ref_on_pay' => 'N',
+            'amount' => $debt->interest,
+            'currency' => $debt->currency,
+            'gfs_code' => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
+            'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
+        ];
+
+        $taxpayer = $debt->business->taxpayer;
+
+        $payer_type = get_class($taxpayer);
+        $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+        $payer_email = $taxpayer->email;
+        $payer_phone = $taxpayer->mobile;
+        $description = "{$debt->debt->taxtype->name} Debt for {$debt->debt->business->name} {$debt->location->name}";
+        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $currency = $debt->currency;
+        $createdby_type = 'Job';
+        $createdby_id = null;
+        $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
+        $payer_id = $taxpayer->id;
+        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+        $billableId = $debt->id;
+        $billableType = get_class($debt);
+
+        $zmBill = ZmCore::createBill(
+            $billableId,
+            $billableType,
+            $taxTypes->where('code', TaxType::DEBTS)->first()->id,
+            $payer_id,
+            $payer_type,
+            $payer_name,
+            $payer_email,
+            $payer_phone,
+            $expire_date,
+            $description,
+            $payment_option,
+            $currency,
+            $exchange_rate,
+            $createdby_id,
+            $createdby_type,
+            $billItems
+        );
+
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                $debt->status = ReturnStatus::CN_GENERATING;
+                $debt->debt->return_category = 'debt';
+
+                $debt->save();
+                $debt->debt->save();
+
+            } else {
+                $debt->status = ReturnStatus::CN_GENERATION_FAILED;
+            }
+
+            $debt->save();
+        } else {
+
+            // We are local
+            $debt->status = ReturnStatus::CN_GENERATED;
+            $debt->debt->return_category = 'debt';
+
+            $debt->save();
+            $debt->debt->save();
+
+            // Simulate successful control no generation
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = '90909919991909';
+            $zmBill->save();
+
         }
     }
 }
