@@ -46,7 +46,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: -webkit-repeating-linear-gradient(-45deg, #71b7e6, #69a6ce, #b98acc, #ee8176, #b98acc, #69a6ce, #9b59b6);
+            background: -webkit-repeating-linear-gradient(-45deg, #b65b98, #9f5484, #d2556c, #c82949, #563a61, #910f48, #b80a15);
             background-size: 400%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -101,13 +101,13 @@
             display: inline-block;
             margin: 0 10px;
             text-decoration: none;
-            border: 2px solid #97363a;
+            border: 1px solid #97363a;
             color: #97363a;
             font-weight: 500;
             padding: 10px 25px;
-            border-radius: 25px;
+            border-radius: 2px;
             text-transform: uppercase;
-            transition: all 0.3s ease;
+            transition: all 0.5s ease-in-out;
         }
         .content .btns a:hover{
             background: #97363a;
