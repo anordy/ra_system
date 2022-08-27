@@ -30,8 +30,8 @@ class NilReturnsController extends Controller
             ->where('total_amount_due',0)
             ->orderBy('id')
             ->groupBy('business_location_id')
-//            ->havingRaw('COUNT(*) >= ?', [2])
-//            ->limit($rows)
+            ->havingRaw('COUNT(*) >= ?', [2])
+            ->limit($rows)
             ->get();
 //        dd($vats);
         foreach ($vats as $vat)
