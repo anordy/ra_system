@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Mvr;
 
+use App\Models\DlLicenseClass;
+use App\Models\DlLicenseDuration;
 use App\Models\GenericSettingModel;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
@@ -52,10 +54,15 @@ class GenericSettingsTable extends DataTableComponent
 
     public function columns(): array
     {
-        return array_merge([
-            Column::make("Name", "name")
-            ->sortable()
-        ],
+        $name_column = [];
+        if ($this->modelHasNameColumn()){
+            $name_column =  [
+                Column::make("Name", "name")
+                ->sortable()
+            ];
+        }
+        return array_merge(
+            $name_column,
             $this->modelExtraColumns(),[
                 Column::make('Action', 'id')
             ->format(function ($value){
@@ -117,11 +124,25 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("Amount", "amount")->sortable()->format(fn($value)=>number_format($value).' TZS'),
                 Column::make("GFS Code", "gfs_code")->sortable(),
                 Column::make("Transfer Category", "transfer_category.name")->sortable(),
-            ]
+            ],
+            DlLicenseClass::class => [
+                Column::make("Description", "description")->sortable()
+            ],
+            DlLicenseDuration::class => [
+                Column::make("Years", "number_of_years")->sortable(),
+                Column::make("Description", "description")->sortable()
+            ],
         ];
 
         return $model_extra_columns[$this->model]??[];
     }
 
+    private function modelHasNameColumn(){
+        $models_with_no_name_columns = [
+            DlLicenseDuration::class => 1,
+        ];
+
+        return empty($models_with_no_name_columns[$this->model]);
+    }
 
 }

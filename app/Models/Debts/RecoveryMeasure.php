@@ -2,8 +2,10 @@
 
 namespace App\Models\Debts;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Debts\Debt;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Debts\RecoveryMeasureCategory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RecoveryMeasure extends Model
 {

@@ -2,9 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\Bill\CancelBill;
+use App\Jobs\Debt\GenerateControlNo;
 use App\Models\DateConfiguration;
 use App\Models\Debts\Debt;
 use App\Models\Returns\ReturnStatus;
+use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyForDebt;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -13,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 
 class DailyDebtPenaltyInterest extends Command
 {
+    use PaymentsTrait;
     /**
      * The name and signature of the console command.
      *
@@ -52,7 +56,8 @@ class DailyDebtPenaltyInterest extends Command
     }
 
     public function getDebtAfterDueDate(){
-        $debts = Debt::where('curr_due_date', '<', Carbon::now())
+        $now = Carbon::now();
+        $debts = Debt::where('curr_due_date', '<', $now)
                         ->whereNotIn('status', ['complete', 'paid-by-debt'])
                         ->get();
 
@@ -68,6 +73,14 @@ class DailyDebtPenaltyInterest extends Command
                 $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $penaltyIterations);
                 
                 $debtUpdate = Debt::find($debt->id);
+
+                if ($debt->bill) {
+                    CancelBill::dispatch($debt->bill, 'Penalty Increment')->delay($now->addSeconds(10));
+                    GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
+                } else {
+                    GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
+                }
+
                 $debtUpdate->penalty = $debt->debtPenalties->sum('late_payment');
                 $debtUpdate->interest = $debt->debtPenalties->sum('rate_amount');
                 $debtUpdate->curr_due_date = $penaltyReturn[0];

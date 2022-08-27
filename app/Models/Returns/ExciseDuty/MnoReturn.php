@@ -2,18 +2,19 @@
 
 namespace App\Models\Returns\ExciseDuty;
 
-use App\Models\Business;
-use App\Models\BusinessLocation;
-use App\Models\Debts\Debt;
-use App\Models\FinancialMonth;
-use App\Models\FinancialYear;
-use App\Models\Returns\ExciseDuty\MnoReturnItem;
-use App\Models\Taxpayer;
-use App\Models\TaxType;
 use App\Models\ZmBill;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TaxType;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
+use App\Models\FinancialYear;
+use App\Models\FinancialMonth;
+use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Returns\ExciseDuty\MnoPenalty;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Returns\ExciseDuty\MnoReturnItem;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MnoReturn extends Model
 {

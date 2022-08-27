@@ -7,6 +7,7 @@ use App\Models\TaxType;
 use App\Models\Business;
 use App\Traits\WorkflowTrait;
 use App\Models\BusinessLocation;
+use App\Models\Debts\DebtPenalty;
 use App\Models\Debts\RecoveryMeasure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -45,5 +46,13 @@ class Debt extends Model
 
     public function recoveryMeasures() {
         return $this->hasMany(RecoveryMeasure::class);
+    }
+
+    public function bills(){
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function debt(){
+        return $this->morphTo();
     }
 }

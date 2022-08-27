@@ -7,6 +7,7 @@
                         class="fa fa-times-circle"></i></button>
             </div>
             <div class="modal-body">
+                @if($this->hasNameColumn())
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Name</label>
@@ -16,35 +17,36 @@
                         @enderror
                     </div>
                 </div>
-
-                @foreach($relation_options as $field=>$relation)
-                    <div class="row pr-3 pl-3">
-                        <div class="form-group col-lg-12">
-                            <label class="control-label">{{$relation['title']}}</label>
-                            <select wire:model="relation_data.{{$field}}" class="form-control" id="{{$field}}">
-                                <option>Choose option</option>
-                                @foreach ($relation['data'] as $option)
-                                    <option value="{{ $option['id'] }}">{{ $option['name']?? $option['type'] }}</option>
-                                @endforeach
-                            </select>
-                            @error("relation_data.{$field}")
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                @endforeach
+                @endif
 
                 @foreach($field_options as $f=>$options)
                     <div class="row pr-3 pl-3">
                         <div class="form-group col-lg-12">
                             <label class="control-label" for="{{$f}}">{{$options['title']}}</label>
-                            <input type="text" class="form-control" wire:model.lazy="data.{{$f}}" id="{{$f}}">
+                            <input type="{{$this->getFieldInputType($f)}}" class="form-control" wire:model.lazy="data.{{$f}}" id="{{$f}}">
                             @error("data.{$f}")
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
                 @endforeach
+
+                    @foreach($relation_options as $field=>$relation)
+                        <div class="row pr-3 pl-3">
+                            <div class="form-group col-lg-12">
+                                <label class="control-label">{{$relation['title']}}</label>
+                                <select wire:model="relation_data.{{$field}}" class="form-control" id="{{$field}}">
+                                    <option>Choose option</option>
+                                    @foreach ($relation['data'] as $option)
+                                        <option value="{{ $option['id'] }}">{{ $option['name']?? $option['type'] }}</option>
+                                    @endforeach
+                                </select>
+                                @error("relation_data.{$field}")
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    @endforeach
 
             </div>
             <div class="modal-footer">
