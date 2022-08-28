@@ -2,13 +2,19 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Enum\TaxAuditStatus;
+use App\Models\Returns\ReturnStatus;
 use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAuditOfficer;
 use App\Models\TaxType;
 use App\Models\User;
+use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\NotIn;
@@ -274,7 +280,126 @@ class TaxAuditApprovalProcessing extends Component
             Log::error($e);
             $this->alert('error', 'Something went wrong');
         }
+
+        if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
+            $this->generateControlNumber();
+            $this->subject->assessment->update([
+                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+            ]);
+        } else {
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+        }
     }
+
+    public function generateControlNumber()
+    {
+        $assessment = $this->subject->assessment;
+        $taxType = $this->subject->taxType;
+
+        DB::beginTransaction();
+
+        try {
+            $billitems = [
+                [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $this->principalAmount,
+                    'currency' => 'TZS',
+                    'gfs_code' => $this->taxTypes->where('code', 'audit')->first()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'audit')->first()->id
+                ],
+                [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $this->interestAmount,
+                    'currency' => 'TZS',
+                    'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
+                ],
+                [
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
+                    'use_item_ref_on_pay' => 'N',
+                    'amount' => $this->penaltyAmount,
+                    'currency' => 'TZS',
+                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id
+                ]
+            ];
+
+            $taxpayer = $this->subject->business->taxpayer;
+
+            $payer_type = get_class($taxpayer);
+            $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+            $payer_email = $taxpayer->email;
+            $payer_phone = $taxpayer->mobile;
+            $description = "Verification for {$taxType->name} ";
+            $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+            $currency = 'TZS';
+            $createdby_type = get_class(Auth::user());
+            $createdby_id = Auth::id();
+            $exchange_rate = 1;
+            $payer_id = $taxpayer->id;
+            $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
+            $billableId = $assessment->id;
+            $billableType = get_class($assessment);
+
+            $zmBill = ZmCore::createBill(
+                $billableId,
+                $billableType,
+                $this->taxTypes->where('code', 'audit')->first()->id,
+                $payer_id,
+                $payer_type,
+                $payer_name,
+                $payer_email,
+                $payer_phone,
+                $expire_date,
+                $description,
+                $payment_option,
+                $currency,
+                $exchange_rate,
+                $createdby_id,
+                $createdby_type,
+                $billitems
+            );
+
+
+            if (config('app.env') != 'local') {
+                $response = ZmCore::sendBill($zmBill->id);
+                if ($response->status === ZmResponse::SUCCESS) {
+                    $assessment->status = ReturnStatus::CN_GENERATING;
+                    $assessment->save();
+
+                    $this->flash('success', 'A control number has been generated successful.');
+                } else {
+
+                    session()->flash('error', 'Control number generation failed, try again later');
+                    $assessment->status = ReturnStatus::CN_GENERATION_FAILED;
+                }
+
+                $assessment->save();
+            } else {
+                // We are local
+                $assessment->status = ReturnStatus::CN_GENERATED;
+                $assessment->save();
+
+                // Simulate successful control no generation
+                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $zmBill->zan_status = 'pending';
+                $zmBill->control_number = '90909919991909';
+                $zmBill->save();
+
+                $this->flash('success', 'A control number for this verification has been generated successflu');
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            Log::error($e);
+            DB::rollBack();
+        }
+    }
+
 
     public function hasNoticeOfAttachmentChange($value)
     {
