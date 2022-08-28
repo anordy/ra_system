@@ -118,7 +118,7 @@ class TaxAgentController extends Controller
 
 	public function renewal()
 	{
-        if (Gate::allows('tax-consultant-renewal-requests-view')) {
+        if (!Gate::allows('tax-consultant-renewal-requests-view')) {
             abort(403);
         }
 		return view('taxagents.renew.renewalRequests');
@@ -146,6 +146,9 @@ class TaxAgentController extends Controller
 
     public function sup($app_date)
     {
+        if (!Gate::allows('active-tax-consultant-view')) {
+            abort(403);
+        }
         $a = [1,21,31];
         $b= [2,22];
         $c = [3,23];

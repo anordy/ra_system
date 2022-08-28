@@ -35,6 +35,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'active-tax-consultant-view', 'sys_module_id' => 3],
             ['name' => 'tax-consultant-renewal-requests-view', 'sys_module_id' => 3],
             ['name' => 'tax-consultant-fee-configuration-view', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-fee-configuration-add', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-verify', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-reject-first', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-approve', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-reject-last', 'sys_module_id' => 3],
 
             # Tax Returns
             ['name' => 'return-hotel-levy-view', 'sys_module_id' => 5],
