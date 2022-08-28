@@ -60,7 +60,7 @@ class BusinessFileController extends Controller
     }
 
     public function getCertificate($locationId, $taxTypeId){
-        if (!Gate::allows('business-registration-view')) {
+        if (!Gate::allows('business-certificate-view')) {
             abort(403);
         }
         $locationId = decrypt($locationId);

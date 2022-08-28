@@ -287,17 +287,17 @@
                     Tax Auditing
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
                         </li>
                     @endcan
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/assessments*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.assessments.index') }}">Assessments</a>
                         </li>
                     @endcan
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/verified*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.verified.index') }}">Approved Audits</a>
                         </li>

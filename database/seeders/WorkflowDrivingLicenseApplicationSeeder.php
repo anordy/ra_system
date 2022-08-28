@@ -31,7 +31,7 @@ class WorkflowDrivingLicenseApplicationSeeder extends Seeder
             'correct_application' => [
                 'owner' => 'staff',
                 'operator_type' => 'user',
-                'operators' => []
+                'operators' => [1,2,3]
             ],
             'revenue_officer' => [
                 'owner' => 'staff',

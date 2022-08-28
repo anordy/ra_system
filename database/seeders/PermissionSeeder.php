@@ -23,6 +23,7 @@ class PermissionSeeder extends Seeder
 
             # Business Management
             ['name' => 'business-registration-view', 'sys_module_id' => 2],
+            ['name' => 'business-certificate-view', 'sys_module_id' => 2],
             ['name' => 'business-branches-view', 'sys_module_id' => 2],
             ['name' => 'de-registration-view', 'sys_module_id' => 2],
             ['name' => 'temporary-closures-view', 'sys_module_id' => 2],
