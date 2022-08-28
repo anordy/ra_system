@@ -5,9 +5,11 @@ namespace App\Http\Livewire\Relief;
 use App\Models\Relief\ReliefMinistry;
 use App\Models\Relief\ReliefProjectList;
 use Exception;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Support\Facades\Gate;
 
 class ReliefProjectListEditModal extends Component
 {
@@ -43,6 +45,9 @@ class ReliefProjectListEditModal extends Component
 
     public function submit()
     {
+        if(!Gate::allows('relief-project-edit-create')){
+            abort(403);
+        }
         $this->validate();
         try {
             $this->project->update([

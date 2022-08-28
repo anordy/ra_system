@@ -49,12 +49,13 @@ class ReliefProjectListTable extends DataTableComponent
                 ->sortable(),
             Column::make("Ministry", "ministry.name")
                 ->sortable(),
-            Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-project-list-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
-                ->html(true),
+            // Column::make('Action', 'id')
+            //     ->format(fn ($value) => <<< HTML
+            //         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-project-list-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+            //         <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+            //     HTML)
+            //     ->html(true),
+            Column::make("Actions", "id")->view("relief.project_list.includes.actions"),
         ];
     }
 

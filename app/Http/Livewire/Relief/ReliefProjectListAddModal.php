@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Gate;
 
 class ReliefProjectListAddModal extends Component
 {
@@ -41,9 +42,12 @@ class ReliefProjectListAddModal extends Component
         ];
     }
 
-
     public function submit()
     {
+        if (!Gate::allows('relief-projcts-list-create')) {
+            abort(403);
+        }
+
         $this->validate();
         $government_notice_path = null;
         if ($this->government_notice_path) {
@@ -57,12 +61,11 @@ class ReliefProjectListAddModal extends Component
                 'rate' => $this->rate,
                 'ministry_id' => $this->ministry_id ?? null,
                 'government_notice_path' => $government_notice_path ?? null,
-                'created_by' => auth()->user()->id
+                'created_by' => auth()->user()->id,
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            dd($e);
             $this->alert('error', 'Something went wrong');
         }
     }

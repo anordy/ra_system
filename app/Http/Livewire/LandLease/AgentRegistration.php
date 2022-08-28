@@ -21,11 +21,13 @@ use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Support\Facades\Gate;
 
 class AgentRegistration extends Component
 {
@@ -52,6 +54,9 @@ class AgentRegistration extends Component
     public function submit()
     {
         $this->validate();
+        if(!Gate::allows('land-lease-register-agent')){
+            abort(403);
+        }
         if(LandLeaseAgent::where('taxpayer_id',$this->taxpayer->id)->exists()){
             $this->alert('error', 'Taxpayer already registered as Agent');
             return; 

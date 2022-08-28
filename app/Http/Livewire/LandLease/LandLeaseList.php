@@ -80,7 +80,9 @@ class LandLeaseList extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("Applicant Status", "id")->view("land-lease.includes.applicant-status"),
-            Column::make("Actions", "id")->view("land-lease.includes.actions"),
+            Column::make("Actions", "id")
+            // ->hideIf(!Gate::allows('land-lease-view'))
+            ->view("land-lease.includes.actions"),
         ];
     }
 

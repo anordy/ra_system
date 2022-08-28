@@ -5,7 +5,7 @@
 @section('content')
 <div class="card">
     <div class="card-header text-uppercase font-weight-bold">
-        Managerial Reports
+        Retrun Reports
     </div>
     <div class="card-body mt-0">
         @livewire('reports.returns.return-report')
