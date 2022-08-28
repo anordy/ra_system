@@ -618,6 +618,9 @@
                         <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
                             <a href="{{ route('reports.returns') }}">Return Reports</a>
                         </li>
+                        <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
+                        </li>
                     @endcan
                 </ul>
             </li>
