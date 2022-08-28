@@ -6,7 +6,6 @@ use App\Models\Debts\SentDemandNotice;
 use Carbon\Carbon;
 use PDF;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -40,6 +39,7 @@ class DemandNotice extends Mailable
         $this->debt->demand_notice_count = $this->debt->demand_notice_count + 1;
         $this->debt->next_demand_notice_date = Carbon::now()->addDays($this->payload['next_notify_date']);
         $this->debt->save();
+        
         SentDemandNotice::create(['debt_id' => $this->debt->id, 'sent_by' => 'job']);
         $now = Carbon::now()->format('d M Y');
         $paid_within_days = $this->paid_within_days;

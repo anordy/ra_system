@@ -2,21 +2,24 @@
 
 namespace App\Models\Returns\StampDuty;
 
-use App\Models\Business;
-use App\Models\BusinessLocation;
-use App\Models\Debts\Debt;
-use App\Models\FinancialMonth;
-use App\Models\FinancialYear;
-use App\Models\Taxpayer;
-use App\Models\TaxType;
 use App\Models\ZmBill;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TaxType;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
+use App\Traits\ReturnTrait;
+use App\Models\FinancialYear;
+use App\Models\FinancialMonth;
+use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Returns\StampDuty\StampDutyReturnItem;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Returns\StampDuty\StampDutyReturnPenalty;
 
 class StampDutyReturn extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ReturnTrait;
 
     protected $guarded = [];
 
@@ -71,5 +74,9 @@ class StampDutyReturn extends Model
 
     public function getBillAttribute(){
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
+    }
+
+    public function stampDutyPenalties(){
+        return $this->hasMany(StampDutyReturnPenalty::class, 'return_id');
     }
 }

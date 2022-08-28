@@ -12,20 +12,12 @@ use Livewire\Component;
 
 class TaxClearanceRequest extends Component
 {
-    public $returnDebts;
-    public $verificationDebts;
-    public $auditDebts;
-    public $investigationDebts;
+    public $debts;
     public $taxClearence;
 
-    public function mount($taxClearence, $returnDebts, $verificationDebts, $auditDebts, $investigationDebts){
-        $this->returnDebts = $returnDebts;
-        $this->verificationDebts = $verificationDebts;
-        $this->auditDebts = $auditDebts;
-        $this->investigationDebts = $investigationDebts;
+    public function mount($debts, $taxClearence){
+        $this->debts = $debts;
         $this->taxClearence = $taxClearence;
-
-
     }
 
     public function render()

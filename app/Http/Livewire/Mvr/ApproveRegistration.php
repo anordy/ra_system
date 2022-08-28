@@ -66,13 +66,13 @@ class ApproveRegistration extends Component
         }
         try {
             DB::beginTransaction();
-            $registration_id = MvrMotorVehicleRegistration::query()->insertGetId([
+            $registration_id = MvrMotorVehicleRegistration::query()->create([
                 'mvr_plate_size_id' => $this->plate_number_size_id,
                 'mvr_plate_number_status_id' => $plate_status->id,
                 'mvr_motor_vehicle_id' => $this->motor_vehicle_id,
                 'plate_number' => $this->plate_number,
                 'mvr_registration_type_id' => $this->registration_type_id
-            ]);
+            ])->id;
 
             if (!empty($personalized)){
                 MvrPersonalizedPlateNumberRegistration::query()->create([
@@ -110,7 +110,7 @@ class ApproveRegistration extends Component
             $zmBill = ZmCore::createBill(
                 $registration->id,
                 get_class($registration),
-                1,//todo: remove, why is it mandatory
+                6,
                 $mv->agent->id,
                 get_class($mv->agent),
                 $mv->agent->taxpayer->fullname(),
@@ -129,7 +129,7 @@ class ApproveRegistration extends Component
                         'billable_type' => get_class($registration),
                         'fee_id' => $fee->id,
                         'fee_type' => get_class($fee),
-                        'tax_type_id' => 1, //todo: remove, why is it mandatory
+                        'tax_type_id' => 6,
                         'amount' => $amount,
                         'currency' => 'TZS',
                         'exchange_rate' => $exchange_rate,

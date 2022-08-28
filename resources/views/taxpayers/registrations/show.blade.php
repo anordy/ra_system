@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="text-center mt-4">
-                <a href="{{ route('taxpayers.enroll-fingerprint', $kyc->id) }}" class="btn btn-primary rounded-0">
+                <a href="{{ route('taxpayers.enroll-fingerprint', encrypt($kyc->id)) }}" class="btn btn-primary rounded-0">
                     <i class="bi bi-fingerprint mr-2"></i>
                     Enroll Fingerprint
                 </a>

@@ -2,16 +2,19 @@
 
 namespace App\Models\Returns\Vat;
 
-use App\Models\Business;
-use App\Models\BusinessLocation;
-use App\Models\Debts\Debt;
-use App\Models\FinancialMonth;
-use App\Models\FinancialYear;
-use App\Models\Taxpayer;
-use App\Models\TaxType;
 use App\Models\ZmBill;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TaxType;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
+use App\Models\FinancialYear;
+use App\Models\FinancialMonth;
+use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Returns\Vat\VatReturnItem;
+use App\Models\Returns\Vat\VatReturnPenalty;
+use App\Models\Returns\Vat\VatReturnSupplierDetail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class VatReturn extends Model
 {
@@ -36,7 +39,7 @@ class VatReturn extends Model
 
     public function items()
     {
-        return $this->hasMany(VatReturnItem::class, 'vat_return_id');
+        return $this->hasMany(VatReturnItem::class, 'return_id');
     }
 
     public function taxpayer()

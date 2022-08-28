@@ -23,20 +23,20 @@ class RegistrationsController extends Controller
 
     public function show($kycId)
     {
-        $kyc = KYC::findOrFail($kycId);
+        $kyc = KYC::findOrFail(decrypt($kycId));
         return view('taxpayers.registrations.show', compact('kyc'));
     }
 
 
     public function enrollFingerprint($kycId)
     {
-        $kyc = KYC::findOrFail($kycId);
+        $kyc = KYC::findOrFail(decrypt($kycId));
         return view('taxpayers.registrations.enroll-fingerprint', compact('kyc'));
     }
 
     public function verifyUser($kycId)
     {
-        $kyc = KYC::findOrFail($kycId);
+        $kyc = KYC::findOrFail(decrypt($kycId));
         if (config('app.env') != 'local') {
             $biometrics = Biometric::where('reference_no', $kyc->reference_no)
                 ->get();

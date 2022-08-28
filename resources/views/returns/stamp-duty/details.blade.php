@@ -6,15 +6,15 @@
     <th style="width: 20%">VAT</th>
     </thead>
     <tbody>
-    @foreach ($return->items as $item)
-        <tr>
-            <td>{{ $item->config->name ?? 'name' }}</td>
-            <td>{{ number_format($item->value) }}</td>
-            <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' : $item->config->rate_usd ?? '' }}
-            </td>
-            <td>{{ number_format($item->vat) }}</td>
-        </tr>
-    @endforeach
+        @foreach ($return->items as $item)
+            <tr>
+                <td>{{ $item->config->name ?? 'name' }}</td>
+                <td>{{ number_format($item->value) }}</td>
+                <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' : $item->config->rate_usd ?? '' }}
+                </td>
+                <td>{{ number_format($item->tax) }}</td>
+            </tr>
+        @endforeach
     </tbody>
     <tfoot>
     <tr>

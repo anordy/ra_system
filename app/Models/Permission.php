@@ -23,4 +23,5 @@ class Permission extends Model
     {
         return $this->belongsTo(SysModule::class, 'sys_module_id');
     }
+    
 }

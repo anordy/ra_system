@@ -54,6 +54,17 @@
                         <p>Null</p>
                     @endif
                 </div>
+
+                <div class="col-md-3 mb-2">
+                    <span class="font-weight-bold text-uppercase">Application Type</span>
+
+                    @if ($agent->is_first_application == 1)
+                        <p class="my-1">Registration</p>
+                    @else
+                        <p class="my-1">Renewal</p>
+                    @endif
+                </div>
+
                 <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">Application Status</span>
                     @if($agent->status == \App\Models\TaxAgentStatus::PENDING)

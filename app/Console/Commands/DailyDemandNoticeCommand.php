@@ -50,6 +50,7 @@ class DailyDemandNoticeCommand extends Command
     {
         Log::channel('demandNotice')->info("Daily Demand notice for returns and assesments");
         $debts = Debt::where('demand_notice_count', '<', 3)
+            ->whereRaw("TIMESTAMPDIFF(DAY, debts.curr_due_date, CURDATE()) >= 30")
             ->whereNotIn('status', ['completed', 'paid-by-debt'])
             ->get();
 
@@ -90,7 +91,7 @@ class DailyDemandNoticeCommand extends Command
         $nextSendDate = Carbon::create($debt->next_demand_notice_date);
 
         if ($now->gt($nextSendDate)) {
-            SendDemandNoticeEmail::dispatch($payload);
+            SendDemandNoticeEmail::dispatch($payload)->delay($now->addSeconds(30));
         }
     }
 }

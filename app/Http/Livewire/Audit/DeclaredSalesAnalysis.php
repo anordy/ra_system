@@ -309,7 +309,7 @@ class DeclaredSalesAnalysis extends Component
 
         $yearReturnGroup = BfoReturnItems::select('bfo_configs.code', 'bfo_return_items.value', 'bfo_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('bfo_configs', 'bfo_configs.id', 'bfo_return_items.config_id')
-            ->leftJoin('bfo_returns', 'bfo_returns.id', 'bfo_return_items.bfo_return_id')
+            ->leftJoin('bfo_returns', 'bfo_returns.id', 'bfo_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'bfo_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
             ->whereIn('config_id', $salesConfigs)
@@ -429,7 +429,7 @@ class DeclaredSalesAnalysis extends Component
     {
         $purchaseConfigs = StampDutyConfig::whereIn('code', ['EXIMP', 'LOCPUR', 'IMPPUR'])->get()->pluck('id');
 
-        $this->purchases = StampDutyReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_purchases, SUM(tax) as total_purchases_vat')
+        $this->purchases = StampDutyReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_purchases, SUM(vat) as total_purchases_vat')
             ->leftJoin('stamp_duty_configs', 'stamp_duty_configs.id', 'stamp_duty_return_items.config_id')
             ->leftJoin('stamp_duty_returns', 'stamp_duty_returns.id', 'stamp_duty_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'stamp_duty_returns.financial_month_id')
@@ -441,7 +441,7 @@ class DeclaredSalesAnalysis extends Component
 
         $salesConfigs = StampDutyConfig::whereIn('code', ['SUP', 'INST'])->get()->pluck('id');
 
-        $this->sales = StampDutyReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(tax) as total_sales_vat')
+        $this->sales = StampDutyReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
             ->leftJoin('stamp_duty_configs', 'stamp_duty_configs.id', 'stamp_duty_return_items.config_id')
             ->leftJoin('stamp_duty_returns', 'stamp_duty_returns.id', 'stamp_duty_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'stamp_duty_returns.financial_month_id')

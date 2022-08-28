@@ -2,18 +2,19 @@
 
 namespace App\Models\Returns\BFO;
 
-use App\Models\Business;
-use App\Models\BusinessLocation;
-use App\Models\Debts\Debt;
-use App\Models\FinancialMonth;
-use App\Models\FinancialYear;
-use App\Models\Returns\Vat\VatReturnItem;
-use App\Models\Taxpayer;
-use App\Models\TaxType;
 use App\Models\ZmBill;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TaxType;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
+use App\Models\FinancialYear;
+use App\Models\FinancialMonth;
+use App\Models\BusinessLocation;
+use App\Models\Returns\BFO\BfoPenalty;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Returns\BFO\BfoReturnItems;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BfoReturn extends Model
 {
@@ -27,7 +28,7 @@ class BfoReturn extends Model
     }
 
     public function items(){
-        return $this->hasMany(BfoReturnItems::class, 'bfo_return_id');
+        return $this->hasMany(BfoReturnItems::class, 'return_id');
     }
 
     public function debt(){
@@ -35,7 +36,7 @@ class BfoReturn extends Model
     }
 
     public function configReturns(){
-        return $this->hasMany(BfoReturnItems::class, 'bfo_return_id');
+        return $this->hasMany(BfoReturnItems::class, 'return_id');
     }
 
     public function business() {

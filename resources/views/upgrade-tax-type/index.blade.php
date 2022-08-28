@@ -45,7 +45,7 @@
                                         </strong>
                                         </td>
                                         <td>
-                                            <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($hotel_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                            <a href="{{route('business.upgrade-tax-types.show', [encrypt($return->id), encrypt($hotel_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                data-placement="right" title="View">
                                                 <i class="bi bi-eye-fill"></i>
                                                 View
@@ -88,7 +88,7 @@
                                                 </strong>
                                             </td>
                                             <td>
-                                                <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($stamp_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                <a href="{{route('bussiness.upgrade-tax-types.show', [encrypt($return->id), encrypt($stamp_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                    data-placement="right" title="View">
                                                     <i class="bi bi-eye-fill"></i>
                                                     View
@@ -131,7 +131,7 @@
                                                 </strong>
                                             </td>
                                             <td>
-                                                <a href="{{route('upgrade-tax-types.show', [encrypt($return->id), encrypt($lump_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                <a href="{{route('business.upgrade-tax-types.show', [encrypt($return->id), encrypt($lump_tax_type_id), encrypt($return->total_sales)])}}" class="btn btn-info btn-sm" data-toggle="tooltip"
                                                    data-placement="right" title="View">
                                                     <i class="bi bi-eye-fill"></i>
                                                     View

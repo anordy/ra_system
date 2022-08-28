@@ -28,78 +28,73 @@ class WorkflowDebtWaiverSeeder extends Seeder
                 'operator_type' => 'user',
                 'operators' => [],
             ],
-            'correct_application' => [
-                'owner' => 'taxpayer',
-                'operator_type' => 'user',
-                'operators' => [],
-            ],
-            'objection_manager' => [
+            'debt_manager' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2, 3],
+                'operators' => [1, 9]
             ],
-            'chief_assurance' => [
+            'crdm' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2, 3],
+                'operators' => [1, 10]
             ],
-            'commisioner' => [
+            'commissioner' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [1, 2, 3],
+                'operators' => [1, 7]
             ],
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
-                'operators' => [],
+                'operators' => []
+            ],
+            'rejected' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => []
             ],
         ];
         $transitions = [
             'application_submitted' => [
                 'from' => 'apply',
-                'to' => 'objection_manager',
+                'to'   => 'debt_manager',
                 'condition' => '',
             ],
-            'objection_manager_review' => [
-                'from' => 'objection_manager',
-                'to' => 'chief_assurance',
+            'debt_manager_review' => [
+                'from' => 'debt_manager',
+                'to'   => 'crdm',
                 'condition' => '',
             ],
-            'application_filled_incorrect' => [
-                'from' => 'objection_manager',
-                'to' => 'correct_application',
+            'crdm_review' => [
+                'from' => 'crdm',
+                'to'   => 'commissioner',
                 'condition' => '',
             ],
-            'application_corrected' => [
-                'from' => 'correct_application',
-                'to' => 'objection_manager',
+            'crdm_complete' => [
+                'from' => 'crdm',
+                'to'   => 'completed',
                 'condition' => '',
             ],
-            'chief_assurance_review' => [
-                'from' => 'chief_assurance',
-                'to' => 'commisioner',
+            'crdm_reject' => [
+                'from' => 'crdm',
+                'to'   => 'rejected',
                 'condition' => '',
             ],
-            'chief_assurance_reject' => [
-                'from' => 'chief_assurance',
-                'to' => 'objection_manager',
+            'commissioner_reject' => [
+                'from' => 'commissioner',
+                'to'   => 'rejected',
                 'condition' => '',
             ],
-            'commisioner_reject' => [
-                'from' => 'commisioner',
-                'to' => 'chief_assurance',
-                'condition' => '',
-            ],
-            'commisioner_review' => [
-                'from' => 'commisioner',
-                'to' => 'completed',
+            'commissioner_complete' => [
+                'from' => 'commissioner',
+                'to'   => 'completed',
                 'condition' => '',
             ],
 
         ];
 
         Workflow::updateOrCreate([
-            'code' => 'DEBTWAIVER',
+            'code' => 'DEBT_WAIVER',
             'summary' => 'Debt Waiver Workflow',
             'name' => $name,
             'type' => $type,

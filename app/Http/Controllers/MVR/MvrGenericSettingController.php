@@ -11,7 +11,7 @@ use Illuminate\Contracts\View\View;
 class MvrGenericSettingController extends Controller
 {
 
-    public function index($model): Factory|View|Application
+    public function index($model)
     {
         $class = 'App\Models\\'.$model;
         abort_if(!class_exists($class),404);
@@ -19,7 +19,7 @@ class MvrGenericSettingController extends Controller
         if (array_search(GenericSettingModel::class,class_parents($class))){
             $setting_title = $class::settingTitle();
         }else {
-            $setting_title = preg_replace('/^Mvr/','',$model);
+            $setting_title = preg_replace('/^(Mvr|Dl)/','',$model);
             $setting_title = preg_replace('/([a-z]+)([A-Z])/','$1 $2',$setting_title);
         }
 

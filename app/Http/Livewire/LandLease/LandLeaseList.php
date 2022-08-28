@@ -43,7 +43,7 @@ class LandLeaseList extends DataTableComponent
                             if ($row->is_registered == 1) {
                                 return $this->getApplicantName($row->taxpayer_id);
                             } else {
-                                return $value;
+                                return $row->name;
                             }
                         }
                     }
