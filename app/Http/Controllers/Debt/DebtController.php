@@ -2,21 +2,48 @@
 
 namespace App\Http\Controllers\Debt;
 
-use App\Http\Controllers\Controller;
+use App\Models\Business;
 use App\Models\Debts\Debt;
+use App\Models\Debts\DebtWaiver;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Debts\RecoveryMeasure;
+use App\Models\Debts\DebtWaiverAttachment;
 
 class DebtController extends Controller
 {
 
     public function index()
     {
+        if (!Gate::allows('debt-management-debts-view')) {
+            abort(403);
+        }       
         return view('debts.index');
     }
 
     public function overdue()
     {
+        if (!Gate::allows('debt-management-debts-overdue-view')) {
+            abort(403);
+        }
         return view('debts.overdue.overdue-debts');
+    }
+
+    public function waivers()
+    {
+        if (!Gate::allows('debt-management-waiver-debt-view')) {
+            abort(403);
+        }
+        return view('debts.waivers.index');
+    }
+
+    public function approval($waiverId)
+    {
+        $waiver = DebtWaiver::findOrFail(decrypt($waiverId));
+        $debt = Debt::find($waiver->debt_id);
+        $business = Business::find($waiver->business_id);
+        $files = DebtWaiverAttachment::where('debt_id', $waiver->id)->get();
+        return view('debts.waivers.approval', compact('waiver', 'files', 'business', 'debt'));
     }
 
     public function recovery($debtId)

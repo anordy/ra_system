@@ -51,7 +51,7 @@ class PermissionSeeder extends Seeder
 
             # Withholding Agent
             ['name' => 'withholding-agents-registration', 'sys_module_id' => 6],
-            ['name' => 'withholding-agents-list', 'sys_module_id' => 6],
+            ['name' => 'withholding-agents-view', 'sys_module_id' => 6],
             ['name' => 'withholding_agents_disable', 'sys_module_id' => 6],
 
             # Petroleum Management
