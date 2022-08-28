@@ -49,6 +49,8 @@ class ZanMalipoController extends Controller
         TaxAssessment::class,
         Dispute::class,
         TaxAgent::class,
+        PortReturn::class,
+        Debt::class,
         RenewTaxAgentRequest::class
     ];
 
