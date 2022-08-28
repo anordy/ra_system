@@ -29,6 +29,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'business-update-request-view', 'sys_module_id' => 2],
             ['name' => 'taxtype-change-request-view', 'sys_module_id' => 2],
             ['name' => 'qualified-tax-types-upgrade-view', 'sys_module_id' => 2],
+            ['name' => 'qualified-tax-types-upgrade-add', 'sys_module_id' => 2],
 
             # Tax Consultant
             ['name' => 'tax-consultant-registration-view', 'sys_module_id' => 3],
