@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Assesments;
 
 use App\Http\Controllers\Controller;
-use App\Models\Business;
-use App\Models\Objection;
-use App\Models\ObjectionAttachment;
-use App\Models\WaiverAttachment;
+use Illuminate\Support\Facades\Gate;
 
 class ObjectionController extends Controller
 {
     public function index()
     {
-        return view('assesments.objection.index');
+        if (!Gate::allows('dispute-objection-view')) {
+            abort(403);
+        }
+
+         return view('assesments.objection.index');
     }
 
     public function edit()

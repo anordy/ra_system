@@ -4,19 +4,21 @@ namespace App\Http\Controllers\Assesments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Business;
-use App\Models\Disputes\Dispute;
 use App\Models\DisputeAttachment;
+use App\Models\Disputes\Dispute;
 use App\Models\TaxAssessments\TaxAssessment;
-use App\Models\Verification\TaxVerificationAssessment;
-use App\Models\Waiver;
-use App\Models\WaiverAttachment;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class WaiverController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('dispute-waiver-view')) {
+            abort(403);
+        }
+
         return view('assesments.waiver.index');
     }
 
@@ -31,7 +33,7 @@ class WaiverController extends Controller
         $assesment = TaxAssessment::find($dispute->assesment_id);
         $business = Business::find($dispute->business_id);
         $files = DisputeAttachment::where('dispute_id', $dispute->id)->get();
-        return view('assesments.waiver.approval', compact('dispute', 'files', 'business','assesment'));
+        return view('assesments.waiver.approval', compact('dispute', 'files', 'business', 'assesment'));
     }
 
     public function files($path)
