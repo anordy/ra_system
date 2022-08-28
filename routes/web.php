@@ -29,6 +29,7 @@ use App\Http\Controllers\Business\BusinessFileController;
 use App\Http\Controllers\Business\BusinessUpdateFileController;
 use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\CaptchaController;
+use App\Http\Controllers\Cases\CasesController;
 use App\Http\Controllers\Claims\ClaimFilesController;
 use App\Http\Controllers\Claims\ClaimsController;
 use App\Http\Controllers\CountryController;
@@ -37,6 +38,7 @@ use App\Http\Controllers\Debt\AssessmentDebtController;
 use App\Http\Controllers\Debt\DebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Extension\ExtensionController;
 use App\Http\Controllers\HomeController;
@@ -86,6 +88,7 @@ use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
+use App\Http\Controllers\RoadInspectionOffence\RegisterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Setting\ExchangeRateController;
 use App\Http\Controllers\Setting\InterestRateController;
@@ -112,7 +115,6 @@ use App\Http\Livewire\Reports\Returns\ReturnReport;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
 
 Auth::routes();
 
@@ -151,10 +153,10 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/assesment-files', AssesmentFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
-        Route::name('mvr-generic.')->prefix('mvr-generic')->group(function(){
+        Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model','MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
+                ->where('model', 'DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
         });
     });
 
@@ -226,7 +228,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/upgrade-tax-types/', [UpgradeTaxtypeController::class, 'index'])->name('upgrade-tax-types.index');
         Route::get('/upgrade-tax-types/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('upgrade-tax-types.show');
-
     });
 
     // assesments
@@ -353,9 +354,9 @@ Route::middleware(['auth'])->group(function () {
 
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
-        Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
-        Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
-        Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
+        Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
+        Route::get('/returns/preview/{parameters}', [ReturnReportController::class, 'preview'])->name('returns.preview');
+        Route::get('/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -375,7 +376,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [InstallmentController::class, 'index'])->name('index');
         Route::get('/show/{installmentId}', [InstallmentController::class, 'show'])->name('show');
 
-        Route::prefix('/requests')->as('requests.')->group(function (){
+        Route::prefix('/requests')->as('requests.')->group(function () {
             Route::get('/', [InstallmentRequestController::class, 'index'])->name('index');
             Route::get('create/{debtId}', [InstallmentRequestController::class, 'create'])->name('create');
             Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
@@ -383,7 +384,6 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-  
     Route::name('debts.')->prefix('/debts')->group(function () {
         // General debts
         Route::get('/all', [DebtController::class, 'index'])->name('debt.index');
@@ -392,7 +392,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/show/{debtId}', [DebtController::class, 'show'])->name('debt.show');
         Route::get('/overdue/show/{debtId}', [DebtController::class, 'showOverdue'])->name('debt.showOverdue');
         Route::get('/demand-notice/send/{debtId}', [DebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
-
 
         // Assesments
         Route::get('/waivers', [AssessmentDebtController::class, 'waivers'])->name('waivers.index');
@@ -427,15 +426,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
 
-        Route::name('land-lease.')->prefix('land-lease')->group(function () {
-            Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
-            Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
-            Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
-            Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
-            Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');
-            Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
-            Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
-        });
+    Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');
+        Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
+        Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
+    });
 
     //Tax Clearance
     Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {
@@ -477,16 +476,40 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
         Route::get('/reg-change-chassis-search/{type}/{number}', [RegistrationChangeController::class, 'search'])
-            ->name('internal-search')->where('type','plate-number|chassis');
+            ->name('internal-search')->where('type', 'plate-number|chassis');
         Route::get('/de-registration-chassis-search/{type}/{number}', [DeRegistrationController::class, 'search'])
-            ->name('internal-search-dr')->where('type','plate-number|chassis');
+            ->name('internal-search-dr')->where('type', 'plate-number|chassis');
         Route::get('/ownership-transfer-chassis-search/{type}/{number}', [OwnershipTransferController::class, 'search'])
-            ->name('internal-search-ot')->where('type','plate-number|chassis');
+            ->name('internal-search-ot')->where('type', 'plate-number|chassis');
         Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
-            ->name('internal-search-wo')->where('type','plate-number|chassis');
-        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']);//todo: remove
-        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']);//todo: remove
-        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']);//todo: remove
-        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']);//todo: remove
+            ->name('internal-search-wo')->where('type', 'plate-number|chassis');
+        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove
+        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove
+        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove
+        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove
+    });
+
+    Route::prefix('drivers-license')->as('drivers-license.')->group(function () {
+        Route::get('/applications', [LicenseApplicationsController::class, 'index'])->name('applications');
+        Route::get('/applications/create', [LicenseApplicationsController::class, 'create'])->name('applications.create');
+        Route::get('/applications/submit/{id}', [LicenseApplicationsController::class, 'submit'])->name('applications.submit');
+        Route::get('/applications/approve/{id}', [LicenseApplicationsController::class, 'approve'])->name('applications.approve');
+        Route::get('/applications/printed/{id}', [LicenseApplicationsController::class, 'printed'])->name('applications.printed');
+        Route::get('/applications/{id}', [LicenseApplicationsController::class, 'show'])->name('applications.show');
+        Route::get('/applications/sp/{id}', [LicenseApplicationsController::class, 'simulatePayment'])->name('applications.sp');
+    });
+
+    Route::prefix('rio')->as('rio.')->group(function () {
+        Route::get('/register', [RegisterController::class, 'index'])->name('register');
+        Route::get('/register/create', [RegisterController::class, 'create'])->name('register.create');
+        Route::get('/register/remove-restriction/{id}', [RegisterController::class, 'removeRestriction'])->name('register.remove-restriction');
+        Route::get('/register/{id}', [RegisterController::class, 'show'])->name('register.show');
+    });
+
+    Route::prefix('cases')->as('cases.')->group(function () {
+        Route::get('/', [CasesController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [CasesController::class, 'show'])->name('show');
+        Route::get('/appeals', [CasesController::class, 'appealsIndex'])->name('appeals');
+        Route::get('/appeals/{id}', [CasesController::class, 'appealShow'])->name('appeal.show');
     });
 });

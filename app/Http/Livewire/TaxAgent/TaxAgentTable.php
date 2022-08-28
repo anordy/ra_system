@@ -15,7 +15,7 @@ class TaxAgentTable extends DataTableComponent
 
 	public function builder(): Builder
 	{
-		return TaxAgent::query()->where('status', '=', TaxAgentStatus::VERIFIED)->with('region', 'district');
+		return TaxAgent::query()->where('status', '=', TaxAgentStatus::VERIFIED)->with('region', 'district')->orderByDesc('id');
 	}
 
 	public function configure(): void

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxInvestigationStatus;
 use App\Models\Investigation\TaxInvestigationOfficer;
+use App\Models\Returns\ReturnStatus;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Role;
@@ -243,18 +244,29 @@ class TaxInvestigationApprovalProcessing extends Component
             Log::error($e);
             $this->alert('error', 'Something went wrong');
         }
+
+        if ($this->subject->status == TaxInvestigationStatus::APPROVED && $this->subject->assessment()->exists()) {
+            $this->generateControlNumber();
+            $this->subject->assessment->update([
+                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+            ]);
+        } else {
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+        }
     }
 
-    public function generateControlNumber($verification_assessment)
+    public function generateControlNumber()
     {
+        $assessment = $this->subject->assessment;
+        $taxType = $this->subject->taxType;
+
         DB::beginTransaction();
 
         try {
-
             $billitems = [
                 [
-                    'billable_id' => $verification_assessment->id,
-                    'billable_type' => get_class($verification_assessment),
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->principalAmount,
                     'currency' => 'TZS',
@@ -262,8 +274,8 @@ class TaxInvestigationApprovalProcessing extends Component
                     'tax_type_id' => $this->taxTypes->where('code', 'investigation')->first()->id
                 ],
                 [
-                    'billable_id' => $verification_assessment->id,
-                    'billable_type' => get_class($verification_assessment),
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->interestAmount,
                     'currency' => 'TZS',
@@ -271,8 +283,8 @@ class TaxInvestigationApprovalProcessing extends Component
                     'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
                 ],
                 [
-                    'billable_id' => $verification_assessment->id,
-                    'billable_type' => get_class($verification_assessment),
+                    'billable_id' => $assessment->id,
+                    'billable_type' => get_class($assessment),
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->penaltyAmount,
                     'currency' => 'TZS',
@@ -287,21 +299,21 @@ class TaxInvestigationApprovalProcessing extends Component
             $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
             $payer_email = $taxpayer->email;
             $payer_phone = $taxpayer->mobile;
-            $description = "Investigation for {$this->subject->taxType->name}}";
+            $description = "Verification for {$taxType->name} ";
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'TZS';
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();
-            $exchange_rate = 0;
+            $exchange_rate = 1;
             $payer_id = $taxpayer->id;
-            $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-            $billableId = $verification_assessment->id;
-            $billableType = get_class($verification_assessment);
+            $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
+            $billableId = $assessment->id;
+            $billableType = get_class($assessment);
 
             $zmBill = ZmCore::createBill(
                 $billableId,
                 $billableType,
-                $this->subject->tax_type_id,
+                $this->taxTypes->where('code', 'investigation')->first()->id,
                 $payer_id,
                 $payer_type,
                 $payer_name,
@@ -321,21 +333,21 @@ class TaxInvestigationApprovalProcessing extends Component
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
-                    $verification_assessment->status = TaxInvestigationStatus::CN_GENERATING;
-                    $verification_assessment->save();
+                    $assessment->status = ReturnStatus::CN_GENERATING;
+                    $assessment->save();
 
                     $this->flash('success', 'A control number has been generated successful.');
                 } else {
 
                     session()->flash('error', 'Control number generation failed, try again later');
-                    $verification_assessment->status = TaxInvestigationStatus::CN_GENERATION_FAILED;
+                    $assessment->status = ReturnStatus::CN_GENERATION_FAILED;
                 }
 
-                $verification_assessment->save();
+                $assessment->save();
             } else {
                 // We are local
-                $verification_assessment->status = TaxInvestigationStatus::CN_GENERATED;
-                $verification_assessment->save();
+                $assessment->status = ReturnStatus::CN_GENERATED;
+                $assessment->save();
 
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
@@ -351,7 +363,7 @@ class TaxInvestigationApprovalProcessing extends Component
             DB::rollBack();
         }
     }
-
+    
     public function reject($transtion)
     {
         $this->validate([

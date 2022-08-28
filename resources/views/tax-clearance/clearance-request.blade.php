@@ -5,10 +5,7 @@
 @section('content')
     <div class="row mx-1">
         <div class="col-md-12">
-            <livewire:tax-clearance.tax-clearance-request 
-            :returnDebts="$returnDebts" :verificationDebts="$verificationDebts"
-            :auditDebts="$auditDebts" :investigationDebts="$investigationDebts"
-            :taxClearence="$taxClearence" />
+            <livewire:tax-clearance.tax-clearance-request :debts="$debts" :taxClearence="$taxClearence" />
         </div>
     </div>
 @endsection

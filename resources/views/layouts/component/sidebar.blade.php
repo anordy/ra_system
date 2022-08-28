@@ -546,6 +546,30 @@
             </ul>
         </li>
 
+        <li  class="{{ (request()->is('drivers-license*') || request()->is('rio*')) ? 'active':'' }}">
+            <a href="#dlSubmenu" data-toggle="collapse" aria-expanded="{{ (request()->is('drivers-license*') || request()->is('rio*'))? 'true' : 'false' }}" class="dropdown-toggle">Driver's Licenses</a>
+            <ul class="collapse list-unstyled {{ (request()->is('drivers-license*') || request()->is('drivers-license*')) ? 'show' : '' }}" id="dlSubmenu">
+                <li class="{{ (request()->is('drivers-license/applications') || request()->is('drivers-license*')) ? 'active': '' }}">
+                    <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
+                </li>
+                <li class="{{ request()->is('rio*') ? 'active': '' }}">
+                    <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
+                </li>
+            </ul>
+        </li>
+
+        <li  class="{{ request()->is('cases*') ? 'active':'' }}">
+            <a href="#lcmSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('cases*') ? 'true' : 'false' }}" class="dropdown-toggle">Legal Cases Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('cases*') ? 'show' : '' }}" id="lcmSubmenu">
+                <li class="{{ request()->is('cases') ? 'active': '' }}">
+                    <a href="{{ route('cases.index') }}">Cases</a>
+                </li>
+                <li class="{{ request()->is('cases/appeals') ? 'active': '' }}">
+                    <a href="{{ route('cases.appeals') }}">Appeals</a>
+                </li>
+            </ul>
+        </li>
+
         @can('land-lease-management')
             <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
                 <a href="#landLeaseSubmenu" data-toggle="collapse"
@@ -780,6 +804,15 @@
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Transfer Fees</a>
                         </li>
                     @endcan
+                        <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','DlLicenseClass') }}">Driver's License Classes</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','DlLicenseDuration') }}">Driver's License Duration</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','DlBloodGroup') }}">Blood Groups</a>
+                        </li>
                 </ul>
             </li>
         @endcan

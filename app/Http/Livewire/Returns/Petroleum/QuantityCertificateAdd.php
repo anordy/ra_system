@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Returns\Petroleum;
 
-use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\QuantityCertificate;
@@ -21,7 +20,7 @@ class QuantityCertificateAdd extends Component
     use LivewireAlert;
 
 
-    public $business;
+    public $location;
     public $ship;
     public $port;
     public $cargo;
@@ -41,7 +40,7 @@ class QuantityCertificateAdd extends Component
             'port' => 'required',
             'voyage_no' => 'nullable',
             'ascertained' => 'required|date|after_or_equal:today',
-            'business' => [
+            'location' => [
                 'required',
                 'exists:business_locations,zin'
             ],
@@ -107,10 +106,11 @@ class QuantityCertificateAdd extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            $business = BusinessLocation::firstWhere('zin', $this->business);
+            $location = BusinessLocation::firstWhere('zin', $this->location);
             
             $certificate = QuantityCertificate::create([
-                'business_id' => $business->id,
+                'business_id' => $location->business_id,
+                'location_id' => $location->id,
                 'ascertained' => $this->ascertained,
                 'ship' => $this->ship,
                 'port' => $this->port,
@@ -119,7 +119,7 @@ class QuantityCertificateAdd extends Component
                 'download_count' => 0
             ]);
             
-            $certificateNumber = 'COQ-'.$business->zin.$certificate->id;
+            $certificateNumber = 'COQ-'.$location->zin.$certificate->id;
             $certificateUpdate = QuantityCertificate::find($certificate->id);
             $certificateUpdate->certificate_no = $certificateNumber;
             $certificateUpdate->save();
