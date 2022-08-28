@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowDebtWaiverSeeder::class);
         $this->call(WorkflowTaxAuditSeeder::class);
         $this->call(WorkflowDisputeSeeder::class);
+        $this->call(WorkflowDrivingLicenseApplicationSeeder::class);
         $this->call(EducationLevelSeeder::class);
         $this->call(HotelReturnConfigSeeder::class);
         $this->call(PetroleumConfigSeeder::class);
@@ -79,6 +80,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MvrFuelTypeTableSeeder::class);
         $this->call(MvrMakeTableSeeder::class);
         $this->call(MvrModelTableSeeder::class);
+        $this->call(MvrFeeTypesTableSeeder::class);
         $this->call(MvrTransmissionTypeTableSeeder::class);
         $this->call(RecoveryMeasureCategoriesSeeder::class);
         $this->call(WorkflowRecoveryMeasureSeeder::class);

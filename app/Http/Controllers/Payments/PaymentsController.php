@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Payments;
 use App\Http\Controllers\Controller;
 use App\Models\ZmPayment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 class PaymentsController extends Controller
 {
     public function complete(){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
         $usdDaily = ZmPayment::where('currency', 'USD')
             ->whereDate('trx_time', Carbon::today())
             ->sum('paid_amount');
