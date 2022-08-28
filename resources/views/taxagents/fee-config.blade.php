@@ -9,10 +9,13 @@
         <div class="card-header">
             <div class="text-uppercase font-weight-bold">Fee Configuration</div>
             <div class="card-tools">
-                <button class="btn btn-info btn-sm"
-                        onclick="Livewire.emit('showModal', 'tax-agent-fee-modal')"><i
-                            class="fa fa-plus-circle"></i>
-                    Add</button>
+                @can('tax-consultant-fee-configuration-add')
+                    <button class="btn btn-info btn-sm"
+                            onclick="Livewire.emit('showModal', 'tax-agent-fee-modal')"><i
+                                class="fa fa-plus-circle"></i> Add
+                    </button>
+                @endcan
+
             </div>
         </div>
 

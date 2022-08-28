@@ -309,7 +309,7 @@ class DeclaredSalesAnalysis extends Component
 
         $yearReturnGroup = BfoReturnItems::select('bfo_configs.code', 'bfo_return_items.value', 'bfo_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('bfo_configs', 'bfo_configs.id', 'bfo_return_items.config_id')
-            ->leftJoin('bfo_returns', 'bfo_returns.id', 'bfo_return_items.bfo_return_id')
+            ->leftJoin('bfo_returns', 'bfo_returns.id', 'bfo_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'bfo_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
             ->whereIn('config_id', $salesConfigs)

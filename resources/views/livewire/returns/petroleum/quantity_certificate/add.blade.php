@@ -5,9 +5,9 @@
         <div class="row">
             <div class="form-group col-lg-6">
                 <label class="control-label">Name of Importer/Market (ZIN No.)</label>
-                <input type="text" class="form-control @error('business') is-invalid @enderror"
-                    wire:model.lazy="business">
-                @error('business')
+                <input type="text" class="form-control @error('location') is-invalid @enderror"
+                    wire:model.lazy="location">
+                @error('location')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>

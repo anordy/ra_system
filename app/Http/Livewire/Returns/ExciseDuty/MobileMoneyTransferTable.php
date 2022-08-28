@@ -6,10 +6,17 @@ use Carbon\Carbon;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\MmTransferReturn;
+use Illuminate\Support\Facades\Gate;
 
 class MobileMoneyTransferTable extends DataTableComponent
 {
     protected $model = MmTransferReturn::class;
+
+    public function mount(){
+        if (!Gate::allows('return-mobile-money-transfer-view')) {
+            abort(403);
+        }
+    }
 
     public function configure(): void
     {

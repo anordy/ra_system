@@ -8,6 +8,7 @@ use App\Models\Returns\MmTransferReturn;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MobileMoneyTransferController extends Controller
 {
@@ -15,7 +16,9 @@ class MobileMoneyTransferController extends Controller
 
     public function index()
     {
-        // return MmTransferPenalty::getTableName();
+        if (!Gate::allows('return-mobile-money-transfer-view')) {
+            abort(403);
+        }
         $paidData = $this->returnCardReportForPaidReturns(MmTransferReturn::class, MmTransferReturn::getTableName(), MmTransferPenalty::getTableName());
 
         $unpaidData = $this->returnCardReportForUnpaidReturns(MmTransferReturn::class, MmTransferReturn::getTableName(), MmTransferPenalty::getTableName());

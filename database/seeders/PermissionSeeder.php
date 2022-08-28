@@ -29,12 +29,18 @@ class PermissionSeeder extends Seeder
             ['name' => 'business-update-request-view', 'sys_module_id' => 2],
             ['name' => 'taxtype-change-request-view', 'sys_module_id' => 2],
             ['name' => 'qualified-tax-types-upgrade-view', 'sys_module_id' => 2],
+            ['name' => 'qualified-tax-types-upgrade-add', 'sys_module_id' => 2],
 
             # Tax Consultant
             ['name' => 'tax-consultant-registration-view', 'sys_module_id' => 3],
             ['name' => 'active-tax-consultant-view', 'sys_module_id' => 3],
             ['name' => 'tax-consultant-renewal-requests-view', 'sys_module_id' => 3],
             ['name' => 'tax-consultant-fee-configuration-view', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-fee-configuration-add', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-verify', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-reject-first', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-approve', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-reject-last', 'sys_module_id' => 3],
 
             # Tax Returns
             ['name' => 'return-hotel-levy-view', 'sys_module_id' => 5],
@@ -51,11 +57,12 @@ class PermissionSeeder extends Seeder
 
             # Withholding Agent
             ['name' => 'withholding-agents-registration', 'sys_module_id' => 6],
-            ['name' => 'withholding-agents-list', 'sys_module_id' => 6],
+            ['name' => 'withholding-agents-view', 'sys_module_id' => 6],
             ['name' => 'withholding_agents_disable', 'sys_module_id' => 6],
 
             # Petroleum Management
-            ['name' => 'quantity-of-certificate-view', 'sys_module_id' => 7],
+            ['name' => 'certificate-of-quantity-view', 'sys_module_id' => 7],
+            ['name' => 'certificate-of-quantity-create', 'sys_module_id' => 7],
             ['name' => 'return-petroleum-return-view', 'sys_module_id' => 7],
 
             # Return Verifications
