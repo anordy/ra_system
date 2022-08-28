@@ -104,7 +104,7 @@ class Create extends Component
 
             DB::commit();
             $this->flash('success', 'Tax type changed successfully');
-            return redirect()->route('upgrade-tax-types.index');
+            return redirect()->route('business.upgrade-tax-types.index');
         }
         catch (\Throwable $exception)
         {

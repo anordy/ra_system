@@ -287,17 +287,17 @@
                     Tax Auditing
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
                         </li>
                     @endcan
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/assessments*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.assessments.index') }}">Assessments</a>
                         </li>
                     @endcan
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/verified*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.verified.index') }}">Approved Audits</a>
                         </li>
@@ -607,7 +607,7 @@
                 </ul>
             </li>
         @endcan
-        @can('managerial-report-management')
+        @can('managerial-report')
             <li class="{{ request()->is('reports*') ? 'active' : '' }}">
                 <a href="#reportSubmenu" data-toggle="collapse"
                     aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
@@ -617,6 +617,9 @@
                     @can('managerial-report-view')
                         <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
                             <a href="{{ route('reports.returns') }}">Return Reports</a>
+                        </li>
+                        <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
                         </li>
                     @endcan
                 </ul>
@@ -630,9 +633,9 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
 
-                <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
-                    <a href="{{ route('queries.nil-returns') }}">Nil Returns</a>
-                </li>
+{{--                <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">--}}
+{{--                    <a href="{{ route('queries.nil-returns') }}">Nil Returns</a>--}}
+{{--                </li>--}}
 
                 <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
                     <a href="{{ route('queries.non-filers') }}">Non Filers</a>
