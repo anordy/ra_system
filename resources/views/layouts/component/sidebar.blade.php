@@ -607,7 +607,7 @@
                 </ul>
             </li>
         @endcan
-        @can('managerial-report-management')
+        @can('managerial-report')
             <li class="{{ request()->is('reports*') ? 'active' : '' }}">
                 <a href="#reportSubmenu" data-toggle="collapse"
                     aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
@@ -617,6 +617,9 @@
                     @can('managerial-report-view')
                         <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
                             <a href="{{ route('reports.returns') }}">Return Reports</a>
+                        </li>
+                        <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
                         </li>
                     @endcan
                 </ul>
