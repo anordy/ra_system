@@ -31,10 +31,16 @@ class AgentsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Number", "agent_number")
+            Column::make("Agent Number", "agent_number")
                 ->sortable(),
             Column::make("Name", "taxpayer_id")
                 ->format(fn($taxpayer_id) => Taxpayer::query()->find($taxpayer_id)->fullname())
+                ->sortable(),
+            Column::make("ZRB Ref No.", "taxpayer_id")
+                ->format(function ($value) {
+                    $taxpayer = Taxpayer::find($value);
+                    return $taxpayer->reference_no;
+                })
                 ->sortable(),
             Column::make("Phone Numbers", "taxpayer_id")
                 ->format(function ($taxpayer_id) {
@@ -50,9 +56,9 @@ class AgentsTable extends DataTableComponent
                 })
                 ->sortable(),
             Column::make("Status", "status")
-            ->view("land-lease.includes.agent-status"),
+                ->view("land-lease.includes.agent-status"),
             Column::make('Action', 'id')
-            ->view("land-lease.includes.agent-actions")
+                ->view("land-lease.includes.agent-actions"),
             // ->hideIf(!Gate::allows('land-lease-change-agent-status')),
         ];
     }
