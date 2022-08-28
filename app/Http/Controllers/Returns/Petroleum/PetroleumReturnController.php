@@ -11,6 +11,7 @@ use App\Traits\ReturnSummaryCardTrait;
 use App\Traits\ReturnCardReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class PetroleumReturnController extends Controller
 {
@@ -20,6 +21,10 @@ class PetroleumReturnController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('return-petroleum-return-view')) {
+            abort(403);
+        }
+
         $vars = $this->getSummaryData(PetroleumReturn::query());
 
         $paidData = $this->returnCardReportForPaidReturns(PetroleumReturn::class, PetroleumReturn::getTableName(), PetroleumPenalty::getTableName());

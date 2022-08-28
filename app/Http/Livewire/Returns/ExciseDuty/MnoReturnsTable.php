@@ -48,7 +48,7 @@ class MnoReturnsTable extends DataTableComponent
                     return number_format($row->total_amount_due_with_penalties,2);
                 }),
                 
-            Column::make("Action", "status")
+            Column::make("Status", "status")
                 ->view('returns.excise-duty.mno.includes.status'),
             
             Column::make("Action", "id")

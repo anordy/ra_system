@@ -129,7 +129,8 @@
             You don't have permission to access this resource.
         </p>
         <div class="btns">
-            <a href="{{route('home')}}">return home</a>
+            <a href="{{route('home')}}">Home</a>
+            <a href="{{url()->previous()}}">Back</a>
         </div>
     </div>
 </div>

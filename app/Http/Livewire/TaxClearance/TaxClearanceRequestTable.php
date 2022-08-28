@@ -5,6 +5,7 @@ namespace App\Http\Livewire\TaxClearance;
 use App\Enum\TaxClearanceStatus;
 use App\Models\TaxClearanceRequest;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -16,6 +17,10 @@ class TaxClearanceRequestTable extends DataTableComponent
     public $approved = false;
 
     public function mount($status){
+
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
 
         if($status == TaxClearanceStatus::APPROVED){
             $this->approved = true;

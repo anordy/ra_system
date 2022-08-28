@@ -13,6 +13,7 @@ use App\Models\District;
 use App\Models\Taxpayer;
 use App\Models\WithholdingAgent;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 
@@ -88,6 +89,9 @@ class WithholdingAgentEditModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('withholding-agents-registration')) {
+            abort(403);
+        }
         $this->validate();
 
         try {

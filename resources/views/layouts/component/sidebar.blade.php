@@ -10,11 +10,12 @@
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
             <a href="{{ route('notifications') }}">Notifications
                 @if (auth()->user()->unreadNotifications->count() > 0)
-                    <span class="badge badge-light">
-                        <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                <span class="badge badge-light">
+                    <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
                 @endif
             </a>
         </li>
+
         @can('taxpayer-management')
             <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
                 <a href="#taxpayersMenu" data-toggle="collapse"
@@ -141,9 +142,16 @@
                             <a href="{{ route('returns.port.index') }}">Port Returns</a>
                         </li>
                     @endcan
+                    @can('return-bfo-excise-duty-return-view')
+                        <li class="{{ request()->is('e-filling/bfo-excise-duty*') ? 'active' : '' }}">
+                            <a href="{{ route('returns.bfo-excise-duty.index') }}">
+                                Banks, Financial Institutions and Others Returns
+                            </a>
+                        </li>
+                    @endcan
                     @can('return-mno-excise-duty-return-view')
                         <li class="{{ request()->is('e-filling/excise-duty/mno*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.excise-duty.mno') }}">MNO Excise Duty Returns</a>
+                            <a href="{{ route('returns.excise-duty.mno') }}">Moblie Network Operator Returns</a>
                         </li>
                     @endcan
                     @can('return-electronic-money-transaction-return-view')
@@ -154,11 +162,6 @@
                     @can('return-stamp-duty-return-view')
                         <li class="{{ request()->is('e-filling/stamp-duty*') ? 'active' : '' }}">
                             <a href="{{ route('returns.stamp-duty.index') }}">Stamp Duty Returns</a>
-                        </li>
-                    @endcan
-                    @can('return-bfo-excise-duty-return-view')
-                        <li class="{{ request()->is('e-filling/bfo-excise-duty*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.bfo-excise-duty.index') }}">BFO Excise Duty Return</a>
                         </li>
                     @endcan
                     @can('return-lump-sum-payment-return-view')
@@ -202,7 +205,7 @@
                 <a href="#petroleum" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Petroleum
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is('petroleum*') ? 'show' : '' }}" id="petroleum">
-                    @can('quantity-of-certificate-view')
+                    @can('certificate-of-quantity-view')
                         <li class="{{ request()->is('petroleum/certificateOfQuantity*') ? 'active' : '' }}">
                             <a href="{{ route('petroleum.certificateOfQuantity.index') }}">Certificate of Quantity</a>
                         </li>
@@ -319,7 +322,7 @@
                             <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
                         </li>
                     @endcan
-                    @can('tax-investigation-approved-view')
+                    @can('tax-investigation-approved-view') 
                         <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
                             <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
                         </li>
@@ -498,14 +501,16 @@
                     @endcan
                     @can('debt-management-bfo-returns-view')
                         <li class="{{ request()->is('debts/returns/bfo*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">BFO
-                                Returns</a>
+                            <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">
+                                Banks, Financial Institutions and Others Returns
+                            </a>
                         </li>
                     @endcan
                     @can('debt-management-mno-returns-view')
                         <li class="{{ request()->is('debts/returns/mno*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">MNO
-                                Returns</a>
+                            <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">
+                                Moblie Network Operator Returns
+                            </a>
                         </li>
                     @endcan
                 </ul>
@@ -572,6 +577,9 @@
                 </li>
                 <li class="{{ request()->is('cases/appeals') ? 'active' : '' }}">
                     <a href="{{ route('cases.appeals') }}">Appeals</a>
+                </li>
+                <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
                 </li>
             </ul>
         </li>
