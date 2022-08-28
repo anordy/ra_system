@@ -52,7 +52,8 @@ class AgentsTable extends DataTableComponent
             Column::make("Status", "status")
             ->view("land-lease.includes.agent-status"),
             Column::make('Action', 'id')
-            ->view("land-lease.includes.agent-actions"),
+            ->view("land-lease.includes.agent-actions")
+            // ->hideIf(!Gate::allows('land-lease-change-agent-status')),
         ];
     }
 

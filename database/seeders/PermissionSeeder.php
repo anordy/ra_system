@@ -118,8 +118,17 @@ class PermissionSeeder extends Seeder
 
 
             # Land Lease
+            ['name' => 'land-lease-create', 'sys_module_id' => 16],
             ['name' => 'land-lease-view', 'sys_module_id' => 16],
+            ['name' => 'land-lease-edit', 'sys_module_id' => 16],
+            ['name' => 'land-lease-delete', 'sys_module_id' => 16],
+            ['name' => 'land-lease-view-own', 'sys_module_id' => 16],
+
             ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
+            ['name' => 'land-lease-agent-view', 'sys_module_id' => 16],
+            ['name' => 'land-lease-register-agent', 'sys_module_id' => 16],
+            ['name' => 'land-lease-change-agent-status', 'sys_module_id' => 16],
+            ['name' => 'land-lease-generate-control-number', 'sys_module_id' => 16],
 
             
             # Managerial Report
@@ -230,10 +239,30 @@ class PermissionSeeder extends Seeder
 
             # Relief Management
             ['name' => 'relief-ministries-view', 'sys_module_id' => 23],
+            ['name' => 'relief-ministries-create', 'sys_module_id' => 23],
+            ['name' => 'relief-ministries-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-ministries-delete', 'sys_module_id' => 23],
+
             ['name' => 'relief-projects-view', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-create', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-delete', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-configure', 'sys_module_id' => 23],
+
+            ['name' => 'relief-project-list-view', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-list-create', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-list-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-list-delete', 'sys_module_id' => 23],
+
             ['name' => 'relief-registration-view', 'sys_module_id' => 23],
+            ['name' => 'relief-registration-create', 'sys_module_id' => 23],
+
             ['name' => 'relief-applications-view', 'sys_module_id' => 23],
+            ['name' => 'relief-applications-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-applications-delete', 'sys_module_id' => 23],
+
             ['name' => 'relief-generate-report-view', 'sys_module_id' => 23],
+            ['name' => 'relief-generate-report', 'sys_module_id' => 23],
 
         ];
 

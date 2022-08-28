@@ -7,6 +7,7 @@ use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\LandLease;
+use Illuminate\Support\Facades\Gate;
 
 class GenerateReport extends Component
 {
@@ -80,6 +81,9 @@ class GenerateReport extends Component
 
     public function export()
     {
+        if(!Gate::allows('land-lease-generate-report')){
+            abort(403);
+        }
         $dates = $this->getStartEndDate();
         if($dates['startDate'] == null || $dates['endDate'] == null) {
             $exists = LandLease::exists();
@@ -96,8 +100,30 @@ class GenerateReport extends Component
             $this->alert('success', 'Downloading file');
             return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'Land Leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
         } else {
-            // $this->flash('error', 'No records found.');
-            // return redirect()->back()->with('error', 'No data found for the selected period.');
+            $this->alert('error', "No data found for the selected period.");
+        }
+    }
+
+    public function exportPdf()
+    {
+        if(!Gate::allows('land-lease-generate-report')){
+            abort(403);
+        }
+        $dates = $this->getStartEndDate();
+        if($dates['startDate'] == null || $dates['endDate'] == null) {
+            $exists = LandLease::exists();
+            if($exists){
+                $this->alert('success', 'Exporting Pdf File');
+                return redirect()->route('land-lease.download.report.pdf', encrypt(json_encode($dates)));
+            }else{
+                $this->alert('error', "No data found.");
+            } 
+        }
+        $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
+        if ($exists) {
+            $this->alert('success', 'Exporting Pdf File');
+            return redirect()->route('land-lease.download.report.pdf', encrypt(json_encode($dates)));
+        } else {
             $this->alert('error', "No data found for the selected period.");
         }
     }

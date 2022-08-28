@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Support\Facades\Gate;
 
 class ReliefMinistriesAddModal extends Component
 {
@@ -33,6 +34,9 @@ class ReliefMinistriesAddModal extends Component
 
     public function submit()
     {
+        if(!Gate::allows('relief-ministries-create')){
+            abort(403); 
+        }
         $this->validate();
         try{
             ReliefMinistry::create([
