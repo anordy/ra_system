@@ -5,15 +5,22 @@ namespace App\Http\Controllers\Installment;
 use App\Http\Controllers\Controller;
 use App\Models\Installment\InstallmentRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class InstallmentRequestController extends Controller
 {
     public function index(){
+        if (!Gate::allows('payment-installment-request-view')) {
+            abort(403);
+        }
         return view('installment.requests.index');
     }
 
     public function show($installmentId){
+        if (!Gate::allows('payment-installment-request-view')) {
+            abort(403);
+        }
         $installment = InstallmentRequest::findOrFail(decrypt($installmentId));
         $debt = $installment->debt;
 
@@ -21,6 +28,9 @@ class InstallmentRequestController extends Controller
     }
 
     public function file($file){
+        if (!Gate::allows('payment-installment-request-view')) {
+            abort(403);
+        }
         if ($file) {
             try {
                 return Storage::disk('local-admin')->response(decrypt($file));

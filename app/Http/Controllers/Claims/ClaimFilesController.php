@@ -14,7 +14,6 @@ class ClaimFilesController extends Controller
         if (!Gate::allows('tax-claim-view')) {
             abort(403);
         }
-//        dd(decrypt($path));
         if ($path) {
             try {
                 return Storage::response(decrypt($path));

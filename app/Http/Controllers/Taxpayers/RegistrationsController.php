@@ -10,6 +10,7 @@ use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class RegistrationsController extends Controller
@@ -18,11 +19,17 @@ class RegistrationsController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('kyc_view')) {
+            abort(403);
+        }
         return view('taxpayers.registrations.index');
     }
 
     public function show($kycId)
     {
+        if (!Gate::allows('kyc_view')) {
+            abort(403);
+        }
         $kyc = KYC::findOrFail(decrypt($kycId));
         return view('taxpayers.registrations.show', compact('kyc'));
     }
@@ -30,12 +37,18 @@ class RegistrationsController extends Controller
 
     public function enrollFingerprint($kycId)
     {
+        if (!Gate::allows('kyc_view')) {
+            abort(403);
+        }
         $kyc = KYC::findOrFail(decrypt($kycId));
         return view('taxpayers.registrations.enroll-fingerprint', compact('kyc'));
     }
 
     public function verifyUser($kycId)
     {
+        if (!Gate::allows('kyc_view')) {
+            abort(403);
+        }
         $kyc = KYC::findOrFail(decrypt($kycId));
         if (config('app.env') != 'local') {
             $biometrics = Biometric::where('reference_no', $kyc->reference_no)
