@@ -623,6 +623,7 @@
             </li>
         @endcan
 
+        @can('managerial-report-view')
         <li class="{{ request()->is('queries*') ? 'active' : '' }}">
             <a href="#queriesSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
@@ -647,6 +648,7 @@
                 </li>
             </ul>
         </li>
+        @endcan
 
         @can('manage-payment-management')
             <li class="{{ request()->is('payments*') ? 'active' : '' }}">
