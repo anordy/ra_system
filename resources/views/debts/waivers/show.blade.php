@@ -2,7 +2,7 @@
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Complainant</a>
+                aria-selected="true">Waiver Details</a>
         </li>
 
         <li class="nav-item" role="presentation">
@@ -99,17 +99,48 @@
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $business->physical_address }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Waiver Type</span>
-                    <p class="my-1">
-                            <span class="badge badge-success py-1 px-2"
-                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                {{ $waiver->category }}
-                            </span>
-                    </p>
-                </div>
-
             </div>
+
+            @if ($debt)
+            <div class="card my-4 rounded-0">
+                <div class="card-header text-uppercase font-weight-bold bg-white">
+                    Debt Figures
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Waiver Type</span>
+                            <p class="my-1">
+                                    <span class="badge badge-success py-1 px-2"
+                                        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                        {{ $waiver->category }}
+                                    </span>
+                            </p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Principal Amount</span>
+                            <p class="my-1">{{ number_format($debt->principal_amount, 2) ?? '' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Penalty Amount</span>
+                            <p class="my-1">{{ number_format($debt->penalty, 2) ?? '' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                            <p class="my-1">{{ number_format($debt->interest, 2) ?? '' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Total Amount</span>
+                            <p class="my-1">{{ number_format($debt->total_amount, 2) ?? '' }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
+                            <p class="my-1">{{ number_format($debt->outstanding_amount, 2) ?? '' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         </div>
 
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">
@@ -153,33 +184,4 @@
         </div>
     </div>
 
-
-    @if ($debt)
-        <div class="card my-4 rounded-0">
-            <div class="card-header text-uppercase font-weight-bold bg-white">
-                Assessment Details
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                        <p class="my-1">{{ number_format($debt->principal_amount, 2) ?? '' }}</p>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                        <p class="my-1">{{ number_format($debt->penalty, 2) ?? '' }}</p>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                        <p class="my-1">{{ number_format($debt->interest, 2) ?? '' }}</p>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Total Amount Due</span>
-                        <p class="my-1">{{ number_format($debt->total_amount, 2) ?? '' }}</p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    @endif
 </div>
