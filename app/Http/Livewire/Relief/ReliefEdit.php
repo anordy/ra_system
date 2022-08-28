@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Gate;
 
 class ReliefEdit extends Component
 {
@@ -110,12 +111,14 @@ class ReliefEdit extends Component
             'items.*.costPerItem' => 'required|numeric',
             'attachments.*.file' => 'nullable|required_with:attachments.*.name|mimes:pdf',
             'attachments.*.name' => 'nullable|required_with:attachments.*.file',
-
         ];
     }
 
     public function save()
     {
+        if(!Gate::allows('relief-applications-edit')){
+            abort(403);
+        }
         $this->validate();
         try {
             DB::beginTransaction();

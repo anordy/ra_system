@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Gate;
 
 class ReliefRegistrations extends Component
 {
@@ -101,6 +102,9 @@ class ReliefRegistrations extends Component
 
     public function save()
     {
+        if(!Gate::allows('relief-registration-create')){
+            abort(403);
+        }
         $this->validate();
         try {
             DB::beginTransaction();

@@ -59,6 +59,7 @@ class TaxClearanceController extends Controller
         $debts = Debt::where('business_location_id', $taxClearence->business_location_id)
             ->where('business_id', $taxClearence->business_id)
             ->where('status', '!=', ReturnStatus::COMPLETE)
+            ->with('installment')
             ->get();
             
         return view('tax-clearance.clearance-request', compact('debts', 'taxClearence'));
@@ -80,7 +81,9 @@ class TaxClearanceController extends Controller
         $debts = Debt::where('business_location_id', $taxClearence->business_location_id)
             ->where('business_id', $taxClearence->business_id)
             ->where('status', '!=', ReturnStatus::COMPLETE)
+            ->with('installment')
             ->get();
+        
 
         return view('tax-clearance.approval', compact('debts', 'taxClearence'));
     }

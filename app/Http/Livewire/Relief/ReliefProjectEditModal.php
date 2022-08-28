@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Support\Facades\Gate;
 
 class ReliefProjectEditModal extends Component
 {
@@ -35,6 +36,9 @@ class ReliefProjectEditModal extends Component
 
     public function submit()
     {
+        if(!Gate::allows('relief-projects-edit')){
+            abort(403);
+        }
         $this->validate();
         try {
             $this->reliefProjectSection->update([
