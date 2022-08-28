@@ -607,7 +607,7 @@
                 </ul>
             </li>
         @endcan
-        @can('managerial-report-management')
+        @can('managerial-report')
             <li class="{{ request()->is('reports*') ? 'active' : '' }}">
                 <a href="#reportSubmenu" data-toggle="collapse"
                     aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
