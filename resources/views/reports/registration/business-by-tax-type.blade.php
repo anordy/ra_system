@@ -5,10 +5,10 @@
 @section('content')
 <div class="card">
     <div class="card-header text-uppercase font-weight-bold">
-        Registration Reports
+        Business Registration By Tax type Reports
     </div>
     <div class="card-body mt-0">
-        @livewire('reports.registrations.registration-report')
+        @livewire('reports.registration.previews.business.business-tax-type-preview-table',['tax_type_id'=>$tax_type_id])
     </div>
 </div>
 @endsection

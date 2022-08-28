@@ -67,6 +67,8 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Reports\Registration\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Registration\InitRegReportController;
 use App\Http\Controllers\Reports\Registrations\RegistrationReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
@@ -108,8 +110,6 @@ use App\Http\Controllers\Verification\TaxVerificationVerifiedController;
 use App\Http\Controllers\WardController;
 use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
-use App\Http\Livewire\Reports\Returns\ReturnReport;
-use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -350,6 +350,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
         Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
         Route::get('/registrations',[RegistrationReportController::class,'index'])->name('registrations.index');
+
+        Route::get('/registration/init',[InitRegReportController::class,'init'])->name('registration.init');
+
+        Route::get('/registration/business-by-nature/preview/{isic1}',[BusinessRegReportController::class,'byNature'])->name('registration.business-by-nature.preview');
+        Route::get('/registration/business-by-nature/pdf/preview/{isic1}',[BusinessRegReportController::class,'exportBusinessByNatureReportPdf'])->name('registration.business-by-nature.pdf');
+
+        Route::get('/registration/business-by-tax-type/preview/{tax_type_id}',[BusinessRegReportController::class,'byTaxType'])->name('registration.business-by-tax-type.preview');
+        Route::get('/registration/business-by-tax-type/pdf/{tax_type_id}',[BusinessRegReportController::class,'exportBusinessByTaxTypeReportPdf'])->name('registration.business-by-tax-type.pdf');
+
+        Route::get('/registration/business-by-turn-over-last/preview/{from}/{to}',[BusinessRegReportController::class,'byTurnOverLast'])->name('registration.business-by-turn-over-last.preview');
+        Route::get('/registration/business-by-turn-over-last/pdf/{from}/{to}',[BusinessRegReportController::class,'exportBusinessByTurnOverLastReportPdf'])->name('registration.business-by-turn-over-last.pdf');
+
+        Route::get('/registration/business-by-turn-over-next/preview/{from}/{to}',[BusinessRegReportController::class,'byTurnOverNext'])->name('registration.business-by-turn-over-next.preview');
+        Route::get('/registration/business-by-turn-over-next/pdf/{from}/{to}',[BusinessRegReportController::class,'exportBusinessByTurnOverNextReportPdf'])->name('registration.business-by-turn-over-next.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
