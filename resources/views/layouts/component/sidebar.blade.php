@@ -319,7 +319,7 @@
                             <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
                         </li>
                     @endcan
-                    @can('tax-investigation-approved-view')
+                    @can('tax-investigation-approved-view') 
                         <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
                             <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
                         </li>
