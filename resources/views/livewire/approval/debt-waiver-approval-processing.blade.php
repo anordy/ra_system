@@ -1,4 +1,4 @@
-@if (count($this->getEnabledTranstions()) > 1)
+@if (count($this->getEnabledTranstions()) >= 1)
     <div class="card shadow-sm mb-2 mt-4 bg-white mx-4">
         <div class="card-header font-weight-bold">
             Approval
@@ -6,11 +6,16 @@
         <div class="card-body">
             @include('livewire.approval.transitions')
 
-            @if ($this->checkTransition('objection_manager_review'))
-                @include('livewire.approval.debts.objection_manager_review')
-            @elseif ($this->checkTransition('commisioner_review'))
-                @include('livewire.approval.debts.objection_commisioner_review')
+            @if ($this->checkTransition('crdm_review'))
+                @if (!$forwardToCommisioner)
+                    @include('livewire.approval.debts.crdm_or_commissioner_review')
+                @endif
             @endif
+
+            @if ($this->checkTransition('commissioner_complete'))
+                @include('livewire.approval.debts.crdm_or_commissioner_review')
+            @endif
+
             <div class="row m">
                 <div class="col-md-12 mb-3">
                     <div class="form-group">
@@ -26,26 +31,25 @@
                 </div>
             </div>
         </div>
-        @if ($this->checkTransition('objection_manager_review'))
+        @if ($this->checkTransition('debt_manager_review'))
             <div class="modal-footer p-2 m-0">
-                {{-- <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
-                    Incorrect
-                    return to Applicant</button> --}}
-                <button type="button" class="btn btn-primary" wire:click="approve('objection_manager_review')">Approve
+                <button type="button" class="btn btn-primary" wire:click="approve('debt_manager_review')">Approve
                     & Forward</button>
             </div>
-        @elseif ($this->checkTransition('chief_assurance_review'))
+        @elseif ($this->checkTransition('crdm_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('chief_assurance_reject')">Reject
-                    & Return</button>
-                <button type="button" class="btn btn-primary" wire:click="approve('chief_assurance_review')">Approve &
-                    Forward</button>
+                @if ($forwardToCommisioner)
+                <button button type="button" class="btn btn-primary" wire:click="approve('crdm_review')">Approve
+                    & Forward</button>
+                @else
+                    <button type="button" class="btn btn-danger" wire:click="reject('crdm_reject')">Reject</button>
+                    <button type="button" class="btn btn-primary" wire:click="approve('crdm_complete')">Approve & Complete</button>
+                @endif
             </div>
-        @elseif ($this->checkTransition('commisioner_review'))
+        @elseif ($this->checkTransition('commissioner_complete'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('commisioner_review')">Reject &
-                    Return</button>
-                <button type="button" class="btn btn-primary" wire:click="approve('commisioner_review')">Approve &
+                <button type="button" class="btn btn-danger" wire:click="reject('commissioner_reject')">Reject</button>
+                <button type="button" class="btn btn-primary" wire:click="approve('commissioner_complete')">Approve &
                     Complete</button>
             </div>
         @endif
