@@ -80,6 +80,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MvrFuelTypeTableSeeder::class);
         $this->call(MvrMakeTableSeeder::class);
         $this->call(MvrModelTableSeeder::class);
+        $this->call(MvrFeeTypesTableSeeder::class);
         $this->call(MvrTransmissionTypeTableSeeder::class);
         $this->call(RecoveryMeasureCategoriesSeeder::class);
         $this->call(WorkflowRecoveryMeasureSeeder::class);
