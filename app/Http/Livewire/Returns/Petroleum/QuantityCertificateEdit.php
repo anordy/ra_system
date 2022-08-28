@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Returns\Petroleum;
 
-use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\QuantityCertificate;
 use App\Models\Returns\Petroleum\QuantityCertificateItem;
@@ -18,7 +18,7 @@ class QuantityCertificateEdit extends Component
 {
     use LivewireAlert;
 
-    public $business;
+    public $location;
     public $ship;
     public $port;
     public $cargo;
@@ -39,9 +39,9 @@ class QuantityCertificateEdit extends Component
             'port' => 'required',
             'voyage_no' => 'nullable',
             'ascertained' => 'required|date',
-            'business' => [
+            'location' => [
                 'required',
-                'exists:businesses,zin'
+                'exists:business_locations,zin'
             ],
             'products.*.config_id' => 'required',
             'products.*.liters_observed' => 'required|numeric',
@@ -64,13 +64,14 @@ class QuantityCertificateEdit extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $this->certificate = QuantityCertificate::with('business', 'products')->find($id);
+        $this->certificate = QuantityCertificate::with('location', 'products')->find($id);
+
 
         $this->ascertained = $this->certificate->ascertained;
         $this->ship = $this->certificate->ship;
         $this->port = $this->certificate->port;
         $this->voyage_no = $this->certificate->voyage_no;
-        $this->business = $this->certificate->business->zin;
+        $this->location = $this->certificate->location->zin ?? '';
 
         $this->configs = PetroleumConfig::where('row_type', 'dynamic')
             ->where('col_type', '!=', 'heading')
@@ -109,11 +110,16 @@ class QuantityCertificateEdit extends Component
     {
         $this->validate();
         DB::beginTransaction();
+        if($this->certificate->status == 'filled'){
+            session()->flash('success', "You can't edit the already filled certificate");
+            return;
+        }
         try {
-            $business = Business::firstWhere('zin', $this->business);
+            $location = BusinessLocation::firstWhere('zin', $this->location);
 
             $this->certificate->update([
-                'business_id' => $business->id,
+                'business_id' => $location->business_id,
+                'location_id' => $location->id,
                 'ascertained' => $this->ascertained,
                 'ship' => $this->ship,
                 'port' => $this->port,

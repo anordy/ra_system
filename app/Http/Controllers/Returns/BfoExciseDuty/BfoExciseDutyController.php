@@ -11,6 +11,7 @@ use App\Traits\ReturnSummaryCardTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyController extends Controller
 {
@@ -18,6 +19,9 @@ class BfoExciseDutyController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('return-bfo-excise-duty-return-view')) {
+            abort(403);
+        }
         $paidData = $this->returnCardReportForPaidReturns(BfoReturn::class, BfoReturn::getTableName(), BfoPenalty::getTableName());
 
         $unpaidData = $this->returnCardReportForUnpaidReturns(BfoReturn::class, BfoReturn::getTableName(), BfoPenalty::getTableName());

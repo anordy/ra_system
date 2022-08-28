@@ -116,7 +116,6 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
@@ -154,10 +153,10 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/assesment-files', AssesmentFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
-        Route::name('mvr-generic.')->prefix('mvr-generic')->group(function(){
+        Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model','DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
+                ->where('model', 'DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
         });
     });
 
@@ -229,7 +228,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/upgrade-tax-types/', [UpgradeTaxtypeController::class, 'index'])->name('upgrade-tax-types.index');
         Route::get('/upgrade-tax-types/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('upgrade-tax-types.show');
-
     });
 
     // assesments
@@ -356,9 +354,9 @@ Route::middleware(['auth'])->group(function () {
 
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
-        Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
-        Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
-        Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
+        Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
+        Route::get('/returns/preview/{parameters}', [ReturnReportController::class, 'preview'])->name('returns.preview');
+        Route::get('/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -378,7 +376,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [InstallmentController::class, 'index'])->name('index');
         Route::get('/show/{installmentId}', [InstallmentController::class, 'show'])->name('show');
 
-        Route::prefix('/requests')->as('requests.')->group(function (){
+        Route::prefix('/requests')->as('requests.')->group(function () {
             Route::get('/', [InstallmentRequestController::class, 'index'])->name('index');
             Route::get('create/{debtId}', [InstallmentRequestController::class, 'create'])->name('create');
             Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
@@ -386,7 +384,6 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-  
     Route::name('debts.')->prefix('/debts')->group(function () {
         // General debts
         Route::get('/all', [DebtController::class, 'index'])->name('debt.index');
@@ -396,10 +393,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/overdue/show/{debtId}', [DebtController::class, 'showOverdue'])->name('debt.showOverdue');
         Route::get('/demand-notice/send/{debtId}', [DebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
 
-
         // Assesments
-        Route::get('/waivers', [AssessmentDebtController::class, 'waivers'])->name('waivers.index');
-        Route::get('/waivers/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('waivers.approval');
+        Route::get('/waivers', [DebtController::class, 'waivers'])->name('waivers.index');
+        Route::get('/waivers/{waiverId}', [DebtController::class, 'approval'])->name('waivers.approval');
 
         Route::get('/audits', [AssessmentDebtController::class, 'audit'])->name('audits.index');
         Route::get('/assessments', [AssessmentDebtController::class, 'verification'])->name('assessments.index');
@@ -430,15 +426,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
 
-        Route::name('land-lease.')->prefix('land-lease')->group(function () {
-            Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
-            Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
-            Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
-            Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
-            Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');
-            Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
-            Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
-        });
+    Route::name('land-lease.')->prefix('land-lease')->group(function () {
+        Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
+        Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
+        Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');
+        Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
+        Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
+    });
 
     //Tax Clearance
     Route::name('tax-clearance.')->prefix('tax-clearance')->group(function () {
@@ -480,17 +476,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/agent', [AgentsController::class, 'index'])->name('agent');
         Route::get('/agent/create', [AgentsController::class, 'create'])->name('agent.create');
         Route::get('/reg-change-chassis-search/{type}/{number}', [RegistrationChangeController::class, 'search'])
-            ->name('internal-search')->where('type','plate-number|chassis');
+            ->name('internal-search')->where('type', 'plate-number|chassis');
         Route::get('/de-registration-chassis-search/{type}/{number}', [DeRegistrationController::class, 'search'])
-            ->name('internal-search-dr')->where('type','plate-number|chassis');
+            ->name('internal-search-dr')->where('type', 'plate-number|chassis');
         Route::get('/ownership-transfer-chassis-search/{type}/{number}', [OwnershipTransferController::class, 'search'])
-            ->name('internal-search-ot')->where('type','plate-number|chassis');
+            ->name('internal-search-ot')->where('type', 'plate-number|chassis');
         Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
-            ->name('internal-search-wo')->where('type','plate-number|chassis');
-        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']);//todo: remove
-        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']);//todo: remove
-        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']);//todo: remove
-        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']);//todo: remove
+            ->name('internal-search-wo')->where('type', 'plate-number|chassis');
+        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove
+        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove
+        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove
+        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {

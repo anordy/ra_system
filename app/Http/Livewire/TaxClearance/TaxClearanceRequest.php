@@ -8,24 +8,22 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 
 class TaxClearanceRequest extends Component
 {
-    public $returnDebts;
-    public $verificationDebts;
-    public $auditDebts;
-    public $investigationDebts;
+    public $debts;
     public $taxClearence;
 
-    public function mount($taxClearence, $returnDebts, $verificationDebts, $auditDebts, $investigationDebts){
-        $this->returnDebts = $returnDebts;
-        $this->verificationDebts = $verificationDebts;
-        $this->auditDebts = $auditDebts;
-        $this->investigationDebts = $investigationDebts;
+    public function mount($debts, $taxClearence){
+
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+
+        $this->debts = $debts;
         $this->taxClearence = $taxClearence;
-
-
     }
 
     public function render()
