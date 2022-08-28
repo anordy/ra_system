@@ -2,16 +2,18 @@
 
 namespace App\Models\Returns;
 
-use App\Models\Debts\Debt;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
 use App\Models\FinancialYear;
 use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Returns\EmTransactionPenalty;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Returns\EmTransactionReturnItem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EmTransactionReturn extends Model

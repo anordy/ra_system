@@ -16,6 +16,7 @@ class CreateQuantityCertificatesTable extends Migration
         Schema::create('quantity_certificates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('location_id');
             $table->string('ship');
             $table->string('port');
             $table->string('voyage_no')->nullable();
