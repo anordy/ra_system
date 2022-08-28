@@ -128,7 +128,8 @@
             Sorry, the page you're looking for doesn't exist. If you think something is broken, report a problem to admin.
         </p>
         <div class="btns">
-            <a href="{{route('home')}}">return home</a>
+            <a href="{{route('home')}}">Home</a>
+            <a href="{{url()->previous()}}">Back</a>
         </div>
     </div>
 </div>

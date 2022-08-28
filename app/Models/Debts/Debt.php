@@ -2,6 +2,9 @@
 
 namespace App\Models\Debts;
 
+use App\Models\Extension\ExtensionRequest;
+use App\Models\Installment\Installment;
+use App\Models\Installment\InstallmentRequest;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
@@ -54,5 +57,17 @@ class Debt extends Model
 
     public function debt(){
         return $this->morphTo();
+    }
+
+    public function extensionRequest(){
+        return $this->hasOne(ExtensionRequest::class);
+    }
+
+    public function installmentRequest(){
+        return $this->hasOne(InstallmentRequest::class);
+    }
+
+    public function installment(){
+        return $this->hasOne(Installment::class);
     }
 }

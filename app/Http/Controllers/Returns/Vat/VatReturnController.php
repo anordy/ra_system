@@ -9,6 +9,7 @@ use App\Models\Returns\Vat\VatReturnPenalty;
 use App\Traits\PaymentsTrait;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
+use Illuminate\Support\Facades\Gate;
 
 class VatReturnController extends Controller
 {
@@ -16,6 +17,9 @@ class VatReturnController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('return-vat-return-view')) {
+            abort(403);
+        }
         $paidData = $this->returnCardReportForPaidReturns(VatReturn::class, VatReturn::getTableName(), VatReturnPenalty::getTableName());
 
         $unpaidData = $this->returnCardReportForUnpaidReturns(VatReturn::class, VatReturn::getTableName(), VatReturnPenalty::getTableName());
@@ -26,6 +30,9 @@ class VatReturnController extends Controller
     }
     public function show($id)
     {
+        if (!Gate::allows('return-vat-return-view')) {
+            abort(403);
+        }
         $return = VatReturn::query()->findOrFail(decrypt($id));
         $egovernmentFee = $this->getTransactionFee(
             $return->total_amount_due_with_penalties,
