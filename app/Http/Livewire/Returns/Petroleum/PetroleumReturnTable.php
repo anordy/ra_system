@@ -6,9 +6,17 @@ use App\Models\Returns\Petroleum\PetroleumReturn;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 
 class PetroleumReturnTable extends DataTableComponent
 {
+
+    public function mount(){
+        if (!Gate::allows('return-petroleum-return-view')) {
+            abort(403);
+        }
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');

@@ -7,12 +7,19 @@ use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\TaxClearanceRequest;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxClearanceRequestApprovalTable extends DataTableComponent
 {
+    public function mount(){
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');

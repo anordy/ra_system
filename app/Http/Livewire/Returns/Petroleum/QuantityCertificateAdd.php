@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Illuminate\Support\Collection;
-
+use Illuminate\Support\Facades\Gate;
 
 class QuantityCertificateAdd extends Component
 {
@@ -64,6 +64,10 @@ class QuantityCertificateAdd extends Component
 
     public function mount()
     {
+        if (!Gate::allows('certificate-of-quantity-create')) {
+            abort(403);
+        }
+
         $this->ascertained = Carbon::now()->toDateString();
 
         $this->configs = PetroleumConfig::where('row_type', 'dynamic')
