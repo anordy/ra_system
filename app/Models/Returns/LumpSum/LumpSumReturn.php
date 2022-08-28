@@ -2,17 +2,18 @@
 
 namespace App\Models\Returns\LumpSum;
 
-use App\Models\Debts\Debt;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\BusinessLocation;
-use App\Models\FinancialMonth;
-use App\Models\FinancialYear;
-use App\Models\Business;
-use App\Models\LumpSumPayment;
-use App\Models\Taxpayer;
-use App\Models\TaxType;
 use App\Models\ZmBill;
+use App\Models\TaxType;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
+use App\Models\FinancialYear;
+use App\Models\FinancialMonth;
+use App\Models\LumpSumPayment;
+use App\Models\BusinessLocation;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Returns\LumpSum\LumpSumPenalties;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LumpSumReturn extends Model
 {
