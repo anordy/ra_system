@@ -70,7 +70,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'verification-assessment-view', 'sys_module_id' => 8],
             ['name' => 'verification-approved-view', 'sys_module_id' => 8],
 
-
             # Tax Claim
             ['name' => 'tax-claim-view', 'sys_module_id' => 9],
 
@@ -83,7 +82,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-investigation-approval-view', 'sys_module_id' => 11],
             ['name' => 'tax-investigation-assessment-view', 'sys_module_id' => 11],
             ['name' => 'tax-investigation-approved-view', 'sys_module_id' => 11],
-
 
             # Disputes Management
             ['name' => 'dispute-waiver-view', 'sys_module_id' => 12],
@@ -123,11 +121,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15],
 
-
             # Land Lease
             ['name' => 'land-lease-view', 'sys_module_id' => 16],
             ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
-
             
             # Managerial Report
             ['name' => 'managerial-report-view', 'sys_module_id' => 20],
@@ -233,7 +229,6 @@ class PermissionSeeder extends Seeder
             # Installment
             ['name' => 'payment-installment-view', 'sys_module_id' => 22],
             ['name' => 'payment-installment-request-view', 'sys_module_id' => 22],
-
 
             # Relief Management
             ['name' => 'relief-ministries-view', 'sys_module_id' => 23],
