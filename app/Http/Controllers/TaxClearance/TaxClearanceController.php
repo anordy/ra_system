@@ -21,21 +21,34 @@ use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxClearanceRequest;
 use App\Models\Verification\TaxVerification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class TaxClearanceController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+
         return view('tax-clearance.index');
     }
     public function requestList()
     {
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+
         return view('tax-clearance.requests');
     }
 
     public function viewRequest($requestId)
     {
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+
         $request_id = decrypt($requestId);
 
         $taxClearence = TaxClearanceRequest::where('id', $request_id)
@@ -53,6 +66,10 @@ class TaxClearanceController extends Controller
 
     public function approval($requestId)
     {
+        if (!Gate::allows('tax-clearance-view')) {
+            abort(403);
+        }
+
         $request_id = decrypt($requestId);
 
         $taxClearence = TaxClearanceRequest::where('id', $request_id)
@@ -66,7 +83,6 @@ class TaxClearanceController extends Controller
             ->get();
 
         return view('tax-clearance.approval', compact('debts', 'taxClearence'));
-        // return view('tax-clearance.approval',compact('debts','taxClearence', 'returnDebts', 'verificationDebts', 'auditDebts', 'investigationDebts'));
     }
 
     public function generateReturnsDebts($business_location_id)
@@ -85,7 +101,7 @@ class TaxClearanceController extends Controller
             BfoReturn::class,
             LumpSumReturn::class,
         ];
-        // dd($returnModels);
+
         $return_debts = [];
 
         foreach ($returnModels as $model) {

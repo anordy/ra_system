@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Returns\Petroleum;
 use PDF;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Petroleum\QuantityCertificate;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class QuantityCertificateController extends Controller
@@ -12,16 +13,19 @@ class QuantityCertificateController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('certificate-of-quantity-view')) {
+            abort(403);
+        }
+
         return view('returns.petroleum.quantity_certificate.index');
     }
 
     public function create()
     {
-        // $checkAnyPending = QuantityCertificate::where('status', 'pending')->first();
-        // if($checkAnyPending) {
-        //     $this->alert('warning', 'Client must complete filing for previous certificate first.');
-        //     return back();
-        // }
+        if (!Gate::allows('certificate-of-quantity-create')) {
+            abort(403);
+        }
+
         return view('returns.petroleum.quantity_certificate.create');
     }
 
@@ -32,6 +36,10 @@ class QuantityCertificateController extends Controller
 
     public function show($id)
     {
+        if (!Gate::allows('certificate-of-quantity-view')) {
+            abort(403);
+        }
+
         return view('returns.petroleum.quantity_certificate.show', compact('id'));
     }
 

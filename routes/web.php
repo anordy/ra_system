@@ -414,8 +414,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/demand-notice/send/{debtId}', [DebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
 
         // Assesments
-        Route::get('/waivers', [AssessmentDebtController::class, 'waivers'])->name('waivers.index');
-        Route::get('/waivers/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('waivers.approval');
+        Route::get('/waivers', [DebtController::class, 'waivers'])->name('waivers.index');
+        Route::get('/waivers/{waiverId}', [DebtController::class, 'approval'])->name('waivers.approval');
 
         Route::get('/audits', [AssessmentDebtController::class, 'audit'])->name('audits.index');
         Route::get('/assessments', [AssessmentDebtController::class, 'verification'])->name('assessments.index');

@@ -7,9 +7,17 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use App\Models\Returns\EmTransactionReturn;
+use Illuminate\Support\Facades\Gate;
 
 class EmTransactionsTable extends DataTableComponent
 {
+
+    public function mount(){
+        if (!Gate::allows('return-electronic-money-transaction-return-view')) {
+            abort(403);
+        }
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');

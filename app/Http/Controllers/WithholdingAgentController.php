@@ -1,29 +1,39 @@
 <?php
 
 namespace App\Http\Controllers;
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\SvgWriter;
 use PDF;
 use App\Models\WaResponsiblePerson;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
+use Illuminate\Support\Facades\Gate;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 
 class WithholdingAgentController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('withholding-agents-view')) {
+            abort(403);
+        }
         return view('withholding-agent.index');
     }
 
     public function view()
     {
+        if (!Gate::allows('withholding-agents-view')) {
+            abort(403);
+        }
         return view('withholding-agent.view');
     }
 
     public function registration()
     {
+        if (!Gate::allows('withholding-agents-registration')) {
+            abort(403);
+        }
         return view('withholding-agent.registration');
     }
 

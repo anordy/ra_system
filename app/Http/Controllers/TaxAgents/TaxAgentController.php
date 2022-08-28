@@ -32,7 +32,7 @@ class TaxAgentController extends Controller
 
 	public function activeAgents()
 	{
-        if (Gate::allows('tax-consultant-registration-view')) {
+        if (!Gate::allows('tax-consultant-registration-view')) {
             abort(403);
         }
 		return view('taxagents.activeTaxagents');

@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\BFO\BfoReturn;
+use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyTable extends DataTableComponent
 {
     protected $model = BfoReturn::class;
+
+    public function mount(){
+        if (!Gate::allows('return-bfo-excise-duty-return-view')) {
+            abort(403);
+        }
+    }
 
     public function configure(): void
     {
