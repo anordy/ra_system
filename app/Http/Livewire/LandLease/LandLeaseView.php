@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use App\Traits\PaymentsTrait;
+use Illuminate\Support\Facades\Gate;
 
 class LandLeaseView extends Component
 {
@@ -35,6 +36,10 @@ class LandLeaseView extends Component
 
     public function controlNumber()
     {
+
+        if(!Gate::allows('land-lease-generate-control-number')){
+            abort(403);
+        }
 
         DB::beginTransaction();
 
@@ -125,6 +130,9 @@ class LandLeaseView extends Component
     }
 
     public function regenerate(){
+        if(!Gate::allows('land-lease-generate-control-number')){
+            abort(403);
+        }
         $response = $this->regenerateControlNo($this->return->bill);
         if ($response){
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');

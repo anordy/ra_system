@@ -7,11 +7,11 @@
         <div class="card-header">
             <h5>Land Lease Agents</h5>
             <div class="card-tools">
-                {{-- @can('mvr_register_agent') --}}
+                @can('land-lease-register-agent')
                     <a href="{{route('land-lease.agent.create')}}">
                         <button class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i>Register</button>
                     </a>
-                {{-- @endcan --}}
+                @endcan
             </div>
         </div>
 

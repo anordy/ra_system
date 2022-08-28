@@ -32,9 +32,6 @@ class ReliefList extends DataTableComponent
     public function columns(): array
     {
         return [
-            // NumberColumn::make("ID", "id")
-            //     ->searchable()
-            //     ->sortable(),
             Column::make("Business", "business.name")
                 ->searchable(),
             Column::make("Location", "location.name")
@@ -74,12 +71,6 @@ class ReliefList extends DataTableComponent
                     return date('d/m/Y', strtotime($value));
                 })
                 ->searchable(),
-            // Column::make("Status", "status")
-            //     ->format(function ($value) {
-            //         return ucfirst($value);
-            //     })
-            //     ->searchable()
-            //     ->sortable(),
             Column::make("Status", "id")->view("relief.includes.relief-status"),
             Column::make("Actions", "id")->view("relief.includes.actions"),
         ];

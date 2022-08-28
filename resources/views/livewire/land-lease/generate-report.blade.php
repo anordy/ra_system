@@ -142,7 +142,13 @@
                         <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="export"></i>
                         <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                             wire:target="export"></i>
-                        Generate Report  
+                        Export to Excel 
+                    </button>
+                    <button  class="btn btn-success ml-2"  wire:click="exportPdf" wire:loading.attr="disabled">
+                        <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportPdf"></i>
+                        <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                            wire:target="exportPdf"></i>
+                        Export to Pdf  
                     </button>
                 </div>
 
@@ -159,8 +165,6 @@
             @livewire('land-lease.land-lease-report-table')
         </div>
     </div>
-    
-
 
 
 </div>

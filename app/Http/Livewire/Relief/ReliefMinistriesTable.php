@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Illuminate\Support\Facades\Gate;
 
 class ReliefMinistriesTable extends DataTableComponent
 {
@@ -40,17 +41,15 @@ class ReliefMinistriesTable extends DataTableComponent
                 ->sortable(),
             Column::make("Type", "type")
                 ->sortable(),
-            Column::make('Action', 'id')
-                ->format(fn($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-ministries-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
-                ->html(true),
+            Column::make("Actions", "id")->view("relief.ministries.includes.actions"),
         ];
     }
 
     public function delete($id)
     {
+        if(!Gate::allows('relief-ministries-delete')){
+            abort(403);
+        }
         $ministries = ReliefMinistry::find($id);
         //check if ministry has been used in relief project list and if so, prevent deletion
         if ($ministries->projectList()->count()>0) {
