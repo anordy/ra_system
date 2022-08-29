@@ -815,7 +815,7 @@
                                 Reasons</a>
                         </li>
                     @endcan
-                    @can('setting-transfer-category-view')
+                    @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
                                 Categories</a>
