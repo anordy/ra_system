@@ -6,13 +6,13 @@
     </span>
 @elseif ($row->status == 'control-number-generated')
     <span class="badge badge-warning "
-        style="border-radius: 1rem; background: #4edc3559; color: #474704; font-size: 100%; padding:3%">
+        style="border-radius: 1rem; background: #d4dc3559; color: #474704; font-size: 100%; padding:3%">
         <i class="bi bi-check-circle-fill mr-1"></i>
         Control Number Generated
     </span>
 @elseif ($row->status == 'control-number-generating')
     <span class="badge badge-warning "
-        style="border-radius: 1rem; background: #dcd43559; color: #474704; font-size: 100%; padding:3%">
+        style="border-radius: 1rem; background: #dcd43559; color: #474704; font-size: 80%; padding:3%">
         <i class="fas fa-clock mr-1 "></i>
         Control Number Generating
     </span>
