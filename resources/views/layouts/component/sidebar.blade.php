@@ -668,7 +668,7 @@
             </li>
         @endcan
 
-        @can('setting')
+        {{--@can('setting')--}}
             <li class="{{ request()->is('settings*') ? 'active' : '' }}">
                 <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
                 <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
@@ -836,12 +836,14 @@
                     <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlBloodGroup') }}">Blood Groups</a>
                     </li>
-                        <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index','DlBloodGroup') }}">Blood Groups</a>
+                        <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','DlFee') }}">Driver's License Fees</a>
                         </li>
                 </ul>
             </li>
+{{--
         @endcan
+--}}
         @can('system')
             <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
