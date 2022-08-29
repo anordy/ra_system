@@ -52,7 +52,7 @@ class LumpSumReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Control No', 'id')
-            ->label(fn ($row) => $row->bill->control_number ?? '')
+            ->label(fn ($row) => $row->bill->control_number ?? $row->debt->bill->control_number ?? '')
             ->searchable(),
             Column::make('Status', 'status')
             ->view('returns.lump-sum.status')
