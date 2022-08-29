@@ -55,10 +55,10 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th style="width: 20%"></th>
+                            <th style="width: 20%">Total</th>
                             <th style="width: 30%"></th>
                             <th style="width: 25%"></th>
-                            <th style="width: 25%">{{ number_format($return->total) }}</th>
+                            <th style="width: 25%">{{ number_format($return->total_amount_due) }}</th>
                         </tr>
 
                     </tfoot>
