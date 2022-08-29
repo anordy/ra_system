@@ -1,4 +1,4 @@
-<nav id="sidebar">
+<nav id="sidebar" class="mb-3">
     <div class="sidebar-header text-center pb-0">
         <h3 class="mt-2"><i class="bi bi-card-heading mr-2"></i> ZITMS</h3>
     </div>
@@ -840,7 +840,7 @@
             </li>
         @endcan
         @can('system')
-            <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
                 <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
                     @can('system-audit-trail-view')
