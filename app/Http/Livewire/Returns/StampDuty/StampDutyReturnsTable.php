@@ -9,13 +9,12 @@ use App\Models\Returns\StampDuty\StampDutyReturn;
 
 class StampDutyReturnsTable extends DataTableComponent
 {
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
     }
 
@@ -30,6 +29,9 @@ class StampDutyReturnsTable extends DataTableComponent
     {
         return [
             Column::make('Business Name', 'business.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('TIN', 'business.tin')

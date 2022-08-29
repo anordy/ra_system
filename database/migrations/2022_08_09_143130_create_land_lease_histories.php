@@ -31,6 +31,7 @@ class CreateLandLeaseHistories extends Migration
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('edited_by')->nullable();
             $table->enum('category', ['sole owner','business']);
+            $table->unsignedBigInteger('business_location_id')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();

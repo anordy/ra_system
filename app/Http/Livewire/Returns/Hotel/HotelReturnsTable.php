@@ -18,7 +18,7 @@ class HotelReturnsTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
         $this->setAdditionalSelects(['financial_month_id']);
     }
@@ -28,18 +28,16 @@ class HotelReturnsTable extends DataTableComponent
         $this->status = $status;
     }
 
-
-
     public function builder(): Builder
     {
         if ($this->status == 'all') {
             $tax = TaxType::where('code', TaxType::HOTEL)->first();
+
             return HotelReturn::where('tax_type_id', $tax->id)->orderBy('hotel_returns.created_at', 'desc');
-        } else if ($this->status == 'submitted') {
+        } elseif ($this->status == 'submitted') {
             return HotelReturn::where('hotel_returns.status', $this->status)->orderBy('hotel_returns.created_at', 'desc');
         }
     }
-
 
     public function columns(): array
     {
@@ -47,6 +45,9 @@ class HotelReturnsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),
@@ -78,7 +79,6 @@ class HotelReturnsTable extends DataTableComponent
                 })
                 ->searchable(),
             Column::make('Action', 'id')->view('returns.hotel.includes.actions'),
-
         ];
     }
 }
