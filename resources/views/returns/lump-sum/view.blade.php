@@ -5,7 +5,7 @@
 @section('content')
     <div class="card rounded-0">
         <div class="card-header bg-white h-100 d-flex justify-content-between align-items-center rounded-1">
-            <div>Lump Sum Payments</div>
+            <h6 class="text-uppercase">lumpsum payments details for the quater of {{ $return->quarter_name }}</h6>
         </div>
 
         <div class="card-body">
@@ -34,15 +34,20 @@
                     <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Total</span>
-                    <p class="my-1">{{ $return->currency }}
-                        {{ number_format($return->total_amount_due_with_penalties ?? 0, 2) }}</p>
+                    <span class="font-weight-bold text-uppercase">Application Status</span>
+                    <p class="my-1">{{ $return->application_status }}</p>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Payment Status</span>
+                    <p class="my-1">{{ $return->status }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Return Category</span>
+                    <p class="my-1"><span class="badge badge-info">{{ $return->return_category }}</span></p>
+                </div>
+
             </div>
-
             <livewire:returns.lump-sum.view-return :return="$return">
-
         </div>
-
     </div>
 @endsection

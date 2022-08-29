@@ -260,7 +260,7 @@
             </li>
         @endcan
 
-        @can('payment-installment')
+        @can('payment-installment-view')
             <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
                 <a href="#installment-menu" data-toggle="collapse"
                     aria-expanded="{{ request()->is('installments-e-filling*') ? 'true' : 'false' }}"
