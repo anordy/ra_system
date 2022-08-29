@@ -3,8 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Enum\BillStatus;
+use App\Enum\DebtPaymentMethod;
 use App\Enum\InstallmentStatus;
+use App\Enum\PaymentMethod;
 use App\Models\Installment\Installment;
+use App\Models\Returns\ReturnStatus;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -59,10 +62,25 @@ class UpdateInstallmentState extends Command
             $installment->update([
                 'status' => InstallmentStatus::COMPLETE
             ]);
+            // Mark debt as complete
+            $installment->debt->update([
+                'status' => ReturnStatus::COMPLETE
+            ]);
+
+            // Mark return as paid by debt
+            $installment->debt->debt->update([
+                'status' => ReturnStatus::PAID_BY_DEBT
+            ]);
+
         } elseif($installment->getNextPaymentDate() && $installment->getNextPaymentDate()->lessThan(Carbon::today())) {
             // Mark as FORFEIT
             $installment->update([
                 'status' => InstallmentStatus::CANCELLED
+            ]);
+
+            // Return debt to normal
+            $installment->debt->update([
+                'app_step' => DebtPaymentMethod::NORMAL
             ]);
         }
 

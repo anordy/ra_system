@@ -59,6 +59,10 @@ class Debt extends Model
         return $this->morphTo();
     }
 
+    public function return(){
+        return $this->morphTo('debt');
+    }
+
     public function extensionRequest(){
         return $this->hasOne(ExtensionRequest::class);
     }
