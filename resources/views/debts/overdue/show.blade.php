@@ -17,14 +17,14 @@
                             <div>
                                 <h6 class="text-uppercase mt-2 ml-2">Overdue Debt Details</h6>
                                 <hr>
-                                {{-- @if ($debt->recovery_measure_status == 'approved')
+                                @if ($debt->recovery_measure_status == 'none')
                                     <div class="card-tools">
-                                        <a href="{{ route('debts.debt.sendDemandNotice', encrypt($debt->id)) }}"
-                                            class="btn btn-info btn-sm text-white" style="color: white !important;"><i
+                                            <a href="{{ route('debts.debt.recovery', encrypt($debt->id)) }}"  class="btn btn-info btn-sm text-white" style="color: white !important;"><i
                                                 class="fa fa-plus text-white"></i>
-                                            Send Demand Notice Email</a>
+                                                Assign Recovery Measure
+                                            </a>
                                     </div>
-                                @endif --}}
+                                @endif
                             </div>
 
                             <div class="row m-2 pt-3">
@@ -87,6 +87,30 @@
                                     <p class="my-1">{{ $debt->payment_method }}</p>
                                 </div>
                             </div>
+
+                            @if (count($debt->recoveryMeasures))
+                            <div class="card p-0 m-0 mt-4">
+                                <div class="card-body mt-0 p-2">
+                                    <h6 class="text-uppercase mt-2 ml-2">Recommended Recovery Measures</h6>
+                                    <hr>
+                                    <div class="row m-2 pt-3">                         
+            
+                                        @foreach ($debt->recoveryMeasures as $key => $recovery_measure)
+                                            <div class="col-md-4 mb-3">
+                                                <span class="font-weight-bold text-uppercase">Measure Type</span>
+                                                <p class="my-1">{{ $key + 1 }}. {{ $recovery_measure->category->name }}</p>
+                                            </div>
+                                        @endforeach
+            
+                                        <div class="col-md-4 mb-3">
+                                            <span class="font-weight-bold text-uppercase">Status</span><br>
+                                            <span class="badge badge-primary">{{ $debt->recovery_measure_status }}</span>
+                                        </div>
+            
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
 
                     </div>

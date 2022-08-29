@@ -23,8 +23,7 @@ class TaxInvestigationApprovalTable extends DataTableComponent
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', TaxInvestigation::class)
             ->where('status', 'running')
-            ->whereJsonContains('operators', auth()->user()->id)
-            ->orderBy('created_at', 'DESC');
+            ->whereJsonContains('operators', auth()->user()->id);
     }
 
     public function configure(): void
@@ -58,7 +57,7 @@ class TaxInvestigationApprovalTable extends DataTableComponent
             Column::make('Created By', 'pinstance_id')
                 ->label(fn ($row) => $row->pinstance->createdBy->full_name ?? ''),
             Column::make('Created On', 'created_at')
-                ->label(fn ($row) => Carbon::create($row->pinstance->created_at)->toDayDateTimeString()),
+                ->label(fn ($row) => Carbon::create($row->pinstance->created_at ?? null)->toDayDateTimeString()),
             Column::make('Action', 'id')
                 ->view('investigation.approval.action')
                 ->html(true),

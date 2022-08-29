@@ -1,17 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\Assesments;
-
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
-use App\Models\Business;
-use App\Models\DisputeAttachment;
-use App\Models\Verification\TaxVerificationAssessment;
-use App\Models\WaiverObjection;
 
 class WaiverObjectionController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('dispute-waiver-objection-view')) {
+            abort(403);
+        }
+    
         return view('assesments.waiverobjection.index');
     }
 }

@@ -21,7 +21,7 @@ class VerificationController extends Controller
         //     'limit'  => 10,
         // ]); Used to fetch from TRA api
 
-        $response   = json_decode(file_get_contents(public_path() . '\api\TIN.json'), true);
+        $response   = json_decode(file_get_contents(public_path() . '/api/TIN.json'), true);
        
         if (array_key_exists($tin, $response)) {
             $taxpayer = $response[$tin];

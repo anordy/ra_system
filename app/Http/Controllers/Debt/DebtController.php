@@ -70,7 +70,8 @@ class DebtController extends Controller
     {
         $debtId = decrypt($debtId);
         $debt = Debt::findOrFail($debtId);
-        $recovery_measures = RecoveryMeasure::where('debt_id', $debtId)->get();
+        $recovery_measures = RecoveryMeasure::where('debt_id', $debt->id)->get();
+        // dd($recovery_measures);
         return view('debts.overdue.show', compact('debt', 'recovery_measures'));
     }
 

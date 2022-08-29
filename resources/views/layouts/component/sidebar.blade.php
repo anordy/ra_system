@@ -1,4 +1,4 @@
-<nav id="sidebar">
+<nav id="sidebar" class="mb-3">
     <div class="sidebar-header text-center pb-0">
         <h3 class="mt-2"><i class="bi bi-card-heading mr-2"></i> ZITMS</h3>
     </div>
@@ -322,7 +322,7 @@
                             <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
                         </li>
                     @endcan
-                    @can('tax-investigation-approved-view') 
+                    @can('tax-investigation-approved-view')
                         <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
                             <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
                         </li>
@@ -413,8 +413,8 @@
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
                     @can('debt-management-debts-view')
-                        <li class="{{ request()->is('debts/debt*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.debt.index') }}">Debts</a>
+                        <li class="{{ request()->is('debts/all*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.debt.index') }}">Normal Debts</a>
                         </li>
                     @endcan
                     @can('debt-management-debts-overdue-view')
@@ -457,20 +457,20 @@
                                 Returns</a>
                         </li>
                     @endcan
-                    @can('debt-management-vat-return-view')
+                    @can('debt-management-vat-view')
                         <li class="{{ request()->is('debts/returns/vat*') ? 'active' : '' }}">
                             <a href="{{ route('debts.vat.index', encrypt(App\Models\TaxType::VAT)) }}">VAT
                                 Returns</a>
                         </li>
                     @endcan
-                    @can('debt-management-stamp-duty-return-view')
+                    @can('debt-management-stamp-duty-view')
                         <li class="{{ request()->is('debts/returns/stamp-duty*') ? 'active' : '' }}">
                             <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp
                                 Duty
                                 Returns</a>
                         </li>
                     @endcan
-                    @can('debt-management-lump-sum-return-view')
+                    @can('debt-management-lumpsum-payment-view')
                         <li class="{{ request()->is('debts/returns/lump-sum*') ? 'active' : '' }}">
                             <a href="{{ route('debts.lump-sum.index', encrypt(App\Models\TaxType::LUMPSUM_PAYMENT)) }}">Lump
                                 Sum Returns</a>
@@ -483,7 +483,7 @@
                                 Money Transaction</a>
                         </li>
                     @endcan
-                    @can('debt-management-sea-services-transport-view')
+                    @can('debt-management-sea-service-transport-charge-view')
                         <li class="{{ request()->is('debts/returns/sea*') ? 'active' : '' }}">
                             <a
                                 href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea
@@ -491,7 +491,7 @@
                             </a>
                         </li>
                     @endcan
-                    @can('debt-management-air-port-safety-fee-view')
+                    @can('debt-management-airport-service-safety-fee-view')
                         <li class="{{ request()->is('debts/returns/airport*') ? 'active' : '' }}">
                             <a
                                 href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport
@@ -499,14 +499,14 @@
                             </a>
                         </li>
                     @endcan
-                    @can('debt-management-bfo-returns-view')
+                    @can('debt-management-excise-duty-bfo-view')
                         <li class="{{ request()->is('debts/returns/bfo*') ? 'active' : '' }}">
                             <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">
                                 Banks, Financial Institutions and Others Returns
                             </a>
                         </li>
                     @endcan
-                    @can('debt-management-mno-returns-view')
+                    @can('debt-management-excise-duty-mno-view')
                         <li class="{{ request()->is('debts/returns/mno*') ? 'active' : '' }}">
                             <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">
                                 Moblie Network Operator Returns
@@ -815,7 +815,7 @@
                                 Reasons</a>
                         </li>
                     @endcan
-                    @can('setting-transfer-category-view')
+                    @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
                                 Categories</a>
@@ -836,11 +836,14 @@
                     <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlBloodGroup') }}">Blood Groups</a>
                     </li>
+                        <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','DlBloodGroup') }}">Blood Groups</a>
+                        </li>
                 </ul>
             </li>
         @endcan
         @can('system')
-            <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
                 <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
                     @can('system-audit-trail-view')

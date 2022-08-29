@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Mvr;
 
+use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
 use App\Models\GenericSettingModel;
@@ -131,6 +132,11 @@ class GenericSettingsTable extends DataTableComponent
             DlLicenseDuration::class => [
                 Column::make("Years", "number_of_years")->sortable(),
                 Column::make("Description", "description")->sortable()
+            ],
+            DlFee::class => [
+                Column::make("Amount", "amount")->sortable()->format(fn($value)=>number_format($value).' TZS'),
+                Column::make("GFS Code", "gfs_code")->sortable(),
+                Column::make("Type", "type")->sortable(),
             ],
         ];
 
