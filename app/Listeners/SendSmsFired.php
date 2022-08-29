@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\Business;
@@ -97,6 +98,8 @@ class SendSmsFired
         } else if ($event->service === 'branch-correction'){
             // Token ID is payload data having all notification details
             SendBranchCorrectionSMS::dispatch($event->tokenId);
+        }else if ($event->service === 'license-application-submitted'){
+            SendFreshApplicationSubmittedSMS::dispatch($event->tokenId);
         }
     }
 }

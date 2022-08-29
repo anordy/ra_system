@@ -21,7 +21,7 @@ class RecoveryMeasureApprovalProcessing extends Component
     public $recovery_measure_categories = [];
     public $debtId;
     public $debt;
-    public $recovery_measures = [];
+    public $recovery_measures;
     public $selected_recovery_measures;
     public $comments;
 
@@ -33,7 +33,7 @@ class RecoveryMeasureApprovalProcessing extends Component
         $this->registerWorkflow(get_class($this->debt), $this->debt->id);
 
         if($this->checkTransition('commissioner_review') || $this->checkTransition('assignment_corrected')) {
-            $this->recovery_measures = RecoveryMeasure::where('debt_id', $debtId)->pluck('recovery_measure_id');
+            $this->recovery_measures = RecoveryMeasure::where('debt_id', $debtId);
             $this->selected_recovery_measures = $this->recovery_measures;
         }
 
@@ -47,7 +47,7 @@ class RecoveryMeasureApprovalProcessing extends Component
         try {
             
             if($this->checkTransition('crdm_assign')) {
-                $measures = $this->recovery_measures; 
+                $measures = $this->recovery_measures->toArray();
 
                 $payload = array_map(function ($measures) {
                     return [
@@ -60,7 +60,7 @@ class RecoveryMeasureApprovalProcessing extends Component
             }
 
             if($this->checkTransition('commissioner_review')) {
-                $measures = $this->recovery_measures;
+                $measures = $this->recovery_measures->toArray();
 
                 $payload = array_map(function ($measures) {
                     return [
@@ -76,7 +76,7 @@ class RecoveryMeasureApprovalProcessing extends Component
             }
 
             if($this->checkTransition('assignment_corrected')) {
-                $measures = $this->recovery_measures; 
+                $measures = $this->recovery_measures->toArray();
 
                 $payload = array_map(function ($measures) {
                     return [

@@ -22,7 +22,6 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ReturnDebtsTable extends DataTableComponent
 {
-
     use LivewireAlert;
     public $taxType;
 
@@ -33,8 +32,8 @@ class ReturnDebtsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-
         $tax = TaxType::where('code', $this->taxType)->first();
+
         return Debt::query()->where('tax_type_id', $tax->id)->orderBy('debts.created_at', 'desc');
     }
 
@@ -43,9 +42,9 @@ class ReturnDebtsTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id','tax_type_id', 'business_location_id']);
+        $this->setAdditionalSelects(['business_id', 'tax_type_id', 'business_location_id']);
     }
 
     public function columns(): array

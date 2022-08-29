@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Mvr;
 
 use App\Models\Bank;
 use App\Models\DlDriversLicenseClass;
+use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
 use App\Models\GenericSettingModel;
@@ -34,11 +35,19 @@ class GenericSettingAddModal extends Component
             ['title'=>'Motor vehicle Registration Status','class'=>MvrRegistrationType::class,'field'=>'mvr_registration_type_id'],
             ['title'=>'Fee Type/Category','class'=>MvrFeeType::class,'field'=>'mvr_fee_type_id']]
     ];
+
+    private array $enums = [
+        DlFee::class=>[
+            ['title'=>'Type','field'=>'type','options'=>['FRESH'=>'Fresh Applicant','RENEW'=>'License Renewal','DUPLICATE'=>'License Copy']]
+        ]
+    ];
+
     private $fields = [
         MvrColor::class=>[['title'=>'Hex Value','field'=>'hex_value']],
         MvrFee::class=>[['title'=>'Amount','field'=>'amount'],['title'=>'GFS Code','field'=>'gfs_code']],
         MvrTransferFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number'],['title'=>'GFS Code','field'=>'gfs_code','type'=>'number']],
         DlLicenseDuration::class=>[['title'=>'Years','field'=>'number_of_years','type'=>'number'],['title'=>'Description','field'=>'description']],
+        DlFee::class=>[['title'=>'Amount','field'=>'amount','type'=>'number'],['title'=>'GFS Code','field'=>'gfs_code','type'=>'number']],
         DlLicenseClass::class=>[['title'=>'Description','field'=>'description']],
     ];
 
@@ -48,7 +57,8 @@ class GenericSettingAddModal extends Component
 
     private $rules = [
         MvrFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric'],
-        MvrTransferFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric']
+        MvrTransferFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric'],
+        DlFee::class=>['data.amount'=>'required|numeric','data.gfs_code'=>'required|numeric']
     ];
 
     /**
@@ -61,6 +71,7 @@ class GenericSettingAddModal extends Component
     public $relation_data = [];
     public $relation_options = [];
     public $field_options = [];
+    public $enum_options = [];
     /**
      * @var array|string|string[]|null
      */
@@ -84,6 +95,7 @@ class GenericSettingAddModal extends Component
 
         $this->prepareRelations();
         $this->prepareData();
+        $this->prepareEnums();
     }
 
     protected function rules()
@@ -140,6 +152,12 @@ class GenericSettingAddModal extends Component
                 }
             }
 
+            if (!empty($this->enums[$this->model])){
+                foreach ($this->enums[$this->model] as $field){
+                    $data[$field['field']] = $this->data[$field['field']];
+                }
+            }
+
             if (empty($this->instance)){
                 $this->model::query()->create($data);
                 $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
@@ -174,6 +192,14 @@ class GenericSettingAddModal extends Component
         foreach ($this->fields[$this->model] as $field){
             $this->field_options[$field['field']] = ['title'=>$field['title']];
             $this->data[$field['field']] = $this->instance[$field['field']]??null;
+        }
+    }
+
+    private function prepareEnums()
+    {
+        if (empty($this->enums[$this->model])) return;
+        foreach ($this->enums[$this->model] as $enums){
+            $this->enum_options[$enums['field']] = ['data'=>$enums['options'],'title'=>$enums['title']];
         }
     }
 

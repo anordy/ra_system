@@ -322,7 +322,7 @@
                             <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
                         </li>
                     @endcan
-                    @can('tax-investigation-approved-view') 
+                    @can('tax-investigation-approved-view')
                         <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
                             <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
                         </li>
@@ -413,8 +413,8 @@
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
                     @can('debt-management-debts-view')
-                        <li class="{{ request()->is('debts/debt*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.debt.index') }}">Debts</a>
+                        <li class="{{ request()->is('debts/all*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.debt.index') }}">Normal Debts</a>
                         </li>
                     @endcan
                     @can('debt-management-debts-overdue-view')
@@ -815,7 +815,7 @@
                                 Reasons</a>
                         </li>
                     @endcan
-                    @can('setting-transfer-category-view')
+                    @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
                                 Categories</a>
@@ -836,6 +836,9 @@
                     <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlBloodGroup') }}">Blood Groups</a>
                     </li>
+                        <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','DlBloodGroup') }}">Blood Groups</a>
+                        </li>
                 </ul>
             </li>
         @endcan

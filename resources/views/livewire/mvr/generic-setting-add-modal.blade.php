@@ -47,7 +47,22 @@
                             </div>
                         </div>
                     @endforeach
-
+                    @foreach($enum_options as $field=>$enum)
+                        <div class="row pr-3 pl-3">
+                            <div class="form-group col-lg-12">
+                                <label class="control-label">{{$enum['title']}}</label>
+                                <select wire:model="data.{{$field}}" class="form-control" id="{{$field}}">
+                                    <option>Choose option</option>
+                                    @foreach ($enum['data'] as $key=>$title)
+                                        <option value="{{ $key }}">{{ $title }}</option>
+                                    @endforeach
+                                </select>
+                                @error("data.{$field}")
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    @endforeach
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
