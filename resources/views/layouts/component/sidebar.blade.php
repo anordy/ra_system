@@ -470,7 +470,7 @@
                                 Returns</a>
                         </li>
                     @endcan
-                    @can('debt-management-lump-sum-return-view')
+                    @can('debt-management-lumpsum-payment-view')
                         <li class="{{ request()->is('debts/returns/lump-sum*') ? 'active' : '' }}">
                             <a href="{{ route('debts.lump-sum.index', encrypt(App\Models\TaxType::LUMPSUM_PAYMENT)) }}">Lump
                                 Sum Returns</a>
