@@ -8,14 +8,21 @@ use App\Models\Claims\TaxClaim;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
+use Illuminate\Support\Facades\Gate;
 
 class ClaimsController extends Controller
 {
     public function index(){
+        if (!Gate::allows('tax-claim-view')) {
+            abort(403);
+        }
         return view('claims.index');
     }
 
     public function show($claimId){
+        if (!Gate::allows('tax-claim-view')) {
+            abort(403);
+        }
         $claimId = decrypt($claimId);
         $claim = TaxClaim::findOrFail($claimId);
         $return = $claim->oldReturn;

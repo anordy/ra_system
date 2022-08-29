@@ -15,7 +15,7 @@ class MnoReturnsTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
     }
 
@@ -27,32 +27,35 @@ class MnoReturnsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Taxpayer Name", 'business_id')
+            Column::make('Taxpayer Name', 'business_id')
             ->sortable()
             ->searchable()
-            ->format(function($value, $row){
-                    return "{$row->business->taxpayer->fullName}";
-                }),
+            ->format(function ($value, $row) {
+                return "{$row->business->taxpayer->fullName}";
+            }),
                 
-            Column::make("Business Name", "business_id")
+            Column::make('Business Name', 'business_id')
                 ->sortable()
                 ->searchable()
-                ->format(function($value, $row){
+                ->format(function ($value, $row) {
                     return "{$row->business->name}";
                 }),
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
 
-            Column::make("Total Payable Vat", 'total_amount_due_with_penalties')
+            Column::make('Total Payable Vat', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->searchable()
-                ->format(function($value, $row){
-                    return number_format($row->total_amount_due_with_penalties,2);
+                ->format(function ($value, $row) {
+                    return number_format($row->total_amount_due_with_penalties, 2);
                 }),
                 
-            Column::make("Action", "status")
+            Column::make('Status', 'status')
                 ->view('returns.excise-duty.mno.includes.status'),
             
-            Column::make("Action", "id")
-                ->view('returns.excise-duty.mno.includes.actions')
+            Column::make('Action', 'id')
+                ->view('returns.excise-duty.mno.includes.actions'),
         ];
     }
 }

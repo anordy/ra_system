@@ -3,8 +3,9 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 use Exception;
-use App\Models\WaResponsiblePerson;
 use Carbon\Carbon;
+use App\Models\WaResponsiblePerson;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -90,6 +91,10 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 
     public function changeStatus($id)
     {
+        if (!Gate::allows('withholding-agents-registration')) {
+            abort(403);
+        }
+        
         $responsible_person = WaResponsiblePerson::find($id);
         $status = $responsible_person->status == 'active' ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
@@ -111,6 +116,9 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 
     public function confirmed($value)
     {
+        if (!Gate::allows('withholding-agents-registration')) {
+            abort(403);
+        }
         try {
             $data = (object) $value['data'];
             $responsible_person = WaResponsiblePerson::find($data->id);

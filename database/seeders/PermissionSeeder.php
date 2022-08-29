@@ -23,18 +23,25 @@ class PermissionSeeder extends Seeder
 
             # Business Management
             ['name' => 'business-registration-view', 'sys_module_id' => 2],
+            ['name' => 'business-certificate-view', 'sys_module_id' => 2],
             ['name' => 'business-branches-view', 'sys_module_id' => 2],
             ['name' => 'de-registration-view', 'sys_module_id' => 2],
             ['name' => 'temporary-closures-view', 'sys_module_id' => 2],
             ['name' => 'business-update-request-view', 'sys_module_id' => 2],
             ['name' => 'taxtype-change-request-view', 'sys_module_id' => 2],
             ['name' => 'qualified-tax-types-upgrade-view', 'sys_module_id' => 2],
+            ['name' => 'qualified-tax-types-upgrade-add', 'sys_module_id' => 2],
 
             # Tax Consultant
             ['name' => 'tax-consultant-registration-view', 'sys_module_id' => 3],
             ['name' => 'active-tax-consultant-view', 'sys_module_id' => 3],
             ['name' => 'tax-consultant-renewal-requests-view', 'sys_module_id' => 3],
             ['name' => 'tax-consultant-fee-configuration-view', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-fee-configuration-add', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-verify', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-reject-first', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-approve', 'sys_module_id' => 3],
+            ['name' => 'tax-consultant-registration-reject-last', 'sys_module_id' => 3],
 
             # Tax Returns
             ['name' => 'return-hotel-levy-view', 'sys_module_id' => 5],
@@ -51,18 +58,18 @@ class PermissionSeeder extends Seeder
 
             # Withholding Agent
             ['name' => 'withholding-agents-registration', 'sys_module_id' => 6],
-            ['name' => 'withholding-agents-list', 'sys_module_id' => 6],
+            ['name' => 'withholding-agents-view', 'sys_module_id' => 6],
             ['name' => 'withholding_agents_disable', 'sys_module_id' => 6],
 
             # Petroleum Management
-            ['name' => 'quantity-of-certificate-view', 'sys_module_id' => 7],
+            ['name' => 'certificate-of-quantity-view', 'sys_module_id' => 7],
+            ['name' => 'certificate-of-quantity-create', 'sys_module_id' => 7],
             ['name' => 'return-petroleum-return-view', 'sys_module_id' => 7],
 
             # Return Verifications
             ['name' => 'verification-approval-view', 'sys_module_id' => 8],
             ['name' => 'verification-assessment-view', 'sys_module_id' => 8],
             ['name' => 'verification-approved-view', 'sys_module_id' => 8],
-
 
             # Tax Claim
             ['name' => 'tax-claim-view', 'sys_module_id' => 9],
@@ -76,7 +83,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-investigation-approval-view', 'sys_module_id' => 11],
             ['name' => 'tax-investigation-assessment-view', 'sys_module_id' => 11],
             ['name' => 'tax-investigation-approved-view', 'sys_module_id' => 11],
-
 
             # Disputes Management
             ['name' => 'dispute-waiver-view', 'sys_module_id' => 12],
@@ -93,16 +99,16 @@ class PermissionSeeder extends Seeder
             ['name' => 'debt-management-assessment-debt-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-hotel-levy-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-restaurant-levy-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-tour-operation-levy-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-tour-operator-levy-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-petroleum-levy-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-vat-return-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-stamp-duty-return-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-lump-sum-return-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-vat-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-stamp-duty-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-lumpsum-payment-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-electronic-money-transaction-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-sea-services-transport-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-air-port-safety-fee-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-bfo-returns-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-mno-returns-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-sea-service-transport-charge-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-airport-service-safety-fee-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-excise-duty-bfo-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-excise-duty-mno-view', 'sys_module_id' => 14],
 
             ['name' => 'mvr_initiate_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_approve_registration', 'sys_module_id' => 15],
@@ -116,14 +122,19 @@ class PermissionSeeder extends Seeder
             ['name' => 'mvr_initiate_de_registration', 'sys_module_id' => 15],
             ['name' => 'mvr_approve_de_registration', 'sys_module_id' => 15],
 
-
             # Land Lease
+            ['name' => 'land-lease-create', 'sys_module_id' => 16],
             ['name' => 'land-lease-view', 'sys_module_id' => 16],
-            ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
+            ['name' => 'land-lease-edit', 'sys_module_id' => 16],
+            ['name' => 'land-lease-delete', 'sys_module_id' => 16],
+            ['name' => 'land-lease-view-own', 'sys_module_id' => 16],
 
-            
-            # Managerial Report
-            ['name' => 'managerial-report-view', 'sys_module_id' => 20],
+            ['name' => 'land-lease-generate-report', 'sys_module_id' => 16],
+            ['name' => 'land-lease-agent-view', 'sys_module_id' => 16],
+            ['name' => 'land-lease-register-agent', 'sys_module_id' => 16],
+            ['name' => 'land-lease-change-agent-status', 'sys_module_id' => 16],
+            ['name' => 'land-lease-generate-control-number', 'sys_module_id' => 16],
+
 
             # Manage Payments
             ['name' => 'manage-payments-view', 'sys_module_id' => 17],
@@ -227,13 +238,32 @@ class PermissionSeeder extends Seeder
             ['name' => 'payment-installment-view', 'sys_module_id' => 22],
             ['name' => 'payment-installment-request-view', 'sys_module_id' => 22],
 
-
             # Relief Management
             ['name' => 'relief-ministries-view', 'sys_module_id' => 23],
+            ['name' => 'relief-ministries-create', 'sys_module_id' => 23],
+            ['name' => 'relief-ministries-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-ministries-delete', 'sys_module_id' => 23],
+
             ['name' => 'relief-projects-view', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-create', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-delete', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-configure', 'sys_module_id' => 23],
+
+            ['name' => 'relief-project-list-view', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-list-create', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-list-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-projects-list-delete', 'sys_module_id' => 23],
+
             ['name' => 'relief-registration-view', 'sys_module_id' => 23],
+            ['name' => 'relief-registration-create', 'sys_module_id' => 23],
+
             ['name' => 'relief-applications-view', 'sys_module_id' => 23],
+            ['name' => 'relief-applications-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-applications-delete', 'sys_module_id' => 23],
+
             ['name' => 'relief-generate-report-view', 'sys_module_id' => 23],
+            ['name' => 'relief-generate-report', 'sys_module_id' => 23],
 
         ];
 

@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Transfer Category</span>
-                    <p class="my-1">{{ $request->transfer_category->name}}</p>
+                    <p class="my-1">{{ $request->transfer_category->name ?? ''}}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Market Value</span>

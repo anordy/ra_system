@@ -56,10 +56,14 @@ class ApprovalProcessing extends Component
     public function reject($transition)
     {
         $this->validate(['comments' => 'required']);
+        $operators = [];
+        if($this->checkTransition('application_filled_incorrect')){
+            $operators = [1,2,3];
+        }
         try {
             $this->subject->dl_application_status_id = DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_DETAILS_CORRECTION])->id;
             $this->subject->save();
-            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
             dd($e);
         }

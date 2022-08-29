@@ -100,17 +100,13 @@
                     <strong>Currency</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>VAT Amount Due (TZS)</strong>
+                    <strong>VAT Amount Due</strong>
                 </th>
+            
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>VAT Amount Due (USD)</strong>
+                    <strong>Amount Due With Penalties</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Amount Due With Penalties (TZS)</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Amount Due With Penalties (USD)</strong>
-                </th>
+             
                 <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
                     <strong>Filing Date</strong>
                 </th>
@@ -156,20 +152,13 @@
                         {{ $record->currency ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->total_vat_payable_tzs === null ? '-' : number_format($record->total_vat_payable_tzs, 2) }}
+                        {{ $record->total_amount_due === null ? '-' : number_format($record->total_amount_due, 2) }}
                     </td>
+                
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->total_vat_payable_usd === null ? '-' : number_format($record->total_vat_payable_usd, 2) }}
+                        {{ $record->total_amount_due_with_penalties === null ? '-' : number_format($record->total_amount_due_with_penalties, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->total_amount_due_with_penalties_tzs === null ? '-' : number_format($record->total_amount_due_with_penalties_tzs, 2) }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->total_amount_due_with_penalties_usd === null ? '-' : number_format($record->total_amount_due_with_penalties_usd, 2) }}
-                    </td>
-                    {{-- <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->total_amount_due_with_penalties===null?'-':number_format($record->total_amount_due_with_penalties, 2) }}
-                </td> --}}
+                   
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ date('d/m/Y', strtotime($record->created_at)) }}
                     </td>

@@ -32,7 +32,8 @@ class VerificationApprovalTable extends DataTableComponent
                 ->with('business', 'location', 'taxType', 'taxReturn')
                 ->whereHas('taxReturn', function (Builder $builder) {
                     $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
-                        ->where('status', ReturnStatus::COMPLETE);
+                        ->orWhere('status', ReturnStatus::COMPLETE)
+                        ->orWhere('status', ReturnStatus::PAID_BY_DEBT);
                 })
                 ->where('tax_verifications.status', TaxVerificationStatus::PENDING);
         } elseif ($this->paymentStatus == 'unpaid') {

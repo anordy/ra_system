@@ -14,6 +14,7 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 
@@ -21,10 +22,17 @@ class BusinessFileController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('setting-business-file-view')) {
+            abort(403);
+        }
         return view('settings.business-files');
     }
 
     public function getBusinessFile($fileId){
+        if (!Gate::allows('business-registration-view')) {
+            abort(403);
+        }
+
         $file = BusinessFile::findOrFail(decrypt($fileId));
 
         // Check who can access the file
@@ -38,6 +46,10 @@ class BusinessFileController extends Controller
 
     public function getTinFile($taxpayerId)
     {
+        if (!Gate::allows('business-registration-view')) {
+            abort(403);
+        }
+
         $taxpayer = Taxpayer::findOrFail(decrypt($taxpayerId));
 
         if ($taxpayer->tin_location){
@@ -48,6 +60,9 @@ class BusinessFileController extends Controller
     }
 
     public function getCertificate($locationId, $taxTypeId){
+        if (!Gate::allows('business-certificate-view')) {
+            abort(403);
+        }
         $locationId = decrypt($locationId);
         $taxTypeId = decrypt($taxTypeId);
         $location = BusinessLocation::with('business', 'business.taxpayer')->find($locationId);

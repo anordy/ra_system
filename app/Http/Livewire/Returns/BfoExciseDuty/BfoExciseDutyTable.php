@@ -7,10 +7,18 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\BFO\BfoReturn;
+use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyTable extends DataTableComponent
 {
     protected $model = BfoReturn::class;
+
+    public function mount()
+    {
+        if (!Gate::allows('return-bfo-excise-duty-return-view')) {
+            abort(403);
+        }
+    }
 
     public function configure(): void
     {
@@ -19,7 +27,9 @@ class BfoExciseDutyTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BfoReturn::query()->with('business', 'business.taxpayer')->orderBy('bfo_returns.created_at', 'desc');
+        return BfoReturn::query()
+            ->with('business', 'business.taxpayer', 'businessLocation')
+            ->orderBy('bfo_returns.created_at', 'desc');
     }
 
     public function columns(): array
@@ -28,10 +38,13 @@ class BfoExciseDutyTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
+            Column::make('Branch Name', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Total VAT', 'total_amount_due')

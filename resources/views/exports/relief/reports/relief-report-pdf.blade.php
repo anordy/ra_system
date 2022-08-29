@@ -50,8 +50,8 @@
     </style>
 </head>
 
-<body style="font-size: 8pt">
-    <div>
+<body style="font-size: 6pt">
+  
         <table style="border-collapse:collapse; width:100%">
             <thead>
                 <tr>
@@ -272,7 +272,7 @@
                 </tr>
             </tfoot>
         </table>
-    </div>
+    
 </body>
 
 </html>

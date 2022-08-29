@@ -7,21 +7,31 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use App\Models\Returns\EmTransactionReturn;
+use Illuminate\Support\Facades\Gate;
 
 class EmTransactionsTable extends DataTableComponent
 {
+    public function mount()
+    {
+        if (!Gate::allows('return-electronic-money-transaction-return-view')) {
+            abort(403);
+        }
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
     }
 
     public function builder(): Builder
     {
-        return EmTransactionReturn::query()->orderBy('em_transaction_returns.created_at', 'desc');
+        return EmTransactionReturn::query()
+            ->with('business', 'business.taxpayer', 'businessLocation')
+            ->orderBy('em_transaction_returns.created_at', 'desc');
     }
 
     public function columns(): array
@@ -30,10 +40,13 @@ class EmTransactionsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
+            Column::make('Branch Name', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Total VAT', 'total_amount_due')

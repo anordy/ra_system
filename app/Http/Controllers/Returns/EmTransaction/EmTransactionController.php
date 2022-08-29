@@ -7,6 +7,7 @@ use App\Models\Returns\EmTransactionPenalty;
 use App\Models\Returns\EmTransactionReturn;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
+use Illuminate\Support\Facades\Gate;
 
 class EmTransactionController extends Controller
 {
@@ -14,6 +15,10 @@ class EmTransactionController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('return-electronic-money-transaction-return-view')) {
+            abort(403);
+        }
+
         $paidData = $this->returnCardReportForPaidReturns(EmTransactionReturn::class, EmTransactionReturn::getTableName(), EmTransactionPenalty::getTableName());
 
         $unpaidData = $this->returnCardReportForUnpaidReturns(EmTransactionReturn::class, EmTransactionReturn::getTableName(), EmTransactionPenalty::getTableName());

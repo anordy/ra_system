@@ -49,6 +49,8 @@ class ZanMalipoController extends Controller
         TaxAssessment::class,
         Dispute::class,
         TaxAgent::class,
+        PortReturn::class,
+        Debt::class,
         RenewTaxAgentRequest::class
     ];
 
@@ -279,7 +281,12 @@ class ZanMalipoController extends Controller
         try {
             if (in_array($bill->billable_type, $this->debtReturnable)) {
                 if ($bill->paidAmount() >= $bill->amount) {
-                    $debt         = $bill->billable;
+                    $debt = $bill->billable;
+                    $return = $debt->debt;
+                    if ($return){
+                        $return->status = ReturnStatus::PAID_BY_DEBT;
+                        $return->save();
+                    }
                     $debt->status = ReturnStatus::COMPLETE;
                     $debt->outstanding_amount = 0;
                     $debt->save();
@@ -316,6 +323,14 @@ class ZanMalipoController extends Controller
                     } elseif(!$item->installment->getNextPaymentDate() && ($item->installment->status == InstallmentStatus::ACTIVE)) {
                         $item->installment->update([
                             'status' => InstallmentStatus::COMPLETE
+                        ]);
+
+                        $item->installment->debt->update([
+                            'status' => ReturnStatus::COMPLETE
+                        ]);
+
+                        $item->installment->debt->debt->update([
+                            'status' => ReturnStatus::PAID_BY_DEBT
                         ]);
                     }
                 } else {

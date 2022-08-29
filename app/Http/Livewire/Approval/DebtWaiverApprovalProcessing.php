@@ -2,25 +2,21 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Models\Debts\Debt;
-use App\Models\Debts\DebtWaiver;
-use App\Models\ExchangeRate;
-use App\Models\Returns\ReturnStatus;
-use App\Models\TaxAssessments\TaxAssessment;
-use App\Models\TaxType;
-use App\Models\WaiverStatus;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use App\Traits\PaymentsTrait;
-use App\Traits\WorkflowProcesssingTrait;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\TaxType;
+use Livewire\Component;
+use App\Models\Debts\Debt;
+use App\Models\WaiverStatus;
+use App\Jobs\Bill\CancelBill;
+use App\Traits\PaymentsTrait;
+use Livewire\WithFileUploads;
+use App\Models\Debts\DebtWaiver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\Debt\GenerateControlNo;
+use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class DebtWaiverApprovalProcessing extends Component
 {
@@ -34,17 +30,17 @@ class DebtWaiverApprovalProcessing extends Component
     public $penaltyPercent = 0, $penaltyAmount = 0, $penaltyAmountDue = 0, $interestAmountDue = 0;
     public $interestPercent = 0, $interestAmount = 0, $debt_waiver, $total;
     public $natureOfAttachment, $noticeReport, $settingReport;
+    public $forwardToCommisioner;
 
     public function mount($modelName, $modelId)
     {
-
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->debt_waiver = DebtWaiver::find($this->modelId);
         $this->debt = Debt::find($this->debt_waiver->debt_id);
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $modelId);
-
+        $this->forwardToCommisioner = $this->canForwardToCommisioner($this->debt);
     }
 
     public function updated($propertyName)
@@ -75,53 +71,96 @@ class DebtWaiverApprovalProcessing extends Component
     public function approve($transtion)
     {
 
-        $taxType = $this->subject->taxType;
+        if ($this->checkTransition('debt_manager_review')) {
 
-        if ($this->checkTransition('objection_manager_review')) {
+        }
 
-            $this->validate(
-                [
-                    'waiverReport' => 'required|mimes:pdf',
-                ]
-            );
-
-            $waiverReport = "";
-            if ($this->waiverReport) {
-                $waiverReport = $this->waiverReport->store('waiver_report', 'local-admin');
-            }
-
-            $debt_waiver = DebtWaiver::find($this->modelId);
-
-            DB::beginTransaction();
-            try {
-
-                $debt_waiver->update([
-                    'waiver_report' => $waiverReport ?? '',
+        if ($this->checkTransition('crdm_complete')) {
+            if (!$this->forwardToCommisioner) {
+                $this->validate([
+                    'interestPercent' => 'required',
+                    'penaltyPercent' => 'required',
                 ]);
-
-                DB::commit();
-            } catch (\Exception $e) {
-                Log::error($e);
-                DB::rollBack();
-                $this->alert('error', 'Something went wrong.');
+                DB::beginTransaction();
+                try {
+                    $this->debt->update([
+                        'penalty' => $this->penaltyAmountDue,
+                        'interest' => $this->interestAmountDue,
+                        'total_amount' => $this->total,
+                        'outstanding_amount' => $this->total,
+                        'app_step' => 'waiver',
+                    ]);
+    
+                    $billitems[] = [
+                            'billable_id' => $this->debt->id,
+                            'billable_type' => get_class($this->debt),
+                            'use_item_ref_on_pay' => 'N',
+                            'amount' => $this->debt->principal_amount,
+                            'currency' => 'TZS',
+                            'gfs_code' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
+                            'tax_type_id' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->id,
+                    ];
+    
+                    if ($this->penaltyAmountDue > 0) {
+                        $billitems[] = [
+                            'billable_id' => $this->debt->id,
+                            'billable_type' => get_class($this->debt),
+                            'use_item_ref_on_pay' => 'N',
+                            'amount' => $this->penaltyAmountDue,
+                            'currency' => 'TZS',
+                            'gfs_code' => $this->taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
+                            'tax_type_id' => $this->taxTypes->where('code', TaxType::PENALTY)->first()->id,
+                        ];
+                    }
+      
+                    if ($this->interestAmountDue > 0) {
+                        $billitems[] = [
+                            'billable_id' => $this->debt->id,
+                            'billable_type' => get_class($this->debt),
+                            'use_item_ref_on_pay' => 'N',
+                            'amount' => $this->interestAmountDue,
+                            'currency' => 'TZS',
+                            'gfs_code' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
+                            'tax_type_id' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->id,
+                        ];
+                    }
+                    $this->subject->status = WaiverStatus::APPROVED;
+                    $this->subject->save();
+    
+                    $now = Carbon::now();
+                    if ($this->debt->bill) {
+                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
+                        GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
+                    } else {
+                        GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
+                    }
+    
+                    DB::commit();
+                } catch (Exception $e) {
+                    Log::error($e);
+                    DB::rollBack();
+                    $this->alert('error', 'Something went wrong');
+                }
+    
             }
-
+       
         }
 
-        if ($this->checkTransition('chief_assurance_review')) {
-
-        }
-
-        if ($this->checkTransition('commisioner_review')) {
+        if ($this->checkTransition('commisioner_complete')) {
             $this->validate([
                 'interestPercent' => 'required',
                 'penaltyPercent' => 'required',
             ]);
             DB::beginTransaction();
-
             try {
+                $this->debt->update([
+                    'penalty' => $this->penaltyAmountDue,
+                    'interest' => $this->interestAmountDue,
+                    'total_amount' => $this->total,
+                    'outstanding_amount' => $this->total,
+                    'app_step' => 'waiver',
+                ]);
 
-                // Generate control number for waived application
                 $billitems[] = [
                         'billable_id' => $this->debt->id,
                         'billable_type' => get_class($this->debt),
@@ -155,105 +194,22 @@ class DebtWaiverApprovalProcessing extends Component
                         'tax_type_id' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->id,
                     ];
                 }
-       
 
-                $taxpayer = $this->subject->business->taxpayer;
+                $now = Carbon::now();
+                $this->subject->status = WaiverStatus::APPROVED;
+                $this->subject->save();
 
-                $payer_type = get_class($taxpayer);
-                $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-                $payer_email = $taxpayer->email;
-                $payer_phone = $taxpayer->mobile;
-                $description = "Debt Waiver";
-                $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-                $currency = $this->debt->currency;
-                $createdby_type = get_class(Auth::user());
-                $createdby_id = Auth::id();
-                $exchange_rate = $this->debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $this->debt->currency)->first()->mean;
-                $payer_id = $taxpayer->id;
-                $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-                $billableId = $this->debt->id;
-                $billableType = get_class($this->debt);
-
-
-                $zmBill = ZmCore::createBill(
-                    $billableId,
-                    $billableType,
-                    $this->taxTypes->where('code', TaxType::DEBTS)->first()->id,
-                    $payer_id,
-                    $payer_type,
-                    $payer_name,
-                    $payer_email,
-                    $payer_phone,
-                    $expire_date,
-                    $description,
-                    $payment_option,
-                    $currency,
-                    $exchange_rate,
-                    $createdby_id,
-                    $createdby_type,
-                    $billitems
-                );
-
-                if (config('app.env') != 'local') {
-                    $response = ZmCore::sendBill($zmBill->id);
-                    
-
-                    if ($response->status === ZmResponse::SUCCESS) {
-                        $this->debt->update([
-                            'penalty' => $this->penaltyAmountDue,
-                            'interest' => $this->interestAmountDue,
-                            'total_amount' => $this->total,
-                            'outstanding_amount' => $this->total,
-                            'app_step' => 'waiver',
-                            'status' => ReturnStatus::CN_GENERATED
-                        ]);
-                        $this->flash('success', 'A control number has been generated successful.');
-                    } else {
-                        $this->debt->update([
-                            'penalty' => $this->penaltyAmountDue,
-                            'interest' => $this->interestAmountDue,
-                            'total_amount' => $this->total,
-                            'outstanding_amount' => $this->total,
-                            'app_step' => 'waiver',
-                            'status' => ReturnStatus::CN_GENERATION_FAILED
-                        ]);
-                        session()->flash('error', 'Control number generation failed, try again later');
-                    }
-                    $this->debt_waiver->status = WaiverStatus::APPROVED;
-                    $this->debt_waiver->save();
+                if ($this->debt->bill) {
+                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
+                    GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                 } else {
-                    
-                    // We are local
-                    // $this->debt_waiver->status = ReturnStatus::CN_GENERATED;
-                    $this->debt_waiver->save();
-                    $this->debt->update([
-                        'penalty' => $this->penaltyAmountDue,
-                        'interest' => $this->interestAmountDue,
-                        'total_amount' => $this->total,
-                        'outstanding_amount' => $this->total,
-                        'app_step' => 'waiver',
-                        'status' => ReturnStatus::CN_GENERATED
-                    ]);
-
-                    // Simulate successful control no generation
-                    $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                    $zmBill->zan_status = 'pending';
-                    $zmBill->control_number = '90909919991909';
-                    $zmBill->save();
-
-                    $this->subject->verified_at = Carbon::now()->toDateTimeString();
-                    $this->subject->status = WaiverStatus::APPROVED;
-                    $this->subject->save();
-                    // event(new SendSms('business-registration-approved', $this->subject->id));
-                    // event(new SendMail('business-registration-approved', $this->subject->id));
-
-                    $this->flash('success', 'A control number for this debt_waiver has been generated successfull and approved');
+                    GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                 }
 
                 DB::commit();
             } catch (Exception $e) {
                 Log::error($e);
-                throw $e;
+                DB::rollBack();
                 $this->alert('error', 'Something went wrong');
             }
 
@@ -280,10 +236,13 @@ class DebtWaiverApprovalProcessing extends Component
                 // event(new SendMail('business-registration-correction', $this->subject->id));
             }
 
-            if ($this->checkTransition('chief_assurance_reject')) {
+            if ($this->checkTransition('crdm_reject')) {
                 $this->validate([
                     'comments' => 'required',
                 ]);
+                $this->subject->status = WaiverStatus::REJECTED;
+                $this->debt->update(['app_step' => 'normal']);
+                $this->subject->save();
 
             }
 
@@ -291,7 +250,9 @@ class DebtWaiverApprovalProcessing extends Component
                 $this->validate([
                     'comments' => 'required',
                 ]);
-
+                $this->subject->status = WaiverStatus::REJECTED;
+                $this->debt->update(['app_step' => 'normal']);
+                $this->subject->save();
             }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
@@ -301,6 +262,24 @@ class DebtWaiverApprovalProcessing extends Component
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+    public function canForwardToCommisioner($debt)
+    {
+        /**
+         *  If CRDM: Forward waiver request with recommendation to the 
+         *  Commissioner for a request that exceeds agreed amount 
+         *  of USD 10,000 equivalent to TZS 20,000,000 otherwise don't forward the request and make decision
+         */
+        if ($debt->currency == 'TZS') {
+            $amount_limiter = 20000000;
+            $hasLimitExceeded = $debt->outstanding_amount > $amount_limiter ? true : false;
+        } else if ($debt->currency == 'USD') {
+            $amount_limiter = 10000;
+            $hasLimitExceeded = $debt->outstanding_amount > $amount_limiter ? true : false;
+        }
+        return $hasLimitExceeded;
+
     }
 
     public function render()

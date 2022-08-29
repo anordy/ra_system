@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\Taxpayer;
 use App\Models\WaResponsiblePerson;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class EditResponsiblePersonModal extends Component
@@ -39,6 +40,9 @@ class EditResponsiblePersonModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('withholding-agents-registration')) {
+            abort(403);
+        }
         $this->validate();
         try {
             $this->wa_responsible_person->update([

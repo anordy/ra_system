@@ -6,10 +6,18 @@ use Carbon\Carbon;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\MmTransferReturn;
+use Illuminate\Support\Facades\Gate;
 
 class MobileMoneyTransferTable extends DataTableComponent
 {
     protected $model = MmTransferReturn::class;
+
+    public function mount()
+    {
+        if (!Gate::allows('return-mobile-money-transfer-view')) {
+            abort(403);
+        }
+    }
 
     public function configure(): void
     {
@@ -25,7 +33,7 @@ class MobileMoneyTransferTable extends DataTableComponent
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
+            Column::make('Branch Name', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Total VAT', 'total_amount_due')

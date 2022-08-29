@@ -242,26 +242,26 @@ class DeclaredSalesAnalysis extends Component
     {
         $purchaseConfigs = VatReturnConfig::query()->whereIn('code', ['EIP', 'ELP', 'NCP', 'VDP', 'SLP', 'IP', 'SRI', 'SA', 'SC'])->get()->pluck('id');
 
-        $this->purchases = VatReturnItem::query()->selectRaw('financial_months.name as month, financial_years.code as year, SUM(input_amount) as total_purchases, SUM(vat_amount) as total_purchases_vat')
-            ->leftJoin('vat_return_configs', 'vat_return_configs.id', 'vat_return_items.vat_return_config_id')
-            ->leftJoin('vat_returns', 'vat_returns.id', 'vat_return_items.vat_return_id')
+        $this->purchases = VatReturnItem::query()->selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_purchases, SUM(vat) as total_purchases_vat')
+            ->leftJoin('vat_return_configs', 'vat_return_configs.id', 'vat_return_items.config_id')
+            ->leftJoin('vat_returns', 'vat_returns.id', 'vat_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'vat_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
             ->where('vat_returns.tax_type_id', $this->taxType->id)
             ->where('vat_returns.business_location_id', $this->branch->id)
-            ->whereIn('vat_return_config_id', $purchaseConfigs)
+            ->whereIn('config_id', $purchaseConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
 
         $salesConfigs = VatReturnConfig::query()->whereIn('code', ['SRS', 'ZRS', 'ES', 'SER'])->get()->pluck('id');
 
-        $this->sales = VatReturnItem::query()->selectRaw('financial_months.name as month, financial_years.code as year, SUM(input_amount) as total_sales, SUM(vat_amount) as total_sales_vat')
-            ->leftJoin('vat_return_configs', 'vat_return_configs.id', 'vat_return_items.vat_return_config_id')
-            ->leftJoin('vat_returns', 'vat_returns.id', 'vat_return_items.vat_return_id')
+        $this->sales = VatReturnItem::query()->selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
+            ->leftJoin('vat_return_configs', 'vat_return_configs.id', 'vat_return_items.config_id')
+            ->leftJoin('vat_returns', 'vat_returns.id', 'vat_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'vat_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
             ->where('vat_returns.tax_type_id', $this->taxType->id)
             ->where('vat_returns.business_location_id', $this->branch->id)
-            ->whereIn('vat_return_config_id', $salesConfigs)
+            ->whereIn('config_id', $salesConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
 
         $returns = array_replace_recursive($this->purchases->toArray(), $this->sales->toArray());
@@ -309,7 +309,7 @@ class DeclaredSalesAnalysis extends Component
 
         $yearReturnGroup = BfoReturnItems::select('bfo_configs.code', 'bfo_return_items.value', 'bfo_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('bfo_configs', 'bfo_configs.id', 'bfo_return_items.config_id')
-            ->leftJoin('bfo_returns', 'bfo_returns.id', 'bfo_return_items.bfo_return_id')
+            ->leftJoin('bfo_returns', 'bfo_returns.id', 'bfo_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'bfo_returns.financial_month_id')
             ->leftJoin('financial_years', 'financial_years.id', 'financial_months.financial_year_id')
             ->whereIn('config_id', $salesConfigs)

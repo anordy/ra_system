@@ -7,9 +7,17 @@ use App\Models\Returns\Petroleum\QuantityCertificate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 
 class QuantityCertificateTable extends DataTableComponent
 {
+    public function mount(){
+
+        if (!Gate::allows('certificate-of-quantity-view')) {
+            abort(403);
+        }
+    }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');

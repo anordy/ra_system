@@ -96,7 +96,7 @@ class SeaPortPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             //total_vat_payable_tzs
-            Column::make("Vat Amount (TZS)", "total_vat_payable_tzs")
+            Column::make("Vat Amount", "total_amount_due")
                 ->format(
                     function ($value, $row) {
                         if($value == null){
@@ -108,19 +108,19 @@ class SeaPortPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             //total_vat_payable_usd
-            Column::make("Vat Amount (USD)", "total_vat_payable_usd")
-                ->format(
-                    function ($value, $row) {
-                        if($value == null){
-                            return '-';
-                        }
-                        return number_format($value, 2);
-                    }
-                )
-                ->searchable()
-                ->sortable(),
+            // Column::make("Vat Amount (USD)", "total_vat_payable_usd")
+            //     ->format(
+            //         function ($value, $row) {
+            //             if($value == null){
+            //                 return '-';
+            //             }
+            //             return number_format($value, 2);
+            //         }
+            //     )
+            //     ->searchable()
+            //     ->sortable(),
             //total_amount_due_with_penalties_tzs
-            Column::make("Amount Due With Penalties(TZS)", "total_amount_due_with_penalties_tzs")
+            Column::make("Amount Due With Penalties", "total_amount_due_with_penalties")
                 ->format(
                     function ($value, $row) {
                         if($value == null){
@@ -132,17 +132,17 @@ class SeaPortPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
              //total_amount_due_with_penalties_usd
-            Column::make("Amount Due With Penalties(USD)", "total_amount_due_with_penalties_usd")
-                ->format(
-                    function ($value, $row) {
-                        if($value == null){
-                            return '-';
-                        }
-                        return number_format($value, 2);
-                    }
-                )
-                ->searchable()
-                ->sortable(),
+            // Column::make("Amount Due With Penalties(USD)", "total_amount_due_with_penalties")
+            //     ->format(
+            //         function ($value, $row) {
+            //             if($value == null){
+            //                 return '-';
+            //             }
+            //             return number_format($value, 2);
+            //         }
+            //     )
+            //     ->searchable()
+            //     ->sortable(),
             //filing_due_date
             Column::make("Filing Due Date", "filing_due_date")
                 ->format(

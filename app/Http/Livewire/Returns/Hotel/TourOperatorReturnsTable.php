@@ -11,13 +11,12 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class TourOperatorReturnsTable extends DataTableComponent
 {
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
         $this->setAdditionalSelects(['financial_month_id']);
     }
@@ -25,9 +24,9 @@ class TourOperatorReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         $tax = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
+
         return HotelReturn::where('tax_type_id', $tax->id)->orderBy('created_at', 'desc');
     }
-
 
     public function columns(): array
     {
@@ -35,6 +34,9 @@ class TourOperatorReturnsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),
@@ -61,7 +63,6 @@ class TourOperatorReturnsTable extends DataTableComponent
                 })
                 ->searchable(),
             Column::make('Action', 'id')->view('returns.hotel.includes.actions'),
-
         ];
     }
 }

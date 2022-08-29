@@ -1,4 +1,4 @@
-<nav id="sidebar">
+<nav id="sidebar" class="mb-3">
     <div class="sidebar-header text-center pb-0">
         <h3 class="mt-2"><i class="bi bi-card-heading mr-2"></i> ZITMS</h3>
     </div>
@@ -10,11 +10,12 @@
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
             <a href="{{ route('notifications') }}">Notifications
                 @if (auth()->user()->unreadNotifications->count() > 0)
-                    <span class="badge badge-light">
-                        <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                <span class="badge badge-light">
+                    <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
                 @endif
             </a>
         </li>
+
         @can('taxpayer-management')
             <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
                 <a href="#taxpayersMenu" data-toggle="collapse"
@@ -141,9 +142,16 @@
                             <a href="{{ route('returns.port.index') }}">Port Returns</a>
                         </li>
                     @endcan
+                    @can('return-bfo-excise-duty-return-view')
+                        <li class="{{ request()->is('e-filling/bfo-excise-duty*') ? 'active' : '' }}">
+                            <a href="{{ route('returns.bfo-excise-duty.index') }}">
+                                Banks, Financial Institutions and Others Returns
+                            </a>
+                        </li>
+                    @endcan
                     @can('return-mno-excise-duty-return-view')
                         <li class="{{ request()->is('e-filling/excise-duty/mno*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.excise-duty.mno') }}">MNO Excise Duty Returns</a>
+                            <a href="{{ route('returns.excise-duty.mno') }}">Moblie Network Operator Returns</a>
                         </li>
                     @endcan
                     @can('return-electronic-money-transaction-return-view')
@@ -154,11 +162,6 @@
                     @can('return-stamp-duty-return-view')
                         <li class="{{ request()->is('e-filling/stamp-duty*') ? 'active' : '' }}">
                             <a href="{{ route('returns.stamp-duty.index') }}">Stamp Duty Returns</a>
-                        </li>
-                    @endcan
-                    @can('return-bfo-excise-duty-return-view')
-                        <li class="{{ request()->is('e-filling/bfo-excise-duty*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.bfo-excise-duty.index') }}">BFO Excise Duty Return</a>
                         </li>
                     @endcan
                     @can('return-lump-sum-payment-return-view')
@@ -202,7 +205,7 @@
                 <a href="#petroleum" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Petroleum
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is('petroleum*') ? 'show' : '' }}" id="petroleum">
-                    @can('quantity-of-certificate-view')
+                    @can('certificate-of-quantity-view')
                         <li class="{{ request()->is('petroleum/certificateOfQuantity*') ? 'active' : '' }}">
                             <a href="{{ route('petroleum.certificateOfQuantity.index') }}">Certificate of Quantity</a>
                         </li>
@@ -257,7 +260,7 @@
             </li>
         @endcan
 
-        @can('payment-installment')
+        @can('payment-installment-view')
             <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
                 <a href="#installment-menu" data-toggle="collapse"
                     aria-expanded="{{ request()->is('installments-e-filling*') ? 'true' : 'false' }}"
@@ -284,17 +287,17 @@
                     Tax Auditing
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
                         </li>
                     @endcan
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/assessments*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.assessments.index') }}">Assessments</a>
                         </li>
                     @endcan
-                    @can('tax-Auditing-approved-view')
+                    @can('tax-auditing-approved-view')
                         <li class="{{ request()->is('tax_auditing/verified*') ? 'active' : '' }}">
                             <a href="{{ route('tax_auditing.verified.index') }}">Approved Audits</a>
                         </li>
@@ -454,20 +457,20 @@
                                 Returns</a>
                         </li>
                     @endcan
-                    @can('debt-management-vat-return-view')
+                    @can('debt-management-vat-view')
                         <li class="{{ request()->is('debts/returns/vat*') ? 'active' : '' }}">
                             <a href="{{ route('debts.vat.index', encrypt(App\Models\TaxType::VAT)) }}">VAT
                                 Returns</a>
                         </li>
                     @endcan
-                    @can('debt-management-stamp-duty-return-view')
+                    @can('debt-management-stamp-duty-view')
                         <li class="{{ request()->is('debts/returns/stamp-duty*') ? 'active' : '' }}">
                             <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp
                                 Duty
                                 Returns</a>
                         </li>
                     @endcan
-                    @can('debt-management-lump-sum-return-view')
+                    @can('debt-management-lumpsum-payment-view')
                         <li class="{{ request()->is('debts/returns/lump-sum*') ? 'active' : '' }}">
                             <a href="{{ route('debts.lump-sum.index', encrypt(App\Models\TaxType::LUMPSUM_PAYMENT)) }}">Lump
                                 Sum Returns</a>
@@ -480,7 +483,7 @@
                                 Money Transaction</a>
                         </li>
                     @endcan
-                    @can('debt-management-sea-services-transport-view')
+                    @can('debt-management-sea-service-transport-charge-view')
                         <li class="{{ request()->is('debts/returns/sea*') ? 'active' : '' }}">
                             <a
                                 href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea
@@ -488,7 +491,7 @@
                             </a>
                         </li>
                     @endcan
-                    @can('debt-management-air-port-safety-fee-view')
+                    @can('debt-management-airport-service-safety-fee-view')
                         <li class="{{ request()->is('debts/returns/airport*') ? 'active' : '' }}">
                             <a
                                 href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport
@@ -496,16 +499,18 @@
                             </a>
                         </li>
                     @endcan
-                    @can('debt-management-bfo-returns-view')
+                    @can('debt-management-excise-duty-bfo-view')
                         <li class="{{ request()->is('debts/returns/bfo*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">BFO
-                                Returns</a>
+                            <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">
+                                Banks, Financial Institutions and Others Returns
+                            </a>
                         </li>
                     @endcan
-                    @can('debt-management-mno-returns-view')
+                    @can('debt-management-excise-duty-mno-view')
                         <li class="{{ request()->is('debts/returns/mno*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">MNO
-                                Returns</a>
+                            <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">
+                                Moblie Network Operator Returns
+                            </a>
                         </li>
                     @endcan
                 </ul>
@@ -546,26 +551,35 @@
             </ul>
         </li>
 
-        <li  class="{{ (request()->is('drivers-license*') || request()->is('rio*')) ? 'active':'' }}">
-            <a href="#dlSubmenu" data-toggle="collapse" aria-expanded="{{ (request()->is('drivers-license*') || request()->is('rio*'))? 'true' : 'false' }}" class="dropdown-toggle">Driver's Licenses</a>
-            <ul class="collapse list-unstyled {{ (request()->is('drivers-license*') || request()->is('drivers-license*')) ? 'show' : '' }}" id="dlSubmenu">
-                <li class="{{ (request()->is('drivers-license/applications') || request()->is('drivers-license*')) ? 'active': '' }}">
+        <li class="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'active' : '' }}">
+            <a href="#dlSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'true' : 'false' }}"
+                class="dropdown-toggle">Driver's Licenses</a>
+            <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('drivers-license*') ? 'show' : '' }}"
+                id="dlSubmenu">
+                <li
+                    class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
                     <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
                 </li>
-                <li class="{{ request()->is('rio*') ? 'active': '' }}">
+                <li class="{{ request()->is('rio*') ? 'active' : '' }}">
                     <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
                 </li>
             </ul>
         </li>
 
-        <li  class="{{ request()->is('cases*') ? 'active':'' }}">
-            <a href="#lcmSubmenu" data-toggle="collapse" aria-expanded="{{ request()->is('cases*') ? 'true' : 'false' }}" class="dropdown-toggle">Legal Cases Management</a>
+        <li class="{{ request()->is('cases*') ? 'active' : '' }}">
+            <a href="#lcmSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('cases*') ? 'true' : 'false' }}" class="dropdown-toggle">Legal Cases
+                Management</a>
             <ul class="collapse list-unstyled {{ request()->is('cases*') ? 'show' : '' }}" id="lcmSubmenu">
-                <li class="{{ request()->is('cases') ? 'active': '' }}">
+                <li class="{{ request()->is('cases') ? 'active' : '' }}">
                     <a href="{{ route('cases.index') }}">Cases</a>
                 </li>
-                <li class="{{ request()->is('cases/appeals') ? 'active': '' }}">
+                <li class="{{ request()->is('cases/appeals') ? 'active' : '' }}">
                     <a href="{{ route('cases.appeals') }}">Appeals</a>
+                </li>
+                <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                    <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
                 </li>
             </ul>
         </li>
@@ -577,20 +591,23 @@
                     Lease</a>
                 <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}"
                     id="landLeaseSubmenu">
-
                     <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
                         <a href="{{ route('land-lease.list') }}">Land Lease List</a>
                     </li>
+                    @can('land-lease-generate-report')
                     <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
                         <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
                     </li>
-                    <li class="{{ request()->is('land-lease/agents*') ? 'active' : '' }}">
-                        <a href="{{ route('land-lease.agents') }}">Land Lease Agents</a>
-                    </li>
+                    @endcan
+                    @can('land-lease-agent-view')
+                        <li class="{{ request()->is('land-lease/agents*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.agents') }}">Land Lease Agents</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan
-        @can('managerial-report-management')
+        @can('managerial-report')
             <li class="{{ request()->is('reports*') ? 'active' : '' }}">
                 <a href="#reportSubmenu" data-toggle="collapse"
                     aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
@@ -601,11 +618,15 @@
                         <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
                             <a href="{{ route('reports.returns') }}">Return Reports</a>
                         </li>
+                        <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
+                        </li>
                     @endcan
                 </ul>
             </li>
         @endcan
 
+        @can('managerial-report-view')
         <li class="{{ request()->is('queries*') ? 'active' : '' }}">
             <a href="#queriesSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
@@ -613,9 +634,9 @@
             </a>
             <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
 
-                <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
-                    <a href="{{ route('queries.nil-returns') }}">Nil Returns</a>
-                </li>
+{{--                <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">--}}
+{{--                    <a href="{{ route('queries.nil-returns') }}">Nil Returns</a>--}}
+{{--                </li>--}}
 
                 <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
                     <a href="{{ route('queries.non-filers') }}">Non Filers</a>
@@ -630,6 +651,7 @@
                 </li>
             </ul>
         </li>
+        @endcan
 
         @can('manage-payment-management')
             <li class="{{ request()->is('payments*') ? 'active' : '' }}">
@@ -793,7 +815,7 @@
                                 Reasons</a>
                         </li>
                     @endcan
-                    @can('setting-transfer-category-view')
+                    @can('setting-mvr-transfer-category-view')
                         <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
                                 Categories</a>
@@ -804,15 +826,16 @@
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Transfer Fees</a>
                         </li>
                     @endcan
-                        <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index','DlFee') }}">Driver's License Fees</a>
-                        </li>
-                        <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index','DlLicenseClass') }}">Driver's License Classes</a>
-                        </li>
-                        <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index','DlLicenseDuration') }}">Driver's License Duration</a>
-                        </li>
+                    <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License Classes</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index', 'DlLicenseDuration') }}">Driver's License
+                            Duration</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index', 'DlBloodGroup') }}">Blood Groups</a>
+                    </li>
                         <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index','DlBloodGroup') }}">Blood Groups</a>
                         </li>
@@ -820,7 +843,7 @@
             </li>
         @endcan
         @can('system')
-            <li class="{{ request()->is('system*') ? 'active' : '' }}">
+            <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
                 <ul class="collapse list-unstyled {{ request()->is('system*') ? 'show' : '' }}" id="system">
                     @can('system-audit-trail-view')

@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Returns\Hotel;
 
 use Carbon\Carbon;
 use App\Models\TaxType;
+use App\Traits\HotelLevyCardReport;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+use App\Traits\ReturnSummaryCardTrait;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\HotelReturns\HotelReturnPenalty;
-use App\Traits\HotelLevyCardReport;
-use App\Traits\ReturnSummaryCardTrait;
 
 class HotelReturnController extends Controller
 {
@@ -16,6 +17,9 @@ class HotelReturnController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('return-hotel-levy-view')) {
+            abort(403);
+        }
         $tax = TaxType::where('code', TaxType::HOTEL)->first();
         $summary = $this->getSummary($tax->id);
         $vars = $summary['vars'];
@@ -26,6 +30,9 @@ class HotelReturnController extends Controller
 
     public function tour()
     {
+        if (!Gate::allows('return-tour-operation-view')) {
+            abort(403);
+        }
         $tax = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
         $summary = $this->getSummary($tax->id);
         $vars = $summary['vars'];
@@ -36,6 +43,9 @@ class HotelReturnController extends Controller
 
     public function restaurant()
     {
+        if (!Gate::allows('return-restaurant-levy-view')) {
+            abort(403);
+        }
         $tax = TaxType::where('code', TaxType::RESTAURANT)->first();
         $summary = $this->getSummary($tax->id);
         $vars = $summary['vars'];

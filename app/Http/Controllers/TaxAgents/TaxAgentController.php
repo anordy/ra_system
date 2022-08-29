@@ -17,66 +17,41 @@ use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class TaxAgentController extends Controller
 {
 
 	public function index(){
-
+        if (!Gate::allows('tax-consultant-registration-view')) {
+            abort(403);
+        }
 		return view('taxagents.index');
 	}
 
 	public function activeAgents()
 	{
+        if (!Gate::allows('active-tax-consultant-view')) {
+            abort(403);
+        }
 		return view('taxagents.activeTaxagents');
 	}
 
 	public function showActiveAgent($id)
 	{
+        if (!Gate::allows('active-tax-consultant-view')) {
+            abort(403);
+        }
 		$id = Crypt::decrypt($id);
 		$agent = TaxAgent::query()->findOrfail($id);
 		return view('taxagents.active-agent-show', compact('agent', 'id'));
 	}
 
-	public function showAgentRequest($id)
-	{
-		$id = Crypt::decrypt($id);
-		$agent = TaxAgent::query()->findOrfail($id);
-
-		return view('taxagents.request-agent-show', compact('agent', 'id'));
-	}
-
-	public function showVerificationAgentRequest($id)
-	{
-		$id = Crypt::decrypt($id);
-		$agent = TaxAgent::query()->findOrfail($id);
-        $fee = DB::table('ta_payment_configurations')
-            ->where('category', '=', 'registration fee')->first();
-		return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
-	}
-
-	public function renewal()
-	{
-		return view('taxagents.renew.renewalRequests');
-	}
-
-    public function renewalShow($id)
-    {
-        $id = decrypt($id);
-        $agent = TaxAgent::query()->findOrfail($id);
-        $fee = DB::table('ta_payment_configurations')
-            ->where('category', '=', 'renewal fee')->first();
-//        dd($agent->requests);
-        return view('taxagents.renew.show', compact('agent','fee'));
-    }
-
-	public function fee()
-	{
-		return view('taxagents.fee-config');
-	}
-
     public function certificate($id){
+        if (!Gate::allows('active-tax-consultant-view')) {
+            abort(403);
+        }
         $id = decrypt($id);
         $taxagent = TaxAgent::with('taxpayer')->find($id);
         $start = date('d', strtotime($taxagent->app_first_date));
@@ -118,8 +93,62 @@ class TaxAgentController extends Controller
 
     }
 
+	public function showAgentRequest($id)
+	{
+        if (!Gate::allows('tax-consultant-registration-view')) {
+            abort(403);
+        }
+		$id = Crypt::decrypt($id);
+		$agent = TaxAgent::query()->findOrfail($id);
+
+		return view('taxagents.request-agent-show', compact('agent', 'id'));
+	}
+
+	public function showVerificationAgentRequest($id)
+	{
+        if (!Gate::allows('tax-consultant-registration-view')) {
+            abort(403);
+        }
+		$id = Crypt::decrypt($id);
+		$agent = TaxAgent::query()->findOrfail($id);
+        $fee = DB::table('ta_payment_configurations')
+            ->where('category', '=', 'registration fee')->first();
+		return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
+	}
+
+	public function renewal()
+	{
+        if (!Gate::allows('tax-consultant-renewal-requests-view')) {
+            abort(403);
+        }
+		return view('taxagents.renew.renewalRequests');
+	}
+
+    public function renewalShow($id)
+    {
+        if (!Gate::allows('tax-consultant-renewal-requests-view')) {
+            abort(403);
+        }
+        $id = decrypt($id);
+        $agent = TaxAgent::query()->findOrfail($id);
+        $fee = DB::table('ta_payment_configurations')
+            ->where('category', '=', 'renewal fee')->first();
+        return view('taxagents.renew.show', compact('agent','fee'));
+    }
+
+	public function fee()
+	{
+    if (!Gate::allows('tax-consultant-fee-configuration-view')) {
+        abort(403);
+    }
+		return view('taxagents.fee-config');
+	}
+
     public function sup($app_date)
     {
+        if (!Gate::allows('active-tax-consultant-view')) {
+            abort(403);
+        }
         $a = [1,21,31];
         $b= [2,22];
         $c = [3,23];

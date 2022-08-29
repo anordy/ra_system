@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\LandLease;
 
+use App\Models\BusinessLocation;
 use App\Models\LandLease;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
@@ -47,7 +48,7 @@ class LandLeaseReportTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered', 'taxpayer_id', 'land_leases.created_at']);
+        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered', 'taxpayer_id', 'land_leases.created_at', 'land_leases.business_location_id']);
     }
 
     public function columns(): array
@@ -62,18 +63,44 @@ class LandLeaseReportTable extends DataTableComponent
             Column::make("DP Number", "dp_number")
                 ->searchable()
                 ->sortable(),
-            Column::make("Name", "name")
+            Column::make("Name", "category")
                 ->format(
                     function ($value, $row) {
-                        if ($row->is_registered == 1) {
-                            return $this->getApplicantName($row->taxpayer_id);
+                        if ($row->category == 'business') {
+                            return $this->getBusinessName($row->business_location_id);
                         } else {
-                            return $value;
+                            if ($row->is_registered == 1) {
+                                return $this->getApplicantName($row->taxpayer_id);
+                            } else {
+                                return $row->name;
+                            }
                         }
                     }
                 )
                 ->sortable(),
-
+            Column::make("Applicant Type", "category")
+                ->format(function ($value) {
+                    return ucwords($value);
+                })
+                ->searchable()
+                ->sortable(),
+            Column::make('ZRB No./ Zin No.', 'id')
+                ->format(
+                    function ($value, $row) {
+                        if ($row->category == 'business') {
+                            return $this->getBusinessZin($row->business_location_id);
+                        } else {
+                            if ($row->is_registered == 1) {
+                                return $this->getApplicantNo($row->taxpayer_id);
+                            } else {
+                                return $row->name;
+                            }
+                        }
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+            Column::make("Applicant Type", "id")->view("land-lease.includes.applicant-status"),
             Column::make("Commence Date", "commence_date")
                 ->format(function ($value, $row) {
                     return date('d/m/Y', strtotime($value));
@@ -95,27 +122,9 @@ class LandLeaseReportTable extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
-            // Column::make("Region", "region.name")
-            //     ->searchable()
-            //     ->sortable(),
-            // Column::make("District", "district.name")
-            //     ->searchable()
-            //     ->sortable(),
-            // Column::make("Ward", "ward.name")
-            //     ->searchable()
-            //     ->sortable(),
-            Column::make("Applicant Type", "id")->view("land-lease.includes.applicant-status"),
-            Column::make('ZRB No.', 'taxpayer.reference_no')
-                ->format(function ($value, $row) {
-                    if($value == null){
-                        return 'N/A';
-                    }else{
-                        return $value;
-                    }
-                })
-                ->searchable()
-                ->sortable(),
-            Column::make("Actions", "id")->view("land-lease.includes.actions"),
+            Column::make("Actions", "id")
+            // ->hideIf(!Gate::allows('land-lease-view'))
+                ->view("land-lease.includes.actions"),
         ];
     }
 
@@ -125,4 +134,22 @@ class LandLeaseReportTable extends DataTableComponent
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
+    public function getBusinessName($id)
+    {
+        $businessLocation = BusinessLocation::find($id);
+        return $businessLocation->business->name . ' | ' . $businessLocation->name;
+    }
+
+    public function getApplicantNo($id)
+    {
+        $taxpayer = Taxpayer::find($id);
+        return $taxpayer->reference_no;
+    }
+
+    public function getBusinessZin($id)
+    {
+        $businessLocation = BusinessLocation::find($id);
+        // dd($businessLocation);
+        return $businessLocation->zin;
+    }
 }
