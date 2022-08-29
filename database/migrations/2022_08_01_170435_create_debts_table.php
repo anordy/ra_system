@@ -24,6 +24,7 @@ class CreateDebtsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_location_id');
             $table->string('currency')->nullable();
+            $table->string('marking')->nullable();
             $table->decimal('original_principal_amount', 20,2);
             $table->decimal('original_penalty', 20,2);
             $table->decimal('original_interest', 20,2);
@@ -44,7 +45,7 @@ class CreateDebtsTable extends Migration
             $table->enum('app_step', ['waiver', 'extension', 'normal'])->default('normal');
             $table->enum('status', ReturnStatus::getConstants())->default('submitted');
             $table->enum('payment_method', DebtPaymentMethod::getConstants())->default(DebtPaymentMethod::NORMAL);
-            $table->enum('recovery_measure_status', RecoveryMeasureStatus::getConstants())->default(RecoveryMeasureStatus::PENDING);
+            $table->enum('recovery_measure_status', RecoveryMeasureStatus::getConstants())->default(RecoveryMeasureStatus::NONE);
             $table->enum('origin', ['job', 'manual'])->nullable();
             $table->unique(['debt_type', 'debt_id'], 'debt_type_unique');
             $table->timestamps();

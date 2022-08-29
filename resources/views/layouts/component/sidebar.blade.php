@@ -260,7 +260,7 @@
             </li>
         @endcan
 
-        @can('payment-installment')
+        @can('payment-installment-view')
             <li class="{{ request()->is('installments-e-filling*') ? 'active' : '' }}">
                 <a href="#installment-menu" data-toggle="collapse"
                     aria-expanded="{{ request()->is('installments-e-filling*') ? 'true' : 'false' }}"
@@ -626,6 +626,7 @@
             </li>
         @endcan
 
+        @can('managerial-report-view')
         <li class="{{ request()->is('queries*') ? 'active' : '' }}">
             <a href="#queriesSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
@@ -650,6 +651,7 @@
                 </li>
             </ul>
         </li>
+        @endcan
 
         @can('manage-payment-management')
             <li class="{{ request()->is('payments*') ? 'active' : '' }}">

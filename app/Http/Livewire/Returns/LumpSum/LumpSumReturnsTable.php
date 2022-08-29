@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Returns\LumpSum;
 
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -35,11 +36,14 @@ class LumpSumReturnsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Financial Year', 'financialyear.name')
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
+            Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Quarter', 'installment')
-               ->sortable()
+            Column::make('Financial Year', 'financialyear.name')
+                ->sortable()
                 ->searchable(),
             Column::make('Quarter Of', 'quarter_name')
                ->sortable()
