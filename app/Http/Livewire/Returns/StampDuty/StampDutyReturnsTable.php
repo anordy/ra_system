@@ -32,6 +32,9 @@ class StampDutyReturnsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
+                ->sortable()
+                ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
