@@ -9,13 +9,12 @@ use App\Models\Returns\StampDuty\StampDutyReturn;
 
 class StampDutyReturnsTable extends DataTableComponent
 {
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
     }
 

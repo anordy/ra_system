@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Gate;
 
 class PetroleumReturnTable extends DataTableComponent
 {
-
-    public function mount(){
+    public function mount()
+    {
         if (!Gate::allows('return-petroleum-return-view')) {
             abort(403);
         }
@@ -22,7 +22,7 @@ class PetroleumReturnTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
     }
 
@@ -31,13 +31,15 @@ class PetroleumReturnTable extends DataTableComponent
         return PetroleumReturn::query()->where('filed_by_id', auth()->user()->id)->orderBy('petroleum_returns.created_at', 'desc');
     }
 
-
     public function columns(): array
     {
         return [
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
@@ -46,10 +48,10 @@ class PetroleumReturnTable extends DataTableComponent
                 ->searchable(),
             Column::make('Petroleum Levy', 'petroleum_levy')
                 ->sortable()
-                ->searchable(),  
+                ->searchable(),
             Column::make('Infrastructure Tax', 'infrastructure_tax')
                 ->sortable()
-                ->searchable(),  
+                ->searchable(),
             Column::make('RDF', 'rdf_tax')
                 ->sortable()
                 ->searchable(),
@@ -60,7 +62,6 @@ class PetroleumReturnTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Action', 'id')->view('returns.petroleum.filing.includes.actions'),
-
         ];
     }
 }
