@@ -804,6 +804,9 @@
                             <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Transfer Fees</a>
                         </li>
                     @endcan
+                        <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','DlFee') }}">Driver's License Fees</a>
+                        </li>
                         <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index','DlLicenseClass') }}">Driver's License Classes</a>
                         </li>
