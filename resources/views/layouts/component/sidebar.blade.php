@@ -413,8 +413,8 @@
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
                     @can('debt-management-debts-view')
-                        <li class="{{ request()->is('debts/debt*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.debt.index') }}">Debts</a>
+                        <li class="{{ request()->is('debts/all*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.debt.index') }}">Normal Debts</a>
                         </li>
                     @endcan
                     @can('debt-management-debts-overdue-view')
