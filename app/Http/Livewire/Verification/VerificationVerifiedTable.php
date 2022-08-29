@@ -20,7 +20,8 @@ class VerificationVerifiedTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn')
-            ->where('tax_verifications.status', TaxVerificationStatus::APPROVED);
+            ->where('tax_verifications.status', TaxVerificationStatus::APPROVED)
+            ->orderByDesc('tax_verifications.id');
     }
 
     public function configure(): void

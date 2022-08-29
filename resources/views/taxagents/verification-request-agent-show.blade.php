@@ -15,7 +15,7 @@
         </div>
         <div class="card-body">
             @if(empty($fee))
-                <div class=" alert alert-danger">
+                <div class=" alert alert-danger d-flex justify-content-between" >
                     <div class="d-flex justify-content-start  align-items-center">
                         <div>
                             <i style="font-size: 30px;" class="bi bi-x-circle mr-1"></i>
@@ -23,6 +23,13 @@
                         <div>
                             Please kindly add registration fee before approving any request
                         </div>
+                    </div>
+
+                    <div >
+                        <a class="btn btn-primary" href="{{ route('taxagents.fee') }}">
+                            <i class="bi bi-plus-square-fill mr-2"></i>
+                            Add Fee
+                        </a>
                     </div>
                 </div>
             @else
