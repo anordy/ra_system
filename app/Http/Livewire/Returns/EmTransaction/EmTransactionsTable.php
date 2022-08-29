@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Gate;
 
 class EmTransactionsTable extends DataTableComponent
 {
-
-    public function mount(){
+    public function mount()
+    {
         if (!Gate::allows('return-electronic-money-transaction-return-view')) {
             abort(403);
         }
@@ -23,7 +23,7 @@ class EmTransactionsTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
     }
 
@@ -38,6 +38,9 @@ class EmTransactionsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),

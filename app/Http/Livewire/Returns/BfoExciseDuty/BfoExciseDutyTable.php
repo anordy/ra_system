@@ -13,7 +13,8 @@ class BfoExciseDutyTable extends DataTableComponent
 {
     protected $model = BfoReturn::class;
 
-    public function mount(){
+    public function mount()
+    {
         if (!Gate::allows('return-bfo-excise-duty-return-view')) {
             abort(403);
         }
@@ -35,6 +36,9 @@ class BfoExciseDutyTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Branch / Location', 'businessLocation.name')
+            ->sortable()
+            ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
