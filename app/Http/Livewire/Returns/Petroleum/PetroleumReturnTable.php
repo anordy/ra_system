@@ -43,7 +43,7 @@ class PetroleumReturnTable extends DataTableComponent
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
+            Column::make('Branch Name', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Petroleum Levy', 'petroleum_levy')

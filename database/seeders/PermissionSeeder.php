@@ -135,9 +135,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'land-lease-change-agent-status', 'sys_module_id' => 16],
             ['name' => 'land-lease-generate-control-number', 'sys_module_id' => 16],
 
-            
-            # Managerial Report
-            ['name' => 'managerial-report-view', 'sys_module_id' => 20],
 
             # Manage Payments
             ['name' => 'manage-payments-view', 'sys_module_id' => 17],

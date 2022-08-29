@@ -29,7 +29,9 @@ class EmTransactionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return EmTransactionReturn::query()->orderBy('em_transaction_returns.created_at', 'desc');
+        return EmTransactionReturn::query()
+            ->with('business', 'business.taxpayer', 'businessLocation')
+            ->orderBy('em_transaction_returns.created_at', 'desc');
     }
 
     public function columns(): array
@@ -44,7 +46,7 @@ class EmTransactionsTable extends DataTableComponent
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
+            Column::make('Branch Name', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Total VAT', 'total_amount_due')

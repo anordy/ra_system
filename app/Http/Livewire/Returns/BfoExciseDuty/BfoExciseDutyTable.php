@@ -27,7 +27,9 @@ class BfoExciseDutyTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BfoReturn::query()->with('business', 'business.taxpayer')->orderBy('bfo_returns.created_at', 'desc');
+        return BfoReturn::query()
+            ->with('business', 'business.taxpayer', 'businessLocation')
+            ->orderBy('bfo_returns.created_at', 'desc');
     }
 
     public function columns(): array
@@ -42,7 +44,7 @@ class BfoExciseDutyTable extends DataTableComponent
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
+            Column::make('Branch Name', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Total VAT', 'total_amount_due')
