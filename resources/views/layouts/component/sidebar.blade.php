@@ -444,7 +444,7 @@
                                 Levy</a>
                         </li>
                     @endcan
-                    @can('debt-management-tour-operation-levy-view')
+                    @can('debt-management-tour-operator-levy-view')
                         <li class="{{ request()->is('debts/returns/tour*') ? 'active' : '' }}">
                             <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour
                                 Operation
@@ -836,8 +836,8 @@
                     <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlBloodGroup') }}">Blood Groups</a>
                     </li>
-                        <li class="{{ request()->is('settings/mvr-generic/DlBloodGroup') ? 'active' : '' }}">
-                            <a href="{{ route('settings.mvr-generic.index','DlBloodGroup') }}">Blood Groups</a>
+                        <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','DlFee') }}">Driver's License Fees</a>
                         </li>
                 </ul>
             </li>
