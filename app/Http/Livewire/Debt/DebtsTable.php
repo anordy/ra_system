@@ -12,14 +12,13 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class DebtsTable extends DataTableComponent
 {
-
     use LivewireAlert;
 
     public function builder(): Builder
     {
         return Debt::query()
-            ->whereNotIn('debts.status',  [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT, ReturnStatus::ON_CLAIM])
-            ->whereRaw("TIMESTAMPDIFF(DAY, debts.curr_due_date, CURDATE()) < 30")
+            ->whereNotIn('debts.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT, ReturnStatus::ON_CLAIM])
+            ->whereRaw('TIMESTAMPDIFF(DAY, debts.curr_due_date, CURDATE()) < 30')
             ->orderBy('debts.created_at', 'desc');
     }
 
@@ -28,9 +27,9 @@ class DebtsTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id','tax_type_id', 'business_location_id']);
+        $this->setAdditionalSelects(['business_id', 'tax_type_id', 'business_location_id']);
     }
 
     public function columns(): array
@@ -69,7 +68,6 @@ class DebtsTable extends DataTableComponent
             Column::make('Payment Method', 'payment_method'),
             Column::make('Status', 'status')->view('debts.includes.status'),
             Column::make('Actions', 'id')->view('debts.includes.actions'),
-
         ];
     }
 }
