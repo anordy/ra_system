@@ -112,7 +112,7 @@ class StampDutyConfigSeeder extends Seeder
             [
                 'financia_year_id' => 1,
                 'order' => 8,
-                'code' => 'exempt-import',
+                'code' => 'TOTAL',
                 'name' => 'Total Duty(Amount due) / Kiasi kinachostahili kulipwa',
                 'row_type' => 'dynamic',
                 'value_calculated' => false,

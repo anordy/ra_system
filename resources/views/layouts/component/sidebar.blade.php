@@ -444,7 +444,7 @@
                                 Levy</a>
                         </li>
                     @endcan
-                    @can('debt-management-tour-operation-levy-view')
+                    @can('debt-management-tour-operator-levy-view')
                         <li class="{{ request()->is('debts/returns/tour*') ? 'active' : '' }}">
                             <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour
                                 Operation
@@ -668,7 +668,7 @@
             </li>
         @endcan
 
-        {{--@can('setting')--}}
+        @can('setting')
             <li class="{{ request()->is('settings*') ? 'active' : '' }}">
                 <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>
                 <ul class="collapse list-unstyled {{ request()->is('settings*') ? 'show' : '' }}" id="settings">
@@ -841,9 +841,7 @@
                         </li>
                 </ul>
             </li>
-{{--
         @endcan
---}}
         @can('system')
             <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
