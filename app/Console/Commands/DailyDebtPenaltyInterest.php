@@ -74,8 +74,14 @@ class DailyDebtPenaltyInterest extends Command
                 
                 $debtUpdate = Debt::find($debt->id);
 
+                // Cancel return bill if it exists
+                if ($debt->debt->bill) {
+                    CancelBill::dispatch($debt->debt->bill, 'Debt Penalty Increment')->delay($now->addSeconds(2));
+                }
+
+                // Cancel debt bill if exists otherwise generate control no.
                 if ($debt->bill) {
-                    CancelBill::dispatch($debt->bill, 'Penalty Increment')->delay($now->addSeconds(10));
+                    CancelBill::dispatch($debt->bill, 'Debt Penalty Increment')->delay($now->addSeconds(5));
                     GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
                 } else {
                     GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));

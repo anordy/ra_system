@@ -6,6 +6,7 @@ use ReflectionClass;
 
 class RecoveryMeasureStatus implements Status
 {
+    public const NONE = 'none';
     public const PENDING = 'pending';
     public const APPROVED = 'approved';
     public const CORRECTION = 'correction';
