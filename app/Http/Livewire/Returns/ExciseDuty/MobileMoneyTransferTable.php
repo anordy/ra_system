@@ -12,7 +12,8 @@ class MobileMoneyTransferTable extends DataTableComponent
 {
     protected $model = MmTransferReturn::class;
 
-    public function mount(){
+    public function mount()
+    {
         if (!Gate::allows('return-mobile-money-transfer-view')) {
             abort(403);
         }
@@ -32,7 +33,7 @@ class MobileMoneyTransferTable extends DataTableComponent
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Type', 'taxtype.name')
+            Column::make('Branch Name', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Total VAT', 'total_amount_due')

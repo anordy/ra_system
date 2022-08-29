@@ -27,15 +27,15 @@ class NilReturnsController extends Controller
 
         $vats = VatReturn::query()->select('*')
             ->whereIn('business_location_id', $business_lo)
-            ->where('total_amount_due',0)
+            ->where('total_amount_due', 0)
             ->orderBy('id')
             ->groupBy('business_location_id')
             ->havingRaw('COUNT(*) >= ?', [2])
             ->limit($rows)
             ->get();
-//        dd($vats);
-        foreach ($vats as $vat)
-        {
+        
+        $locations = [];
+        foreach ($vats as $vat) {
             $locations[] = $vat->business_location_id;
         }
         $check = VatReturn::query()->whereIn('business_location_id', $locations);

@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefProject;
 use Illuminate\Database\Eloquent\Builder;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ReliefProjectTable extends DataTableComponent
 {
@@ -19,7 +19,7 @@ class ReliefProjectTable extends DataTableComponent
 
     protected $listeners = [
         'confirmed',
-        'toggleStatus'
+        'toggleStatus',
     ];
 
     public function configure(): void
@@ -41,12 +41,13 @@ class ReliefProjectTable extends DataTableComponent
                 ->sortable(),
             Column::make('Configure Projects', 'id')
                 ->view('relief.project.includes.project-actions'),
-            Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-project-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
-                ->html(true),
+            // Column::make('Action', 'id')
+            //     ->format(fn($value) => <<< HTML
+            //         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-project-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+            //         <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+            //     HTML)
+            //     ->html(true),
+            Column::make("Actions","id")->view("relief.project.includes.actions"),
         ];
     }
 
@@ -54,7 +55,7 @@ class ReliefProjectTable extends DataTableComponent
     {
         $projectSection = ReliefProject::find($id);
         //check if ministry has been used in relief project list and if so, prevent deletion
-        if ($projectSection->reliefProjects()->count()>0) {
+        if ($projectSection->reliefProjects()->count() > 0) {
             $this->alert('error', 'Cannot delete project section. Project section is used in Project.');
         } else {
             $projectSection->delete();

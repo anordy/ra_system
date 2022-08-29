@@ -15,7 +15,7 @@
         <div class="card-header d-flex justify-content-between">
             <div>Return Details</div>
             <div>
-                <a class="btn btn-info" href="{{ route('upgrade-tax-types.index') }}">
+                <a class="btn btn-info" href="{{ route('business.upgrade-tax-types.index') }}">
                     <i class="bi bi-arrow-return-left mr-2"></i>
                     Back
                 </a>

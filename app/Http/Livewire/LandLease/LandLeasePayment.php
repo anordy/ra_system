@@ -7,6 +7,7 @@ use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Illuminate\Support\Facades\Gate;
 
 class LandLeasePayment extends Component
 {
@@ -28,6 +29,9 @@ class LandLeasePayment extends Component
     }
 
     public function regenerate(){
+        if(!Gate::allows('land-lease-generate-control-number')){
+            abort(403);
+        }
         $response = $this->regenerateControlNo($this->landLease->bill());
         if ($response){
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
@@ -38,6 +42,9 @@ class LandLeasePayment extends Component
 
     public function generate()
     {
+        if(!Gate::allows('land-lease-generate-control-number')){
+            abort(403);
+        }
         $billItems[] = [
             'billable_id' => $this->landLease->id,
             'billable_type' => get_class($this->landLease),

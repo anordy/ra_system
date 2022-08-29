@@ -122,6 +122,7 @@
                                         <th>Principal Amount</th>
                                         <th>Penalty Amount</th>
                                         <th>Interest Amount</th>
+                                        <th>Installment</th>
                                         <th>Total Debt</th>
                                     </tr>
                                 </thead>
@@ -153,6 +154,9 @@
                                                     <td>
                                                         {{ number_format($debt->interest, 2) }}
                                                         {{ $debt->currency }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $debt->installment->installment_count ?? '0'  }}
                                                     </td>
                                                     <td>
                                                         {{ number_format($debt->outstanding_amount, 2) }}
@@ -189,6 +193,7 @@
                                         <th>Principal</th>
                                         <th>Penalty</th>
                                         <th>Interest</th>
+                                        <th>Installment</th>
                                         <th>Total Debt</th>
                                     </tr>
                                 </thead>
@@ -208,6 +213,9 @@
                                                     <td>
                                                         {{ number_format($debt->interest, 2) }}
                                                         {{ $debt->currency }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $debt->installment->installment_count ?? '0'  }}
                                                     </td>
                                                     <td>
                                                         {{ number_format($debt->outstanding_amount, 2) }}
@@ -245,6 +253,7 @@
                                         <th>Principal</th>
                                         <th>Penalty</th>
                                         <th>Interest</th>
+                                        <th>Installment</th>
                                         <th>Total Debt</th>
                                     </tr>
                                 </thead>
@@ -264,6 +273,9 @@
                                                     <td>
                                                         {{ number_format($debt->interest, 2) }}
                                                         {{ $debt->currency }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $debt->installment->installment_count ?? '0'  }}
                                                     </td>
                                                     <td>
                                                         {{ number_format($debt->outstanding_amount, 2) }}
@@ -302,6 +314,7 @@
                                         <th>Principal</th>
                                         <th>Penalty</th>
                                         <th>Interest</th>
+                                        <th>Installment</th>
                                         <th>Total Debt</th>
                                     </tr>
                                 </thead>
@@ -321,6 +334,9 @@
                                                     <td>
                                                         {{ number_format($debt->interest, 2) }}
                                                         {{ $debt->currency }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $debt->installment->installment_count ?? '0'  }}
                                                     </td>
                                                     <td>
                                                         {{ number_format($debt->outstanding_amount, 2) }}

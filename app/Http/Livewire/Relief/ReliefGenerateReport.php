@@ -11,6 +11,7 @@ use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use PDF;
+use Illuminate\Support\Facades\Gate;
 
 class ReliefGenerateReport extends Component
 {
@@ -88,6 +89,9 @@ class ReliefGenerateReport extends Component
 
     public function export()
     {
+        if(!Gate::allows('relief-generate-report')){
+            abort(403);
+        }
         $dates = $this->getStartEndDate();
         if ($dates['startDate'] == null || $dates['endDate'] == null) {
             $exists = Relief::exists();
@@ -203,6 +207,9 @@ class ReliefGenerateReport extends Component
 
     public function exportPdf()
     {
+        if(!Gate::allows('relief-generate-report')){
+            abort(403);
+        }
         $dates = $this->getStartEndDate();
         if ($dates['startDate'] == null || $dates['endDate'] == null) {
             $exists = Relief::exists();
