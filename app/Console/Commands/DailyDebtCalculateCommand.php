@@ -4,12 +4,14 @@ namespace App\Console\Commands;
 
 use App\Models\Business;
 use App\Models\Debts\Debt;
+use App\Models\Debts\DebtPenalty;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\HotelReturns\HotelReturnPenalty;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
@@ -17,6 +19,7 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\TaxAssessments\TaxAssessment;
+use App\Traits\PenaltyTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -25,6 +28,7 @@ use Illuminate\Support\Facades\Log;
 
 class DailyDebtCalculateCommand extends Command
 {
+    use PenaltyTrait;
     /**
      * The name and signature of the console command.
      *
@@ -57,11 +61,7 @@ class DailyDebtCalculateCommand extends Command
     public function handle()
     {
         Log::channel('debtCollection')->info('Daily Debt collection process started');
-        $financialYear = FinancialYear::firstWhere('code', date('Y'));
-        $month = Carbon::now()->month;
-        $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
-            ->where('number', $month)->first();
-
+        $financialMonth = $this->getCurrentFinancialMonth();
         $this->returnsDebts($financialMonth);
         $this->assessmentDebt($financialMonth);
         Log::channel('debtCollection')->info('Daily Debt collection ended');
@@ -69,6 +69,7 @@ class DailyDebtCalculateCommand extends Command
 
     protected function returnsDebts($financialMonth)
     {
+        // 
         $returnModels = [
             HotelReturn::class,
             StampDutyReturn::class,
@@ -87,7 +88,7 @@ class DailyDebtCalculateCommand extends Command
             DB::beginTransaction();
             try {
 
-                $hoteReturn = $model::select(
+                $returns = $model::with('penalties')->select(
                     'id as debt_id',
                     'business_location_id',
                     'business_id',
@@ -105,23 +106,43 @@ class DailyDebtCalculateCommand extends Command
                     'submitted_at',
                     'filing_due_date',
                     'payment_due_date as last_due_date',
-                    'payment_due_date as curr_due_date'
+                    'payment_due_date as curr_due_date',
+                    'id',
                 )
                     ->doesntHave('payments')
                     ->whereNotIn('status', ['complete', 'paid-by-debt'])
                     ->where('filing_due_date', '<', $financialMonth->due_date)
                     ->get();
 
-                $data = $hoteReturn->map(function ($return) use ($model) {
+
+                $returns->map(function ($return) use ($model) {
+                    $penalties = $return->penalties->toArray();
                     $return->debt_type = $model;
                     $return->origin = 'job';
+                    $return->curr_due_date = end($penalties)['end_date']; // Set current due date as last penalty end date
                     $return->logged_date = Carbon::now()->toDateTimeString();
                     return $return;
                 });
 
-                $dataToInsert = $data->toArray();
+                
+                foreach ($returns as $return) {
+                    $penalties = $return->penalties; // Hold return penalties
 
-                Debt::upsert($dataToInsert, ['debt_id', 'debt_type']);
+                    unset($return->penalties, $return->id); // Unset penalties & return id
+
+                    $debt = Debt::create($return->toArray()); // Create main debt
+
+                    if (count($penalties) > 0) {
+
+                        $penalties->map(function($penalty) {
+                            unset($penalty->id, $penalty->created_at, $penalty->updated_at, $penalty->return_id);
+                        });
+    
+                        $debt->penalties()->createMany($penalties->toArray()); // Copy return penalties to debt penalties
+                    }
+                   
+                }
+
                 DB::commit();
                 Log::channel('debtCollection')->info("Daily Debt collection for return model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
             } catch (Exception $e) {
