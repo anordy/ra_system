@@ -81,8 +81,8 @@ class VerifyAction extends Component
         try {
             $comment = $value['value'];
             $data = (object)$value['data'];
-            $agent = TaxAgent::query()->findOrFail($data->id);
-            $taxpayer = Taxpayer::query()->findOrFail($agent->taxpayer_id);
+            $agent = TaxAgent::findOrFail($data->id);
+            $taxpayer = Taxpayer::findOrFail($agent->taxpayer_id);
             $fee = TaPaymentConfiguration::query()->where('category', 'registration fee')->first();
             $amount = $fee->amount;
             $used_currency = $fee->currency;
@@ -143,7 +143,7 @@ class VerifyAction extends Component
                 $billitems
             );
 
-            if (config('app.env') != 'local') {
+            if (config('app.env') == 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
                     $agent->status = TaxAgentStatus::VERIFIED;
@@ -154,6 +154,8 @@ class VerifyAction extends Component
                 } else {
                     session()->flash('error', 'Control number generation failed, try again later');
                     $agent->billing_status = BillingStatus::CN_GENERATION_FAILED;
+                    $agent->status = TaxAgentStatus::DRAFTING;
+                    $agent->save();
                 }
 
             } else {
