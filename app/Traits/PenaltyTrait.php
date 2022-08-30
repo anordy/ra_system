@@ -190,5 +190,15 @@ trait PenaltyTrait
         $interest = ($taxAmount * pow((1 + $rate), $period)) - $taxAmount;
         return $interest;
     }
+
+    public function getCurrentFinancialMonth() {
+        $now = Carbon::now();
+
+        $financialYear = FinancialYear::where('code', $now->year)->first();
+        $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
+                                ->where('number', ($now->month))
+                                ->first();
+        return $financialMonth;
+    }
 }
 
