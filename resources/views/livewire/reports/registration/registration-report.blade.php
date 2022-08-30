@@ -1,14 +1,14 @@
 <div>
     <div class="row">
         <div class="col-md-4 form-group">
-            <label for="report_type" class="d-flex justify-content-between'">
+            <label class="d-flex justify-content-between'">
                 <span>
-                    Type Of Report
+                    Criteria
                 </span>
             </label>
-            <select name="reportType" id="reportType" wire:model="reportType"
+            <select wire:model="reportType"
                 class="form-control {{ $errors->has('reportType') ? 'is-invalid' : '' }}">
-                <option value="">Select Report</option>
+                <option value="">Select Criteria</option>
                 @foreach ($optionReportTypes as $key=>$report)
                 <option value={{ $key }}>
                     {{ $report }}</option>
@@ -23,19 +23,76 @@
 
         @if($reportType == 'Business-Reg-By-Nature')
             <div class="col-md-4 form-group">
-                <label for="report_type" class="d-flex justify-content-between'">
+                <label class="d-flex justify-content-between'">
                     <span>
-                        Select ISIC LEVEL I
+                        ISIC LEVEL I
                     </span>
                 </label>
                 <select wire:model="isic1Id" class="form-control {{ $errors->has('isic1Id') ? 'is-invalid' : '' }}">
-                    <option value="">Select Tax Type</option>
+                    <option value="">Select Level</option>
                     @foreach ($optionIsic1s as $isic1)
                     <option value={{ $isic1->id }}>
                         {{ $isic1->description }}</option>
                     @endforeach
                 </select>
                 @error('isic1Id')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="col-md-4 form-group">
+                <label class="d-flex justify-content-between'">
+                    <span>
+                        ISIC LEVEL II
+                    </span>
+                </label>
+                <select wire:model="isic2Id" class="form-control {{ $errors->has('isic2Id') ? 'is-invalid' : '' }}">
+                    <option value="">Select Level</option>
+                    @foreach ($optionIsic2s as $isic2)
+                    <option value={{ $isic2->id }}>
+                        {{ $isic2->description }}</option>
+                    @endforeach
+                </select>
+                @error('isic2Id')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="col-md-4 form-group">
+                <label class="d-flex justify-content-between'">
+                    <span>
+                        ISIC LEVEL III
+                    </span>
+                </label>
+                <select wire:model="isic3Id" class="form-control {{ $errors->has('isic3Id') ? 'is-invalid' : '' }}">
+                    <option value="">Select Level</option>
+                    @foreach ($optionIsic3s as $isic3)
+                    <option value={{ $isic3->id }}>
+                        {{ $isic3->description }}</option>
+                    @endforeach
+                </select>
+                @error('isic3Id')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="col-md-4 form-group">
+                <label class="d-flex justify-content-between'">
+                    <span>
+                        ISIC LEVEL IV
+                    </span>
+                </label>
+                <select wire:model="isic4Id" class="form-control {{ $errors->has('isic4Id') ? 'is-invalid' : '' }}">
+                    <option value="">Select Level</option>
+                    @foreach ($optionIsic4s as $isic4)
+                    <option value={{ $isic4->id }}>
+                        {{ $isic4->description }}</option>
+                    @endforeach
+                </select>
+                @error('isic4Id')
                 <div class="invalid-feedback">
                     {{ $message }}
                 </div>
@@ -114,7 +171,6 @@
             @enderror
         </div>
         @endif
-
     </div>
 
     <div class="row mt-3">
@@ -125,7 +181,7 @@
                     Preview Report
                 </button>
             </div>
-            <button class="btn btn-success ml-2" wire:click="exportExcel " wire:loading.attr="disabled">
+            {{-- <button class="btn btn-success ml-2" wire:click="exportExcel " wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                     wire:target="exportExcel"></i>
@@ -135,7 +191,7 @@
                 <i class="bi bi-file-earmark-pdf ml-1" wire:loading.remove wire:target="exportPdf"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="exportPdf"></i>
                 Export to Pdf
-            </button>
+            </button> --}}
         </div>
     </div>
 

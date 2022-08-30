@@ -68,7 +68,7 @@ class UploadDeRegistrationInspectionReport extends Component
                 'inspection_report_path'=>$this->inspection_report_path,
                 'mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_APPROVAL])->id,
             ]);
-            $this->flash('success', 'Inspection Report Uploaded', [], redirect()->route('mvr.de-register-requests.show',encrypt($this->request_id))->getTargetUrl());
+            $this->flash('success', 'Inspection Report Uploaded', [], route('mvr.de-register-requests.show',encrypt($this->request_id)));
         }catch(Exception $e){
             Log::error($e);
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);

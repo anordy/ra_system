@@ -10,10 +10,12 @@ use App\Models\DlDriversLicense;
 use App\Models\DlDriversLicenseClass;
 use App\Models\DlFee;
 use App\Models\DlLicenseApplication;
+use App\Models\MvrMotorVehicle;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\WorkflowProcesssingTrait;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -128,7 +130,6 @@ class LicenseApplicationsController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
         }
         return redirect()->route('drivers-license.applications.show',encrypt($id));
     }
@@ -144,6 +145,18 @@ class LicenseApplicationsController extends Controller
             session()->flash('error','Could not update application');
         }
         return redirect()->route('drivers-license.applications.show',encrypt($id));
+    }
+
+    public function license($id){
+        $id = decrypt($id);
+        $license = DlDriversLicense::query()->find($id);
+
+        header('Content-Type: application/pdf' );
+
+        $pdf = PDF::loadView('driver-license.pdfs.drivers-license', compact('license' ));
+        $pdf->setPaper('legal', 'landscape');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        return $pdf->stream();
     }
 
 }

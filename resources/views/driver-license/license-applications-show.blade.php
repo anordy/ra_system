@@ -50,6 +50,13 @@
                             <p class="my-1">{{ $application->created_at }}</p>
                         </div>
 
+                        @if(!empty($application->loss_report_path))
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Loss Report</span>
+                                <p class="my-1"><a class="btn btn-sm btn-success" href="{{ url('storage/'.$application->loss_report_path) }}">View/Download</a></p>
+                            </div>
+                        @endif
+
                         @if(strtolower($application->type)=='fresh')
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Certificate Number</span>
@@ -234,6 +241,15 @@
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">Expire Date</span>
                                         <p class="my-1">{{ $application->drivers_license->expiry_date->format('Y-m-d') }}</p>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Print Drivers License</span>
+                                        <p class="my-1">
+                                            <a href="{{route('drivers-license.license.print',encrypt($application->drivers_license->id))}}">
+                                                <button class="btn btn-sm btn-success">Print</button>
+                                            </a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

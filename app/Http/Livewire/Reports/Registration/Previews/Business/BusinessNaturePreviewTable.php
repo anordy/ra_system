@@ -15,7 +15,8 @@ class BusinessNaturePreviewTable extends DataTableComponent
 {
     use LivewireAlert,RegistrationReportTrait;
 
-    public $isic1Id;
+    public $isicId;
+    public $level;
 
     public function configure(): void
     {
@@ -28,13 +29,26 @@ class BusinessNaturePreviewTable extends DataTableComponent
         $this->setAdditionalSelects(['business_locations.business_id']);
     }
 
-    public function mount($isic1Id){
-        $this->isic1Id = $isic1Id;
+    public function mount($isicId,$level){
+        $this->isic1Id = $isicId;
+        $this->level = $level;
+        // dd($isicId,$level);
     }
 
     public function builder(): Builder
     {
-        return $this->businessByNatureQuery($this->isic1Id);
+        if($this->level == 1){
+            return $this->businessByNatureIsic1Query($this->isicId);
+        }
+        elseif($this->level == 2){
+            return $this->businessByNatureIsic2Query($this->isicId);
+        }
+        elseif($this->level == 3){
+            return $this->businessByNatureIsic3Query($this->isicId);
+        }
+        elseif($this->level == 4){
+            return $this->businessByNatureIsic4Query($this->isicId);
+        }
     }
 
     public function columns(): array

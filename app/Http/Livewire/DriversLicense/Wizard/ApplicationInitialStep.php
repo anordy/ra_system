@@ -61,9 +61,9 @@ class ApplicationInitialStep extends StepComponent
     public function applicantLookup(){
         $this->lookup_fired = true;
         if ($this->search_type == 'zin'){
-            $business = BusinessLocation::query()->where(['zin'=>$this->number])->first();
-            if (!empty($business->taxpayer)){
-                $this->taxpayer = $business->taxpayer;
+            $taxpayer = Taxpayer::query()->where(['reference_no'=>$this->number])->first();
+            if (!empty($taxpayer)){
+                $this->taxpayer = $taxpayer;
             }else{
                 $this->taxpayer = null;
             }

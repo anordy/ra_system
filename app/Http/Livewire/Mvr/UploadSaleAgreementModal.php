@@ -68,7 +68,7 @@ class UploadSaleAgreementModal extends Component
                 'mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_APPROVAL])->id,
             ]);
             DB::commit();
-            $this->flash('success', 'Document Uploaded', [], redirect()->route('mvr.transfer-ownership.show',encrypt($this->request_id))->getTargetUrl());
+            $this->flash('success', 'Document Uploaded', [], route('mvr.transfer-ownership.show',encrypt($this->request_id)));
         }catch(Exception $e){
             Log::error($e);
             if (Storage::exists($this->agreement_path)) Storage::delete($this->agreement_path);

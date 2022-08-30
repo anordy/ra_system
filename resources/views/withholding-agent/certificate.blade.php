@@ -5,7 +5,7 @@
     <title></title>
     <style>
         body {
-            background-image: url("{{ public_path() }}/images/certificate/withholding_agent.jpg");
+            background-image: url("{{ public_path() }}/images/certificate/withholding_agent.png");
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;

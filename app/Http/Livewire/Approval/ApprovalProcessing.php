@@ -49,6 +49,8 @@ class ApprovalProcessing extends Component
 
     public $showLumpsumOptions = false;
 
+    public $Ids, $exceptionOne, $exceptionTwo;
+
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
@@ -121,13 +123,26 @@ class ApprovalProcessing extends Component
 
         if (end($property) === 'tax_type_id') {
             // Pluck id
-            $Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
+            $this->Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
 
             // Get lumpsum ID
-            $lumpSumId = TaxType::where('code', 'lumpsum-payment')->first()->id;
+            $lumpSumId = TaxType::query()->where('code', TaxType::LUMPSUM_PAYMENT)->first()->id;
+
+            // Get vat ID
+            $vatId = TaxType::query()->where('code', TaxType::VAT)->first()->id;
+
+            // Get vat ID
+            $hotelId = TaxType::query()->where('code', TaxType::HOTEL)->first()->id;
+
+            // Get stamp ID
+            $stampId = TaxType::query()->where('code', TaxType::STAMP_DUTY)->first()->id;
+
+            //adding IDs to array
+            $this->exceptionOne = [$vatId, $hotelId];
+            $this->exceptionTwo = [$vatId, $stampId];
 
             // compare if plucked ID are the same as Lumpsum id
-            if (in_array($lumpSumId, $Ids)) {
+            if (in_array($lumpSumId, $this->Ids)) {
                 $this->showLumpsumOptions = true;
                 $this->selectedTaxTypes   = [];
                 $this->selectedTaxTypes[] = [
@@ -157,6 +172,20 @@ class ApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+//        if ($this->showLumpsumOptions == false)
+//        {
+//            if (array_intersect($this->exceptionOne, $this->Ids) == $this->exceptionOne)
+//            {
+//                $this->alert('error', 'One business can not have both hotel and vat as tax types');
+//                return redirect()->back();
+//            }
+//            if (array_intersect($this->exceptionTwo, $this->Ids) == $this->exceptionTwo)
+//            {
+//                $this->alert('error', 'One business can not have both stamp duty and vat as tax types');
+//                return redirect()->back();
+//            }
+//        }
+
         if ($this->checkTransition('registration_officer_review')) {
             $this->subject->isiic_i   = $this->isiic_i ?? null;
             $this->subject->isiic_ii  = $this->isiic_ii ?? null;
@@ -255,7 +284,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-
+            $this->alert('error', 'Something went wrong');
             return;
         }
 
@@ -277,7 +306,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-
+            $this->alert('error', 'Something went wrong');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());

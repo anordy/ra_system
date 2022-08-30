@@ -19,7 +19,7 @@ class CreateMvrRegistrationChangeRequestsTable extends Migration
             $table->unsignedBigInteger('current_registration_id');
             $table->unsignedBigInteger('requested_registration_type_id');
             $table->unsignedBigInteger('mvr_plate_size_id');
-            $table->string('custom_plate_number',20);
+            $table->string('custom_plate_number',20)->nullable();
             $table->date('date')->useCurrent();
             $table->unsignedBigInteger('mvr_request_status_id');
             $table->timestamps();

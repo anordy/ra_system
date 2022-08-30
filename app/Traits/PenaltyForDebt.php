@@ -27,22 +27,20 @@ class PenaltyForDebt
         $endDate = null;
         $totalAmount = 0;
         $penaltyEntry = DebtPenalty::where('debt_id', $debtId)->count();
-
+        // dd($penaltyIterations);
         for ($i = 0; $i < $penaltyIterations; $i++) {
 
-            if ($i == 1) {
-                $period = $penaltyEntry + 1;
-            }
+            $period = $penaltyEntry + 1;
 
             if ($i === 0) {
                 $penaltableAmount = $taxAmount;
                 $latePaymentAmount = $latePaymentBeforeRate * $penaltableAmount;
                 $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-                $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $i);
+                $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $period);
                 $penaltableAmount = $interestAmount + $penaltableAmount;
 
                 $penaltableAmountForPerticularMonth = $penaltableAmount;
-                dd($penaltableAmountForPerticularMonth);
+                
                 $date->addDays(1);
                 $fromDate = clone $date;
                 $date->addDays(29);
@@ -74,9 +72,10 @@ class PenaltyForDebt
             if ($penaltableAmount == 0) {
                 $penaltableAmount = $taxAmount;
             }
+
             $latePaymentAmount = $latePaymentAfterRate * $penaltableAmount;
             $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-            $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $i);
+            $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $period);
             $penaltableAmount = $penaltableAmount + $interestAmount;
             $date->addDays(1);
             $fromDate = clone $date;

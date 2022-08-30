@@ -65,8 +65,11 @@ class LicenseDetailsStep extends StepComponent
     {
         $this->validate();
         $init = $this->state()->all()['drivers-license.wizard.application-initial-step'];
-        $applicant = $this->state()->all()['drivers-license.wizard.application-details-step'];;
-
+        $applicant = $this->state()->all()['drivers-license.wizard.application-details-step'];
+        if (empty($this->license_class_ids)){
+            $this->alert('error', 'License classes cannot be empty!');
+            return;
+        }
         try{
             DB::beginTransaction();
             if (strtolower($init['type'])=='fresh'){
@@ -88,6 +91,7 @@ class LicenseDetailsStep extends StepComponent
                     'dl_drivers_license_owner_id'=>DlDriversLicenseOwner::query()->where(['taxpayer_id'=>$init['taxpayer']['id']])->first()->id,
                     'dl_license_duration_id' => $this->duration_id,
                     'dl_blood_group_id' => $applicant['blood_group_id'],
+                    'loss_report_path'=>$applicant['loss_report_path'],
                     'type' => strtoupper($init['type']),
                     'dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name'=>DlApplicationStatus::STATUS_INITIATED])->id
                 ]);

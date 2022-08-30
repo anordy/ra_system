@@ -258,6 +258,7 @@ class DebtWaiverApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
+            $this->alert('error', 'Something went wrong');
 
             return;
         }

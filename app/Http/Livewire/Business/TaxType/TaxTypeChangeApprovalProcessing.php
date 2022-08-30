@@ -52,7 +52,6 @@ class TaxTypeChangeApprovalProcessing extends Component
                 'created_at' => $value->created_at
             ];
         }
-
     }
 
     public function getTaxNameById($taxId)
@@ -89,7 +88,6 @@ class TaxTypeChangeApprovalProcessing extends Component
                             'new_tax_id' => $this->selectedTaxTypes[$key]['tax_type_id']
                         ];
                     }
-
                 }
 
                 foreach ($business->taxTypes as $type) {
@@ -99,7 +97,7 @@ class TaxTypeChangeApprovalProcessing extends Component
                 $notification_payload = [
                     'old_taxtypes' => $old_taxtypes_list,
                     'new_taxtypes' => $new_taxtypes_list,
-                    'new_taxes' =>$changed_tax_types,
+                    'new_taxes' => $changed_tax_types,
                     'business' => $business,
                     'time' => Carbon::now()->format('d-m-Y')
                 ];
@@ -107,11 +105,9 @@ class TaxTypeChangeApprovalProcessing extends Component
                 DB::commit();
                 event(new SendMail('change-tax-type-approval', $notification_payload));
                 event(new SendSms('change-tax-type-approval', $notification_payload));
-
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-
         } catch (Exception $e) {
             DB::rollback();
             Log::error($e);
@@ -127,10 +123,11 @@ class TaxTypeChangeApprovalProcessing extends Component
                 $this->subject->status = BusinessStatus::REJECTED;
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 

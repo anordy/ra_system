@@ -37,7 +37,7 @@ class VerificationApprovalTable extends DataTableComponent
                 })
                 ->where('tax_verifications.status', TaxVerificationStatus::PENDING)
                 ->orderByDesc('tax_verifications.id');
-        } elseif ($this->paymentStatus == 'unpaid') {
+        } elseif ($this->paymentStatus == 'unpaid') {   
             return TaxVerification::query()
                 ->with('business', 'location', 'taxType', 'taxReturn')
                 ->whereHas('taxReturn', function (Builder $builder) {
@@ -68,8 +68,7 @@ class VerificationApprovalTable extends DataTableComponent
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),
-            Column::make('Payment Status', 'location.name'),
-            Column::make('Tax Type', 'taxType.name'),
+                Column::make('Tax Type', 'taxType.name'),
             Column::make('Filled By', 'created_by_id')
                 ->format(function ($value, $row) {
                     $user = $row->createdBy()->first();

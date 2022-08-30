@@ -16,7 +16,7 @@ class EmTransactionPenalty extends Model
         return with(new static)->getTable();
     }
 
-    public function emTransactionReturn(){
+    public function return(){
         return $this->belongsTo(EmTransactionReturn::class);
     }
 }
