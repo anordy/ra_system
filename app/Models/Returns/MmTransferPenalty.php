@@ -16,7 +16,7 @@ class MmTransferPenalty extends Model
         return with(new static)->getTable();
     }
 
-    public function penalties(){
+    public function return(){
         return $this->belongsTo(MmTransferReturn::class);
     }
 }

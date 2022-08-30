@@ -13,4 +13,8 @@ class StampDutyReturnPenalty extends Model
     {
         return with(new static)->getTable();
     }
+
+    public function return(){
+        return $this->belongsTo(StampDutyReturn::class);
+    }
 }

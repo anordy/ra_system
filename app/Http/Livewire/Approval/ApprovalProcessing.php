@@ -284,7 +284,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-
+            $this->alert('error', 'Something went wrong');
             return;
         }
 
@@ -306,7 +306,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-
+            $this->alert('error', 'Something went wrong');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());

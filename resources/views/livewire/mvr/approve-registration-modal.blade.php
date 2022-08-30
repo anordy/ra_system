@@ -7,6 +7,7 @@
                         class="fa fa-times-circle"></i></button>
             </div>
             <div class="modal-body">
+                @include('layouts.component.messages')
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Registration Type</label>

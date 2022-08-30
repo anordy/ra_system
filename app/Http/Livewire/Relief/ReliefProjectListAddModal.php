@@ -44,7 +44,7 @@ class ReliefProjectListAddModal extends Component
 
     public function submit()
     {
-        if (!Gate::allows('relief-projcts-list-create')) {
+        if (!Gate::allows('relief-projects-list-create')) {
             abort(403);
         }
 

@@ -29,7 +29,7 @@ class QuantityCertificateTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return QuantityCertificate::query()->where('created_by', auth()->user()->id);
+        return QuantityCertificate::query()->with('business')->where('created_by', auth()->user()->id);
     }
 
 

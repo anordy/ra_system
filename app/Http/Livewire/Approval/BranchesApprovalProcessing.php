@@ -13,6 +13,7 @@ use App\Models\BusinessLocation;
 use App\Models\LumpSumPayment;
 use Illuminate\Support\Facades\DB;
 use App\Traits\WorkflowProcesssingTrait;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class BranchesApprovalProcessing extends Component
@@ -30,20 +31,19 @@ class BranchesApprovalProcessing extends Component
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
         $this->taxRegions = TaxRegion::all();
-
     }
 
     public function approve($transtion)
     {
         $this->validate(['comments' => 'required']);
 
-        if ($this->checkTransition('registration_officer_review')){
+        if ($this->checkTransition('registration_officer_review')) {
             $this->subject->tax_region_id = $this->selectedTaxRegion;
             $this->subject->save();
         }
 
         if ($this->checkTransition('director_of_trai_review')) {
-            if (!$this->subject->generateZin()){
+            if (!$this->subject->generateZin()) {
                 $this->alert('error', 'Something went wrong.');
                 return;
             }
@@ -68,17 +68,18 @@ class BranchesApprovalProcessing extends Component
                 'branch' => $this->subject,
                 'time' => Carbon::now()->format('d-m-Y')
             ];
-            
+
             event(new SendSms('branch-approval', $notification_payload));
             event(new SendMail('branch-approval', $notification_payload));
         }
 
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function reject($transtion)
@@ -87,7 +88,7 @@ class BranchesApprovalProcessing extends Component
             'branch' => $this->subject,
             'time' => Carbon::now()->format('d-m-Y')
         ];
-        
+
         event(new SendSms('branch-correction', $notification_payload));
         event(new SendMail('branch-correction', $notification_payload));
         try {
@@ -98,16 +99,16 @@ class BranchesApprovalProcessing extends Component
                     'branch' => $this->subject,
                     'time' => Carbon::now()->format('d-m-Y')
                 ];
-                
+
                 event(new SendSms('branch-correction', $notification_payload));
                 event(new SendMail('branch-correction', $notification_payload));
-
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 

@@ -23,7 +23,7 @@ class MotorVehiclesTable extends DataTableComponent
         if (empty($this->status_id)){
             return MvrMotorVehicle::query();
         }else{
-            return MvrMotorVehicle::query()->where(['mvr_registration_status_id'=>$this->status_id]);
+            return MvrMotorVehicle::query()->distinct()->where(['mvr_registration_status_id'=>$this->status_id]);
         }
 	}
 
