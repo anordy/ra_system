@@ -30,7 +30,7 @@ class OverdueDebtsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id','tax_type_id', 'business_location_id', 'recovery_measure_status']);
+        $this->setAdditionalSelects(['debts.business_id', 'tax_type_id', 'business_location_id', 'recovery_measure_status']);
     }
 
     public function columns(): array
@@ -39,12 +39,9 @@ class OverdueDebtsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Payer', 'business.taxpayer.first_name')
+            Column::make('Branch', 'location.name')
                 ->sortable()
-                ->searchable()
-                ->format(function ($value, $row) {
-                    return "{$row->business->taxpayer->first_name} {$row->business->taxpayer->last_name}";
-                }),
+                ->searchable(),
             Column::make('Tax Type', 'taxtype.name'),
             Column::make('Principal Amount', 'principal_amount')
             ->format(function ($value, $row) {
@@ -58,9 +55,9 @@ class OverdueDebtsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($row->interest, 2);
                 }),
-            Column::make('Total Debt', 'total_amount')
+            Column::make('Total Debt', 'outstanding_amount')
                 ->format(function ($value, $row) {
-                    return number_format($row->total_amount, 2);
+                    return number_format($row->outstanding_amount, 2);
                 }),
             Column::make('Due date', 'curr_due_date')
                 ->format(function ($value, $row) {

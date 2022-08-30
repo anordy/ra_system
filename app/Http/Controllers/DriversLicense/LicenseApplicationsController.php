@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\DriversLicense;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Http\Controllers\Controller;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
@@ -48,6 +50,10 @@ class LicenseApplicationsController extends Controller
                 $application->update(['dl_application_status_id'=>DlApplicationStatus::query()->firstOrCreate(['name'=>DlApplicationStatus::STATUS_PENDING_APPROVAL])->id]);
                 $this->registerWorkflow(get_class($application), $application->id);
                 $this->doTransition($transition, ['status'=>'','comment'=>$comment]);
+                if ($transition == 'application_submitted'){
+                    event(new SendSms('license-application-submitted', $application->id));
+                    event(new SendMail('license-application-submitted', $application->id));
+                }
                 DB::commit();
             }catch (\Exception $e){
                 DB::rollBack();

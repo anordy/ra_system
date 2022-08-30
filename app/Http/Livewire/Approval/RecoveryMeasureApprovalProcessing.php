@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Debts\RecoveryMeasureCategory;
 use App\Traits\WorkflowProcesssingTrait;
+use Illuminate\Support\Collection;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class RecoveryMeasureApprovalProcessing extends Component
@@ -21,7 +22,7 @@ class RecoveryMeasureApprovalProcessing extends Component
     public $recovery_measure_categories = [];
     public $debtId;
     public $debt;
-    public $recovery_measures = [];
+    public $recovery_measures;
     public $selected_recovery_measures;
     public $comments;
 
@@ -32,11 +33,10 @@ class RecoveryMeasureApprovalProcessing extends Component
         $this->debt = Debt::findOrFail($debtId);
         $this->registerWorkflow(get_class($this->debt), $this->debt->id);
 
-        if($this->checkTransition('commissioner_review') || $this->checkTransition('assignment_corrected')) {
-            $this->recovery_measures = RecoveryMeasure::where('debt_id', $debtId)->pluck('recovery_measure_id');
+        if ($this->checkTransition('commissioner_review') || $this->checkTransition('assignment_corrected')) {
+            $this->recovery_measures = RecoveryMeasure::where('debt_id', $debtId)->get()->pluck('recovery_measure_id');
             $this->selected_recovery_measures = $this->recovery_measures;
         }
-
     }
 
 
@@ -45,45 +45,57 @@ class RecoveryMeasureApprovalProcessing extends Component
         $this->validate(['recovery_measures' => 'required']);
         DB::beginTransaction();
         try {
-            
-            if($this->checkTransition('crdm_assign')) {
-                $measures = $this->recovery_measures; 
+
+            if ($this->checkTransition('crdm_assign')) {
+                if ($this->recovery_measures instanceof Collection) {
+                    $measures = $this->recovery_measures->toArray();
+                } else {
+                    $measures = $this->recovery_measures;
+                }
 
                 $payload = array_map(function ($measures) {
                     return [
                         'recovery_measure_id'    => $measures,
                         'debt_id' => $this->debtId
                     ];
-                }, $measures); 
+                }, $measures);
                 $this->debt->update(['recovery_measure_status' => RecoveryMeasureStatus::PENDING]);
                 RecoveryMeasure::insert($payload);
             }
 
-            if($this->checkTransition('commissioner_review')) {
-                $measures = $this->recovery_measures;
+            if ($this->checkTransition('commissioner_review')) {
+                if ($this->recovery_measures instanceof Collection) {
+                    $measures = $this->recovery_measures->toArray();
+                } else {
+                    $measures = $this->recovery_measures;
+                }
 
                 $payload = array_map(function ($measures) {
                     return [
                         'recovery_measure_id'    => $measures,
                         'debt_id' => $this->debtId
                     ];
-                }, $measures); 
+                }, $measures);
 
                 RecoveryMeasure::where('debt_id', $this->debtId)->delete();
                 RecoveryMeasure::insert($payload);
                 $this->debt->update(['recovery_measure_status' => RecoveryMeasureStatus::APPROVED]);
-
             }
 
-            if($this->checkTransition('assignment_corrected')) {
-                $measures = $this->recovery_measures; 
+            if ($this->checkTransition('assignment_corrected')) {
+
+                if ($this->recovery_measures instanceof Collection) {
+                    $measures = $this->recovery_measures->toArray();
+                } else {
+                    $measures = $this->recovery_measures;
+                }
 
                 $payload = array_map(function ($measures) {
                     return [
                         'recovery_measure_id'    => $measures,
                         'debt_id' => $this->debtId
                     ];
-                }, $measures); 
+                }, $measures);
                 $this->debt->update(['recovery_measure_status' => RecoveryMeasureStatus::PENDING]);
                 RecoveryMeasure::where('debt_id', $this->debtId)->delete();
                 RecoveryMeasure::insert($payload);
@@ -93,38 +105,33 @@ class RecoveryMeasureApprovalProcessing extends Component
 
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-
         } catch (Exception $e) {
             dd($e);
             Log::error($e);
             DB::rollback();
             $this->alert('error', 'Something went wrong');
         }
-        
     }
 
     public function reject($transition)
     {
         DB::beginTransaction();
         try {
-            
-            if($this->checkTransition('assignment_incorrect')) {
+
+            if ($this->checkTransition('assignment_incorrect')) {
                 $this->debt->update(['recovery_measure_status' => RecoveryMeasureStatus::CORRECTION]);
-                
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
 
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-
         } catch (Exception $e) {
             dd($e);
             Log::error($e);
             DB::rollback();
             $this->alert('error', 'Something went wrong');
         }
-        
     }
 
     public function render()

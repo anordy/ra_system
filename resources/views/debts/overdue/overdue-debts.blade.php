@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'All Debts Management')
+@section('title', 'Overdue Debts')
 
 @section('content')
     <div class="card p-0 m-0">

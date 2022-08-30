@@ -2,17 +2,18 @@
 
 namespace App\Models\Debts;
 
-use App\Models\Extension\ExtensionRequest;
-use App\Models\Installment\Installment;
-use App\Models\Installment\InstallmentRequest;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Traits\WorkflowTrait;
 use App\Models\BusinessLocation;
+use App\Models\Debts\DebtWaiver;
 use App\Models\Debts\DebtPenalty;
 use App\Models\Debts\RecoveryMeasure;
+use App\Models\Installment\Installment;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Extension\ExtensionRequest;
+use App\Models\Installment\InstallmentRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Debt extends Model
@@ -59,6 +60,10 @@ class Debt extends Model
         return $this->morphTo();
     }
 
+    public function return(){
+        return $this->morphTo('debt');
+    }
+
     public function extensionRequest(){
         return $this->hasOne(ExtensionRequest::class);
     }
@@ -69,5 +74,13 @@ class Debt extends Model
 
     public function installment(){
         return $this->hasOne(Installment::class);
+    }
+
+    public function debtWaiver(){
+        return $this->hasOne(DebtWaiver::class);
+    }
+
+    public function penalties(){
+        return $this->hasMany(DebtPenalty::class);
     }
 }

@@ -94,6 +94,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
+        
         $responsible_person = WaResponsiblePerson::find($id);
         $status = $responsible_person->status == 'active' ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [

@@ -2,16 +2,18 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Events\SendMail;
-use App\Events\SendSms;
-use App\Models\BusinessLocation;
-use App\Models\BusinessStatus;
-use App\Models\TaxRegion;
-use App\Traits\WorkflowProcesssingTrait;
-use Carbon\Carbon;
 use Exception;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Carbon\Carbon;
+use App\Events\SendSms;
 use Livewire\Component;
+use App\Events\SendMail;
+use App\Models\TaxRegion;
+use App\Models\BusinessStatus;
+use App\Models\BusinessLocation;
+use App\Models\LumpSumPayment;
+use Illuminate\Support\Facades\DB;
+use App\Traits\WorkflowProcesssingTrait;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class BranchesApprovalProcessing extends Component
 {
@@ -44,6 +46,19 @@ class BranchesApprovalProcessing extends Component
             if (!$this->subject->generateZin()){
                 $this->alert('error', 'Something went wrong.');
                 return;
+            }
+
+            $lump_sum_payemnt = LumpSumPayment::where('business_id', $this->subject->business_id)->first() ?? null;
+
+            if ($lump_sum_payemnt != null) {
+                LumpSumPayment::create([
+                    'filed_by_id'         => auth()->user()->id,
+                    'business_id'         => $this->subject->business_id,
+                    'business_location_id' => $this->subject->id,
+                    'annual_estimate'     => $lump_sum_payemnt->annual_estimate,
+                    'payment_quarters'    => $lump_sum_payemnt->payment_quarters,
+                    'currency'            => $lump_sum_payemnt->currency,
+                ]);
             }
 
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
