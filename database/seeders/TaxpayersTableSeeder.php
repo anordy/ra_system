@@ -22,7 +22,7 @@ class TaxpayersTableSeeder extends Seeder
             'first_name' => 'John',
             'middle_name' => 'Tim',
             'last_name' => 'Doe',
-            'email' => 'meshackf1@gmail.com',
+            'email' => 'meshack.fungo@ubx.co.tz',
             'mobile' => '0700000000',
             'alt_mobile' => '0754555555',
             'location' => 'Unguja',
@@ -63,5 +63,28 @@ class TaxpayersTableSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
+        $taxpayer = Taxpayer::create([
+            'reference_no' => 'ZRB556699',
+            'first_name' => 'Meshack',
+            'middle_name' => '',
+            'tin' => '8998889998',
+            'last_name' => 'Victor',
+            'email' => 'meshackf1@gmail.com',
+            'mobile' => '0753550590',
+            'alt_mobile' => '0754555555',
+            'location' => 'Unguja',
+            'physical_address' => 'P.O.Box 887, Unguja, Zanzibar.',
+            'street' => 'Main Street',
+            'is_citizen' => true,
+            'is_first_login' => false,
+            'id_type' => '1',
+            'id_number' => '12312123123123123',
+            'work_permit' => 'sample',
+            'residence_permit' => 'sample',
+            'country_id' => 1,
+            'biometric_verified_at' => Carbon::now()->toDateTimeString(),
+            'authorities_verified_at' => Carbon::now()->toDateTimeString(),
+            'password' => Hash::make('password'),
+        ]);
     }
 }
