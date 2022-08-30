@@ -44,6 +44,7 @@ class MvrFee extends Model
 		'mvr_fee_type_id',
 		'mvr_registration_type_id',
 		'mvr_class_id',
+		'status',
 	];
 
 	public function fee_type()
@@ -55,4 +56,9 @@ class MvrFee extends Model
 	{
 		return $this->belongsTo(MvrRegistrationType::class,'mvr_registration_type_id');
 	}
+
+    public function class()
+    {
+        return $this->belongsTo(MvrClass::class,'mvr_class_id');
+    }
 }

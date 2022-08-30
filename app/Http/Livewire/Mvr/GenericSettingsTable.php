@@ -120,6 +120,8 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("GFS Code", "gfs_code")->sortable(),
                 Column::make("Fee Category", "fee_type.type")->sortable(),
                 Column::make("Registration Type", "registration_type.name")->sortable(),
+                Column::make("Class", "class.name")->sortable(),
+                Column::make("Status", "status")->sortable(),
             ],
             MvrTransferFee::class => [
                 Column::make("Amount", "amount")->sortable()->format(fn($value)=>number_format($value).' TZS'),
