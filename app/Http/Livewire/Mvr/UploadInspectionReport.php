@@ -65,7 +65,7 @@ class UploadInspectionReport extends Component
         DB::beginTransaction();
         try{
             $data = $this->prepareMotorVehicleData();
-            $taxpayer = BusinessLocation::query()->where(['zin'=>$data['owner']['z_number']])->first()->taxpayer ?? null;
+            $taxpayer = Taxpayer::query()->where(['reference_no'=>$data['owner']['z_number']])->first()->id ?? null;
             if (empty($taxpayer)){
                 $this->alert('error', "Could not find owner/taxpayer with Z number {$data['owner']['z_number']}");
                 Storage::delete($this->inspection_report_path);
@@ -73,7 +73,7 @@ class UploadInspectionReport extends Component
                 return;
             }
 
-            $taxpayer_agent = BusinessLocation::query()->where(['zin'=>$data['agent']['z_number']])->first()->taxpayer ?? null;
+            $taxpayer_agent = Taxpayer::query()->where(['reference_no'=>$data['agent']['z_number']])->first()->id ?? null;
             if (empty($taxpayer_agent->transport_agent)){
                 $this->alert('error', "Could not find agent/taxpayer with Z number {$data['agent']['z_number']}");
                 Storage::delete($this->inspection_report_path);
