@@ -18,7 +18,7 @@ class QuantityCertificate extends Model
     }
 
     public function business(){
-        return $this->belongsTo(BusinessLocation::class, 'business_id');
+        return $this->belongsTo(Business::class, 'business_id');
     }
 
     public function products()

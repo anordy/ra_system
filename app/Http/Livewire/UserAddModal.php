@@ -96,9 +96,7 @@ class UserAddModal extends Component
 
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
             Log::error($e);
-
             $this->alert('error', 'Something went wrong');
         }
     }

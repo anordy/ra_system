@@ -15,6 +15,12 @@
                            <i class="fa fa-check"></i>Approve
                         </button>
                     </a>
+
+                        <a href="{{route('mvr.de-register-requests.reject',encrypt($request->id))}}">
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fa fa-check"></i>Reject
+                            </button>
+                        </a>
                     @endcan
                 @elseif($request->request_status->name == \App\Models\MvrRequestStatus::STATUS_RC_INITIATED)
                     @can('mvr_initiate_de_registration')
