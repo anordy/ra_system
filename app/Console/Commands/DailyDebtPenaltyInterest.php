@@ -55,42 +55,78 @@ class DailyDebtPenaltyInterest extends Command
         Log::channel('debtCollection')->info('Daily Debt penalties and interest collection and calculations ended');
     }
 
-    public function getDebtAfterDueDate(){
+    public function getDebtAfterDueDate()
+    {
+        // $now = Carbon::now();
+        // $debts = Debt::where('curr_due_date', '<', $now)
+        //                 ->whereNotIn('status', ['complete', 'paid-by-debt'])
+        //                 ->get();
+
+        // if ($debts) {
+
+        //     foreach ($debts as $debt) {
+        //         $dueDate = Carbon::parse($debt->curr_due_date);
+        //         $dateDiff = $dueDate->diffInDays(Carbon::now());
+        //         $validDays = DateConfiguration::where('code', 'validMonthDays')->value('value');
+        //         $mod = $dateDiff% $validDays;
+        //         $penaltyIterations = ($dateDiff-$mod)/$validDays;
+
+        //         $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $penaltyIterations);
+
+        //         $debtUpdate = Debt::find($debt->id);
+
+        //         if ($debt->bill) {
+        //             CancelBill::dispatch($debt->bill, 'Penalty Increment')->delay($now->addSeconds(10));
+        //             GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
+        //         } else {
+        //             GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
+        //         }
+
+        //         $debtUpdate->penalty = $debt->debtPenalties->sum('late_payment');
+        //         $debtUpdate->interest = $debt->debtPenalties->sum('rate_amount');
+        //         $debtUpdate->curr_due_date = $penaltyReturn[0];
+        //         $debtUpdate->total_amount = $penaltyReturn[1];
+        //         $debtUpdate->outstanding_amount = $penaltyReturn[1];
+        //         $debtUpdate->save();
+
+        //     }
+
+        // }
+
         $now = Carbon::now();
         $debts = Debt::where('curr_due_date', '<', $now)
-                        ->whereNotIn('status', ['complete', 'paid-by-debt'])
-                        ->get();
+            ->whereNotIn('status', ['complete', 'paid-by-debt'])
+            ->get();
+        // dd($debts->count());
 
         if ($debts) {
-            
-            foreach ($debts as $debt) {
-                $dueDate = Carbon::parse($debt->curr_due_date);
-                $dateDiff = $dueDate->diffInDays(Carbon::now());
-                $validDays = DateConfiguration::where('code', 'validMonthDays')->value('value');
-                $mod = $dateDiff% $validDays;
-                $penaltyIterations = ($dateDiff-$mod)/$validDays;
-                
-                $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $penaltyIterations);
-                
-                $debtUpdate = Debt::find($debt->id);
+            foreach ($debts as $key => $debt) {
+                    $dueDate = Carbon::parse($debt->curr_due_date);
+                    $dateDiff = $dueDate->diffInDays($now);
+                    $validDays = DateConfiguration::where('code', 'validMonthDays')->value('value');
+                    $mod = $dateDiff % $validDays;
+                    $penaltyIterations = ($dateDiff - $mod) / $validDays;
 
-                if ($debt->bill) {
-                    CancelBill::dispatch($debt->bill, 'Penalty Increment')->delay($now->addSeconds(10));
-                    GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
-                } else {
-                    GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
-                }
+                    if ($penaltyIterations > 0) {
+                        $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $penaltyIterations);
 
-                $debtUpdate->penalty = $debt->debtPenalties->sum('late_payment');
-                $debtUpdate->interest = $debt->debtPenalties->sum('rate_amount');
-                $debtUpdate->curr_due_date = $penaltyReturn[0];
-                $debtUpdate->total_amount = $penaltyReturn[1];
-                $debtUpdate->outstanding_amount = $penaltyReturn[1];
-                $debtUpdate->save();
-    
+                        $debtUpdate = Debt::find($debt->id);
+
+                        if ($debt->bill) {
+                            CancelBill::dispatch($debt->bill, 'Penalty Increment')->delay($now->addSeconds(10));
+                            GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
+                        } else {
+                            GenerateControlNo::dispatch($debt)->delay($now->addSeconds(10));
+                        }
+
+                        $debtUpdate->penalty = $debt->debtPenalties->sum('late_payment');
+                        $debtUpdate->interest = $debt->debtPenalties->sum('rate_amount');
+                        $debtUpdate->curr_due_date = $penaltyReturn[0];
+                        $debtUpdate->total_amount = $penaltyReturn[1];
+                        $debtUpdate->outstanding_amount = $penaltyReturn[1];
+                        $debtUpdate->save();
+                    }
             }
-
         }
-        
     }
 }
