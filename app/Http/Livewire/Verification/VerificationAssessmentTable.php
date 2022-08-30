@@ -27,7 +27,8 @@ class VerificationAssessmentTable extends DataTableComponent
             ->whereHas('taxReturn', function (Builder $builder) {
                 $builder->where('status', ReturnStatus::COMPLETE);
             })
-            ->where('tax_verifications.status', TaxVerificationStatus::APPROVED);
+            ->where('tax_verifications.status', TaxVerificationStatus::APPROVED)
+            ->orderByDesc('tax_verifications.id');
     }
 
     public function configure(): void
