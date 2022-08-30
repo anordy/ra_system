@@ -26,11 +26,18 @@ class TaxAgentTable extends DataTableComponent
 	      'default' => true,
 	      'class' => 'table-bordered table-sm',
 	    ]);
+        $this->setAdditionalSelects(['taxpayer_id']);
     }
 
     public function columns(): array
     {
         return [
+            Column::make("Tax Payer", "taxpayer.first_name")
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->taxpayer->first_name} {$row->taxpayer->middle_name} {$row->taxpayer->last_name}";
+                }),
             Column::make("TIN No", "tin_no")
                 ->sortable(),
             Column::make("Town", "district.name")
