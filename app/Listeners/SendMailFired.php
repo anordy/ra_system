@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Jobs\Business\SendBusinessApprovedMail;
 use App\Jobs\Business\SendBusinessCorrectionMail;
+use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
 use App\Jobs\SendTaxAgentApprovalEmail;
 use App\Jobs\Taxpayer\SendRegistrationMail;
 use App\Models\Business;
@@ -107,6 +108,8 @@ class SendMailFired
         } else if ($event->service === 'tax-clearance-rejected'){
             // Token ID is payload data having all notification details
             SendTaxClearanceRejectedEmail::dispatch($event->tokenId);
+        } else if ($event->service === 'license-application-submitted'){
+            SendFreshApplicationSubmittedEmail::dispatch($event->tokenId);
         }
     }
 }

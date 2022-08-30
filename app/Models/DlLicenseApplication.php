@@ -70,6 +70,7 @@ class DlLicenseApplication extends Model
 		'confirmation_number',
 		'photo_path',
 		'license_restrictions',
+		'loss_report_path',
 		'type',
 		'dl_application_status_id'
 	];

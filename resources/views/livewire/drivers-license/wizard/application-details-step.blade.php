@@ -69,6 +69,20 @@
                 </div>
                 @enderror
             </div>
+
+            @if($type=='duplicate')
+                <div class="p-1">
+                    <label for="conf_number">Loss Report</label>
+                    <input type="file" wire:model.lazy="loss_report"
+                    class="form-control {{ $errors->has('loss_report') ? 'is-invalid' : '' }}">
+                    @error('loss_report')
+                    <div class="invalid-feedback">
+                        {{ $errors->first('loss_report') }}
+                    </div>
+                    @enderror
+                </div>
+            @endif
+
         </div>
 
     </div>

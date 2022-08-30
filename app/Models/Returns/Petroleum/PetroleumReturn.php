@@ -72,7 +72,7 @@ class PetroleumReturn extends Model
         return $this->bills()->where('status', 'paid');
     }
 
-    public function petroleumPenalties(){
+    public function penalties(){
         return $this->hasMany(PetroleumPenalty::class, 'return_id');
     }
 }

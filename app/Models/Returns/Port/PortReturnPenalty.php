@@ -16,4 +16,8 @@ class PortReturnPenalty extends Model
 
     protected $guarded = [];
 
+    public function return(){
+        return $this->belongsTo(PortReturn::class);
+    }
+
 }

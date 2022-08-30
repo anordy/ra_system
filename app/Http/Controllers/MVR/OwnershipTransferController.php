@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\MVR;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\v1\SMSController;
 use App\Models\MvrDeRegistrationRequest;
@@ -115,6 +117,8 @@ class OwnershipTransferController extends Controller
             }else{
                 session()->flash("success",'Request Approved, Control Number request sent');
             }
+            event(new SendSms('mvr-ownership-transfer-approval', $request->id));
+            event(new SendMail('mvr-ownership-transfer-approval', $request->id));
             DB::commit();
         }catch (\Exception $e){
             report($e);
@@ -130,9 +134,10 @@ class OwnershipTransferController extends Controller
         $request = MvrOwnershipTransfer::query()->find($id);
 
         $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_REJECTED])->id]);
-        (new SMSController())->sendSMS('255753387833','ZanMalipo','Request Rejected');
-
         session()->flash('warning','Request has been rejected');
+
+        event(new SendSms('mvr-ownership-transfer-approval', $request->id));
+        event(new SendMail('mvr-ownership-transfer-approval', $request->id));
 
         return redirect()->route('mvr.transfer-ownership.show',encrypt($id));
     }

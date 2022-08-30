@@ -76,10 +76,10 @@ class DeRegistrationRequest extends Component
     }
 
     public function agentLookup(){
-        $agent = BusinessLocation::query()->where(['zin'=>$this->agent_z_number])->first();
-        if (!empty($agent->taxpayer->transport_agent)){
-            $this->agent_name = $agent->taxpayer->fullname();
-            $this->agent_id = $agent->taxpayer->transport_agent->id;
+        $agent = Taxpayer::query()->where(['reference_no'=>$this->agent_z_number])->first();
+        if (!empty($agent->transport_agent)){
+            $this->agent_name = $agent->fullname();
+            $this->agent_id = $agent->transport_agent->id;
         }else{
             $this->agent_name = null;
             $this->agent_id = null;
