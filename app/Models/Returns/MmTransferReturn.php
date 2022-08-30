@@ -76,7 +76,7 @@ class MmTransferReturn extends Model
         return $this->bills()->where('status', 'paid');
     }
 
-    public function mmTransferPenalties(){
+    public function penalties(){
         return $this->hasMany(MmTransferPenalty::class, 'return_id');
     }
 }

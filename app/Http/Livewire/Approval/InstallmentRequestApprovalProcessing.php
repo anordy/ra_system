@@ -8,6 +8,7 @@ use App\Enum\InstallmentRequestStatus;
 use App\Enum\InstallmentStatus;
 use App\Models\Debts\Debt;
 use App\Models\Installment\Installment;
+use App\Traits\PaymentsTrait;
 use Carbon\Carbon;
 use Exception;
 use App\Models\TaxType;
@@ -20,7 +21,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class InstallmentRequestApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
+    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
 
     public $modelId;
     public $modelName;
@@ -69,10 +70,17 @@ class InstallmentRequestApprovalProcessing extends Component
             if ($this->checkTransition('accepted')) {
                 $this->subject->status = InstallmentRequestStatus::APPROVED;
                 $debt = Debt::findOrFail($this->subject->debt_id);
+
+                // Update debt details
                 $debt->update([
                     'curr_due_date' => $this->subject->installment_to,
                     'payment_method' => DebtPaymentMethod::INSTALLMENT
                 ]);
+
+                // Cancel Control No.
+                if ($debt->bill){
+                    $this->cancelBill($debt->bill, 'Debt shifted to installments');
+                }
 
                 // Create installment record
                 Installment::create([

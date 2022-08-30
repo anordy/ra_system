@@ -29,7 +29,7 @@
                     <option selected>Choose option</option>
                     @if($type == 'fresh')
                         <option value="tin">TIN Number</option>
-                        <option value="zin">Z-Number</option>
+                        <option value="zin">Reference/KYC Number</option>
                     @else
                         <option value="license">License Number</option>
                     @endif
@@ -42,7 +42,7 @@
             </div>
             <br>
             <div>
-                <label for="zin">{{strtoupper($search_type) ?? ''}} Number</label>
+                <label for="zin">{{str_replace('ZIN','Ref/KYC',strtoupper($search_type)) ?? ''}} Number</label>
                 <input type="text" wire:model.lazy="number"
                        class="form-control {{ $errors->has('number') ? 'is-invalid' : '' }}">
                 @error('number')

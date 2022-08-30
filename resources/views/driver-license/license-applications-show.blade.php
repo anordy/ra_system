@@ -50,6 +50,13 @@
                             <p class="my-1">{{ $application->created_at }}</p>
                         </div>
 
+                        @if(!empty($application->loss_report_path))
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Loss Report</span>
+                                <p class="my-1"><a class="btn btn-sm btn-success" href="{{ url('storage/'.$application->loss_report_path) }}">View/Download</a></p>
+                            </div>
+                        @endif
+
                         @if(strtolower($application->type)=='fresh')
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Certificate Number</span>

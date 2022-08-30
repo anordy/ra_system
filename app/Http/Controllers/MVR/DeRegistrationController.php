@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\MVR;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\v1\SMSController;
 use App\Models\MvrDeRegistrationRequest;
@@ -9,6 +11,7 @@ use App\Models\MvrFee;
 use App\Models\MvrFeeType;
 use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
+use App\Models\MvrOwnershipTransfer;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationChangeRequest;
 use App\Models\MvrRegistrationStatus;
@@ -126,6 +129,20 @@ class DeRegistrationController extends Controller
             DB::rollBack();
             report($e);
         }
+        return redirect()->route('mvr.de-register-requests.show',encrypt($id));
+    }
+
+    public function reject($id){
+        $id = decrypt($id);
+        //Generate control number
+        $request = MvrDeRegistrationRequest::query()->find($id);
+
+        $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_REJECTED])->id]);
+        event(new SendSms('mvr-de-registration-approval', $request->id));
+        event(new SendMail('mvr-de-registration-approval', $request->id));
+
+        session()->flash('warning','Request has been rejected');
+
         return redirect()->route('mvr.de-register-requests.show',encrypt($id));
     }
 
