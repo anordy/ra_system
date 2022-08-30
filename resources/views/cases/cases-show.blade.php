@@ -76,7 +76,7 @@
 
                     @if(empty($case->case_outcome))
                     <div class="modal-footer">
-                        @if($case->assiged_officer_id == auth()->user()->id)
+                        @if($case->assigned_officer_id == auth()->user()->id)
                             <button class="btn btn-sm btn-primary mt-2"
                                     onclick="Livewire.emit('showModal', 'cases.add-proceeding-model',{{$case->id}})"><i class="fa fa-plus"></i>
                                 Add Proceeding
