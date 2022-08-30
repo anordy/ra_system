@@ -64,18 +64,16 @@ class ChangesApprovalProcessing extends Component
                         'business' => $business,
                         'time' => Carbon::now()->format('d-m-Y')
                     ];
-                    
+
                     event(new SendMail('change-business-information', $notification_payload));
                     event(new SendSms('change-business-information', $notification_payload));
-                    
-
                 } else if ($this->business_update_data->type == 'responsible_person') {
                     /** Update business information */
                     $new_values = json_decode($this->business_update_data->new_values, true);
                     $business = Business::findOrFail($this->business_id);
                     $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first();
 
-                    if($new_values['is_own_consultant'] == 0) {
+                    if ($new_values['is_own_consultant'] == 0) {
                         if ($current_business_consultant) {
                             $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
 
@@ -90,9 +88,7 @@ class ChangesApprovalProcessing extends Component
                                 'contract' => $this->business_update_data->agent_contract ?? null,
                                 'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
                             ]);
-
                         }
-                 
                     } else {
                         if ($current_business_consultant) {
                             $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
@@ -109,17 +105,17 @@ class ChangesApprovalProcessing extends Component
                         'business' => $business,
                         'time' => Carbon::now()->format('d-m-Y')
                     ];
-                    
+
                     event(new SendMail('change-business-information', $notification_payload));
                     event(new SendSms('change-business-information', $notification_payload));
-
                 }
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function reject($transtion)
@@ -127,18 +123,17 @@ class ChangesApprovalProcessing extends Component
         $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('registration_manager_reject')) {
-                // $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::REJECTED;
             } else if ($this->checkTransition('application_filled_incorrect')) {
-                // $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
             }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 

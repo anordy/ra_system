@@ -11,6 +11,7 @@ use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use App\Traits\WorkflowProcesssingTrait;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ClosureApprovalProcessing extends Component
@@ -30,7 +31,6 @@ class ClosureApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
-        // $this->officers = User::all()->where('role_id', 5);
     }
 
 
@@ -50,10 +50,9 @@ class ClosureApprovalProcessing extends Component
                 event(new SendMail('business-closure-approval', $this->subject->business_id));
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
         }
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function reject($transtion)
@@ -68,12 +67,13 @@ class ClosureApprovalProcessing extends Component
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
             }
-            
+
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 

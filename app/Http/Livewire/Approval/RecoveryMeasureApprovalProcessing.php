@@ -106,7 +106,6 @@ class RecoveryMeasureApprovalProcessing extends Component
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
             Log::error($e);
             DB::rollback();
             $this->alert('error', 'Something went wrong');
@@ -127,7 +126,6 @@ class RecoveryMeasureApprovalProcessing extends Component
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
             Log::error($e);
             DB::rollback();
             $this->alert('error', 'Something went wrong');
