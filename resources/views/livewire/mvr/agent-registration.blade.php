@@ -1,6 +1,6 @@
 <div class="row m-2">
     <div class="col-md-12 form-group">
-        <label for="zin">Agent Z-Number</label>
+        <label for="zin">Agent Reference/KYC Number</label>
         <input type="text" wire:model.lazy="zin"
                class="form-control {{ $errors->has('zin') ? 'is-invalid' : '' }}">
         @error('zin')
@@ -72,7 +72,7 @@
                 </div>
             </div>
         @elseif($lookup_fired)
-            <p class="my-1 text-danger"> The supplied Z-Number does not exist </p>
+            <p class="my-1 text-danger"> The supplied Reference/KYC No. does not exist </p>
         @endif
     </div>
 

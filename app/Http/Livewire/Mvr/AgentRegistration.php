@@ -68,8 +68,8 @@ class AgentRegistration extends Component
             }else{
                 $last_number = 1;
             }
-            $agent_number = 'ZTA'.date('y').sprintf('%06s',$last_number);
-            MvrAgent::query()->insert(
+            $agent_number = 'ZTA'.date('y').sprintf('%06s',$last_number+1);
+            MvrAgent::query()->create(
                 [
                     'taxpayer_id'=>$this->taxpayer->id,
                     'registration_date'=>Carbon::now(),
@@ -93,8 +93,7 @@ class AgentRegistration extends Component
 
     public function lookup(){
         $this->lookup_fired = true;
-        $this->taxpayer = Taxpayer::query()->where(['business_locations.zin'=>$this->zin])
-            ->join('business_locations','taxpayers.id','=','taxpayer_id')
+        $this->taxpayer = Taxpayer::query()->where(['reference_no'=>$this->zin])
             ->first();
     }
 }

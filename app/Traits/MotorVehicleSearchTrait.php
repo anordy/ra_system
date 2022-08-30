@@ -24,7 +24,7 @@ trait MotorVehicleSearchTrait
                     ->where(['plate_number'=>$number])
                     ->first()->motor_vehicle ?? null;
 
-            return $motor_vehicle->mvr_registration_status_id == $status->id ? $motor_vehicle: null;
+            return ($motor_vehicle->mvr_registration_status_id ?? null) == $status->id ? $motor_vehicle: null;
         }
     }
 }
