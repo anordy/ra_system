@@ -238,11 +238,24 @@
             </li>
         @endcan
         @can('tax-claim')
-            @can('tax-claim-view')
-                <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
-                    <a href="{{ route('claims.index') }}">Tax Claims</a>
-                </li>
-            @endcan
+            <li class="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'active' : '' }}">
+                <a href="#installment-menu" data-toggle="collapse"
+                   aria-expanded="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'true' : 'false' }}"
+                   class="dropdown-toggle">Tax Claims</a>
+                <ul class="collapse list-unstyled {{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'show' : '' }}"
+                    id="installment-menu">
+                    @can('tax-claim-view')
+                        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
+                            <a href="{{ route('claims.index') }}">Claims</a>
+                        </li>
+                    @endcan
+                    @can('tax-credit-view')
+                        <li class="{{ request()->is('tax-credits*') ? 'active' : '' }}">
+                            <a href="{{ route('credits.index') }}">Credits (CBF)</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
         @endcan
         @can('payment-extension')
             <li class="{{ request()->is('extensions-e-filling*') ? 'active' : '' }}">
