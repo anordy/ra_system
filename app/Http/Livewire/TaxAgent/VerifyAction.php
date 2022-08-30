@@ -143,7 +143,7 @@ class VerifyAction extends Component
                 $billitems
             );
 
-            if (config('app.env') == 'local') {
+            if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
                     $agent->status = TaxAgentStatus::VERIFIED;
@@ -152,7 +152,6 @@ class VerifyAction extends Component
                     $agent->verifier_true_comment = $comment;
                     $agent->save();
                 } else {
-                    session()->flash('error', 'Control number generation failed, try again later');
                     $agent->billing_status = BillingStatus::CN_GENERATION_FAILED;
                     $agent->status = TaxAgentStatus::DRAFTING;
                     $agent->save();
