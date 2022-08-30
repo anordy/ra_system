@@ -100,8 +100,8 @@
                         </thead>
 
                         <tbody>
-                        @if(count($return->stampDutyPenalties))
-                            @foreach ($return->stampDutyPenalties as $penalty)
+                        @if(count($return->penalties))
+                            @foreach ($return->penalties as $penalty)
                                 <tr>
                                     <td>{{ $penalty['financial_month_name'] }}</td>
                                     <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>

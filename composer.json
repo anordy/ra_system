@@ -29,11 +29,12 @@
         "rappasoft/laravel-livewire-tables": "^2.8",
         "spatie/array-to-xml": "^2.16",
         "symfony/event-dispatcher": "^5.4",
-        "symfony/expression-language": "^6.1",
+        "symfony/expression-language": "^5.4",
         "symfony/psr-http-message-bridge": "^2.1",
         "symfony/security-core": "^5.4",
         "torann/geoip": "^3.0",
-        "yajra/laravel-datatables": "^1.5"
+        "yajra/laravel-datatables": "^1.5",
+      "ext-intl": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
