@@ -130,7 +130,6 @@ class LicenseApplicationsController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
         }
         return redirect()->route('drivers-license.applications.show',encrypt($id));
     }

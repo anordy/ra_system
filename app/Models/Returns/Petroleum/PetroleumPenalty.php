@@ -16,7 +16,7 @@ class PetroleumPenalty extends Model
         return with(new static)->getTable();
     }
 
-    public function petroleumReturn(){
+    public function return(){
         return $this->belongsTo(PetroleumReturn::class);
     }
 }

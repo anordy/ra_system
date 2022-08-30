@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Created By CodingNepal -->
 <html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
@@ -16,7 +15,7 @@
             Opps! Page not found
         </h4>
         <p>
-            Sorry, the page you're looking for doesn't exist. If you think something is broken, report a problem to admin.
+            Sorry, the page you're looking for doesn't exist.
         </p>
         <div class="btns">
             <a href="{{route('home')}}">Home</a>

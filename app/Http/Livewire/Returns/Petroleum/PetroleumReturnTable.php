@@ -28,7 +28,7 @@ class PetroleumReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PetroleumReturn::query()->where('filed_by_id', auth()->user()->id)->orderBy('petroleum_returns.created_at', 'desc');
+        return PetroleumReturn::query()->orderBy('petroleum_returns.created_at', 'desc');
     }
 
     public function columns(): array

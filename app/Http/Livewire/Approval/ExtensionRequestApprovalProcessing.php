@@ -77,9 +77,9 @@ class ExtensionRequestApprovalProcessing extends Component
         $this->validate([
             'comments' => 'required|string',
         ]);
+        DB::beginTransaction();
 
         try {
-            DB::beginTransaction();
             if ($this->checkTransition('rejected')) {
                 $this->subject->status = ExtensionRequestStatus::REJECTED;
                 $this->subject->save();
