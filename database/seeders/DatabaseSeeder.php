@@ -23,19 +23,15 @@ class DatabaseSeeder extends Seeder
         $this->call(BanksTableSeeder::class);
         $this->call(BusinessWorkflowSeeder::class);
         $this->call(BusinessActivitiesSeeder::class);
-        $this->call(BusinessCategoriesSeeder::class);
         $this->call(BusinessFileTypesSeeder::class);
         $this->call(CountriesTableSeeder::class);
         $this->call(CurrenciesTableSeeder::class);
-        $this->call(IDTypesTableSeeder::class);
         $this->call(RegionSeeder::class);
         $this->call(DistrictSeeder::class);
         $this->call(WardSeeder::class);
-        $this->call(SysModuleSeeder::class);
         $this->call(TaxTypesSeeder::class);
         $this->call(TaxpayersTableSeeder::class);
         $this->call(BusinessCategoriesSeeder::class);
-        $this->call(AccountTypesSeeder::class);
         $this->call(BusinessBranchWorkflow::class);
         $this->call(WorkflowBusinessClosureSeeder::class);
         $this->call(WorkflowBusinessDeregistrationSeeder::class);
@@ -74,6 +70,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TaxRegionsSeeder::class);
         $this->call(ReliefProjectSeeder::class);
         $this->call(DateConfigurationSeeder::class);
+        $this->call(MvrRegistrationTypeCategoriesSeeder::class);
         $this->call(MvrRegistrationTypesSeeder::class);
         $this->call(MvrPlateNumberColorsTableSeeder::class);
         $this->call(MvrBodyTypeTableSeeder::class);
@@ -83,7 +80,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MvrModelTableSeeder::class);
         $this->call(MvrFeeTypesTableSeeder::class);
         $this->call(MvrTransmissionTypeTableSeeder::class);
-        $this->call(MvrClass::class);
         $this->call(RecoveryMeasureCategoriesSeeder::class);
         $this->call(WorkflowRecoveryMeasureSeeder::class);
     }
