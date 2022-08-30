@@ -17,7 +17,7 @@ class AddColumnsToDebtPenalties extends Migration
         Schema::table('debt_penalties', function (Blueprint $table) {
             //
             $table->dateTime('end_date')->nullable()->after('debt_id');
-            $table->dateTime('starting_date')->nullable()->after('debt_id');
+            $table->dateTime('start_date')->nullable()->after('debt_id');
             $table->decimal('penalty_amount', 20, 2)->after('debt_id');
             $table->decimal('rate_amount', 20, 2)->after('debt_id');
             $table->decimal('rate_percentage', 20, 2)->after('debt_id');

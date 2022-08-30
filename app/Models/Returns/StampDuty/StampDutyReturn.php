@@ -76,7 +76,7 @@ class StampDutyReturn extends Model
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
-    public function stampDutyPenalties(){
+    public function penalties(){
         return $this->hasMany(StampDutyReturnPenalty::class, 'return_id');
     }
 }
