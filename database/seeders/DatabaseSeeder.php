@@ -75,6 +75,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MvrPlateNumberColorsTableSeeder::class);
         $this->call(MvrBodyTypeTableSeeder::class);
         $this->call(MvrClassTableSeeder::class);
+        $this->call(MvrClassesTableSeeder::class);
         $this->call(MvrFuelTypeTableSeeder::class);
         $this->call(MvrMakeTableSeeder::class);
         $this->call(MvrModelTableSeeder::class);
