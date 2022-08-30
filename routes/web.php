@@ -363,7 +363,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/registration/init',[InitRegReportController::class,'init'])->name('registration.init');
 
-        Route::get('/registration/business-by-nature/preview/{isic1}',[BusinessRegReportController::class,'byNature'])->name('registration.business-by-nature.preview');
+        Route::get('/registration/business-by-nature/preview/{isic1}/{level}',[BusinessRegReportController::class,'byNature'])->name('registration.business-by-nature.preview');
         Route::get('/registration/business-by-nature/pdf/preview/{isic1}',[BusinessRegReportController::class,'exportBusinessByNatureReportPdf'])->name('registration.business-by-nature.pdf');
 
         Route::get('/registration/business-by-tax-type/preview/{tax_type_id}',[BusinessRegReportController::class,'byTaxType'])->name('registration.business-by-tax-type.preview');
