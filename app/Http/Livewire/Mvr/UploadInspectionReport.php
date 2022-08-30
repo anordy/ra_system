@@ -88,8 +88,9 @@ class UploadInspectionReport extends Component
                 'mvr_ownership_status_id'=>$this->getForeignKey(MvrOwnershipStatus::STATUS_CURRENT_OWNER,MvrOwnershipStatus::class,true),
             ]);
             DB::commit();
-            $this->flash('success', 'Inspection Report Uploaded', [], route('mvr.show',encrypt($id)));
-        }catch(Exception $e){
+            $this->alert('success', 'Inspection Report Uploaded');
+            return redirect()->route('mvr.show', encrypt($id));
+        } catch (Exception $e) {
             Log::error($e);
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);
             DB::rollBack();
@@ -120,7 +121,7 @@ class UploadInspectionReport extends Component
             $yy = explode('-',$last_mv->certificate_number)[2] ?? null;
             $n = explode('-',$last_mv->certificate_number)[1] ?? null;
             if ($yy == date('y')){
-                $cert_number = 'ZBSIQC-'.str_pad($n,4,'0',STR_PAD_LEFT).'-'.date('y');
+                $cert_number = 'ZBSIQC-'.str_pad($n+1,4,'0',STR_PAD_LEFT).'-'.date('y');
             }
         }
 

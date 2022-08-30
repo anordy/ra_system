@@ -27,6 +27,14 @@
         <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
             <div class="row pt-3">
                 <div class="col-md-3 mb-2">
+                    <span class="font-weight-bold text-uppercase">Tax Payer Name</span>
+                    <p class="my-1">{{ $agent->taxpayer->first_name}} {{$agent->taxpayer->middle_name}} {{$agent->taxpayer->last_name}}</p>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <span class="font-weight-bold text-uppercase">Tax Payer Reference No</span>
+                    <p class="my-1">{{ $agent->taxpayer->reference_no }}</p>
+                </div>
+                <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">TIN No</span>
                     <p class="my-1">{{ $agent->tin_no }}</p>
                 </div>
@@ -47,11 +55,11 @@
                     <p class="my-1">{{ $agent->region->name }}</p>
                 </div>
                 <div class="col-md-3 mb-2">
-                    <span class="font-weight-bold text-uppercase">Reference No</span>
+                    <span class="font-weight-bold text-uppercase">Consultation Reference No</span>
                     @if($agent->status == \App\Models\TaxAgentStatus::APPROVED)
                         <p class="my-1">{{ $agent->reference_no }}</p>
                     @else
-                        <p>Null</p>
+                        <span class="badge badge-danger py-1 px-2"style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i class="bi bi-clock-history mr-1"></i>Pending</span>
                     @endif
                 </div>
 

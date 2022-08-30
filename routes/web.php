@@ -32,6 +32,7 @@ use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\Cases\CasesController;
 use App\Http\Controllers\Claims\ClaimFilesController;
 use App\Http\Controllers\Claims\ClaimsController;
+use App\Http\Controllers\Claims\CreditsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
@@ -152,7 +153,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
-//        Route::resource('/assesment-files', AssesmentFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
@@ -173,7 +173,6 @@ Route::middleware(['auth'])->group(function () {
         Route::name('returns.')->prefix('returns')->group(function () {
             Route::name('returns.')->prefix('returns')->group(function () {
                 Route::get('/', [ReturnsController::class, 'index'])->name('index');
-//                Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
             });
         });
     });
@@ -360,7 +359,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
         Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
         Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
-//        Route::get('/registrations',[RegistrationReportController::class,'index'])->name('registrations.index');
+//        Route::get('/registrations', [RegistrationReportController::class,'index'])->name('registrations.index');
 
         Route::get('/registration/init',[InitRegReportController::class,'init'])->name('registration.init');
 
@@ -385,6 +384,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{claim}', [ClaimsController::class, 'show'])->name('show');
         Route::get('/{claim}/approve', [ClaimsController::class, 'approve'])->name('approve');
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
+    });
+
+    Route::name('credits.')->prefix('/tax-credits')->group(function () {
+        Route::get('/', [CreditsController::class, 'index'])->name('index');
+        Route::get('/{credit}', [CreditsController::class, 'show'])->name('show');
     });
 
     Route::name('extension.')->prefix('/extensions-e-filling')->group(function () {
