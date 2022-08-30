@@ -52,6 +52,10 @@ class Installment extends Model
         return $this->morphOne(ZmBill::class, 'billable');
     }
 
+    public function paidAmount(){
+        return $this->items()->sum('amount');
+    }
+
     /**
      * @return bool|Carbon
      */

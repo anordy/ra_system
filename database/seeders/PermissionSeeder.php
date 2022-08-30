@@ -73,6 +73,7 @@ class PermissionSeeder extends Seeder
 
             # Tax Claim
             ['name' => 'tax-claim-view', 'sys_module_id' => 9],
+            ['name' => 'tax-credit-view', 'sys_module_id' => 9],
 
             # Auditing
             ['name' => 'tax-auditing-approval-view', 'sys_module_id' => 10],
