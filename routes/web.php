@@ -519,6 +519,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/applications/printed/{id}', [LicenseApplicationsController::class, 'printed'])->name('applications.printed');
         Route::get('/applications/{id}', [LicenseApplicationsController::class, 'show'])->name('applications.show');
         Route::get('/applications/sp/{id}', [LicenseApplicationsController::class, 'simulatePayment'])->name('applications.sp');
+        Route::get('/applications/license/{id}', [LicenseApplicationsController::class, 'license'])->name('license.print');
     });
 
     Route::prefix('rio')->as('rio.')->group(function () {
