@@ -852,6 +852,18 @@
                         <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index','DlFee') }}">Driver's License Fees</a>
                         </li>
+                        <li class="{{ request()->is('settings/mvr-generic/CaseStage') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','CaseStage') }}">Case Stages</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/CaseOutcome') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','CaseOutcome') }}">Case Outcomes</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/CaseDecision') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','CaseDecision') }}">Case Decision</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','CourtLevel') }}">Court Levels</a>
+                        </li>
                 </ul>
             </li>
         @endcan
