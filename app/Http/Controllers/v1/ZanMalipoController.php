@@ -50,7 +50,6 @@ class ZanMalipoController extends Controller
         Dispute::class,
         TaxAgent::class,
         PortReturn::class,
-        Debt::class,
         RenewTaxAgentRequest::class
     ];
 
@@ -350,9 +349,10 @@ class ZanMalipoController extends Controller
         }
     }
 
+    // TODO: Remove on production
     public function pay(Request $request){
         if (config('app.env') != 'local'){
-            return abort(404);
+            Log::alert('Bypassing payments on production.');
         }
 
         $request->validate([
