@@ -88,7 +88,7 @@ class UploadInspectionReport extends Component
                 'mvr_ownership_status_id'=>$this->getForeignKey(MvrOwnershipStatus::STATUS_CURRENT_OWNER,MvrOwnershipStatus::class,true),
             ]);
             DB::commit();
-            $this->flash('success', 'Inspection Report Uploaded', [], route('mvr.show',encrypt($id)));
+            $this->flash('success', 'Inspection Report Uploaded', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             Log::error($e);
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);
