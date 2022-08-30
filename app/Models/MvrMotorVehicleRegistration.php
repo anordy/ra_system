@@ -106,16 +106,16 @@ class MvrMotorVehicleRegistration extends Model
         if ($reg_type->name == MvrRegistrationType::TYPE_CORPORATE){
             if (empty($last_reg)) {
                 $number = str_pad( '1', 4, '0', STR_PAD_LEFT);
-                $plate_number = 'SLS' . $number.$class->name;
+                $plate_number = 'SLS' . $number.$class->category;
             } else {
                 $number = preg_replace('/SLS(\d{4}){}/', '$1', $last_reg->plate_number);
                 $plate_number = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
-                $plate_number = preg_replace('/SLS(.+)(.)$/', 'SMZ' . $plate_number . '$2', $last_reg->plate_number);
+                $plate_number = preg_replace('/SLS(.+)(.)$/', 'SLS' . $plate_number . '$2', $last_reg->plate_number);
             }
         }elseif ($reg_type->name == MvrRegistrationType::TYPE_GOVERNMENT){
             if (empty($last_reg)) {
                 $number = str_pad( '1', 4, '0', STR_PAD_LEFT);
-                $plate_number = 'SMZ' . $number.$class->name;
+                $plate_number = 'SMZ' . $number.$class->category;
             } else {
                 $number = preg_replace('/SMZ(\d{4}){}/', '$1', $last_reg->plate_number);
                 $plate_number = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
@@ -139,7 +139,6 @@ class MvrMotorVehicleRegistration extends Model
                 ->orderBy(DB::raw('concat(substring(plate_number,5,2),substring(plate_number,2,3))'), 'desc')
                 ->lockForUpdate()
                 ->first();
-
 
             if (empty($last_reg)) {
                 $plate_number = empty($reg_type->initial_plate_number)?'Z001AA':$reg_type->initial_plate_number;

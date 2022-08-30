@@ -141,7 +141,7 @@ class UploadInspectionReport extends Component
             'mvr_vehicle_status_id'=>$this->getForeignKey('Imported',MvrVehicleStatus::class,true),
             'imported_from_country_id'=>$this->getForeignKey($motor_vehicle['imported_from'],Country::class),
             'mvr_color_id'=>$this->getForeignKey($motor_vehicle['color'],MvrColor::class),
-            'mvr_class_id'=>$this->getForeignKey($motor_vehicle['class'],MvrClass::class),
+            'mvr_class_id'=>MvrClass::query()->where(['code'=>$motor_vehicle['class']])->first()->id,
             'mvr_model_id'=>$this->getForeignKey($motor_vehicle['model'],MvrModel::class),
             'mvr_fuel_type_id'=>$this->getForeignKey($motor_vehicle['fuel_type'],MvrFuelType::class),
             'mvr_transmission_id'=>$this->getForeignKey($motor_vehicle['transmission_type'],MvrTransmissionType::class),
