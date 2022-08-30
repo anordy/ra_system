@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\MvrClass;
+use App\Models\MvrRegistrationTypeCategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -74,16 +75,16 @@ class DatabaseSeeder extends Seeder
         $this->call(TaxRegionsSeeder::class);
         $this->call(ReliefProjectSeeder::class);
         $this->call(DateConfigurationSeeder::class);
+        $this->call(MvrRegistrationTypeCategoriesSeeder::class);
         $this->call(MvrRegistrationTypesSeeder::class);
         $this->call(MvrPlateNumberColorsTableSeeder::class);
         $this->call(MvrBodyTypeTableSeeder::class);
-        $this->call(MvrClassTableSeeder::class);
+        $this->call(MvrClassesTableSeeder::class);
         $this->call(MvrFuelTypeTableSeeder::class);
         $this->call(MvrMakeTableSeeder::class);
         $this->call(MvrModelTableSeeder::class);
         $this->call(MvrFeeTypesTableSeeder::class);
         $this->call(MvrTransmissionTypeTableSeeder::class);
-        $this->call(MvrClass::class);
         $this->call(RecoveryMeasureCategoriesSeeder::class);
         $this->call(WorkflowRecoveryMeasureSeeder::class);
     }
