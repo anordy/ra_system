@@ -76,7 +76,7 @@ class EmTransactionReturn extends Model
         return $this->bills()->where('status', 'paid');
     }
 
-    public function emTransactionPenalties(){
+    public function penalties(){
         return $this->hasMany(EmTransactionPenalty::class, 'return_id');
     }
 }

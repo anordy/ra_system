@@ -63,7 +63,7 @@ class BfoReturn extends Model
         return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
     }
 
-    public function bfoPenalties(){
+    public function penalties(){
         return $this->hasMany(BfoPenalty::class, 'return_id');
     }
 
