@@ -32,7 +32,7 @@ class BusinessTaxTypePreviewTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return $this->businessByNatureQuery($this->taxType->id);
+        return $this->businessByTaxTypeQuery($this->taxType->id);
     }
 
     public function columns(): array

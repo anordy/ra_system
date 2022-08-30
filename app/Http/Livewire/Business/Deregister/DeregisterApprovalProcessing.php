@@ -11,6 +11,7 @@ use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use App\Traits\WorkflowProcesssingTrait;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class DeregisterApprovalProcessing extends Component
@@ -48,10 +49,11 @@ class DeregisterApprovalProcessing extends Component
                 event(new SendMail('business-deregister-approval', $this->subject->business_id));
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function reject($transtion)
@@ -69,10 +71,11 @@ class DeregisterApprovalProcessing extends Component
                  */
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 

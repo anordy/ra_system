@@ -65,7 +65,7 @@ class RegistrationChangeRequest extends Component
             $change_req = MvrRegistrationChangeRequest::query()->create([
                 'mvr_plate_size_id' => $this->plate_number_size_id,
                 'current_registration_id' => $mv->current_registration->id,
-                'custom_plate_number' => $this->custom_plate_number,
+                'custom_plate_number' => $this->custom_plate_number ?? '',
                 'requested_registration_type_id' => $this->registration_type_id,
                 'date' => Carbon::now(),
                 'mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate([
@@ -83,10 +83,10 @@ class RegistrationChangeRequest extends Component
     }
 
     public function agentLookup(){
-        $agent = BusinessLocation::query()->where(['zin'=>$this->agent_z_number])->first();
-        if (!empty($agent->taxpayer->transport_agent)){
-            $this->agent_name = $agent->taxpayer->fullname();
-            $this->agent_id = $agent->taxpayer->transport_agent->id;
+        $agent = Taxpayer::query()->where(['reference_no'=>$this->agent_z_number])->first();
+        if (!empty($agent->transport_agent)){
+            $this->agent_name = $agent->fullname();
+            $this->agent_id = $agent->transport_agent->id;
         }else{
             $this->agent_name = null;
             $this->agent_id = null;

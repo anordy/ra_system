@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Created By CodingNepal -->
 <html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
@@ -9,7 +8,7 @@
 <body>
 <div id="error-page">
     <div class="content">
-        <h2 class="header" data-text="404">
+        <h2 class="header" data-text="500">
             500
         </h2>
         <h4 data-text="Opps! Page not found">

@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Traits\WorkflowProcesssingTrait;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ApprovalProcessing extends Component
@@ -30,10 +31,11 @@ class ApprovalProcessing extends Component
 
     public function approve($transition)
     {
-        $this->validate(['comments' => 'required','duration_id'=>'required'],['duration_id.required'=>'You must select License Duration to approve']);
+        $this->validate(['comments' => 'required', 'duration_id' => 'required'], ['duration_id.required' => 'You must select License Duration to approve']);
+        
+        DB::beginTransaction();
 
         try {
-            DB::beginTransaction();
             $this->subject->dl_application_status_id = DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id;
             $this->subject->dl_license_duration_id = $this->duration_id;
             $this->subject->save();
@@ -46,28 +48,30 @@ class ApprovalProcessing extends Component
                 session()->flash('error', 'Control number generation failed, try again later');
             }
             DB::commit();
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
     public function reject($transition)
     {
         $this->validate(['comments' => 'required']);
         $operators = [];
-        if($this->checkTransition('application_filled_incorrect')){
-            $operators = [1,2,3];
+        if ($this->checkTransition('application_filled_incorrect')) {
+            $operators = [1, 2, 3];
         }
         try {
             $this->subject->dl_application_status_id = DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_DETAILS_CORRECTION])->id;
             $this->subject->save();
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            dd($e);
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 

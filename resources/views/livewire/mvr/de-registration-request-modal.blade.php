@@ -44,7 +44,7 @@
 
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Agent Z-Number</label>
+                        <label class="control-label">Agent Reference Number</label>
                         <input type="text" class="form-control" wire:model.lazy="agent_z_number" id="agent_z_number">
                         @error('agent_z_number')
                         <span class="text-danger">{{ $message }}</span>

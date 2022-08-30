@@ -94,6 +94,14 @@
                     <p class="my-1">{{ $request->sale_date }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Agreement Contract</span>
+                    @if(!empty($request->agreement_contract_path))
+                        <p class="my-1"><a href="{{url('storage/'.$request->agreement_contract_path)}}">Preview</a></p>
+                    @else
+                        <p class="my-1 text-danger">Not attached</p>
+                    @endif
+                </div>
+                <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Delivered Date</span>
                     <p class="my-1">{{ $request->delivered_date }}</p>
                 </div>

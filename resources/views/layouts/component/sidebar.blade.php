@@ -191,7 +191,7 @@
                             <a href="{{ route('withholdingAgents.register') }}">Registration</a>
                         </li>
                     @endcan
-                    @can('withholding-agents-list')
+                    @can('withholding-agents-view')
                         <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
                             <a href="{{ route('withholdingAgents.list') }}">Agents List</a>
                         </li>

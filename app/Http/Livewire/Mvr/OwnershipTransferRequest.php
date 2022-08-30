@@ -103,10 +103,10 @@ class OwnershipTransferRequest extends Component
     }
 
     public function agentLookup(){
-        $agent = BusinessLocation::query()->where(['zin'=>$this->agent_z_number])->first();
-        if (!empty($agent->taxpayer->transport_agent)){
-            $this->agent_name = $agent->taxpayer->fullname();
-            $this->agent_id = $agent->taxpayer->transport_agent->id;
+        $agent = Taxpayer::query()->where(['reference_no'=>$this->agent_z_number])->first();
+        if (!empty($agent->transport_agent)){
+            $this->agent_name = $agent->fullname();
+            $this->agent_id = $agent->transport_agent->id;
         }else{
             $this->agent_name = null;
             $this->agent_id = null;
@@ -114,10 +114,10 @@ class OwnershipTransferRequest extends Component
     }
 
     public function ownerLookup(){
-        $owner = BusinessLocation::query()->where(['zin'=>$this->owner_z_number])->first();
-        if (!empty($owner->taxpayer)){
-            $this->owner_name = $owner->taxpayer->fullname();
-            $this->owner_taxpayer_id = $owner->taxpayer_id;
+        $owner = Taxpayer::query()->where(['reference_no'=>$this->owner_z_number])->first();
+        if (!empty($owner)){
+            $this->owner_name = $owner->fullname();
+            $this->owner_taxpayer_id = $owner->id;
         }else{
             $this->owner_name = null;
             $this->owner_taxpayer_id = null;

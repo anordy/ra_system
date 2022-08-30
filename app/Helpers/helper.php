@@ -22,6 +22,16 @@ function fmCurrency($amount){
     return number_format(floatval($amount), 2);
 }
 
+function convertMoneyToWord($number)
+{
+    if (class_exists(NumberFormatter::class)){
+        $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+        return $f->format($number);
+    } else {
+        return $number;
+    }
+}
+
 function getNumberOrdinal($number) {
     $ends = array('th','st','nd','rd','th','th','th','th','th','th');
     if ((($number % 100) >= 11) && (($number % 100) <= 13))
