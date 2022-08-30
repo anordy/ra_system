@@ -26,7 +26,7 @@
                                 <br>
                                 <div>
                                     <div>
-                                        Registration Fee: <strong> {{number_format($motor_vehicle->current_registration->get_latest_bill()->amount)}} TZS</strong><br>
+                                        Registration Fee: <strong> {{number_format($motor_vehicle->current_registration->get_latest_bill()->amount ?? 'Not Set')}} TZS</strong><br>
                                     </div>
                                     <div>
                                         Control Number: <strong>{!! $motor_vehicle->current_registration->get_latest_bill()->control_number ?? ' <span class="text-danger">Not available</span>' !!}</strong>
