@@ -97,7 +97,7 @@ class DailyDebtPenaltyInterest extends Command
         $debts = Debt::where('curr_due_date', '<', $now)
             ->whereNotIn('status', ['complete', 'paid-by-debt'])
             ->get();
-        // dd($debts->count());
+        dd($debts);
 
         if ($debts) {
             foreach ($debts as $key => $debt) {
@@ -109,7 +109,7 @@ class DailyDebtPenaltyInterest extends Command
                 if ($penaltyIterations > 0) {
                     $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $penaltyIterations);
                     // Cancel return bill if it exists
-                    
+
                     if ($debt->debt->bill) {
                         CancelBill::dispatch($debt->debt->bill, 'Debt Penalty Increment')->delay($now->addSeconds(2));
                     }

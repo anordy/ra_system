@@ -16,7 +16,7 @@ class BfoPenalty extends Model
         return with(new static)->getTable();
     }
 
-    public function BfoReturn(){
+    public function return(){
         return $this->belongsTo(BfoReturn::class);
     }
 }

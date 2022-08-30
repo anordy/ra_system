@@ -27,7 +27,7 @@ class PenaltyForDebt
         $endDate = null;
         $totalAmount = 0;
         $penaltyEntry = DebtPenalty::where('debt_id', $debtId)->count();
-        dd($penaltyIterations);
+        // dd($penaltyIterations);
         for ($i = 0; $i < $penaltyIterations; $i++) {
 
             $period = $penaltyEntry + 1;
