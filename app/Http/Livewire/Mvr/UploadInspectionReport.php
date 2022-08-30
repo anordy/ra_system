@@ -65,7 +65,7 @@ class UploadInspectionReport extends Component
         DB::beginTransaction();
         try{
             $data = $this->prepareMotorVehicleData();
-            $taxpayer = Taxpayer::query()->where(['reference_no'=>$data['owner']['z_number']])->first()->id ?? null;
+            $taxpayer = Taxpayer::query()->where(['reference_no'=>$data['owner']['z_number']])->first();
             if (empty($taxpayer)){
                 $this->alert('error', "Could not find owner/taxpayer with Z number {$data['owner']['z_number']}");
                 Storage::delete($this->inspection_report_path);
@@ -73,7 +73,7 @@ class UploadInspectionReport extends Component
                 return;
             }
 
-            $taxpayer_agent = Taxpayer::query()->where(['reference_no'=>$data['agent']['z_number']])->first()->id ?? null;
+            $taxpayer_agent = Taxpayer::query()->where(['reference_no'=>$data['agent']['z_number']])->first();
             if (empty($taxpayer_agent->transport_agent)){
                 $this->alert('error', "Could not find agent/taxpayer with Z number {$data['agent']['z_number']}");
                 Storage::delete($this->inspection_report_path);
@@ -88,7 +88,7 @@ class UploadInspectionReport extends Component
                 'mvr_ownership_status_id'=>$this->getForeignKey(MvrOwnershipStatus::STATUS_CURRENT_OWNER,MvrOwnershipStatus::class,true),
             ]);
             DB::commit();
-            $this->flash('success', 'Inspection Report Uploaded', [], redirect()->route('mvr.show',encrypt($id))->getTargetUrl());
+            $this->flash('success', 'Inspection Report Uploaded', [], route('mvr.show',encrypt($id)));
         }catch(Exception $e){
             Log::error($e);
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);

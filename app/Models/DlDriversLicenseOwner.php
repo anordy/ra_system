@@ -54,9 +54,9 @@ class DlDriversLicenseOwner extends Model
 		'photo_path'
 	];
 
-	public function dl_blood_group()
+	public function blood_group()
 	{
-		return $this->belongsTo(DlBloodGroup::class);
+		return $this->belongsTo(DlBloodGroup::class,'dl_blood_group_id');
 	}
 
 	public function taxpayer()

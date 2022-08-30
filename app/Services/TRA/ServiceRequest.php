@@ -35,7 +35,7 @@ class ServiceRequest
           'email'=> $faker->email,
         ];
         $agent = [
-            'z_number'=>  Taxpayer::query()->where(['id'=>MvrAgent::query()->first()->taxpayer_id ?? null])->first()->reference_no ??'INVALID-Z-NUMBER',
+            'z_number'=>  MvrAgent::query()->first()->taxpayer->reference_no ??'INVALID-Z-NUMBER',
             'name'=> $faker->name,
             'phone_number'=> '0719906669',
             'agent_id'=> 'AAAAA',
