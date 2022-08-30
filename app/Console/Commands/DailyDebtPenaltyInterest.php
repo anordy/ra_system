@@ -68,12 +68,8 @@ class DailyDebtPenaltyInterest extends Command
         if ($debts) {
             foreach ($debts as $key => $debt) {
                 $dueDate = Carbon::parse($debt->curr_due_date);
-                $dateDiff = $dueDate->diffInDays($now);
-                $validDays = DateConfiguration::where('code', 'validMonthDays')->value('value');
-                $mod = $dateDiff % $validDays;
-                $penaltyIterations = ($dateDiff - $mod) / $validDays;
-                if ($penaltyIterations > 0) {
-                    $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $penaltyIterations);
+                if ($debt->period > 0) {
+                    $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $debt->period);
                     // Cancel return bill if it exists
 
                     if ($debt->debt->bill) {

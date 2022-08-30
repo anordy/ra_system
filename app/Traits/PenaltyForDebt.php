@@ -9,7 +9,7 @@ use App\Models\PenaltyRate;
 
 class PenaltyForDebt
 {
-    public static function getTotalPenalties($debtId, $date, $taxAmount, $penaltyIterations)
+    public static function getTotalPenalties($debtId, $date, $taxAmount, $period)
     {
         $penaltableAmount = 0;
 
@@ -26,90 +26,45 @@ class PenaltyForDebt
 
         $endDate = null;
         $totalAmount = 0;
-        $penaltyEntry = DebtPenalty::where('debt_id', $debtId)->count();
-        // dd($penaltyIterations);
-        for ($i = 0; $i < $penaltyIterations; $i++) {
 
-            $period = $penaltyEntry + 1;
+        
+        $penaltableAmount = $taxAmount;
+        $latePaymentAmount = $latePaymentAfterRate * $penaltableAmount;
+        $penaltableAmount = $latePaymentAmount + $penaltableAmount;
+        $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $period);
+        $penaltableAmount = $penaltableAmount + $interestAmount;
+        $date->addDays(1);
+        $fromDate = clone $date;
+        $date->addDays(29);
+        $toDate = clone $date;
 
-            if ($i === 0) {
-                $penaltableAmount = $taxAmount;
-                $latePaymentAmount = $latePaymentBeforeRate * $penaltableAmount;
-                $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-                $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $period);
-                $penaltableAmount = $interestAmount + $penaltableAmount;
+        $checkPenaltyExist = DebtPenalty::where('debt_id', $debtId)
+            ->where('starting_date', $fromDate)
+            ->where('end_date', $toDate)
+            ->exists();
 
-                $penaltableAmountForPerticularMonth = $penaltableAmount;
-                
-                $date->addDays(1);
-                $fromDate = clone $date;
-                $date->addDays(29);
-                $toDate = clone $date;
+        if (!$checkPenaltyExist) {
 
-                $checkPenaltyExist = DebtPenalty::where('debt_id', $debtId)
-                    ->where('starting_date', $fromDate)
-                    ->where('end_date', $toDate)
-                    ->exists();
-
-                if (!$checkPenaltyExist) {
-                    DebtPenalty::create([
-                        'debt_id' => $debtId,
-                        'financial_month_name' => $fromDate->day . '-' . $fromDate->monthName . '-' . $fromDate->year . '  to ' . $toDate->day . '-' . $toDate->monthName . '-' . $toDate->year,
-                        'tax_amount' => $taxAmount,
-                        'late_filing' => $lateFilingFee ?? 0,
-                        'late_payment' => $latePaymentAmount ?? 0,
-                        'rate_percentage' => $interestRate,
-                        'rate_amount' => $interestAmount,
-                        'penalty_amount' => $penaltableAmountForPerticularMonth,
-                        'starting_date' => $fromDate,
-                        'end_date' => $toDate,
-                    ]);
-                }
-
-                continue;
-            }
-
-            if ($penaltableAmount == 0) {
-                $penaltableAmount = $taxAmount;
-            }
-
-            $latePaymentAmount = $latePaymentAfterRate * $penaltableAmount;
-            $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-            $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $period);
-            $penaltableAmount = $penaltableAmount + $interestAmount;
-            $date->addDays(1);
-            $fromDate = clone $date;
-            $date->addDays(29);
-            $toDate = clone $date;
-
-            $checkPenaltyExist = DebtPenalty::where('debt_id', $debtId)
-                ->where('starting_date', $fromDate)
-                ->where('end_date', $toDate)
-                ->exists();
-
-            if (!$checkPenaltyExist) {
-
-                DebtPenalty::create([
-                    'debt_id' => $debtId,
-                    'financial_month_name' => $fromDate->day . '-' . $fromDate->monthName . '-' . $fromDate->year . '  to ' . $toDate->day . '-' . $toDate->monthName . '-' . $toDate->year,
-                    'tax_amount' => $penaltableAmountForPerticularMonth,
-                    'late_filing' => 0,
-                    'late_payment' => $latePaymentAmount ?? 0,
-                    'rate_percentage' => $interestRate,
-                    'rate_amount' => $interestAmount,
-                    'penalty_amount' => $penaltableAmount,
-                    'starting_date' => $fromDate,
-                    'end_date' => $toDate,
-                ]);
-            }
-
-            $penaltableAmountForPerticularMonth = $penaltableAmount;
-
-            // if ($i == $penaltyIterations - 1) {
-            //     $endDate = clone $toDate->addDays(30);
-            // }
-            $totalAmount = $penaltableAmount;
+            DebtPenalty::create([
+                'debt_id' => $debtId,
+                'financial_month_name' => $fromDate->day . '-' . $fromDate->monthName . '-' . $fromDate->year . '  to ' . $toDate->day . '-' . $toDate->monthName . '-' . $toDate->year,
+                'tax_amount' => $penaltableAmountForPerticularMonth,
+                'late_filing' => 0,
+                'late_payment' => $latePaymentAmount ?? 0,
+                'rate_percentage' => $interestRate,
+                'rate_amount' => $interestAmount,
+                'penalty_amount' => $penaltableAmount,
+                'starting_date' => $fromDate,
+                'end_date' => $toDate,
+            ]);
         }
+
+        $penaltableAmountForPerticularMonth = $penaltableAmount;
+
+        // if ($i == $penaltyIterations - 1) {
+        //     $endDate = clone $toDate->addDays(30);
+        // }
+        $totalAmount = $penaltableAmount;
 
         $endDate = DebtPenalty::where('debt_id', $debtId)->latest()->first()->end_date;
         return [$endDate, $totalAmount];
