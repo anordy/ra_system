@@ -93,6 +93,7 @@ class GenericSettingAddModal extends Component
             $this->setting_title = preg_replace('/^(.*\\\\(Mvr|Dl))/','',$model);
             $this->setting_title = preg_replace('/^(Mvr|Dl)/','',$this->setting_title);
             $this->setting_title = preg_replace('/([a-z]+)([A-Z])/','$1 $2',$this->setting_title);
+            $this->setting_title = preg_replace('/App\\\\Models\\\\/','',$this->setting_title);
         }
 
         $this->prepareRelations();
