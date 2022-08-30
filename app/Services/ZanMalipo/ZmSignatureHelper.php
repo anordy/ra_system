@@ -23,7 +23,6 @@ class ZmSignatureHelper
      */
     public static function signContent($content)
     {
-        return '';
         $cert_store = file_get_contents("cert/ZPC-zanmalipo-all.pfx"); //todo: remove .pfx from public folder
         if (openssl_pkcs12_read($cert_store, $cert_info, "zpc@2022")) {
             openssl_sign($content, $signature, $cert_info['pkey'], "sha1WithRSAEncryption");
