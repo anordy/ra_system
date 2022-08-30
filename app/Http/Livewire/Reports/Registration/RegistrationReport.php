@@ -11,6 +11,7 @@ use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
+use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Traits\RegistrationReportTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -26,9 +27,10 @@ class RegistrationReport extends Component
     public $optionIsic2s = [];
     public $optionIsic3s = [];
     public $optionIsic4s = [];
-    public $optionTaxTypes;
-    public $optionTurnOverTypes;
-    public $optionPeriods;
+    public $optionTaxTypes =[];
+    public $optionTurnOverTypes=[];
+    public $optionTaxRegions=[];
+    public $optionYears=[];
 
     public $reportType;
     public $isic1Id;
@@ -39,6 +41,7 @@ class RegistrationReport extends Component
     public $turn_over_type;
     public $turn_over_from_amount;
     public $turn_over_to_amount;
+    public $tax_region_id;
 
 
     public function rules()
@@ -62,11 +65,11 @@ class RegistrationReport extends Component
         ];
         $this->optionIsic1s = ISIC1::all();
         $this->optionTaxTypes = TaxType::where('category','main')->get();
+        $this->optionTaxRegions = TaxRegion::all();
         $this->optionTurnOverTypes=[
             'Last-12-Months' => 'Turn Over for Last 12 Months',
             'Next-12-Months' => 'Turn Over for Next 12 Months',
         ];
-
     }
 
     public function updated($propertyName)

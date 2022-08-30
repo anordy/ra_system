@@ -3,12 +3,12 @@
         <div class="col-md-4 form-group">
             <label class="d-flex justify-content-between'">
                 <span>
-                    Type Of Report
+                    Criteria
                 </span>
             </label>
             <select wire:model="reportType"
                 class="form-control {{ $errors->has('reportType') ? 'is-invalid' : '' }}">
-                <option value="">Select Report</option>
+                <option value="">Select Criteria</option>
                 @foreach ($optionReportTypes as $key=>$report)
                 <option value={{ $key }}>
                     {{ $report }}</option>
