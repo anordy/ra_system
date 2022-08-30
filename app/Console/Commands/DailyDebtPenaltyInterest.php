@@ -49,29 +49,29 @@ class DailyDebtPenaltyInterest extends Command
     public function handle()
     {
         Log::channel('debtCollection')->info('Daily Debt penalties and interest collection and calculations started');
-        DB::beginTransaction();
         $this->getDebtAfterDueDate();
-        DB::commit();
+        
         Log::channel('debtCollection')->info('Daily Debt penalties and interest collection and calculations ended');
     }
 
     public function getDebtAfterDueDate()
     {
-        $now = Carbon::now();
-        $debts = Debt::selectRaw('debts.*, TIMESTAMPDIFF(month, filing_due_date, NOW()) as periods, TIMESTAMPDIFF(month, curr_due_date, NOW()) as months')
+        $now = Carbon::now()->addMonths(1);
+        $debts = Debt::selectRaw('debts.*, TIMESTAMPDIFF(month, filing_due_date, NOW()) as periods, TIMESTAMPDIFF(month, curr_due_date, NOW()) as penatableMonths')
             ->where('curr_due_date', '<', $now)
             ->whereNotIn('status', ['complete', 'paid-by-debt'])
             ->get();
-     
-        dd($debts);
 
         if ($debts) {
-            foreach ($debts as $key => $debt) {
+            DB::beginTransaction();
+            foreach ($debts as $debt) {
                 $dueDate = Carbon::parse($debt->curr_due_date);
-                if ($debt->period > 0) {
-                    $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $debt->period);
-                    // Cancel return bill if it exists
+                
+                if ($debt->penatableMonths > 0) {
+                    $period = $debt->periods + $debt->penatableMonths;
+                    $penaltyReturn = PenaltyForDebt::getTotalPenalties($debt->id, $dueDate, $debt->outstanding_amount, $period);
 
+                    // Cancel return bill if it exists
                     if ($debt->debt->bill) {
                         CancelBill::dispatch($debt->debt->bill, 'Debt Penalty Increment')->delay($now->addSeconds(2));
                     }
@@ -86,7 +86,6 @@ class DailyDebtPenaltyInterest extends Command
 
                     $debtUpdate = Debt::find($debt->id);
 
-                    
                     $debtUpdate->penalty = $debt->debtPenalties->sum('late_payment');
                     $debtUpdate->interest = $debt->debtPenalties->sum('rate_amount');
                     $debtUpdate->curr_due_date = $penaltyReturn[0];
@@ -95,6 +94,7 @@ class DailyDebtPenaltyInterest extends Command
                     $debtUpdate->save();
                 }
             }
+            DB::commit();
         }
     }
 }
