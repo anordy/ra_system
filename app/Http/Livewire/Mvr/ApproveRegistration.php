@@ -40,7 +40,7 @@ class ApproveRegistration extends Component
         return [
             'registration_type_id' => 'required',
             'plate_number_size_id' => 'required',
-            'plate_number' => 'unique:mvr_motor_vehicle_registration,plate_number',
+            'plate_number' => 'nullable|unique:mvr_motor_vehicle_registration,plate_number',
         ];
     }
 
