@@ -12,9 +12,11 @@ class BusinessRegReportController extends Controller
 {
     use RegistrationReportTrait;
 
-    public function byNature($isic1Id){
-        $isic1Id = decrypt($isic1Id);
-        return view('reports.registration.business-by-nature',compact('isic1Id'));
+    public function byNature($isicId,$level){
+        $isicId = decrypt($isicId);
+        $level = decrypt($level);
+        // dd($level,$isicId);
+        return view('reports.registration.business-by-nature',compact('isicId','level'));
     }
 
     public function exportBusinessByNatureReportPdf($isic1Id)
@@ -30,7 +32,8 @@ class BusinessRegReportController extends Controller
 
     public function byTaxType($tax_type_id){
         $tax_type_id = decrypt($tax_type_id);
-        return view('reports.registration.business-by-tax-type',compact('tax_type_id'));
+        $taxType = TaxType::find($tax_type_id);
+        return view('reports.registration.business-by-tax-type',compact('taxType'));
     }
 
     public function exportBusinessByTaxTypeReportPdf($tax_type_id)
