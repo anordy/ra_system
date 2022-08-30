@@ -63,6 +63,7 @@ use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\MVR\WrittenOffVehiclesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Payments\PaymentsController;
+use App\Http\Controllers\QRCodeGeneratorController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefGenerateReportController;
@@ -161,9 +162,9 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-//    Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
-//    Route::get('bill_transfer/pdf/{id}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
-//    Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
+    Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
+    Route::get('bill_transfer/pdf/{id}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
+    Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
     Route::name('returns.')->prefix('returns')->group(function () {
         Route::resource('/interest-rates', InterestRateController::class);
