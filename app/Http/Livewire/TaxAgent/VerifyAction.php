@@ -153,7 +153,7 @@ class VerifyAction extends Component
                     $agent->save();
                 } else {
                     $agent->billing_status = BillingStatus::CN_GENERATION_FAILED;
-                    $agent->status = TaxAgentStatus::DRAFTING;
+                    $agent->status = TaxAgentStatus::PENDING;
                     $agent->save();
                 }
 
