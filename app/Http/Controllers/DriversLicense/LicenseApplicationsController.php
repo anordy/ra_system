@@ -19,6 +19,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class LicenseApplicationsController extends Controller
@@ -178,5 +180,17 @@ class LicenseApplicationsController extends Controller
         $pdf->setPaper('legal', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->stream();
+    }
+
+    public function getFile($location){
+        if ($location) {
+            try {
+                return Storage::response(decrypt($location));
+            } catch (Exception $e) {
+                report($e);
+                abort(404);
+            }
+        }
+        return abort(404);
     }
 }

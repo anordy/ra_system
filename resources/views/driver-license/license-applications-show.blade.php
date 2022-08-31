@@ -139,7 +139,7 @@
                                     </div>
                                 @else
                                     <div style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
-                                        <img src="{{url('storage/'.($application->photo_path ?? $application->drivers_license_owner->photo_path))}}" style="width: 100%;">
+                                        <img src="{{ route('drivers-license.license.file', encrypt($application->photo_path ?? $application->drivers_license_owner->photo_path)) }}" style="width: 100%;">
                                     </div>
                                 @endif
                                 @if($application->application_status->name === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
