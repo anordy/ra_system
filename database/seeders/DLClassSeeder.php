@@ -17,7 +17,7 @@ class DLClassSeeder extends Seeder
         $classes = ['A', 'A1', 'A2', 'A3', 'B', 'C', 'C1', 'C2', 'C3', 'D', 'E', 'F', 'G', 'H'];
 
         foreach ($classes as $cl){
-            DlLicenseClass::create(['name' => $cl]);
+            DlLicenseClass::updateOrCreate(['name' => $cl]);
         }
     }
 }

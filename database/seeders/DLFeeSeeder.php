@@ -17,7 +17,7 @@ class DLFeeSeeder extends Seeder
         $types = ['FRESH', 'RENEW', 'DUPLICATE'];
 
         foreach ($types as $type){
-            DlFee::create([
+            DlFee::updateOrCreate([
                 'name' => $type,
                 'amount' => 10000,
                 'gfs_code' => 116101,
