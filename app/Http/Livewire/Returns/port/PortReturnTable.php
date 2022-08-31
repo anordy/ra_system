@@ -32,7 +32,7 @@ class PortReturnTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch / Location', 'branch.name')
+            Column::make('Branch Location', 'branch.name')
             ->sortable()
             ->searchable(),
             Column::make('Tax Type', 'taxtype.name')
@@ -48,9 +48,9 @@ class PortReturnTable extends DataTableComponent
             Column::make('Total VAT', 'total_amount_due')
                 ->sortable()
                 ->searchable(),
-            Column::make('Payment Status', 'status')
+            Column::make('Payment Status','status')
                 ->hideif(true),
-            Column::make('Status', 'id')->view('returns.port.includes.status'),
+            // Column::make('Status', 'id')->view('returns.port.includes.status'),
             Column::make('Action', 'id')
                 ->view('returns.port.includes.actions'),
         ];
