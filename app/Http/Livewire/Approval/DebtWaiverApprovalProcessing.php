@@ -66,6 +66,10 @@ class DebtWaiverApprovalProcessing extends Component
         $this->penaltyAmountDue = $this->debt->penalty - $this->penaltyAmount;
         $this->interestAmountDue = $this->debt->interest - $this->interestAmount;
         $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->debt->principal_amount);
+
+        $this->penaltyAmountDue = round($this->penaltyAmountDue, 2);
+        $this->interestAmountDue = round($this->interestAmountDue, 2);
+        $this->total = round($this->total, 2);
     }
 
     public function approve($transtion)
@@ -95,7 +99,7 @@ class DebtWaiverApprovalProcessing extends Component
                             'billable_id' => $this->debt->id,
                             'billable_type' => get_class($this->debt),
                             'use_item_ref_on_pay' => 'N',
-                            'amount' => $this->debt->principal_amount,
+                            'amount' => round($this->debt->principal_amount, 2),
                             'currency' => 'TZS',
                             'gfs_code' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
                             'tax_type_id' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->id,

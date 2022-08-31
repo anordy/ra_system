@@ -29,7 +29,7 @@
                 <strong>Location</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Financial Month</strong>
+                <strong>Financial Quater</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Financial Year</strong>
@@ -66,6 +66,8 @@
             </th>
         </tr>
     </thead>
+
+    {{ dd($record) }}
     <tbody>
         @foreach ($records as $index => $record)
             <tr>
@@ -79,7 +81,7 @@
                     {{ $record->businessLocation->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->financialMonth->name ?? '-' }}
+                    {{ $record->quarter_name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->financialYear->name ?? '-' }}
@@ -91,16 +93,16 @@
                     {{ $record->currency ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->total_amount_due===null?'-':number_format($record->total_amount_due, 2) }}
+                    {{ $record->total_amount_due === null ? '-' : number_format($record->total_amount_due, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->total_amount_due_with_penalties===null?'-':number_format($record->total_amount_due_with_penalties, 2) }}
+                    {{ $record->total_amount_due_with_penalties === null ? '-' : number_format($record->total_amount_due_with_penalties, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ date('d/m/Y', strtotime($record->created_at)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->filing_due_date==null?'-': date('d/m/Y', strtotime($record->filing_due_date)) }}
+                    {{ $record->filing_due_date == null ? '-' : date('d/m/Y', strtotime($record->filing_due_date)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     @if ($record->created_at == null || $record->filing_due_date == null)
@@ -114,12 +116,12 @@
                     @endif
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->paid_at==null?'-':date('d/m/Y', strtotime($record->paid_at)) }}
+                    {{ $record->paid_at == null ? '-' : date('d/m/Y', strtotime($record->paid_at)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->payment_due_date==null?'-':date('d/m/Y', strtotime($record->payment_due_date)) }}
+                    {{ $record->payment_due_date == null ? '-' : date('d/m/Y', strtotime($record->payment_due_date)) }}
                 </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">     
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     @if ($record->created_at == null || $record->paid_at == null)
                         -
                     @else
