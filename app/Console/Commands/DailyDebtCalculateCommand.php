@@ -135,6 +135,9 @@ class DailyDebtCalculateCommand extends Command
                     if (count($penalties) > 0) {
 
                         $penalties->map(function($penalty) {
+                            // Override financial_month_name format
+                            $penalty->financial_month_name = "{$this->convertDate($penalty->start_date)} to {$this->convertDate($penalty->end_date)}";
+
                             unset($penalty->id, $penalty->created_at, $penalty->updated_at, $penalty->return_id);
                         });
     
@@ -209,6 +212,11 @@ class DailyDebtCalculateCommand extends Command
                 DB::rollBack();
             }
         }
+    }
+
+    public function convertDate($date)
+    {
+        return Carbon::create($date)->format('d-M-Y');
     }
 
 }
