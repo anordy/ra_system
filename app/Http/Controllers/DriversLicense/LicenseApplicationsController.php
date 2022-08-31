@@ -61,7 +61,7 @@ class LicenseApplicationsController extends Controller
                 $this->doTransition($transition, ['status' => '', 'comment' => $comment]);
                 if ($transition == 'application_submitted') {
                     event(new SendSms('license-application-submitted', $application->id));
-                    event(new SendMail('license-application-submitted', $application->id));
+                    //event(new SendMail('license-application-submitted', $application->id));
                 }
                 DB::commit();
             } catch (\Exception $e) {
@@ -70,6 +70,7 @@ class LicenseApplicationsController extends Controller
                 session()->flash('error', 'Could not update application');
             }
         } else {
+            $fee = DlFee::query()->where(['type' => $application->type])->first();
             if (empty($fee)) {
                 session()->flash('error', "Fee for Drivers license application ({$application->type}) is not configured");
                 return redirect()->back();

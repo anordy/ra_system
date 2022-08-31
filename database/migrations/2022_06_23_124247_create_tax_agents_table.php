@@ -40,6 +40,10 @@ class CreateTaxAgentsTable extends Migration
             $table->text('app_true_comment')->nullable();
             $table->text('verifier_reject_comment')->nullable();
             $table->text('app_reject_comment')->nullable();
+            $table->dateTime('verified_at')->nullable();
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('first_rejected_at')->nullable();
+            $table->dateTime('final_rejected_at')->nullable();
             $table->unsignedBigInteger('verifier_id')->nullable();
             $table->unsignedBigInteger('approver_id')->nullable();
             $table->timestamps();
