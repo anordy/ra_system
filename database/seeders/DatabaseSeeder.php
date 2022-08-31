@@ -85,5 +85,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BloodGroupSeeder::class);
         $this->call(DLClassSeeder::class);
         $this->call(DLDurationSeeder::class);
+        $this->call(DLFeeSeeder::class);
     }
 }
