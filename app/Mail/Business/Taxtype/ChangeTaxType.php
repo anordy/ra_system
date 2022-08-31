@@ -6,7 +6,6 @@ use PDF;
 use App\Models\TaxType;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use App\Models\BusinessLocation;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
@@ -44,19 +43,19 @@ class ChangeTaxType extends Mailable
 
         $email = $this->markdown('emails.business.taxtypes.change')->subject("ZRB Change Tax Type Request - " . strtoupper($this->payload['business']->name));
 
-
         if(!empty($new_taxes)) {
-            foreach ($new_taxes as $taxType) {
+            foreach ($new_taxes as $new_tax) {
                 // $attachments is an array with file paths of attachments
                 if (!empty($business_locations)) {
                     foreach ($business_locations as $location) {
     
                         if ($location->status == 'approved') {
-                            $tax = TaxType::find($taxType['new_tax_id']);
+                            $taxType = TaxType::find($new_tax['new_tax_id']);
+                            $tax = $taxType;
         
                             $code = 'ZIN: ' . $location->zin . ", " .
                                 'Business Name: ' . $location->business->name . ", " .
-                                'Tax Type: ' . $tax->name . ", " .
+                                'Tax Type: ' . $taxType->name . ", " .
                                 'Location: ' . "{$location->street}, {$location->district->name}, {$location->region->name}" . ", " .
                                 'Website: ' . 'https://uat.ubx.co.tz:8888/zrb_client/public/login';
                     
@@ -79,11 +78,11 @@ class ChangeTaxType extends Mailable
                     
                             $dataUri = $result->getDataUri();
             
-                            $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri'));
+                            $pdf = PDF::loadView('business.certificate', compact('location', 'taxType', 'dataUri', 'tax'));
                             $pdf->setPaper('a4', 'portrait');
                             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
             
-                            $email->attachData($pdf->output(), "{$this->payload['business']->name}_{$tax->name}_certificate.pdf");
+                            $email->attachData($pdf->output(), "{$this->payload['business']->name}_{$taxType->name}_certificate.pdf");
                         }
         
                     }
