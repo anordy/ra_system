@@ -52,13 +52,13 @@ class PreviewTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Business Category', 'business.business_category_id')
-            ->sortable()
-            ->searchable()
-            ->format(
-                function ($value, $row) {
-                    return $row->business->category->name;
-                }
-            ),
+                ->sortable()
+                ->searchable()
+                ->format(
+                    function ($value, $row) {
+                        return $row->business->category->name;
+                    }
+                ),
             Column::make('Taxpayer', 'business.taxpayer_id')
                 ->sortable()
                 ->searchable()
@@ -72,7 +72,7 @@ class PreviewTable extends DataTableComponent
                 ->searchable()
                 ->format(
                     function ($value, $row) {
-                        return date('d, M Y', strtotime($row->date_of_commencing));
+                        return date('M, d Y', strtotime($row->date_of_commencing));
                     }
             ),
             Column::make('Region', 'region_id')
