@@ -284,6 +284,7 @@ class ZanMalipoController extends Controller
                     $return = $debt->debt;
                     if ($return){
                         $return->status = ReturnStatus::PAID_BY_DEBT;
+                        $return->paid_at = Carbon::now()->toDateTimeString();
                         $return->save();
                     }
                     $debt->status = ReturnStatus::COMPLETE;
