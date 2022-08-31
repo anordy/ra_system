@@ -23,6 +23,6 @@ class MvrGenericSettingController extends Controller
             $setting_title = preg_replace('/([a-z]+)([A-Z])/','$1 $2',$setting_title);
         }
 
-        return view('settings.mvr-generic',['model'=>$class,'setting_title'=>$setting_title]);
+        return view('settings.mvr-generic', ['model'=>$class,'setting_title'=>$setting_title]);
     }
 }

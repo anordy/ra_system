@@ -40,7 +40,7 @@ class CapturePassportModal extends Component
     protected function rules()
     {
         return [
-            'photo'=>'required|mimes:png,jpg'
+            'photo'=>'required|mimes:png,jpg,jpeg'
         ];
     }
 
@@ -50,7 +50,7 @@ class CapturePassportModal extends Component
         $this->validate();
         try{
             DB::beginTransaction();
-            $this->photo_path = $this->photo->storePubliclyAs('DL', "DL-Passport-{$this->application_id}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->photo->extension());
+            $this->photo_path = $this->photo->storeAs('dl_passport', "dl-passport-{$this->application_id}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->photo->extension());
             $dla =  DlLicenseApplication::query()->find($this->application_id);
             $dla->update([
                 'photo_path'=>$this->photo_path,

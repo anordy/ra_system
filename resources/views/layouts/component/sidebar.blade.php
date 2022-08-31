@@ -239,11 +239,11 @@
         @endcan
         @can('tax-claim')
             <li class="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'active' : '' }}">
-                <a href="#installment-menu" data-toggle="collapse"
+                <a href="#tax-claim" data-toggle="collapse"
                    aria-expanded="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'true' : 'false' }}"
                    class="dropdown-toggle">Tax Claims</a>
                 <ul class="collapse list-unstyled {{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'show' : '' }}"
-                    id="installment-menu">
+                    id="tax-claim">
                     @can('tax-claim-view')
                         <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
                             <a href="{{ route('claims.index') }}">Claims</a>
