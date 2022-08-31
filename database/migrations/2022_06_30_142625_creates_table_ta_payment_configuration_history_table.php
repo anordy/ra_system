@@ -15,7 +15,7 @@ class CreatesTableTaPaymentConfigurationHistoryTable extends Migration
     {
 	    Schema::create('ta_payment_configuration_history', function (Blueprint $table){
 		    $table->id();
-		    $table->enum('category', ['first fee', 'renewal fee']);
+		    $table->enum('category', ['Registration Fee', 'Renewal Fee']);
 			$table->bigInteger('tapc_id');
 		    $table->string('duration')->nullable();
 		    $table->integer('no_of_days')->nullable();
