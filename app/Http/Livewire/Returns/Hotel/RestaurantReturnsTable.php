@@ -25,7 +25,7 @@ class RestaurantReturnsTable extends DataTableComponent
     {
         $tax = TaxType::where('code', TaxType::RESTAURANT)->first();
 
-        return HotelReturn::where('tax_type_id', $tax->id)->orderBy('created_at', 'desc');
+        return HotelReturn::where('tax_type_id', $tax->id)->doesntHave('debt')->orderBy('created_at', 'desc');
     }
 
     public function columns(): array

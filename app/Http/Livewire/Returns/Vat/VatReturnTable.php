@@ -18,7 +18,7 @@ class VatReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return VatReturn::query()->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->with('business', 'business.taxpayer');
+        return VatReturn::query()->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->doesntHave('debt')->with('business', 'business.taxpayer');
     }
 
     public function columns(): array
