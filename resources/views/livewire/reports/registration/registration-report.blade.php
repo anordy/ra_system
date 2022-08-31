@@ -131,23 +131,39 @@
                 </div>
             @endif
 
-            {{-- @if ($reportType == 'Business-Reg-By-Turn-Over')
-                <div class="col-md-4 form-group">
-                    <label for="report_type" class="d-flex justify-content-between'">
-                        <span>
-                            Minimum (Amount in TZS)
-                        </span>
-                    </label>
-                    <input wire:model="turn_over_from_amount"
-                        class="form-control {{ $errors->has('turn_over_from_amount') ? 'is-invalid' : '' }}">
-                    @error('turn_over_from_amount')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+        </div>
+    </div>
 
-        <div class="col-md-4 form-group">
+    <!-- period -->
+    <div>
+        <div class="row pt-4">
+            <div class="col-12">
+                <div class="card-header"><b>Registered Period</b></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label class="d-flex justify-content-between'">
+                    <span>
+                        Year
+                    </span>
+                </label>
+                <select wire:model="year" class="form-control {{ $errors->has('year') ? 'is-invalid' : '' }}">
+                    <option value="all">All</option>
+                    @foreach ($optionYears as $key => $y)
+                        <option value={{ $y }}>
+                            {{ $y }}</option>
+                    @endforeach
+                </select>
+                @error('year')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            {{-- {{ dd($year) }} --}}
+            @if ($year != 'all')
+                <div class="col-md-4 form-group">
                     <label class="d-flex justify-content-between'">
                         <span>
                             Month
@@ -207,7 +223,7 @@
                 @endforeach
             </div>
         </div>
-        <!-- Physical Location -->
+         <!-- Physical Location -->
         <div>
             <div class="row pt-2">
                 <div class="col-12">
@@ -291,8 +307,7 @@
                 @endforeach
             </div>
         </div>
-
-        <!-- Business Consultant -->
+        
         <div>
             <div class="row pt-2">
                 <div class="col-12">
@@ -313,7 +328,7 @@
                 @endforeach
             </div>
         </div>
-
+       
     @endif
 
 
