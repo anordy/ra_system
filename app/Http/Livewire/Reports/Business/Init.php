@@ -217,7 +217,6 @@ class Init extends Component
     public function exportExcel()
     {
         $this->validate();
-        $this->validate();
         if (!$this->checkCheckboxes()) {
             return;
         };
@@ -261,34 +260,13 @@ class Init extends Component
     public function exportPdf()
     {
         $this->validate();
-        if ($this->reportType == 'Business-Reg-By-Nature') {
-            if ($this->hasBusinessByNature($this->isic1Id)) {
-                return redirect()->route('reports.registration.business-by-nature.pdf', encrypt($this->isic1Id));
-            } else {
-                return $this->alert('error', 'No data for this selection');
-            }
-        } elseif ($this->reportType == 'Business-Reg-By-TaxType') {
-            if ($this->hasBusinessByTaxType($this->tax_type_id)) {
-                return redirect()->route('reports.registration.business-by-tax-type.pdf', encrypt($this->tax_type_id));
-            } else {
-                return $this->alert('error', 'No data for this selection');
-            }
-        } elseif ($this->reportType == 'Business-Reg-By-Turn-Over') {
-            if ($this->turn_over_type == 'Last-12-Months') {
-                if ($this->hasBusinessByTurnOverLast($this->turn_over_from_amount, $this->turn_over_to_amount)) {
-                    return redirect()->route('reports.registration.business-by-turn-over-last.pdf', [$this->turn_over_from_amount, $this->turn_over_to_amount]);
-                } else {
-                    return $this->alert('error', 'No data for this selection');
-                }
-            }
-            if ($this->turn_over_type == 'Next-12-Months') {
-                if ($this->hasBusinessByTurnOverNext($this->turn_over_from_amount, $this->turn_over_to_amount)) {
-                    return redirect()->route('reports.registration.business-by-turn-over-next.pdf', [$this->turn_over_from_amount, $this->turn_over_to_amount]);
-                } else {
-                    return $this->alert('error', 'No data for this selection');
-                }
-            }
-        }
+        if (!$this->checkCheckboxes()) {
+            return;
+        };
+        $this->parameters=[];
+        $this->selectReportType();
+        $this->extraFilters();
+        return redirect()->route('reports.business.download.pdf',encrypt(json_encode($this->parameters)));
     }
 
     public function render()
