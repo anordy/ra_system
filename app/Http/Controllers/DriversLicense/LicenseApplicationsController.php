@@ -70,6 +70,7 @@ class LicenseApplicationsController extends Controller
                 session()->flash('error', 'Could not update application');
             }
         } else {
+            $fee = DlFee::query()->where(['type' => $application->type])->first();
             if (empty($fee)) {
                 session()->flash('error', "Fee for Drivers license application ({$application->type}) is not configured");
                 return redirect()->back();
