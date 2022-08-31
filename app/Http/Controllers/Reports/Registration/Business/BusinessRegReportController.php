@@ -12,6 +12,15 @@ class BusinessRegReportController extends Controller
 {
     use RegistrationReportTrait;
 
+    public function init(){
+        return view('reports.business.init');
+    }
+
+    public function preview($parameters)
+    {
+        return view('reports.business.preview',compact('parameters')); 
+    }
+
     public function byNature($isicId,$level){
         $isicId = decrypt($isicId);
         $level = decrypt($level);

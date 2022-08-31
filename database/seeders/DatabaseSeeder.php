@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\MvrClass;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -85,5 +84,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BloodGroupSeeder::class);
         $this->call(DLClassSeeder::class);
         $this->call(DLDurationSeeder::class);
+        $this->call(DLFeeSeeder::class);
     }
 }

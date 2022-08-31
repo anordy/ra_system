@@ -23,13 +23,14 @@ class EmTransactionsTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class' => 'table-bordered table-sm',
         ]);
     }
 
     public function builder(): Builder
     {
         return EmTransactionReturn::query()
+            ->doesntHave('debt')
             ->with('business', 'business.taxpayer', 'businessLocation')
             ->orderBy('em_transaction_returns.created_at', 'desc');
     }
@@ -41,8 +42,8 @@ class EmTransactionsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),

@@ -5,7 +5,7 @@
 @section('content')
 <div class="card">
     <div class="card-body mt-0">
-        @livewire('reports.registration.registration-report')
+        @livewire('reports.business.init')
     </div>
 </div>
 @endsection

@@ -146,5 +146,57 @@ class UserSeeder extends Seeder
             'is_first_login' => false,
         ]);
 
+        User::updateOrCreate([
+            'fname' => "Compliance",
+            'lname' => "Officer1",
+            'email' => "compliance.officer1@zrb.co.tz",
+            'phone' => '0765639173',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 5,
+            'status' => true,
+            'is_first_login' => false,
+        ]);
+
+        User::updateOrCreate([
+            'fname' => "Compliance",
+            'lname' => "officer2",
+            'email' => "compliance.officer2@ubx.co.tz",
+            'phone' => '0765639174',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 5,
+            'status' => true,
+            'is_first_login' => false,
+        ]);
+
+        User::updateOrCreate([
+            'fname' => "Registration",
+            'lname' => "officer1",
+            'email' => "registration.officer1@ubx.co.tz",
+            'phone' => '0765639175',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 3,
+            'status' => true,
+            'is_first_login' => false,
+        ]);
+
+        User::updateOrCreate([
+            'fname' => "Registration",
+            'lname' => "officer2",
+            'email' => "registration.officer2@ubx.co.tz",
+            'phone' => '0765639176',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 3,
+            'status' => true,
+            'is_first_login' => false,
+        ]);
+
     }
 }

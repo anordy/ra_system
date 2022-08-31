@@ -249,11 +249,11 @@
                             <a href="{{ route('claims.index') }}">Claims</a>
                         </li>
                     @endcan
-                    @can('tax-credit-view')
-                        <li class="{{ request()->is('tax-credits*') ? 'active' : '' }}">
-                            <a href="{{ route('credits.index') }}">Credits (CBF)</a>
-                        </li>
-                    @endcan
+{{--                    @can('tax-credit-view')--}}
+{{--                        <li class="{{ request()->is('tax-credits*') ? 'active' : '' }}">--}}
+{{--                            <a href="{{ route('credits.index') }}">Credits (CBF)</a>--}}
+{{--                        </li>--}}
+{{--                    @endcan--}}
                 </ul>
             </li>
         @endcan
@@ -629,7 +629,7 @@
                             <a href="{{ route('reports.returns') }}">Return Reports</a>
                         </li>
                         <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
+                            <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
                     @endcan
                 </ul>

@@ -20,7 +20,7 @@ class PortReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PortReturn::query();
+        return PortReturn::query()->doesntHave('debt');
     }
 
     public function columns(): array
@@ -32,7 +32,7 @@ class PortReturnTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch / Location', 'branch.name')
+            Column::make('Branch Location', 'branch.name')
             ->sortable()
             ->searchable(),
             Column::make('Tax Type', 'taxtype.name')
@@ -45,12 +45,12 @@ class PortReturnTable extends DataTableComponent
                 ->sortable(),
             Column::make('Infrastructure(ZNZ-ZNZ)', 'infrastructure_znz_znz')
                 ->sortable(),
-            Column::make('Total VAT', 'total_amount_due')
+            Column::make('Total VAT', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->searchable(),
-            Column::make('Payment Status', 'status')
+            Column::make('Payment Status','status')
                 ->hideif(true),
-            Column::make('Status', 'id')->view('returns.port.includes.status'),
+            // Column::make('Status', 'id')->view('returns.port.includes.status'),
             Column::make('Action', 'id')
                 ->view('returns.port.includes.actions'),
         ];

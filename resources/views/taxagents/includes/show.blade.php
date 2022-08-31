@@ -148,9 +148,10 @@
                 @endif
             </div>
 
+            @if($agent->verifier_id != null or $agent->approver_id != null)
             <div class="card">
                 <div class="card-header">Tax Consultant Approval Levels </div>
-                <div class="card">
+                <div class="card-body">
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -161,12 +162,16 @@
                         </tr>
                         </thead>
                         <tbody>
+
+                        @if($agent->verifier_id != null)
                         <tr>
                             <td>Verification</td>
                             <td>{{\App\Http\Controllers\TaxAgents\TaxAgentController::getUser($agent->verifier_id)}}</td>
                             <td>{{$agent->verifier_true_comment}}</td>
                             <td>{{date('D, Y-m-d', strtotime($agent->verified_at))}}</td>
                         </tr>
+                        @endif
+
                         @if($agent->approver_id != null)
                         <tr>
                             <td>Approval</td>
@@ -177,8 +182,10 @@
                         @endif
                         </tbody>
                     </table>
+
                 </div>
             </div>
+            @endif
         </div>
         <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
             <table class="table table-striped table-bordered ">

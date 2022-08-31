@@ -6,11 +6,11 @@ use Carbon\Carbon;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\MmTransferReturn;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 
 class MobileMoneyTransferTable extends DataTableComponent
 {
-    protected $model = MmTransferReturn::class;
 
     public function mount()
     {
@@ -22,6 +22,18 @@ class MobileMoneyTransferTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
+    }
+
+    public function builder(): Builder
+    {
+        return MmTransferReturn::query()
+            ->doesntHave('debt')
+            ->with('business', 'business.taxpayer', 'businessLocation')
+            ->orderBy('mm_transfer_returns.created_at', 'desc');
     }
 
     public function columns(): array
@@ -48,6 +60,10 @@ class MobileMoneyTransferTable extends DataTableComponent
                     return number_format($value, 2);
                 })
                 ->searchable(),
+            Column::make('Status', 'status')
+                ->view('returns.excise-duty.mobile-money-transfer.includes.status')
+                ->searchable()
+                ->sortable(),
             Column::make('Date', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {

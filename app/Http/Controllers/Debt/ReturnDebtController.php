@@ -23,17 +23,11 @@ class ReturnDebtController extends Controller
     public function index($taxType)
     {
         $taxType = decrypt($taxType);
-        if ($taxType == TaxType::AIRPORT_SERVICE_SAFETY_FEE || $taxType == TaxType::SEA_SERVICE_TRANSPORT_CHARGE) {
-            if (!Gate::allows("debt-management-{$taxType}-view")) {
-                abort(403);
-            }
-            return view('debts.returns.port', compact('taxType'));
-        } else {
-            if (!Gate::allows("debt-management-{$taxType}-view")) {
-                abort(403);
-            }
-            return view('debts.returns.index', compact('taxType'));
+
+        if (!Gate::allows("debt-management-{$taxType}-view")) {
+            abort(403);
         }
+        return view('debts.returns.index', compact('taxType'));
     }
 
     public function show($id, $taxType)
