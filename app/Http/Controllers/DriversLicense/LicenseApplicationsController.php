@@ -75,14 +75,23 @@ class LicenseApplicationsController extends Controller
             try {
                 DB::beginTransaction();
                 $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id]);
-                $bill = $application->generateBill();
-                $response = ZmCore::sendBill($bill->id);
-                DB::commit();
-                if ($response->status === ZmResponse::SUCCESS) {
-                    session()->flash('success', 'A control number request was sent successful.');
+                $zmBill = $application->generateBill();
+                
+                if (config('app.env') != 'local') {
+                    $response = ZmCore::sendBill($zmBill->id);
+                    if ($response->status === ZmResponse::SUCCESS) {
+                        session()->flash('success', 'A control number request was sent successful.');
+                    } else {
+                        session()->flash('error', 'Control number generation failed, try again later');
+                    }
                 } else {
-                    session()->flash('error', 'Control number generation failed, try again later');
+                    $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                    $zmBill->zan_status = 'pending';
+                    $zmBill->control_number = '90909919991909';
+                    $zmBill->save();
                 }
+
+                DB::commit(); 
             } catch (\Exception $e) {
                 DB::rollBack();
                 report($e);
