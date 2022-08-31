@@ -11,7 +11,7 @@ trait ReturnCardReport
 
     public function returnCardReportForPaidReturns($returnClass, $returnTableName, $penaltyTableName){
 
-        $penaltyData = $returnClass::where("{$returnTableName}.status", 'complete')->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+        $penaltyData = $returnClass::whereIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
             DB::raw("SUM(".$penaltyTableName.".late_filing) as totalLateFiling"),
             DB::raw("SUM(".$penaltyTableName.".late_payment) as totalLatePayment"),
@@ -35,7 +35,7 @@ trait ReturnCardReport
     public function returnCardReportForUnpaidReturns($returnClass, $returnTableName, $penaltyTableName){
 
         
-        $penaltyData = $returnClass::where("{$returnTableName}.status", '!=', 'complete')->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+        $penaltyData = $returnClass::whereNotIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
             DB::raw("SUM(".$penaltyTableName.".late_filing) as totalLateFiling"),
             DB::raw("SUM(".$penaltyTableName.".late_payment) as totalLatePayment"),
