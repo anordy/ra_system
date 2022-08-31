@@ -22,12 +22,15 @@ class BranchesTable extends DataTableComponent
     {
         if ($this->status == BranchStatus::PENDING) {
             return BusinessLocation::where('business_locations.status', BranchStatus::PENDING)
+                ->orderBy('business_locations.created_at', 'DESC')
                 ->with('business');
         } else if ($this->status == BranchStatus::APPROVED) {
             return BusinessLocation::where('business_locations.status', BranchStatus::APPROVED)
+                ->orderBy('business_locations.created_at', 'DESC')
                 ->with('business');
         } else if ($this->status == BranchStatus::REJECTED) {
             return BusinessLocation::where('business_locations.status', BranchStatus::REJECTED)
+                ->orderBy('business_locations.created_at', 'DESC')
                 ->with('business');
         }
     }
