@@ -591,9 +591,6 @@
                 <li class="{{ request()->is('cases/appeals') ? 'active' : '' }}">
                     <a href="{{ route('cases.appeals') }}">Appeals</a>
                 </li>
-                <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
-                    <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
-                </li>
             </ul>
         </li>
 
