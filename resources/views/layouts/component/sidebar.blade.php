@@ -249,11 +249,11 @@
                             <a href="{{ route('claims.index') }}">Claims</a>
                         </li>
                     @endcan
-                    @can('tax-credit-view')
-                        <li class="{{ request()->is('tax-credits*') ? 'active' : '' }}">
-                            <a href="{{ route('credits.index') }}">Credits (CBF)</a>
-                        </li>
-                    @endcan
+{{--                    @can('tax-credit-view')--}}
+{{--                        <li class="{{ request()->is('tax-credits*') ? 'active' : '' }}">--}}
+{{--                            <a href="{{ route('credits.index') }}">Credits (CBF)</a>--}}
+{{--                        </li>--}}
+{{--                    @endcan--}}
                 </ul>
             </li>
         @endcan
