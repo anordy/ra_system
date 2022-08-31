@@ -7,7 +7,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\Vat\VatReturn;
 
-class VatReturnTable extends DataTableComponent
+class VatDebtReturnTable extends DataTableComponent
 {
     protected $model = VatReturn::class;
 
@@ -18,7 +18,7 @@ class VatReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return VatReturn::query()->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->doesntHave('debt')->with('business', 'business.taxpayer');
+        return VatReturn::query()->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->whereHas('debt')->with('business', 'business.taxpayer');
     }
 
     public function columns(): array

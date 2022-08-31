@@ -9,7 +9,7 @@ use App\Models\Returns\HotelReturns\HotelReturn;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class RestaurantReturnsTable extends DataTableComponent
+class TourOperatorDebtReturnsTable extends DataTableComponent
 {
     public function configure(): void
     {
@@ -23,9 +23,9 @@ class RestaurantReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $tax = TaxType::where('code', TaxType::RESTAURANT)->first();
+        $tax = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
 
-        return HotelReturn::where('tax_type_id', $tax->id)->doesntHave('debt')->orderBy('created_at', 'desc');
+        return HotelReturn::where('tax_type_id', $tax->id)->whereHas('debt')->orderBy('created_at', 'desc');
     }
 
     public function columns(): array

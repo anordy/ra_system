@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Http\Livewire\Returns\EmTransaction;
+namespace App\Http\Livewire\Returns\BfoExciseDuty;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
-use App\Models\Returns\EmTransactionReturn;
+use Rappasoft\LaravelLivewireTables\Views\Column;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Gate;
 
-class EmTransactionsTable extends DataTableComponent
+class BfoExciseDutyDebtTable extends DataTableComponent
 {
+    protected $model = BfoReturn::class;
+
     public function mount()
     {
-        if (!Gate::allows('return-electronic-money-transaction-return-view')) {
+        if (!Gate::allows('return-bfo-excise-duty-return-view')) {
             abort(403);
         }
     }
@@ -21,27 +24,20 @@ class EmTransactionsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'class' => 'table-bordered table-sm',
-        ]);
     }
 
     public function builder(): Builder
     {
-        return EmTransactionReturn::query()
-            ->doesntHave('debt')
+        return BfoReturn::query()
             ->with('business', 'business.taxpayer', 'businessLocation')
-            ->orderBy('em_transaction_returns.created_at', 'desc');
+            ->whereHas('debt')
+            ->orderBy('bfo_returns.created_at', 'desc');
     }
 
     public function columns(): array
     {
         return [
             Column::make('Business Name', 'business.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Branch / Location', 'businessLocation.name')
                 ->sortable()
                 ->searchable(),
             Column::make('TIN', 'business.tin')
@@ -62,13 +58,17 @@ class EmTransactionsTable extends DataTableComponent
                     return number_format($value, 2);
                 })
                 ->searchable(),
+            Column::make('Status', 'status')
+                ->view('returns.excise-duty.bfo.includes.status')
+                ->searchable()
+                ->sortable(),
             Column::make('Date', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {
                     return Carbon::create($value)->format('M d, Y');
                 })
                 ->searchable(),
-            Column::make('Action', 'id')->view('returns.em-transaction.includes.actions'),
+            Column::make('Action', 'id')->view('returns.excise-duty.bfo.includes.actions'),
         ];
     }
 }

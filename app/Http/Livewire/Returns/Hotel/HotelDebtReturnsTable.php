@@ -9,8 +9,10 @@ use App\Models\Returns\HotelReturns\HotelReturn;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class RestaurantReturnsTable extends DataTableComponent
+class HotelDebtReturnsTable extends DataTableComponent
 {
+    public $status;
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -21,11 +23,20 @@ class RestaurantReturnsTable extends DataTableComponent
         $this->setAdditionalSelects(['financial_month_id']);
     }
 
+    public function mount($status)
+    {
+        $this->status = $status;
+    }
+
     public function builder(): Builder
     {
-        $tax = TaxType::where('code', TaxType::RESTAURANT)->first();
+        if ($this->status == 'all') {
+            $tax = TaxType::where('code', TaxType::HOTEL)->first();
 
-        return HotelReturn::where('tax_type_id', $tax->id)->doesntHave('debt')->orderBy('created_at', 'desc');
+            return HotelReturn::where('tax_type_id', $tax->id)->whereHas('debt')->orderBy('hotel_returns.created_at', 'desc');
+        } elseif ($this->status == 'submitted') {
+            return HotelReturn::where('hotel_returns.status', $this->status)->whereHas('debt')->orderBy('hotel_returns.created_at', 'desc');
+        }
     }
 
     public function columns(): array
@@ -52,6 +63,11 @@ class RestaurantReturnsTable extends DataTableComponent
                     return number_format($value, 2);
                 }),
             Column::make('Total VAT with Penalty', 'total_amount_due_with_penalties')
+                ->sortable()
+                ->format(function ($value, $row) {
+                    return number_format($value, 2);
+                }),
+            Column::make('Infrastructure Tax', 'hotel_infrastructure_tax')
                 ->sortable()
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
