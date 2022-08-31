@@ -32,8 +32,7 @@ class VerificationApprovalTable extends DataTableComponent
                 ->with('business', 'location', 'taxType', 'taxReturn')
                 ->whereHas('taxReturn', function (Builder $builder) {
                     $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
-                        ->orWhere('status', ReturnStatus::COMPLETE)
-                        ->orWhere('status', ReturnStatus::PAID_BY_DEBT);
+                        ->whereIn('status', [ReturnStatus::PAID_BY_DEBT, ReturnStatus::COMPLETE]);
                 })
                 ->where('tax_verifications.status', TaxVerificationStatus::PENDING)
                 ->orderByDesc('tax_verifications.id');
@@ -42,7 +41,7 @@ class VerificationApprovalTable extends DataTableComponent
                 ->with('business', 'location', 'taxType', 'taxReturn')
                 ->whereHas('taxReturn', function (Builder $builder) {
                     $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
-                        ->where('status', '!=', ReturnStatus::COMPLETE);
+                        ->whereNotIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
                 })
                 ->where('tax_verifications.status', TaxVerificationStatus::PENDING)
             ->orderByDesc('tax_verifications.id');
