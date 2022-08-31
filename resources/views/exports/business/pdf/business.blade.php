@@ -80,9 +80,21 @@
                 {{-- <th style="text-align:center; border: 1px solid black;">
                     <strong>Tax Type</strong>
                 </th> --}}
-
-                <th style="text-align:center; border: 1px solid black;">
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Business Category</strong>
+                </th>
+    
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Taxpayer</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Date of Commensing</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Region</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Physical Address</strong>
                 </th>
             </tr>
         </thead>
@@ -101,8 +113,20 @@
                     {{-- <td style="text-align:center; border: 1px solid black;">
                         {{ $record-> }}
                     </td> --}}
-                    <td style="text-align:center; border: 1px solid black;">
-                        {{ $record->taxpayer->full_name ?? '-' }}
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->business->category->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->taxpayer->fullname ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ date('M, d Y', strtotime($record->date_of_commencing)) ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->region->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->physical_address ?? '-' }}
                     </td>
                 </tr>
             @endforeach
