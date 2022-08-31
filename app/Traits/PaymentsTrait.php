@@ -298,35 +298,44 @@ trait PaymentsTrait {
     public function generateDebtControlNo($debt)
     {
         $taxTypes = TaxType::all();
-        $billItems[] = [
-            'billable_id' => $debt->id,
-            'billable_type' => get_class($debt),
-            'use_item_ref_on_pay' => 'N',
-            'amount' => $debt->principal_amount,
-            'currency' => $debt->currency,
-            'gfs_code' => $taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
-            'tax_type_id' => $taxTypes->where('code', TaxType::DEBTS)->first()->id
-        ];
 
-        $billItems[] = [
-            'billable_id' => $debt->id,
-            'billable_type' => get_class($debt),
-            'use_item_ref_on_pay' => 'N',
-            'amount' => $debt->penalty,
-            'currency' => $debt->currency,
-            'gfs_code' => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
-            'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->first()->id
-        ];
+        if ($debt->principal_amount > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->principal_amount,
+                'currency' => $debt->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::DEBTS)->first()->id
+            ];
+        }
 
-        $billItems[] = [
-            'billable_id' => $debt->id,
-            'billable_type' => get_class($debt),
-            'use_item_ref_on_pay' => 'N',
-            'amount' => $debt->interest,
-            'currency' => $debt->currency,
-            'gfs_code' => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
-            'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
-        ];
+        if ($debt->penalty > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->penalty,
+                'currency' => $debt->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->first()->id
+            ];
+        }
+
+
+        if ($debt->interest > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->interest,
+                'currency' => $debt->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
+            ];
+        }
+ 
 
         $taxpayer = $debt->business->taxpayer;
 
