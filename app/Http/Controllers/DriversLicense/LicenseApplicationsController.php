@@ -61,7 +61,7 @@ class LicenseApplicationsController extends Controller
                 $this->doTransition($transition, ['status' => '', 'comment' => $comment]);
                 if ($transition == 'application_submitted') {
                     event(new SendSms('license-application-submitted', $application->id));
-                    event(new SendMail('license-application-submitted', $application->id));
+                    //event(new SendMail('license-application-submitted', $application->id));
                 }
                 DB::commit();
             } catch (\Exception $e) {
