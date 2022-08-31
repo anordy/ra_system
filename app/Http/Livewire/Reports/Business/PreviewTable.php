@@ -51,6 +51,14 @@ class PreviewTable extends DataTableComponent
             Column::make('Zin No.', 'zin')
                 ->sortable()
                 ->searchable(),
+            Column::make('Business Category', 'business.business_category_id')
+            ->sortable()
+            ->searchable()
+            ->format(
+                function ($value, $row) {
+                    return $row->business->category->name;
+                }
+            ),
             Column::make('Taxpayer', 'business.taxpayer_id')
                 ->sortable()
                 ->searchable()
@@ -59,6 +67,26 @@ class PreviewTable extends DataTableComponent
                         return $row->business->taxpayer->fullname;
                     }
                 ),
+            Column::make('Date of Commensing', 'date_of_commencing')
+                ->sortable()
+                ->searchable()
+                ->format(
+                    function ($value, $row) {
+                        return date('d, M Y', strtotime($row->date_of_commencing));
+                    }
+            ),
+            Column::make('Region', 'region_id')
+                ->sortable()
+                ->searchable()
+                ->format(
+                    function ($value, $row) {
+                        return $row->region->name ?? '-';
+                    }
+            ),
+            Column::make('Physical Address', 'physical_address')
+                ->sortable()
+                ->searchable(),
+
             Column::make('Status', 'business.status')
                 ->view('reports.business.includes.status'),
             Column::make('Tax Region', 'taxRegion.name')
