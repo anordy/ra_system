@@ -49,11 +49,19 @@ class ApprovalProcessing extends Component
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $bill = $this->subject->generateBill();
-            $response = ZmCore::sendBill($bill->id);
-            if ($response->status === ZmResponse::SUCCESS) {
-                session()->flash('success', 'A control number request was sent successful.');
+            if (config('app.env') != 'local') {
+                $response = ZmCore::sendBill($bill->id);
+                if ($response->status === ZmResponse::SUCCESS) {
+                    session()->flash('success', 'A control number request was sent successful.');
+                } else {
+                    session()->flash('error', 'Control number generation failed, try again later');
+                }
             } else {
-                session()->flash('error', 'Control number generation failed, try again later');
+                $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $bill->zan_status = 'pending';
+                $bill->control_number = '90909919991909';
+                $bill->save();
+                $this->flash('success', 'A control number for this dispute has been generated successfull and approved');
             }
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
