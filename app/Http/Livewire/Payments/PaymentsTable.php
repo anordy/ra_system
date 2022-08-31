@@ -15,7 +15,7 @@ class PaymentsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return ZmBill::whereHas('bill_payments')->where('status', PaymentStatus::PAID);
+        return ZmBill::whereHas('bill_payments')->where('status', PaymentStatus::PAID)->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
