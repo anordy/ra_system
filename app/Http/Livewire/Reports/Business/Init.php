@@ -210,6 +210,11 @@ class Init extends Component
         $this->parameters=[];
         $this->selectReportType();
         $this->extraFilters();
+        $records = $this->getBusinessBuilder($this->parameters);
+        if($records->get()->count()<1){
+            $this->alert('error','No Data Found for selected options');
+            return;
+        }
         return redirect()->route('reports.business.preview',encrypt(json_encode($this->parameters)));
     }
 
@@ -224,37 +229,14 @@ class Init extends Component
         $this->selectReportType();
         $this->extraFilters();
 
+        $records = $this->getBusinessBuilder($this->parameters);
+        if($records->get()->count()<1){
+            $this->alert('error','No Data Found for selected options');
+            return;
+        }else{
+            $this->alert('success','Exporting Excel File');
+        }
         return Excel::download(new BusinessReportExport($this->getBusinessBuilder($this->parameters)), 'Business.xlsx');
-        // if ($this->reportType == 'Business-Reg-By-Nature') {
-        //     if ($this->hasBusinessByNature($this->isic1Id)) {
-        //         $this->alert('success', 'Exporting Excel File');
-        //         return Excel::download(new BusinessRegByNatureReportExport($this->isic1Id), 'Business By Nature.xlsx');
-        //     } else {
-        //         return $this->alert('error', 'No data for this selection');
-        //     }
-
-        // } elseif ($this->reportType == 'Business-Reg-By-TaxType') {
-        //     if ($this->hasBusinessByTaxType($this->tax_type_id)) {
-        //         return Excel::download(new BusinessRegByTaxTypeReportExport($this->tax_type_id), 'Business By TaxType.xlsx');
-        //     } else {
-        //         return $this->alert('error', 'No data for this selection');
-        //     }
-        // } elseif ($this->reportType == 'Business-Reg-By-Turn-Over') {
-        //     if ($this->turn_over_type == 'Last-12-Months') {
-        //         if ($this->hasBusinessByTurnOverLast($this->turn_over_from_amount, $this->turn_over_to_amount)) {
-        //             return Excel::download(new BusinessRegByLastTurnOverReportExport($this->turn_over_from_amount, $this->turn_over_to_amount), 'Business By TurnOver-Last 12 Months.xlsx');
-        //         } else {
-        //             return $this->alert('error', 'No data for this selection');
-        //         }
-        //     }
-        //     if ($this->turn_over_type == 'Next-12-Months') {
-        //         if ($this->hasBusinessByTurnOverNext($this->turn_over_from_amount, $this->turn_over_to_amount)) {
-        //             return Excel::download(new BusinessRegByNextTurnOverReportExport($this->turn_over_from_amount, $this->turn_over_to_amount), 'Business By TurnOver-Last 12 Months.xlsx');
-        //         } else {
-        //             return $this->alert('error', 'No data for this selection');
-        //         }
-        //     }
-        // }
     }
 
     public function exportPdf()
@@ -266,6 +248,14 @@ class Init extends Component
         $this->parameters=[];
         $this->selectReportType();
         $this->extraFilters();
+
+        $records = $this->getBusinessBuilder($this->parameters);
+        if($records->get()->count()<1){
+            $this->alert('error','No Data Found for selected options');
+            return;
+        }else{
+            $this->alert('success','Exporting Pdf File');
+        }
         return redirect()->route('reports.business.download.pdf',encrypt(json_encode($this->parameters)));
     }
 
