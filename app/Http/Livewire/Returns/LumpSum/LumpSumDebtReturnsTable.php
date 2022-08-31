@@ -11,7 +11,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class LumpSumReturnsTable extends DataTableComponent
+class LumpSumDebtReturnsTable extends DataTableComponent
 {
     use LivewireAlert;
 
@@ -28,7 +28,7 @@ class LumpSumReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         return LumpSumReturn::query()
-        ->doesntHave('debt')
+        ->whereHas('debt')
         ->orderBy('lump_sum_returns.created_at', 'desc');
     }
 

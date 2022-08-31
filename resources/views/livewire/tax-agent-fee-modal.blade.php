@@ -13,8 +13,8 @@
                             <label class="control-label">Category</label>
                             <select wire:model.lazy="category" name="category" id="category" class="form-control">
                                 <option  value="">select category</option>
-                                <option value="registration fee">Registration fee</option>
-                                <option value="renewal fee">renewal fee</option>
+                                <option value="Registration Fee">Registration Fee</option>
+                                <option value="Renewal Fee">Renewal Fee</option>
 
                             </select>
                             @error('category')
@@ -22,7 +22,7 @@
                             @enderror
                         </div>
 
-                        @if($category == 'renewal fee')
+                        @if($category == 'Renewal Fee')
                         <div class="form-group col-lg-6">
                             <label class="control-label">Duration</label>
                             <select wire:model="duration" class="form-control">
