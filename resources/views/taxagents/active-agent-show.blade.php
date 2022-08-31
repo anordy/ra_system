@@ -15,8 +15,6 @@
         </div>
 
         <div class="card-body">
-            @include('taxagents.includes.show')
-
             <div class="d-flex justify-content-end p-2">
                 @if ($agent->status == \App\Models\TaxAgentStatus::APPROVED && $agent->bill->status == \App\Models\PaymentStatus::PAID)
                     <div class="d-flex justify-content-end">
@@ -30,6 +28,7 @@
                     </div>
                 @endif
             </div>
+            @include('taxagents.includes.show')
 
         </div>
     </div>

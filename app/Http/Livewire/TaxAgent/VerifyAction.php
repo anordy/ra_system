@@ -150,10 +150,11 @@ class VerifyAction extends Component
                     $agent->billing_status = BillingStatus::CN_GENERATED;
                     $agent->verifier_id = Auth::id();
                     $agent->verifier_true_comment = $comment;
+                    $agent->verified_at = now();
                     $agent->save();
                 } else {
                     $agent->billing_status = BillingStatus::CN_GENERATION_FAILED;
-                    $agent->status = TaxAgentStatus::DRAFTING;
+                    $agent->status = TaxAgentStatus::PENDING;
                     $agent->save();
                 }
 
@@ -161,6 +162,9 @@ class VerifyAction extends Component
                 // We are local
                 $agent->status = TaxAgentStatus::VERIFIED;
                 $agent->billing_status = BillingStatus::CN_GENERATED;
+                $agent->verifier_id = Auth::id();
+                $agent->verifier_true_comment = $comment;
+                $agent->verified_at = now();
                 $agent->save();
 
                 // Simulate successful control no generation
@@ -201,6 +205,7 @@ class VerifyAction extends Component
             $agent->status = TaxAgentStatus::REJECTED;
             $agent->verifier_reject_comment = $comment;
             $agent->verifier_id = Auth::id();
+            $agent->first_rejected_at = now();
             $agent->save();
 
             $taxpayer = Taxpayer::query()->find($agent->taxpayer_id);
