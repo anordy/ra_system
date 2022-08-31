@@ -22,6 +22,11 @@ class Debt extends Model
     
     use HasFactory, WorkflowTrait;
 
+    protected $casts = [
+        'curr_due_date' => 'datetime',
+        'last_due_date' => 'datetime',
+    ];
+
     protected $guarded = [];
     
     public function business() {

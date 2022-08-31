@@ -85,4 +85,15 @@ class BusinessRegReportController extends Controller
         return $pdf->download('business by post-turn-over.pdf');
     }
 
+    public function exportBusinessesReportPdf($data)
+    {
+        $parameters = json_decode(decrypt($data),true);
+       $records = $this->getBusinessBuilder($parameters)->get();
+
+        $pdf = PDF::loadView('exports.business.pdf.business',compact('records'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        return $pdf->download('Business.pdf');
+    }
+
 }

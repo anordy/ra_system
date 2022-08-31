@@ -362,7 +362,7 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('/business', [BusinessRegReportController::class,'init'])->name('business.init');
         Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
-        Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportRegistrationsReportPdf'])->name('business.download.pdf');
+        Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
