@@ -6,7 +6,9 @@
     <div class="card-body pb-0">
         <nav class="nav nav-tabs mt-0 border-top-0">
             <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
-            <a href="#tab2" class="nav-item nav-link font-weight-bold">Waiver Details</a>
+            @if ($debt->debtWaiver)
+                <a href="#tab2" class="nav-item nav-link font-weight-bold">Waiver Details</a>
+            @endif
             <a href="#tab3" class="nav-item nav-link font-weight-bold">Debt Penalties</a>
 
         </nav>
@@ -160,7 +162,7 @@
                     <div>
                         <h6 class="text-uppercase mt-2 ml-2">Debt Penalties</h6>
                         <hr>
-                        <livewire:debts.debt-penalties :penalties="$debt->penalties" />
+                        <livewire:debt.debt-penalties :penalties="$debt->penalties" />
                     </div>
                 @endif
             </div>

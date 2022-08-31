@@ -2,20 +2,9 @@
 
 namespace App\Http\Livewire\Debt;
 
-use App\Models\Business;
 use App\Models\Debts\Debt;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\MmTransferReturn;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\TaxType;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -77,6 +66,7 @@ class ReturnDebtsTable extends DataTableComponent
                     return number_format($row->total_amount, 2);
                 }),
             Column::make('Status', 'status')->view('debts.includes.status'),
+            Column::make('Actions', 'id')->view('debts.includes.actions'),
         ];
     }
 }
