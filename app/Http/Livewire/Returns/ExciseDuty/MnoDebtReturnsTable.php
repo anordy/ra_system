@@ -8,7 +8,7 @@ use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class MnoReturnsTable extends DataTableComponent
+class MnoDebtReturnsTable extends DataTableComponent
 {
     public function configure(): void
     {
@@ -22,7 +22,7 @@ class MnoReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         return MnoReturn::query()
-        ->doesntHave('debt')
+        ->whereHas('debt')
         ->orderBy('mno_returns.created_at', 'desc');
     }
 

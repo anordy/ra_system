@@ -7,21 +7,21 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 
-class StampDutyReturnsTable extends DataTableComponent
+class StampDutyDebtReturnsTable extends DataTableComponent
 {
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class' => 'table-bordered table-sm',
         ]);
     }
 
     public function builder(): Builder
     {
         return StampDutyReturn::select('financial_month_id')
-            ->doesntHave('debt')
+            ->whereHas('debt')
             ->with('business')
             ->orderBy('stamp_duty_returns.created_at', 'DESC');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\DB;
 
 
@@ -19,7 +20,7 @@ trait ReturnCardReport
         ->groupBy('return_id')
         ->get();
 
-        $returnQuery = $returnClass::where('status', 'complete');
+        $returnQuery = $returnClass::whereIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
 
         return  [
             'totalTaxAmount' => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
@@ -43,7 +44,7 @@ trait ReturnCardReport
         ->groupBy('return_id')
         ->get();
 
-        $returnQuery = $returnClass::where('status', '!=', 'complete');
+        $returnQuery = $returnClass::whereNotIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
 
         return  [
             'totalTaxAmount' => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
