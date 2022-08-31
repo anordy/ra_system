@@ -8,6 +8,7 @@ use App\Models\TaxAgent;
 use App\Models\TaxAgentAcademicQualification;
 use App\Models\TaxAgentProfessionals;
 use App\Models\TaxAgentTrainingExperience;
+use App\Models\User;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
@@ -103,6 +104,13 @@ class TaxAgentController extends Controller
 
 		return view('taxagents.request-agent-show', compact('agent', 'id'));
 	}
+
+	public function getUser($id)
+    {
+        $user = User::query()->select('fname', 'lname')->where('id',$id)->first();
+        $user = $user->fname.' '.$user->lname;
+        return $user;
+    }
 
 	public function showVerificationAgentRequest($id)
 	{

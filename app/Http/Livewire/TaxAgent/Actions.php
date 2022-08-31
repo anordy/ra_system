@@ -82,6 +82,7 @@ class Actions extends Component
 			$agent->app_first_date = Carbon::now();
 			$agent->app_expire_date = Carbon::now()->addYear()->toDateTimeString();
 			$agent->approver_id = Auth::id();
+			$agent->approved_at = now();
 			$agent->save();
 
 			$taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);
@@ -114,6 +115,7 @@ class Actions extends Component
 			$agent->status = TaxAgentStatus::REJECTED;
             $agent->app_reject_comment = $value['value'];
             $agent->approver_id = Auth::id();
+            $agent->final_rejected_at = now();
 			$agent->save();
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
