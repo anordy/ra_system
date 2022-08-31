@@ -48,7 +48,6 @@ class ZanMalipoController extends Controller
         LumpSumReturn::class,
         TaxAssessment::class,
         Dispute::class,
-//        TaxAgent::class,
         PortReturn::class,
         RenewTaxAgentRequest::class
     ];
