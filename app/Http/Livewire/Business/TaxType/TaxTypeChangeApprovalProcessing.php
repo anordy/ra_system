@@ -103,8 +103,10 @@ class TaxTypeChangeApprovalProcessing extends Component
                 ];
 
                 DB::commit();
+                
                 event(new SendMail('change-tax-type-approval', $notification_payload));
                 event(new SendSms('change-tax-type-approval', $notification_payload));
+
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());

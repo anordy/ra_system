@@ -45,7 +45,7 @@ class RegistrationChangeRequest extends Component
             'registration_type_id' => 'required',
             'plate_number_size_id' => 'required',
             'agent_id' => 'required',
-            'custom_plate_number' => 'unique:mvr_motor_vehicle_registration,plate_number',
+            'custom_plate_number' => 'nullable|unique:mvr_motor_vehicle_registration,plate_number',
         ];
     }
 

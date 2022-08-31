@@ -65,7 +65,7 @@ class UploadInspectionReport extends Component
         DB::beginTransaction();
         try{
             $data = $this->prepareMotorVehicleData();
-            $taxpayer = BusinessLocation::query()->where(['zin'=>$data['owner']['z_number']])->first()->taxpayer ?? null;
+            $taxpayer = Taxpayer::query()->where(['reference_no'=>$data['owner']['z_number']])->first();
             if (empty($taxpayer)){
                 $this->alert('error', "Could not find owner/taxpayer with Z number {$data['owner']['z_number']}");
                 Storage::delete($this->inspection_report_path);
@@ -73,7 +73,7 @@ class UploadInspectionReport extends Component
                 return;
             }
 
-            $taxpayer_agent = BusinessLocation::query()->where(['zin'=>$data['agent']['z_number']])->first()->taxpayer ?? null;
+            $taxpayer_agent = Taxpayer::query()->where(['reference_no'=>$data['agent']['z_number']])->first();
             if (empty($taxpayer_agent->transport_agent)){
                 $this->alert('error', "Could not find agent/taxpayer with Z number {$data['agent']['z_number']}");
                 Storage::delete($this->inspection_report_path);
@@ -88,8 +88,9 @@ class UploadInspectionReport extends Component
                 'mvr_ownership_status_id'=>$this->getForeignKey(MvrOwnershipStatus::STATUS_CURRENT_OWNER,MvrOwnershipStatus::class,true),
             ]);
             DB::commit();
-            $this->flash('success', 'Inspection Report Uploaded', [], redirect()->route('mvr.show',encrypt($id)));
-        }catch(Exception $e){
+            $this->alert('success', 'Inspection Report Uploaded');
+            return redirect()->route('mvr.show', encrypt($id));
+        } catch (Exception $e) {
             Log::error($e);
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);
             DB::rollBack();
@@ -120,7 +121,7 @@ class UploadInspectionReport extends Component
             $yy = explode('-',$last_mv->certificate_number)[2] ?? null;
             $n = explode('-',$last_mv->certificate_number)[1] ?? null;
             if ($yy == date('y')){
-                $cert_number = 'ZBSIQC-'.str_pad($n,4,'0',STR_PAD_LEFT).'-'.date('y');
+                $cert_number = 'ZBSIQC-'.str_pad($n+1,4,'0',STR_PAD_LEFT).'-'.date('y');
             }
         }
 
@@ -141,7 +142,7 @@ class UploadInspectionReport extends Component
             'mvr_vehicle_status_id'=>$this->getForeignKey('Imported',MvrVehicleStatus::class,true),
             'imported_from_country_id'=>$this->getForeignKey($motor_vehicle['imported_from'],Country::class),
             'mvr_color_id'=>$this->getForeignKey($motor_vehicle['color'],MvrColor::class),
-            'mvr_class_id'=>$this->getForeignKey($motor_vehicle['class'],MvrClass::class),
+            'mvr_class_id'=>MvrClass::query()->where(['code'=>$motor_vehicle['class']])->first()->id,
             'mvr_model_id'=>$this->getForeignKey($motor_vehicle['model'],MvrModel::class),
             'mvr_fuel_type_id'=>$this->getForeignKey($motor_vehicle['fuel_type'],MvrFuelType::class),
             'mvr_transmission_id'=>$this->getForeignKey($motor_vehicle['transmission_type'],MvrTransmissionType::class),

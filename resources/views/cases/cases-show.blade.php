@@ -76,15 +76,17 @@
 
                     @if(empty($case->case_outcome))
                     <div class="modal-footer">
-                        <button class="btn btn-sm btn-primary mt-2"
-                                onclick="Livewire.emit('showModal', 'cases.add-proceeding-model',{{$case->id}})"><i class="fa fa-plus"></i>
-                            Add Proceeding
-                        </button>
+                        @if($case->assigned_officer_id == auth()->user()->id)
+                            <button class="btn btn-sm btn-primary mt-2"
+                                    onclick="Livewire.emit('showModal', 'cases.add-proceeding-model',{{$case->id}})"><i class="fa fa-plus"></i>
+                                Add Proceeding
+                            </button>
 
-                        <button class="btn btn-sm btn-primary mt-2"
-                                onclick="Livewire.emit('showModal', 'cases.close-case-model',{{$case->id}})"><i class="fa fa-cancel"></i>
-                            Close Case
-                        </button>
+                            <button class="btn btn-sm btn-primary mt-2"
+                                    onclick="Livewire.emit('showModal', 'cases.close-case-model',{{$case->id}})"><i class="fa fa-cancel"></i>
+                                Close Case
+                            </button>
+                        @endif
                     </div>
                     @endif
                 </div>

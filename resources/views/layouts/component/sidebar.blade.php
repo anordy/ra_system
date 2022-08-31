@@ -238,11 +238,24 @@
             </li>
         @endcan
         @can('tax-claim')
-            @can('tax-claim-view')
-                <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
-                    <a href="{{ route('claims.index') }}">Tax Claims</a>
-                </li>
-            @endcan
+            <li class="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'active' : '' }}">
+                <a href="#tax-claim" data-toggle="collapse"
+                   aria-expanded="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'true' : 'false' }}"
+                   class="dropdown-toggle">Tax Claims</a>
+                <ul class="collapse list-unstyled {{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'show' : '' }}"
+                    id="tax-claim">
+                    @can('tax-claim-view')
+                        <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
+                            <a href="{{ route('claims.index') }}">Claims</a>
+                        </li>
+                    @endcan
+{{--                    @can('tax-credit-view')--}}
+{{--                        <li class="{{ request()->is('tax-credits*') ? 'active' : '' }}">--}}
+{{--                            <a href="{{ route('credits.index') }}">Credits (CBF)</a>--}}
+{{--                        </li>--}}
+{{--                    @endcan--}}
+                </ul>
+            </li>
         @endcan
         @can('payment-extension')
             <li class="{{ request()->is('extensions-e-filling*') ? 'active' : '' }}">
@@ -835,6 +848,18 @@
                     </li>
                         <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index','DlFee') }}">Driver's License Fees</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/CaseStage') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','CaseStage') }}">Case Stages</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/CaseOutcome') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','CaseOutcome') }}">Case Outcomes</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/CaseDecision') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','CaseDecision') }}">Case Decision</a>
+                        </li>
+                        <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index','CourtLevel') }}">Court Levels</a>
                         </li>
                 </ul>
             </li>

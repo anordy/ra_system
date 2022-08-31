@@ -15,6 +15,7 @@ use App\Notifications\DatabaseNotification;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -44,7 +45,7 @@ class VerifyAction extends Component
             'cancelButtonText' => 'Cancel',
             'confirmButtonColor' => '#3085d6',
             'cancelButtonColor' => '#d33',
-            'showLoaderOnConfirm'=> true,
+            'showLoaderOnConfirm' => true,
             'timer' => null,
             'input' => 'textarea',
             'data' => [
@@ -65,7 +66,7 @@ class VerifyAction extends Component
             'cancelButtonText' => 'Cancel',
             'confirmButtonColor' => '#3085d6',
             'cancelButtonColor' => '#d33',
-            'showLoaderOnConfirm'=> true,
+            'showLoaderOnConfirm' => true,
             'timer' => null,
             'input' => 'textarea',
             'data' => [
@@ -80,18 +81,16 @@ class VerifyAction extends Component
         try {
             $comment = $value['value'];
             $data = (object)$value['data'];
-            $agent = TaxAgent::query()->findOrFail($data->id);
-            $taxpayer = Taxpayer::query()->findOrFail($agent->taxpayer_id);
+            $agent = TaxAgent::findOrFail($data->id);
+            $taxpayer = Taxpayer::findOrFail($agent->taxpayer_id);
             $fee = TaPaymentConfiguration::query()->where('category', 'registration fee')->first();
             $amount = $fee->amount;
             $used_currency = $fee->currency;
-            if ($used_currency != 'TZS')
-            {
+            if ($used_currency != 'TZS') {
                 $rate = ExchangeRate::query()->where('currency', $used_currency)
                     ->first(); //letter will be fetched from BOT API
                 $rate = $rate->mean;
-            }
-            else{
+            } else {
                 $rate = 1;
             }
             $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
@@ -148,26 +147,24 @@ class VerifyAction extends Component
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
                     $agent->status = TaxAgentStatus::VERIFIED;
-                    $agent->billing_status = BillingStatus::CN_GENERATING;
+                    $agent->billing_status = BillingStatus::CN_GENERATED;
+                    $agent->verifier_id = Auth::id();
+                    $agent->verifier_true_comment = $comment;
+                    $agent->verified_at = now();
                     $agent->save();
-                    $taxpayer->notify(new DatabaseNotification(
-                        $subject = 'TAX CONSULTANT VERIFICATION',
-                        $message = 'Your application has been verified',
-                        $href = 'taxagent.apply',
-                        $hrefText = 'view'
-                    ));
-                    $this->alert('success', 'Request verified successfully.');
                 } else {
-                    session()->flash('error', 'Control number generation failed, try again later');
                     $agent->billing_status = BillingStatus::CN_GENERATION_FAILED;
+                    $agent->status = TaxAgentStatus::PENDING;
+                    $agent->save();
                 }
-
-                $agent->save();
 
             } else {
                 // We are local
                 $agent->status = TaxAgentStatus::VERIFIED;
                 $agent->billing_status = BillingStatus::CN_GENERATED;
+                $agent->verifier_id = Auth::id();
+                $agent->verifier_true_comment = $comment;
+                $agent->verified_at = now();
                 $agent->save();
 
                 // Simulate successful control no generation
@@ -175,15 +172,15 @@ class VerifyAction extends Component
                 $zmBill->zan_status = 'pending';
                 $zmBill->control_number = '90909919991909';
                 $zmBill->save();
-
-                $taxpayer->notify(new DatabaseNotification(
-                    $subject = 'TAX CONSULTANT VERIFICATION',
-                    $message = 'Your application has been verified',
-                    $href = 'taxagent.apply',
-                    $hrefText = 'view'
-                ));
             }
-            
+
+            $taxpayer->notify(new DatabaseNotification(
+                $subject = 'TAX CONSULTANT VERIFICATION',
+                $message = 'Your application has been verified',
+                $href = 'taxagent.apply',
+                $hrefText = 'view'
+            ));
+
             DB::commit();
             $this->flash('success', 'Request verified successfully');
             return redirect()->route('taxagents.requests');
@@ -204,10 +201,11 @@ class VerifyAction extends Component
         try {
             $comment = $value['value'];
             $data = (object)$value['data'];
-            $agent = TaxAgent::find($data->id);
-            $agent->status = BillingStatus::REJECTED;
+            $agent = TaxAgent::query()->find($data->id);
+            $agent->status = TaxAgentStatus::REJECTED;
             $agent->verifier_reject_comment = $comment;
-            $agent->verifier_id	 = Auth::id();
+            $agent->verifier_id = Auth::id();
+            $agent->first_rejected_at = now();
             $agent->save();
 
             $taxpayer = Taxpayer::query()->find($agent->taxpayer_id);

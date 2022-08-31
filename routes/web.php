@@ -32,6 +32,7 @@ use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\Cases\CasesController;
 use App\Http\Controllers\Claims\ClaimFilesController;
 use App\Http\Controllers\Claims\ClaimsController;
+use App\Http\Controllers\Claims\CreditsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
@@ -152,13 +153,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic3', ISIC3Controller::class);
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
-//        Route::resource('/assesment-files', AssesmentFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model','DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
+                ->where('model','CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
         });
     });
 
@@ -173,7 +173,6 @@ Route::middleware(['auth'])->group(function () {
         Route::name('returns.')->prefix('returns')->group(function () {
             Route::name('returns.')->prefix('returns')->group(function () {
                 Route::get('/', [ReturnsController::class, 'index'])->name('index');
-//                Route::get('hotel', [HotelLevyReturnController::class, 'hotel'])->name('hotel');
             });
         });
     });
@@ -373,6 +372,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/files/{file}', [ClaimFilesController::class, 'show'])->name('files.show');
     });
 
+    Route::name('credits.')->prefix('/tax-credits')->group(function () {
+        Route::get('/', [CreditsController::class, 'index'])->name('index');
+        Route::get('/{credit}', [CreditsController::class, 'show'])->name('show');
+    });
+
     Route::name('extension.')->prefix('/extensions-e-filling')->group(function () {
         Route::get('/', [ExtensionController::class, 'index'])->name('index');
         Route::get('show/{debtId}', [ExtensionController::class, 'show'])->name('show');
@@ -505,6 +509,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/applications/printed/{id}', [LicenseApplicationsController::class, 'printed'])->name('applications.printed');
         Route::get('/applications/{id}', [LicenseApplicationsController::class, 'show'])->name('applications.show');
         Route::get('/applications/sp/{id}', [LicenseApplicationsController::class, 'simulatePayment'])->name('applications.sp');
+        Route::get('/applications/license/{id}', [LicenseApplicationsController::class, 'license'])->name('license.print');
+        Route::get('/applications/file/{location}', [LicenseApplicationsController::class, 'getFile'])->name('license.file');
     });
 
     Route::prefix('rio')->as('rio.')->group(function () {

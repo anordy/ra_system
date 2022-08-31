@@ -40,7 +40,7 @@ class ApproveRegistration extends Component
         return [
             'registration_type_id' => 'required',
             'plate_number_size_id' => 'required',
-            'plate_number' => 'unique:mvr_motor_vehicle_registration,plate_number',
+            'plate_number' => 'nullable|unique:mvr_motor_vehicle_registration,plate_number',
         ];
     }
 
@@ -145,6 +145,12 @@ class ApproveRegistration extends Component
                 } else {
                     session()->flash('error', 'Control number generation failed, try again later');
                 }
+            }else {
+                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $zmBill->zan_status = 'pending';
+                $zmBill->control_number = '90909919991909';
+                $zmBill->save();
+                $this->flash('success', 'A control number for this verification has been generated successflu');
             }
             DB::commit();
             return redirect()->to(route('mvr.show', encrypt($this->motor_vehicle_id)));

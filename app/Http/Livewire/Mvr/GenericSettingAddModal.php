@@ -8,6 +8,7 @@ use App\Models\DlFee;
 use App\Models\DlLicenseClass;
 use App\Models\DlLicenseDuration;
 use App\Models\GenericSettingModel;
+use App\Models\MvrClass;
 use App\Models\MvrColor;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
@@ -32,7 +33,8 @@ class GenericSettingAddModal extends Component
         MvrModel::class=>[['title'=>'Motor vehicle Make','class'=>MvrMake::class,'field'=>'mvr_make_id']],
         MvrTransferFee::class=>[['title'=>'Transfer Category','class'=>MvrTransferCategory::class,'field'=>'mvr_transfer_category_id']],
         MvrFee::class=>[
-            ['title'=>'Motor vehicle Registration Status','class'=>MvrRegistrationType::class,'field'=>'mvr_registration_type_id'],
+            ['title'=>'Motor vehicle Registration Type','class'=>MvrRegistrationType::class,'field'=>'mvr_registration_type_id'],
+            ['title'=>'Motor vehicle Class','class'=>MvrClass::class,'field'=>'mvr_class_id'],
             ['title'=>'Fee Type/Category','class'=>MvrFeeType::class,'field'=>'mvr_fee_type_id']]
     ];
 
@@ -91,6 +93,7 @@ class GenericSettingAddModal extends Component
             $this->setting_title = preg_replace('/^(.*\\\\(Mvr|Dl))/','',$model);
             $this->setting_title = preg_replace('/^(Mvr|Dl)/','',$this->setting_title);
             $this->setting_title = preg_replace('/([a-z]+)([A-Z])/','$1 $2',$this->setting_title);
+            $this->setting_title = preg_replace('/App\\\\Models\\\\/','',$this->setting_title);
         }
 
         $this->prepareRelations();

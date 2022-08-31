@@ -139,7 +139,7 @@
                                     </div>
                                 @else
                                     <div style="border: 1px solid silver; width: 100%; border-radius: 3px; margin-bottom: 3px; padding: 3px">
-                                        <img src="{{url('storage/'.($application->photo_path ?? $application->drivers_license_owner->photo_path))}}" style="width: 100%;">
+                                        <img src="{{ route('drivers-license.license.file', encrypt($application->photo_path ?? $application->drivers_license_owner->photo_path)) }}" style="width: 100%;">
                                     </div>
                                 @endif
                                 @if($application->application_status->name === \App\Models\DlApplicationStatus::STATUS_TAKING_PICTURE)
@@ -241,6 +241,15 @@
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">Expire Date</span>
                                         <p class="my-1">{{ $application->drivers_license->expiry_date->format('Y-m-d') }}</p>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Print Drivers License</span>
+                                        <p class="my-1">
+                                            <a href="{{route('drivers-license.license.print',encrypt($application->drivers_license->id))}}">
+                                                <button class="btn btn-sm btn-success">Print</button>
+                                            </a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

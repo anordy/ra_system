@@ -27,6 +27,14 @@
         <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
             <div class="row pt-3">
                 <div class="col-md-3 mb-2">
+                    <span class="font-weight-bold text-uppercase">Tax Payer Name</span>
+                    <p class="my-1">{{ $agent->taxpayer->first_name}} {{$agent->taxpayer->middle_name}} {{$agent->taxpayer->last_name}}</p>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <span class="font-weight-bold text-uppercase">Tax Payer Reference No</span>
+                    <p class="my-1">{{ $agent->taxpayer->reference_no }}</p>
+                </div>
+                <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">TIN No</span>
                     <p class="my-1">{{ $agent->tin_no }}</p>
                 </div>
@@ -47,11 +55,11 @@
                     <p class="my-1">{{ $agent->region->name }}</p>
                 </div>
                 <div class="col-md-3 mb-2">
-                    <span class="font-weight-bold text-uppercase">Reference No</span>
+                    <span class="font-weight-bold text-uppercase">Consultation Reference No</span>
                     @if($agent->status == \App\Models\TaxAgentStatus::APPROVED)
                         <p class="my-1">{{ $agent->reference_no }}</p>
                     @else
-                        <p>Null</p>
+                        <p class="badge badge-danger px-2"style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i class="bi bi-clock-history mr-1"></i>Pending</p>
                     @endif
                 </div>
 
@@ -68,22 +76,22 @@
                 <div class="col-md-3 mb-2">
                     <span class="font-weight-bold text-uppercase">Application Status</span>
                     @if($agent->status == \App\Models\TaxAgentStatus::PENDING)
-                        <span class="badge badge-danger py-1 px-2"
+                        <p class="badge badge-danger py-1 px-2"
                               style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
-                                    class="bi bi-clock-history mr-1"></i>Pending</span>
+                                    class="bi bi-clock-history mr-1"></i>Pending</p>
 
                     @elseif($agent->status == \App\Models\TaxAgentStatus::APPROVED)
-                        <span class="badge badge-success py-1 px-2"
+                        <p class="badge badge-success py-1 px-2"
                               style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
-                                    class="bi bi-check-circle-fill mr-1"></i>Approved</span>
+                                    class="bi bi-check-circle-fill mr-1"></i>Approved</p>
                     @elseif($agent->status == \App\Models\TaxAgentStatus::VERIFIED)
-                        <span class="badge badge-success py-1 px-2"
+                        <p class="badge badge-success py-1 px-2"
                               style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
-                                    class="bi bi-check-circle-fill mr-1"></i>Verified</span>
+                                    class="bi bi-check-circle-fill mr-1"></i>Verified</p>
                     @else
-                        <span class="badge badge-danger py-1 px-2"
+                        <p class="badge badge-danger py-1 px-2"
                               style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
-                                    class="bi bi-x-circle-fill mr-1"></i>Rejected</span>
+                                    class="bi bi-x-circle-fill mr-1"></i>Rejected</p>
                     @endif
 
                 </div>
@@ -139,6 +147,45 @@
                 </div>
                 @endif
             </div>
+
+            @if($agent->verifier_id != null or $agent->approver_id != null)
+            <div class="card">
+                <div class="card-header">Tax Consultant Approval Levels </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Verified By</th>
+                            <th>Comment</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @if($agent->verifier_id != null)
+                        <tr>
+                            <td>Verification</td>
+                            <td>{{\App\Http\Controllers\TaxAgents\TaxAgentController::getUser($agent->verifier_id)}}</td>
+                            <td>{{$agent->verifier_true_comment}}</td>
+                            <td>{{date('D, Y-m-d', strtotime($agent->verified_at))}}</td>
+                        </tr>
+                        @endif
+
+                        @if($agent->approver_id != null)
+                        <tr>
+                            <td>Approval</td>
+                            <td>{{\App\Http\Controllers\TaxAgents\TaxAgentController::getUser($agent->approver_id)}}</td>
+                            <td>{{$agent->app_true_comment}}</td>
+                            <td>{{date('D, Y-m-d', strtotime($agent->approved_at))}}</td>
+                        </tr>
+                        @endif
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            @endif
         </div>
         <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
             <table class="table table-striped table-bordered ">

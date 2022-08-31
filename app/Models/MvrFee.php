@@ -33,7 +33,8 @@ class MvrFee extends Model
 	protected $casts = [
 		'amount' => 'float',
 		'mvr_fee_type_id' => 'int',
-		'mvr_registration_type_id' => 'int'
+		'mvr_registration_type_id' => 'int',
+		'mvr_class_id' => 'int',
 	];
 
 	protected $fillable = [
@@ -41,7 +42,9 @@ class MvrFee extends Model
 		'amount',
 		'gfs_code',
 		'mvr_fee_type_id',
-		'mvr_registration_type_id'
+		'mvr_registration_type_id',
+		'mvr_class_id',
+		'status',
 	];
 
 	public function fee_type()
@@ -53,4 +56,9 @@ class MvrFee extends Model
 	{
 		return $this->belongsTo(MvrRegistrationType::class,'mvr_registration_type_id');
 	}
+
+    public function class()
+    {
+        return $this->belongsTo(MvrClass::class,'mvr_class_id');
+    }
 }

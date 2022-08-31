@@ -147,55 +147,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-4 form-group">
-                    <label for="report_type" class="d-flex justify-content-between'">
-                        <span>
-                            Maximum (Amount in TZS)
-                        </span>
-                    </label>
-                    <input wire:model="turn_over_to_amount"
-                        class="form-control {{ $errors->has('turn_over_to_amount') ? 'is-invalid' : '' }}">
-                    @error('turn_over_to_amount')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-            @endif --}}
-
-        </div>
-    </div>
-
-    <!-- period -->
-    <div>
-        <div class="row pt-4">
-            <div class="col-12">
-                <div class="card-header"><b>Registered Period</b></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 form-group">
-                <label class="d-flex justify-content-between'">
-                    <span>
-                        Year
-                    </span>
-                </label>
-                <select wire:model="year" class="form-control {{ $errors->has('year') ? 'is-invalid' : '' }}">
-                    <option value="all">All</option>
-                    @foreach ($optionYears as $key => $y)
-                        <option value={{ $y }}>
-                            {{ $y }}</option>
-                    @endforeach
-                </select>
-                @error('year')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-            {{-- {{ dd($year) }} --}}
-            @if ($year != 'all')
-                <div class="col-md-4 form-group">
+        <div class="col-md-4 form-group">
                     <label class="d-flex justify-content-between'">
                         <span>
                             Month
@@ -255,7 +207,7 @@
                 @endforeach
             </div>
         </div>
-         <!-- Physical Location -->
+        <!-- Physical Location -->
         <div>
             <div class="row pt-2">
                 <div class="col-12">
@@ -339,27 +291,7 @@
                 @endforeach
             </div>
         </div>
-        <!-- Business Currency -->
-        {{-- <div>
-            <div class="row pt-2">
-                <div class="col-12">
-                    <div class="card-header"><b>Business Currency</b></div>
-                </div>
-            </div>
-            <div class="row">
-                @foreach ($optionBusinessCurrencies as $id => $businessCurrency)
-                    <div class="col-sm-2 form-group">
-                        <label class="d-flex justify-content-between" for="business-currency-{{ $id }}">
-                            <span>
-                                {{ $businessCurrency }}
-                            </span>
-                        </label>
-                        <input type="checkbox" wire:model="selectedBusinessCurrencyIds.{{ $id }}"
-                            id="business-currency-{{ $id }}">
-                    </div>
-                @endforeach
-            </div>
-        </div> --}}
+
         <!-- Business Consultant -->
         <div>
             <div class="row pt-2">
@@ -381,7 +313,7 @@
                 @endforeach
             </div>
         </div>
-       
+
     @endif
 
 

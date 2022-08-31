@@ -23,7 +23,7 @@ class ServiceRequest
         $make = ['Toyota','Subaru','Nissan'][rand(0,2)];
 
         $owner = [
-          'z_number'=> BusinessLocation::query()->first()->zin ??'INVALID-Z-NUMBER',
+          'z_number'=> Taxpayer::query()->first()->reference_no ??'INVALID-Z-NUMBER',
           'name'=> $faker->name,
           'city'=> $faker->city,
           'tin'=> $faker->randomNumber(9),
@@ -35,7 +35,7 @@ class ServiceRequest
           'email'=> $faker->email,
         ];
         $agent = [
-            'z_number'=>  BusinessLocation::query()->where(['taxpayer_id'=>MvrAgent::query()->first()->taxpayer_id ?? null])->first()->zin ??'INVALID-Z-NUMBER',
+            'z_number'=>  MvrAgent::query()->first()->taxpayer->reference_no ??'INVALID-Z-NUMBER',
             'name'=> $faker->name,
             'phone_number'=> '0719906669',
             'agent_id'=> 'AAAAA',
@@ -50,7 +50,7 @@ class ServiceRequest
             'gross_weight'=>$faker->numberBetween(2000,6000),
             'number_of_axle'=>$faker->numberBetween(1,6),
             'year'=>$faker->numberBetween(1995,2020),
-            'class'=>'A',
+            'class'=>'DA',
             'body_type'=>['Sedan','Saloon'][rand(0,1)],
             'make'=>$make,
             'model'=>['Toyota'=>['Alion','IST','Prado','RAV4','Probox'],'Subaru'=>['Forester','Legacy','Forester XT'],'Nissan'=>['XTrail','Tiida','Dualis']][$make][rand(0,2)],

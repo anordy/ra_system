@@ -48,7 +48,6 @@ class ZanMalipoController extends Controller
         LumpSumReturn::class,
         TaxAssessment::class,
         Dispute::class,
-        TaxAgent::class,
         PortReturn::class,
         RenewTaxAgentRequest::class
     ];
@@ -284,6 +283,7 @@ class ZanMalipoController extends Controller
                     $return = $debt->debt;
                     if ($return){
                         $return->status = ReturnStatus::PAID_BY_DEBT;
+                        $return->paid_at = Carbon::now()->toDateTimeString();
                         $return->save();
                     }
                     $debt->status = ReturnStatus::COMPLETE;
@@ -355,23 +355,26 @@ class ZanMalipoController extends Controller
             Log::alert('Bypassing payments on production.');
         }
 
-        $request->validate([
-            'bill_id' => 'required',
-            'amount' => 'required'
-        ]);
+        if ($request->control_number){
+            $bill = ZmBill::where('control_number', $request->control_number)->firstOrFail();
+        } else {
+            $request->validate([
+                'bill_id' => 'required'
+            ]);
 
-        $bill = ZmBill::findOrFail($request->bill_id);
+            $bill = ZmBill::findOrFail($request->bill_id);
+        }
 
         try {
             DB::beginTransaction();
             $payment = ZmPayment::query()->insert([
-                'zm_bill_id'         => $request->bill_id,
+                'zm_bill_id'         => $bill->id,
                 'trx_id'             => rand(100000, 1000000),
                 'sp_code'            => 'SP20007',
                 'pay_ref_id'         => rand(100000, 1000000),
                 'control_number'     => $bill->control_number,
-                'bill_amount'        => $request->amount,
-                'paid_amount'        => $request->amount,
+                'bill_amount'        => $bill->amount,
+                'paid_amount'        => $bill->amount,
                 'bill_pay_opt'       => $bill->payment_option,
                 'currency'           => $bill->currency,
                 'trx_time'           => Carbon::now()->toDateTimeString(),

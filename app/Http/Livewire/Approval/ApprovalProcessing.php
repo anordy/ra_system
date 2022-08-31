@@ -141,7 +141,6 @@ class ApprovalProcessing extends Component
             $this->exceptionOne = [$vatId, $hotelId];
             $this->exceptionTwo = [$vatId, $stampId];
 
-
             // compare if plucked ID are the same as Lumpsum id
             if (in_array($lumpSumId, $this->Ids)) {
                 $this->showLumpsumOptions = true;
@@ -173,16 +172,19 @@ class ApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-        if (array_intersect($this->exceptionOne, $this->Ids) == $this->exceptionOne)
-        {
-            $this->alert('error', 'One business can not have both hotel and vat as tax types');
-            return redirect()->back();
-        }
-        if (array_intersect($this->exceptionTwo, $this->Ids) == $this->exceptionTwo)
-        {
-            $this->alert('error', 'One business can not have both stamp duty and vat as tax types');
-            return redirect()->back();
-        }
+//        if ($this->showLumpsumOptions == false)
+//        {
+//            if (array_intersect($this->exceptionOne, $this->Ids) == $this->exceptionOne)
+//            {
+//                $this->alert('error', 'One business can not have both hotel and vat as tax types');
+//                return redirect()->back();
+//            }
+//            if (array_intersect($this->exceptionTwo, $this->Ids) == $this->exceptionTwo)
+//            {
+//                $this->alert('error', 'One business can not have both stamp duty and vat as tax types');
+//                return redirect()->back();
+//            }
+//        }
 
         if ($this->checkTransition('registration_officer_review')) {
             $this->subject->isiic_i   = $this->isiic_i ?? null;
