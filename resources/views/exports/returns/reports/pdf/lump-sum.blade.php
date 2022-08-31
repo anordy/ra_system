@@ -7,7 +7,7 @@
             background-image: url("{{ public_path() }}/images/logo.png");
             background-repeat: no-repeat;
             background-position: center;
-            background-size:contain;
+            background-size: contain;
             margin: 10px;
             opacity: 0.1;
         }
@@ -84,7 +84,7 @@
                     <strong>Location</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Financial Month</strong>
+                    <strong>Financial Quater</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Financial Year</strong>
@@ -134,7 +134,7 @@
                         {{ $record->businessLocation->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->financialMonth->name ?? '-' }}
+                        {{ $record->quarter_name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->financialYear->name ?? '-' }}
@@ -176,14 +176,14 @@
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         @if ($record->created_at == null || $record->paid_at == null)
-                        -
-                    @else
-                        @if ($record->paid_at < $record->payment_due_date)
-                            In-Time
+                            -
                         @else
-                            Late
+                            @if ($record->paid_at < $record->payment_due_date)
+                                In-Time
+                            @else
+                                Late
+                            @endif
                         @endif
-                    @endif
                     </td>
                 </tr>
             @endforeach
