@@ -83,7 +83,7 @@ class OwnershipTransferController extends Controller
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,
-                $request->id,
+                get_class($request),
                 1, //todo: remove
                 $request->agent->id,
                 get_class($request->agent),
@@ -113,7 +113,6 @@ class OwnershipTransferController extends Controller
                 ]
             );
             $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
-
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($bill);
                 if ($response->status != ZmResponse::SUCCESS) {

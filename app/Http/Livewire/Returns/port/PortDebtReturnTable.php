@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class PortReturnTable extends DataTableComponent
+class PortDebtReturnTable extends DataTableComponent
 {
     public function configure(): void
     {
@@ -20,7 +20,7 @@ class PortReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PortReturn::query()->doesntHave('debt');
+        return PortReturn::query()->whereHas('debt');
     }
 
     public function columns(): array
