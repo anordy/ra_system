@@ -2,19 +2,7 @@
 
 namespace App\Services\ZanMalipo;
 
-use App\Models\Disputes\Dispute;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\TaxAssessments\TaxAssessment;
+
 use App\Models\ZmBill;
 use App\Models\ZmBillItem;
 use Carbon\Carbon;
@@ -180,34 +168,6 @@ class ZmCore
      */
     public static function sendBill($bill, $generated_by = 'ZRB', $approved_by = 'ZRB'): ZmResponse
     {
-        $returnable = [
-            StampDutyReturn::class,
-            MnoReturn::class,
-            VatReturn::class,
-            MmTransferReturn::class,
-            HotelReturn::class,
-            PetroleumReturn::class,
-            EmTransactionReturn::class,
-            BfoReturn::class,
-            LumpSumReturn::class,
-            TaxAssessment::class,
-            Dispute::class,
-            PortReturn::class,
-        ];
-    
-        $multipleBillsReturnable = [
-            PortReturn::class,
-        ];
-    
-        $debtReturnable = [
-            Debt::class
-        ];
-    
-        $installable = [
-            InstallmentItem::class
-        ];
-    
-
         if (is_numeric($bill)) {
             $zm_bill = ZmBill::query()->find($bill);
         } else if ($bill instanceof ZmBill) {
@@ -215,34 +175,6 @@ class ZmCore
         } else {
             throw new \Exception('Invalid bill supplied to send bill');
         }
-
-        // we have bill, get last control no
-        $latest = ZmBill::orderBy('created_at', 'DESC')->first();
-        if($latest){
-            $bill->control_number = $latest->control_number + 1;
-            $bill->zan_trx_sts_code = 7101;
-            $bill->save();
-        } else {
-            $bill->control_number = 2000070000145;
-            $bill->zan_trx_sts_code = 7101;
-            $bill->save();
-        }
-
-        if (in_array($bill->billable_type, array_merge(
-            $returnable,
-            $multipleBillsReturnable,
-            $debtReturnable,
-            $installable))) {
-            try {
-                $billable         = $bill->billable;
-                $billable->status = ReturnStatus::CN_GENERATED;
-                $billable->save();
-            } catch(\Exception $e){
-                Log::error($e);
-            }
-        }
-
-        return;
 
         $xml = new XmlWrapper('gepgBillSubReq');
         $xml_bill_hdr = $xml->createElement("BillHdr");
