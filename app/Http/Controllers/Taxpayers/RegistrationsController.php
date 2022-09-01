@@ -72,7 +72,8 @@ class RegistrationsController extends Controller
         $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at'])->toArray();
         $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
         $password = substr(str_shuffle($permitted_chars), 0, 8);
-        $data['password'] = Hash::make($password);
+//        $data['password'] = Hash::make($password);
+        $data['password'] = Hash::make('password');
 
 
         if (config('app.env') == 'local') {
