@@ -90,7 +90,7 @@ class LicenseApplicationsController extends Controller
                 } else {
                     $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                     $zmBill->zan_status = 'pending';
-                    $zmBill->control_number = '90909919991909';
+                    $zmBill->control_number = rand(2000070001000, 2000070009999);
                     $zmBill->save();
                 }
 

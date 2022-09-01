@@ -45,7 +45,7 @@ trait PaymentsTrait {
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
-                $bill->control_number = '90909919991909';
+                $bill->control_number = rand(2000070001000, 2000070009999);
                 $bill->save();
             }
             DB::commit();
@@ -129,7 +129,7 @@ trait PaymentsTrait {
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status = 'pending';
-            $bill->control_number = '90909919991909';
+            $bill->control_number = rand(2000070001000, 2000070009999);
             $bill->save();
 
             $this->flash('success', 'Your return was submitted, you will receive your payment information shortly - test');
@@ -207,7 +207,7 @@ trait PaymentsTrait {
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status       = 'pending';
-            $bill->control_number   = '90909919991909';
+            $bill->control_number   = rand(2000070001000, 2000070009999);
             $bill->save();
 
             // $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly - test');
@@ -288,7 +288,7 @@ trait PaymentsTrait {
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status       = 'pending';
-            $bill->control_number   = '90909919991909';
+            $bill->control_number   = rand(2000070001000, 2000070009999);
             $bill->save();
 
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly - test');
@@ -399,7 +399,7 @@ trait PaymentsTrait {
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
-            $zmBill->control_number = '90909919991909';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
             $zmBill->save();
 
         }
