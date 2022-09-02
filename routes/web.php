@@ -71,7 +71,7 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
-use App\Http\Controllers\Reports\Registration\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Business\BusinessRegReportController;
 use App\Http\Controllers\Reports\Registration\InitRegReportController;
 //use App\Http\Controllers\Reports\Registrations\RegistrationReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
