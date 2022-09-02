@@ -33,6 +33,37 @@
                             <hr class="mt-2 mb-3"/>
                         </div>
 
+                        @if($application->application_status->name == \App\Models\DlApplicationStatus::STATUS_PENDING_PAYMENT)
+                            <div class="col-md-12 mb-3">
+                                <div class="alert alert-info">
+                                    <div>Pending Payment for <strong>'{{$application->type}}'</strong> Driver's license Application </div>
+                                    <br>
+                                    <div>
+                                        <div>
+                                            Registration Fee: <strong> {{number_format($application->get_latest_bill()->amount ?? 0)}} TZS</strong><br>
+                                        </div>
+                                        <div>
+                                            Control Number: <strong>{!! $application->get_latest_bill()->control_number ?? ' <span class="text-danger">Not available</span>' !!}</strong>
+                                        </div>
+                                        @if($application->get_latest_bill()->control_number ?? null)
+                                            <div>
+                                                Control Number Expiry: <strong>{!! $application->get_latest_bill()->expiry_date ?? ' <span class="text-danger"></span>' !!}</strong>
+                                            </div>
+                                        @endif
+                                        <br>
+                                        @if($application->get_latest_bill()->zan_trx_sts_code ?? null != \App\Services\ZanMalipo\ZmResponse::SUCCESS)
+                                            <a href="{{route('control-number.retry',['id'=>encrypt($application->get_latest_bill()->id)])}}">
+                                                <button class="btn btn-secondary btn-sm btn-rounded">
+                                                    Request Control Number</button>
+                                            </a>
+                                        @elseif($application->get_latest_bill()->is_waiting_callback())
+                                            <div>Refresh after 30 seconds to get control number</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Application Type</span>
                             <p class="my-1">{{ $application->type }}</p>

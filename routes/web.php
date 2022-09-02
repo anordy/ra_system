@@ -539,4 +539,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/appeals', [CasesController::class, 'appealsIndex'])->name('appeals');
         Route::get('/appeals/{id}', [CasesController::class, 'appealShow'])->name('appeal.show');
     });
+
+    Route::get('/control-number/retry/{id}', [LicenseApplicationsController::class, 'retryControlNumber'])->name('control-number.retry');
 });

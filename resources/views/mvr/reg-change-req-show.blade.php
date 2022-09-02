@@ -43,8 +43,10 @@
                                 @endif
                                 <br>
                                 @if($change_req->get_latest_bill()->zan_trx_sts_code != \App\Services\ZanMalipo\ZmResponse::SUCCESS)
-                                    <button class="btn btn-secondary btn-sm btn-rounded">
-                                        Request Control Number</button>
+                                    <a href="{{route('control-number.retry',['id'=>encrypt($change_req->get_latest_bill()->id)])}}">
+                                        <button class="btn btn-secondary btn-sm btn-rounded">
+                                            Request Control Number</button>
+                                    </a>
                                 @elseif($change_req->get_latest_bill()->is_waiting_callback())
                                     <div>Refresh after 30 seconds to get control number</div>
                                 @endif

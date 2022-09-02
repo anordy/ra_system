@@ -143,7 +143,7 @@ class MvrMotorVehicle extends Model
 
     public function current_registration()
     {
-        return $this->hasOne(MvrMotorVehicleRegistration::class,'mvr_motor_vehicle_id')->latest('registration_date');
+        return $this->hasOne(MvrMotorVehicleRegistration::class,'mvr_motor_vehicle_id')->latest();
     }
 
 	public function transmission_type()

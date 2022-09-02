@@ -159,4 +159,15 @@ class LicenseApplicationsController extends Controller
         return $pdf->stream();
     }
 
+
+    public function retryControlNumber($id){
+        $response = ZmCore::sendBill(decrypt($id));
+        if ($response->status === ZmResponse::SUCCESS) {
+            $this->flash('success', 'A control number has been generated successful.');
+        } else {
+            session()->flash('error', 'Control number generation failed, try again later');
+        }
+        return redirect()->back();
+    }
+
 }
