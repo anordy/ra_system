@@ -79,7 +79,7 @@ class LicenseApplicationsController extends Controller
                 DB::beginTransaction();
                 $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id]);
                 $zmBill = $application->generateBill();
-                
+
                 if (config('app.env') != 'local') {
                     $response = ZmCore::sendBill($zmBill->id);
                     if ($response->status === ZmResponse::SUCCESS) {
@@ -94,7 +94,7 @@ class LicenseApplicationsController extends Controller
                     $zmBill->save();
                 }
 
-                DB::commit(); 
+                DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
                 report($e);
@@ -194,4 +194,25 @@ class LicenseApplicationsController extends Controller
         }
         return abort(404);
     }
+
+    public function retryControlNumber($id){
+        $response = ZmCore::sendBill(decrypt($id));
+        if ($response->status === ZmResponse::SUCCESS) {
+            $this->flash('success', 'A control number has been generated successful.');
+        } else {
+            session()->flash('error', 'Control number generation failed, try again later');
+        }
+        return redirect()->back();
+    }
+
+
+    public function showLicense($id){
+        $license = DlDriversLicense::query()->find(decrypt($id));
+        return view('driver-license.licenses-show',compact('license'));
+    }
+
+    public function indexLicense(){
+        return view('driver-license.licenses-index');
+    }
+
 }

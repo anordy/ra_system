@@ -574,6 +574,9 @@
                     class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
                     <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
                 </li>
+                <li class="{{ request()->is('drivers-license/license*') || request()->is('drivers-license*') ? 'active' : '' }}">
+                    <a href="{{ route('drivers-license.licenses') }}">Driver's Licenses</a>
+                </li>
                 <li class="{{ request()->is('rio*') ? 'active' : '' }}">
                     <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
                 </li>
