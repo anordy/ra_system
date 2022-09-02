@@ -502,6 +502,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {
+        Route::get('/license', [LicenseApplicationsController::class, 'indexLicense'])->name('licenses');
+        Route::get('/license/{id}', [LicenseApplicationsController::class, 'showLicense'])->name('licenses.show');
         Route::get('/applications', [LicenseApplicationsController::class, 'index'])->name('applications');
         Route::get('/applications/create', [LicenseApplicationsController::class, 'create'])->name('applications.create');
         Route::get('/applications/submit/{id}', [LicenseApplicationsController::class, 'submit'])->name('applications.submit');

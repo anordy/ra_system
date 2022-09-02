@@ -205,4 +205,14 @@ class LicenseApplicationsController extends Controller
         return redirect()->back();
     }
 
+
+    public function showLicense($id){
+        $license = DlDriversLicense::query()->find(decrypt($id));
+        return view('driver-license.licenses-show',compact('license'));
+    }
+
+    public function indexLicense(){
+        return view('driver-license.licenses-index');
+    }
+
 }
