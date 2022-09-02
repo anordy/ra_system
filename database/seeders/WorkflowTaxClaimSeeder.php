@@ -35,7 +35,7 @@ class WorkflowTaxClaimSeeder extends Seeder
             ],
             'verification_results' => [
                 'owner' => 'staff',
-                'operator_type' => 'role',
+                'operator_type' => 'user',
                 'operators' => [1, 5]
             ],
             'method_of_payment' => [
