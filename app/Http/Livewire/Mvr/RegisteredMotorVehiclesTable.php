@@ -37,9 +37,11 @@ class RegisteredMotorVehiclesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Plate Number", "current_registration.plate_number")
+            Column::make("Plate Number", "id")
+                ->format(fn($id)=>MvrMotorVehicle::query()->find($id)->current_registration->plate_number??'')
                 ->sortable(),
-            Column::make("Registration Type", "current_registration.registration_type.name")
+            Column::make("Registration Type", "id")
+                ->format(fn($id)=>MvrMotorVehicle::query()->find($id)->current_registration->registration_type->name??'')
                 ->sortable(),
             Column::make("Chassis No", "chassis_number")
                 ->sortable(),

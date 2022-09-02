@@ -71,7 +71,7 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
-use App\Http\Controllers\Reports\Registration\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Business\BusinessRegReportController;
 use App\Http\Controllers\Reports\Registration\InitRegReportController;
 //use App\Http\Controllers\Reports\Registrations\RegistrationReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
@@ -502,6 +502,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {
+        Route::get('/license', [LicenseApplicationsController::class, 'indexLicense'])->name('licenses');
+        Route::get('/license/{id}', [LicenseApplicationsController::class, 'showLicense'])->name('licenses.show');
         Route::get('/applications', [LicenseApplicationsController::class, 'index'])->name('applications');
         Route::get('/applications/create', [LicenseApplicationsController::class, 'create'])->name('applications.create');
         Route::get('/applications/submit/{id}', [LicenseApplicationsController::class, 'submit'])->name('applications.submit');
@@ -526,4 +528,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/appeals', [CasesController::class, 'appealsIndex'])->name('appeals');
         Route::get('/appeals/{id}', [CasesController::class, 'appealShow'])->name('appeal.show');
     });
+
+    Route::get('/control-number/retry/{id}', [LicenseApplicationsController::class, 'retryControlNumber'])->name('control-number.retry');
 });
