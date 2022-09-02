@@ -163,20 +163,21 @@ class MvrMotorVehicleRegistration extends Model
 
 
     public static function getGoldenPlateNumbers(){
-        $last_reg = MvrMotorVehicleRegistration::query()
+        $regs = MvrMotorVehicleRegistration::query()
             ->join('mvr_motor_vehicles','mvr_motor_vehicles.id','=','mvr_motor_vehicle_id')
-            ->whereRaw('plate_number REGEXP "Z([\d])(?=(?:.*?\1){2}).{2}[a-zA-Z]{2}"')
+            ->whereRaw('substring(plate_number,2,3)%111=0')
             ->orderBy(DB::raw('concat(substring(plate_number,5,2),substring(plate_number,2,3))'), 'desc')
             ->lockForUpdate()
-            ->first();
-        if (empty($last_reg)){
+            ->limit(20) //20 last Golden plate numbers - acceptable range will be 40
+            ->get()->pluck('plate_number');
+        if (empty($regs[0])){
             $last_special = 'Z000AA';
         }else{
-            $last_special = $last_reg->plate_number;
+            $last_special = $regs[count($regs)-1];
         }
 
         $plate_numbers = [];
-        for ($i=0;$i<20;++$i){
+        for ($i=0;$i<40;++$i){
             $number = preg_replace('/Z(\d{3})([A-Z]{2})/', '$1', $last_special);
             $alpha = preg_replace('/Z(\d{3})([A-Z]{2})/', '$2', $last_special);
             if ($number==999){
@@ -187,7 +188,15 @@ class MvrMotorVehicleRegistration extends Model
             }
             $number = str_pad($number, 3, '0', STR_PAD_LEFT);
             $last_special = 'Z'.$number.$alpha;
+            //1st 20 have to be checked
+            if (MvrMotorVehicleRegistration::query()->where(['plate_number'=>$last_special])->exists()){
+                continue;
+            }
             $plate_numbers[] = $last_special;
+
+            if (count($plate_numbers)>=20){
+                break;
+            }
         }
 
 
