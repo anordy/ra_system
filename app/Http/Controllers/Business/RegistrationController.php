@@ -30,7 +30,7 @@ class RegistrationController extends Controller
         if (!Gate::allows('business-registration-view')) {
             abort(403);
         }
-        $business = Business::findOrFail($businessId);
+        $business = Business::findOrFail(decrypt($businessId));
         return view('business.registrations.approval', compact('business'));
     }
 }
