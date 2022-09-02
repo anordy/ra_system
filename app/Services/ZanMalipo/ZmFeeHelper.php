@@ -61,14 +61,13 @@ class ZmFeeHelper
                 throw new \Exception('Bill amount out of range.');
         }
 
-
         if ($currency != 'TZS'){
             $fee = round($fee / $exchangeRate, 2);
         }
 
         $billItems[] = [
             'use_item_ref_on_pay' => 'N',
-            'amount' => $fee,
+            'amount' => round($fee, 2),
             'currency' => $currency,
             'gfs_code' => '116101',
             'tax_type_id' => TaxType::where('code', TaxType::GOVERNMENT_FEE)->firstOrFail()->id,

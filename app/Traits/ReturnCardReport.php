@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\DB;
 
 
@@ -10,7 +11,7 @@ trait ReturnCardReport
 
     public function returnCardReportForPaidReturns($returnClass, $returnTableName, $penaltyTableName){
 
-        $penaltyData = $returnClass::where("{$returnTableName}.status", 'complete')->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+        $penaltyData = $returnClass::whereIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
             DB::raw("SUM(".$penaltyTableName.".late_filing) as totalLateFiling"),
             DB::raw("SUM(".$penaltyTableName.".late_payment) as totalLatePayment"),
@@ -19,7 +20,7 @@ trait ReturnCardReport
         ->groupBy('return_id')
         ->get();
 
-        $returnQuery = $returnClass::where('status', 'complete');
+        $returnQuery = $returnClass::whereIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
 
         return  [
             'totalTaxAmount' => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
@@ -34,7 +35,7 @@ trait ReturnCardReport
     public function returnCardReportForUnpaidReturns($returnClass, $returnTableName, $penaltyTableName){
 
         
-        $penaltyData = $returnClass::where("{$returnTableName}.status", '!=', 'complete')->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+        $penaltyData = $returnClass::whereNotIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
             DB::raw("SUM(".$penaltyTableName.".late_filing) as totalLateFiling"),
             DB::raw("SUM(".$penaltyTableName.".late_payment) as totalLatePayment"),
@@ -43,7 +44,7 @@ trait ReturnCardReport
         ->groupBy('return_id')
         ->get();
 
-        $returnQuery = $returnClass::where('status', '!=', 'complete');
+        $returnQuery = $returnClass::whereNotIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
 
         return  [
             'totalTaxAmount' => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),

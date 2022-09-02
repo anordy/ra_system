@@ -21,7 +21,9 @@ class MnoReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return MnoReturn::query()->orderBy('mno_returns.created_at', 'desc');
+        return MnoReturn::query()
+        ->doesntHave('debt')
+        ->orderBy('mno_returns.created_at', 'desc');
     }
 
     public function columns(): array

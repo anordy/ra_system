@@ -45,14 +45,14 @@
                             <br>
                             <div>
                                 <div>
-                                    Transfer Fee: <strong> {{number_format($request->get_latest_bill()->amount)}} TZS</strong><br>
+                                    Transfer Fee: <strong> {{number_format($request->get_latest_bill()->amount ?? 0)}} TZS</strong><br>
                                 </div>
                                 <div>
                                     Control Number: <strong>{!! $request->get_latest_bill()->control_number ?? ' <span class="text-danger">Not available</span>' !!}</strong>
                                 </div>
-                                @if($request->get_latest_bill()->control_number)
+                                @if($request->get_latest_bill()->control_number ?? null)
                                     <div>
-                                        Control Number Expiry: <strong>{!! $request->get_latest_bill()->expiry_date ?? ' <span class="text-danger"></span>' !!}</strong>
+                                        Control Number Expiry: <strong>{!! $request->get_latest_bill()->expire_date ?? ' <span class="text-danger"></span>' !!}</strong>
                                     </div>
                                 @endif
                                 <br>

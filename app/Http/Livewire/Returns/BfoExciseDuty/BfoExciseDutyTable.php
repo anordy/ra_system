@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyTable extends DataTableComponent
@@ -29,6 +30,7 @@ class BfoExciseDutyTable extends DataTableComponent
     {
         return BfoReturn::query()
             ->with('business', 'business.taxpayer', 'businessLocation')
+            ->doesntHave('debt')
             ->orderBy('bfo_returns.created_at', 'desc');
     }
 
@@ -38,9 +40,6 @@ class BfoExciseDutyTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch / Location', 'businessLocation.name')
-            ->sortable()
-            ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
@@ -59,6 +58,10 @@ class BfoExciseDutyTable extends DataTableComponent
                     return number_format($value, 2);
                 })
                 ->searchable(),
+            Column::make('Status', 'status')
+                ->view('returns.excise-duty.bfo.includes.status')
+                ->searchable()
+                ->sortable(),
             Column::make('Date', 'created_at')
                 ->sortable()
                 ->format(function ($value, $row) {

@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Returns\Port;
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\Port\PortReturnPenalty;
-use App\Traits\ReturnCardReport;
+use App\Traits\PortReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
 use Illuminate\Support\Facades\Gate;
 
 class PortReturnController extends Controller
 {
-    use ReturnCardReport, ReturnSummaryCardTrait;
+    use PortReturnCardReport, ReturnSummaryCardTrait;
 
     public function index()
     {

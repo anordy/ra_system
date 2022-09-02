@@ -29,31 +29,35 @@ class RegistrationChangeController extends Controller
 
     use MotorVehicleSearchTrait;
 
-	public function index(){
-		return view('mvr.reg-change-index');
-	}
+    public function index()
+    {
+        return view('mvr.reg-change-index');
+    }
 
     /**
      * @param $id
      * @return Application|Factory|View
      */
-    public function show($id){
+    public function show($id)
+    {
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
         $change_req = MvrRegistrationChangeRequest::query()->find($id);
-        $motor_vehicle =$change_req->current_registration->motor_vehicle;
-        return view('mvr.reg-change-req-show',compact('motor_vehicle','change_req'));
+        $motor_vehicle = $change_req->current_registration->motor_vehicle;
+        return view('mvr.reg-change-req-show', compact('motor_vehicle', 'change_req'));
     }
 
-    public function search($type,$number){
-        $motor_vehicle = $this->searchRegistered($type,$number);
-        $search_type = ucwords(preg_replace('/-/',' ',$type));
+    public function search($type, $number)
+    {
+        $motor_vehicle = $this->searchRegistered($type, $number);
+        $search_type = ucwords(preg_replace('/-/', ' ', $type));
         $action = 'mvr.registration-change-request';
-        return view('mvr.internal-search',compact('motor_vehicle','search_type','number','action'));
+        return view('mvr.internal-search', compact('motor_vehicle', 'search_type', 'number', 'action'));
     }
 
 
-    public function approve($id){
+    public function approve($id)
+    {
         Gate::authorize('mvr_approve_registration_change');
         $id = decrypt($id);
         //Generate control number
@@ -67,13 +71,13 @@ class RegistrationChangeController extends Controller
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected registration type (change) is not configured");
-            return redirect()->route('mvr.reg-change-requests.show',encrypt($id));
+            return redirect()->route('mvr.reg-change-requests.show', encrypt($id));
         }
         $exchange_rate = 1;
         $amount = $fee->amount;
         $gfs_code = $fee->gfs_code;
 
-        try{
+        try {
             DB::beginTransaction();
 
             $bill = ZmCore::createBill(
@@ -98,7 +102,7 @@ class RegistrationChangeController extends Controller
                         'billable_type' => get_class($change_req),
                         'fee_id' => $fee->id,
                         'fee_type' => get_class($fee),
-                        'tax_type_id' => 1,//todo: this should be nullable
+                        'tax_type_id' => 1, //todo: this should be nullable
                         'amount' => $amount,
                         'currency' => 'TZS',
                         'exchange_rate' => $exchange_rate,
@@ -107,30 +111,38 @@ class RegistrationChangeController extends Controller
                     ]
                 ]
             );
-            $change_req->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
+            $change_req->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
 
-            $response = ZmCore::sendBill($bill);
-            if ($response->status != ZmResponse::SUCCESS){
-                session()->flash("success",'Request Approved!');
-                session()->flash("error",'Control Number request failed');
-            }else{
-                session()->flash("success",'Request Approved, Control Number request sent');
+            if (config('app.env') != 'local') {
+                $response = ZmCore::sendBill($bill);
+                if ($response->status != ZmResponse::SUCCESS) {
+                    session()->flash("success", 'Request Approved!');
+                    session()->flash("error", 'Control Number request failed');
+                } else {
+                    session()->flash("success", 'Request Approved, Control Number request sent');
+                }
+            } else {
+                $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $bill->zan_status = 'pending';
+                $bill->control_number = rand(2000070001000, 2000070009999);
+                $bill->save();
+                session()->flash("success", 'Request Approved, Control Number request sent');
             }
 
             DB::commit();
-
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             report($e);
-            session()->flash('warning','Approval failed, could not update data');
+            session()->flash('warning', 'Approval failed, could not update data');
             DB::rollBack();
         }
 
 
-        return redirect()->route('mvr.reg-change-requests.show',encrypt($id));
+        return redirect()->route('mvr.reg-change-requests.show', encrypt($id));
     }
 
 
-    public function simulatePayment($id){
+    public function simulatePayment($id)
+    {
         Gate::authorize('mvr_approve_registration_change');
         $id = decrypt($id);
         $change_req = MvrRegistrationChangeRequest::query()
@@ -142,55 +154,57 @@ class RegistrationChangeController extends Controller
             DB::beginTransaction();
             $reg_type = $change_req->requested_registration_type;
             $bill = $change_req->get_latest_bill();
-            $bill->update(['status'=>'Paid']);
+            $bill->update(['status' => 'Paid']);
 
-            $change_req->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
-            if ($reg_type->external_defined == 1){
+            $change_req->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
+            if ($reg_type->external_defined == 1) {
                 $plate_number = $change_req->custom_plate_number;
-            }else{
-                $plate_number = MvrMotorVehicleRegistration::getNexPlateNumber($reg_type,$change_req->current_registration->motor_vehicle->class);
+            } else {
+                $plate_number = MvrMotorVehicleRegistration::getNexPlateNumber($reg_type, $change_req->current_registration->motor_vehicle->class);
             }
-            if ($reg_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED &&
+            if (
+                $reg_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED &&
                 !empty($change_req->current_registration) &&
                 ($change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_GOLDEN  ||
-                $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_ORDINARY  ||
-                $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED)){
+                    $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_ORDINARY  ||
+                    $change_req->current_registration->registration_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED)
+            ) {
                 //In this case we do not need to insert a new registration
                 $mvr_id = $change_req->current_registration->id;
                 MvrMotorVehicleRegistration::query()->find($mvr_id)->update([
-                    'mvr_registration_type_id'=>$reg_type->id,
-                    'mvr_plate_number_status_id'=>$plate_status->id
+                    'mvr_registration_type_id' => $reg_type->id,
+                    'mvr_plate_number_status_id' => $plate_status->id
                 ]);
-            }else{
+            } else {
                 $change_req->current_registration->update([
-                    'mvr_plate_number_status_id'=>MvrPlateNumberStatus::query()->where(['name' => MvrPlateNumberStatus::STATUS_RETIRED])->first()->id
+                    'mvr_plate_number_status_id' => MvrPlateNumberStatus::query()->where(['name' => MvrPlateNumberStatus::STATUS_RETIRED])->first()->id
                 ]);
                 $mvr_id = MvrMotorVehicleRegistration::query()->create([
-                    'plate_number'=>$plate_number,
-                    'mvr_registration_type_id'=>$reg_type->id,
+                    'plate_number' => $plate_number,
+                    'mvr_registration_type_id' => $reg_type->id,
                     'mvr_plate_size_id' => $change_req->mvr_plate_size_id,
                     'mvr_motor_vehicle_id' => $change_req->current_registration->mvr_motor_vehicle_id,
-                    'mvr_plate_number_status_id'=>$plate_status->id,
-                    'registration_date'=>date('Y-m-d')
+                    'mvr_plate_number_status_id' => $plate_status->id,
+                    'registration_date' => date('Y-m-d')
                 ])->id;
             }
 
 
-            if ($reg_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED){
-                MvrPersonalizedPlateNumberRegistration::query()->where(['mvr_motor_vehicle_registration_id'=>$mvr_id])->update(['status'=>'RETIRED']);
+            if ($reg_type->name == MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED) {
+                MvrPersonalizedPlateNumberRegistration::query()->where(['mvr_motor_vehicle_registration_id' => $mvr_id])->update(['status' => 'RETIRED']);
                 MvrPersonalizedPlateNumberRegistration::query()->create([
-                    'plate_number'=>$change_req->custom_plate_number,
-                    'status'=>'ACTIVE',
-                    'mvr_motor_vehicle_registration_id'=>$mvr_id
+                    'plate_number' => $change_req->custom_plate_number,
+                    'status' => 'ACTIVE',
+                    'mvr_motor_vehicle_registration_id' => $mvr_id
                 ]);
             }
             DB::commit();
-            return redirect()->route('mvr.reg-change-requests.show',encrypt($id));
-        }catch (\Exception $e){
+            return redirect()->route('mvr.reg-change-requests.show', encrypt($id));
+        } catch (\Exception $e) {
             session()->flash('error', 'Could not update status');
             DB::rollBack();
             report($e);
-            return redirect()->route('mvr.reg-change-requests.show',encrypt($id));
+            return redirect()->route('mvr.reg-change-requests.show', encrypt($id));
         }
     }
 }

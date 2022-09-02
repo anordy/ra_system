@@ -21,6 +21,7 @@ class StampDutyReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         return StampDutyReturn::select('financial_month_id')
+            ->doesntHave('debt')
             ->with('business')
             ->orderBy('stamp_duty_returns.created_at', 'DESC');
     }

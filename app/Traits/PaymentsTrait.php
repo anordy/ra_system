@@ -45,7 +45,7 @@ trait PaymentsTrait {
                 // Simulate successful control no generation
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
-                $bill->control_number = '90909919991909';
+                $bill->control_number = rand(2000070001000, 2000070009999);
                 $bill->save();
             }
             DB::commit();
@@ -129,7 +129,7 @@ trait PaymentsTrait {
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status = 'pending';
-            $bill->control_number = '90909919991909';
+            $bill->control_number = rand(2000070001000, 2000070009999);
             $bill->save();
 
             $this->flash('success', 'Your return was submitted, you will receive your payment information shortly - test');
@@ -207,7 +207,7 @@ trait PaymentsTrait {
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status       = 'pending';
-            $bill->control_number   = '90909919991909';
+            $bill->control_number   = rand(2000070001000, 2000070009999);
             $bill->save();
 
             // $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly - test');
@@ -288,7 +288,7 @@ trait PaymentsTrait {
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $bill->zan_status       = 'pending';
-            $bill->control_number   = '90909919991909';
+            $bill->control_number   = rand(2000070001000, 2000070009999);
             $bill->save();
 
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly - test');
@@ -298,35 +298,44 @@ trait PaymentsTrait {
     public function generateDebtControlNo($debt)
     {
         $taxTypes = TaxType::all();
-        $billItems[] = [
-            'billable_id' => $debt->id,
-            'billable_type' => get_class($debt),
-            'use_item_ref_on_pay' => 'N',
-            'amount' => $debt->principal_amount,
-            'currency' => $debt->currency,
-            'gfs_code' => $taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
-            'tax_type_id' => $taxTypes->where('code', TaxType::DEBTS)->first()->id
-        ];
 
-        $billItems[] = [
-            'billable_id' => $debt->id,
-            'billable_type' => get_class($debt),
-            'use_item_ref_on_pay' => 'N',
-            'amount' => $debt->penalty,
-            'currency' => $debt->currency,
-            'gfs_code' => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
-            'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->first()->id
-        ];
+        if ($debt->principal_amount > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->principal_amount,
+                'currency' => $debt->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::DEBTS)->first()->id
+            ];
+        }
 
-        $billItems[] = [
-            'billable_id' => $debt->id,
-            'billable_type' => get_class($debt),
-            'use_item_ref_on_pay' => 'N',
-            'amount' => $debt->interest,
-            'currency' => $debt->currency,
-            'gfs_code' => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
-            'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
-        ];
+        if ($debt->penalty > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->penalty,
+                'currency' => $debt->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->first()->id
+            ];
+        }
+
+
+        if ($debt->interest > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->interest,
+                'currency' => $debt->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
+            ];
+        }
+ 
 
         $taxpayer = $debt->business->taxpayer;
 
@@ -390,7 +399,7 @@ trait PaymentsTrait {
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
-            $zmBill->control_number = '90909919991909';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
             $zmBill->save();
 
         }

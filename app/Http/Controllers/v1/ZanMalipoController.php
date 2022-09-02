@@ -19,12 +19,12 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
-use App\Models\TaxAgent;
 use App\Models\ZmBill;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
+use App\Models\LandLease;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
@@ -48,9 +48,9 @@ class ZanMalipoController extends Controller
         LumpSumReturn::class,
         TaxAssessment::class,
         Dispute::class,
-        TaxAgent::class,
         PortReturn::class,
-        RenewTaxAgentRequest::class
+        RenewTaxAgentRequest::class,
+        LandLease::class
     ];
 
     private $multipleBillsReturnable = [
@@ -284,6 +284,7 @@ class ZanMalipoController extends Controller
                     $return = $debt->debt;
                     if ($return){
                         $return->status = ReturnStatus::PAID_BY_DEBT;
+                        $return->paid_at = Carbon::now()->toDateTimeString();
                         $return->save();
                     }
                     $debt->status = ReturnStatus::COMPLETE;

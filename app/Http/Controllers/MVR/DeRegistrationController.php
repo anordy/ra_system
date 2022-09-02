@@ -31,9 +31,10 @@ class DeRegistrationController extends Controller
 {
     use MotorVehicleSearchTrait;
 
-	public function index(){
-		return view('mvr.de-register-requests-index');
-	}
+    public function index()
+    {
+        return view('mvr.de-register-requests-index');
+    }
 
     /**
      * @param $id
@@ -45,27 +46,30 @@ class DeRegistrationController extends Controller
         /** @var MvrRegistrationChangeRequest $change_req */
         $request = MvrDeRegistrationRequest::query()->find($id);
         $motor_vehicle = $request->motor_vehicle;
-        return view('mvr.de-registration-req-show',compact('motor_vehicle','request'));
+        return view('mvr.de-registration-req-show', compact('motor_vehicle', 'request'));
     }
 
-    public function search($type,$number){
-        $motor_vehicle = $this->searchRegistered($type,$number);
-        $search_type = ucwords(preg_replace('/-/',' ',$type));
+    public function search($type, $number)
+    {
+        $motor_vehicle = $this->searchRegistered($type, $number);
+        $search_type = ucwords(preg_replace('/-/', ' ', $type));
         $action = 'mvr.de-registration-request';
         $result_route = 'mvr.internal-search-dr';
-        return view('mvr.internal-search',compact('motor_vehicle','search_type','number','action','result_route'));
+        return view('mvr.internal-search', compact('motor_vehicle', 'search_type', 'number', 'action', 'result_route'));
     }
 
-    public function zbsSubmit($id){
+    public function zbsSubmit($id)
+    {
         $id = decrypt($id);
         $request = MvrDeRegistrationRequest::query()->findOrFail($id);
-        $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_APPROVAL])->id]);
+        $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_APPROVAL])->id]);
         //Notify Agent here through SMS
-        return redirect()->route('mvr.de-register-requests.show',encrypt($id));
+        return redirect()->route('mvr.de-register-requests.show', encrypt($id));
     }
 
 
-    public function approve($id){
+    public function approve($id)
+    {
         $id = decrypt($id);
         //Generate control number
         $request = MvrDeRegistrationRequest::query()->find($id);
@@ -77,12 +81,12 @@ class DeRegistrationController extends Controller
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected registration type (de-registration) is not configured");
-            return redirect()->route('mvr.de-register-requests.show',encrypt($id));
+            return redirect()->route('mvr.de-register-requests.show', encrypt($id));
         }
         $exchange_rate = 1;
         $amount = $fee->amount;
 
-        try{
+        try {
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,
@@ -115,38 +119,50 @@ class DeRegistrationController extends Controller
                     ]
                 ]
             );
-            $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
-            $response = ZmCore::sendBill($bill);
-            if ($response->status != ZmResponse::SUCCESS){
-                session()->flash("success",'Request Approved!');
-                session()->flash("error",'Control Number request failed');
-            }else{
-                session()->flash("success",'Request Approved, Control Number request sent');
+            $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
+            
+            if (config('app.env') != 'local') {
+                $response = ZmCore::sendBill($bill);
+                if ($response->status != ZmResponse::SUCCESS) {
+                    session()->flash("success", 'Request Approved!');
+                    session()->flash("error", 'Control Number request failed');
+                } else {
+                    session()->flash("success", 'Request Approved, Control Number request sent');
+                }
+            } else {
+                $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+                $bill->zan_status = 'pending';
+                $bill->control_number = rand(2000070001000, 2000070009999);
+                $bill->save();
+                session()->flash("success", 'Request Approved, Control Number request sent');
             }
+            
             DB::commit();
-        }catch (\Exception $e){
-            session()->flash("error",'Approval failed,  could not update data!');
+        } catch (\Exception $e) {
+            session()->flash("error", 'Approval failed,  could not update data!');
             DB::rollBack();
             report($e);
         }
-        return redirect()->route('mvr.de-register-requests.show',encrypt($id));
+        return redirect()->route('mvr.de-register-requests.show', encrypt($id));
     }
 
-    public function reject($id){
+    public function reject($id)
+    {
         $id = decrypt($id);
         //Generate control number
         $request = MvrDeRegistrationRequest::query()->find($id);
 
-        $request->update(['mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_REJECTED])->id]);
+        $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_REJECTED])->id]);
         event(new SendSms('mvr-de-registration-approval', $request->id));
         event(new SendMail('mvr-de-registration-approval', $request->id));
 
-        session()->flash('warning','Request has been rejected');
+        session()->flash('warning', 'Request has been rejected');
 
-        return redirect()->route('mvr.de-register-requests.show',encrypt($id));
+        return redirect()->route('mvr.de-register-requests.show', encrypt($id));
     }
 
-    public function simulatePayment($id){
+    public function simulatePayment($id)
+    {
         $id = decrypt($id);
         $request = MvrDeRegistrationRequest::query()->find($id);
 
@@ -154,18 +170,18 @@ class DeRegistrationController extends Controller
         try {
             DB::beginTransaction();
             $bill = $request->get_latest_bill();
-            $bill->update(['status'=>'Paid']);
-            $request->update(['certificate_date'=>date('Y-m-d'),'mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
-            $request->motor_vehicle->update(['mvr_registration_status_id'=>MvrRegistrationStatus::query()->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_DE_REGISTERED])->id]);
+            $bill->update(['status' => 'Paid']);
+            $request->update(['certificate_date' => date('Y-m-d'), 'mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_ACCEPTED])->id]);
+            $request->motor_vehicle->update(['mvr_registration_status_id' => MvrRegistrationStatus::query()->firstOrCreate(['name' => MvrRegistrationStatus::STATUS_DE_REGISTERED])->id]);
             $mvr_reg = $request->motor_vehicle->current_registration;
-            $mvr_reg->update(['mvr_plate_number_status_id'=>$plate_status->id]);
+            $mvr_reg->update(['mvr_plate_number_status_id' => $plate_status->id]);
             DB::commit();
-            return redirect()->route('mvr.de-register-requests.show',encrypt($id));
-        }catch (\Exception $e){
+            return redirect()->route('mvr.de-register-requests.show', encrypt($id));
+        } catch (\Exception $e) {
             session()->flash('error', 'Could not update status');
             DB::rollBack();
             report($e);
-            return redirect()->route('mvr.de-register-requests.show',encrypt($id));
+            return redirect()->route('mvr.de-register-requests.show', encrypt($id));
         }
     }
 }

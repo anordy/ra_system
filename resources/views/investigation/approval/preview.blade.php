@@ -1,22 +1,22 @@
 @extends('layouts.master')
 
-@section('title', 'Audit Preview')
+@section('title', 'Investigation Preview')
 
 @section('content')
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Investigation Report</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                aria-selected="false">Returns Information</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-                aria-selected="false">Approval Details</a>
-        </li>
-    </ul>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+            aria-selected="true">Investigation Report</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+            aria-selected="false">Returns Information</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
+            aria-selected="false">Approval Details</a>
+    </li>
+</ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
@@ -135,24 +135,10 @@
                 </div>
             @endif
         </div>
-        <div class="tab-pane fade" id="profile card p-2" role="tabpanel" aria-labelledby="profile-tab">
-            @if (view()->exists($viewRender))
-            
-                @php echo view($viewRender, compact('return'))->render() @endphp
-            @else
-                <div class="card">
-                    <div class="card-body">
-                        <div class="alert alert-danger" role="alert">
-                            <h4 class="alert-heading">Error!</h4>
-                            <p>
-                                Configured page not found kindly check with Administrator
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
+        <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation])
         </div>
-        <div class="tab-pane fade" id="contact card p-2" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($investigation) }}'
@@ -163,4 +149,13 @@
         </div>
     </div>
 
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $(".nav-tabs a").click(function() {
+                $(this).tab('show');
+            });
+        });
+    </script>
 @endsection

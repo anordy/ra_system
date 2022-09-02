@@ -239,21 +239,21 @@
         @endcan
         @can('tax-claim')
             <li class="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'active' : '' }}">
-                <a href="#installment-menu" data-toggle="collapse"
+                <a href="#tax-claim" data-toggle="collapse"
                    aria-expanded="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'true' : 'false' }}"
                    class="dropdown-toggle">Tax Claims</a>
                 <ul class="collapse list-unstyled {{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'show' : '' }}"
-                    id="installment-menu">
+                    id="tax-claim">
                     @can('tax-claim-view')
                         <li class="{{ request()->is('tax-claims*') ? 'active' : '' }}">
                             <a href="{{ route('claims.index') }}">Claims</a>
                         </li>
                     @endcan
-                    @can('tax-credit-view')
-                        <li class="{{ request()->is('tax-credits*') ? 'active' : '' }}">
-                            <a href="{{ route('credits.index') }}">Credits (CBF)</a>
-                        </li>
-                    @endcan
+{{--                    @can('tax-credit-view')--}}
+{{--                        <li class="{{ request()->is('tax-credits*') ? 'active' : '' }}">--}}
+{{--                            <a href="{{ route('credits.index') }}">Credits (CBF)</a>--}}
+{{--                        </li>--}}
+{{--                    @endcan--}}
                 </ul>
             </li>
         @endcan
@@ -591,9 +591,6 @@
                 <li class="{{ request()->is('cases/appeals') ? 'active' : '' }}">
                     <a href="{{ route('cases.appeals') }}">Appeals</a>
                 </li>
-                <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
-                    <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
-                </li>
             </ul>
         </li>
 
@@ -632,7 +629,7 @@
                             <a href="{{ route('reports.returns') }}">Return Reports</a>
                         </li>
                         <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
+                            <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
                     @endcan
                 </ul>

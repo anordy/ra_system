@@ -4,7 +4,7 @@
     <title>Tax Clearance Certificate - {{ $location->business->name }}</title>
     <style>
         body {
-            background-image: url("{{ public_path()}}/images/certificate/tax_clearance.jpg");
+            background-image: url("{{ public_path()}}/images/certificate/tax_clearance.png");
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;

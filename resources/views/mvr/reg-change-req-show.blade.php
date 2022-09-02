@@ -38,7 +38,7 @@
                                 </div>
                                 @if($change_req->get_latest_bill()->control_number)
                                     <div>
-                                        Control Number Expiry: <strong>{!! $change_req->get_latest_bill()->expiry_date ?? ' <span class="text-danger"></span>' !!}</strong>
+                                        Control Number Expiry: <strong>{!! $change_req->get_latest_bill()->expire_date ?? ' <span class="text-danger"></span>' !!}</strong>
                                     </div>
                                 @endif
                                 <br>
