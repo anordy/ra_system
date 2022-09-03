@@ -257,10 +257,12 @@
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $location->physical_address }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">House No.</span>
-                    <p class="my-1">{{ $location->house_no }}</p>
-                </div>
+                @if($location->house_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">House No.</span>
+                        <p class="my-1">{{ $location->house_no }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Latitude</span>
                     <p class="my-1">{{ $location->latitude }}</p>
