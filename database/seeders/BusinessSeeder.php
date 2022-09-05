@@ -35,8 +35,6 @@ class BusinessSeeder extends Seeder
             "email" => "goodman@mailinator.com",
             "place_of_business" => "Mazizini",
             "physical_address" => "PO BOX 456 Mazizini",
-            "pre_estimated_turnover" => "12000000",
-            "post_estimated_turnover" => "0",
             "goods_and_services_types" => "Food and drinks",
             "goods_and_services_example" => "Azam-cola and Minute maid",
             "is_own_consultant" => 1,
@@ -69,6 +67,8 @@ class BusinessSeeder extends Seeder
             "tax_region_id" => 1,
             "zin" => 1,
             "date_of_commencing" => "2022-01-01",
+            "pre_estimated_turnover" => 1200000,
+            "post_estimated_turnover" => 340000,
             "approved_on"=> Carbon::now()
         ];
 
