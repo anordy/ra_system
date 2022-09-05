@@ -49,7 +49,6 @@ class ZanMalipoController extends Controller
         TaxAssessment::class,
         Dispute::class,
         PortReturn::class,
-        RenewTaxAgentRequest::class
     ];
 
     private $multipleBillsReturnable = [
