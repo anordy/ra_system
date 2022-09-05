@@ -19,12 +19,12 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
-use App\Models\TaxAgent;
 use App\Models\ZmBill;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
+use App\Models\LandLease;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
@@ -49,6 +49,7 @@ class ZanMalipoController extends Controller
         TaxAssessment::class,
         Dispute::class,
         PortReturn::class,
+        LandLease::class
     ];
 
     private $multipleBillsReturnable = [

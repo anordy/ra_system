@@ -71,7 +71,7 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
-use App\Http\Controllers\Reports\Registration\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Business\BusinessRegReportController;
 use App\Http\Controllers\Reports\Registration\InitRegReportController;
 //use App\Http\Controllers\Reports\Registrations\RegistrationReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
@@ -360,27 +360,13 @@ Route::middleware(['auth'])->group(function () {
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
 
-        Route::get('/returns',[ReturnReportController::class,'index'])->name('returns');
-        Route::get('/returns/preview/{parameters}',[ReturnReportController::class,'preview'])->name('returns.preview');
-        Route::get('/download-report-pdf/{data}',[ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
-//        Route::get('/registrations', [RegistrationReportController::class,'index'])->name('registrations.index');
-
-        Route::get('/registration/init',[InitRegReportController::class,'init'])->name('registration.init');
-
-        Route::get('/registration/business-by-nature/preview/{isic1}/{level}',[BusinessRegReportController::class,'byNature'])->name('registration.business-by-nature.preview');
-        Route::get('/registration/business-by-nature/pdf/preview/{isic1}',[BusinessRegReportController::class,'exportBusinessByNatureReportPdf'])->name('registration.business-by-nature.pdf');
-
-        Route::get('/registration/business-by-tax-type/preview/{tax_type_id}',[BusinessRegReportController::class,'byTaxType'])->name('registration.business-by-tax-type.preview');
-        Route::get('/registration/business-by-tax-type/pdf/{tax_type_id}',[BusinessRegReportController::class,'exportBusinessByTaxTypeReportPdf'])->name('registration.business-by-tax-type.pdf');
-
-        Route::get('/registration/business-by-turn-over-last/preview/{from}/{to}',[BusinessRegReportController::class,'byTurnOverLast'])->name('registration.business-by-turn-over-last.preview');
-        Route::get('/registration/business-by-turn-over-last/pdf/{from}/{to}',[BusinessRegReportController::class,'exportBusinessByTurnOverLastReportPdf'])->name('registration.business-by-turn-over-last.pdf');
-
-        Route::get('/registration/business-by-turn-over-next/preview/{from}/{to}',[BusinessRegReportController::class,'byTurnOverNext'])->name('registration.business-by-turn-over-next.preview');
-        Route::get('/registration/business-by-turn-over-next/pdf/{from}/{to}',[BusinessRegReportController::class,'exportBusinessByTurnOverNextReportPdf'])->name('registration.business-by-turn-over-next.pdf');
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
         Route::get('/returns/preview/{parameters}', [ReturnReportController::class, 'preview'])->name('returns.preview');
-        Route::get('/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
+        Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
+        
+        Route::get('/business', [BusinessRegReportController::class,'init'])->name('business.init');
+        Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
+        Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -520,6 +506,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {
+        Route::get('/license', [LicenseApplicationsController::class, 'indexLicense'])->name('licenses');
+        Route::get('/license/{id}', [LicenseApplicationsController::class, 'showLicense'])->name('licenses.show');
         Route::get('/applications', [LicenseApplicationsController::class, 'index'])->name('applications');
         Route::get('/applications/create', [LicenseApplicationsController::class, 'create'])->name('applications.create');
         Route::get('/applications/submit/{id}', [LicenseApplicationsController::class, 'submit'])->name('applications.submit');
@@ -544,4 +532,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/appeals', [CasesController::class, 'appealsIndex'])->name('appeals');
         Route::get('/appeals/{id}', [CasesController::class, 'appealShow'])->name('appeal.show');
     });
+
+    Route::get('/control-number/retry/{id}', [LicenseApplicationsController::class, 'retryControlNumber'])->name('control-number.retry');
 });

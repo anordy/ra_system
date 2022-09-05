@@ -193,7 +193,7 @@
                     @endcan
                     @can('withholding-agents-view')
                         <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
-                            <a href="{{ route('withholdingAgents.list') }}">Agents List</a>
+                            <a href="{{ route('withholdingAgents.list') }}">Withholding Agents List</a>
                         </li>
                     @endcan
                 </ul>
@@ -574,6 +574,9 @@
                     class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
                     <a href="{{ route('drivers-license.applications') }}">Driver's License Applications</a>
                 </li>
+                <li class="{{ request()->is('drivers-license/license*') || request()->is('drivers-license*') ? 'active' : '' }}">
+                    <a href="{{ route('drivers-license.licenses') }}">Driver's Licenses</a>
+                </li>
                 <li class="{{ request()->is('rio*') ? 'active' : '' }}">
                     <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
                 </li>
@@ -629,7 +632,7 @@
                             <a href="{{ route('reports.returns') }}">Return Reports</a>
                         </li>
                         <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.registration.init') }}">Registration Reports</a>
+                            <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
                     @endcan
                 </ul>

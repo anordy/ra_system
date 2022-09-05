@@ -20,16 +20,13 @@ class TaxInvestigationApprovalTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return WorkflowTask::with('pinstance', 'user')
-            ->where('pinstance_type', TaxInvestigation::class)
-            ->where('status', 'running')
-            ->whereJsonContains('operators', auth()->user()->id);
+        return TaxInvestigation::query()->with('business', 'location', 'taxType', 'taxReturn')
+            ->where('tax_investigations.status', TaxInvestigationStatus::PENDING);
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['user_type', 'pinstance_type']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -39,25 +36,12 @@ class TaxInvestigationApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('pinstance_id')->hideIf(true),
-            Column::make('ZRB No', 'pinstance_id')
-                ->label(fn ($row) => $row->pinstance->location->zin ?? ''),
-            Column::make('TIN', 'pinstance_id')
-                ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
-            Column::make('Business Name', 'pinstance_id')
-                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
-            Column::make('Business Location', 'pinstance_id')
-                ->label(fn ($row) => $row->pinstance->location->name ?? ''),
-            Column::make('TaxType', 'pinstance_id')
-                ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
-            Column::make('Period From', 'pinstance_id')
-                ->label(fn ($row) => $row->pinstance->period_from ?? ''),
-            Column::make('Period To', 'pinstance_id')
-                ->label(fn ($row) => $row->pinstance->period_to ?? ''),
-            Column::make('Created By', 'pinstance_id')
-                ->label(fn ($row) => $row->pinstance->createdBy->full_name ?? ''),
-            Column::make('Created On', 'created_at')
-                ->label(fn ($row) => Carbon::create($row->pinstance->created_at ?? null)->toDayDateTimeString()),
+            Column::make('Z_Number', 'location.zin'),
+            Column::make('Business Name', 'business.name'),
+            Column::make('Business Location', 'location.name'),
+            Column::make('Tax Type', 'taxType.name'),
+            Column::make('From Date', 'period_from'),
+            Column::make('To Date', 'period_to'),
             Column::make('Action', 'id')
                 ->view('investigation.approval.action')
                 ->html(true),

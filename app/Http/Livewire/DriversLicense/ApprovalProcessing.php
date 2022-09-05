@@ -59,7 +59,7 @@ class ApprovalProcessing extends Component
             } else {
                 $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $bill->zan_status = 'pending';
-                $bill->control_number = '90909919991909';
+                $bill->control_number = rand(2000070001000, 2000070009999);
                 $bill->save();
                 $this->flash('success', 'A control number for this dispute has been generated successfull and approved');
             }

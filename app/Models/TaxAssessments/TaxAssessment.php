@@ -3,6 +3,7 @@
 namespace App\Models\TaxAssessments;
 
 use App\Models\Debts\Debt;
+use App\Models\Disputes\Dispute;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Models\FinancialMonth;
@@ -20,6 +21,9 @@ class TaxAssessment extends Model
 
     protected $guarded = [];
 
+    public function dispute(){
+        return $this->belongsTo(Dispute::class);
+    }
 
     public function business()
     {

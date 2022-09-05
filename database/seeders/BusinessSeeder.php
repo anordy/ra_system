@@ -7,6 +7,7 @@ use App\Models\BusinessBank;
 use App\Models\BusinessLocation;
 use App\Models\BusinessTaxType;
 use App\Models\TaxType;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -68,6 +69,7 @@ class BusinessSeeder extends Seeder
             "tax_region_id" => 1,
             "zin" => 1,
             "date_of_commencing" => "2022-01-01",
+            "approved_on"=> Carbon::now()
         ];
 
         $bank = [
