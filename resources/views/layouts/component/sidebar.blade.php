@@ -193,7 +193,7 @@
                     @endcan
                     @can('withholding-agents-view')
                         <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
-                            <a href="{{ route('withholdingAgents.list') }}">Agents List</a>
+                            <a href="{{ route('withholdingAgents.list') }}">Withholding Agents List</a>
                         </li>
                     @endcan
                 </ul>
