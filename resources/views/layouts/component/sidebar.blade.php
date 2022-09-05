@@ -864,6 +864,12 @@
                         <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index','CourtLevel') }}">Court Levels</a>
                         </li>
+                        <li class="{{ request()->is('settings/financial-years') ? 'active' : '' }}">
+                            <a href="{{ route('settings.financial-years') }}">Financial Years</a>
+                        </li>
+                        <li class="{{ request()->is('settings/financial-months') ? 'active' : '' }}">
+                            <a href="{{ route('settings.financial-months') }}">Financial Months</a>
+                        </li>
                 </ul>
             </li>
         @endcan

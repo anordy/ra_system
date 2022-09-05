@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 class SevenDaysFinancialMonth extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
 
     public function year(){
         return $this->belongsTo(FinancialYear::class, 'financial_year_id');
