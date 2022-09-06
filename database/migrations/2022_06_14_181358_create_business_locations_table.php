@@ -29,7 +29,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->enum('nature_of_possession',['Owned','Rented']);
             $table->string('street');
             $table->string('physical_address');
-            $table->string('house_no');
+            $table->string('house_no')->nullable();
             $table->string('owner_name')->nullable();
             $table->string('owner_phone_no')->nullable();
             $table->float('pre_estimated_turnover', 20, 2);
