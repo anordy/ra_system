@@ -40,14 +40,16 @@ class WithholdingAgentRegistration extends Component
     public $title;
     public $position;
     public $date_of_commencing;
-
+    public $reference_no;
+    public $search_triggered = false;
+    public $taxpayer;
 
     protected $rules = [
-        'tin' => 'required|integer',
+        'tin' => 'required|integer|min:8',
         'institution_name' => 'required',
         'institution_place' => 'required',
         'email' => 'required|email|unique:withholding_agents,email',
-        'mobile' => 'required|unique:withholding_agents,mobile|size:10',
+        'mobile' => 'required|unique:withholding_agents,mobile|max:20',
         'address' => 'required',
         'responsible_person_id' => 'required',
         'region_id' => 'required',
@@ -86,7 +88,7 @@ class WithholdingAgentRegistration extends Component
         DB::beginTransaction();
         try {
             $withholding_agent = [
-                'wa_number' => mt_rand(1000000000,9999999999),
+                'wa_number' => mt_rand(1000000000, 9999999999),
                 'tin' => $this->tin,
                 'institution_name' => $this->institution_name,
                 'institution_place' => $this->institution_place,
@@ -107,19 +109,33 @@ class WithholdingAgentRegistration extends Component
                 'officer_id' => auth()->user()->id,
             ];
             $withholding_agent_resp_person = $withholding_agent->responsiblePersons()->create($withholding_agent_resp_person_data);
-            
+
             DB::commit();
 
             event(new SendMail('withholding_agent_registration', $withholding_agent_resp_person->id));
             event(new SendSms('withholding_agent_registration', $withholding_agent_resp_person->id));
 
             return redirect()->to('/withholdingAgents/list')->with('success', "A notification for successful registration of a withholding agent for {$this->institution_name} has been sent to the responsible person.");
-         
         } catch (Exception $e) {
             Log::error($e);
             DB::rollBack();
             $this->alert('error', 'Something went wrong');
         }
+    }
+
+    public function searchResponsiblePerson()
+    {
+        $this->search_triggered = true;
+
+        $taxpayer = Taxpayer::query()->where(['reference_no' => $this->reference_no])->first();
+
+        if (!empty($taxpayer)) {
+            $this->taxpayer = $taxpayer;
+        } else {
+            $this->taxpayer = null;
+        }
+
+        $this->responsible_person_id = $this->taxpayer->id ?? null;
     }
 
 

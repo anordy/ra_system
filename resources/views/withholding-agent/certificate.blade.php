@@ -11,47 +11,37 @@
             background-size: cover;
             margin: -70px;
         }
-        .institutionName {
+
+        .embed {
             position: absolute;
-            font-size: 1.5em;
-            top: 38%;
-            left: 30%;
             text-transform: uppercase;
-            font-weight: bold
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+        }
+        .institutionName {
+            font-size: 1.15em;
+            top: 39%;
         }
 
         .witholdingAgentNumber {
-            position: absolute;
-            font-size: 1.5em;
-            top: 70%;
-            left: 43%;
-            text-transform: uppercase;
-            font-weight: bold
+            font-size: 1.15em;
+            top: 70.5%;
         }
         .startDate {
-            position: absolute;
-            font-size: 1.2em;
+            font-size: 1.15em;
             top: 75%;
-            left: 43%;
-            text-transform: uppercase;
-            font-weight: bold
         }
 
         .dateGiven {
-            position: absolute;
-            font-size: 1.2em;
+            font-size: 1.15em;
             top: 80%;
-            left: 43%;
-            text-transform: uppercase;
-            font-weight: bold
         }
         .location {
-            position: absolute;
-            font-size: 1.1em;
+            font-size: 1.15em;
             top: 46.7%;
-            left: 35%;
-            text-transform: uppercase;
-            font-weight: bold
         }
         .qr-code {
             top: 86%;
@@ -74,11 +64,11 @@
 
 <body>
 
-    <span class="institutionName">{{ $wa_responsible_person->withholdingAgent->institution_name  ?? '' }}</span>
-    <span class="location">{{ $wa_responsible_person->withholdingAgent->institution_place ?? '' }}</span>
-    <span class="witholdingAgentNumber">{{ $wa_responsible_person->withholdingAgent->wa_number ?? '' }}</span>
-    <span class="startDate">{{ $wa_responsible_person->created_at->toFormattedDateString() ?? '' }}</span>
-    <span class="dateGiven">{{ date('M d, Y') }}</span>
+    <span class="embed institutionName">{{ $wa_responsible_person->withholdingAgent->institution_name  ?? '' }}</span>
+    <span class="embed location">{{ $wa_responsible_person->withholdingAgent->institution_place ?? '' }}</span>
+    <span class="embed witholdingAgentNumber">{{ $wa_responsible_person->withholdingAgent->wa_number ?? '' }}</span>
+    <span class="embed startDate">{{ $wa_responsible_person->created_at->toFormattedDateString() ?? '' }}</span>
+    <span class="embed dateGiven">{{ date('M d, Y') }}</span>
     <span class="commissioner-signature">
         <img src="{{ public_path()}}/sign/commissioner.png">
     </span>

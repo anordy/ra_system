@@ -20,6 +20,9 @@ class AddResponsiblePersonModal extends Component
     public $position;
     public $responsible_persons = [];
     public $withholding_agent_id;
+    public $search_triggered = false;
+    public $taxpayer;
+    public $reference_no;
 
     protected function rules()
     {
@@ -56,6 +59,21 @@ class AddResponsiblePersonModal extends Component
             Log::error($e);
             $this->alert('error', 'Something went wrong');
         }
+    }
+
+    public function searchResponsiblePerson()
+    {
+        $this->search_triggered = true;
+
+        $taxpayer = Taxpayer::query()->where(['reference_no' => $this->reference_no])->first();
+
+        if (!empty($taxpayer)) {
+            $this->taxpayer = $taxpayer;
+        } else {
+            $this->taxpayer = null;
+        }
+
+        $this->responsible_person_id = $this->taxpayer->id ?? null;
     }
 
     public function render()

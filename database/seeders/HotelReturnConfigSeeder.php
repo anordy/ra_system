@@ -43,7 +43,7 @@ class HotelReturnConfigSeeder extends Seeder
                 'rate_applicable' => true,
                 'rate_type' => 'fixed',
                 'currency' => 'USD',
-                'rate_usd' => 8,
+                'rate_usd' => 0,
                 'active' => true,
                 'tax_type_id' => 2,
                 'heading_type' => 'supplies'
