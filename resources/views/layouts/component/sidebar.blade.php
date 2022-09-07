@@ -870,6 +870,9 @@
                         <li class="{{ request()->is('settings/financial-months') ? 'active' : '' }}">
                             <a href="{{ route('settings.financial-months') }}">Financial Months</a>
                         </li>
+                        <li class="{{ request()->is('settings/return-config/*') ? 'active' : '' }}">
+                            <a href="{{route('settings.return-config.index')}}">Return Configurations</a>
+                        </li>
                 </ul>
             </li>
         @endcan
