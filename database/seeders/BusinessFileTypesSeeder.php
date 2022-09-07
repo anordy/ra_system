@@ -68,16 +68,6 @@ class BusinessFileTypesSeeder extends Seeder
             'is_required' => true
         ]);
 
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'identification_card',
-            'name' => 'Identification Card',
-            'description' => 'Identification Card of the business owner.',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::PARTNERSHIP,
-            'is_required' => true
-        ]);
-
-
         // Company
         BusinessFileType::updateOrCreate([
             'short_name' => 'memorandum',

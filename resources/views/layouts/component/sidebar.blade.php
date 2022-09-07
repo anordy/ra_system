@@ -193,7 +193,7 @@
                     @endcan
                     @can('withholding-agents-view')
                         <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
-                            <a href="{{ route('withholdingAgents.list') }}">Agents List</a>
+                            <a href="{{ route('withholdingAgents.list') }}">Withholding Agents List</a>
                         </li>
                     @endcan
                 </ul>
@@ -863,6 +863,15 @@
                         </li>
                         <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index','CourtLevel') }}">Court Levels</a>
+                        </li>
+                        <li class="{{ request()->is('settings/financial-years') ? 'active' : '' }}">
+                            <a href="{{ route('settings.financial-years') }}">Financial Years</a>
+                        </li>
+                        <li class="{{ request()->is('settings/financial-months') ? 'active' : '' }}">
+                            <a href="{{ route('settings.financial-months') }}">Financial Months</a>
+                        </li>
+                        <li class="{{ request()->is('settings/return-config/*') ? 'active' : '' }}">
+                            <a href="{{route('settings.return-config.index')}}">Return Configurations</a>
                         </li>
                 </ul>
             </li>

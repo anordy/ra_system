@@ -3,10 +3,11 @@
     <a href="#tab2" class="nav-item nav-link font-weight-bold">Responsible Persons</a>
 </nav>
 <div class="tab-content px-2 card pt-3 pb-2">
-    <div id="tab1" class="tab-pane fade active show">
+    <div id="tab1" class="tab-pane fade active show m-2">
         <h6 class="text-uppercase">Main Details</h6>
+        <hr>
 
-        <div class="row m-2 pt-3">
+        <div class="row m-4 pt-3">
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Withholding Agent Number</span>
                 <p class="my-1">{{ $withholding_agent->wa_number }}</p>
@@ -20,15 +21,15 @@
                 <p class="my-1">{{ $withholding_agent->institution_name }}</p>
             </div>
             <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Address</span>
+                <span class="font-weight-bold text-uppercase">Institution Address</span>
                 <p class="my-1">{{ $withholding_agent->address }}</p>
             </div>
             <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Contact Number</span>
+                <span class="font-weight-bold text-uppercase">Institution Contact Number</span>
                 <p class="my-1">{{ $withholding_agent->mobile }}</p>
             </div>
             <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Email Address</span>
+                <span class="font-weight-bold text-uppercase">Institution Email Address</span>
                 <p class="my-1">{{ $withholding_agent->email }}</p>
             </div>
             <div class="col-md-4 mb-3">
@@ -58,7 +59,7 @@
             </div>
         </div>
     </div>
-    <div id="tab2" class="tab-pane fade">
+    <div id="tab2" class="tab-pane fade m-2">
         <div class="row mb-2">
             <div class="col-md-6 text-left">
             </div>

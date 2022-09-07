@@ -128,14 +128,6 @@
                 <p class="my-1">{{ $business->physical_address }}</p>
             </div>
             <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months) TZS</span>
-                <p class="my-1">{{ fmCurrency($business->post_estimated_turnover) }}</p>
-            </div>
-            <div class="col-md-4 mb-3">
-                <span class="font-weight-bold text-uppercase">Estimated Turnover (Last 12 Months) TZS</span>
-                <p class="my-1">{{ fmCurrency($business->pre_estimated_turnover) }}</p>
-            </div>
-            <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Type of Business Activities</span>
                 <p class="my-1">{{ $business->activityType->name }}</p>
             </div>
@@ -234,6 +226,14 @@
                     <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>
+                    <p class="my-1">{{ number_format($location->pre_estimated_turnover ?? 0, 2) }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Post Estimated Turnover</span>
+                    <p class="my-1">{{ number_format($location->post_estimated_turnover ?? 0, 2) }}</p>
+                </div>
+                <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Electric Metre No.</span>
                     <p class="my-1">{{ $location->meter_no }}</p>
                 </div>
@@ -257,10 +257,12 @@
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $location->physical_address }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">House No.</span>
-                    <p class="my-1">{{ $location->house_no }}</p>
-                </div>
+                @if($location->house_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">House No.</span>
+                        <p class="my-1">{{ $location->house_no }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Latitude</span>
                     <p class="my-1">{{ $location->latitude }}</p>
@@ -327,6 +329,14 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
                         <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>
+                        <p class="my-1">{{ $business->currency->iso }}. {{ number_format($location->pre_estimated_turnover ?? 0, 2) }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Post Estimated Turnover</span>
+                        <p class="my-1">{{ $business->currency->iso }}. {{ number_format($location->post_estimated_turnover ?? 0, 2) }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Electric Metre No.</span>

@@ -78,6 +78,8 @@ use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
 use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
+//use App\Http\Controllers\Returns\HotelLevyReturnController;
+use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
@@ -87,9 +89,11 @@ use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
 use App\Http\Controllers\Returns\Queries\NilReturnsController;
 use App\Http\Controllers\Returns\Queries\NonFilersController;
 use App\Http\Controllers\Returns\Queries\SalesPurchasesController;
+use App\Http\Controllers\Returns\ReturnController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
+use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\RoadInspectionOffence\RegisterController;
 use App\Http\Controllers\RoleController;
@@ -153,11 +157,21 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
+        Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
+        Route::get('financial-months', [FinancialMonthsController::class, 'index'])->name('financial-months');
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
                 ->where('model','CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
         });
+        Route::name('return-config.')->prefix('return-config')->group(function () {
+            Route::get('/',[ReturnController::class,'config'])->name('index');
+            Route::get('/show/{id}',[ReturnController::class,'showReturnConfigs'])->name('show');
+            Route::get('/create/{id}/{code}',[ReturnController::class,'create'])->name('create');
+            Route::get('/edit/{id}/{code}/{config_id}',[ReturnController::class,'edit'])->name('edit');
+        });
+
+        Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
