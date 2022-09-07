@@ -78,6 +78,14 @@
                                 <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>
+                                <p class="my-1">{{ number_format($location->pre_estimated_turnover ?? 0, 2) }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Post Estimated Turnover</span>
+                                <p class="my-1">{{ number_format($location->post_estimated_turnover ?? 0, 2) }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">House No.</span>
                                 <p class="my-1">{{ $location->house_no }}</p>
                             </div>

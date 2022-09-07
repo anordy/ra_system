@@ -17,16 +17,16 @@
                 <a href="#tab4" class="nav-item nav-link font-weight-bold">Pending Correction</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
-                <div id="tab1" class="tab-pane fade active show">
+                <div id="tab1" class="tab-pane fade active show m-2">
                     <livewire:business.updates.changes-request-table status='pending'></livewire:business.updates.changes-request-table>
                 </div>
-                <div id="tab2" class="tab-pane fade">
+                <div id="tab2" class="tab-pane fade m-2">
                     <livewire:business.updates.changes-request-table status='approved'></livewire:business.updates.changes-request-table>
                 </div>
-                <div id="tab3" class="tab-pane fade">
+                <div id="tab3" class="tab-pane fade m-2">
                     <livewire:business.updates.changes-request-table status='rejected'></livewire:business.updates.changes-request-table>
                 </div>
-                <div id="tab4" class="tab-pane fade">
+                <div id="tab4" class="tab-pane fade m-2">
                     <livewire:business.updates.changes-request-table status='correction'></livewire:business.updates.changes-request-table>
                 </div>
             </div>
