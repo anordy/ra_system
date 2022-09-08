@@ -18,7 +18,7 @@ class RegistrationsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        
+
         $this->perPageAccepted = [15, 25, 50];
 
         $this->setTableWrapperAttributes([
