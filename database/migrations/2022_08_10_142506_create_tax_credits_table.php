@@ -24,7 +24,7 @@ class CreateTaxCreditsTable extends Migration
             $table->enum('currency', ['TZS', 'USD', 'EUR'])->default('TZS');
             $table->unsignedInteger('installments_count')->nullable();
             $table->string('status')->nullable(); // Change to enum
-            $table->enum('payment_status',['pending','paid', 'paid-partially'])->nullable(); // Change to enum
+            $table->enum('payment_status',['pending','paid', 'paid-partially'])->default('pending'); // Change to enum
             $table->softDeletes();
             $table->timestamps();
         });

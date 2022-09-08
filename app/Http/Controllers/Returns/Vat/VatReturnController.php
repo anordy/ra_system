@@ -41,4 +41,13 @@ class VatReturnController extends Controller
         );
         return view('returns.vat_returns.show', compact('return', 'id', 'egovernmentFee'));
     }
+
+    public function config()
+    {
+        return view('returns.vat_returns.config.index');
+    }
+    public function configCreate()
+    {
+        return view('returns.vat_returns.config.create');
+    }
 }

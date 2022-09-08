@@ -17,11 +17,11 @@
                 <div id="request-details" class="tab-pane fade active show p-4">
                     <div class="row">
                         <div class="col-md-12 mb-4">
-                            <span class="font-weight-bold text-uppercase">Reasons for the application for extension of time to lodge objection</span>
+                            <span class="font-weight-bold text-uppercase">Reasons for the application of payment extension of time for the debt.</span>
                             <p class="my-1">{{ $extension->reasons }}</p>
                         </div>
                         <div class="col-md-12 mb-4">
-                            <span class="font-weight-bold text-uppercase">Statement of facts in support of the reasons for the application for the extension of time to lodge an objection</span>
+                            <span class="font-weight-bold text-uppercase">Statement of facts in support of the reasons for the application payment extension of time for the debt</span>
                             <p class="my-1">{{ $extension->ground }}</p>
                         </div>
                         @if($extension->extend_from)

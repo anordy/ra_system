@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Notifications\DatabaseNotification;
 use App\Services\ZanMalipo\ZmCore;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -78,14 +79,15 @@ class Actions extends Component
 			$agent = TaxAgent::query()->find($data->id);
 			$agent->status = TaxAgentStatus::APPROVED;
 			$agent->app_true_comment = $value['value'];
-			$agent->reference_no = "ZRB10" . rand(0, 9999);
 			$agent->app_first_date = Carbon::now();
 			$agent->app_expire_date = Carbon::now()->addYear()->toDateTimeString();
 			$agent->approver_id = Auth::id();
 			$agent->approved_at = now();
 			$agent->save();
 
-			$taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);
+            $agent->generateReferenceNo();
+
+            $taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
 				$subject = 'TAX-AGENT APPROVAL',
 				$message = 'Your application has been approved',

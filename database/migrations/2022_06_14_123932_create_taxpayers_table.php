@@ -15,13 +15,14 @@ class CreateTaxpayersTable extends Migration
     {
         Schema::create('taxpayers', function (Blueprint $table) {
             $table->id();
-            $table->string('reference_no')->unique();
+            $table->string('reference_no')->nullable()->unique();
 
             $table->unsignedBigInteger('id_type');
             $table->string('id_number');
 
             $table->string('tin')->nullable();
             $table->string('tin_location')->nullable();
+            $table->date('date_of_birth')->nullable();
 
             $table->string('first_name');
             $table->string('middle_name')->nullable();
@@ -33,7 +34,7 @@ class CreateTaxpayersTable extends Migration
             $table->string('mobile')->unique();
             $table->string('alt_mobile')->nullable();
 
-            $table->enum('location', ['Unguja', 'Pemba']);
+            $table->unsignedBigInteger('region_id')->nullable();
 
             $table->string('work_permit')->nullable();
             $table->string('residence_permit')->nullable();
