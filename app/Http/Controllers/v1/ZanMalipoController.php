@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Enum\InstallmentStatus;
 use App\Enum\PaymentStatus;
+use App\Enum\ReturnCategory;
 use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
 use App\Models\Installment\InstallmentItem;
@@ -25,6 +26,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\LandLease;
+use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
@@ -58,6 +60,10 @@ class ZanMalipoController extends Controller
 
     private $debtReturnable = [
         Debt::class
+    ];
+
+    private $taxReturn = [
+        TaxReturn::class
     ];
 
     private $installable = [
@@ -96,9 +102,10 @@ class ZanMalipoController extends Controller
                 $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
                 if (in_array($bill->billable_type, array_merge(
-                    $this->returnable,
+                    $this->returnable, // TODO: Remove this
                     $this->multipleBillsReturnable,
-                    $this->debtReturnable,
+                    $this->debtReturnable, // TODO: Remove this
+                    $this->taxReturn,
                     $this->installable))) {
                     try {
                         $billable         = $bill->billable;
@@ -117,6 +124,7 @@ class ZanMalipoController extends Controller
                     $this->returnable,
                     $this->multipleBillsReturnable,
                     $this->debtReturnable,
+                    $this->taxReturn,
                     $this->installable))) {
                     try {
                         $billable         = $bill->billable;
@@ -189,6 +197,9 @@ class ZanMalipoController extends Controller
 
             // Check and update debts
             $this->updateDebt($bill);
+
+            // Check and update tax return & Return
+            $this->updateTaxReturn($bill);
 
             // Update installments
             $this->updateInstallment($bill);
@@ -301,6 +312,32 @@ class ZanMalipoController extends Controller
         }
     }
 
+    private function updateTaxReturn($bill){
+        try {
+            if (in_array($bill->billable_type, $this->taxReturn)) {
+                if ($bill->paidAmount() >= $bill->amount) {
+                    $tax_return = $bill->billable;
+                    $return = $tax_return->return;
+                    if ($return){
+                        $return->status = ReturnStatus::COMPLETE;
+                        $return->paid_at = Carbon::now()->toDateTimeString();
+                        $return->save();
+                    }
+                    $tax_return->payment_status = ReturnStatus::COMPLETE;
+                    $tax_return->outstanding_amount = 0;
+                    $tax_return->save();
+                } else {
+                    $tax_return         = $bill->billable;
+                    $tax_return->status = ReturnStatus::PAID_PARTIALLY;
+                    $tax_return->outstanding_amount = $bill->amount - $bill->paidAmount();
+                    $tax_return->save();
+                }
+            }
+        } catch(\Exception $e){
+            Log::error($e);
+        }
+    }
+
     private function updateInstallment($bill){
         try {
             if ($bill->billable_type == InstallmentItem::class) {
@@ -402,6 +439,9 @@ class ZanMalipoController extends Controller
 
             // Check and update debts
             $this->updateDebt($bill);
+
+            // Check and update tax return
+            $this->updateTaxReturn($bill);
 
             // Update installments
             $this->updateInstallment($bill);

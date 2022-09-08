@@ -1,11 +1,16 @@
 <?php
 
+use App\Enum\ApplicationStatus;
+use App\Enum\ApplicationStep;
+use App\Enum\PaymentMethod;
+use App\Enum\ReturnCategory;
+use App\Enum\ReturnStatus as EnumReturnStatus;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReturnsTable extends Migration
+class CreateTaxReturnsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +19,7 @@ class CreateReturnsTable extends Migration
      */
     public function up()
     {
-        Schema::create('returns', function (Blueprint $table) {
+        Schema::create('tax_returns', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
@@ -60,13 +65,13 @@ class CreateReturnsTable extends Migration
             $table->boolean('is_nill')->default(false);
 
             $table->enum('filing_method', ['normal', 'method-one', 'method-two'])->default('normal');
-            $table->enum('return_status', ['adjusted', 'self-assessment', 'submitted', 'draft'])->default('submitted');
+            $table->enum('return_status', EnumReturnStatus::getConstants())->default('submitted');
             $table->enum('payment_status', ReturnStatus::getConstants())->default('submitted');
-            $table->enum('return_category', ['normal', 'debt', 'overdue'])->default('normal');
+            $table->enum('return_category', ReturnCategory::getConstants())->default('normal');
 
-            $table->enum('application_step', ['filing', 'debt', 'overdue'])->default('filing');
-            $table->enum('application_status', ['normal', 'waiver', 'installment', 'extension'])->default('normal');
-            $table->enum('payment_method', ['installment', 'full'])->nullable();
+            $table->enum('application_step', ApplicationStep::getConstants())->default('filing');
+            $table->enum('application_status', ApplicationStatus::getConstants())->default('normal');
+            $table->enum('payment_method', PaymentMethod::getConstants())->nullable();
 
             $table->dateTime('paid_at')->nullable();
             $table->dateTime('payment_due_date');
@@ -86,6 +91,6 @@ class CreateReturnsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('returns');
+        Schema::dropIfExists('tax_returns');
     }
 }

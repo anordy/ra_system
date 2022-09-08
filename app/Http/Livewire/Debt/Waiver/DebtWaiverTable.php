@@ -31,34 +31,34 @@ class DebtWaiverTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['debt_waivers.debt_id']);
+        $this->setAdditionalSelects(['debt_waivers.tax_return_id']);
 
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")
-                ->sortable(),
-            Column::make("Business Name", "business.name")
-                ->sortable()
-                ->searchable(),
-            Column::make("Owner", "business.owner_designation")
-                ->sortable()
-                ->searchable(),
-            Column::make("Mobile", "business.mobile")
-                ->sortable(),
-            Column::make("Debt Type", "debt.debt_type")
-                ->sortable()
-                ->format(function($value, $row) {
-                    return preg_split('[\\\]', $value)[2];
-                }),
-            Column::make("Waiver Category", "category")
-                ->sortable(),
-            Column::make('Status', 'status')
-                ->view('debts.waivers.includes.status'),
-            Column::make('Action', 'id')
-                ->view('debts.waivers.includes.action'),
+            // Column::make("Id", "id")
+            //     ->sortable(),
+            // Column::make("Business Name", "business.name")
+            //     ->sortable()
+            //     ->searchable(),
+            // Column::make("Owner", "business.owner_designation")
+            //     ->sortable()
+            //     ->searchable(),
+            // Column::make("Mobile", "business.mobile")
+            //     ->sortable(),
+            // Column::make("Debt Type", "debt.debt_type")
+            //     ->sortable()
+            //     ->format(function($value, $row) {
+            //         return preg_split('[\\\]', $value)[2];
+            //     }),
+            // Column::make("Waiver Category", "category")
+            //     ->sortable(),
+            // Column::make('Status', 'status')
+            //     ->view('debts.waivers.includes.status'),
+            // Column::make('Action', 'id')
+            //     ->view('debts.waivers.includes.action'),
         ];
     }
 }
