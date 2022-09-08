@@ -62,9 +62,10 @@ class AddMonthModal extends Component
             $this->flash('success', 'Saved successfully', [], redirect()->back()->getTargetUrl());
 
         } catch (\Throwable $exception) {
+            DB::rollBack();
             Log::error($exception);
 
-            $this->flash('warning', 'Internal server error', [], redirect()->back()->getTargetUrl());
+            $this->flash('warning', 'Something went wrong', [], redirect()->back()->getTargetUrl());
 
         }
     }

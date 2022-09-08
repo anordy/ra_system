@@ -1,0 +1,2 @@
+<a href="{{ route('settings.return-config.show', encrypt($row->id)) }}" class="btn btn-info btn-sm" data-toggle="tooltip"
+   data-placement="right" title="View"><i class="bi bi-eye mr-1"></i>Configurations</a>

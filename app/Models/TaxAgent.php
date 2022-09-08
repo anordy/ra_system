@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class TaxAgent extends Model implements Auditable
@@ -14,6 +17,47 @@ class TaxAgent extends Model implements Auditable
 	protected $table = 'tax_agents';
 
 	protected $guarded = [];
+
+    public function generateReferenceNo(){
+        if ($this->reference_no){
+            return true;
+        }
+
+        try {
+            DB::beginTransaction();
+            $s = 'ZC';
+
+            switch ($this->region->name){
+                case 'Unguja':
+                    $s = $s . 'U';
+                    break;
+                case 'Pemba':
+                    $s = $s . 'P';
+                    break;
+                default:
+                    abort(404);
+            }
+
+            $s = $s . Carbon::now()->format('y');
+
+            $index = Sequence::where('prefix', 'CRN')->firstOrFail();
+
+            $s = $s . sprintf("%05s", $index->next_id);
+
+            $this->reference_no = $s;
+            $this->save();
+
+            // Update index
+            $index->next_id = $index->next_id + 1;
+            $index->save();
+
+            DB::commit();
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e->getMessage());
+            throw $e;
+        }
+    }
 
 	public function academics() {
 		return $this->hasMany('App\Models\TaxAgentAcademicQualification');

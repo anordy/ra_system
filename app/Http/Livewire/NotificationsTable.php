@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -16,12 +17,13 @@ class NotificationsTable extends DataTableComponent
 {
     use LivewireAlert;
 
-    public function mount(){
+    public function mount()
+    {
         $user = auth()->user();
-        Notification::where('notifiable_type',get_class($user))
-                ->where('notifiable_id',$user->id)
-                ->whereNull('read_at')
-                ->update(['read_at'=> Carbon::now()]);
+        Notification::where('notifiable_type', get_class($user))
+            ->where('notifiable_id', $user->id)
+            ->whereNull('read_at')
+            ->update(['read_at' => Carbon::now()]);
     }
 
     public function builder(): Builder
@@ -93,11 +95,18 @@ class NotificationsTable extends DataTableComponent
 
     public function read($id)
     {
-        $notification = Notification::find($id);
-        if(Route::has($notification['data']->href)){
-            return redirect()->route($notification['data']->href);
-        }else{
+        try {
+            $notification = Notification::find($id);
+            if ($notification['data']->href != null) {
+                if ($notification['data']->hrefParameters != null) {
+                    return redirect()->route($notification['data']->href, $notification['data']->hrefParameters);
+                }
+                return redirect()->route($notification['data']->href);
+            }
             return redirect()->back();
+        } catch (Exception $e) {
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
     }
 
