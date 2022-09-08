@@ -15,7 +15,7 @@ class CreateKYCSTable extends Migration
     {
         Schema::create('kycs', function (Blueprint $table) {
             $table->id();
-            $table->string('reference_no')->unique();
+            $table->string('reference_no')->nullable();
 
             $table->unsignedBigInteger('id_type');
             $table->string('id_number');
@@ -29,7 +29,7 @@ class CreateKYCSTable extends Migration
             $table->string('mobile')->unique();
             $table->string('alt_mobile')->nullable();
 
-            $table->enum('location', ['Unguja', 'Pemba']);
+            $table->unsignedBigInteger('region_id')->nullable();
 
             $table->string('work_permit')->nullable(); // nullable
             $table->string('residence_permit')->nullable(); // nullable

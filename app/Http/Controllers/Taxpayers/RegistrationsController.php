@@ -10,8 +10,10 @@ use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class RegistrationsController extends Controller
 {
@@ -69,27 +71,37 @@ class RegistrationsController extends Controller
         $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
         $kyc->save();
 
-        $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at'])->toArray();
-        $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
-        $password = substr(str_shuffle($permitted_chars), 0, 8);
-//        $data['password'] = Hash::make($password);
-        $data['password'] = Hash::make('password');
+        try {
+            DB::beginTransaction();
 
+            $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at'])->toArray();
+            $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
+            $password = substr(str_shuffle($permitted_chars), 0, 8);
+            $data['password'] = Hash::make($password);
 
-        if (config('app.env') == 'local') {
-            $data['password'] = Hash::make('password');
+            if (config('app.env') == 'local') {
+                $data['password'] = Hash::make('password');
+            }
+
+            $taxpayer = Taxpayer::create($data);
+            $taxpayer->generateReferenceNo();
+
+            // Send email and password for OTP
+            event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+            if ($taxpayer->email) {
+                event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+            }
+
+            $taxpayer ? $kyc->delete() : session()->flash("error", "Couldn't verify user.");
+            DB::commit();
+
+            return redirect()->route('taxpayers.taxpayer.index');
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            session()->flash('error', 'Something went wrong, please try again later.');
+            return redirect()->route('taxpayers.registrations.index');
         }
 
-        $taxpayer = Taxpayer::create($data);
-
-        // Send email and password for OTP
-        event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
-        if ($taxpayer->email) {
-            event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
-        }
-
-        $taxpayer ? $kyc->delete() : session()->flash('error', "Couldn't verify user.");
-
-        return redirect()->route('taxpayers.registrations.index');
     }
 }

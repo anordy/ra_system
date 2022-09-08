@@ -4,6 +4,9 @@
 
 @section('content')
     <div class="card mt-3">
+        <div class="card-header bg-white font-weight-bold">
+            Taxpayer Registration Details
+        </div>
         <div class="card-body">
             <div class="row my-2">
                 <div class="col-md-4 mb-3">
@@ -30,7 +33,6 @@
                     <span class="font-weight-bold text-uppercase">Nationality</span>
                     <p class="my-1">{{ $taxPayer->country->nationality }}</p>
                 </div>
-
             </div>
             <hr />
             <div class="row">

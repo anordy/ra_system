@@ -13,6 +13,10 @@ class KYC extends Model implements Auditable
 
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
+    public function region(){
+        return $this->belongsTo(Region::class);
+    }
+
     public function country(){
         return $this->belongsTo(Country::class);
     }
