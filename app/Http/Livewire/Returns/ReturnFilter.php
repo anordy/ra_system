@@ -14,7 +14,7 @@ class ReturnFilter extends Component
     public function mount()
     {
         //set current year at first
-        // $this->year   = date('Y');
+        $this->year   = date('Y');
         $this->period = 'Monthly';
         $this->month  = strval(intval(date('m')));
 
