@@ -163,13 +163,13 @@ Route::middleware(['auth'])->group(function () {
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
             Route::get('/{model}', [MvrGenericSettingController::class, 'index'])
                 ->name('index')
-                ->where('model','CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
+                ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
-            Route::get('/',[ReturnController::class,'config'])->name('index');
-            Route::get('/show/{id}',[ReturnController::class,'showReturnConfigs'])->name('show');
-            Route::get('/create/{id}/{code}',[ReturnController::class,'create'])->name('create');
-            Route::get('/edit/{id}/{code}/{config_id}',[ReturnController::class,'edit'])->name('edit');
+            Route::get('/', [ReturnController::class, 'config'])->name('index');
+            Route::get('/show/{id}', [ReturnController::class, 'showReturnConfigs'])->name('show');
+            Route::get('/create/{id}/{code}', [ReturnController::class, 'create'])->name('create');
+            Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
         });
 
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
@@ -321,6 +321,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/lump-sum/index', [LumpSumReturnController::class, 'index'])->name('lump-sum.index');
         Route::get('/lump-sum/view/{id}', [LumpSumReturnController::class, 'view'])->name('lump-sum.show');
+        Route::get('/lump-sum/history/{filters}', [LumpSumReturnController::class, 'history'])->name('lump-sum.history');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -368,12 +369,11 @@ Route::middleware(['auth'])->group(function () {
 
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
-
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
         Route::get('/returns/preview/{parameters}', [ReturnReportController::class, 'preview'])->name('returns.preview');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
         
-        Route::get('/business', [BusinessRegReportController::class,'init'])->name('business.init');
+        Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
         Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
     });

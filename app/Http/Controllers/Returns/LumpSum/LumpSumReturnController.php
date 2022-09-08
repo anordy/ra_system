@@ -29,11 +29,6 @@ class LumpSumReturnController extends Controller
         return view('returns.lump-sum.history', compact('vars', 'paidData', 'unpaidData'));
     }
 
-    public function history()
-    {
-        return view('returns.lump-sum.history');
-    }
-
     public function view($row)
     {
         $id = decrypt($row);

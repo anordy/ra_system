@@ -4,15 +4,16 @@
 
 @section('content')
 
-@livewire('returns.return-summary', ['vars' => $vars])
-@livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
+    @livewire('returns.return-summary', ['vars' => $vars])
+    @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
 
-<div class="card rounded-0">
-    <div class="card-header bg-white h-100 d-flex justify-content-between align-items-center rounded-1">
-        <div>Payments History</div>
-    </div>
+    <div class="card rounded-4 shadow">
+        <div class="card-header bg-white h-100 justify-content-between align-items-center rounded-1">
+            <div>Payments History</div> <br><br>
+            <livewire:returns.return-filter />
+        </div>
 
-    <div class="card-body">
+        {{-- <div class="card-body">
         
         <div>
             <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
@@ -39,6 +40,13 @@
             </div>
         </div>
 
+    </div> --}}
+        <div class="card-body">
+            @if (isset($filters))
+                <livewire:returns.lump-sum.lump-sum-returns-table :filters="$filters" />
+            @else
+                <livewire:returns.lump-sum.lump-sum-returns-table />
+            @endif
+        </div>
     </div>
-</div>
 @endsection
