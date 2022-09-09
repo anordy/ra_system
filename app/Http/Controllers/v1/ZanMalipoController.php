@@ -307,7 +307,8 @@ class ZanMalipoController extends Controller
                 if ($bill->paidAmount() >= $bill->amount) {
                     $item = $bill->billable;
                     $item->update([
-                        'status' => ReturnStatus::COMPLETE
+                        'status' => ReturnStatus::COMPLETE,
+                        'paid_at' => Carbon::now()->toDateTimeString()
                     ]);
 
                     $debt = $item->installment->debt;

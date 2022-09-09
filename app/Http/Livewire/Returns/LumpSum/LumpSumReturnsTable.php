@@ -2,11 +2,13 @@
 
 namespace App\Http\Livewire\Returns\LumpSum;
 
+use App\Models\FinancialYear;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -14,22 +16,42 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class LumpSumReturnsTable extends DataTableComponent
 {
     use LivewireAlert;
+    protected $listeners = ['filterData' => 'filterData'];
+
+    public $data = [];
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-
+        // $this->setAdditionalSelects('lump_sum_returns.created_at as lp_created_at');
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
     }
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->builder();
+    }
+
     public function builder(): Builder
     {
-        return LumpSumReturn::query()
-        ->doesntHave('debt')
-        ->orderBy('lump_sum_returns.created_at', 'desc');
+        $data   = $this->data;
+        $filter = LumpSumReturn::query();
+
+        if (isset($data['type']) && $data['type'] != 'all') {
+            $filter->Where('return_category', $data['type']);
+        }
+        if (isset($data['month']) && $data['month'] != 'all') {
+            $filter->whereMonth('lump_sum_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] != 'All') {
+            $filter->whereYear('lump_sum_returns.created_at', '=', $data['year']);
+        }
+
+        return $filter->orderBy('lump_sum_returns.created_at', 'desc');
     }
 
     public function columns(): array
