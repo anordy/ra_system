@@ -19,6 +19,7 @@ class TaxReturn extends Model
 
     protected $casts = [
         'curr_filing_due_date' => 'datetime',
+        'curr_payment_due_date' => 'datetime'
     ];
 
 

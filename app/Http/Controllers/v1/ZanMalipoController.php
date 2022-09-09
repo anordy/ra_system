@@ -344,29 +344,30 @@ class ZanMalipoController extends Controller
                 if ($bill->paidAmount() >= $bill->amount) {
                     $item = $bill->billable;
                     $item->update([
-                        'status' => ReturnStatus::COMPLETE
+                        'status' => ReturnStatus::COMPLETE,
+                        'paid_at' => Carbon::now()->toDateTimeString()
                     ]);
 
-                    $debt = $item->installment->debt;
-                    $debt->update([
-                        'outstanding_amount' => $debt->outstanding_amount - $bill->amount
+                    $taxReturn = $item->installment->taxReturn;
+                    $taxReturn->update([
+                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount
                     ]);
 
                     if ($item->installment->getNextPaymentDate()){
-                        $debt->update([
-                            'curr_due_date' => $item->installment->getNextPaymentDate()
+                        $taxReturn->update([
+                            'curr_payment_due_date' => $item->installment->getNextPaymentDate()
                         ]);
                     } elseif(!$item->installment->getNextPaymentDate() && ($item->installment->status == InstallmentStatus::ACTIVE)) {
                         $item->installment->update([
                             'status' => InstallmentStatus::COMPLETE
                         ]);
 
-                        $item->installment->debt->update([
+                        $item->installment->taxReturn->update([
                             'status' => ReturnStatus::COMPLETE
                         ]);
 
-                        $item->installment->debt->debt->update([
-                            'status' => ReturnStatus::PAID_BY_DEBT
+                        $item->installment->taxReturn->return->update([
+                            'status' => ReturnStatus::COMPLETE
                         ]);
                     }
                 } else {
@@ -375,9 +376,9 @@ class ZanMalipoController extends Controller
                         'status' => ReturnStatus::PAID_PARTIALLY
                     ]);
 
-                    $debt = $item->installment->debt;
-                    $debt->update([
-                        'outstanding_amount' => $debt->outstanding_amount - $bill->amount
+                    $taxReturn = $item->installment->taxReturn;
+                    $taxReturn->update([
+                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount
                     ]);
                 }
             }

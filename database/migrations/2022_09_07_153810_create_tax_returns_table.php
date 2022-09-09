@@ -77,7 +77,7 @@ class CreateTaxReturnsTable extends Migration
             $table->dateTime('payment_due_date');
             $table->dateTime('filing_due_date');
 
-            $table->dateTime('curr_payment_due_date');
+            $table->dateTime('curr_payment_due_date')->nullable();
             $table->dateTime('curr_filing_due_date');
 
             $table->timestamps();

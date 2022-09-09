@@ -5,6 +5,7 @@ namespace App\Models\Installment;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Debts\Debt;
+use App\Models\Returns\TaxReturn;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,8 +22,8 @@ class InstallmentRequest extends Model
         'installment_to' => 'datetime',
     ];
 
-    public function debt(){
-        return $this->belongsTo(Debt::class);
+    public function taxReturn(){
+        return $this->belongsTo(TaxReturn::class);
     }
 
     public function business(){

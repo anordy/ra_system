@@ -6,6 +6,7 @@ use App\Enum\InstallmentStatus;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Debts\Debt;
+use App\Models\Returns\TaxReturn;
 use App\Models\TaxType;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,8 +33,8 @@ class Installment extends Model
         return $this->belongsTo(InstallmentRequest::class, 'installment_request_id');
     }
 
-    public function debt(){
-        return $this->belongsTo(Debt::class);
+    public function taxReturn(){
+        return $this->belongsTo(TaxReturn::class);
     }
 
     public function business(){
