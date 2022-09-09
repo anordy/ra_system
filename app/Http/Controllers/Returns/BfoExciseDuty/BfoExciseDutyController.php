@@ -26,14 +26,16 @@ class BfoExciseDutyController extends Controller
 
         $unpaidData = $this->returnCardReportForUnpaidReturns(BfoReturn::class, BfoReturn::getTableName(), BfoPenalty::getTableName());
 
-        $vars = $this->getSummaryData(BfoReturn::query());
+        $vars      = $this->getSummaryData(BfoReturn::query());
+        $tableName = 'returns.bfo-excise-duty.bfo-excise-duty-table';
 
-        return view('returns.excise-duty.bfo.index', compact('vars', 'paidData', 'unpaidData'));
+        return view('returns.excise-duty.bfo.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
     }
 
     public function show($return_id)
     {
         $return = BfoReturn::query()->findOrFail(decrypt($return_id));
+
         return view('returns.excise-duty.bfo.show', compact('return', 'return_id'));
     }
 }

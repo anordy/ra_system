@@ -262,6 +262,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                         $message = 'Your request has been approved successfully.',
                         $href = $hrefClient ?? null,
                         $hrefText = 'View',
+                        $hrefParameters = null,
                         $owner = 'taxpayer'
                     ));
                 } elseif (key($placesCurrent) == 'rejected') {
@@ -270,6 +271,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                         $message = 'Your request has been rejected .',
                         $href = $hrefClient ?? null,
                         $hrefText = 'View',
+                        $hrefParameters = null,
                         $owner = 'taxpayer',
                     ));
                 }

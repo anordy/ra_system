@@ -11,7 +11,9 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class HotelReturnsTable extends DataTableComponent
 {
+    protected $listeners = ['filterData' => 'filterData'];
     public $status;
+    public $data = [];
 
     public function configure(): void
     {
@@ -23,20 +25,29 @@ class HotelReturnsTable extends DataTableComponent
         $this->setAdditionalSelects(['financial_month_id']);
     }
 
-    public function mount($status)
+    public function filterData($data)
     {
-        $this->status = $status;
+        $this->data = $data;
+        $this->builder();
     }
 
     public function builder(): Builder
     {
-        if ($this->status == 'all') {
-            $tax = TaxType::where('code', TaxType::HOTEL)->first();
-
-            return HotelReturn::where('tax_type_id', $tax->id)->doesntHave('debt')->orderBy('hotel_returns.created_at', 'desc');
-        } elseif ($this->status == 'submitted') {
-            return HotelReturn::where('hotel_returns.status', $this->status)->doesntHave('debt')->orderBy('hotel_returns.created_at', 'desc');
+        $data   = $this->data;
+        $tax    = TaxType::where('code', TaxType::HOTEL)->first();
+        $filter = (new HotelReturn)->newQuery();
+        
+        if (isset($data['type']) && $data['type'] != 'all') {
+            $filter->Where('return_category', $data['type']);
         }
+        if (isset($data['month']) && $data['month'] != 'all') {
+            $filter->whereMonth('hotel_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] != 'All') {
+            $filter->whereYear('hotel_returns.created_at', '=', $data['year']);
+        }
+    
+        return $filter->where('tax_type_id', $tax->id)->orderBy('hotel_returns.created_at', 'desc');
     }
 
     public function columns(): array
