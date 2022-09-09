@@ -26,7 +26,9 @@ class LumpSumReturnController extends Controller
 
         $vars = $this->getSummaryData(LumpSumReturn::query());
 
-        return view('returns.lump-sum.history', compact('vars', 'paidData', 'unpaidData'));
+        $tableName = 'returns.lump-sum.lump-sum-returns-table';
+
+        return view('returns.lump-sum.history', compact('vars', 'paidData', 'unpaidData', 'tableName'));
     }
 
     public function view($row)
