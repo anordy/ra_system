@@ -7,6 +7,7 @@
 <script src="{{ asset('plugins/fontawesome/js/fontawesome.min.js') }}"></script>
 <script src="{{ asset('plugins/fontawesome/js/solid.min.js') }}"></script>
 <script src="{{ asset('plugins/fontawesome/js/regular.js') }}"></script>
+<script src="{{ asset('js/x-mask.js') }}" defer></script>
 <script src="{{ asset('js/alpine.min.js') }}" defer></script>
 <script src="{{ asset('js/modals.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>

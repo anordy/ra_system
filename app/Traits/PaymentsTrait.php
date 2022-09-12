@@ -299,12 +299,12 @@ trait PaymentsTrait {
     {
         $taxTypes = TaxType::all();
 
-        if ($debt->principal_amount > 0) {
+        if ($debt->principal > 0) {
             $billItems[] = [
                 'billable_id' => $debt->id,
                 'billable_type' => get_class($debt),
                 'use_item_ref_on_pay' => 'N',
-                'amount' => $debt->principal_amount,
+                'amount' => $debt->principal,
                 'currency' => $debt->currency,
                 'gfs_code' => $taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
                 'tax_type_id' => $taxTypes->where('code', TaxType::DEBTS)->first()->id
@@ -343,7 +343,7 @@ trait PaymentsTrait {
         $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
         $payer_email = $taxpayer->email;
         $payer_phone = $taxpayer->mobile;
-        $description = "{$debt->debt->taxtype->name} Debt for {$debt->debt->business->name} {$debt->location->name}";
+        $description = "{$debt->taxtype->name} Debt for {$debt->business->name} {$debt->location->name}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $debt->currency;
         $createdby_type = 'Job';
@@ -357,7 +357,7 @@ trait PaymentsTrait {
         $zmBill = ZmCore::createBill(
             $billableId,
             $billableType,
-            $taxTypes->where('code', TaxType::DEBTS)->first()->id,
+            $debt->tax_type_id,
             $payer_id,
             $payer_type,
             $payer_name,
@@ -376,25 +376,20 @@ trait PaymentsTrait {
         if (config('app.env') != 'local') {
             $response = ZmCore::sendBill($zmBill->id);
             if ($response->status === ZmResponse::SUCCESS) {
-                $debt->status = ReturnStatus::CN_GENERATING;
-                $debt->debt->return_category = 'debt';
+                $debt->payment_status = ReturnStatus::CN_GENERATING;
 
                 $debt->save();
-                $debt->debt->save();
-
             } else {
-                $debt->status = ReturnStatus::CN_GENERATION_FAILED;
+                $debt->payment_status = ReturnStatus::CN_GENERATION_FAILED;
             }
 
             $debt->save();
         } else {
 
             // We are local
-            $debt->status = ReturnStatus::CN_GENERATED;
-            $debt->debt->return_category = 'debt';
+            $debt->payment_status = ReturnStatus::CN_GENERATED;
 
             $debt->save();
-            $debt->debt->save();
 
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;

@@ -25,7 +25,7 @@ class CancelBill implements ShouldQueue
     public function __construct($bill, $cancellationReason)
     {
         $this->bill = $bill;
-        $this->cancellationReason;
+        $this->cancellationReason = $cancellationReason;
     }
 
     /**

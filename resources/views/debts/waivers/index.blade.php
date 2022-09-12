@@ -16,10 +16,10 @@
             </nav>
 
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
-                <div id="all-businesses" class="tab-pane fade active show">
+                <div id="all-businesses" class="tab-pane fade active show m-2">
                     <livewire:debt.waiver.debt-waiver-table category="waiver" />
                 </div>
-                <div id="pending-approval" class="tab-pane fade">
+                <div id="pending-approval" class="tab-pane fade m-2">
                     <livewire:debt.waiver.debt-waiver-approval-table category="waiver"/>
                 </div>
             </div>

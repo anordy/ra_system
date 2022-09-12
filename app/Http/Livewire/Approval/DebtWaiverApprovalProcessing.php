@@ -22,7 +22,7 @@ class DebtWaiverApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, LivewireAlert;
     public $modelId;
-    public $debt;
+    public $tax_return;
     public $modelName;
     public $comments;
     public $waiverReport;
@@ -37,10 +37,10 @@ class DebtWaiverApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->debt_waiver = DebtWaiver::find($this->modelId);
-        $this->debt = Debt::find($this->debt_waiver->debt_id);
+        $this->tax_return = $this->debt_waiver->debt;
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $modelId);
-        $this->forwardToCommisioner = $this->canForwardToCommisioner($this->debt);
+        $this->forwardToCommisioner = $this->canForwardToCommisioner($this->tax_return);
     }
 
     public function updated($propertyName)
@@ -51,7 +51,7 @@ class DebtWaiverApprovalProcessing extends Component
             } elseif ($this->penaltyPercent < 0 || !is_numeric($this->penaltyPercent)) {
                 $this->penaltyPercent = null;
             }
-            $this->penaltyAmount = ($this->debt->penalty * $this->penaltyPercent) / 100;
+            $this->penaltyAmount = ($this->tax_return->penalty * $this->penaltyPercent) / 100;
         }
 
         if ($propertyName == "interestPercent") {
@@ -60,12 +60,12 @@ class DebtWaiverApprovalProcessing extends Component
             } elseif ($this->interestPercent < 0 || !is_numeric($this->interestPercent)) {
                 $this->interestPercent = null;
             }
-            $this->interestAmount = ($this->debt->interest * $this->interestPercent) / 100;
+            $this->interestAmount = ($this->tax_return->interest * $this->interestPercent) / 100;
         }
 
-        $this->penaltyAmountDue = $this->debt->penalty - $this->penaltyAmount;
-        $this->interestAmountDue = $this->debt->interest - $this->interestAmount;
-        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->debt->principal_amount);
+        $this->penaltyAmountDue = $this->tax_return->penalty - $this->penaltyAmount;
+        $this->interestAmountDue = $this->tax_return->interest - $this->interestAmount;
+        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->tax_return->principal);
 
         $this->penaltyAmountDue = round($this->penaltyAmountDue, 2);
         $this->interestAmountDue = round($this->interestAmountDue, 2);
@@ -87,56 +87,28 @@ class DebtWaiverApprovalProcessing extends Component
                 ]);
                 DB::beginTransaction();
                 try {
-                    $this->debt->update([
+                    $this->debt_waiver->update([
+                        'penalty_rate' => $this->penaltyPercent ?? 0,
+                        'interest_rate' => $this->interestPercent ?? 0
+                    ]);
+
+                    $this->tax_return->update([
                         'penalty' => $this->penaltyAmountDue,
                         'interest' => $this->interestAmountDue,
                         'total_amount' => $this->total,
                         'outstanding_amount' => $this->total,
-                        'app_step' => 'waiver',
+                        'application_status' => 'waiver',
                     ]);
-    
-                    $billitems[] = [
-                            'billable_id' => $this->debt->id,
-                            'billable_type' => get_class($this->debt),
-                            'use_item_ref_on_pay' => 'N',
-                            'amount' => round($this->debt->principal_amount, 2),
-                            'currency' => 'TZS',
-                            'gfs_code' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
-                            'tax_type_id' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->id,
-                    ];
-    
-                    if ($this->penaltyAmountDue > 0) {
-                        $billitems[] = [
-                            'billable_id' => $this->debt->id,
-                            'billable_type' => get_class($this->debt),
-                            'use_item_ref_on_pay' => 'N',
-                            'amount' => $this->penaltyAmountDue,
-                            'currency' => 'TZS',
-                            'gfs_code' => $this->taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
-                            'tax_type_id' => $this->taxTypes->where('code', TaxType::PENALTY)->first()->id,
-                        ];
-                    }
-      
-                    if ($this->interestAmountDue > 0) {
-                        $billitems[] = [
-                            'billable_id' => $this->debt->id,
-                            'billable_type' => get_class($this->debt),
-                            'use_item_ref_on_pay' => 'N',
-                            'amount' => $this->interestAmountDue,
-                            'currency' => 'TZS',
-                            'gfs_code' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
-                            'tax_type_id' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->id,
-                        ];
-                    }
+
                     $this->subject->status = WaiverStatus::APPROVED;
                     $this->subject->save();
     
                     $now = Carbon::now();
-                    if ($this->debt->bill) {
-                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
-                        GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
+                    if ($this->tax_return->bill) {
+                        CancelBill::dispatch($this->tax_return->bill, 'Debt has been waived')->delay($now->addSeconds(10));
+                        GenerateControlNo::dispatch($this->tax_return)->delay($now->addSeconds(10));
                     } else {
-                        GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
+                        GenerateControlNo::dispatch($this->tax_return)->delay($now->addSeconds(10));
                     }
     
                     DB::commit();
@@ -157,57 +129,28 @@ class DebtWaiverApprovalProcessing extends Component
             ]);
             DB::beginTransaction();
             try {
-                $this->debt->update([
+                $this->debt_waiver->update([
+                    'penalty_rate' => $this->penaltyPercent ?? 0,
+                    'interest_rate' => $this->interestPercent ?? 0
+                ]);
+
+                $this->tax_return->update([
                     'penalty' => $this->penaltyAmountDue,
                     'interest' => $this->interestAmountDue,
                     'total_amount' => $this->total,
                     'outstanding_amount' => $this->total,
-                    'app_step' => 'waiver',
+                    'application_status' => 'waiver',
                 ]);
-
-                $billitems[] = [
-                        'billable_id' => $this->debt->id,
-                        'billable_type' => get_class($this->debt),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->debt->principal_amount,
-                        'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', TaxType::DEBTS)->first()->id,
-                ];
-
-                if ($this->penaltyAmountDue > 0) {
-                    $billitems[] = [
-                        'billable_id' => $this->debt->id,
-                        'billable_type' => get_class($this->debt),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->penaltyAmountDue,
-                        'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', TaxType::PENALTY)->first()->id,
-                    ];
-                }
-  
-                if ($this->interestAmountDue > 0) {
-                    $billitems[] = [
-                        'billable_id' => $this->debt->id,
-                        'billable_type' => get_class($this->debt),
-                        'use_item_ref_on_pay' => 'N',
-                        'amount' => $this->interestAmountDue,
-                        'currency' => 'TZS',
-                        'gfs_code' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
-                        'tax_type_id' => $this->taxTypes->where('code', TaxType::INTEREST)->first()->id,
-                    ];
-                }
 
                 $now = Carbon::now();
                 $this->subject->status = WaiverStatus::APPROVED;
                 $this->subject->save();
 
-                if ($this->debt->bill) {
-                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
-                    GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
+                if ($this->tax_return->bill) {
+                    CancelBill::dispatch($this->tax_return->bill, 'Debt has been waived')->delay($now->addSeconds(10));
+                    GenerateControlNo::dispatch($this->tax_return)->delay($now->addSeconds(10));
                 } else {
-                    GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
+                    GenerateControlNo::dispatch($this->tax_return)->delay($now->addSeconds(10));
                 }
 
                 DB::commit();
@@ -226,7 +169,6 @@ class DebtWaiverApprovalProcessing extends Component
             DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong.');
-            return;
         }
     }
 
@@ -245,9 +187,8 @@ class DebtWaiverApprovalProcessing extends Component
                     'comments' => 'required',
                 ]);
                 $this->subject->status = WaiverStatus::REJECTED;
-                $this->debt->update(['app_step' => 'normal']);
+                $this->tax_return->update(['application_status' => 'normal']);
                 $this->subject->save();
-
             }
 
             if ($this->checkTransition('commisioner_reject')) {
@@ -255,7 +196,7 @@ class DebtWaiverApprovalProcessing extends Component
                     'comments' => 'required',
                 ]);
                 $this->subject->status = WaiverStatus::REJECTED;
-                $this->debt->update(['app_step' => 'normal']);
+                $this->tax_return->update(['application_status' => 'normal']);
                 $this->subject->save();
             }
 
@@ -263,8 +204,6 @@ class DebtWaiverApprovalProcessing extends Component
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
-
-            return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
