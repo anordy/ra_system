@@ -118,8 +118,8 @@ class TaxInvestigationApprovalProcessing extends Component
                 [
                     'intension' => 'required',
                     'scope' => 'required',
-                    'periodFrom' => 'required:date|before:periodTo',
-                    'periodTo' => 'required:date|after:periodFrom',
+                    'periodFrom' => 'required|date',
+                    'periodTo' => 'required|after:periodFrom',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],
                     'teamMember' => ['required',  new NotIn([$this->teamLeader])],
                 ],
@@ -336,9 +336,8 @@ class TaxInvestigationApprovalProcessing extends Component
                     $assessment->status = ReturnStatus::CN_GENERATING;
                     $assessment->save();
 
-                    $this->flash('success', 'A control number has been generated successful.');
+                    $this->flash('success', 'A control number for this verification has been generated successfully', [], redirect()->back()->getTargetUrl());
                 } else {
-
                     session()->flash('error', 'Control number generation failed, try again later');
                     $assessment->status = ReturnStatus::CN_GENERATION_FAILED;
                 }
@@ -349,13 +348,13 @@ class TaxInvestigationApprovalProcessing extends Component
                 $assessment->status = ReturnStatus::CN_GENERATED;
                 $assessment->save();
 
-                // Simulate successful control no generation
+                // Simulate successfully control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = 'pending';
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
 
-                $this->flash('success', 'A control number for this verification has been generated successflu');
+                $this->flash('success', 'A control number for this verification has been generated successfully', [], redirect()->back()->getTargetUrl());
             }
             DB::commit();
         } catch (Exception $e) {
@@ -363,7 +362,7 @@ class TaxInvestigationApprovalProcessing extends Component
             DB::rollBack();
         }
     }
-    
+
     public function reject($transtion)
     {
         $this->validate([
