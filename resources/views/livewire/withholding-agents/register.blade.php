@@ -48,7 +48,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="mobile">Contact number of the Institution</label>
+                        <label for="mobile">Institution Contact Number</label>
                         <input type="tel" maxlength="20" wire:model.lazy="mobile" name="mobile" id="mobile"
                             class="form-control {{ $errors->has('mobile') ? 'is-invalid' : '' }}">
                         @error('mobile')
@@ -58,7 +58,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="email">Email Address of the Institution</label>
+                        <label for="email">Institution Email Address</label>
                         <input type="email" wire:model.lazy="email" name="email" id="email"
                             class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}">
                         @error('email')
