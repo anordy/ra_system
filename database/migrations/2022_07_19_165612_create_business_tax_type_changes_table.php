@@ -17,9 +17,11 @@ class CreateBusinessTaxTypeChangesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('taxpayer_id');
-            $table->longText('old_taxtype')->nullable();
-            $table->longText('new_taxtype')->nullable();
-            $table->string('reason')->nullable();
+            $table->string('from_tax_type_id');
+            $table->string('to_tax_type_id');
+            $table->string('from_tax_type_currency');
+            $table->string('to_tax_type_currency');
+            $table->longText('reason')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();

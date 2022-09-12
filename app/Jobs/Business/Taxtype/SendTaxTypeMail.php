@@ -33,8 +33,8 @@ class SendTaxTypeMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->payload['business']->taxpayer->email){
-            Mail::to($this->payload['business']->taxpayer->email)->send(new ChangeTaxType($this->payload));
+        if ($this->payload['tax_change']->business->taxpayer->email){
+            Mail::to($this->payload['tax_change']->business->taxpayer->email)->send(new ChangeTaxType($this->payload));
         }
     }
 }

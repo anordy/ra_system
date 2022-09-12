@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Business\Closure;
 
 use App\Models\BusinessStatus;
-use Exception;
 use Carbon\Carbon;
 use App\Models\BusinessTempClosure;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,7 +22,7 @@ class PendingClosuresTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended', 'business_temp_closures.status']);
+        $this->setAdditionalSelects(['is_extended', 'status']);
     }
 
     public function builder(): Builder
