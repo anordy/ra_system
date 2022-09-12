@@ -49,13 +49,14 @@
                 <div class="d-flex justify-content-end">
                     <button type="submit" class=" btn btn-primary ml-2 px-5" wire:click='fillter()'
                         wire:loading.attr="disabled">
-                        <i class="fa fa-filter"></i>
-                        <div wire:loading wire:target="fillter()">
-                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
+                        <div wire:loading.remove wire:target='fillter'>
+                            <i class="fa fa-filter"></i>
+                            Fillter
                         </div>
-                        Fillter
+                        <div wire:loading wire:target='fillter'>
+                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"> </div>
+                            Loading...
+                        </div>
                     </button>
                 </div>
             </div>

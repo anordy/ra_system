@@ -10,8 +10,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class PortReturnTable extends DataTableComponent
 {
     protected $listeners = ['filterData' => 'filterData'];
-    public $status;
-    public $data = [];
+    public $data         = [];
 
     public function configure(): void
     {
