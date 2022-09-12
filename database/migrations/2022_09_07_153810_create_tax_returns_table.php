@@ -64,7 +64,7 @@ class CreateTaxReturnsTable extends Migration
             $table->boolean('has_claim')->default(false);
             $table->boolean('is_nill')->default(false);
 
-            $table->enum('filing_method', ['normal', 'method-one', 'method-two'])->default('normal');
+            $table->enum('filing_method', ['normal', 'method_one', 'method_two'])->default('normal');
             $table->enum('return_status', EnumReturnStatus::getConstants())->default('submitted');
             $table->enum('payment_status', ReturnStatus::getConstants())->default('submitted');
             $table->enum('return_category', ReturnCategory::getConstants())->default('normal');
