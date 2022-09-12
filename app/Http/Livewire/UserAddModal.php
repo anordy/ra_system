@@ -5,7 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\DatabaseNotification;
+use App\Notifications\NewUserNotification;
 use Exception;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -85,8 +87,8 @@ class UserAddModal extends Component
 
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
-                    $subject = 'New ' . Role::find($this->role)->name . ' created',
-                    $message = 'New ' . Role::find($this->role)->name . ' ' . $user->fullname() . ' created by ' . auth()->user()->fname . ' ' . auth()->user()->lname,
+                    $subject = 'New '.Role::find($this->role)->name. ' created',
+                    $message = 'New '.Role::find($this->role)->name.' ' .$user->fullname() . ' created by ' .auth()->user()->fname.' '.auth()->user()->lname,
                     $href = 'settings.users.index',
                     $hrefText = 'View'
                 ));

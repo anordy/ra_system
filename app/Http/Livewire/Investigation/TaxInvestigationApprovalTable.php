@@ -16,17 +16,21 @@ class TaxInvestigationApprovalTable extends DataTableComponent
 
     use LivewireAlert;
 
-    public $model = TaxInvestigation::class;
+    public $model = WorkflowTask::class;
 
     public function builder(): Builder
     {
-        return TaxInvestigation::query()->with('business', 'location', 'taxType', 'taxReturn')
-            ->where('tax_investigations.status', TaxInvestigationStatus::PENDING);
+        return WorkflowTask::with('pinstance', 'user')
+            ->where('pinstance_type', TaxInvestigation::class)
+            ->where('status', '!=', 'completed')
+            ->where('owner', 'staff')
+            ->whereJsonContains('operators', auth()->user()->id);
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects('pinstance_type', 'user_type');
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -36,13 +40,31 @@ class TaxInvestigationApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Z_Number', 'location.zin'),
-            Column::make('Business Name', 'business.name'),
-            Column::make('Business Location', 'location.name'),
-            Column::make('Tax Type', 'taxType.name'),
-            Column::make('From Date', 'period_from'),
-            Column::make('To Date', 'period_to'),
-            Column::make('Action', 'id')
+            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+            Column::make('user_type', 'user_id')->hideIf(true),
+            Column::make('Z_Number', 'pinstance.location.zin')
+                ->label(fn ($row) => $row->pinstance->location->zin ?? '')
+                ->searchable(),
+            Column::make('TIN', 'pinstance.business.tin')
+                ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
+            Column::make('Business Name', 'pinstance.business.name')
+                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
+            Column::make('Business Location', 'pinstance.location.name')
+                ->label(fn ($row) => $row->pinstance->location->name ?? ''),
+            Column::make('Tax Type', 'pinstance.taxType.name')
+                ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
+            Column::make('Period From', 'pinstance.period_from')
+                ->label(fn ($row) => $row->pinstance->period_from ?? ''),
+            Column::make('Period To', 'pinstance.period_to')
+                ->label(fn ($row) => $row->pinstance->period_to ?? ''),
+            Column::make('Filled By', 'pinstance.created_by_id')
+                ->label(function ($row) {
+                    $user = $row->pinstance->createdBy;
+                    return $user->full_name ?? '';
+                }),
+            Column::make('Filled On', 'created_at')
+                ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
+            Column::make('Action', 'pinstance_id')
                 ->view('investigation.approval.action')
                 ->html(true),
 

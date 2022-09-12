@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Workflow\Events;
+namespace App\Services\Workflow\Subscriber;
 
 use App\Enum\DisputeStatus;
 use App\Enum\ReturnApplicationStatus;
@@ -120,11 +120,18 @@ class WorkflowSubscriber implements EventSubscriberInterface
             foreach ($places as $key => $place) {
 
                 $operators = json_encode($place['operators']);
-
+                $operator_type = $place['operator_type'];
                 if (array_key_exists('operators', $context) && $context['operators'] != []) {
                     $operators = json_encode($context['operators']);
                 } else {
-                    $operators = json_encode($place['operators']);
+                    $operator_type = 'user';
+
+                    if ($place['operator_type'] == 'role') {
+                        $users = User::whereIn('role_id', $place['operators'])->get();
+                        $operators = $users->count() > 0 ? json_encode($users->pluck('id')) : json_encode([]);
+                    } else {
+                        $operators = json_encode($place['operators']);
+                    }
                 }
 
                 $task = new WorkflowTask([
@@ -133,7 +140,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'from_place' => $transition->getFroms()[0],
                     'to_place' => $key,
                     'owner' => $place['owner'],
-                    'operator_type' => $place['operator_type'],
+                    'operator_type' => $operator_type,
                     'operators' => $operators,
                     'approved_on' => Carbon::now()->toDateTimeString(),
                     'user_id' => $user->id,
