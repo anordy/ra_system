@@ -1,9 +1,5 @@
 <div class="row my-2">
     <div class="col-md-4 mb-3">
-        <span class="font-weight-bold text-uppercase">Application Reference No.</span>
-        <p class="my-1">{{ $kyc->reference_no }}</p>
-    </div>
-    <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Full Name</span>
         <p class="my-1">{{ "{$kyc->first_name} {$kyc->middle_name} {$kyc->last_name}" }}</p>
     </div>
@@ -50,7 +46,7 @@
 <div class="row">
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Location</span>
-        <p class="my-1">{{ $kyc->location }}</p>
+        <p class="my-1">{{ $kyc->region->name }}</p>
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Street</span>
@@ -61,9 +57,3 @@
         <p class="my-1">{{ $kyc->physical_address }}</p>
     </div>
 </div>
-{{--<div class="text-center mt-4">--}}
-{{--    <a href="{{ route('taxpayers.enroll-fingerprint', $kyc->id) }}" class="btn btn-primary rounded-0">--}}
-{{--        <i class="bi bi-fingerprint mr-2"></i>--}}
-{{--        Enroll Fingerprint--}}
-{{--    </a>--}}
-{{--</div>--}}

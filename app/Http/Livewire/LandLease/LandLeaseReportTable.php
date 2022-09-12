@@ -20,7 +20,6 @@ class LandLeaseReportTable extends DataTableComponent
 
     public function builder(): Builder
     {
-
         $dates = $this->dates;
 
         if ($dates == []) {
@@ -32,7 +31,6 @@ class LandLeaseReportTable extends DataTableComponent
         }
 
         return LandLease::query()->whereBetween('land_leases.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('land_leases.created_at', 'asc');
-
     }
 
     public function refreshTable($dates)
@@ -40,12 +38,13 @@ class LandLeaseReportTable extends DataTableComponent
         $this->dates = $dates;
         $this->builder();
     }
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
 
         $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered', 'taxpayer_id', 'land_leases.created_at', 'land_leases.business_location_id']);
@@ -54,16 +53,16 @@ class LandLeaseReportTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Register Date", "created_at")
+            Column::make('Register Date', 'created_at')
                 ->format(function ($value, $row) {
                     return date('d/m/Y', strtotime($value));
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make("DP Number", "dp_number")
+            Column::make('DP Number', 'dp_number')
                 ->searchable()
                 ->sortable(),
-            Column::make("Name", "category")
+            Column::make('Name', 'category')
                 ->format(
                     function ($value, $row) {
                         if ($row->category == 'business') {
@@ -78,7 +77,7 @@ class LandLeaseReportTable extends DataTableComponent
                     }
                 )
                 ->sortable(),
-            Column::make("Applicant Type", "category")
+            Column::make('Applicant Type', 'category')
                 ->format(function ($value) {
                     return ucwords($value);
                 })
@@ -100,15 +99,15 @@ class LandLeaseReportTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make("Applicant Type", "id")->view("land-lease.includes.applicant-status"),
-            Column::make("Commence Date", "commence_date")
+            Column::make('Applicant Type', 'id')->view('land-lease.includes.applicant-status'),
+            Column::make('Commence Date', 'commence_date')
                 ->format(function ($value, $row) {
                     return date('d/m/Y', strtotime($value));
                 })
                 ->searchable()
                 ->sortable(),
 
-            Column::make("Payment Month", "payment_month")
+            Column::make('Payment Month', 'payment_month')
                 ->searchable()
                 ->sortable(),
             Column::make('Payment Amount (USD)', 'payment_amount')
@@ -122,27 +121,30 @@ class LandLeaseReportTable extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make("Actions", "id")
+            Column::make('Actions', 'id')
             // ->hideIf(!Gate::allows('land-lease-view'))
-                ->view("land-lease.includes.actions"),
+                ->view('land-lease.includes.actions'),
         ];
     }
 
     public function getApplicantName($id)
     {
         $taxpayer = Taxpayer::find($id);
+
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
     public function getBusinessName($id)
     {
         $businessLocation = BusinessLocation::find($id);
+
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 
     public function getApplicantNo($id)
     {
         $taxpayer = Taxpayer::find($id);
+
         return $taxpayer->reference_no;
     }
 

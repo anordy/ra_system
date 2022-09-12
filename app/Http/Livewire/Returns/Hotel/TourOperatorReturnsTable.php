@@ -11,6 +11,10 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class TourOperatorReturnsTable extends DataTableComponent
 {
+    protected $listeners = ['filterData' => 'filterData'];
+    public $status;
+    public $data = [];
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -21,11 +25,29 @@ class TourOperatorReturnsTable extends DataTableComponent
         $this->setAdditionalSelects(['financial_month_id']);
     }
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->builder();
+    }
+
     public function builder(): Builder
     {
-        $tax = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
-
-        return HotelReturn::where('tax_type_id', $tax->id)->doesntHave('debt')->orderBy('created_at', 'desc');
+        $data   = $this->data;
+        $tax    = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
+        $filter = (new HotelReturn)->newQuery();
+        
+        if (isset($data['type']) && $data['type'] != 'all') {
+            $filter->Where('return_category', $data['type']);
+        }
+        if (isset($data['month']) && $data['month'] != 'all') {
+            $filter->whereMonth('hotel_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] != 'All') {
+            $filter->whereYear('hotel_returns.created_at', '=', $data['year']);
+        }
+    
+        return $filter->where('tax_type_id', $tax->id)->orderBy('hotel_returns.created_at', 'desc');
     }
 
     public function columns(): array

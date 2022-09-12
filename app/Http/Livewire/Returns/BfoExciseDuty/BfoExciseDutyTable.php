@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyTable extends DataTableComponent
 {
-    protected $model = BfoReturn::class;
+    protected $model     = BfoReturn::class;
+    protected $listeners = ['filterData' => 'filterData'];
+
+    public $data = [];
 
     public function mount()
     {
@@ -26,12 +29,28 @@ class BfoExciseDutyTable extends DataTableComponent
         $this->setPrimaryKey('id');
     }
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->builder();
+    }
+
     public function builder(): Builder
     {
-        return BfoReturn::query()
-            ->with('business', 'business.taxpayer', 'businessLocation')
-            ->doesntHave('debt')
-            ->orderBy('bfo_returns.created_at', 'desc');
+        $data   = $this->data;
+        $filter = (new BfoReturn)->newQuery();
+        
+        if (isset($data['type']) && $data['type'] != 'all') {
+            $filter->Where('return_category', $data['type']);
+        }
+        if (isset($data['month']) && $data['month'] != 'all') {
+            $filter->whereMonth('bfo_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] != 'All') {
+            $filter->whereYear('bfo_returns.created_at', '=', $data['year']);
+        }
+    
+        return $filter->with('business', 'business.taxpayer', 'businessLocation')->orderBy('bfo_returns.created_at', 'desc');
     }
 
     public function columns(): array
