@@ -24,21 +24,24 @@ class VatReturnController extends Controller
 
         $unpaidData = $this->returnCardReportForUnpaidReturns(VatReturn::class, VatReturn::getTableName(), VatReturnPenalty::getTableName());
 
-        $vars = $this->getSummaryData(VatReturn::query());
+        $vars       = $this->getSummaryData(VatReturn::query());
+        $tableName  = 'returns.vat.vat-return-table';
 
-        return view('returns.vat_returns.index', compact('vars', 'paidData', 'unpaidData'));
+        return view('returns.vat_returns.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
     }
+
     public function show($id)
     {
         if (!Gate::allows('return-vat-return-view')) {
             abort(403);
         }
-        $return = VatReturn::query()->findOrFail(decrypt($id));
+        $return         = VatReturn::query()->findOrFail(decrypt($id));
         $egovernmentFee = $this->getTransactionFee(
             $return->total_amount_due_with_penalties,
             $return->currency,
             2300
         );
+
         return view('returns.vat_returns.show', compact('return', 'id', 'egovernmentFee'));
     }
 
@@ -46,6 +49,7 @@ class VatReturnController extends Controller
     {
         return view('returns.vat_returns.config.index');
     }
+
     public function configCreate()
     {
         return view('returns.vat_returns.config.create');

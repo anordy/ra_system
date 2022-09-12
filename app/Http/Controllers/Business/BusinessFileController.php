@@ -72,8 +72,7 @@ class BusinessFileController extends Controller
         $code = 'ZIN: ' . $location->zin . ", " .
             'Business Name: ' . $location->business->name . ", " .
             'Tax Type: ' . $tax->name . ", " .
-            'Location: ' . "{$location->street}, {$location->district->name}, {$location->region->name}" . ", " .
-            'Website: ' . 'https://uat.ubx.co.tz:8888/zrb_client/public/login';
+            'Location: ' . "{$location->street}, {$location->district->name}, {$location->region->name}";
 
         $result = Builder::create()
             ->writer(new PngWriter())

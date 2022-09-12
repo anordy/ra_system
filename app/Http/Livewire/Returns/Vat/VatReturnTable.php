@@ -9,16 +9,38 @@ use App\Models\Returns\Vat\VatReturn;
 
 class VatReturnTable extends DataTableComponent
 {
-    protected $model = VatReturn::class;
+    protected $model     = VatReturn::class;
+    protected $listeners = ['filterData' => 'filterData'];
+    public $status;
+    public $data = [];
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
     }
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->builder();
+    }
+
     public function builder(): Builder
     {
-        return VatReturn::query()->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->doesntHave('debt')->with('business', 'business.taxpayer');
+        $data   = $this->data;
+        $filter = (new VatReturn)->newQuery();
+        
+        if (isset($data['type']) && $data['type'] != 'all') {
+            $filter->Where('return_category', $data['type']);
+        }
+        if (isset($data['month']) && $data['month'] != 'all') {
+            $filter->whereMonth('vat_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] != 'All') {
+            $filter->whereYear('vat_returns.created_at', '=', $data['year']);
+        }
+    
+        return $filter->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->with('business', 'business.taxpayer')->orderBy('vat_returns.created_at', 'desc');
     }
 
     public function columns(): array
