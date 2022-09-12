@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Gate;
 
 class EmTransactionsTable extends DataTableComponent
 {
+    protected $listeners = ['filterData' => 'filterData'];
+    public $data         = [];
+
     public function mount()
     {
         if (!Gate::allows('return-electronic-money-transaction-return-view')) {
@@ -23,16 +26,32 @@ class EmTransactionsTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
+    }
+
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->builder();
     }
 
     public function builder(): Builder
     {
-        return EmTransactionReturn::query()
-            ->doesntHave('debt')
-            ->with('business', 'business.taxpayer', 'businessLocation')
-            ->orderBy('em_transaction_returns.created_at', 'desc');
+        $data   = $this->data;
+        
+        $filter = (new EmTransactionReturn)->newQuery();
+        if (isset($data['type']) && $data['type'] != 'all') {
+            $filter->Where('return_category', $data['type']);
+        }
+        if (isset($data['month']) && $data['month'] != 'all') {
+            $filter->whereMonth('em_transaction_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] != 'All') {
+            $filter->whereYear('em_transaction_returns.created_at', '=', $data['year']);
+        }
+
+        return $filter->with('business', 'business.taxpayer', 'businessLocation')->orderBy('em_transaction_returns.created_at', 'desc');
     }
 
     public function columns(): array

@@ -25,12 +25,15 @@ class MobileMoneyTransferController extends Controller
 
         $vars = $this->getSummaryData(MmTransferReturn::query());
 
-        return view('returns.excise-duty.mobile-money-transfer.index', compact( 'vars', 'paidData', 'unpaidData'));
+        $tableName ='returns.excise-duty.mobile-money-transfer-table';
+
+        return view('returns.excise-duty.mobile-money-transfer.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
     }
 
     public function show($return_id)
     {
         $return = MmTransferReturn::query()->findOrFail(decrypt($return_id));
-        return view('returns.excise-duty.mobile-money-transfer.show', compact('return','return_id'));
+
+        return view('returns.excise-duty.mobile-money-transfer.show', compact('return', 'return_id'));
     }
 }
