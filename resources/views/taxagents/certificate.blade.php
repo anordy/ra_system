@@ -27,11 +27,14 @@
         }
 
         .taxpayerName {
-            position: absolute;
             font-size: 1.2em;
             text-align: center;
             top: 33%;
-            left: 38%;
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
             text-transform: uppercase;
             font-weight: bold
         }
@@ -40,7 +43,7 @@
             position: absolute;
             font-size: 1em;
             top: 62.8%;
-            left: 45.8%;
+            left: 43.9%;
             text-transform: uppercase;
             font-weight: bold
         }
@@ -97,7 +100,7 @@
             position: absolute;
             font-size: 1.4em;
             top: 40.5%;
-            left: 44.3%;
+            left: 40.3%;
             text-transform: uppercase;
             font-weight: bold;
             letter-spacing: 2px;
@@ -118,7 +121,7 @@
 <body>
     <span class="taxpayerName">{{ $taxagent->taxpayer->fullName }}</span>
     <span class="registrationNumber">{{$taxagent->reference_no}}</span>
-    <span class="period">@if($taxagent->is_first_application == 1) 1 year @endif</span>
+    <span class="period">{{$diff.' '.$word}}</span>
     <span class="startDay">{{date('d', strtotime($taxagent->app_first_date))}}<sup class="sup">{{$superStart}}</sup></span>
     <span class="startYear">{{date('M Y', strtotime($taxagent->app_first_date))}}</span>
     <span class="endday">{{date('d', strtotime($taxagent->app_expire_date))}}<sup class="sup">{{$superEnd}}</sup></span>

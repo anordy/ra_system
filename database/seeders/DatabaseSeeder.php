@@ -85,5 +85,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DLClassSeeder::class);
         $this->call(DLDurationSeeder::class);
         $this->call(DLFeeSeeder::class);
+        $this->call(SequencesTableSeeder::class);
     }
 }
