@@ -16,39 +16,45 @@ class TaxAgentFeeModal extends Component
 {
     use LivewireAlert;
 
-    public $category, $duration, $amount, $currency, $no_of_days;
+    public $category, $duration, $amount, $currency, $nationality;
+
+    public function updated($property)
+    {
+        if ($this->nationality == '1')
+        {
+            $this->currency = 'TZS';
+        }
+        else
+        {
+            $this->currency = 'USD';
+        }
+    }
 
     public function submit()
     {
-        if ($this->category == 'Registration Fee') {
-            $validate = $this->validate([
-                    'category' => 'required',
-                    'amount' => 'required|numeric',
-                    'currency' => 'required'
-                ]
-            );
-        } else {
-            $validate = $this->validate([
-                'category' => 'required',
-                'amount' => 'required|numeric',
-                'duration' => 'required',
-                'no_of_days' => 'required',
-                'currency' => 'required'
-            ],
-                [
-                    'no_of_days.required' => 'This field is required'
-                ]
-            );
-        }
+        $validate = $this->validate([
+            'category' => 'required',
+            'amount' => 'required|numeric',
+            'duration' => 'required',
+            'nationality' => 'required',
+            'currency' => 'required'
+        ],
+            [
+                'nationality.required' => 'This field is required'
+            ]
+        );
+
         DB::beginTransaction();
         try {
-            $fee = TaPaymentConfiguration::where('category', '=', $this->category)->first();
-
+            $fee = TaPaymentConfiguration::query()
+                ->where('category', '=', $this->category)
+                ->where('is_citizen', $this->nationality)
+                ->first();
             if ($fee == null) {
                 TaxAgentFee::saveFee(
                     $this->category,
                     $this->duration,
-                    $this->no_of_days,
+                    $this->nationality,
                     $this->amount,
                     $this->currency,
                     Auth::id()
@@ -57,16 +63,17 @@ class TaxAgentFeeModal extends Component
                 $cat = $fee->category;
                 $id = $fee->id;
                 $du = $fee->duration;
-                $no = $fee->no_of_days;
+                $no = $fee->is_citizen;
                 $am = $fee->amount;
                 $cur = $fee->currency;
                 $cr = $fee->created_by;
-                TaPaymentConfiguration::where('category', $this->category)->delete();
+
+                $fee->delete();
 
                 TaxAgentFee::saveFee(
                     $this->category,
                     $this->duration,
-                    $this->no_of_days,
+                    $this->nationality,
                     $this->amount,
                     $this->currency,
                     Auth::id()
@@ -76,7 +83,7 @@ class TaxAgentFeeModal extends Component
                 $hist->tapc_id = $id;
                 $hist->category = $cat;
                 $hist->duration = $du;
-                $hist->no_of_days = $no;
+                $hist->is_citizen = $no;
                 $hist->amount = $am;
                 $hist->currency = $cur;
                 $hist->created_by = $cr;
