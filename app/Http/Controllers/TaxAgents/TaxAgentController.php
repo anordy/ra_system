@@ -9,6 +9,7 @@ use App\Models\TaxAgentAcademicQualification;
 use App\Models\TaxAgentProfessionals;
 use App\Models\TaxAgentTrainingExperience;
 use App\Models\User;
+use Carbon\Carbon;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
@@ -24,32 +25,34 @@ use PDF;
 class TaxAgentController extends Controller
 {
 
-	public function index(){
+    public function index()
+    {
         if (!Gate::allows('tax-consultant-registration-view')) {
             abort(403);
         }
-		return view('taxagents.index');
-	}
+        return view('taxagents.index');
+    }
 
-	public function activeAgents()
-	{
+    public function activeAgents()
+    {
         if (!Gate::allows('active-tax-consultant-view')) {
             abort(403);
         }
-		return view('taxagents.activeTaxagents');
-	}
+        return view('taxagents.activeTaxagents');
+    }
 
-	public function showActiveAgent($id)
-	{
+    public function showActiveAgent($id)
+    {
         if (!Gate::allows('active-tax-consultant-view')) {
             abort(403);
         }
-		$id = Crypt::decrypt($id);
-		$agent = TaxAgent::query()->findOrfail($id);
-		return view('taxagents.active-agent-show', compact('agent', 'id'));
-	}
+        $id = Crypt::decrypt($id);
+        $agent = TaxAgent::query()->findOrfail($id);
+        return view('taxagents.active-agent-show', compact('agent', 'id'));
+    }
 
-    public function certificate($id){
+    public function certificate($id)
+    {
         if (!Gate::allows('active-tax-consultant-view')) {
             abort(403);
         }
@@ -57,14 +60,19 @@ class TaxAgentController extends Controller
         $taxagent = TaxAgent::with('taxpayer')->find($id);
         $start = date('d', strtotime($taxagent->app_first_date));
         $end = date('d', strtotime($taxagent->app_expire_date));
+
+        $diff = Carbon::create($taxagent->app_expire_date)->diffInYears($taxagent->app_first_date);
+
+        $word = $diff > 1 ? 'years' : 'year';
+
         $superStart = $this->sup($start);
         $superEnd = $this->sup($end);
 
         $code = 'Name: ' . $taxagent->taxpayer->fullName . ", " .
-            'Location: ' . $taxagent->district->name.', '.$taxagent->region->name . ", " .
-            'Period: 1 Year'.
-            'From: ' . "{$start}" . ", " .
-            'To: ' . "{$end}" . ", " .
+            'Location: ' . $taxagent->district->name . ', ' . $taxagent->region->name . ", " .
+            'Period: ' . $diff.' '.$word .
+            'From: ' . "{$taxagent->app_first_date}" . ", " .
+            'To: ' . "{$taxagent->app_expire_date}" . ", " .
             'https://uat.ubx.co.tz:8888/zrb_client/public/login';
 
         $result = Builder::create()
@@ -86,7 +94,7 @@ class TaxAgentController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'superStart','superEnd', 'dataUri'));
+        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'superStart', 'superEnd', 'diff', 'word', 'dataUri'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
@@ -94,43 +102,45 @@ class TaxAgentController extends Controller
 
     }
 
-	public function showAgentRequest($id)
-	{
+    public function showAgentRequest($id)
+    {
         if (!Gate::allows('tax-consultant-registration-view')) {
             abort(403);
         }
-		$id = Crypt::decrypt($id);
-		$agent = TaxAgent::query()->findOrfail($id);
+        $id = Crypt::decrypt($id);
+        $agent = TaxAgent::query()->findOrfail($id);
 
-		return view('taxagents.request-agent-show', compact('agent', 'id'));
-	}
+        return view('taxagents.request-agent-show', compact('agent', 'id'));
+    }
 
-	public function getUser($id)
+    public function getUser($id)
     {
-        $user = User::query()->select('fname', 'lname')->where('id',$id)->first();
-        $user = $user->fname.' '.$user->lname;
+        $user = User::query()->select('fname', 'lname')->where('id', $id)->first();
+        $user = $user->fname . ' ' . $user->lname;
         return $user;
     }
 
-	public function showVerificationAgentRequest($id)
-	{
+    public function showVerificationAgentRequest($id)
+    {
         if (!Gate::allows('tax-consultant-registration-view')) {
             abort(403);
         }
-		$id = Crypt::decrypt($id);
-		$agent = TaxAgent::query()->findOrfail($id);
-        $fee = DB::table('ta_payment_configurations')
-            ->where('category', '=', 'registration fee')->first();
-		return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
-	}
+        $id = Crypt::decrypt($id);
+        $agent = TaxAgent::query()->findOrfail($id);
+        $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen')
+            ->where('category', 'Registration Fee')
+            ->where('is_citizen', $agent->taxpayer->is_citizen)
+            ->first();
+        return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
+    }
 
-	public function renewal()
-	{
+    public function renewal()
+    {
         if (!Gate::allows('tax-consultant-renewal-requests-view')) {
             abort(403);
         }
-		return view('taxagents.renew.renewalRequests');
-	}
+        return view('taxagents.renew.renewalRequests');
+    }
 
     public function renewalShow($id)
     {
@@ -141,49 +151,39 @@ class TaxAgentController extends Controller
         $agent = TaxAgent::query()->findOrfail($id);
         $fee = DB::table('ta_payment_configurations')
             ->where('category', '=', 'renewal fee')->first();
-        return view('taxagents.renew.show', compact('agent','fee'));
+        return view('taxagents.renew.show', compact('agent', 'fee'));
     }
 
-	public function fee()
-	{
-    if (!Gate::allows('tax-consultant-fee-configuration-view')) {
-        abort(403);
+    public function fee()
+    {
+        if (!Gate::allows('tax-consultant-fee-configuration-view')) {
+            abort(403);
+        }
+        return view('taxagents.fee-config');
     }
-		return view('taxagents.fee-config');
-	}
 
     public function sup($app_date)
     {
         if (!Gate::allows('active-tax-consultant-view')) {
             abort(403);
         }
-        $a = [1,21,31];
-        $b= [2,22];
-        $c = [3,23];
-        $date=[];
-        for ($x=4; $x<=20; $x++)
-        {
-            $date[]=$x;
+        $a = [1, 21, 31];
+        $b = [2, 22];
+        $c = [3, 23];
+        $date = [];
+        for ($x = 4; $x <= 20; $x++) {
+            $date[] = $x;
         }
-        for ($y=24; $y<=30; $y++)
-        {
-            $date[]=$y;
+        for ($y = 24; $y <= 30; $y++) {
+            $date[] = $y;
         }
-        if (in_array($app_date,$date))
-        {
+        if (in_array($app_date, $date)) {
             return 'th';
-        }
-
-        elseif (in_array($app_date,$c))
-        {
+        } elseif (in_array($app_date, $c)) {
             return 'rd';
-        }
-        elseif (in_array($app_date,$b))
-        {
+        } elseif (in_array($app_date, $b)) {
             return 'nd';
-        }
-        else
-        {
+        } else {
             return 'st';
         }
     }

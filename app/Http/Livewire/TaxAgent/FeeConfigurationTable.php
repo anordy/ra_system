@@ -35,7 +35,9 @@ class FeeConfigurationTable extends DataTableComponent
             Column::make("Category", "category")
                 ->sortable()->searchable(),
             Column::make("duration", "duration")
-                ->view('taxagents.includes.duration'),
+                ->format(
+                    fn($value, $row, Column $column) => $row->duration . ' years '
+                ),
             Column::make('Amount', 'amount')
                 ->format(
                     fn($value, $row, Column $column) => number_format($row->amount, '2', '.', ',') . '<strong> Tsh</strong>'
@@ -43,7 +45,7 @@ class FeeConfigurationTable extends DataTableComponent
                 ->html()->searchable(),
             Column::make("Currency", "currency")
                 ->sortable()->searchable(),
-            Column::make("No of days/months/years", "no_of_days")
+            Column::make("Nationality", "is_citizen")
                 ->view('taxagents.includes.no_of_days'),
         ];
     }

@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Workflow;
-use App\Services\Workflow\Events\WorkflowSubscriber;
+use App\Services\Workflow\Subscriber\WorkflowSubscriber;
 use App\Services\Workflow\WorkflowRegistry;
 use Illuminate\Support\Facades\Log;
 

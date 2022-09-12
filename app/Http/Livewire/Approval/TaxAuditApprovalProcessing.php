@@ -110,9 +110,9 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
-                    'auditingDate' => 'required|date',
                     'periodFrom' => 'required|date',
-                    'periodTo' => 'required|date',
+                    'periodTo' => 'required|after:periodFrom',
+                    'auditingDate' => 'required|after:periodTo',
                     'intension' => 'required',
                     'scope' => 'required',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],

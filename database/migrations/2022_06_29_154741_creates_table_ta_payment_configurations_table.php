@@ -17,7 +17,7 @@ class CreatesTableTaPaymentConfigurationsTable extends Migration
 	        $table->id();
 	        $table->enum('category', ['Registration Fee', 'Renewal Fee']);
 			$table->string('duration')->nullable();
-			$table->integer('no_of_days')->nullable();
+			$table->integer('is_citizen');
 			$table->decimal('amount', 20,2);
 			$table->enum('currency',['TZS','USD']);
 			$table->bigInteger('created_by');

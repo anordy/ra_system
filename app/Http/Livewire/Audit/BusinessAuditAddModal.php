@@ -38,8 +38,8 @@ class BusinessAuditAddModal extends Component
             'tax_type_id' => 'required',
             'intension' => 'required',
             'scope' => 'required',
-            'period_from' => 'required',
-            'period_to' => 'required|before:today',
+            'period_from' => 'required|date',
+            'period_to' => 'required|after:period_from',
         ];
     }
 

@@ -2,14 +2,15 @@
 
 namespace App\Models\Returns\HotelReturns;
 
-use App\Models\Debts\Debt;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
 use App\Models\FinancialYear;
 use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
@@ -78,6 +79,10 @@ class HotelReturn extends Model implements Auditable
 
     public function penalties(){
         return $this->hasMany(HotelReturnPenalty::class, 'return_id');
+    }
+
+    public function tax_return(){
+        return $this->morphOne(TaxReturn::class, 'return');
     }
 
 }

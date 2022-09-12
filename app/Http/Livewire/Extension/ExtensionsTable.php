@@ -43,9 +43,9 @@ class ExtensionsTable extends DataTableComponent
             Column::make('Branch Name', 'location.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Outstanding Amount', 'debt.outstanding_amount')
+            Column::make('Outstanding Amount', 'taxReturn.outstanding_amount')
                 ->searchable(),
-            Column::make('Total Amount', 'debt.total_amount')
+            Column::make('Total Amount', 'taxReturn.total_amount')
                 ->sortable()
                 ->searchable(),
             Column::make('Requested At', 'created_at')
