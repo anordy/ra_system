@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Approval;
 
 use App\Enum\ExtensionRequestStatus;
 use App\Models\Debts\Debt;
+use App\Models\Returns\TaxReturn;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -47,17 +48,18 @@ class ExtensionRequestApprovalProcessing extends Component
 
         try {
             if ($this->checkTransition('debt_manager')) {
-                $this->subject->extend_from = $this->subject->debt->curr_due_date;
+                $this->subject->extend_from = $this->subject->taxReturn->curr_payment_due_date;
                 $this->subject->extend_to = $this->extendTo;
                 $this->subject->save();
             }
 
             if ($this->checkTransition('accepted')) {
                 $this->subject->status = ExtensionRequestStatus::APPROVED;
-                $debt = Debt::findOrFail($this->subject->debt_id);
-                $debt->update([
-                    'curr_due_date' => $this->subject->extend_to
+                $taxReturn = TaxReturn::findOrFail($this->subject->tax_return_id);
+                $taxReturn->update([
+                    'curr_payment_due_date' => $this->subject->extend_to
                 ]);
+                // TODO: Log this change
                 $this->subject->save();
             }
 

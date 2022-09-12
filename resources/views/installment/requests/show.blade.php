@@ -63,35 +63,31 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Status</span>
-                            <p class="my-1">{{ $debt->app_step }}</p>
+                            <p class="my-1">{{ $taxReturn->application_step }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $debt->taxType->name }}</p>
+                            <p class="my-1">{{ $taxReturn->taxType->name }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Due Date</span>
-                            <p class="my-1">{{ $debt->last_due_date }}</p>
+                            <p class="my-1">{{ $taxReturn->curr_payment_due_date->toFormattedDateString() }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                            <p class="my-1">{{ $debt->currency }}. {{ number_format($debt->principal_amount, 2) }}</p>
+                            <p class="my-1">{{ $taxReturn->currency }}. {{ number_format($taxReturn->principal, 2) }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Penalty</span>
-                            <p class="my-1">{{ $debt->currency }}. {{ number_format($debt->penalty, 2) }}</p>
+                            <p class="my-1">{{ $taxReturn->currency }}. {{ number_format($taxReturn->penalty, 2) }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Interest</span>
-                            <p class="my-1">{{ $debt->currency }}. {{ number_format($debt->interest, 2) }}</p>
+                            <p class="my-1">{{ $taxReturn->currency }}. {{ number_format($taxReturn->interest, 2) }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
-                            <p class="my-1">{{ $debt->currency }}. {{ number_format($debt->outstanding_amount, 2) }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Payment Status</span>
-                            {{--                    <p class="my-1">{{ $debt->debt->status }}</p>--}}
+                            <p class="my-1">{{ $taxReturn->currency }}. {{ number_format($taxReturn->outstanding_amount, 2) }}</p>
                         </div>
                     </div>
                 </div>

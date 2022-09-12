@@ -14,14 +14,14 @@
                     <div class="form-group col-lg-6">
                         <div class="form-group">
                             <label>From (Current debt due date)</label>
-                            <input disabled class="form-control" value="{{ \Carbon\Carbon::make($subject->debt->curr_due_date)->toFormattedDateString() }}" />
+                            <input disabled class="form-control" value="{{ \Carbon\Carbon::make($subject->taxReturn->curr_payment_due_date)->toFormattedDateString() }}" />
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
                         <div class="form-group">
                             <label>Extend to</label>
-                            <input min="{{ \Carbon\Carbon::make($subject->debt->curr_due_date)->toDateString() }}"
-                                   max="{{ \Carbon\Carbon::make($subject->debt->curr_due_date)->addYear()->toDateString() }}"
+                            <input min="{{ \Carbon\Carbon::make($subject->taxReturn->curr_payment_due_date)->toDateString() }}"
+                                   max="{{ \Carbon\Carbon::make($subject->taxReturn->curr_payment_due_date)->addYear()->toDateString() }}"
                                    type="date" class="form-control @error('extendTo') is-invalid @enderror"
                                    wire:model="extendTo" />
                             @error('extendTo')

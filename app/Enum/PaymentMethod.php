@@ -6,9 +6,8 @@ use ReflectionClass;
 
 class PaymentMethod implements Status
 {
-    const INSTALLMENT = 'installment';
     const FULL = 'full';
-    const DEPOSIT = 'deposit';
+    const INSTALLMENT = 'installment';
 
     static function getConstants(): array
     {

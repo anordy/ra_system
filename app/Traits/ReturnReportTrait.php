@@ -11,6 +11,7 @@ use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\TaxReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\TaxType;
 
@@ -62,19 +63,23 @@ trait ReturnReportTrait
 
     public function getModelData($parameters)
     {
-        // $parameters = $this->getParameters();
+         $parameters = $this->getParameters();
         switch ($parameters['tax_type_code']) {
             case 'excise-duty-mno':
                 return [
                     'returnName' => 'Excise Duty MNO',
-                    'model'      => MnoReturn::query(),
+                    'model'      => TaxReturn::query()
+                                   ->where('tax_type_id', TaxType::where('code', TaxType::EXCISE_DUTY_MNO)
+                                       ->first()->id),
                 ];
                 break;
 
             case 'excise-duty-bfo':
                 return [
                     'returnName' => 'Excise Duty BFO',
-                    'model'      => BfoReturn::query(),
+                    'model'      => TaxReturn::query()
+                                   ->where('tax_type_id', TaxType::where('code', TaxType::EXCISE_DUTY_BFO)
+                                       ->first()->id),
                 ];
                 break;
 
@@ -83,16 +88,18 @@ trait ReturnReportTrait
 
                 return [
                     'returnName' => 'Hotel Levy',
-                    'model'      => HotelReturn::query()->where('tax_type_id', $taxType->id),
+                    'model'      => TaxReturn::query()
+                                  ->where('tax_type_id', $taxType->id),
                 ];
                 break;
 
             case 'restaurant-levy':
-                $taxType = TaxType::where('code', TaxType::RESTAURANT)->first();
+                $taxType = Tax::where('code', TaxType::RESTAURANT)->first();
+
 
                 return [
                     'returnName' => 'Restaurant Levy',
-                    'model'      => HotelReturn::query()->where('tax_type_id', $taxType->id),
+                    'model'      => TaxReturn::query()->where('tax_type_id', $taxType->id),
                 ];
                 break;
 
@@ -101,7 +108,7 @@ trait ReturnReportTrait
 
                 return [
                     'returnName' => 'Tour Operator Levy',
-                    'model'      => HotelReturn::query()->where('tax_type_id', $taxType->id),
+                    'model'      => TaxReturn::query()->where('tax_type_id', $taxType->id),
                 ];
                 break;
 
@@ -109,14 +116,14 @@ trait ReturnReportTrait
                 $taxType = TaxType::where('code', TaxType::VAT)->first();
                 return [
                     'returnName' => 'Vat Return',
-                    'model'      => VatReturn::query(),
+                    'model'      => TaxReturn::query()->where('tax_type_id', $taxType->id),
                 ];
                 break;
 
             case 'petroleum-levy':
                 return [
                     'returnName'=> 'Petroleum Levy',
-                    'model'     => PetroleumReturn::query(),
+                    'model'     => TaxReturn::query()->where('tax_type_id', TaxType::where('code', TaxType::PETROLEUM)->first()->id),
                 ];
 
                 break;
@@ -124,7 +131,7 @@ trait ReturnReportTrait
                 $taxType = TaxType::where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->first();
                 return [
                     'returnName' => 'Airport Service Safety Fee',
-                    'model'      => PortReturn::query()->where('tax_type_id', $taxType->id),
+                    'model'      => TaxReturn::query()->where('tax_type_id', $taxType->id),
                 ];
 
                 break;
@@ -138,14 +145,14 @@ trait ReturnReportTrait
             case 'electronic-money-transaction':
                 return [
                     'returnName'=> 'Electronic Money Transaction',
-                    'model'     => EmTransactionReturn::query(),
+                    'model'     => TaxReturn::query()->where('tax_type_id', TaxType::where('code', TaxType::ELECTRONIC_MONEY_TRANSACTION)->first()->id),
                 ];
                 break;
 
             case 'lumpsum-payment':
                 return [
                     'returnName'=> 'Lump Sum',
-                    'model'     => LumpSumReturn::query(),
+                    'model'     => TaxReturn::query()->where('tax_type_id', TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->first()->id),
                 ];
                 break;
 
@@ -153,14 +160,14 @@ trait ReturnReportTrait
                 $taxType = TaxType::where('code', TaxType::SEA_SERVICE_TRANSPORT_CHARGE)->first();
                 return [
                     'returnName' => 'Sea Service Transport Charge',
-                    'model'      => PortReturn::query()->where('tax_type_id', $taxType->id),
+                    'model'      => TaxReturn::query()->where('tax_type_id', $taxType->id),
                 ];
                 break;
 
             case 'stamp-duty':
                 return [
                     'returnName' => 'Stamp Duty',
-                    'model'      => StampDutyReturn::query(),
+                    'model'      => TaxReturn::query()->where('tax_type_id', TaxType::where('code', TaxType::STAMP_DUTY)->first()->id),
                 ];
                 break;
         }
