@@ -2,22 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Business;
+use App\Enum\ReturnCategory;
 use App\Models\Debts\Debt;
-use App\Models\Debts\DebtPenalty;
-use App\Models\FinancialMonth;
-use App\Models\FinancialYear;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\HotelReturns\HotelReturnPenalty;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
+use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Traits\PenaltyTrait;
 use Carbon\Carbon;
@@ -60,101 +47,42 @@ class DailyDebtCalculateCommand extends Command
      */
     public function handle()
     {
-        Log::channel('debtCollection')->info('Daily Debt collection process started');
+        Log::channel('debtCollection')->info('Daily Debt Marking process started');
         $financialMonth = $this->getCurrentFinancialMonth();
         $this->returnsDebts($financialMonth);
-        $this->assessmentDebt($financialMonth);
-        Log::channel('debtCollection')->info('Daily Debt collection ended');
+        Log::channel('debtCollection')->info('Daily Debt Marking process ended');
     }
 
     protected function returnsDebts($financialMonth)
     {
-        // 
-        $returnModels = [
-            HotelReturn::class,
-            StampDutyReturn::class,
-            MnoReturn::class,
-            VatReturn::class,
-            MmTransferReturn::class,
-            PetroleumReturn::class,
-            PortReturn::class,
-            EmTransactionReturn::class,
-            BfoReturn::class,
-            LumpSumReturn::class
-        ];
-
-        foreach ($returnModels as $model) {
-            Log::channel('debtCollection')->info("Daily Debt collection for return model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process started");
+            Log::channel('debtCollection')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process started");
             DB::beginTransaction();
+
+            $tax_returns = TaxReturn::where('return_category', ReturnCategory::NORMAL)
+                ->whereRaw("TIMESTAMPDIFF(DAY, tax_returns.curr_filing_due_date, CURDATE()) < 30")
+                ->get();
+
             try {
+                foreach ($tax_returns as $tax_return) {
 
-                $returns = $model::with('penalties')->select(
-                    'id as debt_id',
-                    'business_location_id',
-                    'business_id',
-                    'currency',
-                    'tax_type_id',
-                    'total_amount_due as principal_amount',
-                    'total_amount_due as original_principal_amount',
-                    'total_amount_due_with_penalties as original_total_amount',
-                    'total_amount_due_with_penalties as total_amount',
-                    'total_amount_due_with_penalties as outstanding_amount',
-                    'penalty',
-                    'penalty as original_penalty',
-                    'interest',
-                    'interest as original_interest',
-                    'submitted_at',
-                    'filing_due_date',
-                    'payment_due_date as last_due_date',
-                    'payment_due_date as curr_due_date',
-                    'id',
-                )
-                    ->doesntHave('payments')
-                    ->whereNotIn('status', ['complete', 'paid-by-debt'])
-                    ->where('filing_due_date', '<', $financialMonth->due_date)
-                    ->get();
+                    $curr_filing_due_date = Carbon::create($tax_return->curr_filing_due_date)->addDays(30);
+                    $curr_financial_month_due_date = Carbon::create($financialMonth->due_date);
 
-
-                $returns->map(function ($return) use ($model) {
-                    $penalties = $return->penalties->toArray();
-                    $return->debt_type = $model;
-                    $return->origin = 'job';
-                    $return->curr_due_date = end($penalties)['end_date']; // Set current due date as last penalty end date
-                    $return->logged_date = Carbon::now()->toDateTimeString();
-                    return $return;
-                });
-
-                
-                foreach ($returns as $return) {
-                    $penalties = $return->penalties; // Hold return penalties
-
-                    unset($return->penalties, $return->id); // Unset penalties & return id
-
-                    $debt = Debt::create($return->toArray()); // Create main debt
-
-                    if (count($penalties) > 0) {
-
-                        $penalties->map(function($penalty) {
-                            // Override financial_month_name format
-                            $penalty->financial_month_name = "{$this->convertDate($penalty->start_date)} to {$this->convertDate($penalty->end_date)}";
-
-                            unset($penalty->id, $penalty->created_at, $penalty->updated_at, $penalty->return_id);
-                        });
-    
-                        $debt->penalties()->createMany($penalties->toArray()); // Copy return penalties to debt penalties
+                    if ($curr_financial_month_due_date->greaterThan($curr_filing_due_date)) {
+                        $tax_return->update([
+                            'return_category' => 'debt'
+                        ]);
                     }
-                   
+
                 }
 
                 DB::commit();
-                Log::channel('debtCollection')->info("Daily Debt collection for return model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
+                Log::channel('debtCollection')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process ended");
             } catch (Exception $e) {
                 Log::channel('debtCollection')->info('Daily Debt calculation process ended with error');
                 Log::channel('debtCollection')->error($e);
                 DB::rollBack();
             }
-        }
-
     }
 
     protected function assessmentDebt($financialMonth)
