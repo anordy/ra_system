@@ -23,15 +23,17 @@ class EmTransactionController extends Controller
 
         $unpaidData = $this->returnCardReportForUnpaidReturns(EmTransactionReturn::class, EmTransactionReturn::getTableName(), EmTransactionPenalty::getTableName());
 
-        $vars = $this->getSummaryData(EmTransactionReturn::query());
+        $vars          = $this->getSummaryData(EmTransactionReturn::query());
+        $tableName     ='returns.em-transaction.em-transactions-table';
 
-        return view('returns.em-transaction.index', compact('vars', 'paidData', 'unpaidData'));
+        return view('returns.em-transaction.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
     }
 
     public function show($return_id)
     {
         $returnId = decrypt($return_id);
-        $return = EmTransactionReturn::findOrFail($returnId);
+        $return   = EmTransactionReturn::findOrFail($returnId);
+
         return view('returns.em-transaction.show', compact('return', 'returnId'));
     }
 }

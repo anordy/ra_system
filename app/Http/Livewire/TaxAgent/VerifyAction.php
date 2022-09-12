@@ -83,9 +83,13 @@ class VerifyAction extends Component
             $data = (object)$value['data'];
             $agent = TaxAgent::findOrFail($data->id);
             $taxpayer = Taxpayer::findOrFail($agent->taxpayer_id);
-            $fee = TaPaymentConfiguration::query()->where('category', 'registration fee')->first();
+            $fee = TaPaymentConfiguration::query()->select('id','amount','category', 'duration','is_citizen', 'currency')
+                ->where('category', 'Registration Fee')
+                ->where('is_citizen', $agent->taxpayer->is_citizen)
+                ->first();
             $amount = $fee->amount;
             $used_currency = $fee->currency;
+            $duration = $fee->duration;
             if ($used_currency != 'TZS') {
                 $rate = ExchangeRate::query()->where('currency', $used_currency)
                     ->first(); //letter will be fetched from BOT API
@@ -122,7 +126,6 @@ class VerifyAction extends Component
             $expire_date = Carbon::now()->addMonth()->toDateTimeString();
             $billableId = $agent->id;
             $billableType = get_class($agent);
-
 
             $zmBill = ZmCore::createBill(
                 $billableId,

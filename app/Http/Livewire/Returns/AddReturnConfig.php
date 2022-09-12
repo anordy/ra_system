@@ -28,6 +28,7 @@ class AddReturnConfig extends Component
     public $rate;
     public $rate_usd;
     public $order;
+    public $bank_account;
 
     public function mount()
     {
@@ -40,9 +41,29 @@ class AddReturnConfig extends Component
 
     public function updated($property)
     {
+        $this->bank_account = str_replace(',', '', $this->bank_account);
+        if (is_numeric($this->bank_account))
+        {
+            $this->bank_account = number_format($this->bank_account);
+        }
         $this->config_code = strtoupper($this->get_avatar($this->name));
 
     }
+
+//    public function formatBankAccount(){
+//        $bank_account = $this->bank_account;
+//        $bank_account = preg_replace('/[^0-9]+/', '', $bank_account);
+//        $bank_account = substr($bank_account, 0, 20);
+//        $length = strlen($bank_account);
+//        $formatted = "";
+//        for ($i = 0; $i < $length; $i++) {
+//            $formatted .= $bank_account[$i];
+//            if($i == 2 || $i == 5 || $i == 8 || $i == 11 || $i == 14 || $i == 17 || $i == 20){
+//                $formatted .= ",";
+//            }
+//        }
+//        $this->bank_account = $formatted;
+//    }
 
     function get_avatar($str){
         $words = preg_split("/(\s|\-|\.)/", $str);
