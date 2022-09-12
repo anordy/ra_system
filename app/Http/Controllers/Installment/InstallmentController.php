@@ -23,9 +23,8 @@ class InstallmentController extends Controller
             abort(403);
         }
         $installment = Installment::findOrFail(decrypt($installmentId));
-        $debt = $installment->debt;
-
-        return view('installment.show', compact('installment', 'debt'));
+        $taxReturn = $installment->taxReturn;
+        return view('installment.show', compact('installment', 'taxReturn'));
     }
 
     public function file($file){

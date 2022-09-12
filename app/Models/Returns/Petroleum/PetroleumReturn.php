@@ -9,6 +9,7 @@ use App\Models\Taxpayer;
 use App\Models\Debts\Debt;
 use App\Models\FinancialYear;
 use App\Models\BusinessLocation;
+use App\Models\Returns\TaxReturn;
 use App\Models\SevenDaysFinancialMonth;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Returns\Petroleum\PetroleumPenalty;
@@ -74,5 +75,9 @@ class PetroleumReturn extends Model
 
     public function penalties(){
         return $this->hasMany(PetroleumPenalty::class, 'return_id');
+    }
+
+    public function tax_return(){
+        return $this->morphOne(TaxReturn::class, 'return');
     }
 }
