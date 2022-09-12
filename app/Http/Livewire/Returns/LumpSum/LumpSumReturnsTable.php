@@ -39,7 +39,7 @@ class LumpSumReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         $data   = $this->data;
-        $filter = LumpSumReturn::query();
+        $filter = (new LumpSumReturn)->newQuery();
 
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);

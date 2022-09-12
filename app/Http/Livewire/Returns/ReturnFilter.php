@@ -10,13 +10,15 @@ class ReturnFilter extends Component
     public $year;
     public $month;
     public $optionYears;
+    public $tableName;
 
-    public function mount()
+    public function mount($tablename)
     {
         //set current year at first
-        $this->year   = date('Y');
-        $this->period = 'Monthly';
-        $this->month  = strval(intval(date('m')));
+        $this->year      = date('Y');
+        $this->period    = 'Monthly';
+        $this->tableName = $tablename;
+        $this->month     = strval(intval(date('m')));
 
         //get options for years
         $optionStartYear   = 2020;
@@ -36,7 +38,7 @@ class ReturnFilter extends Component
             'month'=> $this->month,
         ];
 
-        $this->emitTo('returns.lump-sum.lump-sum-returns-table', 'filterData', $filters);
+        $this->emitTo($this->tableName, 'filterData', $filters);
     }
 
     public function render()

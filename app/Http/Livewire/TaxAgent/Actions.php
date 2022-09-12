@@ -77,10 +77,14 @@ class Actions extends Component
 		try {
 			$data = (object) $value['data'];
 			$agent = TaxAgent::query()->find($data->id);
+            $fee = TaPaymentConfiguration::query()->select('id','amount','category', 'duration','is_citizen', 'currency')
+                ->where('category', 'Registration Fee')
+                ->where('is_citizen', $agent->taxpayer->is_citizen)
+                ->first();
 			$agent->status = TaxAgentStatus::APPROVED;
 			$agent->app_true_comment = $value['value'];
 			$agent->app_first_date = Carbon::now();
-			$agent->app_expire_date = Carbon::now()->addYear()->toDateTimeString();
+			$agent->app_expire_date = Carbon::now()->addYear($fee->duration)->toDateTimeString();
 			$agent->approver_id = Auth::id();
 			$agent->approved_at = now();
 			$agent->save();

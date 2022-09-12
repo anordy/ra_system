@@ -1,5 +1,5 @@
 <div>
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-uppercase text-center">Adding fee configuration for taxagent</h5>
@@ -9,6 +9,18 @@
             <div class="modal-body">
                 <div class="row pr-3 pl-3">
                     <div class="row">
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Taxpayer Nationality</label>
+                            <select wire:model.lazy="nationality" name="nationality" id="nationality" class="form-control">
+                                <option  value="">select nationality</option>
+                                <option value="1">Local</option>
+                                <option value="0">Foreigner</option>
+
+                            </select>
+                            @error('category')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Category</label>
                             <select wire:model.lazy="category" name="category" id="category" class="form-control">
@@ -22,30 +34,17 @@
                             @enderror
                         </div>
 
-                        @if($category == 'Renewal Fee')
                         <div class="form-group col-lg-6">
-                            <label class="control-label">Duration</label>
+                            <label class="control-label">Duration(Years)</label>
                             <select wire:model="duration" class="form-control">
                                 <option value="">select duration</option>
-                                <option value="yearly">Yearly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="daily">Daily</option>
+                                <option value="2">2 years</option>
+                                <option value="3">3 years</option>
                             </select>
                             @error('duration')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        @endif
-
-                        @if($duration)
-                            <div class="form-group col-lg-6">
-                                <label class="control-label">No of days/months/years</label>
-                                <input placeholder="e.g 10" type="text" class="form-control" wire:model.lazy="no_of_days" id="no_of_days">
-                                @error('no_of_days')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        @endif
 
                         <div class="form-group col-lg-6">
                             <label class="control-label">Amount</label>
@@ -57,12 +56,7 @@
 
                         <div class="form-group col-lg-6">
                             <label class="control-label">Currency</label>
-                            <select wire:model="currency" class="form-control">
-                                <option value="">select currency</option>
-                                <option value="TZS">TZS</option>
-                                <option value="USD">USD</option>
-
-                            </select>
+                            <input readonly type="text" class="form-control" wire:model.lazy="currency" id="currency">
                             @error('currency')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
