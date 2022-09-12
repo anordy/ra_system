@@ -60,13 +60,16 @@ class TaxAgentFeeModal extends Component
                     Auth::id()
                 );
             } else {
-                $cat = $fee->category;
-                $id = $fee->id;
-                $du = $fee->duration;
-                $no = $fee->is_citizen;
-                $am = $fee->amount;
-                $cur = $fee->currency;
-                $cr = $fee->created_by;
+
+                $hist = new TaPaymentConfigurationHistory();
+                $hist->tapc_id = $fee->id;
+                $hist->category = $fee->category;
+                $hist->duration = $fee->duration;
+                $hist->is_citizen = $fee->is_citizen;
+                $hist->amount = $fee->amount;
+                $hist->currency = $fee->currency;
+                $hist->created_by = $fee->created_by;
+                $hist->save();
 
                 $fee->delete();
 
@@ -78,16 +81,6 @@ class TaxAgentFeeModal extends Component
                     $this->currency,
                     Auth::id()
                 );
-
-                $hist = new TaPaymentConfigurationHistory();
-                $hist->tapc_id = $id;
-                $hist->category = $cat;
-                $hist->duration = $du;
-                $hist->is_citizen = $no;
-                $hist->amount = $am;
-                $hist->currency = $cur;
-                $hist->created_by = $cr;
-                $hist->save();
 
             }
 

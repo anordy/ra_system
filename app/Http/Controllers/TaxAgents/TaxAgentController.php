@@ -119,8 +119,10 @@ class TaxAgentController extends Controller
         }
 		$id = Crypt::decrypt($id);
 		$agent = TaxAgent::query()->findOrfail($id);
-        $fee = DB::table('ta_payment_configurations')
-            ->where('category', '=', 'registration fee')->first();
+        $fee = TaPaymentConfiguration::query()->select('id','amount','category','is_citizen')
+            ->where('category', 'Registration Fee')
+            ->where('is_citizen', $agent->taxpayer->is_citizen)
+            ->first();
 		return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
 	}
 
