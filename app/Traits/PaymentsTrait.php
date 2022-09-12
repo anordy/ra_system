@@ -159,7 +159,7 @@ trait PaymentsTrait {
         $payer_phone    = $taxpayer->mobile;
         $description    = "Payment for Land Lease with DP number {$landLease->dp_number}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-        $currency       = "USD";
+        $currency       = 'USD';
         $createdby_type = get_class(Auth::user());
         $createdby_id   = Auth::id();
         $payer_id       = $taxpayer->id;
