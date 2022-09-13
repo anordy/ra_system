@@ -10,6 +10,9 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class MnoReturnsTable extends DataTableComponent
 {
+    protected $listeners = ['filterData' => 'filterData'];
+    public $data         = [];
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -19,11 +22,28 @@ class MnoReturnsTable extends DataTableComponent
         ]);
     }
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->builder();
+    }
+
     public function builder(): Builder
     {
-        return MnoReturn::query()
-        ->doesntHave('debt')
-        ->orderBy('mno_returns.created_at', 'desc');
+        $data   = $this->data;
+        
+        $filter = (new MnoReturn)->newQuery();
+        if (isset($data['type']) && $data['type'] != 'all') {
+            $filter->Where('return_category', $data['type']);
+        }
+        if (isset($data['month']) && $data['month'] != 'all') {
+            $filter->whereMonth('mno_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] != 'All') {
+            $filter->whereYear('mno_returns.created_at', '=', $data['year']);
+        }
+
+        return $filter->orderBy('mno_returns.created_at', 'desc');
     }
 
     public function columns(): array

@@ -13,6 +13,7 @@ use App\Traits\ReturnSummaryCardTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class LumpSumReturnController extends Controller
 {
@@ -20,6 +21,10 @@ class LumpSumReturnController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('return-lump-sum-payment-return-view')) {
+            abort(403);
+        }
+
         $paidData = $this->returnCardReportForPaidReturns(LumpSumReturn::class, LumpSumReturn::getTableName(), LumpSumPenalties::getTableName());
 
         $unpaidData = $this->returnCardReportForUnpaidReturns(LumpSumReturn::class, LumpSumReturn::getTableName(), LumpSumPenalties::getTableName());
@@ -33,6 +38,9 @@ class LumpSumReturnController extends Controller
 
     public function view($row)
     {
+        if (!Gate::allows('return-lump-sum-payment-return-view')) {
+            abort(403);
+        }
         $id = decrypt($row);
        
         $return = LumpSumReturn::findOrFail($id);

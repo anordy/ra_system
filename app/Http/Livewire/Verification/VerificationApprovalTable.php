@@ -2,10 +2,9 @@
 
 namespace App\Http\Livewire\Verification;
 
-use App\Enum\ReturnApplicationStatus;
-use App\Enum\TaxVerificationStatus;
-use App\Models\Returns\ReturnStatus;
+
 use App\Models\Verification\TaxVerification;
+use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -17,43 +16,22 @@ class VerificationApprovalTable extends DataTableComponent
 
     use LivewireAlert;
 
-    public $model = TaxVerification::class;
-    public $paymentStatus;
-
-    public function mount($payment)
-    {
-        $this->paymentStatus = $payment;
-    }
+    public $model = WorkflowTask::class;
 
     public function builder(): Builder
     {
-        if ($this->paymentStatus == 'paid') {
-            return TaxVerification::query()
-                ->with('business', 'location', 'taxType', 'taxReturn')
-                ->whereHas('taxReturn', function (Builder $builder) {
-                    $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
-                        ->whereIn('status', [ReturnStatus::PAID_BY_DEBT, ReturnStatus::COMPLETE]);
-                })
-                ->where('tax_verifications.status', TaxVerificationStatus::PENDING)
-                ->orderByDesc('tax_verifications.id');
-        } elseif ($this->paymentStatus == 'unpaid') {   
-            return TaxVerification::query()
-                ->with('business', 'location', 'taxType', 'taxReturn')
-                ->whereHas('taxReturn', function (Builder $builder) {
-                    $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
-                        ->whereNotIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
-                })
-                ->where('tax_verifications.status', TaxVerificationStatus::PENDING)
-            ->orderByDesc('tax_verifications.id');
-        } else {
-            return [];
-        }
+        return WorkflowTask::query()
+            ->with('pinstance', 'user')
+            ->where('pinstance_type', TaxVerification::class)
+            ->where('status', '!=', 'completed')
+            ->where('owner', 'staff')
+            ->whereJsonContains('operators', auth()->user()->id);
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['created_by_type', 'tax_return_type']);
+        $this->setAdditionalSelects('pinstance_type', 'user_type');
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -63,22 +41,27 @@ class VerificationApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZRB No', 'location.zin'),
-            Column::make('TIN', 'business.tin'),
-            Column::make('Business Name', 'business.name'),
-            Column::make('Business Location', 'location.name'),
-                Column::make('Tax Type', 'taxType.name'),
-            Column::make('Filled By', 'created_by_id')
-                ->format(function ($value, $row) {
-                    $user = $row->createdBy()->first();
+            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+            Column::make('user_type', 'user_id')->hideIf(true),
+            Column::make('Z_Number', 'pinstance.location.zin')
+                ->label(fn ($row) => $row->pinstance->location->zin ?? '')
+                ->searchable(),
+            Column::make('TIN', 'pinstance.business.tin')
+                ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
+            Column::make('Business Name', 'pinstance.business.name')
+                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
+            Column::make('Business Location', 'pinstance.location.name')
+                ->label(fn ($row) => $row->pinstance->location->name ?? ''),
+            Column::make('Tax Type', 'pinstance.taxType.name')
+                ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
+            Column::make('Filled By', 'pinstance.created_by_id')
+                ->label(function ($row) {
+                    $user = $row->pinstance->createdBy;
                     return $user->full_name ?? '';
                 }),
             Column::make('Filled On', 'created_at')
                 ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
-            Column::make('Payment Status', 'tax_return_id')
-                ->view('verification.payment_status'),
-            Column::make('Action', 'id')
-                ->hideIf($this->paymentStatus != 'paid')
+            Column::make('Action', 'pinstance_id')
                 ->view('verification.approval.action')
                 ->html(true),
 
