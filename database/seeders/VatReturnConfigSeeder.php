@@ -223,6 +223,11 @@ class VatReturnConfigSeeder extends Seeder
                 'row_type' => 'dynamic',
                 'col_type' => 'exemptedMethodTwo',
                 'value_calculated' => false,
+                'rate_applicable' => true,
+                'rate_type' => 'percentage',
+                'currency' => 'TZS',
+                'rate' => 15,
+                'rate_usd' => 0,
                 'active' => true,
             ],
 

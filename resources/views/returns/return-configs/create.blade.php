@@ -14,6 +14,7 @@
             <h6 class="text-capitalize">{{$code}} return configurations</h6>
         </div>
         <div class="card-body">
+
             <livewire:returns.add-return-config code="{{$code}}" taxtype_id="{{$taxtype_id}}"/>
         </div>
     </div>

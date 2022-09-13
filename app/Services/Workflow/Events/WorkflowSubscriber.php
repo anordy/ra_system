@@ -5,6 +5,7 @@ namespace App\Services\Workflow\Events;
 use App\Enum\DisputeStatus;
 use App\Enum\ReturnApplicationStatus;
 use App\Enum\TaxAuditStatus;
+use App\Enum\TaxClearanceStatus;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Role;
@@ -171,12 +172,12 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 }
             } elseif ($placeName == 'TAX_CLEARENCE') {
                 if (key($places) == 'completed') {
-                    $subject->status = TaxInvestigationStatus::APPROVED;
+                    $subject->status = TaxClearanceStatus::APPROVED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                     $subject->expire_on = Carbon::now()->addYear(1)->toDateTimeString();
                 }
                 if (key($places) == 'rejected') {
-                    $subject->status = TaxInvestigationStatus::REJECTED;
+                    $subject->status = TaxClearanceStatus::REJECTED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
             } elseif ($placeName == 'DISPUTE') {

@@ -9,6 +9,9 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class PortReturnTable extends DataTableComponent
 {
+    protected $listeners = ['filterData' => 'filterData'];
+    public $data         = [];
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -18,9 +21,28 @@ class PortReturnTable extends DataTableComponent
         ]);
     }
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->builder();
+    }
+
     public function builder(): Builder
     {
-        return PortReturn::query()->doesntHave('debt');
+        $data   = $this->data;
+        
+        $filter = (new PortReturn)->newQuery();
+        if (isset($data['type']) && $data['type'] != 'all') {
+            $filter->Where('return_category', $data['type']);
+        }
+        if (isset($data['month']) && $data['month'] != 'all') {
+            $filter->whereMonth('port_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] != 'All') {
+            $filter->whereYear('port_returns.created_at', '=', $data['year']);
+        }
+
+        return $filter->orderBy('port_returns.created_at', 'desc');
     }
 
     public function columns(): array
@@ -48,7 +70,7 @@ class PortReturnTable extends DataTableComponent
             Column::make('Total VAT', 'total_amount_due_with_penalties')
                 ->sortable()
                 ->searchable(),
-            Column::make('Payment Status','status')
+            Column::make('Payment Status', 'status')
                 ->hideif(true),
             // Column::make('Status', 'id')->view('returns.port.includes.status'),
             Column::make('Action', 'id')

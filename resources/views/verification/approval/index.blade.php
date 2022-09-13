@@ -9,16 +9,16 @@
         </div>
         <div class="card-body">
             <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">Paid Returns</a>
-                <a href="#pending-approval" class="nav-item nav-link font-weight-bold">UnPaid Returns</a>
+                <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
+                <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Unpaid Returns</a>
             </nav>
 
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 <div id="all-businesses" class="tab-pane fade active show card p-2">
-                    @livewire('verification.verification-approval-table', ['payment' => 'paid'])
+                    @livewire('verification.verification-approval-table')
                 </div>
                 <div id="pending-approval" class="tab-pane fade card p-2">
-                    @livewire('verification.verification-approval-table', ['payment' => 'unpaid'])
+                    @livewire('verification.verification-unpaid-approval-table')
                 </div>
             </div>
         </div>

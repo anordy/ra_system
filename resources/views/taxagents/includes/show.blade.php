@@ -55,7 +55,7 @@
                     <p class="my-1">{{ $agent->region->name }}</p>
                 </div>
                 <div class="col-md-3 mb-2">
-                    <span class="font-weight-bold text-uppercase">Consultation Reference No</span>
+                    <span class="font-weight-bold text-uppercase">Consultation Reference No</span><br>
                     @if($agent->status == \App\Models\TaxAgentStatus::APPROVED)
                         <p class="my-1">{{ $agent->reference_no }}</p>
                     @else
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="col-md-3 mb-2">
-                    <span class="font-weight-bold text-uppercase">Application Type</span>
+                    <span class="font-weight-bold text-uppercase">Application Type</span><br>
 
                     @if ($agent->is_first_application == 1)
                         <p class="my-1">Registration</p>
@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="col-md-3 mb-2">
-                    <span class="font-weight-bold text-uppercase">Application Status</span>
+                    <span class="font-weight-bold text-uppercase">Application Status</span><br>
                     @if($agent->status == \App\Models\TaxAgentStatus::PENDING)
                         <p class="badge badge-danger py-1 px-2"
                               style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
@@ -96,7 +96,7 @@
 
                 </div>
                 <div class="col-md-3 mb-2">
-                    <span class="font-weight-bold text-uppercase">Registration Payment</span>
+                    <span class="font-weight-bold text-uppercase">Registration Payment</span><br>
 
                     <p>@if(!empty($agent->bill))
                             @if ($agent->bill->status == \App\Models\PaymentStatus::PAID)
@@ -129,7 +129,7 @@
 
                 @if(!empty($agent->request))
                 <div class="col-md-3 mb-2">
-                        <span class="font-weight-bold text-uppercase">Renew Payment</span>
+                        <span class="font-weight-bold text-uppercase">Renew Payment</span><br>
                         <p>
                             @if ($agent->request->bill != null)
                                 @if ($agent->request->bill->status == 'paid')

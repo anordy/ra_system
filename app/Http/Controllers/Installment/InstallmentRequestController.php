@@ -22,9 +22,9 @@ class InstallmentRequestController extends Controller
             abort(403);
         }
         $installment = InstallmentRequest::findOrFail(decrypt($installmentId));
-        $debt = $installment->debt;
+        $taxReturn = $installment->taxReturn;
 
-        return view('installment.requests.show', compact('installment', 'debt'));
+        return view('installment.requests.show', compact('installment', 'taxReturn'));
     }
 
     public function file($file){

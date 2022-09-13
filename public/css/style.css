@@ -123,6 +123,7 @@ a[data-toggle="collapse"] {
 
 #content .top-navbar {
     margin-bottom: 8px !important;
+    background: #ead1d1 !important;
 }
 
 .form-control {
@@ -586,4 +587,15 @@ LIVEWIRE TABS
 
 div.table-bordered {
     border: none;
+}
+
+.modal-header
+{
+    background: #ead1d1;
+    color: #c20000ab;
+}
+
+.modal-title
+{
+    font-size: 18px;
 }

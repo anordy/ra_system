@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Installment Total Amount</span>
-                    <p class="my-1">{{ $installment->currency }}. {{ number_format($installment->amount, 2) }}</p>
+                        <p class="my-1">{{ $installment->currency }}. {{ number_format($installment->amount, 2) }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">No. of Installments </span>

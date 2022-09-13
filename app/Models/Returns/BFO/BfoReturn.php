@@ -10,6 +10,7 @@ use App\Models\Debts\Debt;
 use App\Models\FinancialYear;
 use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
+use App\Models\Returns\TaxReturn;
 use App\Models\Returns\BFO\BfoPenalty;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Returns\BFO\BfoReturnItems;
@@ -78,5 +79,9 @@ class BfoReturn extends Model
     public function payments()
     {
         return $this->bills()->where('status', 'paid');
+    }
+
+    public function tax_return(){
+        return $this->morphOne(TaxReturn::class, 'return');
     }
 }
