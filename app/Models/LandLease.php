@@ -58,4 +58,8 @@ class LandLease extends Model
     {
         return $this->belongsTo(BusinessLocation::class, 'business_location_id');
     }
+
+    public function LeasePayments(){
+        return $this->hasMany(LeasePayment::class);
+    }
 }

@@ -17,11 +17,13 @@ class CreateLeasePaymentsTable extends Migration
         Schema::create('lease_payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('land_lease_id');
+            $table->unsignedBigInteger('taxpayer_id');
             $table->string('financial_month_id');
             $table->unsignedBigInteger('financial_year_id');
             $table->enum('currency',['TZS', 'USD'])->default('USD');
             $table->decimal('total_amount', 40, 2)->default(0);
             $table->decimal('total_amount_with_penalties', 40, 2)->default(0);
+            $table->decimal('outstanding_amount', 40, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->enum('status', LeaseStatus::getConstants());
             $table->dateTime('due_date')->nullable();

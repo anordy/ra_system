@@ -452,6 +452,7 @@ Route::middleware(['auth'])->group(function () {
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
         Route::get('/view/{id}', [LandLeaseController::class, 'view'])->name('view');
+        Route::get('/view/lease/payment/{id}', [LandLeaseController::class, 'viewLeasePayment'])->name('view.lease.payment');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
         Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');

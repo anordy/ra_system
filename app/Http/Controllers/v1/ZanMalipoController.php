@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Enum\InstallmentStatus;
+use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
@@ -10,6 +11,7 @@ use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
 use App\Models\Installment\InstallmentItem;
 use App\Models\LandLease;
+use App\Models\LeasePayment;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
@@ -47,7 +49,7 @@ class ZanMalipoController extends Controller
         LumpSumReturn::class,
         TaxAssessment::class,
         PortReturn::class,
-        LandLease::class,
+        LeasePayment::class,
     ];
 
     private $multipleBillsReturnable = [
@@ -197,6 +199,9 @@ class ZanMalipoController extends Controller
 
             // Update Disputes
             $this->updateDispute($bill);
+
+            //Update Lease Payment
+            $this->updateLeasePayment($bill);
 
             //TODO: we should send sms to customer here to notify payment reception
 
@@ -445,13 +450,45 @@ class ZanMalipoController extends Controller
             // Update disputes
             $this->updateDispute($bill);
 
-            DB::commit();
+            //Land Lease
+            $this->updateLeasePayment($bill);
 
+            DB::commit();
             return $payment;
 
         } catch (\Exception $e) {
             DB::rollBack();
             return $e->getMessage();
+        }
+    }
+
+    private function updateLeasePayment($bill){
+        try {
+            if ($bill->billable_type == LeasePayment::class) {
+                $updateLeasePayment = $bill->billable;
+
+                if ($bill->paidAmount() >= $bill->amount) {
+
+                    if(Carbon::now()->month < $updateLeasePayment->due_date->month){
+                        $status = LeaseStatus::IN_ADVANCE_PAYMENT;
+                    } else if(Carbon::now()->month == $updateLeasePayment->due_date->month){
+                        $status = LeaseStatus::ON_TIME_PAYMENT;
+                    } else if(Carbon::now()->month > $updateLeasePayment->due_date->month){
+                        $status = LeaseStatus::LATE_PAYMENT;
+                    }
+
+                    $updateLeasePayment->status = $status;                    
+                } else {
+
+                    $updateLeasePayment->status = LeaseStatus::PAID_PARTIALLY;
+                    $updateLeasePayment->outstanding_amount = $bill->amount - $bill->paidAmount();
+                }
+                $updateLeasePayment->paid_at = Carbon::now();
+
+                $updateLeasePayment->save();
+            }
+        } catch (\Exception $e) {
+            Log::error($e);
         }
     }
 }

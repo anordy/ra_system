@@ -12,7 +12,35 @@ class LeasePayment extends Model
     protected $table = 'lease_payments';
     protected $guarded = [];
 
-    public function landlease(){
-        return $this->belongsTo(LandLease::class);
+    public function landLease(){
+        return $this->belongsTo(LandLease::class, 'land_lease_id');
+    }
+
+    public function taxpayer()
+    {
+        return $this->belongsTo(Taxpayer::class, 'taxpayer_id');
+    }
+    
+    public function bills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function zmBills()
+    {
+        return $this->morphMany(ZmBill::class, 'billable');
+    }
+
+    public function bill()
+    {
+        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
+    }
+
+    public function financialYear() {
+        return $this->belongsTo(FinancialYear::class, 'financial_year_id');
+    }
+
+    public function financialMonth(){
+        return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
     }
 }

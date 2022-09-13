@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\LandLease;
 
 use App\Models\LandLease;
+use App\Models\LeasePayment;
 use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
@@ -16,7 +17,7 @@ use Livewire\Component;
 use App\Traits\PaymentsTrait;
 use Illuminate\Support\Facades\Gate;
 
-class LandLeaseView extends Component
+class ViewLeasePayment extends Component
 {
     use LivewireAlert, PaymentsTrait;
     public $landLease;
@@ -26,13 +27,14 @@ class LandLeaseView extends Component
     //mount function
     public function mount($enc_id)
     {
-        $this->landLease = LandLease::find(decrypt($enc_id));
+        $this->leasePayment = LeasePayment::find(decrypt($enc_id));
+        // dd($this->leasePayment->landLease);
         $this->taxType = TaxType::where('code', TaxType::LAND_LEASE)->first();
     }
 
     public function render()
     {
-        return view('livewire.land-lease.land-lease-view');
+        return view('livewire.land-lease.view-lease-payment');
     }
 
     public function controlNumber()
@@ -45,13 +47,13 @@ class LandLeaseView extends Component
         DB::beginTransaction();
 
         try {
-            // dd($this->landLease->payment_amount,$this->taxType->gfs_code);
+            // dd($this->leasePayment->landLease->payment_amount,$this->taxType->gfs_code);
             $billitems = [
                 [
-                    'billable_id' => $this->landLease->id,
-                    'billable_type' => get_class($this->landLease),
+                    'billable_id' => $this->leasePayment->landLease->id,
+                    'billable_type' => get_class($this->leasePayment),
                     'use_item_ref_on_pay' => 'N',
-                    'amount' => $this->landLease->payment_amount,
+                    'amount' => $this->leasePayment->landLease->payment_amount,
                     // 'amount' => 2242,
                     'currency' => 'USD',
                     'gfs_code' => $this->taxType->gfs_code,
@@ -61,23 +63,23 @@ class LandLeaseView extends Component
                     'fee_type' => null,
                 ],
             ];
-            $isRegistered = $this->landLease->is_registered;
-            $taxpayer = $isRegistered ? $this->landLease->taxpayer : null;
+            $isRegistered = $this->leasePayment->landLease->is_registered;
+            $taxpayer = $isRegistered ? $this->leasePayment->landLease->taxpayer : null;
 
-            $payer_type = get_class($taxpayer == null ? $this->landLease->createdBy : $taxpayer);
-            $payer_name = $isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name;
-            $payer_email = $isRegistered ? $taxpayer->email : $this->landLease->email;
-            $payer_phone = $isRegistered ? $taxpayer->mobile : $this->landLease->phone;
-            $description = "Payment for Land Lease for " . ($isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->landLease->name);
+            $payer_type = get_class($taxpayer == null ? $this->leasePayment->landLease->createdBy : $taxpayer);
+            $payer_name = $isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->leasePayment->landLease->name;
+            $payer_email = $isRegistered ? $taxpayer->email : $this->leasePayment->landLease->email;
+            $payer_phone = $isRegistered ? $taxpayer->mobile : $this->leasePayment->landLease->phone;
+            $description = "Payment for Land Lease for " . ($isRegistered ? implode(" ", array($taxpayer->first_name, $taxpayer->last_name)) : $this->leasePayment->landLease->name);
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'USD';
             $createdby_type = get_class(Auth::user());
             $createdby_id = Auth::id();
             $exchange_rate = 1;
-            $payer_id = $isRegistered ? $taxpayer->id : $this->landLease->createdBy->id;
+            $payer_id = $isRegistered ? $taxpayer->id : $this->leasePayment->landLease->createdBy->id;
             $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-            $billableId = $this->landLease->id;
-            $billableType = get_class($this->landLease);
+            $billableId = $this->leasePayment->landLease->id;
+            $billableType = get_class($this->leasePayment);
 
             $zmBill = ZmCore::createBill(
                 $billableId,
@@ -101,18 +103,18 @@ class LandLeaseView extends Component
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
-                    $this->landLease->status = 'control-number-generating';
-                    $this->landLease->save();
+                    $this->leasePayment->landLease->status = 'control-number-generating';
+                    $this->leasePayment->landLease->save();
                     $this->alert('success', 'Request sent successfully.');
                 } else {
-                    $this->landLease->status = 'control-number-generating-failed';
-                    $this->landLease->save();
+                    $this->leasePayment->landLease->status = 'control-number-generating-failed';
+                    $this->leasePayment->landLease->save();
                     $this->alert('error', 'Failed to Generate Control Number');
                 }
             } else {
                 // We are local
-                $this->landLease->status = 'control-number-generated';
-                $this->landLease->save();
+                $this->leasePayment->landLease->status = 'control-number-generated';
+                $this->leasePayment->landLease->save();
 
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;

@@ -8,8 +8,12 @@ class LeaseStatus implements Status
 {
     const PENDING = 'pending';
     const DEBT = 'debt';
+    const CN_GENERATING = 'control-number-generating';
+    const CN_GENERATED = 'control-number-generated';
+    const CN_GENERATION_FAILED = 'control-number-generating-failed';
+    const PAID_PARTIALLY = 'paid-partially';
     const IN_ADVANCE_PAYMENT = 'in_advance_payment';
-    const IN_PAYMENT = 'in_payment';
+    const ON_TIME_PAYMENT = 'on_time_payment';
     const LATE_PAYMENT = 'late_payment';
 
     public static function getConstants(): array
