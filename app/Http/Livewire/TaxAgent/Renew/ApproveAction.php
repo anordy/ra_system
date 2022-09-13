@@ -24,7 +24,7 @@ class ApproveAction extends Component
 {
     use LivewireAlert;
 
-    public $agent;
+    public $renew;
 
     protected $listeners = [
         'confirmed',
@@ -43,7 +43,7 @@ class ApproveAction extends Component
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $this->agent->request->id
+                'id' => $this->renew->id
             ],
 
         ]);
@@ -61,7 +61,7 @@ class ApproveAction extends Component
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $this->agent->request->id
+                'id' => $this->renew->id
             ],
 
         ]);
@@ -73,21 +73,22 @@ class ApproveAction extends Component
         try {
             $data = (object)$value['data'];
             $req = RenewTaxAgentRequest::query()->find($data->id);
+
+            $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen', 'currency')
+                ->where('category', 'Renewal Fee')
+                ->where('is_citizen', $req->tax_agent->taxpayer_id)
+                ->first();
             $req->status = TaxAgentStatus::APPROVED;
             $req->renew_first_date = Carbon::now();
-            $req->renew_expire_date = Carbon::now()->addYear()->toDateTimeString();
+            $req->renew_expire_date = Carbon::now()->addYear($fee->duration)->toDateTimeString();
             $req->approved_at = now();
             $req->save();
-
-            $req->tax_agent->app_first_date = Carbon::now();
-            $req->tax_agent->app_expire_date = Carbon::now()->addYear()->toDateTimeString();
-            $req->tax_agent->save();
 
             $taxpayer = Taxpayer::query()->find($req->tax_agent->id);
             $taxpayer->notify(new DatabaseNotification(
                 $message = 'Tax agent renew ',
                 $type = 'info',
-                $messageLong = 'Your request for tax agent renew has been rejected',
+                $messageLong = 'Your request for tax agent renew has been approved successfully',
                 $href = '/taxagent/apply',
                 $hrefText = 'View'
             ));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Business\Closure;
 
+use App\Models\BranchStatus;
 use App\Models\BusinessStatus;
 use Exception;
 use Carbon\Carbon;
@@ -28,33 +29,54 @@ class ApprovedClosuresTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessTempClosure::query()->where('business_temp_closures.status', BusinessStatus::APPROVED)->orderBy('business_temp_closures.opening_date', 'DESC');
+        return BusinessTempClosure::query()->whereIn('business_temp_closures.status', [BranchStatus::APPROVED, BranchStatus::DE_REGISTERED, BranchStatus::TEMP_CLOSED])->orderBy('business_temp_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
     {
         return [
             Column::make('Name', 'business.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('TIN', 'business.tin')
-                ->sortable()
-                ->searchable(),
-            Column::make('Reg No.', 'business.reg_no')
-                ->sortable()
-                ->searchable(),
-            Column::make('Closing Date', 'closing_date')
-                ->format(function($value, $row) { return Carbon::create($row->closing_date)->toFormattedDateString(); })
-                ->sortable()
-                ->searchable(),
-            Column::make('Opening Date', 'opening_date')
-                ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
-                ->sortable()
-                ->searchable(),
-            Column::make('Closure Reason', 'reason')
-                ->sortable(),
-            Column::make('Action', 'id')
-                ->view('business.closure.action'),
+            ->sortable()
+            ->searchable(),
+        Column::make('Closure Type', 'closure_type')
+            ->sortable()
+            ->searchable()
+            ->format(function ($value, $row) {
+                if ($value == 'all') {
+                    return 'All Locations';
+                } else {
+                    return 'Single Location';
+                }
+            }),
+        Column::make('Location', 'location.name')
+            ->sortable()
+            ->searchable(),
+        Column::make('Closing Date', 'closing_date')
+            ->format(function($value, $row) { return Carbon::create($row->closing_date)->toFormattedDateString(); })
+            ->sortable()
+            ->searchable(),
+        Column::make('Opening Date', 'opening_date')
+            ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
+            ->sortable()
+            ->searchable(),
+        Column::make('Is Extended', 'is_extended')
+            ->format(function($value, $row) { 
+                if ($row->is_extended == false) {
+                    return <<< HTML
+                    <span class="badge badge-info py-1 px-2">No</span>
+                HTML;
+                } else {
+                    return <<< HTML
+                    <span class="badge badge-success py-1 px-2">Yes</span>
+                HTML;
+                }
+             })
+            ->sortable()
+            ->searchable()
+            ->html(true), 
+        Column::make('Status', 'status')->view('business.closure.includes.status'),
+        Column::make('Action', 'id')
+            ->view('business.closure.action'),
         ];
     }
 

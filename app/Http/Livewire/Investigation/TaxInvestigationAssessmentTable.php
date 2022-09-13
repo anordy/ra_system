@@ -21,7 +21,7 @@ class TaxInvestigationAssessmentTable extends DataTableComponent
     {
         return TaxInvestigation::query()->with('business', 'location', 'taxType', 'createdBy')
             ->has('assessment')
-            ->where('tax_investigations.status', TaxInvestigationStatus::APPROVED);
+            ->whereIn('tax_investigations.status', [TaxInvestigationStatus::APPROVED, TaxInvestigationStatus::LEGAL]);
     }
 
     public function configure(): void

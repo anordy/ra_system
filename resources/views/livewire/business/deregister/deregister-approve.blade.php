@@ -7,33 +7,52 @@
         <div id="tab1" class="tab-pane fade active show">
             <div class="card-body pb-0">
                 <div class="row my-2">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Business Name</span>
                         <p class="my-1">{{ $deregister->business->name }}</p>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">TIN</span>
                         <p class="my-1">{{ $deregister->business->tin }}</p>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Deregisration Type</span>
+                        <p class="my-1">
+                            @if ($deregister->deregistration_type === 'all')
+                                All Locations
+                            @else
+                                Single Location
+                            @endif
+                        </p>
+                    </div>
+                    @if ($deregister->location_id)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Location</span>
+                            <p class="my-1">{{ $deregister->location->name }}</p>
+                        </div>
+                    @endif
+                    <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Submitted By</span>
                         <p class="my-1">{{ $deregister->taxpayer->fullname }}</p>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">De-registration Date</span>
                         <p class="my-1">{{ $deregister->deregistration_date }}</p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Status</span>
+                        <p class="my-1">{{ $deregister->status }}</p>
                     </div>
                     <div class="col-md-12 mb-3">
                         <span class="font-weight-bold text-uppercase">Reason for De-registration</span>
                         <p class="my-1">{{ $deregister->reason }}</p>
                     </div>
                 </div>
-                @if ($deregister->status !== 'approved')
-                    @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' =>$deregister->id])
-                @endif
+                
+                @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' =>$deregister->id])
             </div>
         </div>
-        <div id="tab2" class="tab-pane fade">
+        <div id="tab2" class="tab-pane fade m-2">
             <livewire:approval.approval-history-table modelName='App\Models\BusinessDeregistration' modelId="{{ $deregister->id }}" />
         </div>
     </div>

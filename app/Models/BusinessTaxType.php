@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BusinessTaxType extends Model
 {
@@ -12,5 +13,9 @@ class BusinessTaxType extends Model
     protected $table = 'business_tax_type';
 
     protected $guarded = [];
+
+    public function taxType() {
+        return $this->belongsTo(TaxType::class, 'tax_type_id');
+    }
 
 }

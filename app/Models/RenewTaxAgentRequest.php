@@ -26,7 +26,7 @@ class RenewTaxAgentRequest extends Model
     }
 
     public function bills(){
-        return $this->morphMany(ZmBill::class, 'billable');
+        return $this->morphMany(ZmBill::class, 'billable')->latest();
     }
 
     public function getBillAttribute(){
