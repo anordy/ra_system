@@ -18,7 +18,6 @@ class MnoPreviewTable extends DataTableComponent
 
     public function mount($parameters)
     {
-        // dd($parameters);
         $this->parameters = $parameters;
     }
 
@@ -156,9 +155,9 @@ class MnoPreviewTable extends DataTableComponent
             Column::make("Payment Status", "paid_at")
                 ->format(
                     function ($value, $row) {
-                        if($row->created_at == null || $row->paid_at == null){
-                              return '-';  
-                        }else{
+                        if ($row->created_at == null || $row->paid_at == null) {
+                            return '-';
+                        } else {
                             if ($row->paid_at < $row->payment_due_date) {
                                 return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
                                 <i class="bi bi-check-circle"></i>
@@ -171,7 +170,6 @@ class MnoPreviewTable extends DataTableComponent
                                         </span>';
                             }
                         }
-                        
                     }
                 )
                 ->searchable()

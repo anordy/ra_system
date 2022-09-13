@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Enum\TaxClaimStatus;
+use App\Models\Claims\TaxClaim;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Returns\HotelReturns\HotelReturn;
@@ -26,6 +28,9 @@ trait ReturnReportTrait
                 $returns = $model->where('filing_due_date', '<', "${tableName}.created_at");
             } elseif ($parameters['filing_report_type'] == 'All-Filings') {
                 $returns = $model;
+            }elseif ($parameters['filing_report_type'] == 'Claims') {
+                $tableName = 'tax_claims';
+                $returns = TaxClaim::query()->where('status',TaxClaimStatus::APPROVED);
             }
         } elseif ($parameters['type'] == 'Payment') {
             if ($parameters['payment_report_type'] == 'On-Time-Paid-Returns') {
@@ -40,10 +45,10 @@ trait ReturnReportTrait
                 $returns = $model->whereNotNull('paid_at');
             }
         }
+
         if ($returns->count() < 1) {
             return $returns;
         }
-
         return $this->getSelectedRecords($returns, $parameters, $tableName);
     }
 

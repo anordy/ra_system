@@ -4,12 +4,6 @@ namespace App\Http\Livewire\Reports\Returns;
 
 use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
 use App\Models\TaxType;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -70,7 +64,7 @@ class ReturnReport extends Component
         $this->optionMonths = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
         $this->optionTaxTypes = TaxType::where('category','main')->get();
         $this->optionReportTypes = ['Filing', 'Payment'];
-        $this->optionFilingTypes = ['On-Time-Filings','Late-Filings', 'All-Filings'];
+        $this->optionFilingTypes = ['On-Time-Filings','Late-Filings', 'All-Filings','Claims'];
         $this->optionPaymentTypes = ['All-Paid-Returns','On-Time-Paid-Returns','Late-Paid-Returns', 'Unpaid-Returns'];
     }
 
@@ -102,10 +96,12 @@ class ReturnReport extends Component
         $parameters = $this->getParameters();
         $modelData = $this->getModelData($parameters);
         $records = $this->getRecords($modelData['model'], $parameters);
+        
         if($records->count()<1){
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
+
         $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
         $for = str_replace('-', ' ', $for);
         // dd($parameters);
@@ -209,11 +205,6 @@ class ReturnReport extends Component
         }
     }
 
-    public function render()
-    {
-        return view('livewire.reports.returns.return-report');
-    }
-
     public function getParameters()
     {
         return [
@@ -230,6 +221,11 @@ class ReturnReport extends Component
             'semiAnnual' => $this->semiAnnual,
             'dates'=> $this->getStartEndDate(),
         ];
+    }
+
+    public function render()
+    {
+        return view('livewire.reports.returns.return-report');
     }
 
 }
