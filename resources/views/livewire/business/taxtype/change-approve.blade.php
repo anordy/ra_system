@@ -9,29 +9,10 @@
                         <div class="card-header text-uppercase font-weight-bold">
                             Change of Tax Type Request for {{ $taxchange->business->name }}
                         </div>
-
-                        <div class="px-4 pt-2">
-                            <table class="table table-striped table-lg">
-                                <thead>
-                                    <th style="width: 30%">Tax Change Request By</th>
-                                    <th style="width: 50%">Tax Change Request Date</th>
-                                    <th>Status</th>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{ $taxchange->taxpayer->full_name }}</td>
-                                        <td>{{ $taxchange->created_at->toFormattedDateString() }}</td>
-                                        <td>{{ $taxchange->status }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     
                         <div class="px-4 pt-2">
-
                             <livewire:business.tax-type.tax-type-change-approval-processing
                                 modelName='App\Models\BusinessTaxTypeChange' modelId="{{ $taxchange->id }}" />
-
                         </div>
                     </div>
                 </div>

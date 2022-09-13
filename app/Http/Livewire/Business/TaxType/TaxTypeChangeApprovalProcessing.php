@@ -31,6 +31,8 @@ class TaxTypeChangeApprovalProcessing extends Component
     public $from_tax_type_id;
     public $to_tax_type_id;
     public $to_tax_type_currency;
+    public $effective_date;
+    public $today;
 
     public function mount($modelName, $modelId)
     {
@@ -42,13 +44,20 @@ class TaxTypeChangeApprovalProcessing extends Component
         $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
         $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
         $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
+        $this->today = Carbon::today()->addDay()->format('Y-m-d');
     }
 
 
     public function approve($transtion)
     {
+        $this->validate([
+            'effective_date' => 'required', 
+            'to_tax_type_currency' => 'required', 
+            'to_tax_type_id' => 'required'
+        ]);
+
         if ($this->to_tax_type_id == $this->from_tax_type_id) {
-            $this->alert('warning', 'You cannot change to existing tax type');
+            $this->alert('warning', 'You cannot change to an existing tax type');
             return;
         }
 
@@ -60,12 +69,8 @@ class TaxTypeChangeApprovalProcessing extends Component
                     ->where('tax_type_id', $this->taxchange->from_tax_type_id)
                     ->firstOrFail();
 
-                $current_tax_type->update([
-                    'tax_type_id' => $this->to_tax_type_id,
-                    'currency' => $this->to_tax_type_currency,
-                ]);
-
                 $this->subject->status = BusinessStatus::APPROVED;
+                $this->subject->effective_date = $this->effective_date;
 
                 $notification_payload = [
                     'tax_type' => $current_tax_type,
