@@ -17,11 +17,13 @@ class CreateBusinessTempClosures extends Migration
             $table->id();
             $table->dateTime('closing_date');
             $table->dateTime('opening_date');
-            $table->string('reason');
+            $table->longText('reason');
+            $table->enum('closure_type', ['all', 'location'])->default('location');
             $table->boolean('is_extended')->default(false);
             $table->boolean('show_extension')->default(false);
-			$table->enum('status', ['pending', 'approved', 'rejected', 'correction'])->default('pending');
+			$table->enum('status', ['pending', 'approved', 'rejected', 'correction', 'closed', 'temp_closed', 'deregistered'])->default('pending');
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->unsignedBigInteger('submitted_by');
             $table->unsignedBigInteger('rejected_by')->nullable();
             $table->timestamp('rejected_on')->nullable();

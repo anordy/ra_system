@@ -4,11 +4,11 @@ namespace App\Http\Livewire\Business\Closure;
 
 use Exception;
 use Carbon\Carbon;
-use App\Models\User;
 use App\Events\SendSms;
 use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Facades\Log;
@@ -39,18 +39,41 @@ class ClosureApprovalProcessing extends Component
 
         try {
             if ($this->checkTransition('compliance_officer_review')) {
-                $this->subject->approved_on = Carbon::now()->toDateTimeString();
+
+                if ($this->subject->closure_type == 'all') {
+                    $business = Business::find($this->subject->business_id);
+
+                    $business->update([
+                        'status' => BusinessStatus::TEMP_CLOSED
+                    ]);
+
+                    // Close all locations
+                    foreach ($business->locations as $location) {
+                        $location->update([
+                            'status' => BusinessStatus::TEMP_CLOSED
+                        ]);
+                    }
+
+                } else {
+                    // Close one location
+                    $location = BusinessLocation::findOrFail($this->subject->location_id);
+
+                    $location->update([
+                        'status' => BusinessStatus::TEMP_CLOSED
+                    ]);
+                }
+
                 $this->subject->status = BusinessStatus::APPROVED;
-                $business = Business::find($this->subject->business_id);
-                $business->update([
-                    'status' => BusinessStatus::TEMP_CLOSED
-                ]);
+                $this->subject->approved_on = Carbon::now()->toDateTimeString();
+
                 event(new SendSms('business-closure-approval', $this->subject->business_id));
                 event(new SendMail('business-closure-approval', $this->subject->business_id));
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            Log::error($e);
+            $this->alert('error', 'Something went wrong');
         }
     }
 
