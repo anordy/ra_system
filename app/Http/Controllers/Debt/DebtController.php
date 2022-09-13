@@ -40,10 +40,8 @@ class DebtController extends Controller
     public function approval($waiverId)
     {
         $waiver = DebtWaiver::findOrFail(decrypt($waiverId));
-        $debt = Debt::find($waiver->debt_id);
-        $business = Business::find($waiver->business_id);
         $files = DebtWaiverAttachment::where('debt_id', $waiver->id)->get();
-        return view('debts.waivers.approval', compact('waiver', 'files', 'business', 'debt'));
+        return view('debts.waivers.approval', compact('waiver', 'files'));
     }
 
     public function recovery($debtId)

@@ -4,11 +4,12 @@ namespace App\Enum;
 
 use ReflectionClass;
 
-class ReturnCategory implements Status
+class ApplicationStep implements Status
 {
-    const NORMAL = 'normal';
+    const FILING = 'filing';
     const DEBT = 'debt';
     const OVERDUE = 'overdue';
+
 
     static function getConstants(): array
     {

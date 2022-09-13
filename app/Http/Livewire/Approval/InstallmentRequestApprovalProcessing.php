@@ -8,6 +8,7 @@ use App\Enum\InstallmentRequestStatus;
 use App\Enum\InstallmentStatus;
 use App\Models\Debts\Debt;
 use App\Models\Installment\Installment;
+use App\Models\Returns\TaxReturn;
 use App\Traits\PaymentsTrait;
 use Carbon\Carbon;
 use Exception;
@@ -61,30 +62,30 @@ class InstallmentRequestApprovalProcessing extends Component
             DB::beginTransaction();
 
             if ($this->checkTransition('debt_manager')) {
-                $this->subject->installment_from = $this->subject->debt->curr_due_date;
-                $this->subject->installment_to = Carbon::make($this->subject->debt->curr_due_date)->addMonths($this->installmentPhases);
+                $this->subject->installment_from = $this->subject->taxReturn->curr_payment_due_date;
+                $this->subject->installment_to = Carbon::make($this->subject->taxReturn->curr_payment_due_date)->addMonths($this->installmentPhases);
                 $this->subject->installment_count = $this->installmentPhases;
                 $this->subject->save();
             }
 
             if ($this->checkTransition('accepted')) {
                 $this->subject->status = InstallmentRequestStatus::APPROVED;
-                $debt = Debt::findOrFail($this->subject->debt_id);
+                $taxReturn = TaxReturn::findOrFail($this->subject->tax_return_id);
 
                 // Update debt details
-                $debt->update([
-                    'curr_due_date' => $this->subject->installment_to,
+                $taxReturn->update([
+                    'curr_payment_due_date' => $this->subject->installment_to,
                     'payment_method' => DebtPaymentMethod::INSTALLMENT
                 ]);
 
                 // Cancel Control No.
-                if ($debt->bill){
-                    $this->cancelBill($debt->bill, 'Debt shifted to installments');
+                if ($taxReturn->bill){
+                    $this->cancelBill($taxReturn->bill, 'Debt shifted to installments');
                 }
 
                 // Create installment record
                 Installment::create([
-                    'debt_id' => $this->subject->debt_id,
+                    'tax_return_id' => $this->subject->tax_return_id,
                     'location_id' => $this->subject->location_id,
                     'business_id' => $this->subject->business_id,
                     'tax_type_id' => $this->subject->tax_type_id,
@@ -92,8 +93,8 @@ class InstallmentRequestApprovalProcessing extends Component
                     'installment_from' => $this->subject->installment_from,
                     'installment_to' => $this->subject->installment_to,
                     'installment_count' => $this->subject->installment_count,
-                    'amount' => $debt->outstanding_amount,
-                    'currency' => $debt->currency,
+                    'amount' => $taxReturn->outstanding_amount,
+                    'currency' => $taxReturn->currency,
                     'status' => InstallmentStatus::ACTIVE
                 ]);
 

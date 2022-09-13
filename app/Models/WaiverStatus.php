@@ -10,8 +10,6 @@ class WaiverStatus extends Model
 {
     use HasFactory;
 
-
-      
     protected $guarded = [];
 
     public const DRAFT = 'draft';
@@ -22,11 +20,6 @@ class WaiverStatus extends Model
     public const DEREGISTERED = 'deregistered';
     public const REJECTED = 'rejected';
     public const CLOSED = 'closed';
-
-    public function waiver()
-    {
-        return $this->belongsTo(Waiver::class, 'waiver_id');
-    }
 
     static function getConstants(): array
     {

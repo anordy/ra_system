@@ -9,7 +9,9 @@
 
     <div class="card rounded-4 shadow">
         <div class="card-header bg-white h-100 justify-content-between align-items-center rounded-1">
-            <div>Payments History</div> <br><br>
+            <div class="card-header text-uppercase font-weight-bold bg-white">
+                LUMP SUM Return
+            </div> <br><br>
             <livewire:returns.return-filter :tablename="$tableName" />
         </div>
 

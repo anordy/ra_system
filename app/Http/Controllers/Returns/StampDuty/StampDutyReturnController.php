@@ -24,7 +24,9 @@ class StampDutyReturnController extends Controller
 
         $vars = $this->getSummaryData(StampDutyReturn::query());
 
-        return view('returns.stamp-duty.index', compact('vars', 'paidData', 'unpaidData'));
+        $tableName ='returns.stamp-duty.stamp-duty-returns-table';
+
+        return view('returns.stamp-duty.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
     }
 
     public function show($returnId)
@@ -33,7 +35,8 @@ class StampDutyReturnController extends Controller
             abort(403);
         }
         $returnId = decrypt($returnId);
-        $return = StampDutyReturn::findOrFail($returnId);
+        $return   = StampDutyReturn::findOrFail($returnId);
+
         return view('returns.stamp-duty.show', compact('return'));
     }
 }

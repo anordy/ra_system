@@ -23,13 +23,14 @@ use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\Vat\VatReturn;
-use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\ZmBill;
+use Carbon\Carbon;
+use App\Models\Returns\TaxReturn;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmSignatureHelper;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -58,6 +59,10 @@ class ZanMalipoController extends Controller
 
     private $debtReturnable = [
         Debt::class,
+    ];
+
+    private $taxReturn = [
+        TaxReturn::class
     ];
 
     private $installable = [
@@ -100,9 +105,10 @@ class ZanMalipoController extends Controller
                 $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
                 if (in_array($bill->billable_type, array_merge(
-                    $this->returnable,
+                    $this->returnable, // TODO: Remove this
                     $this->multipleBillsReturnable,
-                    $this->debtReturnable,
+                    $this->debtReturnable, // TODO: Remove this
+                    $this->taxReturn,
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
@@ -121,6 +127,7 @@ class ZanMalipoController extends Controller
                     $this->returnable,
                     $this->multipleBillsReturnable,
                     $this->debtReturnable,
+                    $this->taxReturn,
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
@@ -193,6 +200,9 @@ class ZanMalipoController extends Controller
 
             // Check and update debts
             $this->updateDebt($bill);
+
+            // Check and update tax return & Return
+            $this->updateTaxReturn($bill);
 
             // Update installments
             $this->updateInstallment($bill);
@@ -312,6 +322,32 @@ class ZanMalipoController extends Controller
         }
     }
 
+    private function updateTaxReturn($bill){
+        try {
+            if (in_array($bill->billable_type, $this->taxReturn)) {
+                if ($bill->paidAmount() >= $bill->amount) {
+                    $tax_return = $bill->billable;
+                    $return = $tax_return->return;
+                    if ($return){
+                        $return->status = ReturnStatus::COMPLETE;
+                        $return->paid_at = Carbon::now()->toDateTimeString();
+                        $return->save();
+                    }
+                    $tax_return->payment_status = ReturnStatus::COMPLETE;
+                    $tax_return->outstanding_amount = 0;
+                    $tax_return->save();
+                } else {
+                    $tax_return         = $bill->billable;
+                    $tax_return->status = ReturnStatus::PAID_PARTIALLY;
+                    $tax_return->outstanding_amount = $bill->amount - $bill->paidAmount();
+                    $tax_return->save();
+                }
+            }
+        } catch(\Exception $e){
+            Log::error($e);
+        }
+    }
+
     private function updateDispute($bill)
     {
         try {
@@ -350,26 +386,26 @@ class ZanMalipoController extends Controller
                         'paid_at' => Carbon::now()->toDateTimeString()
                     ]);
 
-                    $debt = $item->installment->debt;
-                    $debt->update([
-                        'outstanding_amount' => $debt->outstanding_amount - $bill->amount,
+                    $taxReturn = $item->installment->taxReturn;
+                    $taxReturn->update([
+                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount
                     ]);
 
-                    if ($item->installment->getNextPaymentDate()) {
-                        $debt->update([
-                            'curr_due_date' => $item->installment->getNextPaymentDate(),
+                    if ($item->installment->getNextPaymentDate()){
+                        $taxReturn->update([
+                            'curr_payment_due_date' => $item->installment->getNextPaymentDate()
                         ]);
                     } elseif (!$item->installment->getNextPaymentDate() && ($item->installment->status == InstallmentStatus::ACTIVE)) {
                         $item->installment->update([
                             'status' => InstallmentStatus::COMPLETE,
                         ]);
 
-                        $item->installment->debt->update([
-                            'status' => ReturnStatus::COMPLETE,
+                        $item->installment->taxReturn->update([
+                            'status' => ReturnStatus::COMPLETE
                         ]);
 
-                        $item->installment->debt->debt->update([
-                            'status' => ReturnStatus::PAID_BY_DEBT,
+                        $item->installment->taxReturn->return->update([
+                            'status' => ReturnStatus::COMPLETE
                         ]);
                     }
                 } else {
@@ -378,9 +414,9 @@ class ZanMalipoController extends Controller
                         'status' => ReturnStatus::PAID_PARTIALLY,
                     ]);
 
-                    $debt = $item->installment->debt;
-                    $debt->update([
-                        'outstanding_amount' => $debt->outstanding_amount - $bill->amount,
+                    $taxReturn = $item->installment->taxReturn;
+                    $taxReturn->update([
+                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount
                     ]);
                 }
             }
@@ -443,6 +479,9 @@ class ZanMalipoController extends Controller
 
             // Check and update debts
             $this->updateDebt($bill);
+
+            // Check and update tax return
+            $this->updateTaxReturn($bill);
 
             // Update installments
             $this->updateInstallment($bill);

@@ -17,20 +17,17 @@ class CreateDebtWaiversTable extends Migration
     {
         Schema::create('debt_waivers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('taxpayer_id')->comments('main Owner');
-            $table->unsignedBigInteger('business_id');
-            $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('filed_by_id');
-            $table->unsignedBigInteger('debt_id')->nullable();
+            $table->unsignedBigInteger('tax_return_id');
             $table->enum('category', ['penalty', 'interest', 'both']);
-            $table->enum('business_type', ['hotel', 'other'])->default('other');
             $table->text('ground')->nullable();
             $table->text('reason')->nullable();
+            $table->float('penalty_rate')->nullable();
+            $table->float('interest_rate')->nullable();
             $table->string('waiver_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();
-            // $table->enum('status', ReturnStatus::getConstants());
             $table->enum('status', WaiverStatus::getConstants());
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();

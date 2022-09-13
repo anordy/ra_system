@@ -11,6 +11,7 @@ use App\Models\FinancialYear;
 use App\Models\FinancialMonth;
 use App\Models\LumpSumPayment;
 use App\Models\BusinessLocation;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Returns\LumpSum\LumpSumPenalties;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -82,5 +83,9 @@ class LumpSumReturn extends Model
     public function penalties()
     {
         return $this->hasMany(LumpSumPenalties::class, 'return_id');
+    }
+
+    public function tax_return(){
+        return $this->morphOne(TaxReturn::class, 'return');
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Debt\Waiver;
 
 use App\Models\Debts\DebtWaiver;
-use App\Models\Disputes\Dispute;
 use App\Models\WaiverStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -32,26 +31,22 @@ class DebtWaiverApprovalTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['debt_waivers.debt_id']);
+        $this->setAdditionalSelects(['debt_waivers.tax_return_id']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Business Name", "business.name")
+            Column::make("Business Name", "debt.business.name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Owner", "business.owner_designation")
+            Column::make("Location", "debt.location.name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Mobile", "business.mobile")
-                ->sortable(),
-            Column::make("Debt Type", "debt.debt_type")
+            Column::make("Debt Type", "debt.taxtype.name")
                 ->sortable()
-                ->format(function($value, $row) {
-                    return preg_split('[\\\]', $value)[2];
-                }),
-            Column::make("Waiver Category", "category")
+                ->searchable(),
+            Column::make("Waiver Type", "category")
                 ->sortable(),
             Column::make('Status', 'status')
                 ->view('debts.waivers.includes.status'),

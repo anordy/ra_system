@@ -2,17 +2,18 @@
 
 namespace App\Models\Returns\Port;
 
-use App\Models\Debts\Debt;
+use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
 use App\Models\Taxpayer;
+use App\Models\Debts\Debt;
 use App\Models\FinancialYear;
 use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Returns\Port\PortReturnItem;
 use App\Models\Returns\Port\PortReturnPenalty;
-use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PortReturn extends Model
@@ -80,6 +81,10 @@ class PortReturn extends Model
     public function payments()
     {
         return $this->bills()->where('status', 'paid');
+    }
+
+    public function tax_return(){
+        return $this->morphOne(TaxReturn::class, 'return');
     }
 
 }

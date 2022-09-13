@@ -16,17 +16,17 @@ class AddColumnsToDebtPenalties extends Migration
     {
         Schema::table('debt_penalties', function (Blueprint $table) {
             //
-            $table->dateTime('end_date')->nullable()->after('debt_id');
-            $table->dateTime('start_date')->nullable()->after('debt_id');
-            $table->decimal('penalty_amount', 20, 2)->after('debt_id');
-            $table->decimal('rate_amount', 20, 2)->after('debt_id');
-            $table->decimal('rate_percentage', 20, 2)->after('debt_id');
-            $table->decimal('late_payment', 20, 2)->after('debt_id');
-            $table->decimal('late_filing', 20, 2)->after('debt_id');
-            $table->decimal('tax_amount', 20, 2)->after('debt_id');
-            $table->decimal('currency_rate_in_tz', 20, 2)->default(1)->after('debt_id');;
-            $table->enum('currency',Currencies::getConstants())->default('TZS')->after('debt_id');
-            $table->string('financial_month_name')->after('debt_id');
+            $table->dateTime('end_date')->nullable()->after('tax_return_id');
+            $table->dateTime('start_date')->nullable()->after('tax_return_id');
+            $table->decimal('penalty_amount', 20, 2)->after('tax_return_id');
+            $table->decimal('rate_amount', 20, 2)->after('tax_return_id');
+            $table->decimal('rate_percentage', 20, 2)->after('tax_return_id');
+            $table->decimal('late_payment', 20, 2)->after('tax_return_id');
+            $table->decimal('late_filing', 20, 2)->after('tax_return_id');
+            $table->decimal('tax_amount', 20, 2)->after('tax_return_id');
+            $table->decimal('currency_rate_in_tz', 20, 2)->default(1)->after('tax_return_id');;
+            $table->enum('currency',Currencies::getConstants())->default('TZS')->after('tax_return_id');
+            $table->string('financial_month_name')->after('tax_return_id');
             
         });
     }
