@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\User;
+use App\Models\Business;
 use App\Traits\WorkflowTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BusinessTempClosure extends Model implements Auditable
 {
@@ -19,6 +21,10 @@ class BusinessTempClosure extends Model implements Auditable
 
     public function user() {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function location() {
+        return $this->belongsTo(BusinessLocation::class, 'location_id');
     }
 
     public function taxpayer() {

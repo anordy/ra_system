@@ -205,6 +205,9 @@
                 <button type="button" class="btn btn-danger" wire:click="reject('rejected')">
                     Reject & Return Back
                 </button>
+                <button type="button" class="btn btn-primary" wire:click="approve('forward_to_legal')">
+                    Forward to Legal Process
+                </button>   
                 <button type="button" class="btn btn-primary" wire:click="approve('accepted')">
                     Approve & Complete
                 </button>

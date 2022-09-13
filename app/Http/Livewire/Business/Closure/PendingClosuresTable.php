@@ -22,12 +22,12 @@ class PendingClosuresTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended', 'status']);
+        $this->setAdditionalSelects(['is_extended', 'business_temp_closures.status']);
     }
 
     public function builder(): Builder
     {
-        return BusinessTempClosure::query()->where('business_temp_closures.status', BusinessStatus::PENDING)->orderBy('business_temp_closures.opening_date', 'DESC');
+        return BusinessTempClosure::query()->where('business_temp_closures.status', BusinessStatus::PENDING)->orderBy('business_temp_closures.created_at', 'DESC');
     }
 
     public function columns(): array
@@ -36,10 +36,17 @@ class PendingClosuresTable extends DataTableComponent
             Column::make('Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('TIN', 'business.tin')
+            Column::make('Closure Type', 'closure_type')
                 ->sortable()
-                ->searchable(),
-            Column::make('Reg No.', 'business.reg_no')
+                ->searchable()
+                ->format(function ($value, $row) {
+                    if ($value == 'all') {
+                        return 'All Locations';
+                    } else {
+                        return 'Single Location';
+                    }
+                }),
+            Column::make('Location', 'location.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Closing Date', 'closing_date')
@@ -65,8 +72,7 @@ class PendingClosuresTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->html(true), 
-            Column::make('Closure Reason', 'reason')
-                ->sortable(),
+            Column::make('Status', 'status')->view('business.closure.includes.status'),
             Column::make('Action', 'id')
                 ->view('business.closure.action'),
         ];

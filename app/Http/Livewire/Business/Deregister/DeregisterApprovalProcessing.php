@@ -4,14 +4,14 @@ namespace App\Http\Livewire\Business\Deregister;
 
 use Exception;
 use Carbon\Carbon;
-use App\Models\User;
 use App\Events\SendSms;
 use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\BusinessStatus;
-use App\Traits\WorkflowProcesssingTrait;
+use App\Models\BusinessLocation;
 use Illuminate\Support\Facades\Log;
+use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class DeregisterApprovalProcessing extends Component
@@ -35,16 +35,36 @@ class DeregisterApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-        $this->validate(['comments' => 'required']);
 
         try {
             if ($this->checkTransition('commissioner_review')) {
-                $this->subject->approved_on = Carbon::now()->toDateTimeString();
+
+                if ($this->subject->deregistration_type == 'all') {
+                    $business = Business::find($this->subject->business_id);
+
+                    $business->update([
+                        'status' => BusinessStatus::DEREGISTERED
+                    ]);
+
+                    // Deregister all locations
+                    foreach ($business->locations as $location) {
+                        $location->update([
+                            'status' => BusinessStatus::DEREGISTERED
+                        ]);
+                    }
+
+                } else {
+                    // Deregister one location
+                    $location = BusinessLocation::findOrFail($this->subject->location_id);
+
+                    $location->update([
+                        'status' => BusinessStatus::DEREGISTERED
+                    ]);
+                }
+
                 $this->subject->status = BusinessStatus::APPROVED;
-                $business = Business::find($this->subject->business_id);
-                $business->update([
-                    'status' => BusinessStatus::DEREGISTERED
-                ]);
+                $this->subject->approved_on = Carbon::now()->toDateTimeString();
+
                 event(new SendSms('business-deregister-approval', $this->subject->business_id));
                 event(new SendMail('business-deregister-approval', $this->subject->business_id));
             }
@@ -66,6 +86,7 @@ class DeregisterApprovalProcessing extends Component
             } else if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
+
                 /**
                  * TODO: Send Email & SMS for correcting the submitted request
                  */

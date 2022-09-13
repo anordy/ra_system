@@ -28,7 +28,7 @@ class CreateTaxInvestigationsTable extends Migration
             $table->string('created_by_type');
             $table->unsignedBigInteger('created_by_id');
             $table->enum('origin', ['system', 'manual'])->default('system');
-            $table->enum('status', ['draft', 'pending', 'approved', 'correction'])->default('draft');
+            $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'legal'])->default('draft');
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->timestamps();

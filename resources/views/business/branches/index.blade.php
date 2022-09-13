@@ -13,7 +13,6 @@
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#tab2" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
                 <a href="#tab1" class="nav-item nav-link font-weight-bold">Approved Branches</a>
-                <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Branches</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab2" class="tab-pane fade m-2 show active">
@@ -21,9 +20,6 @@
                 </div>
                 <div id="tab1" class="tab-pane fade m-2">
                     <livewire:business.branches-table status='approved'></livewire:business.branches-table>
-                </div>
-                <div id="tab3" class="tab-pane fade m-2">
-                    <livewire:business.branches-table status='rejected'></livewire:business.branches-table>
                 </div>
             </div>
         </div>
