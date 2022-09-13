@@ -16,9 +16,21 @@
                                 <p class="my-1">{{ $temp_closure->business->tin }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Submitted By</span>
-                                <p class="my-1">{{ $temp_closure->taxpayer->fullname }}</p>
+                                <span class="font-weight-bold text-uppercase">Closure Type</span>
+                                <p class="my-1">
+                                    @if ($temp_closure->closure_type === 'all')
+                                        All Locations
+                                    @else
+                                        Single Location
+                                    @endif
+                                </p>
                             </div>
+                            @if ($temp_closure->location_id)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Location</span>
+                                    <p class="my-1">{{ $temp_closure->location->name }}</p>
+                                </div>
+                            @endif
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Closing Date</span>
                                 <p class="my-1">{{ $temp_closure->closing_date }}</p>
@@ -28,7 +40,15 @@
                                 <p class="my-1">{{ $temp_closure->opening_date }}</p>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Is Closure Extension</span>
+                                <span class="font-weight-bold text-uppercase">Status</span>
+                                <p class="my-1">{{ $temp_closure->status }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Submitted By</span>
+                                <p class="my-1">{{ $temp_closure->taxpayer->fullname }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Is Closure On Extension</span>
                                 <p class="my-1">
                                     @if ($temp_closure->is_extended == 0)
                                         <span class="badge badge-info py-1 px-2">No</span>
@@ -41,11 +61,9 @@
                                 <span class="font-weight-bold text-uppercase">Reason for Closure</span>
                                 <p class="my-1">{{ $temp_closure->reason }}</p>
                             </div>
-
+            
                         </div>
-                        @if ($temp_closure->status !== 'approved')
-                            @livewire('business.closure.closure-approval-processing', ['modelName' => 'App\Models\BusinessTempClosure', 'modelId' => $temp_closure->id])
-                        @endif
+                        @livewire('business.closure.closure-approval-processing', ['modelName' => 'App\Models\BusinessTempClosure', 'modelId' => $temp_closure->id])
                     </div>
                     <div id="tab2" class="tab-pane fade">
                         <livewire:approval.approval-history-table modelName='App\Models\BusinessTempClosure'

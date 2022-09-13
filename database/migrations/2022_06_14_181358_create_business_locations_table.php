@@ -39,7 +39,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->dateTime('approved_on')->nullable();
             $table->dateTime('verified_at')->nullable();
             $table->boolean('is_headquarter')->default(false);
-            $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'rejected'])->default('pending');
+            $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'rejected', 'temp_closed', 'deregistered'])->default('pending');
             $table->softDeletes();
             $table->timestamps();
         });
