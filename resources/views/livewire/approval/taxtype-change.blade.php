@@ -1,95 +1,114 @@
-<div class="card mb-2 bg-white">
-    <div class="card-body m-0 pb-0">
-
-        <table class="table table-striped table-sm">
-            <thead>
-                <th style="width: 30%">Old Values</th>
-                <th style="width: 50%">New Values</th>
-                <th style="width: 20%">Status</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        @foreach ($oldTaxTypes as $type)
-                            {{ $this->getTaxNameById($type['tax_type_id']) }} - {{ $type['currency'] }}<br>
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach ($selectedTaxTypes as $type)
-                            {{ $this->getTaxNameById($type['tax_type_id']) }} - {{ $type['currency'] }}<br>
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach ($oldTaxTypes as $key => $type)
-                            @if ($type['tax_type_id'] == $selectedTaxTypes[$key]['tax_type_id'])
-                                <span class="table-primary" style="font-size: 13px">Unchanged</span><br>
-                            @else
-                                <span class="table-success" style="font-size: 13px">Changed</span><br>
-                            @endif
-                        @endforeach
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        @if ($this->checkTransition('registration_manager_review'))
-            <h6>Tax Type Change Configurations</h6>
-
-            <div class="row mt-4 mb-4">
-                @foreach ($selectedTaxTypes as $key => $value)
-                    @if ($value['tax_type_id'] !== $oldTaxTypes[$key]['tax_type_id'])
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label class="form-label">Current Tax Type</label>
-                            <select class="form-control" wire:model="oldTaxTypes.{{ $key }}.tax_type_id"
-                                disabled>
-                                @foreach ($taxTypes as $tax)
-                                    <option value="{{ $tax->id }}">{{ $tax->name }} -
-                                        {{ $oldTaxTypes[$key]['currency'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-label">New Tax Type</label>
-                            <select
-                                class="form-control @error("selectedTaxTypes.{$key}.tax_type_id") is-invalid @enderror"
-                                wire:model="selectedTaxTypes.{{ $key }}.tax_type_id">
-                                @foreach ($taxTypes as $type)
-                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                @endforeach
-                            </select>
-                            @error("selectedTaxTypes.{$key}.tax_type_id")
-                                <span class="text-danger error">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-label">New Tax Type Currency</label>
-                            <select class="form-control @error("selectedTaxTypes.{$key}.currency") is-invalid @enderror"
-                                wire:model="selectedTaxTypes.{{ $key }}.currency">
-                                <option value="TZS">Tanzania Shillings</option>
-                                <option value="USD">United State Dollar</option>
-                            </select>
-                            @error("selectedTaxTypes.{$key}.currency")
-                                <span class="text-danger error">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+<div>
+    <table class="table table-striped table-lg">
+        <thead>
+            <th style="width: 30%">From Tax Type</th>
+            <th style="width: 50%">To Tax Type</th>
+            <th style="width: 20%">Status</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <span style="font-size: 13px">{{ $taxchange->fromTax->name }} -
+                        {{ $taxchange->from_tax_type_currency ?? '' }}</span><br>
+                </td>
+                <td>
+                    <span style="font-size: 13px">{{ $taxchange->toTax->name }} -
+                        {{ $taxchange->to_tax_type_currency ?? '' }}</span><br>
+                </td>
+                <td class="@if ($taxchange->from_tax_type_id != $taxchange->to_tax_type_id) table-success @endif">
+                    @if ($taxchange->from_tax_type_id == $taxchange->to_tax_type_id)
+                        <span style="font-size: 13px">Unchanged</span><br>
+                    @else
+                        <span style="font-size: 13px">Changed</span><br>
                     @endif
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-                @endforeach
+    <table class="table table-lg mt-2">
+        <tbody>
+            <tr>
+                <th style="width: 30%">Reason for Changing Tax Type:</th>
+                <td>{{ $taxchange->reason }}</td>
+            </tr>
+            <tr>
+                <th style="width: 30%">Status</th>
+                <td>{{ $taxchange->status }}</td>
+            </tr>
+            @if ($taxchange->effective_date)
+                <tr>
+                    <th style="width: 30%">Effective Date</th>
+                    <td>{{ $taxchange->effective_date }}</td>
+                </tr>
+            @endif
+            <tr>
+                <th style="width: 30%">Request By</th>
+                <td>{{ $taxchange->taxpayer->full_name }}</td>
+            </tr>
+            <tr>
+                <th style="width: 30%">Request Date</th>
+                <td>{{ $taxchange->created_at->toFormattedDateString() }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    @if ($this->checkTransition('registration_manager_review'))
+        <h6>Tax Type Change Configuration</h6>
+        <hr>
+
+        <div class="row mt-2 mb-4">
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="form-label">From Tax Type</label>
+                    <input class="form-control" type="text" disabled value="{{ $taxchange->fromTax->name }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">To Tax Type</label>
+                    <select class="form-control @error('to_tax_type_id') is-invalid @enderror"
+                        wire:model="to_tax_type_id">
+                        @foreach ($taxTypes as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('to_tax_type_id')
+                        <span class="text-danger error">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">To Tax Type Currency</label>
+                    <select class="form-control @error('to_tax_type_currency') is-invalid @enderror"
+                        wire:model="to_tax_type_currency">
+                        <option value="TZS">Tanzania Shillings</option>
+                        <option value="USD">United State Dollar</option>
+                    </select>
+                    @error('to_tax_type_currency')
+                        <span class="text-danger error">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Effective Date</label>
+                    <input type="date" min="{{ $today }}"
+                        class="form-control @error('effective_date') is-invalid @enderror" wire:model="effective_date">
+                    @error('effective_date')
+                        <span class="text-danger error">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
 
-        @endif
+        </div>
 
-        @include('livewire.approval.transitions')
+    @endif
 
+    @include('livewire.approval.transitions')
 
-
-    </div>
     @if ($this->checkTransition('registration_manager_review'))
         <div class="row mt-2">
             <div class="col-md-12 mb-3">
@@ -118,5 +137,4 @@
             </button>
         </div>
     @endif
-
 </div>

@@ -5,26 +5,18 @@
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show">
-                    <div class="card p-0 m-0">
+                    <div class="card m-0">
                         <div class="card-header text-uppercase font-weight-bold">
                             Change of Tax Type Request for {{ $taxchange->business->name }}
                         </div>
-                        <div class="card-body mt-0 p-2 px-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label class="text-left text-uppercase">Changed by
-                                    <strong>{{ $taxchange->taxpayer->full_name }}</strong> <br> on
-                                    <strong>{{ $taxchange->created_at->toFormattedDateString() }}</strong></label>
-                            </div>
-
-                            <p><strong>Reason for Changing Tax Types: </strong>{{ $taxchange->reason }}</p>
-                            <br>
+                    
+                        <div class="px-4 pt-2">
                             <livewire:business.tax-type.tax-type-change-approval-processing
                                 modelName='App\Models\BusinessTaxTypeChange' modelId="{{ $taxchange->id }}" />
-
                         </div>
                     </div>
                 </div>
-                <div id="tab2" class="tab-pane fade">
+                <div id="tab2" class="tab-pane fade m-2">
                     <livewire:approval.approval-history-table modelName='App\Models\BusinessTaxTypeChange'
                         modelId="{{ $taxchange->id }}" />
                 </div>

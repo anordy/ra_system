@@ -36,7 +36,6 @@ class ClosureApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-        $this->validate(['comments' => 'required']);
 
         try {
             if ($this->checkTransition('compliance_officer_review')) {
