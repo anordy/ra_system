@@ -9,6 +9,7 @@ use App\Models\Taxpayer;
 use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
 use App\Models\Debts\DebtWaiver;
+use App\Models\Debts\DebtPenalty;
 use App\Models\Installment\Installment;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Extension\ExtensionRequest;
@@ -78,4 +79,8 @@ class TaxReturn extends Model
      public function installment(){
          return $this->hasOne(Installment::class);
      }
+
+     public function penalties(){
+        return $this->hasMany(DebtPenalty::class);
+    }
 }
