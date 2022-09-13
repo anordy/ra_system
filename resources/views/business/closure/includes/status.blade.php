@@ -28,6 +28,12 @@
         <i class="bi bi-check-circle-fill mr-1"></i>
         Correction
     </span>
+@elseif($row->status === 'cancelled')
+    <span class="badge badge-success py-1 px-2"
+        style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+        <i class="bi bi-check-circle-fill mr-1"></i>
+        Cancelled
+    </span>
 @else
     <span class="badge badge-danger py-1 px-2"
         style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">

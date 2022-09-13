@@ -21,9 +21,10 @@ class CreateBusinessTempClosures extends Migration
             $table->enum('closure_type', ['all', 'location'])->default('location');
             $table->boolean('is_extended')->default(false);
             $table->boolean('show_extension')->default(false);
-			$table->enum('status', ['pending', 'approved', 'rejected', 'correction', 'closed', 'temp_closed', 'deregistered'])->default('pending');
+			$table->enum('status', ['pending', 'approved', 'rejected', 'correction', 'closed', 'temp_closed', 'deregistered', 'reopened'])->default('pending');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id')->nullable();
+            $table->unsignedBigInteger('extended_from_id')->nullable();
             $table->unsignedBigInteger('submitted_by');
             $table->unsignedBigInteger('rejected_by')->nullable();
             $table->timestamp('rejected_on')->nullable();

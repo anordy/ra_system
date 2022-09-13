@@ -29,7 +29,7 @@ class ApprovedClosuresTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessTempClosure::query()->whereIn('business_temp_closures.status', [BranchStatus::APPROVED, BranchStatus::DE_REGISTERED, BranchStatus::TEMP_CLOSED])->orderBy('business_temp_closures.opening_date', 'DESC');
+        return BusinessTempClosure::query()->whereIn('business_temp_closures.status', [BranchStatus::APPROVED, BranchStatus::DE_REGISTERED, BranchStatus::TEMP_CLOSED, 'cancelled'])->orderBy('business_temp_closures.opening_date', 'DESC');
     }
 
     public function columns(): array

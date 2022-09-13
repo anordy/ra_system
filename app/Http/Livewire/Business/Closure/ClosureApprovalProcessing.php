@@ -10,6 +10,7 @@ use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
+use App\Models\BusinessTempClosure;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -85,6 +86,14 @@ class ClosureApprovalProcessing extends Component
             if ($this->checkTransition('compliance_officer_reject')) {
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::REJECTED;
+
+                if ($this->subject->extended_from_id != null) {
+                    $previous_closure = BusinessTempClosure::findOrFail($this->subject->extended_from_id);
+                    $previous_closure->update([
+                        'show_extension' => true,
+                        'status' => 'approved'
+                    ]);
+                }
             } else if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
