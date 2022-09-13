@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\BranchStatus;
+use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
 use App\Models\BusinessTempClosure;
 use Carbon\Carbon;
@@ -48,28 +50,52 @@ class DailyReOpenTempBusinessCommand extends Command
         Log::channel('reopenBusiness')->info('Daily Debt collection ended');
     }
 
+    /**
+     * This job re-opens temporary closed business or locations
+     */
     protected function reopenTempClosedBusinesses()
     {
-        $now = Carbon::now();
 
-        $closed_businesses = BusinessTempClosure::selectRaw('id, created_at, business_id')->whereIn('id', function ($query) use($now) {
-            $query->from('business_temp_closures')->where('status', 'approved')
-            ->where('business_temp_closures.opening_date', '<', $now)->groupBy('business_id')->selectRaw('MAX(id)');
-        })->get();
+        $closed_businesses = BusinessTempClosure::where('status', 'approved')
+            ->whereRaw("TIMESTAMPDIFF(DAY, business_temp_closures.opening_date, CURDATE()) = 0")
+            ->get();
 
-        foreach ($closed_businesses as $closed) {
-            Log::channel('reopenBusiness')->info("Daily Reopen business process started");
-            DB::beginTransaction();
-            try {
-                $closed->business->status = BusinessStatus::APPROVED;
-                $closed->business->save();
-                DB::commit();
-                Log::channel('reopenBusiness')->info("Daily reopen business process ended");
-            } catch (Exception $e) {
-                Log::channel('reopenBusiness')->info('Daily reopen business process ended with error');
-                Log::channel('reopenBusiness')->error($e);
-                DB::rollBack();
+        DB::beginTransaction();
+
+        try {
+
+            foreach ($closed_businesses as $closed_business) {
+
+                if ($closed_business->closure_type == 'all') {
+                    // Update main business
+                    $closed_business->business->status = BusinessStatus::APPROVED;
+                    $closed_business->business->save();
+
+                    // Update business locations
+                    $locations = $closed_business->business->locations;
+                    foreach ($locations as $location) {
+                        $location->status = BranchStatus::APPROVED;
+                        $location->save();
+                    }
+
+                }
+
+                if ($closed_business->closure_type == 'location') {
+                    $location = BusinessLocation::findOrFail($closed_business->location_id);
+                    $location->status = BranchStatus::APPROVED;
+                    $location->save();
+                }
+            
             }
+
+            DB::commit();
+            Log::channel('reopenBusiness')->info("Daily reopen business process ended");
+        } catch(Exception $e) {
+            Log::channel('reopenBusiness')->info('Daily reopen business process ended with error');
+            Log::channel('reopenBusiness')->error($e);
+            DB::rollBack();
         }
+
+        
     }
 }
