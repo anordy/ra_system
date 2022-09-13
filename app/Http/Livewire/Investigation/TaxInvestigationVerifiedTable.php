@@ -20,7 +20,7 @@ class TaxInvestigationVerifiedTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxInvestigation::query()->with('business', 'location', 'taxType')
-            ->where('tax_investigations.status', TaxInvestigationStatus::APPROVED);
+            ->whereIn('tax_investigations.status', [TaxInvestigationStatus::APPROVED, TaxInvestigationStatus::LEGAL]);
     }
 
     public function configure(): void
