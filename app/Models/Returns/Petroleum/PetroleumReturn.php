@@ -2,19 +2,18 @@
 
 namespace App\Models\Returns\Petroleum;
 
-use App\Models\ZmBill;
-use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\Taxpayer;
+use App\Models\BusinessLocation;
 use App\Models\Debts\Debt;
 use App\Models\FinancialYear;
-use App\Models\BusinessLocation;
 use App\Models\Returns\TaxReturn;
 use App\Models\SevenDaysFinancialMonth;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Returns\Petroleum\PetroleumPenalty;
-use App\Models\Returns\Petroleum\PetroleumReturnItem;
+use App\Models\Taxpayer;
+use App\Models\TaxType;
+use App\Models\Verification\TaxVerification;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PetroleumReturn extends Model
 {
@@ -25,6 +24,10 @@ class PetroleumReturn extends Model
     public static function getTableName()
     {
         return with(new static)->getTable();
+    }
+
+    public function verification(){
+        return $this->morphOne(TaxVerification::class, 'tax_return');
     }
 
     public function configReturns()
