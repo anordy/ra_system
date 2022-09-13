@@ -122,10 +122,10 @@
     <span class="taxpayerName">{{ $taxagent->taxpayer->fullName }}</span>
     <span class="registrationNumber">{{$taxagent->reference_no}}</span>
     <span class="period">{{$diff.' '.$word}}</span>
-    <span class="startDay">{{date('d', strtotime($taxagent->app_first_date))}}<sup class="sup">{{$superStart}}</sup></span>
-    <span class="startYear">{{date('M Y', strtotime($taxagent->app_first_date))}}</span>
-    <span class="endday">{{date('d', strtotime($taxagent->app_expire_date))}}<sup class="sup">{{$superEnd}}</sup></span>
-    <span class="endyear">{{date('M Y', strtotime($taxagent->app_expire_date))}}</span>
+    <span class="startDay">{{date('d', strtotime($start_date))}}<sup class="sup">{{$superStart}}</sup></span>
+    <span class="startYear">{{date('M Y', strtotime($start_date))}}</span>
+    <span class="endday">{{date('d', strtotime($end_date))}}<sup class="sup">{{$superEnd}}</sup></span>
+    <span class="endyear">{{date('M Y', strtotime($end_date))}}</span>
     <span class="location">{{$taxagent->district->name.', '.$taxagent->region->name}}</span>
     <span class="commissioner-signature">
         <img src="{{ public_path()}}/sign/commissioner.png">
