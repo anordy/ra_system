@@ -7,6 +7,7 @@ use ReflectionClass;
 class LeaseStatus implements Status
 {
     const PENDING = 'pending';
+    const COMPLETE = 'complete';
     const DEBT = 'debt';
     const CN_GENERATING = 'control-number-generating';
     const CN_GENERATED = 'control-number-generated';

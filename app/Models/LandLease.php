@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\LeaseStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -59,7 +60,19 @@ class LandLease extends Model
         return $this->belongsTo(BusinessLocation::class, 'business_location_id');
     }
 
-    public function LeasePayments(){
+    public function leasePayments(){
         return $this->hasMany(LeasePayment::class);
+    }
+
+    public function lastCompletedLeasePayment(){
+        $statues = [
+            LeaseStatus::IN_ADVANCE_PAYMENT,
+            LeaseStatus::LATE_PAYMENT,
+            LeaseStatus::ON_TIME_PAYMENT,
+            LeaseStatus::COMPLETE
+        ];
+
+        return $this->leasePayments;
+        // ->whereIn('status', $statues)->latest()->first();
     }
 }

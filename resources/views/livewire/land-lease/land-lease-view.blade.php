@@ -7,15 +7,6 @@
         </a>
     </div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                {{-- @livewire('land-lease.land-lease-payment', ['landLease' => $landLease]) --}}
-                {{-- <livewire:returns.land-lease-payment :return="$landLease" /> --}}
-            </div>
-        </div>
-    </div>
-
     <div class="card">
         <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
             <li class="nav-item" role="presentation">
@@ -198,7 +189,7 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Valid Period Term</span>
-                            <p class="my-1">{{ $landLease->valid_period_term }} years</p>
+                            <p class="my-1">{{ $landLease->valid_period_term }} Year(s)</p>
                         </div>
                     </div>
 
@@ -346,6 +337,12 @@
                                                                 style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
                                                                 <i class="bi bi-pencil-square mr-1"></i>
                                                                 Paid Partially
+                                                            </span>
+                                                        @elseif($leasePayment->status === \App\Enum\LeaseStatus::PENDING)
+                                                            <span class="badge badge-danger py-1 px-2"
+                                                                style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
+                                                                <i class="bi bi-pencil-square mr-1"></i>
+                                                                Pending
                                                             </span>
                                                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::DEBT)
                                                             <span class="badge badge-danger py-1 px-2"

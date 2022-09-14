@@ -73,6 +73,12 @@
                                 <i class="bi bi-pencil-square mr-1"></i>
                                 Paid Partially
                             </span>
+                        @elseif($leasePayment->status === \App\Enum\LeaseStatus::PENDING)
+                            <span class="badge badge-danger py-1 px-2"
+                                style="border-radius: 1rem; background: rgba(220,181,53,0.35); color: #cfa51c; font-size: 85%">
+                                <i class="bi bi-pencil-square mr-1"></i>
+                                Pending
+                            </span>
                         @elseif($leasePayment->status === \App\Enum\LeaseStatus::DEBT)
                             <span class="badge badge-danger py-1 px-2"
                                 style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
@@ -106,7 +112,7 @@
                 <div class="col-md-6">
                     <span class="font-weight-bold text-uppercase">Valid Period Terms</span>
                     <p class="my-1">
-                        {{ $leasePayment->landLease->valid_period_term }}
+                        {{ $leasePayment->landLease->valid_period_term }} Years
                     </p>
                 </div>
             </div>

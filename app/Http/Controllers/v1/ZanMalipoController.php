@@ -11,6 +11,7 @@ use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
 use App\Models\Installment\InstallmentItem;
 use App\Models\LandLease;
+use App\Models\LandLeaseDebt;
 use App\Models\LeasePayment;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\EmTransactionReturn;
@@ -31,6 +32,7 @@ use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmSignatureHelper;
+use App\Traits\LandLeaseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -501,30 +503,41 @@ class ZanMalipoController extends Controller
         }
     }
 
+
+    use LandLeaseTrait;
     private function updateLeasePayment($bill){
+        
         try {
             if ($bill->billable_type == LeasePayment::class) {
                 $updateLeasePayment = $bill->billable;
 
                 if ($bill->paidAmount() >= $bill->amount) {
 
-                    if(Carbon::now()->month < $updateLeasePayment->due_date->month){
+                    if(Carbon::now()->month < Carbon::parse($updateLeasePayment->due_date)->month){
                         $status = LeaseStatus::IN_ADVANCE_PAYMENT;
-                    } else if(Carbon::now()->month == $updateLeasePayment->due_date->month){
+                    } else if(Carbon::now()->month == Carbon::parse($updateLeasePayment->due_date)->month){
                         $status = LeaseStatus::ON_TIME_PAYMENT;
-                    } else if(Carbon::now()->month > $updateLeasePayment->due_date->month){
+                    } else if(Carbon::now()->month > Carbon::parse($updateLeasePayment->due_date)->month){
                         $status = LeaseStatus::LATE_PAYMENT;
                     }
-
-                    $updateLeasePayment->status = $status;                    
+                    $updateLeasePayment->status = $status;                
                 } else {
 
                     $updateLeasePayment->status = LeaseStatus::PAID_PARTIALLY;
-                    $updateLeasePayment->outstanding_amount = $bill->amount - $bill->paidAmount();
                 }
-                $updateLeasePayment->paid_at = Carbon::now();
 
+                $updateLeasePayment->outstanding_amount = $bill->amount - $bill->paidAmount();
+                $updateLeasePayment->paid_at = Carbon::now();
                 $updateLeasePayment->save();
+
+
+                if ($updateLeasePayment->debt) {
+                    $updateDebt = LandLeaseDebt::find($updateLeasePayment->debt->id);
+                    $updateDebt->status = LeaseStatus::COMPLETE;
+                    $updateDebt->outstanding_amount = $updateLeasePayment->outstanding_amount;
+                    $updateDebt->save();
+                }
+                
             }
         } catch (\Exception $e) {
             Log::error($e);

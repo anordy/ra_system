@@ -31,7 +31,7 @@ class LeasePayment extends Model
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
-    public function bill()
+    public function getBillAttribute()
     {
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
@@ -42,5 +42,17 @@ class LeasePayment extends Model
 
     public function financialMonth(){
         return $this->belongsTo(FinancialMonth::class, 'financial_month_id');
+    }
+
+    public function penalties(){
+        return $this->hasMany(LeasePaymentPenalty::class);
+    }
+
+    public function totalPenalties(){
+        return $this->penalties->sum('penalty_amount');
+    }
+
+    public function debt(){
+        return $this->hasOne(LandLeaseDebt::class);
     }
 }

@@ -1,6 +1,5 @@
 <div>
     @if ($leasePayment->bills()->count() > 0)
-    {{$leasePayment->bills()}}
         @if ($bill = $leasePayment->bills()->latest()->first())
             <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
                 <div class="col-md-4">
