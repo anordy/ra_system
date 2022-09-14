@@ -30,6 +30,7 @@
                 </label>
                 <select name="month" class="form-control" wire:model="month">
                     <option value="all">All</option>
+                    <option value="range">Range Of Months</option>
                     <option value="1">January</option>
                     <option value="2">February</option>
                     <option value="3">March</option>
@@ -44,6 +45,22 @@
                     <option value="12">December</option>
                 </select>
             </div>
+            @if ($month == 'range')
+                <div class="col-md-4 form-group">
+                    <label for="month" class="d-flex justify-content-between'">
+                        <span>From:</span>
+                    </label>
+                    <input type="date" name="from" class="form-control" wire:model="from">
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label for="month" class="d-flex justify-content-between'">
+                        <span>To:</span>
+                    </label>
+                    <input type="date" name="to" class="form-control" wire:model="to">
+                </div>
+            @endif
+
 
             <div class="col-md-12 text-center">
                 <div class="d-flex justify-content-end">

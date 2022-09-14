@@ -2,19 +2,18 @@
 
 namespace App\Models\Returns\Port;
 
-use App\Models\ZmBill;
-use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Models\Debts\Debt;
-use App\Models\FinancialYear;
-use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
+use App\Models\FinancialMonth;
+use App\Models\FinancialYear;
 use App\Models\Returns\TaxReturn;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Returns\Port\PortReturnItem;
-use App\Models\Returns\Port\PortReturnPenalty;
+use App\Models\Taxpayer;
+use App\Models\TaxType;
+use App\Models\Verification\TaxVerification;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PortReturn extends Model
 {
@@ -25,6 +24,10 @@ class PortReturn extends Model
     public static function getTableName()
     {
         return with(new static)->getTable();
+    }
+
+    public function verification(){
+        return $this->morphOne(TaxVerification::class, 'tax_return');
     }
 
     public function configReturns()

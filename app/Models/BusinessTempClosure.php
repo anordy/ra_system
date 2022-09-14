@@ -27,6 +27,10 @@ class BusinessTempClosure extends Model implements Auditable
         return $this->belongsTo(BusinessLocation::class, 'location_id');
     }
 
+    public function extends() {
+        return $this->belongsTo(BusinessTempClosure::class, 'extended_from_id');
+    }
+
     public function taxpayer() {
         return $this->belongsTo(Taxpayer::class, 'submitted_by');
     }

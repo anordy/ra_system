@@ -2,20 +2,18 @@
 
 namespace App\Models\Returns\Vat;
 
-use App\Models\ZmBill;
-use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Models\Debts\Debt;
-use App\Models\FinancialYear;
-use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
+use App\Models\FinancialMonth;
+use App\Models\FinancialYear;
 use App\Models\Returns\TaxReturn;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Returns\Vat\VatReturnItem;
-use App\Models\Returns\Vat\VatReturnPenalty;
-use App\Models\Returns\Vat\VatReturnSupplierDetail;
+use App\Models\Taxpayer;
+use App\Models\TaxType;
+use App\Models\Verification\TaxVerification;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class VatReturn extends Model
 {
@@ -31,6 +29,10 @@ class VatReturn extends Model
     public function business()
     {
         return $this->belongsTo(Business::class);
+    }
+
+    public function verification(){
+        return $this->morphOne(TaxVerification::class, 'tax_return');
     }
 
     public function taxtype()

@@ -2,33 +2,24 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Enum\DisputeStatus;
 use App\Enum\InstallmentStatus;
-use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
-use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
 use App\Models\Installment\InstallmentItem;
 use App\Models\LandLease;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\ZmBill;
-use Carbon\Carbon;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\ZmBill;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmSignatureHelper;
+use App\Traits\TaxVerificationTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -36,39 +27,15 @@ use Spatie\ArrayToXml\ArrayToXml;
 
 class ZanMalipoController extends Controller
 {
-    private $returnable = [
-        StampDutyReturn::class,
-        MnoReturn::class,
-        VatReturn::class,
-        MmTransferReturn::class,
-        HotelReturn::class,
-        PetroleumReturn::class,
-        EmTransactionReturn::class,
-        BfoReturn::class,
-        LumpSumReturn::class,
-        TaxAssessment::class,
+    use TaxVerificationTrait;
+
+    private $billable = [
         PortReturn::class,
         LandLease::class,
     ];
 
-    private $multipleBillsReturnable = [
-        PortReturn::class,
-    ];
-
-    private $debtReturnable = [
-        Debt::class,
-    ];
-
-    private $taxReturn = [
-        TaxReturn::class
-    ];
-
     private $installable = [
         InstallmentItem::class,
-    ];
-
-    private $disputable = [
-        Dispute::class,
     ];
 
     /**
@@ -103,10 +70,8 @@ class ZanMalipoController extends Controller
                 $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$bill->expire_date}.";
 
                 if (in_array($bill->billable_type, array_merge(
-                    $this->returnable, // TODO: Remove this
-                    $this->multipleBillsReturnable,
-                    $this->debtReturnable, // TODO: Remove this
-                    $this->taxReturn,
+                    $this->billable,
+                    [TaxReturn::class, TaxAssessment::class],
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
@@ -122,10 +87,8 @@ class ZanMalipoController extends Controller
                 $bill->update(['zan_trx_sts_code' => $zan_trx_sts_code]);
 
                 if (in_array($bill->billable_type, array_merge(
-                    $this->returnable,
-                    $this->multipleBillsReturnable,
-                    $this->debtReturnable,
-                    $this->taxReturn,
+                    $this->billable,
+                    [TaxReturn::class, TaxAssessment::class],
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
@@ -193,11 +156,8 @@ class ZanMalipoController extends Controller
             $bill->paid_amount = $bill->paidAmount();
             $bill->save();
 
-            // Check and update return
-            $this->updateReturn($bill);
-
-            // Check and update debts
-            $this->updateDebt($bill);
+            // Check and update billable status
+            $this->updateBillable($bill);
 
             // Check and update tax return & Return
             $this->updateTaxReturn($bill);
@@ -206,7 +166,7 @@ class ZanMalipoController extends Controller
             $this->updateInstallment($bill);
 
             // Update Disputes
-            $this->updateDispute($bill);
+            $this->updateAssessment($bill);
 
             //TODO: we should send sms to customer here to notify payment reception
 
@@ -243,42 +203,15 @@ class ZanMalipoController extends Controller
         return '<Gepg>' . $signedContent . '<gepgSignature>' . $sign . '</gepgSignature></Gepg>';
     }
 
-    private function updateReturn($bill)
+    private function updateBillable($bill)
     {
         try {
-            if (in_array($bill->billable_type, $this->returnable)) {
+            if (in_array($bill->billable_type, $this->billable)) {
                 if ($bill->paidAmount() >= $bill->amount) {
                     $billable = $bill->billable;
                     $billable->status = ReturnStatus::COMPLETE;
                     $billable->paid_at = Carbon::now()->toDateTimeString();
                     $billable->save();
-                } else {
-                    $billable = $bill->billable;
-                    $billable->status = ReturnStatus::PAID_PARTIALLY;
-                    $billable->save();
-                }
-            } elseif (in_array($bill->billable_type, $this->multipleBillsReturnable)) {
-                if ($bill->paidAmount() >= $bill->amount) {
-                    // Find the alternative bill for this return
-                    $altBill = ZmBill::where('billable_id', $bill->billable_id)
-                        ->where('billable_type', $bill->billable_type)
-                        ->where('currency', '!=', $bill->currency)
-                        ->latest()->first();
-
-                    if (!$altBill) {
-                        return;
-                    }
-
-                    if ($altBill->status === PaymentStatus::PAID) {
-                        $billable = $bill->billable;
-                        $billable->status = ReturnStatus::COMPLETE;
-                        $billable->paid_at = Carbon::now()->toDateTimeString();
-                        $billable->save();
-                    } else {
-                        $billable = $bill->billable;
-                        $billable->status = ReturnStatus::COMPLETED_PARTIALLY;
-                        $billable->save();
-                    }
                 } else {
                     $billable = $bill->billable;
                     $billable->status = ReturnStatus::PAID_PARTIALLY;
@@ -290,36 +223,9 @@ class ZanMalipoController extends Controller
         }
     }
 
-    private function updateDebt($bill)
-    {
-        try {
-            if (in_array($bill->billable_type, $this->debtReturnable)) {
-                if ($bill->paidAmount() >= $bill->amount) {
-                    $debt = $bill->billable;
-                    $return = $debt->debt;
-                    if ($return) {
-                        $return->status = ReturnStatus::PAID_BY_DEBT;
-                        $return->paid_at = Carbon::now()->toDateTimeString();
-                        $return->save();
-                    }
-                    $debt->status = ReturnStatus::COMPLETE;
-                    $debt->outstanding_amount = 0;
-                    $debt->save();
-                } else {
-                    $debt = $bill->billable;
-                    $debt->status = ReturnStatus::PAID_PARTIALLY;
-                    $debt->outstanding_amount = $bill->amount - $bill->paidAmount();
-                    $debt->save();
-                }
-            }
-        } catch (\Exception $e) {
-            Log::error($e);
-        }
-    }
-
     private function updateTaxReturn($bill){
         try {
-            if (in_array($bill->billable_type, $this->taxReturn)) {
+            if ($bill->billable_type == TaxReturn::class) {
                 if ($bill->paidAmount() >= $bill->amount) {
                     $tax_return = $bill->billable;
                     $return = $tax_return->return;
@@ -327,12 +233,15 @@ class ZanMalipoController extends Controller
                         $return->status = ReturnStatus::COMPLETE;
                         $return->paid_at = Carbon::now()->toDateTimeString();
                         $return->save();
+
+                        // Trigger verifications approval
+                        $this->initiateVerificationApproval($return);
                     }
                     $tax_return->payment_status = ReturnStatus::COMPLETE;
                     $tax_return->outstanding_amount = 0;
                     $tax_return->save();
                 } else {
-                    $tax_return         = $bill->billable;
+                    $tax_return = $bill->billable;
                     $tax_return->status = ReturnStatus::PAID_PARTIALLY;
                     $tax_return->outstanding_amount = $bill->amount - $bill->paidAmount();
                     $tax_return->save();
@@ -343,26 +252,19 @@ class ZanMalipoController extends Controller
         }
     }
 
-    private function updateDispute($bill)
+    private function updateAssessment($bill)
     {
         try {
-            if (in_array($bill->billable_type, $this->disputable)) {
+            $assessmentBillItems = $bill->bill_items->pluck('billable_type')->toArray();
+            if ($bill->billable_type == TaxAssessment::class && in_array(Dispute::class, $assessmentBillItems)) {
                 if ($bill->paidAmount() >= $bill->amount) {
-                    $dispute = $bill->billable;
-                    $return = $dispute->dispute;
-                    if ($return) {
-                        $return->status = ReturnStatus::PAID_BY_DEBT;
-                        $return->paid_at = Carbon::now()->toDateTimeString();
-                        $return->save();
-                    }
-                    $dispute->status = ReturnStatus::COMPLETE;
-                    $dispute->outstanding_amount = 0;
-                    $dispute->save();
-                } else {
-                    $dispute = $bill->billable;
-                    $dispute->status = ReturnStatus::PAID_PARTIALLY;
-                    $dispute->outstanding_amount = $bill->amount - $bill->paidAmount();
-                    $dispute->save();
+                    $assessment = $bill->billable;
+
+                    // initiate dispute approval
+                    $this->registerWorkflow(get_class($assessment), $assessment->id);
+                    $this->doTransition('application_submitted', 'approved');
+                    $assessment->app_status = DisputeStatus::SUBMITTED;
+                    $assessment->save();
                 }
             }
         } catch (\Exception $e) {
@@ -470,10 +372,7 @@ class ZanMalipoController extends Controller
             $bill->save();
 
             // Check and update return
-            $this->updateReturn($bill);
-
-            // Check and update debts
-            $this->updateDebt($bill);
+            $this->updateBillable($bill);
 
             // Check and update tax return
             $this->updateTaxReturn($bill);
@@ -482,7 +381,7 @@ class ZanMalipoController extends Controller
             $this->updateInstallment($bill);
 
             // Update disputes
-            $this->updateDispute($bill);
+            $this->updateAssessment($bill);
 
             DB::commit();
 

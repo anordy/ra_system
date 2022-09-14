@@ -7,8 +7,8 @@
             background-image: url("{{ public_path() }}/images/logo.png");
             background-repeat: no-repeat;
             background-position: center;
-            background-size: contain;
-            margin: 10px;
+            background-size:contain;
+            margin: 15px;
             opacity: 0.1;
         }
 
@@ -84,10 +84,10 @@
                     <strong>Location</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Financial Quater</strong>
+                    <strong>Tax Type</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Financial Year</strong>
+                    <strong>Reporting Month</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Filed By</strong>
@@ -96,10 +96,19 @@
                     <strong>Currency</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Total Amount Due</strong>
+                    <strong>Principal Amount</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Total Amount Due With Penalties</strong>
+                    <strong>Interest Amount</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Penalty Amount</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Total Amount</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Outstanding Amount</strong>
                 </th>
                 <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
                     <strong>Filing Date</strong>
@@ -108,16 +117,10 @@
                     <strong>Filing Due Date</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Filing Status</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Payment Date</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Payment Due Date</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Payment Status</strong>
                 </th>
             </tr>
         </thead>
@@ -131,13 +134,13 @@
                         {{ $record->business->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->businessLocation->name ?? '-' }}
+                        {{ $record->location->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->quarter_name ?? '-' }}
+                        {{ $record->taxType->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->financialYear->name ?? '-' }}
+                        {{ $record->financialMonth->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->taxpayer->full_name ?? '-' }}
@@ -146,44 +149,32 @@
                         {{ $record->currency ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->total_amount_due === null ? '-' : number_format($record->total_amount_due, 2) }}
+                        {{ $record->principal===null?'-':number_format($record->principal, 2) }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->total_amount_due_with_penalties === null ? '-' : number_format($record->total_amount_due_with_penalties, 2) }}
+                        {{$record->interest===null?'-':number_format($record->interest, 2) }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{$record->penalty===null?'-':number_format($record->penalty, 2) }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{$record->total_amount===null?'-':number_format($record->total_amount, 2) }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{$record->outstanding_amount===null?'-':number_format($record->outstanding_amount, 2) }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ date('d/m/Y', strtotime($record->created_at)) }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->filing_due_date == null ? '-' : date('d/m/Y', strtotime($record->filing_due_date)) }}
+                        {{$record->filing_due_date==null?'-': date('d/m/Y', strtotime($record->filing_due_date)) }}
+                    </td>
+                    
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->paid_at==null?'-':date('d/m/Y', strtotime($record->paid_at)) }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        @if ($record->created_at == null || $record->filing_due_date == null)
-                            -
-                        @else
-                            @if ($record->created_at < $record->filing_due_date)
-                                In-Time
-                            @else
-                                Late
-                            @endif
-                        @endif
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->paid_at == null ? '-' : date('d/m/Y', strtotime($record->paid_at)) }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->payment_due_date == null ? '-' : date('d/m/Y', strtotime($record->payment_due_date)) }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        @if ($record->created_at == null || $record->paid_at == null)
-                            -
-                        @else
-                            @if ($record->paid_at < $record->payment_due_date)
-                                In-Time
-                            @else
-                                Late
-                            @endif
-                        @endif
+                        {{ $record->payment_due_date==null?'-':date('d/m/Y', strtotime($record->payment_due_date)) }}
                     </td>
                 </tr>
             @endforeach
