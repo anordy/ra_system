@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire\Reports\Returns\Previews;
 
-use App\Models\Returns\Port\PortReturn;
-use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -11,7 +9,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 use App\Traits\ReturnReportTrait;
 
-class SeaPortPreviewTable extends DataTableComponent
+class ReportPreviewTable extends DataTableComponent
 {
     use LivewireAlert, ReturnReportTrait;
 
@@ -22,12 +20,11 @@ class SeaPortPreviewTable extends DataTableComponent
         // dd($parameters);
         $this->parameters = $parameters;
     }
-    
+
     public function builder(): Builder
     {
-        $taxType = TaxType::where('code', 'sea-service-transport-charge')->first();
-        $seaPorts =$this->getRecords(PortReturn::query()->where('tax_type_id', $taxType->id), $this->parameters); 
-        return $seaPorts;
+        $mnos = $this->getRecords($this->parameters);
+        return $mnos;
     }
 
     public function configure(): void
@@ -37,7 +34,7 @@ class SeaPortPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['port_returns.business_id', 'port_returns.business_location_id', 'port_returns.financial_month_id', 'port_returns.financial_year_id', 'port_returns.created_at', 'port_returns.filed_by_id', 'port_returns.filed_by_type']);
+        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_returns.location_id', 'tax_returns.financial_month_id', 'tax_returns.created_at', 'tax_returns.filed_by_id', 'tax_returns.filed_by_type']);
     }
 
     public function columns(): array
@@ -57,10 +54,10 @@ class SeaPortPreviewTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make("Business Location", "business_location_id")
+            Column::make("Business Location", "location_id")
                 ->format(
                     function ($value, $row) {
-                        return $row->branch->name;
+                        return $row->location->name;
                     }
                 )
                 ->searchable()
@@ -74,10 +71,10 @@ class SeaPortPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             //financial year
-            Column::make("Financial Year", "financial_year_id")
+            Column::make("Financial Year", "financial_month_id")
                 ->format(
                     function ($value, $row) {
-                        return $row->financialYear->name;
+                        return $row->financialMonth->year->code ?? '-';
                     }
                 )
                 ->searchable()
@@ -95,59 +92,29 @@ class SeaPortPreviewTable extends DataTableComponent
             Column::make("Currency", "currency")
                 ->searchable()
                 ->sortable(),
-            //total_vat_payable_tzs
-            Column::make("Vat Amount", "total_amount_due")
+            //total_amount_due
+            Column::make("Outstanding Amount", "outstanding_amount")
                 ->format(
                     function ($value, $row) {
-                        if($value == null){
-                            return '-';
-                        }
                         return number_format($value, 2);
                     }
                 )
                 ->searchable()
                 ->sortable(),
-            //total_vat_payable_usd
-            // Column::make("Vat Amount (USD)", "total_vat_payable_usd")
-            //     ->format(
-            //         function ($value, $row) {
-            //             if($value == null){
-            //                 return '-';
-            //             }
-            //             return number_format($value, 2);
-            //         }
-            //     )
-            //     ->searchable()
-            //     ->sortable(),
-            //total_amount_due_with_penalties_tzs
-            Column::make("Amount Due With Penalties", "total_amount_due_with_penalties")
+            //total_amount_due_with_penalties
+            Column::make("Total Amount Due With Penalties", "total_amount")
                 ->format(
                     function ($value, $row) {
-                        if($value == null){
-                            return '-';
-                        }
                         return number_format($value, 2);
                     }
                 )
                 ->searchable()
                 ->sortable(),
-             //total_amount_due_with_penalties_usd
-            // Column::make("Amount Due With Penalties(USD)", "total_amount_due_with_penalties")
-            //     ->format(
-            //         function ($value, $row) {
-            //             if($value == null){
-            //                 return '-';
-            //             }
-            //             return number_format($value, 2);
-            //         }
-            //     )
-            //     ->searchable()
-            //     ->sortable(),
             //filing_due_date
             Column::make("Filing Due Date", "filing_due_date")
                 ->format(
                     function ($value, $row) {
-                        if(!$value){
+                        if (!$value) {
                             return '-';
                         }
                         return date('d/m/Y', strtotime($value));
@@ -188,16 +155,20 @@ class SeaPortPreviewTable extends DataTableComponent
             Column::make("Payment Status", "paid_at")
                 ->format(
                     function ($value, $row) {
-                        if ($row->paid_at < $row->payment_due_date) {
-                            return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                            <i class="bi bi-check-circle"></i>
-                                        Not Late
-                                    </span>';
+                        if ($row->created_at == null || $row->paid_at == null) {
+                            return '-';
                         } else {
-                            return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
-                            <i class="bi bi-clock"></i>
-                                        Late
-                                    </span>';
+                            if ($row->paid_at < $row->payment_due_date) {
+                                return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                <i class="bi bi-check-circle"></i>
+                                    In-Time
+                                        </span>';
+                            } else {
+                                return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
+                                <i class="bi bi-clock"></i>
+                                            Late
+                                        </span>';
+                            }
                         }
                     }
                 )
