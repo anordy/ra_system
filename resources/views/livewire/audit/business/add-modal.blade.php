@@ -17,7 +17,7 @@
                     </div>
                 @endif
                 <div class="row">
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-12 form-group">
                         <label>Select Business</label>
                         <select wire:model="business_id" class="form-control @error('business_id') is-invalid @enderror"
                             wire:change="businessChange($event.target.value)">
@@ -35,7 +35,7 @@
 
                     <div class="col-md-6 form-group">
                         <label>Select Location</label>
-                        <select wire:model="location_id"
+                        <select wire:model="location_id" multiple
                             class="form-control @error('location_id') is-invalid @enderror">
                             <option value="">Select Branch</option>
                             @if ($locations)
@@ -55,7 +55,7 @@
 
                     <div class="col-md-6 form-group">
                         <label>Tax Type</label>
-                        <select wire:model="tax_type_id"
+                        <select wire:model="tax_type_id" multiple
                             class="form-control @error('tax_type_id') is-invalid @enderror">
                             <option value="">Select Tax Type</option>
                             @if ($taxTypes)
