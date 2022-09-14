@@ -45,12 +45,21 @@ class TourOperatorReturnsTable extends DataTableComponent
             $filter->Where('return_category', $data['type']);
         }
         if (isset($data['month']) && $data['month'] != 'all') {
-            $filter->whereMonth('hotel_returns.created_at', '=', $data['month']);
+            if (isset($data['month']) && $data['month'] == 'range') {
+                $startDate = Carbon::createFromFormat('Y-m-d', $data['from']);
+                $endDate = Carbon::createFromFormat('Y-m-d', $data['to']);
+                $filter->whereBetween('hotel_returns.created_at', [$startDate, $endDate]);
+            } else {
+                $filter->whereMonth('hotel_returns.created_at', '=', $data['month']);
+            }
         }
-        if (isset($data['year']) && $data['year'] != 'All') {
+        if (isset($data['year']) && $data['year'] != 'All' && $data['month'] != 'range') {
             $filter->whereYear('hotel_returns.created_at', '=', $data['year']);
         }
-    
+
+
+
+
         return $filter->where('tax_type_id', $tax->id)->orderBy('hotel_returns.created_at', 'desc');
     }
 
@@ -61,8 +70,8 @@ class TourOperatorReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),

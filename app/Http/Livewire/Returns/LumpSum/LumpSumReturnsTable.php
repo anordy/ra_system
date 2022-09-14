@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class LumpSumReturnsTable extends DataTableComponent
 {
     use LivewireAlert;
-    protected $listeners = ['filterData' => 'filterData'];
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
 
     public $data = [];
 
@@ -33,6 +33,7 @@ class LumpSumReturnsTable extends DataTableComponent
     {
         $this->data = $data;
         $this->builder();
+        $this->emit('$refresh');
     }
 
     public function builder(): Builder
