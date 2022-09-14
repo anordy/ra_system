@@ -120,28 +120,37 @@
                     @endif
                     @else
                         <span class="badge badge-danger py-1 px-2"
-                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
-                                    class="bi bi-x-circle-fill mr-1"></i>Not Paid</span>
+                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+                            <i class="bi bi-x-circle-fill mr-1"></i>
+                            Not Paid
+                        </span>
                         @endif
                         </p>
 
                 </div>
 
-                @if(!empty($agent->request))
+                @if(!empty($agent->request->first()))
                 <div class="col-md-3 mb-2">
                         <span class="font-weight-bold text-uppercase">Renew Payment</span><br>
                         <p>
-                            @if ($agent->request->bill != null)
-                                @if ($agent->request->bill->status == 'paid')
-                                    <span style=" background: #72DC3559; color: #319e0a; font-size: 85%"
-                                          class="badge badge-success p-2">Paid</span>
+                            @if ($agent->request->first()->bills->first() != null)
+                                @if ($agent->request->first()->bills->first()->status == 'paid')
+                                    <span style=" border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"
+                                          class="badge badge-success py-1 px-2">
+                                        <i class="bi bi-check-circle-fill mr-1"></i>
+                                        Paid
+                                    </span>
                                 @else
-                                    <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
-                                          class="badge badge-danger p-2">Not Paid</span>
+                                    <span style=" border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%" class="badge badge-danger py-1 px-2">
+                                        <i class="bi bi-x-circle-fill mr-1"></i>
+                                        Not Paid
+                                    </span>
                                 @endif
                             @else
-                                <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
-                                      class="badge badge-danger p-2">Not Paid</span>
+                                <span style=" border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"
+                                      class="badge badge-danger py-1 px-2">
+                                    <i class="bi bi-x-circle-fill mr-1"></i>
+                                    Not Paid</span>
                             @endif
                         </p>
                 </div>

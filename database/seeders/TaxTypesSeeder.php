@@ -26,8 +26,8 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Airport Service & Safety Fee', 'code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Sea Port Service & Transport Charge', 'code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Tax Consultant Licences', 'code' => TaxType::TAX_CONSULTANT, 'category' => 'other']);
-        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Stamp Duty', 'code' => TaxType::STAMP_DUTY]);
-        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Lumpsum Payments', 'code' => TaxType::LUMPSUM_PAYMENT]);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Stamp Duty Composition', 'code' => TaxType::STAMP_DUTY]);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Stamp Duty Lumpsum', 'code' => TaxType::LUMPSUM_PAYMENT]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Electronic Money Transaction', 'code' => TaxType::ELECTRONIC_MONEY_TRANSACTION]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Mobile Money Transfer', 'code' => TaxType::MOBILE_MONEY_TRANSFER]);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Penalties', 'code' => TaxType::PENALTY, 'category' => 'other']);

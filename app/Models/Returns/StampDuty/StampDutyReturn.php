@@ -2,21 +2,19 @@
 
 namespace App\Models\Returns\StampDuty;
 
-use App\Models\ZmBill;
-use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Models\Debts\Debt;
-use App\Traits\ReturnTrait;
-use App\Models\FinancialYear;
-use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
+use App\Models\FinancialMonth;
+use App\Models\FinancialYear;
 use App\Models\Returns\TaxReturn;
+use App\Models\TaxType;
+use App\Models\Verification\TaxVerification;
+use App\Models\ZmBill;
+use App\Traits\ReturnTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Returns\StampDuty\StampDutyReturnItem;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Returns\StampDuty\StampDutyReturnPenalty;
 
 class StampDutyReturn extends Model
 {
@@ -59,6 +57,10 @@ class StampDutyReturn extends Model
 
     public function payments(){
         return $this->bills()->where('status', 'paid');
+    }
+
+    public function verification(){
+        return $this->morphOne(TaxVerification::class, 'tax_return');
     }
 
     public function claimable(){

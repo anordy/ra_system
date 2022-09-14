@@ -2,22 +2,22 @@
 
 namespace App\Traits;
 
+use App\Enum\TaxVerificationStatus;
 use Exception;
 use App\Models\Verification\TaxVerification;
 use Illuminate\Support\Facades\Log;
 
 trait TaxVerificationTrait
 {
+    use WorkflowProcesssingTrait;
 
     /**
      * Trigger audit.
      *
-     * @param  $modal_class ie. User::class, Business::class
-     * @param  $event ie. created, updated, deleted
-     * @param  $tags ie. Password
-     * @param  $auditable_id ie. 1 id of the operated process
-     * 
+     * @param $taxReturn
+     * @param $authenticatedUser
      * @return array
+     * @throws Exception
      */
     public function triggerTaxVerifications($taxReturn, $authenticatedUser)
     {
@@ -29,14 +29,33 @@ trait TaxVerificationTrait
                 'tax_return_id' => $taxReturn->id ?? '',
                 'tax_return_type' => get_class($taxReturn),
                 'business_id' => $taxReturn->business_id,
-                'location_id' => $taxReturn->location_id,
+                'location_id' => $taxReturn->business_location_id ?? null,
                 'tax_type_id' => $taxReturn->tax_type_id,
                 'created_by_id' => $authenticatedUser->id ?? null,
                 'created_by_type' => get_class($authenticatedUser),
+                'status' => 'pending',
             ];
 
             try {
-                TaxVerification::create($data);
+                $verification = TaxVerification::create($data);
+                $this->registerWorkflow(get_class($verification), $verification->id);
+                $this->doTransition('start', []);
+                $verification->status = TaxVerificationStatus::PENDING;
+                $verification->save();
+            } catch (Exception $e) {
+                Log::error($e);
+            }
+        }
+    }
+
+    public function initiateVerificationApproval($return){
+        if ($return->verification && !$return->verification->marking){
+            $verification = $return->verification;
+            try {
+                $this->registerWorkflow(get_class($verification), $verification->id);
+                $this->doTransition('start', []);
+                $verification->status = TaxVerificationStatus::PENDING;
+                $verification->save();
             } catch (Exception $e) {
                 Log::error($e);
             }

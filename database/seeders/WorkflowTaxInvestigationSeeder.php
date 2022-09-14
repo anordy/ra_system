@@ -58,6 +58,11 @@ class WorkflowTaxInvestigationSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => []
             ],
+            'legal' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => []
+            ],
             'rejected' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -103,6 +108,11 @@ class WorkflowTaxInvestigationSeeder extends Seeder
             'accepted' => [
                 'from' => 'commissioner',
                 'to'   => 'completed',
+                'condition' => '',
+            ],
+            'forward_to_legal' => [
+                'from' => 'commissioner',
+                'to'   => 'legal',
                 'condition' => '',
             ],
             'rejected' => [

@@ -36,7 +36,11 @@ class HotelReturnsTable extends DataTableComponent
         $data   = $this->data;
         $tax    = TaxType::where('code', TaxType::HOTEL)->first();
         $filter = (new HotelReturn)->newQuery();
-        
+
+        if ($data == []) {
+            $filter->whereMonth('hotel_returns.created_at', '=', date('m'));
+            $filter->whereYear('hotel_returns.created_at', '=', date('Y'));
+        }
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }

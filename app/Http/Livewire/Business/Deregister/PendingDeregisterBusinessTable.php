@@ -16,7 +16,7 @@ class PendingDeregisterBusinessTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects([]);
+        $this->setAdditionalSelects(['business_deregistrations.status']);
     }
 
     public function builder(): Builder
@@ -30,18 +30,23 @@ class PendingDeregisterBusinessTable extends DataTableComponent
             Column::make('Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('TIN', 'business.tin')
+            Column::make('Deregistration Type', 'deregistration_type')
                 ->sortable()
-                ->searchable(),
-            Column::make('Reg No.', 'business.reg_no')
+                ->searchable()
+                ->format(function ($value, $row) {
+                    if ($value == 'all') {
+                        return 'All Locations';
+                    } else {
+                        return 'Single Location';
+                    }
+                }),
+            Column::make('Location', 'location.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Date of De-registration', 'deregistration_date')
                 ->format(function($value, $row) { return Carbon::create($row->deregistration_date)->toFormattedDateString(); })
                 ->sortable()
                 ->searchable(),
-            Column::make('Reason', 'reason')
-                ->sortable(),
             Column::make('Action', 'id')
                 ->view('business.deregister.action'),
 

@@ -25,7 +25,7 @@ class BranchesTable extends DataTableComponent
                 ->orderBy('business_locations.created_at', 'DESC')
                 ->with('business');
         } else if ($this->status == BranchStatus::APPROVED) {
-            return BusinessLocation::where('business_locations.status', BranchStatus::APPROVED)
+            return BusinessLocation::whereIn('business_locations.status', [BranchStatus::APPROVED, BranchStatus::DE_REGISTERED, BranchStatus::TEMP_CLOSED])
                 ->orderBy('business_locations.created_at', 'DESC')
                 ->with('business');
         } else if ($this->status == BranchStatus::REJECTED) {

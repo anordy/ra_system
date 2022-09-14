@@ -1,15 +1,21 @@
 @extends('layouts.master')
 
-@section('title', 'View Hotel Returns')
+@section('title', 'View Hotel Tax Returns')
 
 @section('content')
-    <div class="card">
+    <div class="row mx-1">
+        <div class="col-md-12">
+            <livewire:returns.return-payment :return="$return->tax_return" />
+        </div>
+    </div>
+    <div class="card rounded-0">
+        <div class="card-header bg-white font-weight-bold text-uppercase">
+            {{ $return->taxtype->name }} Tax Returns Details for
+            {{ $return->financialMonth->name }},
+            {{ $return->financialMonth->year->code }}
+        </div>
         <div class="card-body">
-            <h6 class="text-uppercase mt-2 ml-2">{{ $return->taxtype->name }} Returns Details for
-                {{ $return->financialMonth->name }},
-                {{ $return->financialMonth->year->code }}</h6>
-            <hr>
-
+            <h6 class="text-uppercase mt-2 ml-2"></h6>
             <div>
                 <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -50,73 +56,12 @@
                                 <span class="font-weight-bold text-uppercase">Business Location</span>
                                 <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
                             </div>
-                            {{-- <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Payment Status</span>
-                                <p class="my-1">
-                                    @if ($return->status === 'completed')
-                                        <span class="badge badge-success py-1 px-2"
-                                            style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                            Paid
-                                        </span>
-                                    @else
-                                        <span class="badge badge-success py-1 px-2"
-                                            style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
-                                            Not Paid
-                                        </span>
-                                    @endif
-                                </p>
-                            </div> --}}
                         </div>
 
-                        <div class="row m-2 pt-3">
-                            <h6>Payment Summary</h6>
-
-                            <table class="table table-sm">
-                                <thead>
-                                    <th style="width: 20%">Items</th>
-                                    <th style="width: 30%">Amount</th>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th>{{ $return->taxtype->name }} </th>
-                                        <td>{{ number_format($return->total_amount_due, 2) }}</td>
-                                    </tr>
-                                    @if ($return->hotel_infrastructure_tax > 0)
-                                        <tr>
-                                            <th>Infrastructure Tax</th>
-                                            <td>{{ number_format($return->hotel_infrastructure_tax, 2) }}</td>
-                                        </tr>
-                                    @endif
-
-                                    @if ($return->interest > 0)
-                                        <tr>
-                                            <th>Interest Amount</th>
-                                            <td>{{ number_format($return->interest, 2) }}</td>
-                                        </tr>
-                                    @endif
-
-                                    @if ($return->penalty > 0)
-                                        <tr>
-                                            <th>Penalty Amount</th>
-                                            <td>{{ number_format($return->penalty, 2) }}</td>
-                                        </tr>
-                                    @endif
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>TOTAL PAYABLE</th>
-                                        <th>{{ number_format($return->total_amount_due + $return->hotel_infrastructure_tax + $return->interest + $return->penalty, 2) }}
-                                        </th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
+                        <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>
                     </div>
                     <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                         <div class="row mt-3">
-                            <div class="col-md-12">
-                                <p class="text-uppercase font-weight-bold">Return Items</p>
-                            </div>
                             <div class="col-md-12">
                                 <table class="table table-bordered table-striped normal-text">
                                     <thead>
@@ -142,9 +87,7 @@
                     </div>
                     <div class="tab-pane p-2" id="penalty" role="tabpanel" aria-labelledby="penalty-tab">
 
-                        <div class="col-md-12">
-                            <h6 class="text-uppercase mt-2 ml-2">Penalties</h6>
-                            <hr>
+                        <div class="col-md-12 pt-3">
                             <table class="table table-bordered table-sm normal-text">
                                 <thead>
                                     <tr>

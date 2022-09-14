@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Traits\WorkflowTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BusinessDeregistration extends Model
 {
@@ -18,5 +19,9 @@ class BusinessDeregistration extends Model
 
     public function taxpayer() {
         return $this->belongsTo(Taxpayer::class, 'submitted_by');
+    }
+
+    public function location() {
+        return $this->belongsTo(BusinessLocation::class, 'location_id');
     }
 }

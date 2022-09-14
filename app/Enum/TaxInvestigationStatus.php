@@ -9,6 +9,7 @@ class TaxInvestigationStatus
     public const APPROVED = 'approved';
     public const CORRECTION = 'correction';
     public const REJECTED = 'rejected';
+    public const LEGAL = 'legal';
     public const SUBMITTED = 'submitted';
     public const CN_GENERATING = 'control-number-generating';
     public const CN_GENERATED = 'control-number-generated';
