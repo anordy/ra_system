@@ -42,7 +42,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $operator_type = $task->operator_type;
             $operators = json_decode($task->operators, true);
         } else {
-           return;
+            return;
         }
         $status = $place['status'];
 
@@ -142,8 +142,8 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'operator_type' => $operator_type,
                     'operators' => $operators,
                     'approved_on' => Carbon::now()->toDateTimeString(),
-                    'user_id' => $user->id,
-                    'user_type' => get_class($user),
+                    'user_id' => $user->id ?? null,
+                    'user_type' => $user != null ? get_class($user) : null,
                     'status' => $key == 'completed' ? 'completed' : 'running',
                     'remarks' => $context['comment'] ?? null,
                 ]);
