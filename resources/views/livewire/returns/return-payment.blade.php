@@ -1,13 +1,17 @@
-@if($return->bill)
+@if(!empty($return->bill))
     <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
         <div class="col-md-4">
-            <span class="font-weight-bold text-uppercase">Total Payment Amount</span>
-            @if ($return->bill)
-                <p class="my-1">{{ number_format($return->bill->amount, 2) }} TZS</p>
-            @endif
+            <span class="font-weight-bold text-uppercase">
+                @if ($return->payment_status === \App\Models\Returns\ReturnStatus::COMPLETE)
+                    Total Tax Paid
+                @else
+                    Total Tax Payable
+                @endif
+            </span>
+            <p class="my-1">{{ number_format($return->bill->amount, 2) }} {{ $return->bill->currency }}</p>
         </div>
-        @if ($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
-            $return->status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
+        @if ($return->payment_status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
+            $return->payment_status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
 
             @if($return->bill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS)
                 <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
@@ -30,7 +34,7 @@
                     </p>
                 </div>
             @endif
-        @elseif($return->status === \App\Models\Returns\ReturnStatus::COMPLETE)
+        @elseif($return->payment_status === \App\Models\Returns\ReturnStatus::COMPLETE)
             <div class="col-md-4">
                 <span class="font-weight-bold text-uppercase">Payment Status</span>
                 <p class="my-1 text-success font-weight-bold">
@@ -38,7 +42,7 @@
                     Payment Complete
                 </p>
             </div>
-        @elseif($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATING)
+        @elseif($return->payment_status === \App\Models\Returns\ReturnStatus::CN_GENERATING)
             <div class="col-md-4" wire:poll.visible="refresh">
                 <span class="font-weight-bold text-uppercase text-info">Control No.</span>
                 <p class="my-1 text-info">
@@ -46,7 +50,7 @@
                     Pending
                 </p>
             </div>
-        @elseif($return->status === \App\Models\Returns\ReturnStatus::CN_GENERATION_FAILED)
+        @elseif($return->payment_status === \App\Models\Returns\ReturnStatus::CN_GENERATION_FAILED)
             <div class="col-md-4">
                 <span class="font-weight-bold text-uppercase">Control No. Generation Failed</span>
                 <p class="my-1 text-danger">

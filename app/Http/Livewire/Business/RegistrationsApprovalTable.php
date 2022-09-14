@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
 use App\Models\BusinessStatus;
+use App\Models\Investigation\TaxInvestigation;
+use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;

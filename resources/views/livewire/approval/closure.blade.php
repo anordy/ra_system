@@ -1,3 +1,4 @@
+@if (count($this->getEnabledTranstions()) >= 1)
 <div class="card shadow-sm mb-2 bg-white">
     <div class="card-header font-weight-bold">
         Approval
@@ -56,9 +57,12 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
-                    Confirm
+                    Approve & Complete
             </button>
         </div>
     @endif
 
 </div>
+@else
+<div></div>
+@endif

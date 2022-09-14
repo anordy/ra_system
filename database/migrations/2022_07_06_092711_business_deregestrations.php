@@ -16,9 +16,11 @@ class BusinessDeregestrations extends Migration
         Schema::create('business_deregistrations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('location_id')->nullable();
             $table->timestamp('deregistration_date');
-			$table->enum('status', ['pending', 'approved', 'rejected', 'correction'])->default('pending');
-            $table->string('reason');
+            $table->enum('deregistration_type', ['all', 'location'])->default('location');
+			$table->enum('status', ['pending', 'approved', 'rejected', 'correction',  'closed', 'temp_closed', 'deregistered'])->default('pending');
+            $table->longText('reason');
             $table->unsignedBigInteger('submitted_by');
             $table->unsignedBigInteger('rejected_by')->nullable();
             $table->timestamp('rejected_on')->nullable();

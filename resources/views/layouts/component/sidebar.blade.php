@@ -118,7 +118,7 @@
                     Returns</a>
                 <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
                     @can('return-hotel-levy-view')
-                        <li class="{{ request()->is('e-filling/hotel') ? 'active' : '' }}">
+                        <li class="{{ request()->is('e-filling/hotel*') ? 'active' : '' }}">
                             <a href="{{ route('returns.hotel.index') }}">Hotel Levy</a>
                         </li>
                     @endcan
@@ -134,24 +134,24 @@
                     @endcan
                     @can('return-vat-return-view')
                         <li class="{{ request()->is('e-filling/vat*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.vat-return.index') }}">Vat Returns</a>
+                            <a href="{{ route('returns.vat-return.index') }}">VAT Tax Returns</a>
                         </li>
                     @endcan
                     @can('return-port-return-view')
                         <li class="{{ request()->is('e-filling/port*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.port.index') }}">Port Returns</a>
+                            <a href="{{ route('returns.port.index') }}">Port Tax Returns</a>
                         </li>
                     @endcan
                     @can('return-bfo-excise-duty-return-view')
                         <li class="{{ request()->is('e-filling/bfo-excise-duty*') ? 'active' : '' }}">
                             <a href="{{ route('returns.bfo-excise-duty.index') }}">
-                                Banks, Financial Institutions and Others Returns
+                                Banks, Financial Institutions and Others Tax Returns
                             </a>
                         </li>
                     @endcan
                     @can('return-mno-excise-duty-return-view')
                         <li class="{{ request()->is('e-filling/excise-duty/mno*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.excise-duty.mno') }}">Moblie Network Operator Returns</a>
+                            <a href="{{ route('returns.excise-duty.mno') }}">Mobile Network Operator Tax Returns</a>
                         </li>
                     @endcan
                     @can('return-electronic-money-transaction-return-view')
@@ -161,12 +161,12 @@
                     @endcan
                     @can('return-stamp-duty-return-view')
                         <li class="{{ request()->is('e-filling/stamp-duty*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.stamp-duty.index') }}">Stamp Duty Returns</a>
+                            <a href="{{ route('returns.stamp-duty.index') }}">Stamp Duty Composition Tax Returns</a>
                         </li>
                     @endcan
                     @can('return-lump-sum-payment-return-view')
                         <li class="{{ request()->is('e-filling/lump-sum*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.lump-sum.index') }}">Lump Sum Payments</a>
+                            <a href="{{ route('returns.lump-sum.index') }}">Stamp Duty Lumpsum Tax Returns</a>
                         </li>
                     @endcan
                     @can('return-mobile-money-transfer-view')
@@ -212,7 +212,7 @@
                     @endcan
                     @can('return-petroleum-return-view')
                         <li class="{{ request()->is('petroleum/filling*') ? 'active' : '' }}">
-                            <a href="{{ route('petroleum.filling.index') }}">Petroleum Return</a>
+                            <a href="{{ route('petroleum.filling.index') }}">Petroleum Tax Returns</a>
                         </li>
                     @endcan
                 </ul>

@@ -14,14 +14,14 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            Return details for the return month
+    <div class="card rounded-0">
+        <div class="card-header bg-white font-weight-bold">
+            Return details for the VAT tax return month
             of {{$return->financialMonth->name}} {{$return->financialMonth->year->code}}
         </div>
         <div class="card-body">
             <div style="margin-left: 13px; margin-right: 15px;">
-                <livewire:returns.return-payment :return="$return"/>
+                <livewire:returns.return-payment :return="$return->tax_return" />
             </div>
             @if(!empty($return))
                 <div>
@@ -437,9 +437,7 @@
                             </div>
                         </div>
                         <div class="tab-pane p-2" id="payment-summary" role="tabpanel" aria-labelledby="payment-summary-tab">
-                            @if($return->bill)
-                                <x-bill-structure :bill="$return->bill" />
-                            @endif
+                            <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>
                         </div>
                     </div>
                 </div>
