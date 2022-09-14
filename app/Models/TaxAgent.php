@@ -74,7 +74,7 @@ class TaxAgent extends Model implements Auditable
 
 	public function request()
 	{
-		return $this->hasOne(RenewTaxAgentRequest::class);
+		return $this->hasMany(RenewTaxAgentRequest::class)->latest();
 	}
 
 	// Scopes

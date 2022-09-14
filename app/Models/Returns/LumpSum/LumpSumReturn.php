@@ -2,19 +2,19 @@
 
 namespace App\Models\Returns\LumpSum;
 
-use App\Models\ZmBill;
-use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Models\Debts\Debt;
-use App\Models\FinancialYear;
-use App\Models\FinancialMonth;
-use App\Models\LumpSumPayment;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
+use App\Models\FinancialMonth;
+use App\Models\FinancialYear;
+use App\Models\LumpSumPayment;
 use App\Models\Returns\TaxReturn;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Returns\LumpSum\LumpSumPenalties;
+use App\Models\Taxpayer;
+use App\Models\TaxType;
+use App\Models\Verification\TaxVerification;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class LumpSumReturn extends Model
 {
@@ -26,6 +26,10 @@ class LumpSumReturn extends Model
     public static function getTableName()
     {
         return with(new static)->getTable();
+    }
+
+    public function verification(){
+        return $this->morphOne(TaxVerification::class, 'tax_return');
     }
 
     public function business()

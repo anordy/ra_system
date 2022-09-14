@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TaxAgents;
 
 use App\Http\Controllers\Controller;
+use App\Models\RenewTaxAgentRequest;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
 use App\Models\TaxAgentAcademicQualification;
@@ -58,10 +59,24 @@ class TaxAgentController extends Controller
         }
         $id = decrypt($id);
         $taxagent = TaxAgent::with('taxpayer')->find($id);
-        $start = date('d', strtotime($taxagent->app_first_date));
-        $end = date('d', strtotime($taxagent->app_expire_date));
+        if ($taxagent->is_first_application == 1)
+        {
+            $start_date = $taxagent->app_first_date;
+            $end_date = $taxagent->app_expire_date;
+            $start = date('d', strtotime($start_date));
+            $end = date('d', strtotime($end_date));
+            $diff = Carbon::create($end_date)->diffInYears($start_date);
 
-        $diff = Carbon::create($taxagent->app_expire_date)->diffInYears($taxagent->app_first_date);
+        }
+        else
+        {
+            $renew = $taxagent->request->first();
+            $start_date = $renew->renew_first_date;
+            $end_date = $renew->renew_expire_date;
+            $start = date('d', strtotime($start_date));
+            $end = date('d', strtotime($end_date));
+            $diff = Carbon::create($end_date)->diffInYears($start_date);
+        }
 
         $word = $diff > 1 ? 'years' : 'year';
 
@@ -71,8 +86,8 @@ class TaxAgentController extends Controller
         $code = 'Name: ' . $taxagent->taxpayer->fullName . ", " .
             'Location: ' . $taxagent->district->name . ', ' . $taxagent->region->name . ", " .
             'Period: ' . $diff.' '.$word .
-            'From: ' . "{$taxagent->app_first_date}" . ", " .
-            'To: ' . "{$taxagent->app_expire_date}" . ", " .
+            'From: ' . "{$start_date}" . ", " .
+            'To: ' . "{$end_date}" . ", " .
             'https://uat.ubx.co.tz:8888/zrb_client/public/login';
 
         $result = Builder::create()
@@ -94,7 +109,7 @@ class TaxAgentController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'superStart', 'superEnd', 'diff', 'word', 'dataUri'));
+        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'start_date', 'end_date', 'superStart', 'superEnd', 'diff', 'word', 'dataUri'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
@@ -148,10 +163,13 @@ class TaxAgentController extends Controller
             abort(403);
         }
         $id = decrypt($id);
-        $agent = TaxAgent::query()->findOrfail($id);
-        $fee = DB::table('ta_payment_configurations')
-            ->where('category', '=', 'renewal fee')->first();
-        return view('taxagents.renew.show', compact('agent', 'fee'));
+        $renew = RenewTaxAgentRequest::query()->findOrFail($id);
+        $agent = $renew->tax_agent;
+        $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen')
+            ->where('category', 'Renewal Fee')
+            ->where('is_citizen', $agent->taxpayer->is_citizen)
+            ->first();
+        return view('taxagents.renew.show', compact('renew', 'fee'));
     }
 
     public function fee()

@@ -5,7 +5,7 @@
 @section('content')
     <div class="row mx-1">
         <div class="col-md-12">
-            <livewire:returns.return-payment :return="$return" />
+            <livewire:returns.return-payment :return="$return->tax_return" />
         </div>
     </div>
 
@@ -55,7 +55,7 @@
                             <p class="my-1">{{ $return->getPaymentStatus() }}</p>
                         </div>
                     </div>
-                    <x-bill-structure :bill="$return->bill" :withCard="false" />
+                    <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>
                 </div>
                 <div id="payment-structure" class="tab-pane fade p-4">
                     <table class="table table-bordered mb-0 normal-text">

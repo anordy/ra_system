@@ -219,7 +219,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('business')->as('business.')->group(function () {
-        Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approFval'])->name('registrations.approval'); // KYC
+        Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
         Route::get('/closure/{id}', [BusinessController::class, 'viewClosure'])->name('viewClosure');
