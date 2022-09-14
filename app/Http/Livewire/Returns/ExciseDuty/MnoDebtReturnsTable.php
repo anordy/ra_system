@@ -54,9 +54,13 @@ class MnoDebtReturnsTable extends DataTableComponent
                 }),
                 
             Column::make('Status', 'status')
+                ->sortable()
+                ->searchable()
                 ->view('returns.excise-duty.mno.includes.status'),
             
             Column::make('Action', 'id')
+                ->sortable()
+                ->searchable()
                 ->view('returns.excise-duty.mno.includes.actions'),
         ];
     }
