@@ -259,11 +259,6 @@ class Init extends Component
         return redirect()->route('reports.business.download.pdf',encrypt(json_encode($this->parameters)));
     }
 
-    public function render()
-    {
-        return view('livewire.reports.registration.registration-report');
-    }
-
     public function checkCheckboxes()
     {
         //tax regions
@@ -325,6 +320,16 @@ class Init extends Component
         return true;
     }
 
+    public function removeItemsOnFalse($items)
+    {
+        foreach ($items as $key => $item) {
+            if($item==false){
+                unset($items[$key]);
+            }
+        }
+        return $items;
+    }
+
     public function toggleFilters()
     {
         $this->showMoreFilters = !$this->showMoreFilters;
@@ -355,6 +360,7 @@ class Init extends Component
         $this->parameters['month'] = $this->month;
     }
 
+    
     public function extraFilters()
     {
         $this->parameters['tax_regions']=array_keys($this->removeItemsOnFalse($this->selectedTaxReginIds));
@@ -366,15 +372,11 @@ class Init extends Component
         $this->parameters['district']=$this->district;
         $this->parameters['ward']=$this->ward;
     }
+    
 
-    public function removeItemsOnFalse($items)
+    public function render()
     {
-        foreach ($items as $key => $item) {
-            if($item==false){
-                unset($items[$key]);
-            }
-        }
-        return $items;
+        return view('livewire.reports.registration.registration-report');
     }
 
 }

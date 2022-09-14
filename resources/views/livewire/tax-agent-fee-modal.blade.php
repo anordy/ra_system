@@ -17,7 +17,7 @@
                                 <option value="0">Foreigner</option>
 
                             </select>
-                            @error('category')
+                            @error('nationality')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>

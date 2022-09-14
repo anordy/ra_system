@@ -591,8 +591,13 @@ div.table-bordered {
     border: none;
 }
 
+.modal-header
+{
+    border-bottom: 1px solid #97363a;
+    padding: 12px 22px !important;
+}
 
 .modal-title
 {
-    font-size: 18px;
+    font-weight: bold;
 }
