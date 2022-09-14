@@ -26,7 +26,7 @@ class CreateWorkflowTasksTable extends Migration
             $table->string('operator_type');
             $table->string('operators');
             $table->dateTime('approved_on')->nullable();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('user_type')->nullable();
             $table->enum('status', $status_choices)->default('running');
             $table->text('remarks')->nullable();
