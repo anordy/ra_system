@@ -2,34 +2,24 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Enum\DisputeStatus;
 use App\Enum\InstallmentStatus;
-use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
-use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
 use App\Models\Installment\InstallmentItem;
 use App\Models\LandLease;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\ZmBill;
-use App\Traits\TaxVerificationTrait;
-use Carbon\Carbon;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\ZmBill;
 use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmSignatureHelper;
+use App\Traits\TaxVerificationTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -40,17 +30,12 @@ class ZanMalipoController extends Controller
     use TaxVerificationTrait;
 
     private $billable = [
-        TaxAssessment::class,
         PortReturn::class,
         LandLease::class,
     ];
 
     private $installable = [
         InstallmentItem::class,
-    ];
-
-    private $disputable = [
-        Dispute::class,
     ];
 
     /**
@@ -86,7 +71,7 @@ class ZanMalipoController extends Controller
 
                 if (in_array($bill->billable_type, array_merge(
                     $this->billable,
-                    [TaxReturn::class],
+                    [TaxReturn::class, TaxAssessment::class],
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
@@ -103,7 +88,7 @@ class ZanMalipoController extends Controller
 
                 if (in_array($bill->billable_type, array_merge(
                     $this->billable,
-                    [TaxReturn::class],
+                    [TaxReturn::class, TaxAssessment::class],
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
@@ -181,7 +166,7 @@ class ZanMalipoController extends Controller
             $this->updateInstallment($bill);
 
             // Update Disputes
-            $this->updateDispute($bill);
+            $this->updateAssessment($bill);
 
             //TODO: we should send sms to customer here to notify payment reception
 
@@ -267,26 +252,19 @@ class ZanMalipoController extends Controller
         }
     }
 
-    private function updateDispute($bill)
+    private function updateAssessment($bill)
     {
         try {
-            if (in_array($bill->billable_type, $this->disputable)) {
+            $assessmentBillItems = $bill->bill_items->pluck('billable_type')->toArray();
+            if ($bill->billable_type == TaxAssessment::class && in_array(Dispute::class, $assessmentBillItems)) {
                 if ($bill->paidAmount() >= $bill->amount) {
-                    $dispute = $bill->billable;
-                    $return = $dispute->dispute;
-                    if ($return) {
-                        $return->status = ReturnStatus::PAID_BY_DEBT;
-                        $return->paid_at = Carbon::now()->toDateTimeString();
-                        $return->save();
-                    }
-                    $dispute->status = ReturnStatus::COMPLETE;
-                    $dispute->outstanding_amount = 0;
-                    $dispute->save();
-                } else {
-                    $dispute = $bill->billable;
-                    $dispute->status = ReturnStatus::PAID_PARTIALLY;
-                    $dispute->outstanding_amount = $bill->amount - $bill->paidAmount();
-                    $dispute->save();
+                    $assessment = $bill->billable;
+
+                    // initiate dispute approval
+                    $this->registerWorkflow(get_class($assessment), $assessment->id);
+                    $this->doTransition('application_submitted', 'approved');
+                    $assessment->app_status = DisputeStatus::SUBMITTED;
+                    $assessment->save();
                 }
             }
         } catch (\Exception $e) {
@@ -403,7 +381,7 @@ class ZanMalipoController extends Controller
             $this->updateInstallment($bill);
 
             // Update disputes
-            $this->updateDispute($bill);
+            $this->updateAssessment($bill);
 
             DB::commit();
 
