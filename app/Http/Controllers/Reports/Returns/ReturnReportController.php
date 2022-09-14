@@ -19,8 +19,7 @@ class ReturnReportController extends Controller
     public function preview($parameters)
     {
         $parameters = json_decode(decrypt($parameters), true);
-        // dd($parameters);
-        return view('reports.returns.preview', compact('parameters'));
+        return view('reports.assessment.preview', compact('parameters'));
     }
 
     public function exportReturnReportPdf($parameters)

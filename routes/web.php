@@ -53,6 +53,7 @@ use App\Http\Controllers\ISIC1Controller;
 use App\Http\Controllers\ISIC2Controller;
 use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
+use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\MVR\AgentsController;
 use App\Http\Controllers\MVR\DeRegistrationController;
 use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
@@ -60,7 +61,6 @@ use App\Http\Controllers\MVR\MvrGenericSettingController;
 use App\Http\Controllers\MVR\OwnershipTransferController;
 use App\Http\Controllers\MVR\RegistrationChangeController;
 use App\Http\Controllers\MVR\TRAChassisSearchController;
-use App\Http\Controllers\LandLease\LandLeaseController;
 use App\Http\Controllers\MVR\WrittenOffVehiclesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Payments\PaymentsController;
@@ -71,14 +71,15 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
-use App\Http\Controllers\Reports\Registration\InitRegReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
 use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
 use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 //use App\Http\Controllers\Returns\HotelLevyReturnController;
+use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Returns\FinancialYears\FinancialYearsController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
 use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
@@ -93,7 +94,6 @@ use App\Http\Controllers\Returns\ReturnController;
 use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
-use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
 use App\Http\Controllers\RoadInspectionOffence\RegisterController;
 use App\Http\Controllers\RoleController;
@@ -369,9 +369,11 @@ Route::middleware(['auth'])->group(function () {
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
+        Route::get('/assesments', [AssessmentReportController::class, 'index'])->name('assesments');
+        Route::get('/assessments/preview/{parameters}', [AssessmentReportController::class, 'preview'])->name('assessments.preview');
         Route::get('/returns/preview/{parameters}', [ReturnReportController::class, 'preview'])->name('returns.preview');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
-        
+
         Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
         Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
