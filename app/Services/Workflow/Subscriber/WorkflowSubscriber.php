@@ -42,34 +42,33 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $operator_type = $task->operator_type;
             $operators = json_decode($task->operators, true);
         } else {
-            $operator_type = $place["operator_type"];
-            $operators = $place['operators'];
+           return;
         }
-        // $status = $place['status'];
+        $status = $place['status'];
 
-        // if ($status != 1) {
-        //     $event->setBlocked(true);
-        // }
+        if ($status != 1) {
+            $event->setBlocked(true);
+        }
 
-        // if ($owner == 'taxpayer') {
-        //     $event->setBlocked(true);
-        // }
+        if ($owner == 'taxpayer') {
+            $event->setBlocked(true);
+        }
 
-        // if ($operator_type == "role") {
-        //     $role = Role::find($user->role->id ?? null);
-        //     if ($role == null) {
-        //         $event->setBlocked(true);
-        //     }
-        //     if (!in_array($user->role->id, $operators)) {
-        //         $event->setBlocked(true);
-        //     }
-        // } elseif ($operator_type == 'user') {
-        //     if (!in_array($user->id, $operators)) {
-        //         $event->setBlocked(true);
-        //     }
-        // } else {
-        //     $event->setBlocked(true);
-        // }
+        if ($operator_type == "role") {
+            $role = Role::find($user->role->id ?? null);
+            if ($role == null) {
+                $event->setBlocked(true);
+            }
+            if (!in_array($user->role->id, $operators)) {
+                $event->setBlocked(true);
+            }
+        } elseif ($operator_type == 'user') {
+            if (!in_array($user->id, $operators)) {
+                $event->setBlocked(true);
+            }
+        } else {
+            $event->setBlocked(true);
+        }
     }
 
     public function leaveEvent(Event $event)
