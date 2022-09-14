@@ -56,7 +56,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
         }
 
         if ($operator_type == "role") {
-            $role = Role::find($user->role->id);
+            $role = Role::find($user->role->id ?? null);
             if ($role == null) {
                 $event->setBlocked(true);
             }
