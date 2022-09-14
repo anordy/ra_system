@@ -85,6 +85,9 @@ class DailyReOpenTempBusinessCommand extends Command
                     $location->status = BranchStatus::APPROVED;
                     $location->save();
                 }
+
+                $closed_business->status = 'reopened';
+                $closed_business->save();
             
             }
 

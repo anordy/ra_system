@@ -40,6 +40,10 @@ class BfoExciseDutyTable extends DataTableComponent
         $data   = $this->data;
         $filter = (new BfoReturn)->newQuery();
         
+        if ($data == []) {
+            $filter->whereMonth('bfo_returns.created_at', '=', date('m'));
+            $filter->whereYear('bfo_returns.created_at', '=', date('Y'));
+        }
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }
