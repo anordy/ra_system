@@ -2,20 +2,18 @@
 
 namespace App\Models\Returns;
 
-use App\Models\ZmBill;
-use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Models\Debts\Debt;
-use App\Models\FinancialYear;
-use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
-use App\Models\Returns\TaxReturn;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Returns\MmTransferPenalty;
-use App\Models\Returns\MmTransferReturnItem;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Debts\Debt;
+use App\Models\FinancialMonth;
+use App\Models\FinancialYear;
+use App\Models\Taxpayer;
+use App\Models\TaxType;
+use App\Models\Verification\TaxVerification;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MmTransferReturn extends Model
 {
@@ -30,6 +28,10 @@ class MmTransferReturn extends Model
 
     public function mmTransferReturnItems(){
         return $this->hasMany(MmTransferReturnItem::class, 'return_id');
+    }
+
+    public function verification(){
+        return $this->morphOne(TaxVerification::class, 'tax_return');
     }
 
     public function debt(){

@@ -22,7 +22,7 @@
                     @livewire('assesments.waiver-approval-table', ['category' => 'waiver', 'payment' => 'complete'])
                 </div>
                 <div id="pending-approval" class="tab-pane fade">
-                    @livewire('assesments.waiver-approval-table', ['category' => 'waiver', 'payment' => 'unpaid'])
+                    @livewire('assesments.dispute-unpaid-approval-table', ['category' => 'waiver'])
                 </div>
                 <div id="approved-approval" class="tab-pane fade">
                     @livewire('assesments.waiver.waiver-table', ['category' => 'waiver', 'status' => 'approved'])

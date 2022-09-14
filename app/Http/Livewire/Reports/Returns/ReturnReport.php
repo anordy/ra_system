@@ -4,12 +4,6 @@ namespace App\Http\Livewire\Reports\Returns;
 
 use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
 use App\Models\TaxType;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -39,7 +33,7 @@ class ReturnReport extends Component
     public $period;
     public $quater;
     public $semiAnnual;
-    public $tax_type_id;
+    public $tax_type_id = 'all';
     public $type;
     public $filing_report_type;
     public $payment_report_type;
@@ -70,7 +64,7 @@ class ReturnReport extends Component
         $this->optionMonths = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
         $this->optionTaxTypes = TaxType::where('category','main')->get();
         $this->optionReportTypes = ['Filing', 'Payment'];
-        $this->optionFilingTypes = ['On-Time-Filings','Late-Filings', 'All-Filings'];
+        $this->optionFilingTypes = ['On-Time-Filings','Late-Filings', 'All-Filings','Tax-Claims','Nill-Returns'];
         $this->optionPaymentTypes = ['All-Paid-Returns','On-Time-Paid-Returns','Late-Paid-Returns', 'Unpaid-Returns'];
     }
 
@@ -96,36 +90,23 @@ class ReturnReport extends Component
         }
     }
 
-    public function exportExcel()
+    public function preview()
     {
         $this->validate();
         $parameters = $this->getParameters();
-        $modelData = $this->getModelData($parameters);
-        $records = $this->getRecords($modelData['model'], $parameters);
+        $records = $this->getRecords($parameters);
         if($records->count()<1){
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
-        $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
-        $for = str_replace('-', ' ', $for);
-        // dd($parameters);
-        if($parameters['year']=='all'){
-            $fileName = $modelData['returnName'].' Return Records ('.$for.').xlsx';
-            $title = $modelData['returnName'].' Return Records ('.$for.')';
-        }else{
-            $fileName = $modelData['returnName'].' Return Records ('.$for.') - '.$parameters['year']. '.xlsx';
-            $title = $modelData['returnName'].' Return Records ('.$for.')';
-        }  
-        $this->alert('success', 'Exporting Excel File');
-        return Excel::download(new ReturnReportExport($records,$title,$parameters), $fileName);
+        return redirect()->route('reports.returns.preview',encrypt(json_encode($this->getParameters())));
     }
 
     public function exportPdf()
     {
         $this->validate();
         $parameters = $this->getParameters();
-        $modelData = $this->getModelData($parameters);
-        $records = $this->getRecords($modelData['model'], $parameters);
+        $records = $this->getRecords($parameters);
         if($records->count()<1){
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
@@ -134,19 +115,48 @@ class ReturnReport extends Component
         return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
     }
 
-    public function preview()
+    public function exportExcel()
     {
         $this->validate();
         $parameters = $this->getParameters();
-        $modelData = $this->getModelData($parameters);
-        $records = $this->getRecords($modelData['model'], $parameters);
+        $records = $this->getRecords($parameters);
+        
         if($records->count()<1){
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
-        return redirect()->route('reports.returns.preview',encrypt(json_encode($this->getParameters())));
+
+        if($parameters['year']=='all'){
+            $fileName = $parameters['tax_type_name'].'_'.$parameters['filing_report_type'].'.xlsx';
+            $title = $parameters['filing_report_type'].' For'.$parameters['tax_type_name'];
+        }else{
+            $fileName = $parameters['tax_type_name'].'_'.$parameters['filing_report_type'].' - '.$parameters['year'].'.xlsx';
+            $title = $parameters['filing_report_type'].' For'.$parameters['tax_type_name'].' '.$parameters['year'];
+        } 
+        $this->alert('success', 'Exporting Excel File');
+        return Excel::download(new ReturnReportExport($records,$title,$parameters), $fileName);
     }
 
+
+    public function getParameters()
+    {
+        return [
+            'tax_type_id' => $this->tax_type_id ?? 'all',
+            'tax_type_code' => $this->tax_type_id == 'all' ? 'all': TaxType::find($this->tax_type_id)->code,
+            'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns':TaxType::find($this->tax_type_id)->name,
+            'type' => $this->type,
+            'year' => $this->year,
+            'period' => $this->period,
+            'filing_report_type' => $this->filing_report_type,
+            'payment_report_type' => $this->payment_report_type,
+            'month' => $this->month,
+            'quater' => $this->quater,
+            'semiAnnual' => $this->semiAnnual,
+            'dates'=> $this->getStartEndDate(),
+        ];
+    }
+
+    
     public function getStartEndDate()
     {
         if ($this->year == "all") {
@@ -212,24 +222,6 @@ class ReturnReport extends Component
     public function render()
     {
         return view('livewire.reports.returns.return-report');
-    }
-
-    public function getParameters()
-    {
-        return [
-            'tax_type_id' => $this->tax_type_id,
-            'tax_type_code' => TaxType::find($this->tax_type_id)->code,
-            'tax_type_name' => TaxType::find($this->tax_type_id)->name,
-            'type' => $this->type,
-            'year' => $this->year,
-            'period' => $this->period,
-            'filing_report_type' => $this->filing_report_type,
-            'payment_report_type' => $this->payment_report_type,
-            'month' => $this->month,
-            'quater' => $this->quater,
-            'semiAnnual' => $this->semiAnnual,
-            'dates'=> $this->getStartEndDate(),
-        ];
     }
 
 }

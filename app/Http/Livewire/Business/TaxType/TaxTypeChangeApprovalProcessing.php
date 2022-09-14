@@ -10,6 +10,7 @@ use Livewire\Component;
 use App\Events\SendMail;
 use App\Models\Business;
 use App\Models\BusinessStatus;
+use App\Models\BusinessTaxType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\BusinessTaxTypeChange;
@@ -27,7 +28,11 @@ class TaxTypeChangeApprovalProcessing extends Component
     public $selectedTaxTypes = [];
     public $oldTaxTypes = [];
     public $taxTypes;
-    public $currencies = ['TZS', 'USD'];
+    public $from_tax_type_id;
+    public $to_tax_type_id;
+    public $to_tax_type_currency;
+    public $effective_date;
+    public $today;
 
     public function mount($modelName, $modelId)
     {
@@ -35,70 +40,41 @@ class TaxTypeChangeApprovalProcessing extends Component
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
         $this->taxchange = BusinessTaxTypeChange::findOrFail($this->modelId);
-        $this->taxTypes   = TaxType::where('category', 'main')->get();
-
-        foreach (json_decode($this->taxchange->old_taxtype) as $value) {
-            $this->oldTaxTypes[] = [
-                'currency'    => $value->currency,
-                'tax_type_id' => $value->tax_type_id,
-            ];
-        }
-
-        foreach (json_decode($this->taxchange->new_taxtype) as $value) {
-            $this->selectedTaxTypes[] = [
-                'currency'    => $value->currency,
-                'tax_type_id' => $value->tax_type_id,
-                'business_id' => $value->business_id,
-                'created_at' => $value->created_at
-            ];
-        }
-    }
-
-    public function getTaxNameById($taxId)
-    {
-        return TaxType::find($taxId)->name;
+        $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
+        $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
+        $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
+        $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
+        $this->today = Carbon::today()->addDay()->format('Y-m-d');
     }
 
 
     public function approve($transtion)
     {
-        $this->validate(['comments' => 'required']);
-        $business = Business::findOrFail($this->taxchange->business_id);
+        $this->validate([
+            'effective_date' => 'required', 
+            'to_tax_type_currency' => 'required', 
+            'to_tax_type_id' => 'required'
+        ]);
+
+        if ($this->to_tax_type_id == $this->from_tax_type_id) {
+            $this->alert('warning', 'You cannot change to an existing tax type');
+            return;
+        }
 
         DB::beginTransaction();
         try {
             if ($this->checkTransition('registration_manager_review')) {
-                $business->taxTypes()->detach();
 
-                DB::table('business_tax_type')->insert($this->selectedTaxTypes);
+                $current_tax_type = BusinessTaxType::where('business_id', $this->taxchange->business_id)
+                    ->where('tax_type_id', $this->taxchange->from_tax_type_id)
+                    ->firstOrFail();
 
                 $this->subject->status = BusinessStatus::APPROVED;
-
-                $old_taxtypes_list = "";
-                $new_taxtypes_list = "";
-                $changed_tax_types = [];
-
-
-                foreach ($this->oldTaxTypes as $key => $data) {
-                    $old_taxtypes_list .= "{$this->getTaxNameById($data['tax_type_id'])}, ";
-                    if ($data['tax_type_id'] !== $this->selectedTaxTypes[$key]['tax_type_id']) {
-                        $changed_tax_types[] = [
-                            'old' => $this->getTaxNameById($data['tax_type_id']),
-                            'new' => $this->getTaxNameById($this->selectedTaxTypes[$key]['tax_type_id']),
-                            'new_tax_id' => $this->selectedTaxTypes[$key]['tax_type_id']
-                        ];
-                    }
-                }
-
-                foreach ($business->taxTypes as $type) {
-                    $new_taxtypes_list .= "{$type->name}, ";
-                }
+                $this->subject->effective_date = $this->effective_date;
 
                 $notification_payload = [
-                    'old_taxtypes' => $old_taxtypes_list,
-                    'new_taxtypes' => $new_taxtypes_list,
-                    'new_taxes' => $changed_tax_types,
-                    'business' => $business,
+                    'tax_type' => $current_tax_type,
+                    'tax_change' => $this->taxchange,
                     'time' => Carbon::now()->format('d-m-Y')
                 ];
 

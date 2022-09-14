@@ -245,14 +245,24 @@ class TaxInvestigationApprovalProcessing extends Component
             $this->alert('error', 'Something went wrong');
         }
 
+
+        if ($this->subject->status == TaxInvestigationStatus::LEGAL)
+        {
+
+        }
+        
+
         if ($this->subject->status == TaxInvestigationStatus::APPROVED && $this->subject->assessment()->exists()) {
             $this->generateControlNumber();
             $this->subject->assessment->update([
                 'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
             ]);
-        } else {
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         }
+    }
+
+    public function investigationAdd()
+    {
+        // TODO:: Add
     }
 
     public function generateControlNumber()

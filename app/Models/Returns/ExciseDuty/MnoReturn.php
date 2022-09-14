@@ -2,20 +2,19 @@
 
 namespace App\Models\Returns\ExciseDuty;
 
-use App\Models\ZmBill;
-use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Models\Debts\Debt;
-use App\Models\FinancialYear;
-use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
+use App\Models\Debts\Debt;
+use App\Models\FinancialMonth;
+use App\Models\FinancialYear;
 use App\Models\Returns\TaxReturn;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Returns\ExciseDuty\MnoPenalty;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Returns\ExciseDuty\MnoReturnItem;
+use App\Models\Taxpayer;
+use App\Models\TaxType;
+use App\Models\Verification\TaxVerification;
+use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MnoReturn extends Model
 {
@@ -27,6 +26,10 @@ class MnoReturn extends Model
     public static function getTableName()
     {
         return with(new static)->getTable();
+    }
+
+    public function verification(){
+        return $this->morphOne(TaxVerification::class, 'tax_return');
     }
 
     public function financialMonth()

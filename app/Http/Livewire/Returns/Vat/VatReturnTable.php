@@ -29,6 +29,11 @@ class VatReturnTable extends DataTableComponent
     {
         $data   = $this->data;
         $filter = (new VatReturn)->newQuery();
+
+        if ($data == []) {
+            $filter->whereMonth('vat_returns.created_at', '=', date('m'));
+            $filter->whereYear('vat_returns.created_at', '=', date('Y'));
+        }
         
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);

@@ -39,8 +39,12 @@ class EmTransactionsTable extends DataTableComponent
     public function builder(): Builder
     {
         $data   = $this->data;
-        
         $filter = (new EmTransactionReturn)->newQuery();
+
+        if ($data == []) {
+            $filter->whereMonth('em_transaction_returns.created_at', '=', date('m'));
+            $filter->whereYear('em_transaction_returns.created_at', '=', date('Y'));
+        }
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }

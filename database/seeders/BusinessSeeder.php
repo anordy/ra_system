@@ -72,6 +72,31 @@ class BusinessSeeder extends Seeder
             "approved_on"=> Carbon::now()
         ];
 
+        $location_two = [
+            "region_id" => 1,
+            "district_id" => 1,
+            "ward_id" => 6,
+            "latitude" => "2.5454",
+            "longitude" => "34.4343",
+            "nature_of_possession" => "Owned",
+            "street" => "Stone Town",
+            "physical_address" => "PO BOX 345 Stone Town",
+            "house_no" => "9000",
+            "owner_name" => null,
+            "owner_phone_no" => null,
+            "meter_no" => "900900",
+            "taxpayer_id" => 1,
+            "name" => "Stone Town Branch",
+            "is_headquarter" => 0,
+            "status" => "approved",
+            "tax_region_id" => 2,
+            "zin" => 123,
+            "date_of_commencing" => "2022-07-01",
+            "pre_estimated_turnover" => 45000000,
+            "post_estimated_turnover" => 20000000,
+            "approved_on"=> Carbon::now()
+        ];
+
         $bank = [
             "bank_id" => 5,
             "acc_no" => "0124548904",
@@ -85,6 +110,7 @@ class BusinessSeeder extends Seeder
         try {
             $business = Business::create($business);
             $business->headquarter()->create($location);
+            $business->locations()->create($location_two);
             $business->banks()->create($bank);
 
             $taxTypes = TaxType::where('category', 'main')->pluck('id')->toArray();

@@ -25,7 +25,7 @@ class VerifyAction extends Component
 {
     use LivewireAlert;
 
-    public $agent;
+    public $renew;
 
     protected $listeners = [
         'confirmed',
@@ -44,7 +44,7 @@ class VerifyAction extends Component
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $this->agent->request->id
+                'id' => $this->renew->id
             ],
 
         ]);
@@ -62,7 +62,7 @@ class VerifyAction extends Component
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $this->agent->request->id
+                'id' => $this->renew->id
             ],
 
         ]);
@@ -82,7 +82,10 @@ class VerifyAction extends Component
 
             $taxpayer = Taxpayer::query()->find($req->tax_agent->taxpayer_id);
 
-            $fee = TaPaymentConfiguration::query()->where('category', 'renewal fee')->first();
+            $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen', 'currency')
+                ->where('category', 'Renewal Fee')
+                ->where('is_citizen', $req->tax_agent->taxpayer_id)
+                ->first();
             $amount = $fee->amount;
             $used_currency = $fee->currency;
             if ($used_currency != 'TZS') {

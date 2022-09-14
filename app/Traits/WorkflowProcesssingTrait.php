@@ -16,7 +16,7 @@ trait WorkflowProcesssingTrait
     public function registerWorkflow($modelName, $modelId)
     {
         $this->subject = $modelName::find($modelId);
-        $workflow = Workflow::where('supports', $modelName)->first();
+        $workflow = Workflow::where('supports', $modelName)->latest()->first();
 
         if ($workflow == null) {
             Log::error('Workflow object is not configured' . $modelName);

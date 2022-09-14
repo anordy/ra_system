@@ -21,6 +21,10 @@ class WorkflowTask extends Model
         return $this->morphTo();
     }
 
+    public function business(){
+        return $this->morphTo();
+    }
+
     public function scopeCanApprove($query)
     {
         if ($this->operator_type == 'staff') {

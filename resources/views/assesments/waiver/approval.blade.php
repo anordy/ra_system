@@ -3,9 +3,7 @@
 @section('title', 'Waiver Details')
 
 @section('content')
-
     <div class="card p-0 m-0">
-
         <div class="card-body mt-0 p-2">
             <ul class="nav nav-tabs shadow-sm" id="waiverContent" role="tablist" style="margin-bottom: 0;">
                 <li class="nav-item" role="presentation">
@@ -31,9 +29,6 @@
             </div>
         </div>
     </div>
-
-
 @endsection
 @section('scripts')
-
 @endsection

@@ -23,7 +23,6 @@ class LumpSumReturnsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        // $this->setAdditionalSelects('lump_sum_returns.created_at as lp_created_at');
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
@@ -41,11 +40,19 @@ class LumpSumReturnsTable extends DataTableComponent
         $data   = $this->data;
         $filter = (new LumpSumReturn)->newQuery();
 
+        if ($data == []) {
+            $filter->whereMonth('lump_sum_returns.created_at', '=', date('m'));
+            $filter->whereYear('lump_sum_returns.created_at', '=', date('Y'));
+        }
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }
         if (isset($data['month']) && $data['month'] != 'all') {
             $filter->whereMonth('lump_sum_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['month']) && $data['month'] == 'range') {
+            $filter->whereBetween('lump_sum_returns.created_at', [$data['from'], $data['to']]);
+            // dd([$data['from'], $data['to']]);
         }
         if (isset($data['year']) && $data['year'] != 'All') {
             $filter->whereYear('lump_sum_returns.created_at', '=', $data['year']);
@@ -76,7 +83,7 @@ class LumpSumReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Control No', 'id')
-            ->label(fn ($row) => $row->bill->control_number ?? $row->debt->bill->control_number ?? '')
+            ->label(fn ($row) => $row->tax_return->bill->control_number)
             ->searchable(),
             Column::make('Status', 'status')
             ->view('returns.lump-sum.status')

@@ -30,8 +30,12 @@ class PortReturnTable extends DataTableComponent
     public function builder(): Builder
     {
         $data   = $this->data;
-        
         $filter = (new PortReturn)->newQuery();
+
+        if ($data == []) {
+            $filter->whereMonth('port_returns.created_at', '=', date('m'));
+            $filter->whereYear('port_returns.created_at', '=', date('Y'));
+        }
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }

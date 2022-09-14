@@ -36,39 +36,24 @@ class TaxTypeTable extends DataTableComponent
         $this->setPrimaryKey('id');
     }
 
-    public function getTaxNameById($taxId)
-    {
-        return TaxType::find($taxId)->name;
-    }
-
     public function columns(): array
     {
         return [
             Column::make("Business Name", "business.name")
                 ->sortable(),
-            Column::make("Old Tax Types", "old_taxtype")
+            Column::make("From Tax Type", "from_tax_type_id")
                 ->sortable()
                 ->format(function ($value, $row) {
-                    $datas = json_decode($value);
-                    $taxtypes = "";
-                    foreach ($datas as $data) {
-                        $taxtypes .= "{$this->getTaxNameById($data->tax_type_id)}, ";
-                    }
-                    return $taxtypes;
+                    return $row->fromTax->name;
                 }),
-            Column::make("New Tax Types", "new_taxtype")
+            Column::make("To Tax Type", "to_tax_type_id")
                 ->searchable()
                 ->format(function ($value, $row) {
-                    $datas = json_decode($value);
-                    $taxtypes = "";
-                    foreach ($datas as $data) {
-                        $taxtypes .= "{$this->getTaxNameById($data->tax_type_id)}, ";
-                    }
-                    return $taxtypes;
+                    return $row->toTax->name;
                 }),
             Column::make("Date of Request", "created_at")
                 ->format(function ($value, $row) {
-                    return Carbon::create($value)->format('d-m-Y');
+                    return Carbon::create($value)->format('M d, Y');
                 })
                 ->searchable(),
             Column::make('Status', 'status')->view('business.taxtypes.includes.status'),

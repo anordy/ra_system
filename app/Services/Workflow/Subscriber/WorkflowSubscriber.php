@@ -42,8 +42,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $operator_type = $task->operator_type;
             $operators = json_decode($task->operators, true);
         } else {
-            $operator_type = $place["operator_type"];
-            $operators = $place['operators'];
+            return;
         }
         $status = $place['status'];
 
@@ -56,7 +55,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
         }
 
         if ($operator_type == "role") {
-            $role = Role::find($user->role->id);
+            $role = Role::find($user->role->id ?? null);
             if ($role == null) {
                 $event->setBlocked(true);
             }
@@ -143,8 +142,8 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'operator_type' => $operator_type,
                     'operators' => $operators,
                     'approved_on' => Carbon::now()->toDateTimeString(),
-                    'user_id' => $user->id,
-                    'user_type' => get_class($user),
+                    'user_id' => $user->id ?? null,
+                    'user_type' => $user != null ? get_class($user) : null,
                     'status' => $key == 'completed' ? 'completed' : 'running',
                     'remarks' => $context['comment'] ?? null,
                 ]);
@@ -175,6 +174,10 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'TAX_INVESTIGATION') {
                 if (key($places) == 'completed') {
                     $subject->status = TaxInvestigationStatus::APPROVED;
+                    $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
+                if (key($places) == 'legal') {
+                    $subject->status = TaxInvestigationStatus::LEGAL;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
             } elseif ($placeName == 'TAX_CLEARENCE') {
