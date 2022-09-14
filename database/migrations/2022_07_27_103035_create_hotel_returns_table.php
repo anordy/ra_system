@@ -33,6 +33,7 @@ class CreateHotelReturnsTable extends Migration
             $table->enum('claim_status',TaxClaimStatus::getConstants())->default(TaxClaimStatus::NO_CLAIM);
             $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->decimal('hotel_infrastructure_tax', 20, 2)->nullable();
+            $table->decimal('withheld_tax', 20, 2)->nullable();
             $table->string('financial_month_id');
             $table->decimal('total_amount_due', 20, 2)->default(0);
             $table->decimal('total_amount_due_with_penalties', 20, 2)->default(0);

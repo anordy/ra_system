@@ -46,7 +46,6 @@ class WaiverController extends Controller
                 abort(404);
             }
         }
-
         return abort(404);
     }
 }

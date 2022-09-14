@@ -34,6 +34,10 @@ class CreatePortReturnsTable extends Migration
             $table->decimal('infrastructure_znz_znz', 20, 2);
             $table->decimal('infrastructure_znz_tm', 20, 2);
             $table->string('financial_month_id');
+            $table->decimal('airport_safety_fee', 20, 2)->default(0);
+            $table->decimal('airport_service_charge', 20, 2)->default(0);
+            $table->decimal('seaport_service_charge', 20, 2)->default(0);
+            $table->decimal('seaport_transport_charge', 20, 2)->default(0);
             $table->decimal('total_amount_due', 20, 2)->default(0);
             $table->decimal('total_amount_due_with_penalties', 20, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
@@ -45,7 +49,6 @@ class CreatePortReturnsTable extends Migration
             $table->foreign('business_location_id')->references('id')->on('business_locations');
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->timestamps();
-
         });
     }
 
