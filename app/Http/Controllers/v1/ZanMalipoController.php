@@ -3,24 +3,13 @@
 namespace App\Http\Controllers\v1;
 
 use App\Enum\InstallmentStatus;
-use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
-use App\Models\Debts\Debt;
 use App\Models\Disputes\Dispute;
 use App\Models\Installment\InstallmentItem;
 use App\Models\LandLease;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\Vat\VatReturn;
 use App\Models\ZmBill;
 use App\Traits\TaxVerificationTrait;
 use Carbon\Carbon;
@@ -41,7 +30,6 @@ class ZanMalipoController extends Controller
 
     private $billable = [
         TaxAssessment::class,
-        PortReturn::class,
         LandLease::class,
     ];
 

@@ -76,13 +76,13 @@
                     {{ $record->business->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->businessLocation->name ?? '-' }}
+                    {{ $record->location->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->financialMonth->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->financialYear->name ?? '-' }}
+                    {{ $record->financialMonth->year->code ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->taxpayer->full_name ?? '-' }}
@@ -91,10 +91,10 @@
                     {{ $record->currency ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->total_amount_due===null?'-':number_format($record->total_amount_due, 2) }}
+                    {{ $record->outstanding_amount===null?'-':number_format($record->outstanding_amount, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->total_amount_due_with_penalties===null?'-':number_format($record->total_amount_due_with_penalties, 2) }}
+                    {{$record->total_amount===null?'-':number_format($record->total_amount, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ date('d/m/Y', strtotime($record->created_at)) }}
@@ -120,10 +120,10 @@
                     {{ $record->payment_due_date==null?'-':date('d/m/Y', strtotime($record->payment_due_date)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">     
-                    @if ($record->created_at == null || $record->payment_due_date == null)
+                    @if ($record->paid_at == null || $record->payment_due_date == null)
                         -
                     @else
-                        @if ($record->created_at < $record->payment_due_date)
+                        @if ($record->paid_at < $record->payment_due_date)
                             In-Time
                         @else
                             Late

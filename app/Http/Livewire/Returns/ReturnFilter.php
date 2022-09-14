@@ -9,6 +9,8 @@ class ReturnFilter extends Component
     public $payment_type;
     public $year;
     public $month;
+    public $from;
+    public $to;
     public $optionYears;
     public $tableName;
 
@@ -36,6 +38,8 @@ class ReturnFilter extends Component
             'type' => $this->payment_type,
             'year' => $this->year,
             'month'=> $this->month,
+            'from' => $this->from,
+            'to'   => $this->to,
         ];
 
         $this->emitTo($this->tableName, 'filterData', $filters);

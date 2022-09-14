@@ -39,8 +39,12 @@ class MobileMoneyTransferTable extends DataTableComponent
     public function builder(): Builder
     {
         $data   = $this->data;
-        
         $filter = (new MmTransferReturn)->newQuery();
+
+        if ($data == []) {
+            $filter->whereMonth('mm_transfer_returns.created_at', '=', date('m'));
+            $filter->whereYear('mm_transfer_returns.created_at', '=', date('Y'));
+        }
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }

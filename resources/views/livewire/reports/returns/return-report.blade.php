@@ -8,7 +8,7 @@
             </label>
             <select name="tax_type_id" id="tax_type_id" wire:model="tax_type_id"
                 class="form-control {{ $errors->has('tax_type_id') ? 'is-invalid' : '' }}">
-                <option value="">Select Tax Type</option>
+                <option value="all">All</option>
                 @foreach ($optionTaxTypes as $taxType)
                     <option value={{ $taxType->id }}>
                         {{ $taxType->name }}</option>
