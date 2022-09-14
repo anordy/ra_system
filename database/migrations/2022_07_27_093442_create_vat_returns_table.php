@@ -32,6 +32,7 @@ class CreateVatReturnsTable extends Migration
             $table->decimal('total_vat_payable', 20,2);
             $table->decimal('vat_withheld', 20,2);
             $table->decimal('infrastructure_tax', 20,2)->nullable();
+            $table->decimal('credit_brought_forward', 20,2);
             $table->decimal('total_amount_due', 20,2);
             $table->decimal('penalty', 20,2);
             $table->decimal('interest',20,2);

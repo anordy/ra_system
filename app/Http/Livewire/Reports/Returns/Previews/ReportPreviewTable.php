@@ -40,78 +40,111 @@ class ReportPreviewTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Register Date", "created_at")
+            Column::make("Filing Date", "created_at")
+                ->searchable()
+                ->sortable()
                 ->format(function ($value, $row) {
                     return date('d/m/Y', strtotime($value));
-                })
-                ->searchable()
-                ->sortable(),
+                }),
+                
             Column::make("Business", "business_id")
+                ->searchable()
+                ->sortable()
                 ->format(
                     function ($value, $row) {
                         return $row->business->name;
                     }
-                )
-                ->searchable()
-                ->sortable(),
+                ),
+
             Column::make("Business Location", "location_id")
+                ->searchable()
+                ->sortable()
                 ->format(
                     function ($value, $row) {
                         return $row->location->name;
                     }
-                )
+                ),
+            
+            Column::make("Tax Type", "tax_type_id")
                 ->searchable()
-                ->sortable(),
-            Column::make("Financial Month", "financial_month_id")
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return $row->taxType->name;
+                    }
+                ),
+
+            Column::make("Reporting Month", "financial_month_id")
+                ->searchable()
+                ->sortable()
                 ->format(
                     function ($value, $row) {
                         return $row->financialMonth->name;
                     }
-                )
-                ->searchable()
-                ->sortable(),
-            //financial year
-            Column::make("Financial Year", "financial_month_id")
-                ->format(
-                    function ($value, $row) {
-                        return $row->financialMonth->year->code ?? '-';
-                    }
-                )
-                ->searchable()
-                ->sortable(),
-            //filed by
+                ),
+
             Column::make("Filed By", "id")
+                ->searchable()
+                ->sortable()
                 ->format(
                     function ($value, $row) {
                         return $row->taxpayer->fullName;
                     }
-                )
-                ->searchable()
-                ->sortable(),
-            //currency
+                ),
+
             Column::make("Currency", "currency")
                 ->searchable()
                 ->sortable(),
-            //total_amount_due
-            Column::make("Outstanding Amount", "outstanding_amount")
+
+            Column::make("Principal Amount", "principal")
+                ->searchable()
+                ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return number_format($value, 2);
+                        return number_format($value, 2) ?? '-';
                     }
-                )
+                ),
+
+            Column::make("Interest", "interest")
                 ->searchable()
-                ->sortable(),
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return number_format($value, 2) ?? '-';
+                    }
+                ),
+
+            Column::make("Penalty", "penalty")
+                ->searchable()
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return number_format($value, 2) ?? '-';
+                    }
+                ),
+
             //total_amount_due_with_penalties
-            Column::make("Total Amount Due With Penalties", "total_amount")
+            Column::make("Total Amount", "total_amount")
+                ->searchable()
+                ->sortable()
                 ->format(
                     function ($value, $row) {
                         return number_format($value, 2);
                     }
-                )
+                ),
+
+            Column::make("Outstanding Amount", "outstanding_amount")
                 ->searchable()
-                ->sortable(),
-            //filing_due_date
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return number_format($value, 2);
+                    }
+                ),
+
             Column::make("Filing Due Date", "filing_due_date")
+                ->searchable()
+                ->sortable()
                 ->format(
                     function ($value, $row) {
                         if (!$value) {
@@ -120,61 +153,6 @@ class ReportPreviewTable extends DataTableComponent
                         return date('d/m/Y', strtotime($value));
                     }
                 )
-                ->searchable()
-                ->sortable(),
-            //file status
-            Column::make("File Status", "id")
-                ->format(
-                    function ($value, $row) {
-                        if ($row->created_at < $row->filing_due_date) {
-                            return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                            <i class="bi bi-check-circle"></i>
-                                        In Time
-                                    </span>';
-                        } else {
-                            return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
-                            <i class="bi bi-clock"></i>
-                                        Late
-                                    </span>';
-                        }
-                    }
-                )
-                ->searchable()
-                ->sortable()
-                ->html(),
-            //payment_due_date
-            Column::make("Payment Due Date", "payment_due_date")
-                ->format(
-                    function ($value, $row) {
-                        return date('d/m/Y', strtotime($value));
-                    }
-                )
-                ->searchable()
-                ->sortable(),
-            //payment status
-            Column::make("Payment Status", "paid_at")
-                ->format(
-                    function ($value, $row) {
-                        if ($row->created_at == null || $row->paid_at == null) {
-                            return '-';
-                        } else {
-                            if ($row->paid_at < $row->payment_due_date) {
-                                return '<span class="badge badge-success py-1 px-2"  style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                <i class="bi bi-check-circle"></i>
-                                    In-Time
-                                        </span>';
-                            } else {
-                                return '<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
-                                <i class="bi bi-clock"></i>
-                                            Late
-                                        </span>';
-                            }
-                        }
-                    }
-                )
-                ->searchable()
-                ->sortable()
-                ->html(),
         ];
     }
 }

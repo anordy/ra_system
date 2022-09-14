@@ -183,20 +183,18 @@
                     @enderror
                 </div>
             @endif
-
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 text-right">
-            <button class="btn btn-secondary btn-xs ml-2" wire:click="toggleFilters">
-
-                @if ($showMoreFilters)
-                    Hide More filters
-                @else
-                    Show more Filters
-                @endif
-            </button>
+            <div class="col-md-4 form-group">
+                <button class="btn btn-primary btn-xs ml-2 mt-4" wire:click="toggleFilters">
+    
+                    @if ($showMoreFilters)
+                    <i class="bi bi-filter mr-3"></i>
+                        Hide More filters
+                    @else
+                    <i class="bi bi-filter"></i>
+                        Show more Filters
+                    @endif
+                </button>
+            </div>
         </div>
     </div>
 
@@ -328,7 +326,6 @@
                 @endforeach
             </div>
         </div>
-       
     @endif
 
 
