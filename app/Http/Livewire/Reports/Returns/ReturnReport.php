@@ -28,14 +28,14 @@ class ReturnReport extends Component
     public $showPreviewTable = false;
     public $activateButtons = false;
 
-    public $year;
+    public $year = 'all';
     public $month;
     public $period;
     public $quater;
     public $semiAnnual;
     public $tax_type_id = 'all';
     public $type;
-    public $filing_report_type;
+    public $filing_report_type = 'All-Filings';
     public $payment_report_type;
 
     public $returnName;
@@ -57,14 +57,14 @@ class ReturnReport extends Component
 
     public function mount()
     {
-        $this->optionYears = FinancialYear::pluck('code');
+        $this->optionYears = FinancialYear::orderBy('code','DESC')->pluck('code');
         $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
         $this->optionSemiAnnuals = ["1st-Semi-Annual", "2nd-Semi-Annual"];
         $this->optionQuarters = ["1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter"];
         $this->optionMonths = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
         $this->optionTaxTypes = TaxType::where('category','main')->get();
         $this->optionReportTypes = ['Filing', 'Payment'];
-        $this->optionFilingTypes = ['On-Time-Filings','Late-Filings', 'All-Filings','Tax-Claims','Nill-Returns'];
+        $this->optionFilingTypes = ['All-Filings','On-Time-Filings','Late-Filings','Tax-Claims','Nill-Returns'];
         $this->optionPaymentTypes = ['All-Paid-Returns','On-Time-Paid-Returns','Late-Paid-Returns', 'Unpaid-Returns'];
     }
 
