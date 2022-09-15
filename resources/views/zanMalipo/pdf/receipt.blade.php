@@ -108,8 +108,10 @@
                 <td colspan="2" class="padding-left td-title">Payment Ref</td>
                 <td colspan="2" class="td-content">:
                     @if ($bill->bill_payments->count() > 0)
-                        <small>{{ $bill->bill_payments->latest()->first()->pay_ref_id }}</small>
-                        {{ $bill->bill_payment->latest()->first()->psp_receipt_number }}
+                        <small>
+                            {{ $bill->bill_payments->first()->pay_ref_id }}
+                        </small>
+                        {{ $bill->bill_payments->first()->psp_receipt_number }}
                     @endif
                 </td>
             </tr>

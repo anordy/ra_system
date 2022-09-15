@@ -2,28 +2,22 @@
 
 namespace App\Http\Livewire\Debt;
 
-use App\Models\Debts\Debt;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\TaxType;
+use App\Models\Returns\TaxReturn;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ReturnDebtsTable extends DataTableComponent
 {
-    use LivewireAlert;
-    public $taxType;
 
-    public function mount($taxType)
-    {
-        $this->taxType = $taxType;
-    }
+    use LivewireAlert;
 
     public function builder(): Builder
     {
-        $tax = TaxType::where('code', $this->taxType)->first();
-
-        return Debt::query()->where('tax_type_id', $tax->id)->orderBy('debts.created_at', 'desc');
+        return TaxReturn::query()
+                    ->where('return_category', 'debt')
+                    ->orderBy('tax_returns.created_at', 'desc');
     }
 
     public function configure(): void
@@ -31,9 +25,9 @@ class ReturnDebtsTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id', 'tax_type_id', 'business_location_id']);
+        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_type_id', 'location_id']);
     }
 
     public function columns(): array
@@ -42,31 +36,20 @@ class ReturnDebtsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Payer', 'business.taxpayer.first_name')
+            Column::make('Branch', 'location.name')
                 ->sortable()
-                ->searchable()
-                ->format(function ($value, $row) {
-                    return "{$row->business->taxpayer->first_name} {$row->business->taxpayer->last_name}";
-                }),
+                ->searchable(),
             Column::make('Tax Type', 'taxtype.name'),
-            Column::make('Principal Amount', 'principal_amount')
-            ->format(function ($value, $row) {
-                return number_format($row->principal_amount, 2);
-            }),
-            Column::make('Penalty', 'penalty')
-                ->format(function ($value, $row) {
-                    return number_format($row->penalty, 2);
-                }),
-            Column::make('Interest', 'interest')
-                ->format(function ($value, $row) {
-                    return number_format($row->interest, 2);
-                }),
-            Column::make('Total Debt', 'total_amount')
+            Column::make('Total Payable Amount', 'total_amount')
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount, 2);
                 }),
-            Column::make('Status', 'status')->view('debts.includes.status'),
-            Column::make('Actions', 'id')->view('debts.includes.actions'),
+            Column::make('Outstanding Amount', 'outstanding_amount')
+                ->format(function ($value, $row) {
+                    return number_format($row->outstanding_amount, 2);
+                }),
+            Column::make('Payment Status', 'payment_status')->view('debts.includes.status'),
+            Column::make('Action', 'id')->view('debts.includes.actions'),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\LandLease;
 
+use App\Models\LeasePayment;
 use App\Models\TaxType;
 use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyTrait;
@@ -14,9 +15,11 @@ class LandLeasePayment extends Component
     use LivewireAlert, PenaltyTrait, PaymentsTrait;
 
     public $landLease;
+    public $leasePayment;
 
-    public function mount($landLease){
-        $this->landLease = $landLease;
+    public function mount($leasePayment){
+        $this->leasePayment = $leasePayment;
+        $this->landLease = $leasePayment->landLease;
     }
 
     public function refresh(){
@@ -46,15 +49,16 @@ class LandLeasePayment extends Component
             abort(403);
         }
         $billItems[] = [
-            'billable_id' => $this->landLease->id,
-            'billable_type' => get_class($this->landLease),
+            'billable_id' => $this->leasePayment->id,
+            'billable_type' => get_class($this->leasePayment),
             'use_item_ref_on_pay' => 'N',
-            'amount' => $this->landLease->payment_amount,
+            'amount' => $this->leasePayment->total_amount_with_penalties,
             'currency' => 'USD',
             'gfs_code' => TaxType::where('code','land-lease')->first()->gfs_code,
             'tax_type_id' => TaxType::where('code','land-lease')->first()->id
         ];
-        $response = $this->landLeaseGenerateControlNo($this->landLease, $billItems);
+
+        $this->landLeaseGenerateControlNo($this->leasePayment, $billItems);
         $this->refresh();
     }
 

@@ -427,7 +427,7 @@
                 <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
                     @can('debt-management-debts-view')
                         <li class="{{ request()->is('debts/all*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.debt.index') }}">Normal Debts</a>
+                            <a href="{{ route('debts.debt.index') }}">Return Debts</a>
                         </li>
                     @endcan
                     @can('debt-management-debts-overdue-view')
@@ -443,87 +443,6 @@
                     @can('debt-management-assessment-debt-view')
                         <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
                             <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-hotel-levy-view')
-                        <li class="{{ request()->is('debts/returns/hotel*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.hotel.index', encrypt(App\Models\TaxType::HOTEL)) }}">Hotel
-                                Levy</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-restaurant-levy-view')
-                        <li class="{{ request()->is('debts/returns/restaurant*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.restaurant.index', encrypt(App\Models\TaxType::RESTAURANT)) }}">Restaurant
-                                Levy</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-tour-operator-levy-view')
-                        <li class="{{ request()->is('debts/returns/tour*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.tour.index', encrypt(App\Models\TaxType::TOUR_OPERATOR)) }}">Tour
-                                Operation
-                                Levy</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-petroleum-levy-view')
-                        <li class="{{ request()->is('debts/returns/petroleum*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.petroleum.index', encrypt(App\Models\TaxType::PETROLEUM)) }}">Petroleum
-                                Returns</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-vat-view')
-                        <li class="{{ request()->is('debts/returns/vat*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.vat.index', encrypt(App\Models\TaxType::VAT)) }}">VAT
-                                Returns</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-stamp-duty-view')
-                        <li class="{{ request()->is('debts/returns/stamp-duty*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.stamp-duty.index', encrypt(App\Models\TaxType::STAMP_DUTY)) }}">Stamp
-                                Duty
-                                Returns</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-lumpsum-payment-view')
-                        <li class="{{ request()->is('debts/returns/lump-sum*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.lump-sum.index', encrypt(App\Models\TaxType::LUMPSUM_PAYMENT)) }}">Lump
-                                Sum Returns</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-electronic-money-transaction-view')
-                        <li class="{{ request()->is('debts/returns/emt*') ? 'active' : '' }}">
-                            <a
-                                href="{{ route('debts.emt.index', encrypt(App\Models\TaxType::ELECTRONIC_MONEY_TRANSACTION)) }}">Electronic
-                                Money Transaction</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-sea-service-transport-charge-view')
-                        <li class="{{ request()->is('debts/returns/sea*') ? 'active' : '' }}">
-                            <a
-                                href="{{ route('debts.sea.index', encrypt(App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)) }}">Sea
-                                Service Transport
-                            </a>
-                        </li>
-                    @endcan
-                    @can('debt-management-airport-service-safety-fee-view')
-                        <li class="{{ request()->is('debts/returns/airport*') ? 'active' : '' }}">
-                            <a
-                                href="{{ route('debts.airport.index', encrypt(App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)) }}">Airport
-                                Service Safety Fee
-                            </a>
-                        </li>
-                    @endcan
-                    @can('debt-management-excise-duty-bfo-view')
-                        <li class="{{ request()->is('debts/returns/bfo*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.bfo.index', encrypt(App\Models\TaxType::EXCISE_DUTY_BFO)) }}">
-                                Banks, Financial Institutions and Others Returns
-                            </a>
-                        </li>
-                    @endcan
-                    @can('debt-management-excise-duty-mno-view')
-                        <li class="{{ request()->is('debts/returns/mno*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.mno.index', encrypt(App\Models\TaxType::EXCISE_DUTY_MNO)) }}">
-                                Moblie Network Operator Returns
-                            </a>
                         </li>
                     @endcan
                 </ul>

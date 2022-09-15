@@ -113,7 +113,13 @@
                             <p class="my-1">
                                     <span class="badge badge-success py-1 px-2"
                                         style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                        {{ $waiver->category }}
+                                        @if ($waiver->category === 'interest')
+                                            Interest
+                                        @elseif ($waiver->category === 'penalty')
+                                            Penalty
+                                        @else
+                                            Penalty & Interest
+                                        @endif
                                     </span>
                             </p>
                         </div>

@@ -2,7 +2,7 @@
 <table style="border-collapse:collapse;">
     <thead>
         <tr>
-            <th style="text-align:center;" colspan="15" height="70">
+            <th style="text-align:center;" colspan="16" height="70">
                 <strong>ZANZIBAR REVENUE BOARD</strong><br>
                 <strong>{{ $title }}</strong><br>
                 {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
@@ -67,6 +67,12 @@
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Payment Due Date</strong>
             </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Filing Status</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Payment Status</strong>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -85,7 +91,12 @@
                     {{ $record->taxType->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->financialMonth->name ?? '-' }}
+                    @if ($record->taxType->code == 'lumpsum-payment')
+                        {{ \App\Models\Returns\LumpSum\LumpSumReturn::where('id',$record->return_id)->first()->quarter_name ?? '-'}}
+                        @else
+                        {{ $record->financialMonth->name ?? '-' }}
+                    @endif
+                    
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->taxpayer->full_name ?? '-' }}
@@ -109,17 +120,33 @@
                     {{$record->outstanding_amount===null?'-':number_format($record->outstanding_amount, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ date('d/m/Y', strtotime($record->created_at)) }}
+                    {{ date('M, d Y', strtotime($record->created_at)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->filing_due_date==null?'-': date('d/m/Y', strtotime($record->filing_due_date)) }}
+                    {{$record->filing_due_date==null?'-': date('M, d Y', strtotime($record->filing_due_date)) }}
                 </td>
                 
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->paid_at==null?'-':date('d/m/Y', strtotime($record->paid_at)) }}
+                    {{ $record->paid_at==null?'-':date('M, d Y', strtotime($record->paid_at)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->payment_due_date==null?'-':date('d/m/Y', strtotime($record->payment_due_date)) }}
+                    {{ $record->payment_due_date==null?'-':date('M, d Y', strtotime($record->payment_due_date)) }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    @if ($record->created_at > $record->filing_due_date )
+                        Late Filing
+                        @else
+                        In-Time Filing
+                    @endif
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    @if($record->paid_at > $record->payment_due_date)
+                            Late Payment
+                        @elseif($record->paid_at < $record->payment_due_date)
+                            In-Time Payment
+                        @else
+                            Not Paid
+                    @endif
                 </td>
             </tr>
         @endforeach

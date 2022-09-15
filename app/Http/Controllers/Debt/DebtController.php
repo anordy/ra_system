@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Debts\RecoveryMeasure;
 use App\Models\Debts\DebtWaiverAttachment;
+use App\Models\Returns\TaxReturn;
 
 class DebtController extends Controller
 {
@@ -59,18 +60,15 @@ class DebtController extends Controller
     public function show($debtId)
     {
         $debtId = decrypt($debtId);
-        $debt = Debt::findOrFail($debtId);
-        $recovery_measures = RecoveryMeasure::where('debt_id', $debtId)->get();
-        return view('debts.show', compact('debt', 'recovery_measures'));
+        $tax_return = TaxReturn::findOrFail($debtId);
+        return view('debts.show', compact('tax_return'));
     }
 
     public function showOverdue($debtId)
     {
         $debtId = decrypt($debtId);
-        $debt = Debt::findOrFail($debtId);
-        $recovery_measures = RecoveryMeasure::where('debt_id', $debt->id)->get();
-        // dd($recovery_measures);
-        return view('debts.overdue.show', compact('debt', 'recovery_measures'));
+        $tax_return = TaxReturn::findOrFail($debtId);
+        return view('debts.show', compact('tax_return'));
     }
 
 }

@@ -10,7 +10,7 @@ use App\Models\Returns\Vat\VatReturn;
 class VatReturnTable extends DataTableComponent
 {
     protected $model     = VatReturn::class;
-    protected $listeners = ['filterData' => 'filterData'];
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $status;
     public $data = [];
 
@@ -22,7 +22,7 @@ class VatReturnTable extends DataTableComponent
     public function filterData($data)
     {
         $this->data = $data;
-        $this->builder();
+        $this->emit('$refresh');
     }
 
     public function builder(): Builder
@@ -38,11 +38,14 @@ class VatReturnTable extends DataTableComponent
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }
-        if (isset($data['month']) && $data['month'] != 'all') {
+        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
             $filter->whereMonth('vat_returns.created_at', '=', $data['month']);
         }
-        if (isset($data['year']) && $data['year'] != 'All') {
+        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
             $filter->whereYear('vat_returns.created_at', '=', $data['year']);
+        }
+        if (isset($data['year']) && $data['year'] == 'Custom Range') {
+            $filter->whereBetween('vat_returns.created_at', [$data['from'], $data['to']]);
         }
     
         return $filter->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->with('business', 'business.taxpayer')->orderBy('vat_returns.created_at', 'desc');
