@@ -25,6 +25,11 @@ class LandLeaseController extends Controller
         return view('land-lease.view-land-lease', compact('id'));
     }
 
+    public function viewLeasePayment($id)
+    {
+        return view('land-lease.view-lease-payment', compact('id'));
+    }
+
     public function getAgreementDocument($path)
     {
         return Storage::disk('local-admin')->response(decrypt($path));

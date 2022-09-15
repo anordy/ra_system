@@ -122,6 +122,12 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Payment Due Date</strong>
                 </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Filing Status</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Payment Status</strong>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -175,6 +181,22 @@
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->payment_due_date==null?'-':date('d/m/Y', strtotime($record->payment_due_date)) }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        @if ($record->created_at > $record->filing_due_date )
+                            Late Filing
+                            @else
+                            In-Time Filing
+                        @endif
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        @if($record->paid > $record->payment_due_date)
+                                Late Payment
+                            @elseif($record->paid_at < $record->payment_due_date)
+                                In-Time Payment
+                            @else
+                                Not Paid
+                        @endif
                     </td>
                 </tr>
             @endforeach

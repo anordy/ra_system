@@ -1,13 +1,13 @@
 <div>
-    @if ($leasePayment->bills()->count() > 0)
-        @if ($bill = $leasePayment->bills()->latest()->first())
+    @if ($landLease->bills()->count() > 0)
+        @if ($bill = $landLease->bills()->latest()->first())
             <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Total Payment Amount</span>
                     <p class="my-1">{{ number_format($bill->amount, 2) }} {{ $bill->currency }}</p>
                 </div>
-                @if ($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATED ||
-                    $leasePayment->status === \App\Enum\LeaseStatus::PAID_PARTIALLY)
+                @if ($landLease->status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
+                    $landLease->status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
                     <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
                         <span class="font-weight-bold text-uppercase">Control No.</span>
                         <p class="my-1">{{ $bill->control_number }}</p>
@@ -21,9 +21,7 @@
                             </a>
                         </p>
                     </div>
-                @elseif($leasePayment->status === \App\Enum\LeaseStatus::IN_ADVANCE_PAYMENT ||
-                $leasePayment->status === \App\Enum\LeaseStatus::ON_TIME_PAYMENT ||
-                    $leasePayment->status === \App\Enum\LeaseStatus::LATE_PAYMENT)
+                @elseif($landLease->status === \App\Models\Returns\ReturnStatus::COMPLETE)
                     <div class="col-md-4">
                         <span class="font-weight-bold text-uppercase">Payment Status</span>
                         <p class="my-1 text-success font-weight-bold">
@@ -40,7 +38,7 @@
                             </a>
                         </p>
                     </div>
-                @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATING)
+                @elseif($landLease->status === \App\Models\Returns\ReturnStatus::CN_GENERATING)
                     <div class="col-md-4" wire:poll.visible="refresh">
                         <span class="font-weight-bold text-uppercase text-info">Control No.</span>
                         <p class="my-1 text-info">
@@ -48,7 +46,7 @@
                             Pending
                         </p>
                     </div>
-                @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATION_FAILED)
+                @elseif($landLease->status === \App\Models\Returns\ReturnStatus::CN_GENERATION_FAILED)
                     <div class="col-md-4">
                         <span class="font-weight-bold text-uppercase">Control No. Generation Failed</span>
                         <p class="my-1 text-danger">
@@ -66,7 +64,7 @@
                             </button>
                         </p>
                     </div>
-                @elseif($leasePayment->status === \App\Enum\LeaseStatus::PENDING)
+                @elseif($landLease->status === \App\Models\Returns\ReturnStatus::SUBMITTED)
                     <div class="col-md-4">
                         <span class="font-weight-bold text-uppercase">Control No. Not Generated</span>
                         <p class="my-1 text-primary">

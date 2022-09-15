@@ -86,6 +86,7 @@ class QRCodeGeneratorController extends Controller
     {
         $bill = ZmBill::find(decrypt($id));
         $pdf = PDF::loadView('zanMalipo.pdf.receipt', compact('bill'));
+        // return $pdf;
         return $pdf->download('ZanMalipo_receipt_' . time() . '.pdf');
     }
 }

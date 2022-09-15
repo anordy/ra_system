@@ -123,7 +123,6 @@ class ReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            //total_amount_due_with_penalties
             Column::make("Total Amount", "total_amount")
                 ->searchable()
                 ->sortable()
@@ -150,9 +149,19 @@ class ReportPreviewTable extends DataTableComponent
                         if (!$value) {
                             return '-';
                         }
-                        return date('d/m/Y', strtotime($value));
+                        return date('M, d Y', strtotime($value));
                     }
-                )
+                ),
+
+            Column::make("Filing Status", "created_at")
+                ->searchable()
+                ->sortable()
+                ->view('reports.returns.includes.filing-status'),
+
+            Column::make("Payment Status", "paid_at")
+                ->searchable()
+                ->sortable()
+                ->view('reports.returns.includes.payment-status'),
         ];
     }
 }

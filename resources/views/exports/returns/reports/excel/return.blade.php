@@ -2,7 +2,7 @@
 <table style="border-collapse:collapse;">
     <thead>
         <tr>
-            <th style="text-align:center;" colspan="15" height="70">
+            <th style="text-align:center;" colspan="16" height="70">
                 <strong>ZANZIBAR REVENUE BOARD</strong><br>
                 <strong>{{ $title }}</strong><br>
                 {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
@@ -109,17 +109,17 @@
                     {{$record->outstanding_amount===null?'-':number_format($record->outstanding_amount, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ date('d/m/Y', strtotime($record->created_at)) }}
+                    {{ date('M, d Y', strtotime($record->created_at)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->filing_due_date==null?'-': date('d/m/Y', strtotime($record->filing_due_date)) }}
+                    {{$record->filing_due_date==null?'-': date('M, d Y', strtotime($record->filing_due_date)) }}
                 </td>
                 
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->paid_at==null?'-':date('d/m/Y', strtotime($record->paid_at)) }}
+                    {{ $record->paid_at==null?'-':date('M, d Y', strtotime($record->paid_at)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->payment_due_date==null?'-':date('d/m/Y', strtotime($record->payment_due_date)) }}
+                    {{ $record->payment_due_date==null?'-':date('M, d Y', strtotime($record->payment_due_date)) }}
                 </td>
             </tr>
         @endforeach
