@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Enum\Currencies;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateDebtPenaltiesTable extends Migration
 {
@@ -16,6 +17,17 @@ class CreateDebtPenaltiesTable extends Migration
         Schema::create('debt_penalties', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tax_return_id');
+            $table->string('financial_month_name');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
+            $table->decimal('tax_amount', 20, 2);
+            $table->decimal('penalty_amount', 20, 2);
+            $table->decimal('rate_amount', 20, 2);
+            $table->decimal('rate_percentage', 20, 2);
+            $table->decimal('late_payment', 20, 2);
+            $table->decimal('late_filing', 20, 2);
+            $table->decimal('currency_rate_in_tz', 20, 2)->default(1);
+            $table->enum('currency',Currencies::getConstants())->default('TZS');
             $table->timestamps();
         });
     }
