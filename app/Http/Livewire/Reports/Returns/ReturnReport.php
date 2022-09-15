@@ -173,6 +173,8 @@ class ReturnReport extends Component
             return [
                 'startDate' =>date('Y-m-d', strtotime($this->range_start)),
                 'endDate' => date('Y-m-d', strtotime($this->range_end)),
+                'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
+                'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
             ];
         }elseif ($this->month) {
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");

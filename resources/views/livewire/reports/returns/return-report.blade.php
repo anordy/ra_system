@@ -124,7 +124,6 @@
                 <span>Start Date</span>
             </label>
             <input type="date" class="form-control" wire:model="range_start">
-            <div>{{ $range_start }}</div>
             @error('range_start')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -136,7 +135,6 @@
                 <span>End Date</span>
             </label>
             <input type="date" class="form-control" wire:model="range_end">
-            <div>{{ $range_end }}</div>
             @error('range_end')
                 <div class="invalid-feedback">
                     {{ $message }}
