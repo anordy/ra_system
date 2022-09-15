@@ -126,17 +126,17 @@
                 </div> --}}
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
+                    <p class="my-1">{{ number_format($waiver->tax_in_dispute,2) }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_not_in_dispute }} Tzs</p>
+                    <p class="my-1">{{ number_format($waiver->tax_not_in_dispute,2) }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Objected</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute + $waiver->tax_not_in_dispute  }} TZS</p>
+                    <p class="my-1">{{ number_format($waiver->tax_in_dispute + $waiver->tax_not_in_dispute,2)  }} TZS</p>
                 </div>
 
 

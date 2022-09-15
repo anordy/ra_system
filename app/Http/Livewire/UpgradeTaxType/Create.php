@@ -36,7 +36,7 @@ class Create extends Component
             'confirmButtonColor' => '#3085d6',
             'cancelButtonColor' => '#d33',
             'timer' => null,
-            'input' => 'select',
+            'input' => 'date',
             'inputOptions'=> ['TZS','USD'],
             'inputPlaceholder'=>'Select currency for the new tax type',
             'data' => $this->return
@@ -63,19 +63,15 @@ class Create extends Component
                 $currency = 'USD';
             }
 
-            $this->reason = 'reached maximum turnover';
+            $this->reason = 'reached maximum turnover for the previous tax type';
             $data = $value['data'];
 
-            if ($this->return->taxtype->code === TaxType::HOTEL) {
+            if ($this->return->taxtype->code === TaxType::HOTEL or $this->return->taxtype->code === TaxType::STAMP_DUTY) {
                 $this->tax_type = TaxType::query()
                     ->where('code', TaxType::VAT)->first();
                 $this->new_tax_type_id = $this->tax_type->id;
             }
-            if ($this->return->taxtype->code === TaxType::STAMP_DUTY) {
-                $this->tax_type = TaxType::query()
-                    ->where('code', TaxType::VAT)->first();
-                $this->new_tax_type_id = $this->tax_type->id;
-            }
+
             if ($this->return->taxtype->code === TaxType::LUMPSUM_PAYMENT) {
                 $this->tax_type = TaxType::query()
                     ->where('code', TaxType::STAMP_DUTY)->first();
@@ -84,23 +80,15 @@ class Create extends Component
             $payload = [
                 'business_id' => $data['business_id'],
                 'taxpayer_id' => $data['business']['taxpayer']['id'],
-                'old_taxtype' => $data['tax_type_id'],
-                'new_taxtype' => $this->new_tax_type_id,
+                'from_tax_type_id' => $data['tax_type_id'],
+                'to_tax_type_id' => $this->new_tax_type_id,
                 'reason' => $this->reason,
+                'from_tax_type_currency' => $data['currency'],
+                'to_tax_type_currency' => $currency,
+                'category' => 'qualified',
             ];
 
             $taxTypeChange = BusinessTaxTypeChange::query()->create($payload);
-
-            $businessTaxtype = BusinessTaxType::query()
-                ->where('tax_type_id',$data['tax_type_id'])
-                ->update(['status'=>'upgraded']);
-
-            $businessTaxtype = BusinessTaxType::query()
-                ->create([
-                    'business_id'=>$data['business_id'],
-                    'tax_type_id'=>$this->new_tax_type_id,
-                    'currency'=>'TZS'
-                    ]);
 
             DB::commit();
             $this->flash('success', 'Tax type changed successfully');
