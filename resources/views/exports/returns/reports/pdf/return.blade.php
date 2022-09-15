@@ -194,7 +194,7 @@
                         @endif
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        @if($record->paid > $record->payment_due_date)
+                        @if($record->paid_at > $record->payment_due_date)
                                 Late Payment
                             @elseif($record->paid_at < $record->payment_due_date)
                                 In-Time Payment
