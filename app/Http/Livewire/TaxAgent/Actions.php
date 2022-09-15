@@ -6,6 +6,7 @@ use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
+use App\Models\TaxAgentApproval;
 use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use App\Models\User;
@@ -89,6 +90,15 @@ class Actions extends Component
 			$agent->approved_at = now();
 			$agent->save();
 
+            $approval = new TaxAgentApproval();
+            $approval->tax_agent_id = $agent->id;
+            $approval->initial_status = TaxAgentStatus::VERIFIED;
+            $approval->destination_status = TaxAgentStatus::APPROVED;
+            $approval->comment = $value['value'];
+            $approval->approved_by_id = Auth::id();
+            $approval->approved_at = now();
+            $approval->save();
+
             $agent->generateReferenceNo();
 
             $taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);
@@ -123,6 +133,15 @@ class Actions extends Component
             $agent->approver_id = Auth::id();
             $agent->final_rejected_at = now();
 			$agent->save();
+
+            $approval = new TaxAgentApproval();
+            $approval->tax_agent_id = $agent->id;
+            $approval->initial_status = TaxAgentStatus::VERIFIED;
+            $approval->destination_status = TaxAgentStatus::REJECTED;
+            $approval->comment = $value['value'];
+            $approval->approved_by_id = Auth::id();
+            $approval->approved_at = now();
+            $approval->save();
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(

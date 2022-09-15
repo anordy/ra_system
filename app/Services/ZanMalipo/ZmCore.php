@@ -73,14 +73,13 @@ class ZmCore
                 if (!isset($item['amount']) || !isset($item['gfs_code'])) {
                     throw new \Exception('Bill item must contain amount and gfs_code');
                 }
-                if ($item['currency'] != 'TZS') {
-                    $bill_amount = $exchange_rate * $item['amount'];
-                } else {
-                    $bill_amount += $item['amount'];
-                }
+                
+                $bill_amount += $item['amount'];
             }
 
             $equivalent_amount = $bill_amount * $exchange_rate;
+
+            // dd($bill_items, $currency, $exchange_rate, $bill_amount);
 
             $zm_bill = new ZmBill([
                 'billable_id' => $billable_id,
