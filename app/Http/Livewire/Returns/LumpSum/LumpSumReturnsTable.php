@@ -52,7 +52,8 @@ class LumpSumReturnsTable extends DataTableComponent
         }
         if (isset($data['month']) && $data['month'] == 'range') {
             $filter->whereBetween('lump_sum_returns.created_at', [$data['from'], $data['to']]);
-            // dd([$data['from'], $data['to']]);
+            // $filter->whereBetween('lump_sum_returns.created_at', [2021, 2022]);
+            // dd($data);
         }
         if (isset($data['year']) && $data['year'] != 'All') {
             $filter->whereYear('lump_sum_returns.created_at', '=', $data['year']);
