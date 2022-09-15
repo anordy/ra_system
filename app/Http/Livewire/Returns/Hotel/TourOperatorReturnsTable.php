@@ -44,22 +44,16 @@ class TourOperatorReturnsTable extends DataTableComponent
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }
-        if (isset($data['month']) && $data['month'] != 'all') {
-            if (isset($data['month']) && $data['month'] == 'range') {
-                $startDate = Carbon::createFromFormat('Y-m-d', $data['from']);
-                $endDate = Carbon::createFromFormat('Y-m-d', $data['to']);
-                $filter->whereBetween('hotel_returns.created_at', [$startDate, $endDate]);
-            } else {
-                $filter->whereMonth('hotel_returns.created_at', '=', $data['month']);
-            }
+        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
+            $filter->whereMonth('hotel_returns.created_at', '=', $data['month']);
         }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['month'] != 'range') {
+        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
             $filter->whereYear('hotel_returns.created_at', '=', $data['year']);
         }
-
-
-
-
+        if (isset($data['year']) && $data['year'] == 'Custom Range') {
+            $filter->whereBetween('hotel_returns.created_at', [$data['from'], $data['to']]);
+        }
+    
         return $filter->where('tax_type_id', $tax->id)->orderBy('hotel_returns.created_at', 'desc');
     }
 

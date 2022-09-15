@@ -304,6 +304,8 @@ trait PaymentsTrait {
     {
         $taxTypes = TaxType::all();
 
+        $tax_type = TaxType::findOrFail($debt->tax_type_id);
+
         if ($debt->principal > 0) {
             $billItems[] = [
                 'billable_id' => $debt->id,
@@ -311,8 +313,8 @@ trait PaymentsTrait {
                 'use_item_ref_on_pay' => 'N',
                 'amount' => $debt->principal,
                 'currency' => $debt->currency,
-                'gfs_code' => $taxTypes->where('code', TaxType::DEBTS)->first()->gfs_code,
-                'tax_type_id' => $taxTypes->where('code', TaxType::DEBTS)->first()->id
+                'gfs_code' => $tax_type->gfs_code,
+                'tax_type_id' => $tax_type->id
             ];
         }
 
@@ -348,7 +350,7 @@ trait PaymentsTrait {
         $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
         $payer_email = $taxpayer->email;
         $payer_phone = $taxpayer->mobile;
-        $description = "{$debt->taxtype->name} Debt for {$debt->business->name} {$debt->location->name}";
+        $description = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $debt->currency;
         $createdby_type = 'Job';

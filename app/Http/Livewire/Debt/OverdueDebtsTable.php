@@ -2,9 +2,7 @@
 
 namespace App\Http\Livewire\Debt;
 
-use App\Models\Debts\Debt;
-use App\Models\Returns\ReturnStatus;
-use Carbon\Carbon;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -17,10 +15,8 @@ class OverdueDebtsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Debt::query()
-                ->whereNotIn('debts.status',  [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT, ReturnStatus::ON_CLAIM])
-                ->whereRaw("TIMESTAMPDIFF(DAY, debts.curr_due_date, CURDATE()) >= 60")
-                ->orderBy('debts.created_at', 'desc');
+        return TaxReturn::query()
+            ->where('return_category', 'overdue');
     }
 
     public function configure(): void
@@ -30,7 +26,7 @@ class OverdueDebtsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['debts.business_id', 'tax_type_id', 'business_location_id', 'recovery_measure_status']);
+        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_type_id', 'location_id']);
     }
 
     public function columns(): array
@@ -43,29 +39,16 @@ class OverdueDebtsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Tax Type', 'taxtype.name'),
-            Column::make('Principal Amount', 'principal_amount')
-            ->format(function ($value, $row) {
-                return number_format($row->principal_amount, 2);
-            }),
-            Column::make('Penalty', 'penalty')
+            Column::make('Total Payable Amount', 'total_amount')
                 ->format(function ($value, $row) {
-                    return number_format($row->penalty, 2);
+                    return number_format($row->total_amount, 2);
                 }),
-            Column::make('Interest', 'interest')
-                ->format(function ($value, $row) {
-                    return number_format($row->interest, 2);
-                }),
-            Column::make('Total Debt', 'outstanding_amount')
+            Column::make('Outstanding Amount', 'outstanding_amount')
                 ->format(function ($value, $row) {
                     return number_format($row->outstanding_amount, 2);
                 }),
-            Column::make('Due date', 'curr_due_date')
-                ->format(function ($value, $row) {
-                    return Carbon::create($value)->format('d M Y');
-                }),
-            Column::make('Payment Method', 'payment_method'),
-            Column::make('Status', 'status')->view('debts.includes.status'),
-            Column::make('Actions', 'id')->view('debts.overdue.actions'),
+            Column::make('Payment Status', 'payment_status')->view('debts.includes.status'),
+            Column::make('Action', 'id')->view('debts.includes.actions'),
         ];
     }
 }
