@@ -105,6 +105,7 @@
                 <option value="">Select Year</option>
                 @if ($tax_type_id && $reportType)
                     <option value="all">All</option>
+                    <option value="range">Custom Range</option>
                     @foreach ($optionYears as $optionYear)
                         <option value="{{ $optionYear }}">{{ $optionYear }}</option>
                     @endforeach
