@@ -59,7 +59,7 @@ class WaiverObjectionApprovalTable extends DataTableComponent
                     </span>
                     HTML;
                 })->html(true),
-            Column::make('Status', 'status')
+            Column::make('Status', 'payment_status')
                 ->view('assesments.waiverobjection.includes.status'),
             Column::make('Action', 'id')
                 ->view('assesments.waiverobjection.includes.action'),

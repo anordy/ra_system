@@ -9,10 +9,9 @@
                     <select name="payment_type" id="payment_type" class="form-control" wire:model="payment_type">
                         <option value="all">All </option>
                         <option value="normal">Normal Return</option>
-                        <option value="debt">Debit Return</option>
+                        <option value="debt">Debt Return</option>
                     </select>
                 </div>
-
                 <div class="col-md-3 form-group">
                     <label for="year" class="d-flex justify-content-between'">
                         <span>Return Year</span>
