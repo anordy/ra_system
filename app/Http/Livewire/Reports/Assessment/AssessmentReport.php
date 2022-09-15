@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Reports\Assessment;
 
+use App\Exports\AssessmentReportExport;
 use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
 use App\Models\TaxType;
@@ -71,38 +72,42 @@ class AssessmentReport extends Component
     {
         $this->validate();
         $parameters = $this->getParameters();
-        $modelData = $this->getModelData($parameters);
-        $records = $this->getRecords($modelData['model'], $parameters);
+        $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
-        $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
-        $for = str_replace('-', ' ', $for);
+        // $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
+        // $for = str_replace('-', ' ', $for);
         // dd($parameters);
         if ($parameters['year'] == 'all') {
-            $fileName = $modelData['returnName'] . ' Return Records (' . $for . ').xlsx';
-            $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
+            // $fileName = $modelData['returnName'] . ' Return Records (' . $for . ').xlsx';
+            // $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
+            $fileName = 'Verification' . '_' . 'Assessments' . '.xlsx';
+            $title = 'Notice Of Assessments';
+
         } else {
-            $fileName = $modelData['returnName'] . ' Return Records (' . $for . ') - ' . $parameters['year'] . '.xlsx';
-            $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
+            // $fileName = $modelData['returnName'] . ' Return Records (' . $for . ') - ' . $parameters['year'] . '.xlsx';
+            // $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
+            $fileName = 'Verification' . '_' . 'Assessments' . '.xlsx';
+            $title = 'Notice Of Assessments';
+
         }
         $this->alert('success', 'Exporting Excel File');
-        return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
+        return Excel::download(new AssessmentReportExport($records, $title, $parameters), $fileName);
     }
 
     public function exportPdf()
     {
         $this->validate();
         $parameters = $this->getParameters();
-        $modelData = $this->getModelData($parameters);
-        $records = $this->getRecords($modelData['model'], $parameters);
+        $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
         $this->alert('success', 'Exporting Pdf File');
-        return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
+        return redirect()->route('reports.assessments.download.pdf', encrypt(json_encode($parameters)));
     }
 
     public function preview()

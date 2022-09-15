@@ -34,7 +34,7 @@ class AssessmentPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['tax_assessments.business_id', 'tax_assessments.location_id',  'tax_assessments.created_at','tax_assessments.principal_amount','tax_assessments.interest_amount','tax_assessments.penalty_amount' ,'tax_assessments.currency' ]);
+        $this->setAdditionalSelects(['tax_assessments.business_id', 'tax_assessments.location_id',  'tax_assessments.created_at','tax_assessments.principal_amount','tax_assessments.interest_amount','tax_assessments.penalty_amount' ,'tax_assessments.currency','tax_assessments.outstanding_amount' ]);
     }
 
     public function columns(): array
@@ -93,6 +93,15 @@ class AssessmentPreviewTable extends DataTableComponent
                     function ($value, $row) {
                         $debt = $row->penalty_amount + $row->interest_amount;
                         return number_format($debt,2);
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+                  Column::make("OutStanding Amount", "id")
+                ->format(
+                    function ($value, $row) {
+                        
+                        return number_format($row->outstanding_amount,2);
                     }
                 )
                 ->searchable()
