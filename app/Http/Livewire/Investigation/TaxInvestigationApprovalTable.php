@@ -67,7 +67,6 @@ class TaxInvestigationApprovalTable extends DataTableComponent
             Column::make('Action', 'pinstance_id')
                 ->view('investigation.approval.action')
                 ->html(true),
-
         ];
     }
 }

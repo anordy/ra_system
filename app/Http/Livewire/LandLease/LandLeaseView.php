@@ -21,6 +21,7 @@ class LandLeaseView extends Component
     use LivewireAlert, PaymentsTrait;
     public $landLease;
     public $taxType;
+    public $leasePayment;
 
     //mount function
     public function mount($enc_id)

@@ -34,6 +34,7 @@ class CreateStampDutyReturnsTable extends Migration
             $table->decimal('total_amount_due_with_penalties', 40,2);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->decimal('interest', 20, 2)->default(0);
+            $table->decimal('withheld_tax', 20, 2)->nullable();
 
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();

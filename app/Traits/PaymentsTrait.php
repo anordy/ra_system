@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Enum\BillStatus;
+use App\Enum\LeaseStatus;
 use App\Models\Debts\Debt;
 use App\Enum\PaymentStatus;
 use App\Models\ExchangeRate;
@@ -147,9 +148,9 @@ trait PaymentsTrait {
         }
     }
 
-    public function landLeaseGenerateControlNo($landLease, $billItems)
+    public function landLeaseGenerateControlNo($leasePayment, $billItems)
     {
-        $taxpayer      = $landLease->taxpayer;
+        $taxpayer      = $leasePayment->taxpayer;
         $tax_type      = TaxType::where('code','land-lease')->first();
         $exchange_rate  = ExchangeRate::where('currency', 'USD')->first()->mean; 
 
@@ -157,15 +158,15 @@ trait PaymentsTrait {
         $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
-        $description    = "Payment for Land Lease with DP number {$landLease->dp_number}";
+        $description    = "Payment for Land Lease with DP number {$leasePayment->landLease->dp_number}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-        $currency       = "USD";
+        $currency       = 'USD';
         $createdby_type = get_class(Auth::user());
         $createdby_id   = Auth::id();
         $payer_id       = $taxpayer->id;
         $expire_date    = Carbon::now()->addMonth()->toDateTimeString();
-        $billableId     = $landLease->id;
-        $billableType   = get_class($landLease);
+        $billableId     = $leasePayment->id;
+        $billableType   = get_class($leasePayment);
 
         $bill = ZmCore::createBill(
             $billableId,
@@ -187,22 +188,26 @@ trait PaymentsTrait {
         );
 
         if (config('app.env') != 'local') {
+
             $response = ZmCore::sendBill($bill->id);
             if ($response->status === ZmResponse::SUCCESS) {
-                $landLease->status = ReturnStatus::CN_GENERATING;
-                $landLease->save();
 
+                $leasePayment->status = LeaseStatus::CN_GENERATING;
                 $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly.');
+
             } else {
+
                 session()->flash('error', 'Control number generation failed, try again later');
-                $landLease->status = ReturnStatus::CN_GENERATION_FAILED;
+                $leasePayment->status = LeaseStatus::CN_GENERATION_FAILED;
             }
 
-            $landLease->save();
+            $leasePayment->save();
+            
         } else {
+            
             // We are local
-            $landLease->status = ReturnStatus::CN_GENERATED;
-            $landLease->save();
+            $leasePayment->status = LeaseStatus::CN_GENERATED;
+            $leasePayment->save();
 
             // Simulate successful control no generation
             $bill->zan_trx_sts_code = ZmResponse::SUCCESS;

@@ -11,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class TourOperatorReturnsTable extends DataTableComponent
 {
-    protected $listeners = ['filterData' => 'filterData'];
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $status;
     public $data = [];
 
@@ -28,7 +28,7 @@ class TourOperatorReturnsTable extends DataTableComponent
     public function filterData($data)
     {
         $this->data = $data;
-        $this->builder();
+        $this->emit('$refresh');
     }
 
     public function builder(): Builder

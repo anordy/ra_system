@@ -33,9 +33,11 @@
                     </div>
                 </div>
             @else
+                @if($agent->status == \App\Models\TaxAgentStatus::PENDING)
                 <div class="d-flex justify-content-end p-2">
                     <livewire:tax-agent.verify-action :taxagent=$agent></livewire:tax-agent.verify-action>
                 </div>
+                @endif
             @endif
                 @include('taxagents.includes.show')
 

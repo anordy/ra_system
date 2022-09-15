@@ -14,6 +14,11 @@
                     <a class="nav-link" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
                        aria-controls="profile" aria-selected="false">Approval Requests</a>
                 </li>
+
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="rejected-tab" data-toggle="tab" href="#rejected" role="tab"
+                       aria-controls="profile" aria-selected="false">Rejected Requests</a>
+                </li>
             </ul>
 
             <div class="tab-content card" id="myTabContent">
@@ -31,6 +36,15 @@
                     </div>
 
                     <livewire:tax-agent.tax-agent-table/>
+
+                </div>
+
+                <div class="tab-pane p-2" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
+                    <div class="disp-Info text-center mb-2">
+                        Rejected Requests
+                    </div>
+
+                    <livewire:tax-agent.rejected-tax-agent-table/>
 
                 </div>
 
