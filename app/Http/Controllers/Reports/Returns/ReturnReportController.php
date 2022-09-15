@@ -36,7 +36,7 @@ class ReturnReportController extends Controller
         } 
         $records = $records->get(); 
         $pdf = PDF::loadView('exports.returns.reports.pdf.return', compact('records', 'title', 'parameters'));
-        $pdf->setPaper('a4', 'portrait');
+        $pdf->setPaper('a4', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download($fileName);
     }

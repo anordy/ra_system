@@ -46,8 +46,16 @@ class DebtWaiverApprovalTable extends DataTableComponent
             Column::make("Debt Type", "debt.taxtype.name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Waiver Type", "category")
-                ->sortable(),
+            Column::make('Category', 'category')
+                ->format(function ($value, $row) {
+                    if ($value === 'interest') {
+                        return 'Interest';
+                    } else if ($value === 'penalty') {
+                        return 'Penalty';
+                    } else {
+                        return 'Penalty & Interest';
+                    }
+                }),
             Column::make('Status', 'status')
                 ->view('debts.waivers.includes.status'),
             Column::make('Action', 'id')
