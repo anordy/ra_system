@@ -2,9 +2,9 @@
 
 namespace App\Models\Debts;
 
-use App\Models\Debts\Debt;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Debts\RecoveryMeasureCategory;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RecoveryMeasure extends Model
@@ -14,7 +14,7 @@ class RecoveryMeasure extends Model
     protected $guarded = [];
 
     public function debt() {
-        return $this->belongsTo(Debt::class, 'debt_id');
+        return $this->belongsTo(TaxReturn::class, 'tax_return_id');
     }
 
     public function category() {

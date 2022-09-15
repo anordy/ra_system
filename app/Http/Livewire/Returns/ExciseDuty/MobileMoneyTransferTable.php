@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Gate;
 
 class MobileMoneyTransferTable extends DataTableComponent
 {
-    protected $listeners = ['filterData' => 'filterData'];
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];
 
     public function mount()
@@ -33,7 +33,7 @@ class MobileMoneyTransferTable extends DataTableComponent
     public function filterData($data)
     {
         $this->data = $data;
-        $this->builder();
+        $this->emit('$refresh');
     }
 
     public function builder(): Builder
@@ -48,11 +48,14 @@ class MobileMoneyTransferTable extends DataTableComponent
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }
-        if (isset($data['month']) && $data['month'] != 'all') {
+        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
             $filter->whereMonth('mm_transfer_returns.created_at', '=', $data['month']);
         }
-        if (isset($data['year']) && $data['year'] != 'All') {
+        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
             $filter->whereYear('mm_transfer_returns.created_at', '=', $data['year']);
+        }
+        if (isset($data['year']) && $data['year'] == 'Custom Range') {
+            $filter->whereBetween('mm_transfer_returns.created_at', [$data['from'], $data['to']]);
         }
 
         return $filter->with('business', 'business.taxpayer', 'businessLocation')->orderBy('mm_transfer_returns.created_at', 'desc');

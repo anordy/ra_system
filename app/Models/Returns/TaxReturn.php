@@ -95,6 +95,6 @@ class TaxReturn extends Model
 
     public function penalties()
     {
-        return $this->hasMany(DebtPenalty::class);
+        return $this->hasMany(DebtPenalty::class, 'tax_return_id');
     }
 }
