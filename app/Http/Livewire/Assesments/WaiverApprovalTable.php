@@ -91,7 +91,7 @@ class WaiverApprovalTable extends DataTableComponent
             Column::make('Filled On', 'created_at')
                 ->format(fn($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Action', 'pinstance_id')
-                ->view('assesments.waiver.includes.action')
+                ->view('investigation.approval.action')
                 ->html(true),
 
             // Column::make("Id", "id")
