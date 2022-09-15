@@ -75,7 +75,17 @@
                 </div>
                 <div class="col-md-12">
                     <div class="d-flex justify-content-end">
-                        <livewire:upgrade-tax-type.create :return="$return"/>
+                        @if(empty($changed))
+                        <button class="btn btn-primary btn-sm"
+                                onclick="Livewire.emit('showModal', 'upgrade-tax-type.create-modal', {{$return}} )">
+                            <i class="bi bi-arrow-up-circle mr-2"></i>
+                            Upgrade & Approve
+                        </button>
+                        @else
+                            <div class="alert alert-info">
+                                Already upgraded, waiting for the effective date
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
