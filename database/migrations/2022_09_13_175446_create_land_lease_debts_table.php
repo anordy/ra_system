@@ -18,7 +18,7 @@ class CreateLandLeaseDebtsTable extends Migration
         Schema::create('land_lease_debts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('lease_payment_id');
-            $table->unsignedBigInteger('business_location_id');
+            $table->unsignedBigInteger('business_location_id')->nullable();
             $table->enum('currency', Currencies::getConstants())->default('USD');
             $table->decimal('original_total_amount', 20, 2);
             $table->decimal('penalty', 20, 2);
