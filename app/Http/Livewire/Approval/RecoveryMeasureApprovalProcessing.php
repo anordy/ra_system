@@ -6,10 +6,12 @@ use App\Enum\RecoveryMeasureStatus;
 use Exception;
 use Livewire\Component;
 use App\Models\Debts\Debt;
+use App\Models\Debts\DebtRecoveryMeasure;
 use App\Models\Debts\RecoveryMeasure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Debts\RecoveryMeasureCategory;
+use App\Models\Returns\TaxReturn;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Collection;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -22,19 +24,37 @@ class RecoveryMeasureApprovalProcessing extends Component
     public $recovery_measure_categories = [];
     public $debtId;
     public $debt;
+    public $modelName;
     public $recovery_measures;
     public $selected_recovery_measures;
     public $comments;
+    public $initializedRecMeasure;
 
-    public function mount($debtId)
+    public function mount($debt)
     {
-        $this->debtId = $debtId;
+        $this->debtId = $debt->id;
         $this->recovery_measure_categories = RecoveryMeasureCategory::all();
-        $this->debt = Debt::findOrFail($debtId);
-        $this->registerWorkflow(get_class($this->debt), $this->debt->id);
+        $this->debt = $debt;
+        $this->modelName = get_class($debt);
+
+        $this->initializedRecMeasure = RecoveryMeasure::where('debt_id', $this->debtId)
+                ->where('debt_type', $this->modelName)
+                ->get()
+                ->first();
+
+        if ($this->initializedRecMeasure == null) {
+            $this->initializedRecMeasure = RecoveryMeasure::updateOrCreate([
+                'debt_id' => $this->debtId,
+                'debt_type' => $this->modelName
+            ],[
+                'status' => 'unassigned',
+            ]);
+        }
+            
+        $this->registerWorkflow(get_class($this->initializedRecMeasure), $this->initializedRecMeasure->id);
 
         if ($this->checkTransition('commissioner_review') || $this->checkTransition('assignment_corrected')) {
-            $this->recovery_measures = RecoveryMeasure::where('debt_id', $debtId)->get()->pluck('recovery_measure_id');
+            $this->recovery_measures = $this->initializedRecMeasure->measures->pluck('recovery_measure_category_id');
             $this->selected_recovery_measures = $this->recovery_measures;
         }
     }
@@ -55,12 +75,13 @@ class RecoveryMeasureApprovalProcessing extends Component
 
                 $payload = array_map(function ($measures) {
                     return [
-                        'recovery_measure_id'    => $measures,
-                        'debt_id' => $this->debtId
+                        'recovery_measure_category_id'    => $measures,
+                        'recovery_measure_id'    => $this->initializedRecMeasure->id,
                     ];
                 }, $measures);
-                $this->debt->update(['recovery_measure_status' => RecoveryMeasureStatus::PENDING]);
-                RecoveryMeasure::insert($payload);
+
+                $this->initializedRecMeasure->update(['status' => RecoveryMeasureStatus::PENDING]);
+                DebtRecoveryMeasure::insert($payload);
             }
 
             if ($this->checkTransition('commissioner_review')) {
@@ -72,14 +93,14 @@ class RecoveryMeasureApprovalProcessing extends Component
 
                 $payload = array_map(function ($measures) {
                     return [
-                        'recovery_measure_id'    => $measures,
-                        'debt_id' => $this->debtId
+                        'recovery_measure_category_id'    => $measures,
+                        'recovery_measure_id'    => $this->initializedRecMeasure->id,
                     ];
                 }, $measures);
 
-                RecoveryMeasure::where('debt_id', $this->debtId)->delete();
-                RecoveryMeasure::insert($payload);
-                $this->debt->update(['recovery_measure_status' => RecoveryMeasureStatus::APPROVED]);
+                DebtRecoveryMeasure::where('recovery_measure_id', $this->initializedRecMeasure->id)->delete();
+                DebtRecoveryMeasure::insert($payload);
+                $this->initializedRecMeasure->update(['status' => RecoveryMeasureStatus::APPROVED]);
             }
 
             if ($this->checkTransition('assignment_corrected')) {
@@ -92,13 +113,14 @@ class RecoveryMeasureApprovalProcessing extends Component
 
                 $payload = array_map(function ($measures) {
                     return [
-                        'recovery_measure_id'    => $measures,
-                        'debt_id' => $this->debtId
+                        'recovery_measure_id'    => $this->initializedRecMeasure->id,
+                        'recovery_measure_category_id' => $measures
                     ];
                 }, $measures);
-                $this->debt->update(['recovery_measure_status' => RecoveryMeasureStatus::PENDING]);
-                RecoveryMeasure::where('debt_id', $this->debtId)->delete();
-                RecoveryMeasure::insert($payload);
+
+                $this->initializedRecMeasure->update(['status' => RecoveryMeasureStatus::PENDING]);
+                DebtRecoveryMeasure::where('recovery_measure_id', $this->initializedRecMeasure->id)->delete();
+                DebtRecoveryMeasure::insert($payload);
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
@@ -118,7 +140,7 @@ class RecoveryMeasureApprovalProcessing extends Component
         try {
 
             if ($this->checkTransition('assignment_incorrect')) {
-                $this->debt->update(['recovery_measure_status' => RecoveryMeasureStatus::CORRECTION]);
+                $this->initializedRecMeasure->update(['status' => RecoveryMeasureStatus::CORRECTION]);
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);

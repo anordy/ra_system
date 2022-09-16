@@ -33,7 +33,7 @@
 
                 @if ($this->checkTransition('crdm_assign'))
                     <div class="modal-footer p-2 m-0">
-                        <a href="{{ route('debts.debt.index') }}" class="btn btn-danger mr-2">Cancel</a>
+                        <a href="{{ url()->previous() }}" class="btn btn-danger mr-2">Cancel</a>
                         <button type="button" class="btn btn-primary" wire:click="approve('crdm_assign')"
                             wire:loading.attr="disabled">
                             <div wire:loading wire:target="approve">

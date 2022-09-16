@@ -15,9 +15,11 @@ class CreateRecoveryMeasuresTable extends Migration
     {
         Schema::create('recovery_measures', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tax_return_id');
-            $table->unsignedBigInteger('recovery_measure_id');
+            $table->unsignedBigInteger('debt_id');
+            $table->string('debt_type');
             $table->dateTime('approved_on')->nullable();
+            $table->enum('status', ['pending', 'approved', 'correction', 'rejected', 'unassigned'])->default('unassigned');
+            $table->string('marking')->nullable();
             $table->timestamps();
         });
     }
