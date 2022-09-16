@@ -426,23 +426,18 @@
                     Management</a>
                 <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
                     @can('debt-management-debts-view')
-                        <li class="{{ request()->is('debts/all*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.debt.index') }}">Return Debts</a>
+                        <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.returns.index') }}">Return Debts</a>
                         </li>
                     @endcan
-                    @can('debt-management-debts-overdue-view')
-                        <li class="{{ request()->is('debts/overdue*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.debt.overdue') }}">Overdue Debts</a>
-                        </li>
+                    @can('debt-management-assessment-debt-view')
+                    <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
+                        <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
+                    </li>
                     @endcan
                     @can('debt-management-waiver-debt-view')
                         <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
                             <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-assessment-debt-view')
-                        <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
                         </li>
                     @endcan
                 </ul>

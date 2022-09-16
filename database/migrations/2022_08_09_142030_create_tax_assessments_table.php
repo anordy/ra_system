@@ -2,6 +2,7 @@
 
 use App\Enum\TaxAssessmentPaymentStatus;
 use App\Enum\TaxAssessmentStatus;
+use App\Enum\TaxAssessmentStep;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -32,6 +33,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
             $table->enum('payment_status', TaxAssessmentPaymentStatus::getConstants());
             $table->enum('app_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
+            $table->enum('assessment_step', TaxAssessmentStep::getConstants())->default('normal')->nullable();
             $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });
