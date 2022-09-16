@@ -14,11 +14,11 @@
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab2" class="tab-pane fade m-2 show active">
-                    <livewire:debt.return-debts-table />
+                    <livewire:debt.assessment-debts-table />
 
                 </div>
                 <div id="tab1" class="tab-pane fade m-2">
-                    <livewire:debt.return-overdue-debts-table />
+                    <livewire:debt.overdue-assessment-debts-table />
 
                 </div>
             </div>
