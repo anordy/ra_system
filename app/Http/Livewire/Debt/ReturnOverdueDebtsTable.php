@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire\Debt;
 
+use App\Enum\ReturnCategory;
 use App\Models\Returns\TaxReturn;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class OverdueDebtsTable extends DataTableComponent
+class ReturnOverdueDebtsTable extends DataTableComponent
 {
 
     use LivewireAlert;
@@ -16,7 +17,7 @@ class OverdueDebtsTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxReturn::query()
-            ->where('return_category', 'overdue');
+            ->where('return_category', ReturnCategory::OVERDUE);
     }
 
     public function configure(): void

@@ -101,52 +101,101 @@
                 </div>
             </div>
 
-            @if ($waiver->debt)
-            <div class="card my-4 rounded-0">
-                <div class="card-header text-uppercase font-weight-bold bg-white">
-                    Debt Figures
+            @if ($waiver)
+            <div class="card-header text-uppercase font-weight-bold bg-white">
+                Waiver Details
+            </div>
+                <div class="row m-2 pt-3">
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Waiver Type</span>
+                        <p class="my-1">
+                            <span class="badge badge-success py-1 px-2"
+                                style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                @if ($waiver->category === 'interest')
+                                    Interest
+                                @elseif ($waiver->category === 'penalty')
+                                    Penalty
+                                @else
+                                    Penalty & Interest
+                                @endif
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Waiver Status</span>
+                        <p class="my-1"><span class="badge badge-info">{{ $waiver->status }}</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Waived Penalty Percentage</span>
+                        <p class="my-1">{{ number_format($waiver->penalty_rate, 2) }} % of
+                            {{ number_format($waiver->debt->penalty, 2) }}
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Waived Interest Percentage</span>
+                        <p class="my-1"> {{ number_format($waiver->interest_rate, 2) }} % of
+                            {{ number_format($waiver->debt->interest, 2) }}
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Principal Amount</span>
+                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->principal, 2) }}
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Penalty Amount</span>
+                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->penalty, 2) }}
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->interest, 2) }}
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Total Amount</span>
+                        <p class="my-1">{{ $waiver->debt->currency }}.
+                            {{ number_format($waiver->debt->total_amount, 2) }}
+                        </p>
+                    </div>
+
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Waiver Type</span>
-                            <p class="my-1">
-                                    <span class="badge badge-success py-1 px-2"
-                                        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
-                                        @if ($waiver->category === 'interest')
-                                            Interest
-                                        @elseif ($waiver->category === 'penalty')
-                                            Penalty
-                                        @else
-                                            Penalty & Interest
-                                        @endif
-                                    </span>
-                            </p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                            <p class="my-1">{{ number_format($waiver->debt->principal, 2) ?? '' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                            <p class="my-1">{{ number_format($waiver->debt->penalty, 2) ?? '' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                            <p class="my-1">{{ number_format($waiver->debt->interest, 2) ?? '' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Total Amount</span>
-                            <p class="my-1">{{ number_format($waiver->debt->total_amount, 2) ?? '' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
-                            <p class="my-1">{{ number_format($waiver->debt->outstanding_amount, 2) ?? '' }}</p>
+            @else
+                <h6 class="text-uppercase text-center mt-2 ml-2">No Waiver</h6>
+            @endif
+
+            @if ($waiver->debt)
+                <div class="card my-4 rounded-0">
+                    <div class="card-header text-uppercase font-weight-bold bg-white">
+                        Debt Figures
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Principal Amount</span>
+                                <p class="my-1">{{ number_format($waiver->debt->principal, 2) ?? '' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Penalty Amount</span>
+                                <p class="my-1">{{ number_format($waiver->debt->penalty, 2) ?? '' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Interest Amount</span>
+                                <p class="my-1">{{ number_format($waiver->debt->interest, 2) ?? '' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Total Amount</span>
+                                <p class="my-1">{{ number_format($waiver->debt->total_amount, 2) ?? '' }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
+                                <p class="my-1">{{ number_format($waiver->debt->outstanding_amount, 2) ?? '' }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        @endif
+            @endif
         </div>
 
         <div class="tab-pane fade" id="ground" role="tabpanel" aria-labelledby="ground-tab">

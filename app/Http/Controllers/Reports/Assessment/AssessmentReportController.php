@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reports\Assessment;
 
 use App\Http\Controllers\Controller;
+use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
 use PDF;
 
@@ -24,18 +25,18 @@ class AssessmentReportController extends Controller
     {
         $parameters = json_decode(decrypt($parameters), true);
         $records = $this->getRecords($parameters);
+        if ($parameters['tax_type_id'] == 'all') {
+            $tax_type = 'All';
+        } else {
+            $tax_type = TaxType::find($parameters['tax_type_id']);
+        }
 
         if ($parameters['year'] == 'all') {
-            $fileName = 'Verification' . '_' . 'Assessments' . '.pdf';
-            // $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . '.pdf';
-            // $title = $parameters['filing_report_type'] . ' For ' . $parameters['tax_type_name'];
-            $title = 'Notice Of Assessments';
+            $fileName = $tax_type->name. '_' . 'Assessments' . '.pdf';
+            $title = 'Notice of Assessments'. ' For ' . $tax_type->name;
         } else {
-            // $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . ' - ' . $parameters['year'] . '.pdf';
-            // $title = $parameters['filing_report_type'] . ' For ' . $parameters['tax_type_name'] . ' ' . $parameters['year'];
-            $fileName = 'Verification' . '_' . 'Assessments' . '.pdf';
-            $title = 'Notice Of Assessments';
-
+            $fileName = $tax_type->name. '_' . 'Assessments' . ' - ' . $parameters['year'] . '.pdf';
+            $title = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
         }
         $records = $records->get();
         $pdf = PDF::loadView('exports.assessments.reports.pdf.assessment', compact('records', 'title', 'parameters'));
