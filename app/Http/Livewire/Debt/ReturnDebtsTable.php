@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Debt;
 
+use App\Enum\ReturnCategory;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\Returns\TaxReturn;
@@ -16,7 +17,7 @@ class ReturnDebtsTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxReturn::query()
-                    ->where('return_category', 'debt')
+                    ->where('return_category', ReturnCategory::DEBT)
                     ->orderBy('tax_returns.created_at', 'desc');
     }
 
