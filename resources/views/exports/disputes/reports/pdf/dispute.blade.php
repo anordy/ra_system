@@ -47,18 +47,25 @@
             border: 1px solid black;
             width: 100%;
             border-collapse: collapse;
+            background: transparent;
         }
     </style>
 </head>
 
-<body style="font-size: 6pt">
+<body style="font-size: 8pt">
+
     <table style="border-collapse:collapse; width:100%">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="10">
+                <th style="text-align:center;" colspan="15">
                     <strong class="zrb">ZANZIBAR REVENUE BOARD</strong><br>
-                    {{-- <strong>RELIEF APPLLICATIONS</strong><br>
-                        <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
+                    <strong>{{ $title }}</strong><br>
+                    {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
+                    @if ($parameters['period'] == 'Annual')
+                        <strong>{{ $parameters['year'] }}</strong>
+                    @elseif ($parameters['period'] != null)
+                        <strong>From {{ $parameters['dates']['from'] }} To {{ $parameters['dates']['to'] }} </strong>
+                    @endif
                 </th>
             </tr>
         </thead>
@@ -71,80 +78,55 @@
                     <strong>S/N</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Business</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Location</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Tax Region</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Business Category</strong>
-                </th>
-    
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Taxpayer</strong>
                 </th>
+               
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Date of Commensing</strong>
+                    <strong>Category</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Region</strong>
+                    <strong>Tax in Dispute</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>District</strong>
+                    <strong>Tax not in Dispute</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Ward</strong>
+                    <strong>Tax Deposit</strong>
                 </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Physical Address</strong>
-                </th>
+
             </tr>
         </thead>
         <tbody>
+
             @foreach ($records as $index => $record)
                 <tr>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $index + 1 }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->business->name ?? '-' }}
+                        {{ $record->business->owner_designation ?? '-' }}
+                    </td>
+                  
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->category ?? '-' }}
+                    </td>
+
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ number_format($record->tax_in_dispute, 2) }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->name }}
+                        {{ number_format($record->tax_not_in_dispute, 2) }}
                     </td>
+
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->taxRegion->name ?? '-'}}
+                        {{ number_format($record->tax_deposit, 2) }}
                     </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->business->category->name ?? '-' }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->taxpayer->fullname ?? '-' }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ date('M, d Y', strtotime($record->date_of_commencing)) ?? '-' }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->region->name ?? '-' }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->district->name ?? '-' }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->ward->name ?? '-' }}
-                    </td>
-                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->physical_address ?? '-' }}
-                    </td>
+
                 </tr>
             @endforeach
         </tbody>
     </table>
-    
-    <br>
 </body>
+
 
 </html>

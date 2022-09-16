@@ -36,8 +36,8 @@ use App\Http\Controllers\Claims\CreditsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
-use App\Http\Controllers\Debt\DebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
+use App\Http\Controllers\Reports\Dispute\DisputeReportController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
 use App\Http\Controllers\EducationLevelController;
@@ -381,6 +381,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/assessments/download-report-pdf/{data}', [AssessmentReportController::class, 'exportAssessmentReportPdf'])->name('assessments.download.pdf');
         Route::get('/assessments/preview/{parameters}', [AssessmentReportController::class, 'preview'])->name('assessments.preview');
 
+        //  Disputes Report
+        Route::get('/disputes', [DisputeReportController::class, 'index'])->name('disputes');
+        Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
+        Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
+
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -425,7 +430,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/waivers/{waiverId}', [ReturnDebtController::class, 'approval'])->name('waivers.approval');
 
         Route::get('/assessments', [AssessmentDebtController::class, 'index'])->name('assessments.index');
-
 
     });
 
