@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Reports\Assessment;
 
 use App\Exports\AssessmentReportExport;
-use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
 use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
@@ -77,21 +76,19 @@ class AssessmentReport extends Component
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
-        // $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
-        // $for = str_replace('-', ' ', $for);
-        // dd($parameters);
-        if ($parameters['year'] == 'all') {
-            // $fileName = $modelData['returnName'] . ' Return Records (' . $for . ').xlsx';
-            // $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
-            $fileName = 'Verification' . '_' . 'Assessments' . '.xlsx';
-            $title = 'Notice Of Assessments';
 
+        if ($parameters['tax_type_id'] == 'all') {
+            $tax_type = 'All';
         } else {
-            // $fileName = $modelData['returnName'] . ' Return Records (' . $for . ') - ' . $parameters['year'] . '.xlsx';
-            // $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
-            $fileName = 'Verification' . '_' . 'Assessments' . '.xlsx';
-            $title = 'Notice Of Assessments';
+            $tax_type = TaxType::find($parameters['tax_type_id']);
+        }
 
+        if ($parameters['year'] == 'all') {
+            $fileName = $tax_type->name . '_' . 'Assessments' . '.xlsx';
+            $title = 'Notice of Assessments' . ' For ' . $tax_type->name;
+        } else {
+            $fileName = $tax_type->name . '_' . 'Assessments' . ' - ' . $parameters['year'] . '.xlsx';
+            $title = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
         }
         $this->alert('success', 'Exporting Excel File');
         return Excel::download(new AssessmentReportExport($records, $title, $parameters), $fileName);
