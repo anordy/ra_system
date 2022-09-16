@@ -39,6 +39,8 @@ class Init extends Component
     public $optionTurnOverTypes = [];
     public $optionYears = [];
     public $optionMonths = [];
+    public $range_start;
+    public $range_end;
 
     //extra filters
     public $optionTaxRegions = [];
@@ -51,7 +53,7 @@ class Init extends Component
     public $wards;
 
     //main inputs
-    public $reportType;
+    public $reportType = 'all';
     public $isic1Id;
     public $isic2Id;
     public $isic3Id;
@@ -337,8 +339,10 @@ class Init extends Component
 
     public function selectReportType()
     {
-        if ($this->reportType == 'Business-Reg-By-Nature') {
-            $this->parameters['criteria'] = 'Business-Reg-By-Nature';
+        if($this->reportType == 'all'){
+            $this->parameters['criteria'] = 'All-Business';
+        }elseif ($this->reportType == 'Business-Reg-By-Nature') {
+                $this->parameters['criteria'] = 'Business-Reg-By-Nature';
             if ($this->isic4Id) {
                 $this->parameters['isic_level'] = 4;
                 $this->parameters['isic_id'] = $this->isic4Id;
@@ -357,6 +361,8 @@ class Init extends Component
             $this->parameters['taxtype_id'] = $this->tax_type_id;
         }
         $this->parameters['year'] = $this->year;
+        $this->parameters['range_start'] = date('Y-m-d 00:00:00', strtotime($this->range_start));
+        $this->parameters['range_end'] = date('Y-m-d 23:59:59', strtotime($this->range_end));
         $this->parameters['month'] = $this->month;
     }
 

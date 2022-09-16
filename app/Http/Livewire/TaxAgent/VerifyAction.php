@@ -7,6 +7,7 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
 use App\Models\BillingStatus;
+use App\Models\TaxAgentApproval;
 use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
@@ -83,7 +84,7 @@ class VerifyAction extends Component
             $data = (object)$value['data'];
             $agent = TaxAgent::findOrFail($data->id);
             $taxpayer = Taxpayer::findOrFail($agent->taxpayer_id);
-            $fee = TaPaymentConfiguration::query()->select('id','amount','category', 'duration','is_citizen', 'currency')
+            $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
                 ->where('category', 'Registration Fee')
                 ->where('is_citizen', $agent->taxpayer->is_citizen)
                 ->first();
@@ -170,6 +171,15 @@ class VerifyAction extends Component
                 $agent->verified_at = now();
                 $agent->save();
 
+                $approval = new TaxAgentApproval();
+                $approval->tax_agent_id = $agent->id;
+                $approval->initial_status = TaxAgentStatus::DRAFTING;
+                $approval->destination_status = TaxAgentStatus::VERIFIED;
+                $approval->comment = $comment;
+                $approval->approved_by_id = Auth::id();
+                $approval->approved_at = now();
+                $approval->save();
+
                 // Simulate successful control no generation
                 $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
                 $zmBill->zan_status = 'pending';
@@ -210,6 +220,15 @@ class VerifyAction extends Component
             $agent->verifier_id = Auth::id();
             $agent->first_rejected_at = now();
             $agent->save();
+
+            $approval = new TaxAgentApproval();
+            $approval->tax_agent_id = $agent->id;
+            $approval->initial_status = TaxAgentStatus::DRAFTING;
+            $approval->destination_status = TaxAgentStatus::REJECTED;
+            $approval->comment = $comment;
+            $approval->approved_by_id = Auth::id();
+            $approval->approved_at = now();
+            $approval->save();
 
             $taxpayer = Taxpayer::query()->find($agent->taxpayer_id);
             $taxpayer->notify(new DatabaseNotification(

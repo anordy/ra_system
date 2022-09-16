@@ -77,6 +77,11 @@ class TaxAgent extends Model implements Auditable
 		return $this->hasMany(RenewTaxAgentRequest::class)->latest();
 	}
 
+    public function approval()
+    {
+        return $this->hasMany(TaxAgentApproval::class, 'tax_agent_id');
+    }
+
 	// Scopes
 	public function scopeApproved($query){
 		return $query->where('status', TaxAgentStatus::APPROVED);

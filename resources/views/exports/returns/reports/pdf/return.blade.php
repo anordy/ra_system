@@ -146,7 +146,11 @@
                         {{ $record->taxType->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        @if ($record->taxType->code == 'lumpsum-payment')
+                        {{ \App\Models\Returns\LumpSum\LumpSumReturn::where('id',$record->return_id)->first()->quarter_name ?? '-'}}
+                        @else
                         {{ $record->financialMonth->name ?? '-' }}
+                    @endif
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->taxpayer->full_name ?? '-' }}
@@ -190,7 +194,7 @@
                         @endif
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        @if($record->paid > $record->payment_due_date)
+                        @if($record->paid_at > $record->payment_due_date)
                                 Late Payment
                             @elseif($record->paid_at < $record->payment_due_date)
                                 In-Time Payment

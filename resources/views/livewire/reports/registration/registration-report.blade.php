@@ -14,7 +14,7 @@
                     </span>
                 </label>
                 <select wire:model="reportType" class="form-control {{ $errors->has('reportType') ? 'is-invalid' : '' }}">
-                    <option value="">Select Criteria</option>
+                    <option value="all">All Registered Business</option>
                     @foreach ($optionReportTypes as $key => $report)
                         <option value={{ $key }}>
                             {{ $report }}</option>
@@ -131,17 +131,6 @@
                 </div>
             @endif
 
-        </div>
-    </div>
-
-    <!-- period -->
-    <div>
-        <div class="row pt-4">
-            <div class="col-12">
-                <div class="card-header"><b>Registered Period</b></div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-4 form-group">
                 <label class="d-flex justify-content-between'">
                     <span>
@@ -150,6 +139,7 @@
                 </label>
                 <select wire:model="year" class="form-control {{ $errors->has('year') ? 'is-invalid' : '' }}">
                     <option value="all">All</option>
+                    <option value="range">Custome Range</option>
                     @foreach ($optionYears as $key => $y)
                         <option value={{ $y }}>
                             {{ $y }}</option>
@@ -161,8 +151,8 @@
                     </div>
                 @enderror
             </div>
-            {{-- {{ dd($year) }} --}}
-            @if ($year != 'all')
+
+            @if ($year != 'all' && $year != 'range')
                 <div class="col-md-4 form-group">
                     <label class="d-flex justify-content-between'">
                         <span>
@@ -183,6 +173,38 @@
                     @enderror
                 </div>
             @endif
+
+            @if ($year == 'range')
+                <div class="col-md-4 form-group">
+                    <label class="d-flex justify-content-between'">
+                        <span>Start Date</span>
+                    </label>
+                    <input type="date" class="form-control" wire:model="range_start">
+                    @error('range_start')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col-md-4 form-group">
+                    <label class="d-flex justify-content-between'">
+                        <span>End Date</span>
+                    </label>
+                    <input type="date" class="form-control" wire:model="range_end">
+                    @error('range_end')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+        @endif
+
+        </div>
+    </div>
+
+    <!-- Show more filters -->
+    <div>
+        <div class="row">
             <div class="col-md-4 form-group">
                 <button class="btn btn-primary btn-xs ml-2 mt-4" wire:click="toggleFilters">
     

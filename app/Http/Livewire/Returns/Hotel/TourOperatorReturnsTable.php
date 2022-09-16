@@ -11,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class TourOperatorReturnsTable extends DataTableComponent
 {
-    protected $listeners = ['filterData' => 'filterData'];
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $status;
     public $data = [];
 
@@ -28,7 +28,7 @@ class TourOperatorReturnsTable extends DataTableComponent
     public function filterData($data)
     {
         $this->data = $data;
-        $this->builder();
+        $this->emit('$refresh');
     }
 
     public function builder(): Builder
@@ -44,11 +44,14 @@ class TourOperatorReturnsTable extends DataTableComponent
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }
-        if (isset($data['month']) && $data['month'] != 'all') {
+        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
             $filter->whereMonth('hotel_returns.created_at', '=', $data['month']);
         }
-        if (isset($data['year']) && $data['year'] != 'All') {
+        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
             $filter->whereYear('hotel_returns.created_at', '=', $data['year']);
+        }
+        if (isset($data['year']) && $data['year'] == 'Custom Range') {
+            $filter->whereBetween('hotel_returns.created_at', [$data['from'], $data['to']]);
         }
     
         return $filter->where('tax_type_id', $tax->id)->orderBy('hotel_returns.created_at', 'desc');
@@ -61,8 +64,8 @@ class TourOperatorReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),

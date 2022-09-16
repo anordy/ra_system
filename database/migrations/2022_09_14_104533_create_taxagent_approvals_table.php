@@ -15,6 +15,12 @@ class CreateTaxagentApprovalsTable extends Migration
     {
         Schema::create('taxagent_approvals', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tax_agent_id');
+            $table->string('initial_status');
+            $table->string('destination_status');
+            $table->string('comment')->nullable();
+            $table->unsignedBigInteger('approved_by_id');
+            $table->dateTimeTz('approved_at');
             $table->timestamps();
         });
     }
