@@ -164,7 +164,6 @@ class ReturnReport extends Component
     {
         $this->validate();
         $this->parameters = $this->getParameters();
-        dd($this->parameters);
         $records = $this->getRecords($this->parameters);
         if ($records->count() < 1) {
             $this->alert('error', 'No Records Found in the selected criteria');
@@ -179,7 +178,6 @@ class ReturnReport extends Component
         $this->validate();
         $this->parameters = $this->getParameters();
         $records = $this->getRecords($this->parameters);
-
         if ($records->count() < 1) {
             $this->alert('error', 'No Records Found in the selected criteria');
             return;

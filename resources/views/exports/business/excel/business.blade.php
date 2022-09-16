@@ -2,7 +2,7 @@
 <table style="border-collapse:collapse;">
     <thead>
         <tr>
-            <th style="text-align:center;" colspan="8" height="70">
+            <th style="text-align:center;" colspan="11" height="70">
                 <strong>ZANZIBAR REVENUE BOARD</strong><br>
                 {{-- <strong>{{ $title }}</strong><br>
                 <strong>{{ $taxType->name }}</strong><br> --}}
@@ -22,10 +22,9 @@
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Location</strong>
             </th>
-
-            {{-- <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Tax Type</strong>
-            </th> --}}
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Tax Region</strong>
+            </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Business Category</strong>
             </th>
@@ -38,6 +37,12 @@
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Region</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>District</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Ward</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Physical Address</strong>
@@ -56,9 +61,9 @@
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->name }}
             </td>
-            {{-- <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                {{ $record->business-> }}
-            </td> --}}
+            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                {{ $record->taxRegion->name ?? '-'}}
+            </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->business->category->name ?? '-' }}
             </td>
@@ -70,6 +75,12 @@
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->region->name ?? '-' }}
+            </td>
+            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                {{ $record->district->name ?? '-' }}
+            </td>
+            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                {{ $record->ward->name ?? '-' }}
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->physical_address ?? '-' }}
