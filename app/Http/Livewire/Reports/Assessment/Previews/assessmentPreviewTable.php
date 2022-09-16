@@ -47,7 +47,7 @@ class AssessmentPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable()
                 ->hideIf(true),
-            Column::make("Taxayer Name", "business_id")
+            Column::make("Taxpayer Name", "business_id")
                 ->format(
                     function ($value, $row) {
                         return $row->business->owner_designation;

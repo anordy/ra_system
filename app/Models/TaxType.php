@@ -36,6 +36,9 @@ class TaxType extends Model implements Auditable
     public const AUDIT = 'audit';
     public const VERIFICATION = 'verification';
     public const DISPUTES = 'disputes';
+    public const WAIVER = 'waiver';
+    public const OBJECTION = 'objection';
+    public const WAIVER_OBJECTION = 'waiver-and-objection';
     public const INVESTIGATION = 'investigation';
     public const GOVERNMENT_FEE = 'government-fee';
     public const DEBTS = 'debts';
