@@ -121,6 +121,32 @@ class LandLeaseReportTable extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
+            Column::make('Contact Person', 'id')
+                ->format(
+                    function ($value, $row) {
+                        if ($row->is_registered == 1) {
+                            $taxpayer = Taxpayer::find($row->taxpayer_id);
+                            return $taxpayer->first_name .' '. $taxpayer->last_name;
+                        } else {
+                            return $row->name;
+                        }
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+            Column::make('Phone Number', 'id')
+                ->format(
+                    function ($value, $row) {
+                        if ($row->is_registered == 1) {
+                            $taxpayer = Taxpayer::find($row->taxpayer_id);
+                            return $taxpayer->mobile;
+                        } else {
+                            return $row->phone;
+                        }
+                    }
+                )
+                ->searchable()
+                ->sortable(),
             Column::make('Actions', 'id')
             // ->hideIf(!Gate::allows('land-lease-view'))
                 ->view('land-lease.includes.actions'),

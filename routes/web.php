@@ -453,6 +453,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
         Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
         Route::get('/download-report-pdf/{dates}', [LandLeaseController::class, 'downloadLandLeaseReportPdf'])->name('download.report.pdf');
+        Route::get('/payment/download-report-pdf/{dates}', [LandLeaseController::class, 'downloadLandLeasePaymentReportPdf'])->name('payment.download.report.pdf');
     });
 
     //Tax Clearance

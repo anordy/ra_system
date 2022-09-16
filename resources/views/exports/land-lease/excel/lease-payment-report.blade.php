@@ -4,7 +4,7 @@
         <tr>
             <th style="text-align:center;" colspan="18" height="50">
                 <strong>ZANZIBAR REVENUE BOARD</strong><br>
-                <strong>Land Leases Report</strong><br>
+                <strong>Land Lease Payments Report</strong><br>
                 <strong>From {{ $startDate }} To {{ $endDate }} </strong>
             </th>
         </tr>
@@ -26,28 +26,31 @@
                 <strong>Name</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Payment Year</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Payment Month</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Applicant Category</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>ZRB No/ Zin No.</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Applicant Type</strong>
+                <strong>Status</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Commence Date</strong>
+                <strong>Principal Amount (USD)</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Payment Month</strong>
+                <strong>total Amount (USD)</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Payment Amount (USD)</strong>
+                <strong>Total Penalties (USD)</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Review Schedule</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Valid Period Term</strong>
+                <strong>Outstanding Amount (USD)</strong>
             </th>
             <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
                 <strong>Region</strong>
@@ -70,80 +73,102 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($landLeases as $index => $landLease)
+        @foreach ($leasePayments as $index => $leasePayment)
             <tr>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $index + 1 }}
                 </td>
+                
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->created_at->format('d/m/Y') ?? '-' }}
+                    {{ $leasePayment->created_at->format('d/m/Y') ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->dp_number ?? '-' }}
+                    {{ $leasePayment->landLease->dp_number ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    @if ($landLease->category == 'business')
-                        {{ $landLease->businessLocation->business->name }} | {{ $landLease->businessLocation->name }}
+                    @if ($leasePayment->landLease->category == 'business')
+                        {{ $leasePayment->landLease->businessLocation->business->name }} | {{ $leasePayment->landLease->businessLocation->name }}
                     @else
-                        {{ $landLease->is_registered == 1 ? $landLease->taxpayer->first_name . ' ' . $landLease->taxpayer->last_name : $landLease->name }}
+                        {{ $leasePayment->landLease->is_registered == 1 ? $leasePayment->landLease->taxpayer->first_name . ' ' . $leasePayment->landLease->taxpayer->last_name : $leasePayment->landLease->name }}
                     @endif
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ ucwords($landLease->category) }}
+                    {{ $leasePayment->financialYear->code ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    @if ($landLease->category == 'business')
-                        {{ $landLease->businessLocation->zin }}
+                    {{ $leasePayment->landLease->payment_month ?? '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ ucwords($leasePayment->landLease->category) }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    @if ($leasePayment->landLease->category == 'business')
+                        {{ $leasePayment->landLease->businessLocation->zin }}
                     @else
-                        {{ $landLease->taxpayer->reference_no }}
+                        {{ $leasePayment->landLease->taxpayer->reference_no }}
                     @endif
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->is_registered == 1 ? 'Registered' : 'Unregistered' }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ date('d/m/Y', strtotime($landLease->commence_date)) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->payment_month ?? '-' }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->payment_amount ?? '-' }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->review_schedule ?? '-' }} years
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->valid_period_term ?? '-' }} years
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->region->name ?? '-' }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->district->name ?? '-' }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $landLease->ward->name ?? '-' }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    @if ($landLease->category == 'business')
-                        {{ $landLease->businessLocation->business->mobile }}
-                    @else
-                        {{ $landLease->is_registered == 1 ? $landLease->taxpayer->mobile : $landLease->phone }}
+                    @if ($leasePayment->status === \App\Enum\LeaseStatus::IN_ADVANCE_PAYMENT)
+                            Paid In Advance
+                    @elseif ($leasePayment->status === \App\Enum\LeaseStatus::ON_TIME_PAYMENT)
+                            Paid On Time
+                    @elseif ($leasePayment->status === \App\Enum\LeaseStatus::LATE_PAYMENT)
+                            Paid Late
+                    @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATING)
+                            Control Number Generating
+                    @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATED)
+                            Control Number Generated
+                    @elseif($leasePayment->status === \App\Enum\LeaseStatus::CN_GENERATION_FAILED)
+                            Control Number Generating Failed
+                    @elseif($leasePayment->status === \App\Enum\LeaseStatus::PAID_PARTIALLY)
+                            Paid Partially
+                    @elseif($leasePayment->status === \App\Enum\LeaseStatus::PENDING)
+                            Pending
+                    @elseif($leasePayment->status === \App\Enum\LeaseStatus::DEBT)
+                            Debt
                     @endif
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    @if ($landLease->category == 'business')
-                        {{ $landLease->businessLocation->business->email }}
+                    {{ round($leasePayment->total_amount, 2) ?? '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ round($leasePayment->total_amount_with_penalties, 2) ?? '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ round($leasePayment->penalty, 2) ?? '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ round($leasePayment->outstanding_amount, 2) ?? '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ $leasePayment->landLease->region->name ?? '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ $leasePayment->landLease->district->name ?? '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ $leasePayment->landLease->ward->name ?? '-' }}
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    @if ($leasePayment->landLease->category == 'business')
+                        {{ $leasePayment->landLease->businessLocation->business->mobile }}
                     @else
-                        {{ $landLease->is_registered == 1 ? $landLease->taxpayer->email : $landLease->email }}
+                        {{ $leasePayment->landLease->is_registered == 1 ? $leasePayment->landLease->taxpayer->mobile : $leasePayment->landLease->phone }}
                     @endif
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    @if ($landLease->category == 'business')
-                        {{ $landLease->businessLocation->business->physical_address }}
+                    @if ($leasePayment->landLease->category == 'business')
+                        {{ $leasePayment->landLease->businessLocation->business->email }}
                     @else
-                        {{ $landLease->is_registered == 1 ? $landLease->taxpayer->physical_address : $landLease->address }}
+                        {{ $leasePayment->landLease->is_registered == 1 ? $leasePayment->landLease->taxpayer->email : $leasePayment->landLease->email }}
+                    @endif
+                </td>
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    @if ($leasePayment->landLease->category == 'business')
+                        {{ $leasePayment->landLease->businessLocation->business->physical_address }}
+                    @else
+                        {{ $leasePayment->landLease->is_registered == 1 ? $leasePayment->landLease->taxpayer->physical_address : $leasePayment->landLease->address }}
                     @endif
                 </td>   
             </tr>

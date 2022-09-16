@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\LandLease;
 
 use App\Exports\LandLeaseExport;
+use App\Models\FinancialYear;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -35,6 +36,8 @@ class GenerateReport extends Component
     //backend variables
     public $startMonth;
     public $endMonth;
+    public $range_start;
+    public $range_end;
 
     
 
@@ -48,10 +51,11 @@ class GenerateReport extends Component
         $this->semiAnnual = "1st-Semi-Annual";
 
         //get options for years
-        $optionStartYear = 2020;
+        $optionStartYear = intval(FinancialYear::first()->code);
         $this->optionYears = range($optionStartYear, date('Y'));
 
         //add All to year options
+        $this->optionYears[] = "Custom Range";
         $this->optionYears[] = "All";
         //sort array
         rsort($this->optionYears);
@@ -76,6 +80,7 @@ class GenerateReport extends Component
     }
 
     public function preview(){
+        // dd($this->getStartEndDate());
       $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getStartEndDate());
     }
 
@@ -132,6 +137,8 @@ class GenerateReport extends Component
     {
         if ($this->year == "All") {
             $this->showOptions = false;
+        }elseif ($this->year == "Custom Range") {
+                $this->showOptions = false;
         } else {
             $this->showOptions = true;
 
@@ -167,6 +174,15 @@ class GenerateReport extends Component
                 'startDate' => null,
                 'endDate' => null,
             ];
+        } elseif ($this->year == "Custom Range") {
+            // dd('here');
+            return [
+                'startDate' => date('Y-m-d', strtotime($this->range_start)),
+                'endDate' => date('Y-m-d', strtotime($this->range_end)),
+                'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
+                'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+            ];
+
         } elseif ($this->showMonths) {
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
@@ -211,6 +227,7 @@ class GenerateReport extends Component
             $from = $startDate->format('Y-m-d');
             $to = $endDate->format('Y-m-d');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
+
         } else {
             $startDate = \Carbon\Carbon::parse($this->year . "-" . "01" . "-01"); 
             $endDate = \Carbon\Carbon::parse($this->year . "-" . "12" . "-01"); 
