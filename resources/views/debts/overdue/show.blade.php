@@ -17,7 +17,7 @@
                             <div>
                                 <h6 class="text-uppercase mt-2 ml-2">Overdue Debt Details</h6>
                                 <hr>
-                                @if ($debt->recovery_measure_status == 'none')
+                                @if ($debt->recoveryMeasures)
                                     <div class="card-tools">
                                             <a href="{{ route('debts.debt.recovery', encrypt($debt->id)) }}"  class="btn btn-info btn-sm text-white" style="color: white !important;"><i
                                                 class="fa fa-plus text-white"></i>

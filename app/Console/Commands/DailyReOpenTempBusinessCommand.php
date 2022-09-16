@@ -87,6 +87,7 @@ class DailyReOpenTempBusinessCommand extends Command
                 }
 
                 $closed_business->status = 'reopened';
+                $closed_business->reopening_date = Carbon::now()->toDateString();
                 $closed_business->save();
             
             }
