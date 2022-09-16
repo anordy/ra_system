@@ -37,6 +37,8 @@ class ReturnReport extends Component
     public $type;
     public $filing_report_type = 'All-Filings';
     public $payment_report_type;
+    public $range_start;
+    public $range_end;
 
     public $returnName;
     protected function rules()
@@ -46,9 +48,11 @@ class ReturnReport extends Component
             'type' => 'required',
             'year' => 'required',
             'period' => 'required',
+            'range_start' => $this->year == 'range' ? 'required' : '',
+            'range_end' => $this->year == 'range' ? 'required' : '',
             'filing_report_type' => $this->type == 'Filing' ? 'required' : '',
             'payment_report_type' => $this->type == 'Payment' ? 'required' : '',
-            'period' => $this->year != 'all' ? 'required' : '',
+            'period' => $this->year != 'all' && $this->year != 'range' ? 'required' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',
             'quater' => $this->period == 'Quarterly' ? 'required' : '',
             'semiAnnual' => $this->period == 'Semi-Annual' ? 'required' : '',
@@ -94,6 +98,7 @@ class ReturnReport extends Component
     {
         $this->validate();
         $parameters = $this->getParameters();
+        // dd($parameters);
         $records = $this->getRecords($parameters);
         if($records->count()<1){
             $this->alert('error', 'No Records Found in the selected criteria');
@@ -164,7 +169,14 @@ class ReturnReport extends Component
                 'startDate' => null,
                 'endDate' => null,
             ];
-        } elseif ($this->month) {
+        }elseif ($this->year == "range") {
+            return [
+                'startDate' =>date('Y-m-d', strtotime($this->range_start)),
+                'endDate' => date('Y-m-d', strtotime($this->range_end)),
+                'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
+                'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+            ];
+        }elseif ($this->month) {
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');

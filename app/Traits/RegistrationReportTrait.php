@@ -15,6 +15,9 @@ trait RegistrationReportTrait
                                         ->select('business_locations.*');
         //get criteria                                
         switch ($parameters['criteria']){
+            case 'All-Business':
+                $businessLocations = $businessLocations;
+                break;
             case 'Business-Reg-By-Nature':
                 $columnName = $this->getIsiicColumnName($parameters['isic_level']);
                 $businessLocations->where($columnName,$parameters['isic_id']);
@@ -24,11 +27,13 @@ trait RegistrationReportTrait
                 break;
         }
         //get period
-        if($parameters['year']!="all"){
+        if($parameters['year']!="all" && $parameters['year']!="range"){
             $businessLocations->whereYear('business_locations.approved_on','=',$parameters['year']);
             if($parameters['month']!='all'){
                 $businessLocations->whereMonth('business_locations.approved_on','=',$parameters['month']);
             }
+        }if($parameters['year'] == "range"){
+            $businessLocations->whereBetween('business_locations.approved_on', [$parameters['range_start'],$parameters['range_end']]);
         }
         //get tax regions
         $businessLocations->whereIn('business_locations.tax_region_id',$parameters['tax_regions']);
