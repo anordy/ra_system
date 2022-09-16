@@ -19,7 +19,7 @@
                     {{ $message }}
                 </div>
             @enderror
-        </div>
+        </div>  
         <div class="col-md-4 form-group">
             <label for="start_month" class="d-flex justify-content-between'">
                 <span>
