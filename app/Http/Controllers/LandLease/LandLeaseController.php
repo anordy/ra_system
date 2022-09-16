@@ -40,6 +40,11 @@ class LandLeaseController extends Controller
         return view('land-lease.generate-report');
     }
 
+    public function paymentReport()
+    {
+        return view('land-lease.payment-report');
+    }
+
     public function createAgent()
     {
         return view('land-lease.agent-create');

@@ -608,9 +608,12 @@
                         <a href="{{ route('land-lease.list') }}">Land Lease List</a>
                     </li>
                     @can('land-lease-generate-report')
-                    <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
-                        <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
-                    </li>
+                        <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.generate.report') }}">General Report</a>
+                        </li>
+                        <li class="{{ request()->is('land-lease/payment-report*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.payment.report') }}">Payment Report</a>
+                        </li>
                     @endcan
                     @can('land-lease-agent-view')
                         <li class="{{ request()->is('land-lease/agents*') ? 'active' : '' }}">
