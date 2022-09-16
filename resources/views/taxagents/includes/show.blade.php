@@ -156,45 +156,6 @@
                 </div>
                 @endif
             </div>
-
-            @if($agent->verifier_id != null or $agent->approver_id != null)
-            <div class="card">
-                <div class="card-header">Tax Consultant Approval Levels </div>
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Verified By</th>
-                            <th>Comment</th>
-                            <th>Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        @if($agent->verifier_id != null)
-                        <tr>
-                            <td>Verification</td>
-                            <td>{{\App\Http\Controllers\TaxAgents\TaxAgentController::getUser($agent->verifier_id)}}</td>
-                            <td>{{$agent->verifier_true_comment}}</td>
-                            <td>{{date('D, Y-m-d', strtotime($agent->verified_at))}}</td>
-                        </tr>
-                        @endif
-
-                        @if($agent->approver_id != null)
-                        <tr>
-                            <td>Approval</td>
-                            <td>{{\App\Http\Controllers\TaxAgents\TaxAgentController::getUser($agent->approver_id)}}</td>
-                            <td>{{$agent->app_true_comment}}</td>
-                            <td>{{date('D, Y-m-d', strtotime($agent->approved_at))}}</td>
-                        </tr>
-                        @endif
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-            @endif
         </div>
         <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
             <table class="table table-striped table-bordered ">
@@ -377,5 +338,39 @@
             </div>
         </div>
 
+
+
+    </div>
+    <div class="card mt-3">
+        <div class="card-header">Tax Consultant Approval History </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>No:</th>
+                    <th>Initial Status</th>
+                    <th>Destination Status</th>
+                    <th>Comment</th>
+                    <th>Approved By</th>
+                    <th>Approved At</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($agent->approval as $index=>$approval)
+                    <tr>
+                        <td>{{$index + 1}}</td>
+                        <td>{{$approval->initial_status}}</td>
+                        <td>{{$approval->destination_status}}</td>
+                        <td>{{$approval->comment}}</td>
+                        <td>
+                            {{\App\Http\Controllers\TaxAgents\TaxAgentController::getUser($approval->approved_by_id)}}
+                        </td>
+                        <td>{{$approval->approved_at}}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+
+        </div>
     </div>
 </div>

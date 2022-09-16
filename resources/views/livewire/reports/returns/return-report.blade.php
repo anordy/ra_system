@@ -105,6 +105,7 @@
                 <option value="">Select Year</option>
                 @if ($tax_type_id && $reportType)
                     <option value="all">All</option>
+                    <option value="range">Custom Range</option>
                     @foreach ($optionYears as $optionYear)
                         <option value="{{ $optionYear }}">{{ $optionYear }}</option>
                     @endforeach
@@ -117,9 +118,32 @@
             @enderror
         </div>
 
+        @if ($year == 'range')
+        <div class="col-md-4 form-group">
+            <label class="d-flex justify-content-between'">
+                <span>Start Date</span>
+            </label>
+            <input type="date" class="form-control" wire:model="range_start">
+            @error('range_start')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+        <div class="col-md-4 form-group">
+            <label class="d-flex justify-content-between'">
+                <span>End Date</span>
+            </label>
+            <input type="date" class="form-control" wire:model="range_end">
+            @error('range_end')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+        @endif
 
-
-        @if ($year != 'all')
+        @if ($year != 'all' && $year != 'range')
             <div class="col-md-4 form-group">
                 <label for="period" class="d-flex justify-content-between'">
                     <span>
@@ -142,7 +166,6 @@
                     </div>
                 @enderror
             </div>
-
 
             @if ($period == 'Semi-Annual')
                 <div class="col-md-4 form-group">
@@ -194,7 +217,6 @@
                     @enderror
                 </div>
             @endif
-
 
             @if ($period && $period == 'Monthly')
                 <div class="col-md-4 form-group">

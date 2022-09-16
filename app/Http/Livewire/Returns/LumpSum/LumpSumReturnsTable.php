@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class LumpSumReturnsTable extends DataTableComponent
 {
     use LivewireAlert;
-    protected $listeners = ['filterData' => 'filterData'];
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
 
     public $data = [];
 
@@ -32,14 +32,14 @@ class LumpSumReturnsTable extends DataTableComponent
     public function filterData($data)
     {
         $this->data = $data;
-        $this->builder();
+        $this->emit('$refresh');
     }
 
     public function builder(): Builder
     {
         $data   = $this->data;
         $filter = (new LumpSumReturn)->newQuery();
-
+        
         if ($data == []) {
             $filter->whereMonth('lump_sum_returns.created_at', '=', date('m'));
             $filter->whereYear('lump_sum_returns.created_at', '=', date('Y'));
@@ -47,17 +47,16 @@ class LumpSumReturnsTable extends DataTableComponent
         if (isset($data['type']) && $data['type'] != 'all') {
             $filter->Where('return_category', $data['type']);
         }
-        if (isset($data['month']) && $data['month'] != 'all') {
-            $filter->whereMonth('lump_sum_returns.created_at', '=', $data['month']);
-        }
-        if (isset($data['month']) && $data['month'] == 'range') {
-            $filter->whereBetween('lump_sum_returns.created_at', [$data['from'], $data['to']]);
-            // dd([$data['from'], $data['to']]);
-        }
-        if (isset($data['year']) && $data['year'] != 'All') {
+        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
             $filter->whereYear('lump_sum_returns.created_at', '=', $data['year']);
         }
-
+        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
+            $filter->whereMonth('lump_sum_returns.created_at', '=', $data['month']);
+        }
+        if (isset($data['year']) && $data['year'] == 'Custom Range') {
+            $filter->whereBetween('lump_sum_returns.created_at', [$data['from'], $data['to']]);
+        }
+       
         return $filter->orderBy('lump_sum_returns.created_at', 'desc');
     }
 

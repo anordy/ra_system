@@ -1,6 +1,25 @@
 <div>
     <div class="row">
- 
+        <div class="col-md-4 form-group">
+            <label for="tax_type_id" class="d-flex justify-content-between'">
+                <span>
+                    Assessment Type
+                </span>
+            </label>
+            <select name="tax_type_id" id="tax_type_id" wire:model="tax_type_id"
+                class="form-control {{ $errors->has('tax_type_id') ? 'is-invalid' : '' }}">
+                <option value="all">All</option>
+                @foreach ($optionTaxTypes as $taxType)
+                    <option value={{ $taxType->id }}>
+                        {{ $taxType->name }}</option>
+                @endforeach
+            </select>
+            @error('tax_type_id')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
         <div class="col-md-4 form-group">
             <label for="start_month" class="d-flex justify-content-between'">
                 <span>
@@ -10,10 +29,10 @@
             <select name="year" class="form-control {{ $errors->has('year') ? 'is-invalid' : '' }}"
                 wire:model="year">
                 <option value="">Select Year</option>
-                    <option value="all">All</option>
-                    @foreach ($optionYears as $optionYear)
-                        <option value="{{ $optionYear }}">{{ $optionYear }}</option>
-                    @endforeach
+                <option value="all">All</option>
+                @foreach ($optionYears as $optionYear)
+                    <option value="{{ $optionYear }}">{{ $optionYear }}</option>
+                @endforeach
             </select>
             @error('year')
                 <div class="invalid-feedback">
@@ -21,8 +40,6 @@
                 </div>
             @enderror
         </div>
-
-
 
         @if ($year != 'all')
             <div class="col-md-4 form-group">
@@ -34,10 +51,10 @@
                 <select wire:model="period" id="period"
                     class="form-control {{ $errors->has('period') ? 'is-invalid' : '' }}">
                     <option value="">Select Period</option>
-                        @foreach ($optionPeriods as $optionPeriod)
-                            <option value="{{ $optionPeriod }}">
-                                {{ $optionPeriod }}</option>
-                        @endforeach
+                    @foreach ($optionPeriods as $optionPeriod)
+                        <option value="{{ $optionPeriod }}">
+                            {{ $optionPeriod }}</option>
+                    @endforeach
                 </select>
                 @error('period')
                     <div class="invalid-feedback">
@@ -135,12 +152,12 @@
                     Preview Report
                 </button>
             </div>
-            <button class="btn btn-success ml-2" wire:click="exportExcel " wire:loading.attr="disabled">
+            {{-- <button class="btn btn-success ml-2" wire:click="exportExcel " wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                     wire:target="exportExcel"></i>
                 Export to Excel
-            </button>
+            </button> --}}
 
             <button class="btn btn-success ml-2" wire:click="exportPdf" wire:loading.attr="disabled">
                 <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="exportPdf"></i>

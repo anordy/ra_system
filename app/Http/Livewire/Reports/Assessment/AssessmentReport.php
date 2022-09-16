@@ -2,18 +2,25 @@
 
 namespace App\Http\Livewire\Reports\Assessment;
 
+use App\Exports\AssessmentReportExport;
 use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
+use App\Models\TaxType;
+use App\Traits\AssessmentReportTrait;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AssessmentReport extends Component
 {
+    use LivewireAlert, AssessmentReportTrait;
+
     public $optionYears;
     public $optionPeriods;
     public $optionSemiAnnuals;
     public $optionQuarters;
     public $optionMonths;
+    public $optionTaxTypes;
 
     public $showPreviewTable = false;
     public $activateButtons = false;
@@ -23,6 +30,7 @@ class AssessmentReport extends Component
     public $period;
     public $quater;
     public $semiAnnual;
+    public $tax_type_id = 'all';
     public $type;
     public $filing_report_type;
     public $payment_report_type;
@@ -30,7 +38,7 @@ class AssessmentReport extends Component
     protected function rules()
     {
         return [
-
+            'tax_type_id' => 'required',
             'year' => 'required',
             'period' => 'required',
             'period' => $this->year != 'all' ? 'required' : '',
@@ -43,6 +51,7 @@ class AssessmentReport extends Component
     public function mount()
     {
         $this->optionYears = FinancialYear::pluck('code');
+        $this->optionTaxTypes = TaxType::whereIn('code', ['verification', 'investigation', 'audit'])->get();
         $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
         $this->optionSemiAnnuals = ["1st-Semi-Annual", "2nd-Semi-Annual"];
         $this->optionQuarters = ["1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter"];
@@ -63,56 +72,60 @@ class AssessmentReport extends Component
     {
         $this->validate();
         $parameters = $this->getParameters();
-        $modelData = $this->getModelData($parameters);
-        $records = $this->getRecords($modelData['model'], $parameters);
+        $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
-        $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
-        $for = str_replace('-', ' ', $for);
+        // $for = $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'];
+        // $for = str_replace('-', ' ', $for);
         // dd($parameters);
         if ($parameters['year'] == 'all') {
-            $fileName = $modelData['returnName'] . ' Return Records (' . $for . ').xlsx';
-            $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
+            // $fileName = $modelData['returnName'] . ' Return Records (' . $for . ').xlsx';
+            // $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
+            $fileName = 'Verification' . '_' . 'Assessments' . '.xlsx';
+            $title = 'Notice Of Assessments';
+
         } else {
-            $fileName = $modelData['returnName'] . ' Return Records (' . $for . ') - ' . $parameters['year'] . '.xlsx';
-            $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
+            // $fileName = $modelData['returnName'] . ' Return Records (' . $for . ') - ' . $parameters['year'] . '.xlsx';
+            // $title = $modelData['returnName'] . ' Return Records (' . $for . ')';
+            $fileName = 'Verification' . '_' . 'Assessments' . '.xlsx';
+            $title = 'Notice Of Assessments';
+
         }
         $this->alert('success', 'Exporting Excel File');
-        return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
+        return Excel::download(new AssessmentReportExport($records, $title, $parameters), $fileName);
     }
 
     public function exportPdf()
     {
         $this->validate();
         $parameters = $this->getParameters();
-        $modelData = $this->getModelData($parameters);
-        $records = $this->getRecords($modelData['model'], $parameters);
+        $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
         $this->alert('success', 'Exporting Pdf File');
-        return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
+        return redirect()->route('reports.assessments.download.pdf', encrypt(json_encode($parameters)));
     }
 
     public function preview()
     {
-        // $this->validate();
-        // $parameters = $this->getParameters();
-        // $modelData = $this->getModelData($parameters);
-        // $records = $this->getRecords($modelData['model'], $parameters);
-        // if ($records->count() < 1) {
-        //     $this->alert('error', 'No Records Found in the selected criteria');
-        //     return;
-        // }
+        $this->validate();
+        $parameters = $this->getParameters();
+        $records = $this->getRecords($parameters)->get();
+        if ($records->count() < 1) {
+            $this->alert('error', 'No Records Found in the selected criteria');
+            return;
+        }
         return redirect()->route('reports.assessments.preview', encrypt(json_encode($this->getParameters())));
     }
 
     public function getParameters()
     {
         return [
+            'tax_type_id' => $this->tax_type_id,
             'type' => $this->type,
             'year' => $this->year,
             'period' => $this->period,

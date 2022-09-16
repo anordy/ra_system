@@ -22,6 +22,7 @@ class CreateBusinessTaxTypeChangesTable extends Migration
             $table->string('from_tax_type_currency');
             $table->string('to_tax_type_currency');
             $table->longText('reason')->nullable();
+            $table->enum('category', ['requested', 'qualified']);
             $table->enum('status', ['pending', 'approved', 'rejected', 'effective'])->default('pending');
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();

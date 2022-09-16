@@ -7,7 +7,6 @@ use App\Services\Workflow\Subscriber\WorkflowSubscriber;
 use App\Services\Workflow\WorkflowRegistry;
 use Illuminate\Support\Facades\Log;
 
-
 trait WorkflowProcesssingTrait
 {
     public $flow;
@@ -24,14 +23,14 @@ trait WorkflowProcesssingTrait
         } else {
 
             $this->flow = [
-                $workflow->code   => [
-                    'type'          => 'workflow',
+                $workflow->code => [
+                    'type' => 'workflow',
                     'marking_store' => json_decode($workflow->marking_store, true),
                     'initial_marking' => $workflow->initial_marking,
-                    'supports'      => [$workflow->supports],
-                    'places'        => json_decode($workflow->places, true),
-                    'transitions'   => json_decode($workflow->transitions, true),
-                ]
+                    'supports' => [$workflow->supports],
+                    'places' => json_decode($workflow->places, true),
+                    'transitions' => json_decode($workflow->transitions, true),
+                ],
             ];
         }
     }

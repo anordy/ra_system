@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use App\Enum\BillStatus;
 use App\Enum\DisputeStatus;
 use App\Enum\InstallmentStatus;
 use App\Enum\LeaseStatus;
@@ -238,13 +239,14 @@ class ZanMalipoController extends Controller
         }
     }
 
-    private function updateTaxReturn($bill){
+    private function updateTaxReturn($bill)
+    {
         try {
             if ($bill->billable_type == TaxReturn::class) {
                 if ($bill->paidAmount() >= $bill->amount) {
                     $tax_return = $bill->billable;
                     $return = $tax_return->return;
-                    if ($return){
+                    if ($return) {
                         $return->status = ReturnStatus::COMPLETE;
                         $return->paid_at = Carbon::now()->toDateTimeString();
                         $return->save();
@@ -262,7 +264,7 @@ class ZanMalipoController extends Controller
                     $tax_return->save();
                 }
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e);
         }
     }
@@ -273,13 +275,16 @@ class ZanMalipoController extends Controller
             $assessmentBillItems = $bill->bill_items->pluck('billable_type')->toArray();
             if ($bill->billable_type == TaxAssessment::class && in_array(Dispute::class, $assessmentBillItems)) {
                 if ($bill->paidAmount() >= $bill->amount) {
-                    $assessment = $bill->billable;
+                    $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->first()->billable;
 
-                    // initiate dispute approval
-                    $this->registerWorkflow(get_class($assessment), $assessment->id);
-                    $this->doTransition('application_submitted', 'approved');
-                    $assessment->app_status = DisputeStatus::SUBMITTED;
+                    $assessment = $bill->billable;
+                    $assessment->payment_status = BillStatus::PAID_PARTIALLY;
                     $assessment->save();
+
+                    $this->registerWorkflow(get_class($dispute), $dispute->id);
+                    $this->doTransition('application_submitted', []);
+                    $dispute->app_status = DisputeStatus::SUBMITTED;
+                    $dispute->save();
                 }
             }
         } catch (\Exception $e) {
@@ -295,17 +300,17 @@ class ZanMalipoController extends Controller
                     $item = $bill->billable;
                     $item->update([
                         'status' => ReturnStatus::COMPLETE,
-                        'paid_at' => Carbon::now()->toDateTimeString()
+                        'paid_at' => Carbon::now()->toDateTimeString(),
                     ]);
 
                     $taxReturn = $item->installment->taxReturn;
                     $taxReturn->update([
-                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount
+                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount,
                     ]);
 
-                    if ($item->installment->getNextPaymentDate()){
+                    if ($item->installment->getNextPaymentDate()) {
                         $taxReturn->update([
-                            'curr_payment_due_date' => $item->installment->getNextPaymentDate()
+                            'curr_payment_due_date' => $item->installment->getNextPaymentDate(),
                         ]);
                     } elseif (!$item->installment->getNextPaymentDate() && ($item->installment->status == InstallmentStatus::ACTIVE)) {
                         $item->installment->update([
@@ -313,11 +318,11 @@ class ZanMalipoController extends Controller
                         ]);
 
                         $item->installment->taxReturn->update([
-                            'status' => ReturnStatus::COMPLETE
+                            'status' => ReturnStatus::COMPLETE,
                         ]);
 
                         $item->installment->taxReturn->return->update([
-                            'status' => ReturnStatus::COMPLETE
+                            'status' => ReturnStatus::COMPLETE,
                         ]);
                     }
                 } else {
@@ -328,7 +333,7 @@ class ZanMalipoController extends Controller
 
                     $taxReturn = $item->installment->taxReturn;
                     $taxReturn->update([
-                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount
+                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount,
                     ]);
                 }
             }

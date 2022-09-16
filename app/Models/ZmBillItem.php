@@ -25,4 +25,8 @@ class ZmBillItem extends Model
     public function taxType(){
         return $this->belongsTo(TaxType::class);
     }
+    
+    public function billable(){
+        return $this->morphTo();
+    }
 }

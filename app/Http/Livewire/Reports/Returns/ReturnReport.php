@@ -28,15 +28,17 @@ class ReturnReport extends Component
     public $showPreviewTable = false;
     public $activateButtons = false;
 
-    public $year;
+    public $year = 'all';
     public $month;
     public $period;
     public $quater;
     public $semiAnnual;
     public $tax_type_id = 'all';
     public $type;
-    public $filing_report_type;
+    public $filing_report_type = 'All-Filings';
     public $payment_report_type;
+    public $range_start;
+    public $range_end;
 
     public $returnName;
     protected function rules()
@@ -46,9 +48,11 @@ class ReturnReport extends Component
             'type' => 'required',
             'year' => 'required',
             'period' => 'required',
+            'range_start' => $this->year == 'range' ? 'required' : '',
+            'range_end' => $this->year == 'range' ? 'required' : '',
             'filing_report_type' => $this->type == 'Filing' ? 'required' : '',
             'payment_report_type' => $this->type == 'Payment' ? 'required' : '',
-            'period' => $this->year != 'all' ? 'required' : '',
+            'period' => $this->year != 'all' && $this->year != 'range' ? 'required' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',
             'quater' => $this->period == 'Quarterly' ? 'required' : '',
             'semiAnnual' => $this->period == 'Semi-Annual' ? 'required' : '',
@@ -57,14 +61,14 @@ class ReturnReport extends Component
 
     public function mount()
     {
-        $this->optionYears = FinancialYear::pluck('code');
+        $this->optionYears = FinancialYear::orderBy('code','DESC')->pluck('code');
         $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
         $this->optionSemiAnnuals = ["1st-Semi-Annual", "2nd-Semi-Annual"];
         $this->optionQuarters = ["1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter"];
         $this->optionMonths = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
         $this->optionTaxTypes = TaxType::where('category','main')->get();
         $this->optionReportTypes = ['Filing', 'Payment'];
-        $this->optionFilingTypes = ['On-Time-Filings','Late-Filings', 'All-Filings','Tax-Claims','Nill-Returns'];
+        $this->optionFilingTypes = ['All-Filings','On-Time-Filings','Late-Filings','Tax-Claims','Nill-Returns'];
         $this->optionPaymentTypes = ['All-Paid-Returns','On-Time-Paid-Returns','Late-Paid-Returns', 'Unpaid-Returns'];
     }
 
@@ -94,6 +98,7 @@ class ReturnReport extends Component
     {
         $this->validate();
         $parameters = $this->getParameters();
+        // dd($parameters);
         $records = $this->getRecords($parameters);
         if($records->count()<1){
             $this->alert('error', 'No Records Found in the selected criteria');
@@ -164,7 +169,14 @@ class ReturnReport extends Component
                 'startDate' => null,
                 'endDate' => null,
             ];
-        } elseif ($this->month) {
+        }elseif ($this->year == "range") {
+            return [
+                'startDate' =>date('Y-m-d', strtotime($this->range_start)),
+                'endDate' => date('Y-m-d', strtotime($this->range_end)),
+                'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
+                'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+            ];
+        }elseif ($this->month) {
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');
