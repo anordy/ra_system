@@ -10,8 +10,8 @@
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
             <a href="{{ route('notifications') }}">Notifications
                 @if (auth()->user()->unreadNotifications->count() > 0)
-                <span class="badge badge-light">
-                    <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                    <span class="badge badge-light">
+                        <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
                 @endif
             </a>
         </li>
@@ -533,53 +533,56 @@
         </li>
         @endcan
         @can('managerial-report')
-        <li class="{{ request()->is('reports*') ? 'active' : '' }}">
-            <a href="#reportSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                Managerial reports
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}" id="reportSubmenu">
-                @can('managerial-report-view')
-                <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
-                    <a href="{{ route('reports.returns') }}">Return Reports</a>
-                </li>
-                <li class="{{ request()->is('reports/assesments*') ? 'active' : '' }}">
-                    <a href="{{ route('reports.assesments') }}">Assesment Reports</a>
-                </li>
-                <li class="{{ request()->is('reports/business*') ? 'active' : '' }}">
-                    <a href="{{ route('reports.business.init') }}">Registration Reports</a>
-                </li>
-                @endcan
+            <li class="{{ request()->is('reports*') ? 'active' : '' }}">
+                <a href="#reportSubmenu" data-toggle="collapse"
+                    aria-expanded="{{ request()->is('reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                    Managerial reports
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('reports*') ? 'show' : '' }}" id="reportSubmenu">
+                    @can('managerial-report-view')
+                        <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.returns') }}">Return Reports</a>
+                        </li>
+                        <li class="{{ request()->is('reports/assesments*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.assesments') }}">Assesment Reports</a>
+                        </li>
+                        <li class="{{ request()->is('reports/disputes*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.disputes') }}">Dispute Reports</a>
+                        </li>
+                        <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.business.init') }}">Registration Reports</a>
+                        </li>
+                    @endcan
 
             </ul>
         </li>
         @endcan
 
         @can('managerial-report-view')
-        <li class="{{ request()->is('queries*') ? 'active' : '' }}">
-            <a href="#queriesSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                Return Queries
-            </a>
-            <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
+            <li class="{{ request()->is('queries*') ? 'active' : '' }}">
+                <a href="#queriesSubmenu" data-toggle="collapse"
+                    aria-expanded="{{ request()->is('queries*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                    Return Queries
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
 
                 {{-- <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">--}}
                     {{-- <a href="{{ route('queries.nil-returns') }}">Nil Returns</a>--}}
                     {{-- </li>--}}
 
-                <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
-                    <a href="{{ route('queries.non-filers') }}">Non Filers</a>
-                </li>
+                    <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">
+                        <a href="{{ route('queries.non-filers') }}">Non Filers</a>
+                    </li>
 
-                <li class="{{ request()->is('queries/sales-purchases*') ? 'active' : '' }}">
-                    <a href="{{ route('queries.sales-purchases') }}">Sales Vs Purchases</a>
-                </li>
+                    <li class="{{ request()->is('queries/sales-purchases*') ? 'active' : '' }}">
+                        <a href="{{ route('queries.sales-purchases') }}">Sales Vs Purchases</a>
+                    </li>
 
-                <li class="{{ request()->is('queries/all-credit-returns*') ? 'active' : '' }}">
-                    <a href="{{ route('queries.all-credit-returns') }}">All Credit Returns</a>
-                </li>
-            </ul>
-        </li>
+                    <li class="{{ request()->is('queries/all-credit-returns*') ? 'active' : '' }}">
+                        <a href="{{ route('queries.all-credit-returns') }}">All Credit Returns</a>
+                    </li>
+                </ul>
+            </li>
         @endcan
 
         @can('manage-payment-management')
