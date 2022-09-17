@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\LeasePayment;
+use App\Traits\LeasePaymentReportTrait;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -13,6 +14,8 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class LeasePaymentExport implements FromView, WithEvents,ShouldAutoSize
 {
+    use LeasePaymentReportTrait;
+    
     public $startDate;
     public $endDate;
     public $status;
@@ -59,10 +62,14 @@ class LeasePaymentExport implements FromView, WithEvents,ShouldAutoSize
         } else {
             $model = LeasePayment::query()->with('taxpayer', 'landLease.region', 'landLease.district', 'landLease.ward');
             if ($this->date_type == 'payment_month') {
+
                 $months = $this->getMonthList($this->startDate, $this->endDate);
-                $model = clone $model
+                $years = $this->getYearList($this->startDate, $this->endDate);
+                $model = LeasePayment::query()
                 ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
-                ->whereIn("land_leases.{$this->date_type}", $months);
+                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                ->whereIn("land_leases.{$this->date_type}", $months)
+                ->whereIn("financial_years.code", $years);
                 
             } elseif ($this->date_type == 'payment_year') {
                 $years = $this->getYearList($this->startDate, $this->endDate);

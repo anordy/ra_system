@@ -39,10 +39,12 @@ class LeasePaymentReportTable extends DataTableComponent
 
             if ($this->date_type == 'payment_month') {
                 $months = $this->getMonthList($dates);
+                $years = $this->getYearList($dates);
                 $model = LeasePayment::query()
                 ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
-                ->whereIn("land_leases.{$this->date_type}", $months);
-
+                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                ->whereIn("land_leases.{$this->date_type}", $months)
+                ->whereIn("financial_years.code", $years);
             } elseif ($this->date_type == 'payment_year') {
                 $years = $this->getYearList($dates);
                 $model = LeasePayment::query()
@@ -193,7 +195,6 @@ class LeasePaymentReportTable extends DataTableComponent
     public function getBusinessZin($id)
     {
         $businessLocation = BusinessLocation::find($id);
-        // dd($businessLocation);
         return $businessLocation->zin;
     }
 }

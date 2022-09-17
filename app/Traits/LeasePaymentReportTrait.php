@@ -20,8 +20,8 @@ trait LeasePaymentReportTrait
     }
 
     public function getYearList($dates){
-        $period = CarbonPeriod::create($dates['startDate'], $dates['endDate'])->year();
-
+        $endDate = Carbon::parse($dates['endDate'])->copy()->endOfYear();
+        $period = CarbonPeriod::create($dates['startDate'], $endDate)->year();
         $years = collect($period)->map(function (Carbon $date) {
         return  $date->year;
         })->toArray();
