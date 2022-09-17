@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Debt\RecoveryMeasure;
 
-use Exception;
 use Livewire\Component;
 use App\Models\Debts\Debt;
+use App\Models\Returns\TaxReturn;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class AssignRecoveryMeasure extends Component
@@ -16,7 +16,7 @@ class AssignRecoveryMeasure extends Component
 
     public function mount($debtId)
     {
-        $this->debt = Debt::findOrFail($debtId);
+        $this->debt = TaxReturn::findOrFail($debtId);
     }
 
     public function render()

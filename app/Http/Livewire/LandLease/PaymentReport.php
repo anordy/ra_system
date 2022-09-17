@@ -2,23 +2,28 @@
 
 namespace App\Http\Livewire\LandLease;
 
-use App\Exports\LandLeaseExport;
 use App\Models\FinancialYear;
 use Livewire\Component;
+use App\Exports\LeasePaymentExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\LandLease;
+use App\Models\LeasePayment;
+use App\Traits\LeasePaymentReportTrait;
 use Illuminate\Support\Facades\Gate;
 
-class GenerateReport extends Component
+class PaymentReport extends Component
 {
-    use LivewireAlert;
+
+    use LivewireAlert, LeasePaymentReportTrait;
     //values for selects
     public $year;
     public $period;
     public $month;
     public $quater;
     public $semiAnnual;
+    public $status;
+    public $date_type = "created_at";
 
     //select options
     public $optionYears;
@@ -39,7 +44,6 @@ class GenerateReport extends Component
     public $range_start;
     public $range_end;
 
-    
 
     public function mount()
     {
@@ -62,7 +66,6 @@ class GenerateReport extends Component
 
         //set values
         $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
-        // $this->optionPeriods = array(1 => "Monthly", 2 => "Quarterly", 3 => "Semi-Annual", 4 => "Annual");
         $this->optionMonths = array(1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December");
         $this->optionQuarters = array("1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter");
         $this->optionSemiAnnuals = array("1st-Semi-Annual", "2nd-Semi-Annual");
@@ -71,17 +74,12 @@ class GenerateReport extends Component
         $this->showQuarters = false;
         $this->showSemiAnnuals = false;
 
-        $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getStartEndDate());
-    }
-
-    public function render()
-    {
-        return view('livewire.land-lease.generate-report');
+        $this->emitTo('land-lease.lease-payment-report-table', 'refreshTable',  $this->getParameters());
     }
 
     public function preview(){
         // dd($this->getStartEndDate());
-      $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getStartEndDate());
+      $this->emitTo('land-lease.lease-payment-report-table', 'refreshTable',  $this->getParameters());
     }
 
     public function export()
@@ -89,21 +87,53 @@ class GenerateReport extends Component
         if(!Gate::allows('land-lease-generate-report')){
             abort(403);
         }
+
         $dates = $this->getStartEndDate();
+
         if($dates['startDate'] == null || $dates['endDate'] == null) {
-            $exists = LandLease::exists();
+            $exists = LeasePayment::exists();
+            if ($this->status) {
+                $exists = LeasePayment::where('lease_payments.status', $this->status)->exists();
+            }
             if($exists){
                 $this->alert('success', 'Downloading file');
-                return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'Land Leases All Records.xlsx');
+                // dd($this->date_type);
+                return Excel::download(new LeasePaymentExport($dates['startDate'], $dates['endDate'], $this->status, $this->date_type), 'Land Leases Payment All Records.xlsx');
             }else{
                 $this->alert('error', "No data found.");
             } 
         }
 
-        $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
+
+        if ($this->date_type == 'payment_month') {
+            $months = $this->getMonthList($dates);
+                $years = $this->getYearList($dates);
+                $model = LeasePayment::query()
+                ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
+                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                ->whereIn("land_leases.{$this->date_type}", $months)
+                ->whereIn("financial_years.code", $years);
+
+        } elseif ($this->date_type == 'payment_year') {
+            $years = $this->getYearList($dates);
+            $leasePayment = LeasePayment::query()
+            ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+            ->whereIn("financial_years.code", $years);
+        } else{
+
+            $leasePayment =LeasePayment::whereBetween("{$this->date_type}", [$dates['startDate'], $dates['endDate']]);   
+        }
+
+        
+        if ($this->status) {
+            $leasePayment = clone $leasePayment->where('lease_payments.status', $this->status);
+        }
+
+        $exists = $leasePayment->exists();
+
         if ($exists) {
             $this->alert('success', 'Downloading file');
-            return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'Land Leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
+            return Excel::download(new LeasePaymentExport($dates['startDate'], $dates['endDate'], $this->status, $this->date_type), 'Land Leases Payment FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
         } else {
             $this->alert('error', "No data found for the selected period.");
         }
@@ -114,20 +144,51 @@ class GenerateReport extends Component
         if(!Gate::allows('land-lease-generate-report')){
             abort(403);
         }
+
         $dates = $this->getStartEndDate();
         if($dates['startDate'] == null || $dates['endDate'] == null) {
-            $exists = LandLease::exists();
+            
+            $exists = LeasePayment::exists();
+            if ($this->status) {
+                $exists = LeasePayment::where('lease_payments.status', $this->status)->exists();
+            }
+            
             if($exists){
                 $this->alert('success', 'Exporting Pdf File');
-                return redirect()->route('land-lease.download.report.pdf', encrypt(json_encode($dates)));
+                return redirect()->route('land-lease.payment.download.report.pdf', encrypt(json_encode($this->getParameters())));
             }else{
                 $this->alert('error', "No data found.");
             } 
         }
-        $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
+
+        if ($this->date_type == 'payment_month') {
+            $months = $this->getMonthList($dates);
+                $years = $this->getYearList($dates);
+                $model = LeasePayment::query()
+                ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
+                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                ->whereIn("land_leases.{$this->date_type}", $months)
+                ->whereIn("financial_years.code", $years);
+
+        } elseif ($this->date_type == 'payment_year') {
+            $years = $this->getYearList($dates);
+            $leasePayment = LeasePayment::query()
+            ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+            ->whereIn("financial_years.code", $years);
+        } else{
+
+            $leasePayment =LeasePayment::whereBetween("{$this->date_type}", [$dates['startDate'], $dates['endDate']]);   
+        }
+        
+        if ($this->status) {
+            $leasePayment = clone $leasePayment->where('lease_payments.status', $this->status);
+        }
+
+        $exists = $leasePayment->exists();
+        
         if ($exists) {
             $this->alert('success', 'Exporting Pdf File');
-            return redirect()->route('land-lease.download.report.pdf', encrypt(json_encode($dates)));
+            return redirect()->route('land-lease.payment.download.report.pdf', encrypt(json_encode($this->getParameters())));
         } else {
             $this->alert('error', "No data found for the selected period.");
         }
@@ -161,10 +222,17 @@ class GenerateReport extends Component
             }
         }
 
-        // dd('updated');
        $this->selectedDates = $this->getStartEndDate();
-    //    dd($this->selectedDates);
 
+    }
+
+    public function getParameters()
+    {
+        return [
+            'date_type' => $this->date_type,
+            'status' => $this->status,
+            'dates' => $this->getStartEndDate(),
+        ];
     }
 
     public function getStartEndDate()
@@ -175,7 +243,6 @@ class GenerateReport extends Component
                 'endDate' => null,
             ];
         } elseif ($this->year == "Custom Range") {
-            // dd('here');
             return [
                 'startDate' => date('Y-m-d', strtotime($this->range_start)),
                 'endDate' => date('Y-m-d', strtotime($this->range_end)),
@@ -239,4 +306,8 @@ class GenerateReport extends Component
         }
     }
 
+    public function render()
+    {
+        return view('livewire.land-lease.payment-report');
+    }
 }

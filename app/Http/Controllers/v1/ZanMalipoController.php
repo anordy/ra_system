@@ -424,12 +424,15 @@ class ZanMalipoController extends Controller
                 $updateLeasePayment = $bill->billable;
 
                 if ($bill->paidAmount() >= $bill->amount) {
-
-                    if(Carbon::now()->month < Carbon::parse($updateLeasePayment->due_date)->month){
-                        $status = LeaseStatus::IN_ADVANCE_PAYMENT;
-                    } else if(Carbon::now()->month == Carbon::parse($updateLeasePayment->due_date)->month){
+                    
+                    $nowDate = Carbon::now();
+                    $due_date = Carbon::parse($updateLeasePayment->due_date);
+                    
+                    if($nowDate->month == $due_date->month && $nowDate->year == $due_date->year){
                         $status = LeaseStatus::ON_TIME_PAYMENT;
-                    } else if(Carbon::now()->month > Carbon::parse($updateLeasePayment->due_date)->month){
+                    }elseif($nowDate < $due_date && $nowDate->year <= $due_date->year){
+                        $status = LeaseStatus::IN_ADVANCE_PAYMENT;
+                    } elseif($nowDate > $due_date){
                         $status = LeaseStatus::LATE_PAYMENT;
                     }
                     $updateLeasePayment->status = $status;                

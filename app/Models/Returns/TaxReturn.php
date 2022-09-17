@@ -10,6 +10,9 @@ use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
 use App\Models\Debts\DebtWaiver;
 use App\Models\Debts\DebtPenalty;
+use App\Models\Debts\RecoveryMeasure;
+use App\Models\Debts\DebtDemandNotice;
+use App\Models\Debts\SentDemandNotice;
 use App\Models\Installment\Installment;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Extension\ExtensionRequest;
@@ -96,5 +99,15 @@ class TaxReturn extends Model
     public function penalties()
     {
         return $this->hasMany(DebtPenalty::class, 'tax_return_id');
+    }
+
+    public function recoveryMeasure()
+    {
+        return $this->morphOne(RecoveryMeasure::class, 'debt');
+    }
+
+    public function demandNotices()
+    {
+        return $this->morphMany(DebtDemandNotice::class, 'debt');
     }
 }

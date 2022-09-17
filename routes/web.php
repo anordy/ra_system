@@ -448,10 +448,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/view/lease/payment/{id}', [LandLeaseController::class, 'viewLeasePayment'])->name('view.lease.payment');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        Route::get('/payment-report', [LandLeaseController::class, 'paymentReport'])->name('payment.report');
         Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');
         Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
         Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
         Route::get('/download-report-pdf/{dates}', [LandLeaseController::class, 'downloadLandLeaseReportPdf'])->name('download.report.pdf');
+        Route::get('/payment/download-report-pdf/{dates}', [LandLeaseController::class, 'downloadLandLeasePaymentReportPdf'])->name('payment.download.report.pdf');
     });
 
     //Tax Clearance
