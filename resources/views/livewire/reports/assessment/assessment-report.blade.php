@@ -19,7 +19,7 @@
                     {{ $message }}
                 </div>
             @enderror
-        </div>
+        </div>  
         <div class="col-md-4 form-group">
             <label for="start_month" class="d-flex justify-content-between'">
                 <span>
@@ -152,12 +152,12 @@
                     Preview Report
                 </button>
             </div>
-            {{-- <button class="btn btn-success ml-2" wire:click="exportExcel " wire:loading.attr="disabled">
+            <button class="btn btn-success ml-2" wire:click="exportExcel " wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                     wire:target="exportExcel"></i>
                 Export to Excel
-            </button> --}}
+            </button>
 
             <button class="btn btn-success ml-2" wire:click="exportPdf" wire:loading.attr="disabled">
                 <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="exportPdf"></i>

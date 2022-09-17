@@ -63,16 +63,4 @@ class LandLease extends Model
     public function leasePayments(){
         return $this->hasMany(LeasePayment::class);
     }
-
-    public function lastCompletedLeasePayment(){
-        $statues = [
-            LeaseStatus::IN_ADVANCE_PAYMENT,
-            LeaseStatus::LATE_PAYMENT,
-            LeaseStatus::ON_TIME_PAYMENT,
-            LeaseStatus::COMPLETE
-        ];
-
-        return $this->leasePayments;
-        // ->whereIn('status', $statues)->latest()->first();
-    }
 }

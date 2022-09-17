@@ -33,12 +33,15 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Penalties', 'code' => TaxType::PENALTY, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Interests', 'code' => TaxType::INTEREST, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Infrastructure', 'code' => TaxType::INFRASTRUCTURE, 'category' => 'other']);
-        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'RDF', 'code' => TaxType::RDF,'category' => 'other']);
-        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Road License Fee ', 'code' => TaxType::ROAD_LICENSE_FEE,'category' => 'other']);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'RDF', 'code' => TaxType::RDF, 'category' => 'other']);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Road License Fee ', 'code' => TaxType::ROAD_LICENSE_FEE, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Investigation', 'code' => TaxType::INVESTIGATION, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Audit', 'code' => TaxType::AUDIT, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Verification', 'code' => TaxType::VERIFICATION, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Disputes', 'code' => TaxType::DISPUTES, 'category' => 'other']);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Waiver', 'code' => TaxType::WAIVER, 'category' => 'other']);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Objection', 'code' => TaxType::OBJECTION, 'category' => 'other']);
+        TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Waiver and Objection', 'code' => TaxType::WAIVER_OBJECTION, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'eGovernment Fee', 'code' => TaxType::GOVERNMENT_FEE, 'category' => 'other']);
         TaxType::updateOrCreate(['gfs_code' => '116101', 'name' => 'Debts', 'code' => TaxType::DEBTS, 'category' => 'other']);
 

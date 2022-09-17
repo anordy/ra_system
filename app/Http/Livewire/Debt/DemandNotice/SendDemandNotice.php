@@ -8,7 +8,7 @@ use Livewire\Component;
 use App\Models\Debts\Debt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Debts\SentDemandNotice;
+use App\Models\Debts\DebtDemandNotice;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class SendDemandNotice extends Component
@@ -30,7 +30,7 @@ class SendDemandNotice extends Component
             $this->debt->demand_notice_count = $this->debt->demand_notice_count + 1;
             $this->debt->sent_demand_notice_date = Carbon::now();
             $this->debt->save();
-            SentDemandNotice::create(['debt_id' => $this->debt->id, 'sent_by' => 'user']);
+            DebtDemandNotice::create(['debt_id' => $this->debt->id, 'sent_by' => 'user']);
             DB::commit();
         } catch (Exception $e) {
             Log::error($e);

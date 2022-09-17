@@ -21,6 +21,9 @@ class FinancialYearSeeder extends Seeder
             ['name' => '2021/2022', 'code' => '2021'],
             ['name' => '2022/2023', 'code' => '2022'],
             ['name' => '2023/2024', 'code' => '2023'],
+            ['name' => '2024/2025', 'code' => '2024'],
+            ['name' => '2025/2026', 'code' => '2025'],
+            ['name' => '2026/2027', 'code' => '2026'],
         ];
 
         $months = [

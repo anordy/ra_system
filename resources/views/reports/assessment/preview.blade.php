@@ -14,7 +14,6 @@
        Assessment Report Preview
     </div>
     <div class="card-body mt-0">
-        check
     @livewire('reports.assessment.previews.assessment-preview-table',['parameters' => $parameters])
     </div>
 </div>

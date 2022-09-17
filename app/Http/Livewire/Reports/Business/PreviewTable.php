@@ -45,6 +45,9 @@ class PreviewTable extends DataTableComponent
             Column::make('Branch', 'name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Tax Region', 'taxRegion.name')
+                ->sortable()
+                ->searchable(),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
@@ -83,15 +86,28 @@ class PreviewTable extends DataTableComponent
                         return $row->region->name ?? '-';
                     }
             ),
+            Column::make('District', 'district_id')
+                ->sortable()
+                ->searchable()
+                ->format(
+                    function ($value, $row) {
+                        return $row->district->name ?? '-';
+                    }
+            ),
+            Column::make('Ward', 'ward_id')
+                ->sortable()
+                ->searchable()
+                ->format(
+                    function ($value, $row) {
+                        return $row->region->name ?? '-';
+                    }
+            ),
             Column::make('Physical Address', 'physical_address')
                 ->sortable()
                 ->searchable(),
 
             Column::make('Status', 'business.status')
                 ->view('reports.business.includes.status'),
-            Column::make('Tax Region', 'taxRegion.name')
-                ->sortable()
-                ->searchable(),
         ];
     }
 

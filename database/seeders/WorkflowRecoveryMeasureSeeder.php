@@ -21,7 +21,7 @@ class WorkflowRecoveryMeasureSeeder extends Seeder
             'property'  => ['marking']
         ];
         $initial_marking = 'apply';
-        $supports =  ['App\Models\Debts\Debt'];
+        $supports =  ['App\Models\Debts\RecoveryMeasure'];
         $places = [
             'crdm' => [
                 'owner' => 'staff',
