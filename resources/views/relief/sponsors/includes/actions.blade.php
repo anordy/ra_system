@@ -7,7 +7,7 @@
             </button>
         @endcan
         @can('relief-sponsors-delete')
-            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete</button>
+            <button class="btn btn-danger btn-sm" wire:click="delete({{$value}})"><i class="fa fa-trash"></i> Delete</button>
         @endcan
     </div>
 </div>
