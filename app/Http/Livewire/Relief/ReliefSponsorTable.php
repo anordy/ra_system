@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefSponsor;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -45,6 +46,21 @@ class ReliefSponsorTable extends DataTableComponent
                 ->sortable(),
             Column::make("Actions", "id")->view("relief.sponsors.includes.actions"),
         ];
+    }
+
+    public function delete($id)
+    {
+        if(!Gate::allows('relief-sponsors-delete')){
+            abort(403);
+        }
+        $sponsors = ReliefSponsor::find($id);
+
+        if ($sponsors->projectLists()->count()>0) {
+            $this->alert('error', 'Cannot delete Sponsor. its used in one of created project.');
+        } else {
+            $sponsors->delete();
+            $this->alert('success', 'Sponor deleted successfully.');
+        }
     }
 
 }

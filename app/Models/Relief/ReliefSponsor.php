@@ -12,7 +12,7 @@ class ReliefSponsor extends Model
     protected $guarded = [];
     protected $table = 'relief_sponsors';
 
-    public function relief() {
-        return $this->hasMany(Relief::class);
+    public function projectLists() {
+        return $this->hasMany(ReliefProjectList::class);
     }
 }
