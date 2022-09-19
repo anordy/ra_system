@@ -71,6 +71,7 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
@@ -342,6 +343,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
         Route::resource('/ministries', ReliefMinistriestController::class);
+        Route::resource('/sponsors', ReliefSponsorController::class);
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);

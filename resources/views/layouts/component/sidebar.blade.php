@@ -379,6 +379,11 @@
                     <a href="{{ route('reliefs.ministries.index') }}">Ministries</a>
                 </li>
                 @endcan
+                @can('relief-sponsors-view')
+                    <li class="{{ request()->is('reliefs/sponsors*') ? 'active' : '' }}">
+                        <a href="{{ route('reliefs.sponsors.index') }}">Sponsors</a>
+                    </li>
+                @endcan
                 @can('relief-projects-view')
                 <li class="{{ request()->is('reliefs/projects*') ? 'active' : '' }}">
                     <a href="{{ route('reliefs.projects.index') }}">Projects</a>

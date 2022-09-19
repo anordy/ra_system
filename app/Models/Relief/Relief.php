@@ -49,4 +49,8 @@ class Relief extends Model
         return $this->belongsTo(User::class,'created_by');
     }
 
+    public function sponsor(){
+        return $this->belongsTo(ReliefSponsor::class, 'sponsor_id');
+    }
+
 }
