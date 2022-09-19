@@ -35,6 +35,12 @@
                         <span class="font-weight-bold text-uppercase">Closing Date</span>
                         <p class="my-1">{{ $temp_closure->closing_date }}</p>
                     </div>
+                    @if ($temp_closure->reopening_date)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Re-opened On</span>
+                        <p class="my-1">{{ $temp_closure->reopening_date }}</p>
+                    </div>
+                    @endif
                     @if ($temp_closure->extended_from_id)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Previous Opening Date</span>

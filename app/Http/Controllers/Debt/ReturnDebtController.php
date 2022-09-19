@@ -2,61 +2,70 @@
 
 namespace App\Http\Controllers\Debt;
 
-use App\Models\TaxType;
-use App\Models\Debts\Debt;
+use App\Models\Debts\DebtWaiver;
+use App\Models\Returns\TaxReturn;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
-use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Debts\DebtWaiverAttachment;
 
 class ReturnDebtController extends Controller
 {
 
-    public function index($taxType)
+    public function index()
     {
-        $taxType = decrypt($taxType);
-
-        if (!Gate::allows("debt-management-{$taxType}-view")) {
+        if (!Gate::allows('debt-management-debts-view')) {
             abort(403);
-        }
-        return view('debts.returns.index', compact('taxType'));
+        }       
+        return view('debts.returns.index');
     }
 
-    public function show($id, $taxType)
+    public function overdue()
     {
-        $id = decrypt($id);
-        if ($taxType == TaxType::HOTEL || $taxType == TaxType::RESTAURANT || $taxType == TaxType::TOUR_OPERATOR) {
-            $return =  HotelReturn::find($id); 
-        } else if ($taxType == TaxType::PETROLEUM) {
-            $return =  PetroleumReturn::find($id);
-        } else if ($taxType == TaxType::EXCISE_DUTY_BFO) {
-            $return =  BfoReturn::find($id);
-        }  else if ($taxType == TaxType::EXCISE_DUTY_MNO) {
-            $return =  MnoReturn::find($id);
-        } else if ($taxType == TaxType::STAMP_DUTY) {
-            $return =  StampDutyReturn::find($id);
-        } else if ($taxType == TaxType::VAT) {
-            $return =  VatReturn::find($id);
-        } else if ($taxType == TaxType::LUMPSUM_PAYMENT) {
-            $return =  LumpSumReturn::find($id);
-        } else if ($taxType == TaxType::SEA_SERVICE_TRANSPORT_CHARGE || $taxType == TaxType::AIRPORT_SERVICE_SAFETY_FEE) {
-            $return =  PortReturn::find($id);
-        } else if ($taxType == TaxType::ELECTRONIC_MONEY_TRANSACTION) {
-            $return =  EmTransactionReturn::find($id);
-        } else if ($taxType == TaxType::MOBILE_MONEY_TRANSFER) {
-            $return =  MmTransferReturn::find($id);
-        }  else if ($taxType == TaxType::MOBILE_MONEY_TRANSFER) {
-            $return =  MmTransferReturn::find($id);
+        if (!Gate::allows('debt-management-debts-overdue-view')) {
+            abort(403);
         }
-        return view('debts.returns.show', compact('return', 'id'));
+        return view('debts.overdue.overdue-debts');
+    }
+
+    public function waivers()
+    {
+        if (!Gate::allows('debt-management-waiver-debt-view')) {
+            abort(403);
+        }
+        return view('debts.waivers.index');
+    }
+
+    public function approval($waiverId)
+    {
+        $waiver = DebtWaiver::findOrFail(decrypt($waiverId));
+        $files = DebtWaiverAttachment::where('debt_id', $waiver->id)->get();
+        return view('debts.waivers.approval', compact('waiver', 'files'));
+    }
+
+    public function recovery($debtId)
+    {
+        $debtId = decrypt($debtId);
+        return view('debts.recovery-measure.assign-recovery-measure', compact('debtId'));
+    }
+
+    public function sendDemandNotice($debtId)
+    {
+        $debtId = decrypt($debtId);
+        return view('debts.demand-notice.send-demand-notice', compact('debtId'));
+    }
+
+    public function show($debtId)
+    {
+        $debtId = decrypt($debtId);
+        $tax_return = TaxReturn::findOrFail($debtId);
+        return view('debts.returns.show', compact('tax_return'));
+    }
+
+    public function showOverdue($debtId)
+    {
+        $debtId = decrypt($debtId);
+        $tax_return = TaxReturn::findOrFail($debtId);
+        return view('debts.returns.show', compact('tax_return'));
     }
     
 }

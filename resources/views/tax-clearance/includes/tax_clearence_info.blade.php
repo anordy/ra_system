@@ -127,24 +127,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($debts))
-                                        @foreach ($debts as $debt)
-                                            @if ($debt->taxtype->code == \App\Models\TaxType::STAMP_DUTY ||
-                                                $debt->taxtype->code == \App\Models\TaxType::EXCISE_DUTY_BFO ||
-                                                $debt->taxtype->code == \App\Models\TaxType::EXCISE_DUTY_MNO ||
-                                                $debt->taxtype->code == \App\Models\TaxType::HOTEL ||
-                                                $debt->taxtype->code == \App\Models\TaxType::VAT ||
-                                                $debt->taxtype->code == \App\Models\TaxType::RESTAURANT ||
-                                                $debt->taxtype->code == \App\Models\TaxType::PETROLEUM ||
-                                                $debt->taxtype->code == \App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE ||
-                                                $debt->taxtype->code == \App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE ||
-                                                $debt->taxtype->code == \App\Models\TaxType::LUMPSUM_PAYMENT ||
-                                                $debt->taxtype->code == \App\Models\TaxType::ELECTRONIC_MONEY_TRANSACTION ||
-                                                $debt->taxtype->code == \App\Models\TaxType::MOBILE_MONEY_TRANSFER)
+                                    @if (count($tax_return_debts))
+                                        @foreach ($tax_return_debts as $debt)
                                                 <tr>
                                                     <td>{{ $debt->taxtype->name }}</td>
                                                     <td>
-                                                        {{ number_format($debt->original_principal_amount, 2) }}
+                                                        {{ number_format($debt->principal, 2) }}
                                                         {{ $debt->currency }}
                                                     </td>
                                                     <td>
@@ -163,7 +151,6 @@
                                                         {{ $debt->currency }}
                                                     </td>
                                                 </tr>
-                                            @endif
                                         @endforeach
                                     @else
                                         <tr>

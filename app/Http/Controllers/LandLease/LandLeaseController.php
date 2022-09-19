@@ -5,6 +5,8 @@ namespace App\Http\Controllers\LandLease;
 use App\Http\Controllers\Controller;
 use App\Models\LandLease;
 use App\Models\LandLeaseAgent;
+use App\Models\LeasePayment;
+use App\Traits\LeasePaymentReportTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +15,7 @@ use PDF;
 
 class LandLeaseController extends Controller
 {
+    use LeasePaymentReportTrait;
     //
 
     public function index()
@@ -38,6 +41,11 @@ class LandLeaseController extends Controller
     public function generateReport()
     {
         return view('land-lease.generate-report');
+    }
+
+    public function paymentReport()
+    {
+        return view('land-lease.payment-report');
     }
 
     public function createAgent()
@@ -86,6 +94,56 @@ class LandLeaseController extends Controller
         $startDate= $from->format('Y-m-d');
         $endDate = $to->format('Y-m-d');
         $pdf = PDF::loadView('exports.land-lease.pdf.land-lease-report',compact('landLeases','startDate','endDate'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        return $pdf->download('Land Leases applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.pdf');
+    }
+
+
+    public function downloadLandLeasePaymentReportPdf($parameter)
+    {
+        // dd($parameter);
+        $data = json_decode(decrypt($parameter),true);
+        $dates = $data['dates'];
+        $status = $data['status'];
+        $date_type = $data['date_type'];
+
+        if ($dates == []) {
+            $leasePayments = LeasePayment::query()->orderBy('created_at', 'asc');
+        } elseif ($dates['startDate'] == null || $dates['endDate'] == null) {
+            $leasePayments = LeasePayment::query()->orderBy('created_at', 'asc');
+        } else {
+
+            if ($date_type == 'payment_month') {
+                $months = $this->getMonthList($dates);
+                $years = $this->getYearList($dates);
+                $model = LeasePayment::query()
+                ->leftJoin('land_leases', 'land_leases.id', 'lease_payments.land_lease_id')
+                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                ->whereIn("land_leases.{$this->date_type}", $months)
+                ->whereIn("financial_years.code", $years);
+
+            } elseif ($date_type == 'payment_year') {
+                $years = $this->getYearList($dates);
+                $leasePayments = LeasePayment::query()
+                ->leftJoin('financial_years', 'financial_years.id', 'lease_payments.financial_year_id')
+                ->whereIn("financial_years.code", $years);
+
+            }else {
+                $leasePayments = LeasePayment::query()->whereBetween("lease_payments.{$date_type}", [$dates['startDate'], $dates['endDate']]);
+            }
+
+            if ($status) {
+                $leasePayments = clone $leasePayments->where('lease_payments.status', $status);
+            }
+
+        }
+        $leasePayments = $leasePayments->get();
+        $from = \Carbon\Carbon::parse($dates['startDate']); 
+        $to = \Carbon\Carbon::parse($dates['endDate']); 
+        $startDate= $from->format('Y-m-d');
+        $endDate = $to->format('Y-m-d');
+        $pdf = PDF::loadView('exports.land-lease.pdf.lease-payment-report',compact('leasePayments','startDate','endDate'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download('Land Leases applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.pdf');

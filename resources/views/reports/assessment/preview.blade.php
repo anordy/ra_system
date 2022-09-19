@@ -14,7 +14,7 @@
        Assessment Report Preview
     </div>
     <div class="card-body mt-0">
-    @livewire()
+    @livewire('reports.assessment.previews.assessment-preview-table',['parameters' => $parameters])
     </div>
 </div>
 @endsection
