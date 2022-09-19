@@ -101,7 +101,7 @@ class ClaimsReport extends Component
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
-        return redirect()->route('reports.returns.preview', encrypt(json_encode($this->getParameters())));
+        return redirect()->route('reports.claims.preview', encrypt(json_encode($this->getParameters())));
     }
 
     public function exportPdf()
@@ -114,7 +114,7 @@ class ClaimsReport extends Component
             return;
         }
         $this->alert('success', 'Exporting Pdf File');
-        return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
+        return redirect()->route('reports.claim.download.pdf', encrypt(json_encode($parameters)));
     }
 
     public function exportExcel()

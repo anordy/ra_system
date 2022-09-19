@@ -392,7 +392,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/claims', [ClaimReportController::class, 'init'])->name('claims.init');
         Route::get('/claims/preview/{parameters}', [ClaimReportController::class, 'preview'])->name('claims.preview');
-        Route::get('/claims/download-report-pdf/{data}', [ClaimReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
+        Route::get('/claims/download-report-pdf/{data}', [ClaimReportController::class, 'exportClaimReportPdf'])->name('claim.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {

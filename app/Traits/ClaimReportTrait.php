@@ -14,17 +14,26 @@ trait ClaimReportTrait
 {
     public function getRecords($parameters)
     {
-        $model = TaxClaim::query()->with('credit');
+        if ($parameters['tax_payer_id'] != 'all')
+        {
+            $model = TaxClaim::query()->with('credit', 'business')
+                ->leftJoin('businesses', 'tax_claims.business_id', '=', 'businesses.id')
+                ->where('businesses.responsible_person_id', '=', $parameters['tax_payer_id']);
+        }
+        else
+        {
+            $model = TaxClaim::query()->with('credit', 'business');
+        }
+
         if ($parameters['duration'] == 'yearly') {
             if ($parameters['status'] == 'approved') {
                 $claim = clone $model->where('tax_claims.status', '=', 'approved')
                     ->leftJoin('tax_credits', 'tax_credits.claim_id', '=', 'tax_claims.id')
                     ->where('tax_credits.payment_status', '=', $parameters['payment_status']);
-//                ->where('tax_claims.created_by_id', '=', $parameters['taxpayer']);
             } elseif ($parameters['status'] == 'both') {
                 $claim = clone $model;
             } else {
-                $claim = clone $model->where('status', $parameters['status']);
+                $claim = clone $model->where('tax_claims.status', $parameters['status']);
             }
         } else {
             if ($parameters['status'] == 'approved') {
@@ -35,16 +44,11 @@ trait ClaimReportTrait
             } elseif ($parameters['status'] == 'both') {
                 $claim = clone $model->whereBetween('tax_claims.created_at', [$parameters['from'], $parameters['to']]);
             } else {
-                $claim = clone $model->where('status', $parameters['status'])
+                $claim = clone $model->where('tax_claims.status', $parameters['status'])
                     ->whereBetween('tax_claims.created_at', [$parameters['from'], $parameters['to']]);
             }
         }
 
-//        if ($claim->count() < 1) {
-//            dd('yes');
-//            return $claim;
-//        }
-//        dd($this->getSelectedRecords($claim, $parameters)->get());
         return $this->getSelectedRecords($claim, $parameters);
     }
 

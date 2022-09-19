@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Reports\Returns\Previews;
+namespace App\Http\Livewire\Reports\Claims\Previews;
 
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\TaxType;
+use App\Traits\ClaimReportTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -13,23 +12,19 @@ use App\Traits\ReturnReportTrait;
 
 class ReportPreviewTable extends DataTableComponent
 {
-    use LivewireAlert, ReturnReportTrait;
+    use LivewireAlert, ClaimReportTrait;
 
     public $parameters;
-    public $lumpsump;
 
     public function mount($parameters)
     {
-        // dd($parameters);
         $this->parameters = $parameters;
-        $this->lumpsump = TaxType::where('code',TaxType::LUMPSUM_PAYMENT)->first();
     }
 
     public function builder(): Builder
     {
-        $mnos = $this->getRecords($this->parameters);
-        // dd($mnos->get());
-        return $mnos;
+        $reports = $this->getRecords($this->parameters);
+        return $reports;
     }
 
     public function configure(): void
@@ -39,19 +34,12 @@ class ReportPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_returns.location_id', 'tax_returns.financial_month_id', 'tax_returns.created_at', 'tax_returns.filed_by_id', 'tax_returns.filed_by_type','tax_returns.return_id']);
+        $this->setAdditionalSelects(['tax_claims.business_id', 'tax_claims.location_id', 'tax_claims.financial_month_id', 'tax_claims.created_at']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Filing Date", "created_at")
-                ->searchable()
-                ->sortable()
-                ->format(function ($value, $row) {
-                    return date('d/m/Y', strtotime($value));
-                }),
-                
             Column::make("Business", "business_id")
                 ->searchable()
                 ->sortable()
@@ -84,21 +72,7 @@ class ReportPreviewTable extends DataTableComponent
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        if($row->tax_type_id == $this->lumpsump->id){
-                            return LumpSumReturn::where('id',$row->return_id)->first()->quarter_name ?? '-';
-                        }else{
-                            return $row->financialMonth->name;
-                        }
-                        
-                    }
-                ),
-
-            Column::make("Filed By", "id")
-                ->searchable()
-                ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        return $row->taxpayer->fullName;
+                        return $row->financialMonth->name;
                     }
                 ),
 
@@ -106,7 +80,7 @@ class ReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make("Principal Amount", "principal")
+            Column::make("Amount", "amount")
                 ->searchable()
                 ->sortable()
                 ->format(
@@ -115,63 +89,15 @@ class ReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("Interest", "interest")
+            Column::make("Claim Status", "status")
                 ->searchable()
                 ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        return number_format($value, 2) ?? '-';
-                    }
-                ),
+                ->view('reports.claims.includes.claim-status'),
 
-            Column::make("Penalty", "penalty")
-                ->searchable()
-                ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        return number_format($value, 2) ?? '-';
-                    }
-                ),
-
-            Column::make("Total Amount", "total_amount")
-                ->searchable()
-                ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        return number_format($value, 2);
-                    }
-                ),
-
-            Column::make("Outstanding Amount", "outstanding_amount")
-                ->searchable()
-                ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        return number_format($value, 2);
-                    }
-                ),
-
-            Column::make("Filing Due Date", "filing_due_date")
-                ->searchable()
-                ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        if (!$value) {
-                            return '-';
-                        }
-                        return date('M, d Y', strtotime($value));
-                    }
-                ),
-
-            Column::make("Filing Status", "created_at")
-                ->searchable()
-                ->sortable()
-                ->view('reports.returns.includes.filing-status'),
-
-            Column::make("Payment Status", "paid_at")
-                ->searchable()
-                ->sortable()
-                ->view('reports.returns.includes.payment-status'),
+//            Column::make("Payment Status", "paid_at")
+//                ->searchable()
+//                ->sortable()
+//                ->view('reports.returns.includes.payment-status'),
         ];
     }
 }
