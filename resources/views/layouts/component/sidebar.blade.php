@@ -556,6 +556,10 @@
                         <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
                             <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
+
+                        <li class="{{ request()->is('reports/claims*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.claims.init') }}">Claim Reports</a>
+                        </li>
                     @endcan
 
                 </ul>
@@ -787,15 +791,24 @@
                         <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
                             <a href="{{ route('settings.mvr-generic.index','CourtLevel') }}">Court Levels</a>
                         </li>
+
+                        @can('setting-financial-year-view')
                         <li class="{{ request()->is('settings/financial-years') ? 'active' : '' }}">
                             <a href="{{ route('settings.financial-years') }}">Financial Years</a>
                         </li>
+                        @endcan
+
+                        @can('setting-financial-month-view')
                         <li class="{{ request()->is('settings/financial-months') ? 'active' : '' }}">
                             <a href="{{ route('settings.financial-months') }}">Financial Months</a>
                         </li>
+                        @endcan
+
+                        @can('setting-return-configuration-view')
                         <li class="{{ request()->is('settings/return-config/*') ? 'active' : '' }}">
                             <a href="{{route('settings.return-config.index')}}">Return Configurations</a>
                         </li>
+                        @endcan
                 </ul>
             </li>
         @endcan

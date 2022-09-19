@@ -152,6 +152,7 @@ class TaxClaimApprovalProcessing extends Component
             ]);
 
             $this->subject->status = TaxClaimStatus::APPROVED;
+            $this->subject->approved_on = now();
             $this->subject->save();
         }
 

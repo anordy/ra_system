@@ -10,6 +10,7 @@ use App\Models\TaPaymentConfigurationHistory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -29,6 +30,10 @@ class AddMonthModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-financial-month-add')) {
+            abort(403);
+        }
+
         $validate = $this->validate([
             'year' => 'required',
             'number' => 'required',
@@ -49,7 +54,6 @@ class AddMonthModal extends Component
                 'number'            => $this->number,
                 'name'              => $this->month,
                 'due_date'          => Carbon::create($yr['code'], $this->number, 20)->toDateTimeString(),
-                'lumpsum_due_date'  => Carbon::create($yr['code'], $this->number)->endOfMonth()->toDateTimeString(),
             ]);
 
             $seven_days = SevenDaysFinancialMonth::query()->create([
