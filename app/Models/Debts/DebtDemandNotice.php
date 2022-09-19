@@ -3,18 +3,18 @@
 namespace App\Models\Debts;
 
 use App\Models\User;
-use App\Models\Debts\Debt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class SentDemandNotice extends Model
+class DebtDemandNotice extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function debt(){
-        return $this->belongsTo(Debt::class, 'debt_id');
+    public function debt()
+    {
+        return $this->morphTo();
     }
 
     public function user(){

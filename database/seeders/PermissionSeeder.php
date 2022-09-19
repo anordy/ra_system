@@ -245,6 +245,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'relief-ministries-edit', 'sys_module_id' => 23],
             ['name' => 'relief-ministries-delete', 'sys_module_id' => 23],
 
+            ['name' => 'relief-sponsors-view', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-create', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-delete', 'sys_module_id' => 23],
+
             ['name' => 'relief-projects-view', 'sys_module_id' => 23],
             ['name' => 'relief-projects-create', 'sys_module_id' => 23],
             ['name' => 'relief-projects-edit', 'sys_module_id' => 23],

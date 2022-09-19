@@ -2,23 +2,24 @@
 
 namespace App\Models\Debts;
 
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Debts\RecoveryMeasureCategory;
-use App\Models\Returns\TaxReturn;
+use App\Models\Debts\DebtRecoveryMeasure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RecoveryMeasure extends Model
 {
-    use HasFactory;
+    use HasFactory, WorkflowTrait;
 
     protected $guarded = [];
 
-    public function debt() {
-        return $this->belongsTo(TaxReturn::class, 'tax_return_id');
+    public function debt()
+    {
+        return $this->morphTo();
     }
 
-    public function category() {
-        return $this->belongsTo(RecoveryMeasureCategory::class, 'recovery_measure_id');
+    public function measures() {
+        return $this->hasMany(DebtRecoveryMeasure::class, 'recovery_measure_id');
     }
 
 }

@@ -25,4 +25,8 @@ class ReliefProjectList extends Model
     {
         return $this->belongsTo(ReliefMinistry::class);
     }
+
+    public function sponsor(){
+        return $this->belongsTo(ReliefSponsor::class, 'relief_sponsor_id');
+    }
 }

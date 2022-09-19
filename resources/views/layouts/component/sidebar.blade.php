@@ -379,6 +379,11 @@
                     <a href="{{ route('reliefs.ministries.index') }}">Ministries</a>
                 </li>
                 @endcan
+                @can('relief-sponsors-view')
+                    <li class="{{ request()->is('reliefs/sponsors*') ? 'active' : '' }}">
+                        <a href="{{ route('reliefs.sponsors.index') }}">Sponsors</a>
+                    </li>
+                @endcan
                 @can('relief-projects-view')
                 <li class="{{ request()->is('reliefs/projects*') ? 'active' : '' }}">
                     <a href="{{ route('reliefs.projects.index') }}">Projects</a>
@@ -511,26 +516,30 @@
         </li>
 
         @can('land-lease-management')
-        <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
-            <a href="#landLeaseSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
-                Lease</a>
-            <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}" id="landLeaseSubmenu">
-                <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
-                    <a href="{{ route('land-lease.list') }}">Land Lease List</a>
-                </li>
-                @can('land-lease-generate-report')
-                <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
-                    <a href="{{ route('land-lease.generate.report') }}">Generate Report</a>
-                </li>
-                @endcan
-                @can('land-lease-agent-view')
-                <li class="{{ request()->is('land-lease/agents*') ? 'active' : '' }}">
-                    <a href="{{ route('land-lease.agents') }}">Land Lease Agents</a>
-                </li>
-                @endcan
-            </ul>
-        </li>
+            <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
+                <a href="#landLeaseSubmenu" data-toggle="collapse"
+                    aria-expanded="{{ request()->is('land-lease*') ? 'true' : 'false' }}" class="dropdown-toggle">Land
+                    Lease</a>
+                <ul class="collapse list-unstyled {{ request()->is('land-lease*') ? 'show' : '' }}"
+                    id="landLeaseSubmenu">
+                    <li class="{{ request()->is('land-lease/list*') ? 'active' : '' }}">
+                        <a href="{{ route('land-lease.list') }}">Land Lease List</a>
+                    </li>
+                    @can('land-lease-generate-report')
+                        <li class="{{ request()->is('land-lease/generate-report*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.generate.report') }}">General Report</a>
+                        </li>
+                        <li class="{{ request()->is('land-lease/payment-report*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.payment.report') }}">Payment Report</a>
+                        </li>
+                    @endcan
+                    @can('land-lease-agent-view')
+                        <li class="{{ request()->is('land-lease/agents*') ? 'active' : '' }}">
+                            <a href="{{ route('land-lease.agents') }}">Land Lease Agents</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
         @endcan
         @can('managerial-report')
             <li class="{{ request()->is('reports*') ? 'active' : '' }}">
