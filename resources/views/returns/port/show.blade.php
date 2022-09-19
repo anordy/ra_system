@@ -10,13 +10,12 @@
         </a> --}}
     </div>
     <div class="card">
+        <div class="card-header bg-white font-weight-bold text-uppercase">
+            {{ $return->taxtype->name }} Returns Details for
+            {{ $return->financialMonth->name }},
+            {{ $return->financialMonth->year->code }}
+        </div>
         <div class="card-body">
-            <h6 class="text-uppercase mt-2 ml-2">{{ $return->taxtype->name }} Returns Details for
-                {{ $return->financialMonth->name }},
-                {{ $return->financialMonth->year->code }}</h6>
-            <hr>
-
-
             <div>
                 <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -134,8 +133,14 @@
                             </div>
                         </div>
                     </div>
-
-
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank" class="btn btn-info">
+                        <i class="bi bi-printer-fill mr-2"></i>
+                        Print Return
+                    </a>
                 </div>
             </div>
         </div>

@@ -56,14 +56,6 @@
                         </div>
                     </div>
                     <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>
-                    <div class="row mt-3">
-                        <div class="col-md-12 d-flex justify-content-end">
-                            <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank" class="btn btn-info">
-                                <i class="bi bi-printer-fill mr-2"></i>
-                                Print Return
-                            </a>
-                        </div>
-                    </div>
                 </div>
                 <div id="payment-structure" class="tab-pane fade p-4">
                     <table class="table table-bordered mb-0 normal-text">
@@ -136,6 +128,14 @@
                         @endif
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank" class="btn btn-info">
+                        <i class="bi bi-printer-fill mr-2"></i>
+                        Print Return
+                    </a>
                 </div>
             </div>
         </div>
