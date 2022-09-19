@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefMinistry;
 use App\Models\Relief\ReliefProjectList;
+use App\Models\Relief\ReliefSponsor;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -20,7 +21,9 @@ class ReliefProjectListEditModal extends Component
     public $rate;
     public $project;
     public $ministry_id;
+    public $relief_sponsor_id;
     public $ministries = [];
+    public $sponsors = [];
 
     protected function rules()
     {
@@ -34,17 +37,19 @@ class ReliefProjectListEditModal extends Component
     public function mount($id)
     {
         $this->ministries = ReliefMinistry::all();
+        $this->sponsors = ReliefSponsor::all();
         $data = ReliefProjectList::find($id);
         $this->project = $data;
         $this->name = $data->name;
         $this->description = $data->description;
         $this->rate = $data->rate;
         $this->ministry_id = $data->ministry_id;
+        $this->relief_sponsor_id = $data->relief_sponsor_id;
     }
 
     public function submit()
     {
-        if(!Gate::allows('relief-project-edit-create')){
+        if(!Gate::allows('relief-projects-list-edit')){
             abort(403);
         }
         $this->validate();
@@ -53,7 +58,8 @@ class ReliefProjectListEditModal extends Component
                 'name' => $this->name,
                 'description' => $this->description,
                 'rate' => $this->rate,
-                'ministry_id' => $this->ministry_id,
+                'ministry_id' => $this->ministry_id ?? null,
+                'relief_sponsor_id' => $this->relief_sponsor_id ?? null,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

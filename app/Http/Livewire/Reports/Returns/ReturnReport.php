@@ -144,6 +144,7 @@ class ReturnReport extends Component
         }
     }
 
+    //preview report
     public function preview()
     {
         $this->validate();
@@ -151,47 +152,23 @@ class ReturnReport extends Component
             return;
         };
         $this->parameters = $this->getParameters();
-        // dd($this->parameters);
-        $records = $this->getRecords($this->parameters);
-        if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
-            return;
-        }
-        return redirect()->route('reports.returns.preview', encrypt(json_encode($this->getParameters())));
+        $this->previewReport($this->parameters);
     }
 
+    //export pdf report
     public function exportPdf()
     {
         $this->validate();
         $this->parameters = $this->getParameters();
-        $records = $this->getRecords($this->parameters);
-        if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
-            return;
-        }
-        $this->alert('success', 'Exporting Pdf File');
-        return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($this->parameters)));
+        $this->exportPdfReport($this->parameters);
     }
 
+    //export excel report
     public function exportExcel()
     {
         $this->validate();
         $this->parameters = $this->getParameters();
-        $records = $this->getRecords($this->parameters);
-        if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
-            return;
-        }
-
-        if ($this->parameters['year'] == 'all') {
-            $fileName = $this->parameters['tax_type_name'] . '_' . $this->parameters['filing_report_type'] . '.xlsx';
-            $title = $this->parameters['filing_report_type'] . ' For' . $this->parameters['tax_type_name'];
-        } else {
-            $fileName = $this->parameters['tax_type_name'] . '_' . $this->parameters['filing_report_type'] . ' - ' . $this->parameters['year'] . '.xlsx';
-            $title = $this->parameters['filing_report_type'] . ' For' . $this->parameters['tax_type_name'] . ' ' . $this->parameters['year'];
-        }
-        $this->alert('success', 'Exporting Excel File');
-        return Excel::download(new ReturnReportExport($records, $title, $this->parameters), $fileName);
+        $this->exportExcelReport($this->parameters);
     }
 
 

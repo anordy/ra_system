@@ -2,11 +2,9 @@
 
 namespace App\Traits;
 
-use App\Enum\TaxClaimStatus;
-use App\Models\Claims\TaxClaim;
-use App\Models\Returns\MmTransferReturn;
+use App\Exports\ReturnReportExport;
 use App\Models\Returns\TaxReturn;
-use App\Models\TaxType;
+use Maatwebsite\Excel\Facades\Excel;
 
 trait ReturnReportTrait
 {
@@ -72,5 +70,42 @@ trait ReturnReportTrait
         }
 
         return $returns->whereBetween("tax_returns.created_at", [$dates['startDate'], $dates['endDate']])->orderBy("tax_returns.created_at", 'asc');
+    }
+
+    public function exportExcelReport($parameters){
+        $records = $this->getRecords($parameters);
+        if ($records->count() < 1) {
+            $this->alert('error', 'No Records Found in the selected criteria');
+            return;
+        }
+
+        if ($parameters['year'] == 'all') {
+            $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . '.xlsx';
+            $title = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'];
+        } else {
+            $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . ' - ' . $parameters['year'] . '.xlsx';
+            $title = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'] . ' ' . $parameters['year'];
+        }
+        $this->alert('success', 'Exporting Excel File');
+        return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
+    }
+
+    public function exportPdfReport($parameters){
+        $records = $this->getRecords($parameters);
+        if ($records->count() < 1) {
+            $this->alert('error', 'No Records Found in the selected criteria');
+            return;
+        }
+        $this->alert('success', 'Exporting Pdf File');
+        return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
+    }
+
+    public function previewReport($parameters){
+        $records = $this->getRecords($parameters);
+        if ($records->count() < 1) {
+            $this->alert('error', 'No Records Found in the selected criteria');
+            return;
+        }
+        return redirect()->route('reports.returns.preview', encrypt(json_encode($parameters)));
     }
 }
