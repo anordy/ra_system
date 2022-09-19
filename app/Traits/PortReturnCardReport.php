@@ -9,17 +9,15 @@ use Illuminate\Support\Facades\DB;
 trait PortReturnCardReport
 {
 
-    public function returnCardReportForPaidReturns($returnClass, $returnTableName, $penaltyTableName){
+    public function returnCardReportForPaidReturns($returnClass, $returnTableName, $penaltyTableName) : array
+    {
 
-        $penaltyData = $returnClass::whereIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
-        ->where("{$penaltyTableName}.currency", 'TZS')
-        ->select(
-            DB::raw("SUM(".$penaltyTableName.".late_filing) as totalLateFiling"),
-            DB::raw("SUM(".$penaltyTableName.".late_payment) as totalLatePayment"),
-            DB::raw("SUM(".$penaltyTableName.".rate_amount) as totalRate"),
-        )
-        ->groupBy('return_id')
-        ->get();
+        $penaltyData = $returnClass::whereIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])
+            ->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+            ->where("{$penaltyTableName}.currency", 'TZS')
+            ->select(DB::raw("SUM(".$penaltyTableName.".late_filing) as totalLateFiling"), DB::raw("SUM(".$penaltyTableName.".late_payment) as totalLatePayment"), DB::raw("SUM(".$penaltyTableName.".rate_amount) as totalRate"),)
+            ->groupBy('return_id')
+            ->get();
 
         $returnQuery = $returnClass::where("currency", 'TZS')->whereIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
 
@@ -33,7 +31,8 @@ trait PortReturnCardReport
     }
 
 
-    public function returnCardReportForUnpaidReturns($returnClass, $returnTableName, $penaltyTableName){
+    public function returnCardReportForUnpaidReturns($returnClass, $returnTableName, $penaltyTableName) : array
+    {
 
         
         $penaltyData = $returnClass::whereNotIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
@@ -55,6 +54,8 @@ trait PortReturnCardReport
             'totalRate' => $penaltyData->sum('totalRate'),
         ];
 
+
     }
+
     
 }
