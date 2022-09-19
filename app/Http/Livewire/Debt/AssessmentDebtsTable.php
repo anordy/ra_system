@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\Debt;
 
-use App\Models\Business;
-use App\Models\Debts\Debt;
+use App\Enum\ReturnCategory;
+use App\Models\TaxAssessments\TaxAssessment;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -16,7 +16,7 @@ class AssessmentDebtsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Debt::query()->where('debt_type', 'App\Models\TaxAssessments\TaxAssessment')->orderBy('debts.created_at', 'desc');
+        return TaxAssessment::query()->where('assessment_step', ReturnCategory::DEBT)->orderBy('tax_assessments.created_at', 'desc');
     }
 
     public function configure(): void
@@ -55,7 +55,7 @@ class AssessmentDebtsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount, 2);
                 }),
-            Column::make('Status', 'app_step')->view('debts.includes.status'),
+            Column::make('Status', 'application_step')->view('debts.includes.status'),
         ];
     }
 }

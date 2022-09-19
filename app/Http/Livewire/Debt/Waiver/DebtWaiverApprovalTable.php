@@ -31,21 +31,21 @@ class DebtWaiverApprovalTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['debt_waivers.tax_return_id']);
+        // $this->setAdditionalSelects(['debt_waivers.tax_return_id']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Business Name", "debt.business.name")
-                ->sortable()
-                ->searchable(),
-            Column::make("Location", "debt.location.name")
-                ->sortable()
-                ->searchable(),
-            Column::make("Debt Type", "debt.taxtype.name")
-                ->sortable()
-                ->searchable(),
+            // Column::make("Business Name", "debt.business.name")
+            //     ->sortable()
+            //     ->searchable(),
+            // Column::make("Location", "debt.location.name")
+            //     ->sortable()
+            //     ->searchable(),
+            // Column::make("Debt Type", "debt.taxtype.name")
+            //     ->sortable()
+            //     ->searchable(),
             Column::make('Category', 'category')
                 ->format(function ($value, $row) {
                     if ($value === 'interest') {
