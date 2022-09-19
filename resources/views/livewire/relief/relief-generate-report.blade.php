@@ -15,9 +15,7 @@
                             </span>
                         </label>
                         <select name="year" id="start_month" wire:model="year"
-                            class="form-control {{ $errors->has($year) ? 'is-invalid' : '' }}"
-                            {{-- wire:changed="preview" --}}
-                            >
+                            class="form-control {{ $errors->has($year) ? 'is-invalid' : '' }}" {{-- wire:changed="preview" --}}>
                             @foreach ($optionYears as $optionYear)
                                 <option value="{{ $optionYear }}">
                                     {{ $optionYear }}</option>
@@ -29,7 +27,7 @@
                             </div>
                         @enderror
                     </div>
-            
+
                     @if ($showOptions)
                         <div class="col-md-4 form-group">
                             <label for="Period" class="d-flex justify-content-between'">
@@ -119,21 +117,32 @@
                         @endif
                     @endif
                 </div>
-    
-                <div class="row mt-3">
-                    <div class="col-md-12 d-flex justify-content-end">
+
+                <div class="d-flex justify-content-start mt-3 ">
+                    <div class="d-flex justify-content-start w-50">
+                        <button class="btn btn-primary btn-xs ml-2" wire:click="toggleFilters">
+                            @if ($showMoreFilters)
+                                <i class="bi bi-filter"></i>
+                                Hide More filters
+                            @else
+                                <i class="bi bi-filter"></i>
+                                Show more Filters
+                            @endif
+                        </button>
+                    </div>
+                    <div class="d-flex justify-content-end w-50">
                         <div x-data>
                             <button class="btn btn-warning ml-2" wire:click="preview" x-on:mouseenter="$wire.preview()">
                                 <i class="bi bi-eye-fill"></i>
-                                Preview Report  
+                                Preview Report
                             </button>
                         </div>
                         <button class="btn btn-success ml-2" wire:click="export " wire:loading.attr="disabled">
                             <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="export"></i>
                             <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                                 wire:target="export"></i>
-                            Export to Excel  
-                        </button> 
+                            Export to Excel
+                        </button>
                         <button class="btn btn-success ml-2" wire:click="exportPdf" wire:loading.attr="disabled">
                             <i class="bi bi-file-pdf ml-1" wire:loading.remove wire:target="exportPdf"></i>
                             <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
@@ -141,12 +150,39 @@
                             Export to PDF
                         </button>
                     </div>
-    
-                   
                 </div>
+                @if ($showMoreFilters)
+                    <!-- Ministries -->
+                    <div>
+                        <div class="row pt-4">
+                            <div class="col-12">
+                                <div class="card-header"><b>Ministries</b></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            @if (count($optionMinistries) < 1)
+                                No Available Minitry
+                            @else
+                                @foreach ($optionMinistries as $id => $ministry)
+                                    <div class="col-sm-2 form-group">
+                                        <label class="d-flex justify-content-between"
+                                            for="ministry-{{ $id }}">
+                                            <span>
+                                                {{ $ministry }}
+                                            </span>
+                                        </label>
+                                        <input type="checkbox" wire:model="selectedMinistriesIds.{{ $id }}"
+                                            id="ministry-{{ $id }}">
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                @endif
+                <button wire:click="getParameters">test</button>
             </div>
         </div>
-    </div>  
+    </div>
 
     <div class="shadow rounded">
         <div class="card pt-2">
@@ -156,7 +192,7 @@
             <div class="card-body">
                 @livewire('relief.relief-report-table')
             </div>
-        </div> 
+        </div>
     </div>
     <div class="shadow rounded">
         <div class="card pt-2">
@@ -166,7 +202,7 @@
             <div class="card-body">
                 @livewire('relief.relief-report-summary')
             </div>
-        </div> 
+        </div>
     </div>
-    
+
 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Relief;
 
 use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Models\Relief\Relief;
+use App\Models\Relief\ReliefMinistry;
 use App\Models\Relief\ReliefProject;
 use App\Models\Relief\ReliefProjectList;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -30,17 +31,20 @@ class ReliefGenerateReport extends Component
     public $optionMonths;
     public $optionQuarters;
     public $optionSemiAnnuals;
+    public $optionMinistries;
 
     //hide/show elements
     public $showOptions;
     public $showMonths;
     public $showQuarters;
     public $showSemiAnnuals;
+    public $showMoreFilters;
 
     //backend variables
     public $startMonth;
     public $endMonth;
     public $dates;
+    public $selectedMinistriesIds;
 
     public function mount()
     {
@@ -62,14 +66,17 @@ class ReliefGenerateReport extends Component
 
         //set values
         $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
-        // $this->optionPeriods = array(1 => "Monthly", 2 => "Quarterly", 3 => "Semi-Annual", 4 => "Annual");
         $this->optionMonths = array(1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December");
         $this->optionQuarters = array("1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter");
         $this->optionSemiAnnuals = array("1st-Semi-Annual", "2nd-Semi-Annual");
+
+        $this->optionMinistries = ReliefMinistry::orderBy('name', 'desc')->pluck('name','id')->toArray();
+        $this->selectedMinistriesIds = $this->optionMinistries;
         $this->showOptions = true;
         $this->showMonths = true;
         $this->showQuarters = false;
         $this->showSemiAnnuals = false;
+        $this->showMoreFilters = false;
 
         $this->emitTo('relief.relief-report-table', 'refreshTable', $this->getStartEndDate());
         $this->emitTo('relief.relief-report-summary', 'refreshSummary', $this->getStartEndDate());
@@ -106,11 +113,8 @@ class ReliefGenerateReport extends Component
         $exists = Relief::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
         if ($exists) {
             $this->alert('success', 'Exporting Excel file');
-            return Excel::download(new \App\Exports\ReliefExport($dates), 'Relief Applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
-            // return Excel::download(new Relief    Export($dates['startDate'], $dates['endDate']), 'land-leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
+            return Excel::download(new \App\Exports\ReliefExport($dates), 'Relief Applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');  
         } else {
-            // $this->flash('error', 'No records found.');
-            // return redirect()->back()->with('error', 'No data found for the selected period.');
             $this->alert('error', "No data found for the selected period.");
         }
     }
@@ -227,14 +231,30 @@ class ReliefGenerateReport extends Component
             $this->alert('success', "Exporting PDF file.");
             return redirect()->route('reliefs.download.report.pdf',[encrypt($dates)]);
         } else {
-            // $this->flash('error', 'No records found.');
-            // return redirect()->back()->with('error', 'No data found for the selected period.');
             $this->alert('error', "No data found for the selected period.");
         }
     }
 
-//     public function downloadReliefReportPdf($dates)
-//     {
-//         return redirect()->route('reliefs.download.report.pdf',[encrypt($dates)]);
-//     }
+    public function toggleFilters()
+    {
+        $this->showMoreFilters = !$this->showMoreFilters;
+    }
+
+    public function getParameters()
+    {
+        // return [
+        //     'ministries' => array_keys($this->removeItemsOnFalse($this->selectedMinistriesIds)),
+        // ];
+        dd(array_keys($this->removeItemsOnFalse($this->selectedMinistriesIds)));
+    }
+
+    public function removeItemsOnFalse($items)
+    {
+        foreach ($items as $key => $item) {
+            if($item==false){
+                unset($items[$key]);
+            }
+        }
+        return $items;
+    }
 }
