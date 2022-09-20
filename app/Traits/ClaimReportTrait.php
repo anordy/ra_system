@@ -17,14 +17,12 @@ trait ClaimReportTrait
         $model = TaxClaim::query()->select('tax_claims.id', 'tax_claims.business_id', 'tax_claims.location_id', 'tax_claims.tax_type_id',
             'tax_claims.amount', 'tax_claims.currency', 'tax_claims.financial_month_id', 'tax_claims.status', 'tax_claims.approved_on',
             'tax_claims.created_at', 'tax_credits.payment_method', 'tax_credits.installments_count', 'tax_credits.payment_status')->with('business');
-        if ($parameters['tax_payer_id'] != 'all') {
-            $model = clone $model->leftJoin('businesses', 'tax_claims.business_id', '=', 'businesses.id')
-                ->where('businesses.responsible_person_id', '=', $parameters['tax_payer_id']);
-        }
-        else
-        {
-            $model = clone $model;
-        }
+//        if ($parameters['tax_payer_id'] != 'all') {
+//            $model = clone $model->leftJoin('businesses', 'tax_claims.business_id', '=', 'businesses.id')
+//                ->where('businesses.responsible_person_id', '=', $parameters['tax_payer_id']);
+//        } else {
+//            $model = clone $model;
+//        }
 
         if ($parameters['duration'] == 'yearly') {
             if ($parameters['status'] == 'approved') {
@@ -57,15 +55,29 @@ trait ClaimReportTrait
 
         if ($parameters['payment_status'] != null) {
             if ($parameters['payment_status'] != 'all') {
-                $claim = clone $claim->where('tax_credits.payment_status', '=', $parameters['payment_status']);
+                if ($parameters['tax_payer_id'] != 'all') {
+                    $claim = $claim
+                        ->leftJoin('businesses', 'tax_claims.business_id', '=', 'businesses.id')
+                        ->where('tax_credits.payment_status', '=', $parameters['payment_status'])
+                        ->where('businesses.responsible_person_id', '=', $parameters['tax_payer_id']);
+                } else {
+                    $claim = $claim->where('tax_credits.payment_status', '=', $parameters['payment_status']);
+                }
             } else {
-                $claim = clone $claim
-                    ->orWhereIn('tax_credits.payment_status', ['paid', 'partially-paid', 'pending'])
-                    ->orWhereNull('tax_credits.payment_status');
+                if ($parameters['tax_payer_id'] != 'all') {
+                    $claim = $claim
+                        ->leftJoin('businesses', 'tax_claims.business_id', '=', 'businesses.id')
+                        ->where('businesses.responsible_person_id', '=', $parameters['tax_payer_id'])
+                        ->orWhereIn('tax_credits.payment_status', ['paid', 'partially-paid', 'pending']);
+//                        ->orWhereNull('tax_credits.payment_status');
+                } else {
+                    $claim = $claim
+                        ->orWhereIn('tax_credits.payment_status', ['paid', 'partially-paid', 'pending'])
+                        ->orWhereNull('tax_credits.payment_status');;
+                }
             }
         }
 
-//        dd($this->getSelectedRecords($claim, $parameters)->get());
         return $this->getSelectedRecords($claim, $parameters);
     }
 

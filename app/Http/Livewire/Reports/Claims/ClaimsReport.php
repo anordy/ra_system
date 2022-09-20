@@ -9,6 +9,7 @@ use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Traits\ClaimReportTrait;
 use App\Traits\ReturnReportTrait;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
@@ -91,6 +92,9 @@ class ClaimsReport extends Component
 
     public function preview()
     {
+        if (!Gate::allows('managerial-claim-report-preview')) {
+            abort(403);
+        }
         $this->validate();
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
@@ -103,6 +107,9 @@ class ClaimsReport extends Component
 
     public function exportPdf()
     {
+        if (!Gate::allows('managerial-claim-report-pdf')) {
+            abort(403);
+        }
         $this->validate();
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
@@ -116,6 +123,9 @@ class ClaimsReport extends Component
 
     public function exportExcel()
     {
+        if (!Gate::allows('managerial-claim-report-excel')) {
+            abort(403);
+        }
         $this->validate();
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
