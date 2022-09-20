@@ -92,10 +92,6 @@ class TaxReturn extends Model
         return $this->hasOne(Installment::class);
     }
 
-    public function penalties()
-    {
-        return $this->hasMany(DebtPenalty::class, 'tax_return_id');
-    }
 
     public function recoveryMeasure()
     {
@@ -109,5 +105,9 @@ class TaxReturn extends Model
 
     public function waiver(){
         return $this->morphOne(DebtWaiver::class, 'debt');
+    }
+
+    public function penalties(){
+        return $this->morphMany(DebtPenalty::class, 'debt');
     }
 }

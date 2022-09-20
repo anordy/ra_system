@@ -2,17 +2,18 @@
 
 namespace App\Models\TaxAssessments;
 
-use App\Models\Debts\Debt;
-use App\Models\Disputes\Dispute;
+use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
-use App\Models\Investigation\TaxInvestigation;
+use App\Models\Disputes\Dispute;
+use App\Models\Debts\DebtPenalty;
 use App\Models\TaxAudit\TaxAudit;
-use App\Models\Verification\TaxVerification;
-use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Verification\TaxVerification;
+use App\Models\Investigation\TaxInvestigation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaxAssessment extends Model
@@ -80,5 +81,9 @@ class TaxAssessment extends Model
     public function payments()
     {
         return $this->bills()->where('status', 'paid');
+    }
+
+    public function penalties(){
+        return $this->morphMany(DebtPenalty::class, 'debt');
     }
 }
