@@ -3,85 +3,45 @@
 @section('title', 'View Debt')
 
 @section('content')
+    <div class="d-flex justify-content-end pb-2">
+        <a class="btn btn-info" href="{{route('debts.returns.index')}}">
+            <i class="bi bi-arrow-return-left mr-2"></i>
+            Back
+        </a>
+    </div>
     <div class="card">
         <div class="card-body">
             <div>
-                <h6 class="text-uppercase mt-2 ml-2">{{ $tax_return->taxtype->name ?? '' }} Debt
-                    {{ $tax_return->financialMonth->name ?? '' }},
-                    {{ $tax_return->financialMonth->year->code ?? '' }}</h6>
+                <h6 class="text-uppercase mt-2 ml-2">{{ $assessment->taxtype->name ?? '' }} Debt
                 <hr>
             </div>
 
+            {{-- <div class="row m-2 pt-3">
+                <livewire:debts.payment.make-payment :assessment="$assessment" />
+            </div> --}}
+
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
-                <a href="#tab2" class="nav-item nav-link font-weight-bold">Return Details</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Penalties</a>
-                @if ($tax_return->waiver)
-                    <a href="#tab4" class="nav-item nav-link font-weight-bold">Waiver Details</a>
-                @endif
-                @if (count($tax_return->demandNotices) > 0)
-                    <a href="#tab5" class="nav-item nav-link font-weight-bold">Demand Notices</a>
-                @endif
-                @if (count($tax_return->recoveryMeasure->measures) > 0)
-                <a href="#tab6" class="nav-item nav-link font-weight-bold">Assigned Recovery Measures</a>
-                @endif
-                @if ($tax_return->recoveryMeasure)
-                    <a href="#tab7" class="nav-item nav-link font-weight-bold">Recovery Measure Approval History</a>
-                @endif
+                <a href="#tab4" class="nav-item nav-link font-weight-bold">Waiver Details</a>
             </nav>
 
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show m-4">
-                    @if (count($tax_return->recoveryMeasure->measures) == 0)
-                        <div class="card-tools">
-                                <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"  class="btn btn-info btn-sm text-white" style="color: white !important;"><i
-                                    class="fa fa-plus text-white"></i>
-                                    Assign Recovery Measure
-                                </a>
-                        </div>
-                    @endif
-                    @include('debts.returns.details', ['tax_return' => $tax_return])
-                </div>
-                <div id="tab2" class="tab-pane fade m-4">
-                    @include('debts.returns.return-details', ['tax_return' => $tax_return])
+                    @include('debts.assessments.details', ['assessment' => $assessment])
                 </div>
                 <div id="tab3" class="tab-pane fade m-4">
-                    <livewire:debt.debt-penalties :penalties="$tax_return->return->penalties ?? []" />
+                    {{-- <livewire:debts.debt-penalties :penalties="$assessment->penalties ?? []" /> --}}
                 </div>
                 <div id="tab4" class="tab-pane fade  m-4">
-                    @include('debts.waiver-details', ['tax_return' => $tax_return])
-                </div>
-                <div id="tab5" class="tab-pane fade m-4">
-                    <livewire:debt.demand-notice.demand-notice-table debtId="{{ $tax_return->id }}" />
-                </div>
-                <div id="tab6" class="tab-pane fade m-4">
-                    <h6 class="text-uppercase mt-2 ml-2">Recommended Recovery Measures</h6>
-                    <hr>
-                    <div class="row m-2 pt-3">
-    
-                        @if (count($tax_return->recoveryMeasure->measures) > 0)
-                            @foreach ($tax_return->recoveryMeasure->measures as $key => $recovery_measure)
-                                <div class="col-md-4 mb-3">
-                                    <span class="font-weight-bold text-uppercase">Measure Type</span>
-                                    <p class="my-1">{{ $key + 1 }}.
-                                        {{ $recovery_measure->category->name }}</p>
-                                </div>
-                            @endforeach
-                        @else
-                            <p class="my-1">No Assigned Recovery Measures</p>
-                        @endif
-    
-                    </div>
-                </div>
-                <div id="tab7" class="tab-pane fade m-4">
-                    <livewire:approval.approval-history-table modelName='App\Models\Debts\RecoveryMeasure'
-                        modelId="{{ $tax_return->id }}" />
+                    {{-- @include('debts.assessments.waivers.waiver-details', ['assessment' => $assessment]) --}}
                 </div>
             </div>
         </div>
     </div>
 
-    @if ($tax_return->extensionRequest || $tax_return->installment)
+
+    @if ($assessment->extensionRequest || $assessment->installment)
 
         <div class="card rounded-0 mt-3">
             <div class="card-header bg-white">
@@ -89,7 +49,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    @if ($extension = $tax_return->extensionRequest)
+                    @if ($extension = $assessment->extensionRequest)
                         <div class="col-md-12 mb-4">
                             <span class="font-weight-bold text-uppercase">Reasons for the application for extension of time
                                 to lodge objection</span>
@@ -132,7 +92,7 @@
                         @endif
                     @endif
 
-                    @if ($installment = $tax_return->installmentRequest)
+                    @if ($installment = $assessment->installmentRequest)
                         <div class="col-md-12 mb-4">
                             <span class="font-weight-bold text-uppercase">Reasons for the application for extension of time
                                 to lodge objection</span>

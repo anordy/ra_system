@@ -13,9 +13,8 @@ class DebtWaiverApprovalTable extends DataTableComponent
 {
     use LivewireAlert;
 
-    public function mount($category)
+    public function mount()
     {
-        $this->category = $category;
     }
     public function builder(): Builder
     {
@@ -31,22 +30,20 @@ class DebtWaiverApprovalTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        // $this->setAdditionalSelects(['debt_waivers.tax_return_id']);
+        $this->setAdditionalSelects(['debt_type']);
     }
 
     public function columns(): array
     {
         return [
-            // Column::make("Business Name", "debt.business.name")
-            //     ->sortable()
-            //     ->searchable(),
-            // Column::make("Location", "debt.location.name")
-            //     ->sortable()
-            //     ->searchable(),
-            // Column::make("Debt Type", "debt.taxtype.name")
-            //     ->sortable()
-            //     ->searchable(),
-            Column::make('Category', 'category')
+            Column::make('debt_id', 'debt_id')->hideIf(true),
+            Column::make("Business Name", "debt")
+                ->label(fn ($row) => $row->debt->business->name),
+            Column::make('Location', 'debt')
+                ->label(fn ($row) => $row->debt->location->name),
+            Column::make('Tax Type', 'debt')
+                ->label(fn ($row) => $row->debt->taxtype->name),
+            Column::make('Waiver Category', 'category')
                 ->format(function ($value, $row) {
                     if ($value === 'interest') {
                         return 'Interest';

@@ -24,7 +24,7 @@ class ReturnDebtController extends Controller
         if (!Gate::allows('debt-management-debts-overdue-view')) {
             abort(403);
         }
-        return view('debts.overdue.overdue-debts');
+        return view('debts.returns.overdue.overdue-debts');
     }
 
     public function waivers()
@@ -32,14 +32,14 @@ class ReturnDebtController extends Controller
         if (!Gate::allows('debt-management-waiver-debt-view')) {
             abort(403);
         }
-        return view('debts.waivers.index');
+        return view('debts.returns.waivers.index');
     }
 
     public function approval($waiverId)
     {
         $waiver = DebtWaiver::findOrFail(decrypt($waiverId));
         $files = DebtWaiverAttachment::where('debt_id', $waiver->id)->get();
-        return view('debts.waivers.approval', compact('waiver', 'files'));
+        return view('debts.returns.waivers.approval', compact('waiver', 'files'));
     }
 
     public function recovery($debtId)
@@ -59,6 +59,13 @@ class ReturnDebtController extends Controller
         $debtId = decrypt($debtId);
         $tax_return = TaxReturn::findOrFail($debtId);
         return view('debts.returns.show', compact('tax_return'));
+    }
+
+    public function showWaiver($debtId)
+    {
+        $debtId = decrypt($debtId);
+        $tax_return = TaxReturn::findOrFail($debtId);
+        return view('debts.returns.waivers.show', compact('tax_return'));
     }
 
     public function showOverdue($debtId)

@@ -76,10 +76,6 @@ class TaxReturn extends Model
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
-    public function debtWaiver()
-    {
-        return $this->hasOne(DebtWaiver::class, 'tax_return_id');
-    }
 
     public function extensionRequest()
     {
@@ -109,5 +105,9 @@ class TaxReturn extends Model
     public function demandNotices()
     {
         return $this->morphMany(DebtDemandNotice::class, 'debt');
+    }
+
+    public function waiver(){
+        return $this->morphOne(DebtWaiver::class, 'debt');
     }
 }

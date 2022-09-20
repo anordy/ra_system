@@ -13,9 +13,8 @@ class DebtWaiverTable extends DataTableComponent
 {
     use LivewireAlert;
 
-    public function mount($category)
+    public function mount()
     {
-        $this->category = $category;
     }
     public function builder(): Builder
     {
@@ -31,34 +30,34 @@ class DebtWaiverTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['debt_waivers.tax_return_id']);
+        $this->setAdditionalSelects(['debt_type']);
 
     }
 
     public function columns(): array
     {
         return [
-            // Column::make("Id", "id")
-            //     ->sortable(),
-            // Column::make("Business Name", "business.name")
-            //     ->sortable()
-            //     ->searchable(),
-            // Column::make("Owner", "business.owner_designation")
-            //     ->sortable()
-            //     ->searchable(),
-            // Column::make("Mobile", "business.mobile")
-            //     ->sortable(),
-            // Column::make("Debt Type", "debt.debt_type")
-            //     ->sortable()
-            //     ->format(function($value, $row) {
-            //         return preg_split('[\\\]', $value)[2];
-            //     }),
-            // Column::make("Waiver Category", "category")
-            //     ->sortable(),
-            // Column::make('Status', 'status')
-            //     ->view('debts.waivers.includes.status'),
-            // Column::make('Action', 'id')
-            //     ->view('debts.waivers.includes.action'),
+            Column::make('debt_id', 'debt_id')->hideIf(true),
+            Column::make("Business Name", "debt")
+                ->label(fn ($row) => $row->debt->business->name),
+            Column::make('Location', 'debt')
+                ->label(fn ($row) => $row->debt->location->name),
+            Column::make('Tax Type', 'debt')
+                ->label(fn ($row) => $row->debt->taxtype->name),
+            Column::make('Waiver Category', 'category')
+                ->format(function ($value, $row) {
+                    if ($value === 'interest') {
+                        return 'Interest';
+                    } else if ($value === 'penalty') {
+                        return 'Penalty';
+                    } else {
+                        return 'Penalty & Interest';
+                    }
+                }),
+            Column::make('Status', 'status')
+                ->view('debts.waivers.includes.status'),
+            Column::make('Action', 'id')
+                ->view('debts.waivers.includes.action'),
         ];
     }
 }

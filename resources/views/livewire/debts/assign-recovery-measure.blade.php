@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Recovery Measure Status</span><br>
-                        <span class="badge badge-primary">{{ $debt->recoveryMeasure->status }}</span>
+                        <span class="badge badge-primary">{{ $debt->recoveryMeasure->status ?? '' }}</span>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,8 @@
             </div>
     @endif
 
-    @if ($debt->recoveryMeasure->status != 'approved')
+    {{-- TODO: Display only if not approved  --}}
+    @if ($debt->recoveryMeasure->status != 'approved') 
         @livewire('approval.recovery-measure-approval-processing', ['debt' => $debt])
     @endif
 </div>
