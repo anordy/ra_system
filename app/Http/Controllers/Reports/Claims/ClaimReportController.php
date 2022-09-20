@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Reports\Claims;
 use App\Http\Controllers\Controller;
 use App\Traits\ClaimReportTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class ClaimReportController extends Controller
@@ -12,18 +13,26 @@ class ClaimReportController extends Controller
     use ClaimReportTrait;
 
     public function init(){
+        if (!Gate::allows('managerial-claim-report-view')) {
+            abort(403);
+        }
         return view('reports.claims.index');
     }
 
     public function preview($parameters)
     {
+        if (!Gate::allows('managerial-claim-report-preview')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
-//        dd($parameters);
         return view('reports.claims.preview', compact('parameters'));
     }
 
     public function exportClaimReportPdf($parameters)
     {
+        if (!Gate::allows('managerial-claim-report-pdf')) {
+            abort(403);
+        }
         $parameters = json_decode(decrypt($parameters), true);
         $records = $this->getRecords($parameters);
 
