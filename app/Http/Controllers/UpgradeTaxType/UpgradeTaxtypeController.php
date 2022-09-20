@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UpgradeTaxType;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessLocation;
 use App\Models\BusinessTaxType;
+use App\Models\BusinessTaxTypeChange;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\HotelReturns\HotelReturnConfig;
 use App\Models\Returns\HotelReturns\HotelReturnItem;
@@ -93,9 +94,13 @@ class UpgradeTaxtypeController extends Controller
                 abort(404);
         }
 
+        $changed = BusinessTaxTypeChange::query()
+            ->where('business_id', $return->business_id)
+            ->where('from_tax_type_id', $tax_type_id)->first();
+
         $currency = $this->getCurrency($return->business_id, $return->tax_type_id);
 
-        return view('upgrade-tax-type.show', compact('return', 'return_id', 'sales','currency'));
+        return view('upgrade-tax-type.show', compact('return', 'return_id', 'sales','currency', 'changed'));
     }
 
     public function getCurrency($business_id, $tax_type_id)

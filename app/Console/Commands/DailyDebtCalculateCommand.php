@@ -52,6 +52,7 @@ class DailyDebtCalculateCommand extends Command
         Log::channel('debtCollection')->info('Daily Debt Marking process started');
         $financialMonth = $this->getCurrentFinancialMonth();
         $this->markReturnAsDebt($financialMonth);
+        $this->markAssessmentAsDebt();
         Log::channel('debtCollection')->info('Daily Debt Marking process ended');
     }
 
@@ -110,60 +111,46 @@ class DailyDebtCalculateCommand extends Command
         }
     }
 
-    protected function assessmentDebt($financialMonth)
+    /**
+     * Mark normal assessment_step as debt or overdue
+     */
+    protected function markAssessmentAsDebt()
     {
-        $returnModels = [
-            TaxAssessment::class,
-        ];
+        Log::channel('debtCollection')->info("Daily Debt marking for assessment process started");
+        DB::beginTransaction();
 
-        foreach ($returnModels as $model) {
-            Log::channel('debtCollection')->info("Daily Debt collection for assessment model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process started");
-            DB::beginTransaction();
-            try {
+        $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, TIMESTAMPDIFF(DAY, tax_assessments.payment_due_date, CURDATE()) as days_passed')
+            ->whereIn('assessment_step', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
+            ->whereRaw("TIMESTAMPDIFF(DAY, tax_assessments.payment_due_date, CURDATE()) > 30")
+            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
+            ->get();
 
-                $data = $model::select(
-                    'id as debt_id',
-                    'location_id as business_location_id',
-                    'business_id',
-                    'currency',
-                    'tax_type_id',
-                    'principal_amount',
-                    'principal_amount as original_principal_amount',
-                    'total_amount as original_total_amount',
-                    'total_amount',
-                    'total_amount as outstanding_amount',
-                    'penalty_amount as penalty',
-                    'penalty_amount as original_penalty',
-                    'interest_amount as interest',
-                    'interest_amount as original_interest',
-                    'created_at as submitted_at',
-                    'payment_due_date as last_due_date',
-                    'payment_due_date as curr_due_date'
-                )
-                    ->doesntHave('payments')
-                    ->whereNotIn('status', ['complete', 'paid-by-debt'])
-                    ->orWhere('payment_due_date', '<', $financialMonth->due_date)
-                    ->get();
-
-
-                $data = $data->map(function ($return) {
-                    $return->debt_type = TaxAssessment::class;
-                    $return->origin = 'job';
-                    $return->logged_date = Carbon::now()->toDateTimeString();
-                    return $return;
-                });
-
-
-                $dataToInsert = $data->toArray();
-
-                Debt::upsert($dataToInsert, ['debt_id', 'dept_type']);
-                DB::commit();
-                Log::channel('debtCollection')->info("Daily Debt collection for model " . strval($model) . " for financial month " . $financialMonth->id . " with due date " . $financialMonth->due_date . " process ended");
-            } catch (Exception $e) {
-                Log::channel('debtCollection')->info('Daily Debt calculation process ended with error');
-                Log::channel('debtCollection')->error($e);
-                DB::rollBack();
+        try {
+            foreach ($tax_assessments as $tax_assessment) {
+                /**
+                 * Mark assessment process as debt if days_passed is less than 30
+                 */
+                if ($tax_assessment->days_passed < 30) {
+                    $tax_assessment->update([
+                        'assessment_step' => ApplicationStep::DEBT
+                    ]);
+                } else {
+                    /**
+                     * Mark assessment process as overdue if days_passed is greater than 30 days (Meaning 30 days as debt and another 30 days makes it an overdue)
+                     */
+                    if ($tax_assessment->days_passed)
+                        $tax_assessment->update([
+                            'assessment_step' => ApplicationStep::OVERDUE
+                        ]);
+                }
             }
+
+            DB::commit();
+            Log::channel('debtCollection')->info("Daily Debt marking for assessment process ended");
+        } catch (Exception $e) {
+            Log::channel('debtCollection')->info('Daily Debt marking for assessment process ended with error');
+            Log::channel('debtCollection')->error($e);
+            DB::rollBack();
         }
     }
 

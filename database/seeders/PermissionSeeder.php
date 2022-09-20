@@ -222,6 +222,13 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-fee-view', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-year-add', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-year-view', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-add', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-view', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-extend', 'sys_module_id' => 18],
+            ['name' => 'setting-return-configuration-view', 'sys_module_id' => 18],
+            ['name' => 'setting-return-configuration-edit', 'sys_module_id' => 18],
 
             # System
             ['name' => 'system-audit-trail-view', 'sys_module_id' => 19],
@@ -231,6 +238,10 @@ class PermissionSeeder extends Seeder
 
             # Managerial Report
             ['name' => 'managerial-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-excel', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-pdf', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-preview', 'sys_module_id' => 20],
 
             # Extenstion
             ['name' => 'payment-extension-view', 'sys_module_id' => 21],
@@ -244,6 +255,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'relief-ministries-create', 'sys_module_id' => 23],
             ['name' => 'relief-ministries-edit', 'sys_module_id' => 23],
             ['name' => 'relief-ministries-delete', 'sys_module_id' => 23],
+
+            ['name' => 'relief-sponsors-view', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-create', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-delete', 'sys_module_id' => 23],
 
             ['name' => 'relief-projects-view', 'sys_module_id' => 23],
             ['name' => 'relief-projects-create', 'sys_module_id' => 23],

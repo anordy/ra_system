@@ -26,9 +26,7 @@ class DisputeUnpaidApprovalTable extends DataTableComponent
 
         return Dispute::query()
             ->where('disputes.category', $this->category)
-            ->where('app_status', DisputeStatus::SUBMITTED)
-            ->whereNotIn('disputes.status', [BillStatus::COMPLETE])
-        // ->whereNotIn('disputes.app_status', [DisputeStatus::APPROVED])
+            ->whereNotIn('disputes.payment_status', [BillStatus::COMPLETE])
             ->orderBy('disputes.created_at', 'desc');
 
     }
@@ -67,7 +65,7 @@ class DisputeUnpaidApprovalTable extends DataTableComponent
                 ->sortable(),
             Column::make("Tax Deposit", "tax_deposit")
                 ->sortable(),
-            Column::make('Payment Status', 'status')
+            Column::make('Payment Status', 'payment_status')
                 ->hideIf($this->category == 'waiver-and-objection')
                 ->view('assesments.waiver.includes.payment_status')
                 ->html(true),

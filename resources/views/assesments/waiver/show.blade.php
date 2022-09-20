@@ -3,9 +3,7 @@
 @section('title', 'View Waiver')
 
 @section('content')
-    {{-- @if ($business->status === \App\Models\BusinessStatus::CORRECTION)
-        <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business->id }}" />
-    @endif --}}
+
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -30,7 +28,7 @@
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="row m-2 pt-3">
                      <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Weaver Status</span>
+                    <span class="font-weight-bold text-uppercase">Waiver Status</span>
                     <p class="my-1">
                         @if($waiver->status === \App\Models\WaiverStatus::APPROVED)
                             <span class="font-weight-bold text-success">
@@ -126,17 +124,17 @@
                 </div> --}}
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount In Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute }} Tzs</p>
+                    <p class="my-1">{{ number_format($waiver->tax_in_dispute,2) }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Not in Dispute</span>
-                    <p class="my-1">{{ $waiver->tax_not_in_dispute }} Tzs</p>
+                    <p class="my-1">{{ number_format($waiver->tax_not_in_dispute,2) }} Tzs</p>
                 </div>
 
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Amount Objected</span>
-                    <p class="my-1">{{ $waiver->tax_in_dispute + $waiver->tax_not_in_dispute  }} TZS</p>
+                    <p class="my-1">{{ number_format($waiver->tax_in_dispute + $waiver->tax_not_in_dispute,2)  }} TZS</p>
                 </div>
 
 

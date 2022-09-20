@@ -7,6 +7,7 @@ use App\Models\TaPaymentConfiguration;
 use App\Models\TaPaymentConfigurationHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -34,6 +35,9 @@ class AddYearModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-financial-year-add')) {
+            abort(403);
+        }
         $validate = $this->validate([
             'name' => 'required',
             'year' => 'required',

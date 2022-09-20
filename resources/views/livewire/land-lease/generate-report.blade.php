@@ -19,7 +19,8 @@
                         >
                         @foreach ($optionYears as $optionYear)
                             <option value="{{ $optionYear }}">
-                                {{ $optionYear }}</option>
+                                {{ $optionYear }}
+                            </option>
                         @endforeach
                     </select>
                     @error('year')
@@ -28,8 +29,33 @@
                         </div>
                     @enderror
                 </div>
+
+                @if ($year == 'Custom Range')
+                    <div class="col-md-4 form-group">
+                        <label class="d-flex justify-content-between'">
+                            <span>Start Date</span>
+                        </label>
+                        <input type="date" class="form-control" wire:model="range_start">
+                        @error('range_start')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label class="d-flex justify-content-between'">
+                            <span>End Date</span>
+                        </label>
+                        <input type="date" class="form-control" wire:model="range_end">
+                        @error('range_end')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                @endif
         
-                @if ($showOptions)
+                @if ($showOptions || $year != 'Custom Range')
                     <div class="col-md-4 form-group">
                         <label for="Period" class="d-flex justify-content-between'">
                             <span>

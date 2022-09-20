@@ -17,6 +17,7 @@ class CreateBusinessTempClosures extends Migration
             $table->id();
             $table->dateTime('closing_date');
             $table->dateTime('opening_date');
+            $table->dateTime('reopening_date')->nullable();
             $table->longText('reason');
             $table->enum('closure_type', ['all', 'location'])->default('location');
             $table->boolean('is_extended')->default(false);

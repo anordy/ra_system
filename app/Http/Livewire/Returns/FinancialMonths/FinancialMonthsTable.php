@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Returns\FinancialMonths;
 
 use App\Models\FinancialMonth;
+use App\Models\FinancialYear;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -10,7 +11,9 @@ use App\Models\TaPaymentConfiguration;
 
 class FinancialMonthsTable extends DataTableComponent
 {
+    public $today;
 //    protected $model = TaPaymentConfiguration::class;
+
 
     public function configure(): void
     {
@@ -26,6 +29,11 @@ class FinancialMonthsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        $day = date('Y-m-d');
+        $day = date('F', strtotime($day));
+        $year = FinancialYear::query()->where('code',date('Y'))->first();
+        $today = FinancialMonth::query()->where('financial_year_id', $year->id)->where('name', $day)->first();
+        $this->today = $today->id;
         return FinancialMonth::query()->orderBy('financial_months.id', 'desc');
     }
 
@@ -34,27 +42,22 @@ class FinancialMonthsTable extends DataTableComponent
     {
 
         return [
-            Column::make("Name", "name")
+            Column::make("Month", "name")
                 ->sortable()->searchable(),
             Column::make("year", "year.code")
                 ->sortable()->searchable(),
             Column::make("Normal Due Date", "due_date")
                 ->sortable()->searchable(),
-            Column::make("lumpsum Due Date", "lumpsum_due_date")
-                ->sortable()->searchable(),
             Column::make("Created At", "created_at")
                 ->sortable()->searchable(),
-//            Column::make("duration", "duration")
-//                ->view('taxagents.includes.duration'),
-//            Column::make('Amount', 'amount')
-//                ->format(
-//                    fn($value, $row, Column $column) => number_format($row->amount, '2', '.', ',') . '<strong> Tsh</strong>'
-//                )
-//                ->html()->searchable(),
-            Column::make("Created At", "created_at")
-                ->sortable()->searchable(),
-//            Column::make("No of days/months/years", "no_of_days")
-//                ->view('taxagents.includes.no_of_days'),
+            Column::make("Action", "id")
+                ->format(function ($value, $row) {
+                    if ($this->today == $value){
+                    return <<< HTML
+                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.extend-month-modal',$value)"><i class="fa fa-edit mr-1"></i>Extend</button>
+                HTML;}
+                })
+                ->html(true),
         ];
     }
 }

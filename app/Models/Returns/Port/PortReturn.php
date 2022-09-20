@@ -45,6 +45,11 @@ class PortReturn extends Model
         return $this->belongsTo(BusinessLocation::class, 'business_location_id');
     }
 
+    public function businessLocation()
+    {
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
+    }
+
     public function taxpayer()
     {
         return $this->belongsTo(Taxpayer::class, 'filed_by_id');

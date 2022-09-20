@@ -12,6 +12,7 @@
  */
 
 use App\Http\Controllers\AllPdfController;
+use App\Http\Controllers\Assesments\DisputeController;
 use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Assesments\WaiverObjectionController;
@@ -36,7 +37,6 @@ use App\Http\Controllers\Claims\CreditsController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
-use App\Http\Controllers\Debt\DebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
@@ -71,8 +71,11 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Claims\ClaimReportController;
+use App\Http\Controllers\Reports\Dispute\DisputeReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -86,6 +89,7 @@ use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
+use App\Http\Controllers\Returns\PrintController;
 use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
 use App\Http\Controllers\Returns\Queries\NilReturnsController;
 use App\Http\Controllers\Returns\Queries\NonFilersController;
@@ -260,6 +264,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/waiverobjection/show/{waiver_id}', [WaiverObjectionController::class, 'approval'])->name('waiverobjection.approval');
         Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
         Route::get('/waiverobjection/create/location/{location_id}/tax/{tax_type_id}', [WaiverObjectionController::class, 'create'])->name('waiverobjection.create');
+
+        //Dispute
+        Route::get('/dispute/index', [DisputeController::class, 'index'])->name('dispute.index');
+        Route::get('/dispute/approval/{waiver_id}', [DisputeController::class, 'approval'])->name('dispute.approval');
+        Route::get('/dispute/files/{waiver_id}', [DisputeController::class, 'files'])->name('dispute.files');
+        Route::get('/dispute/show/{waiver_id}', [DisputeController::class, 'show'])->name('dispute.show');
+
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
@@ -321,6 +332,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/lump-sum/index', [LumpSumReturnController::class, 'index'])->name('lump-sum.index');
         Route::get('/lump-sum/view/{id}', [LumpSumReturnController::class, 'view'])->name('lump-sum.show');
         Route::get('/lump-sum/history/{filters}', [LumpSumReturnController::class, 'history'])->name('lump-sum.history');
+
+        // Print Returns
+        Route::get('/print/{tax_return_id}', [PrintController::class, 'print'])->name('print');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -342,6 +356,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
         Route::resource('/ministries', ReliefMinistriestController::class);
+        Route::resource('/sponsors', ReliefSponsorController::class);
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
@@ -369,14 +384,26 @@ Route::middleware(['auth'])->group(function () {
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
-        Route::get('/assesments', [AssessmentReportController::class, 'index'])->name('assesments');
-        Route::get('/assessments/preview/{parameters}', [AssessmentReportController::class, 'preview'])->name('assessments.preview');
         Route::get('/returns/preview/{parameters}', [ReturnReportController::class, 'preview'])->name('returns.preview');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
 
         Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
         Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
+
+        //  Assesment Report
+        Route::get('/assesments', [AssessmentReportController::class, 'index'])->name('assesments');
+        Route::get('/assessments/download-report-pdf/{data}', [AssessmentReportController::class, 'exportAssessmentReportPdf'])->name('assessments.download.pdf');
+        Route::get('/assessments/preview/{parameters}', [AssessmentReportController::class, 'preview'])->name('assessments.preview');
+
+        //  Disputes Report
+        Route::get('/disputes', [DisputeReportController::class, 'index'])->name('disputes');
+        Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
+        Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
+
+        Route::get('/claims', [ClaimReportController::class, 'init'])->name('claims.init');
+        Route::get('/claims/preview/{parameters}', [ClaimReportController::class, 'preview'])->name('claims.preview');
+        Route::get('/claims/download-report-pdf/{data}', [ClaimReportController::class, 'exportClaimReportPdf'])->name('claim.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -410,36 +437,18 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::name('debts.')->prefix('/debts')->group(function () {
-        // General debts
-        Route::get('/all', [DebtController::class, 'index'])->name('debt.index');
-        Route::get('/overdue', [DebtController::class, 'overdue'])->name('debt.overdue');
-        Route::get('/recovery-measure/{debtId}', [DebtController::class, 'recovery'])->name('debt.recovery');
-        Route::get('/show/{debtId}', [DebtController::class, 'show'])->name('debt.show');
-        Route::get('/overdue/show/{debtId}', [DebtController::class, 'showOverdue'])->name('debt.showOverdue');
-        Route::get('/demand-notice/send/{debtId}', [DebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
-
-        // Assesments
-        Route::get('/waivers', [DebtController::class, 'waivers'])->name('waivers.index');
-        Route::get('/waivers/{waiverId}', [DebtController::class, 'approval'])->name('waivers.approval');
-
-        Route::get('/audits', [AssessmentDebtController::class, 'audit'])->name('audits.index');
-        Route::get('/assessments', [AssessmentDebtController::class, 'verification'])->name('assessments.index');
-        Route::get('/investigations', [AssessmentDebtController::class, 'investigation'])->name('investigations.index');
-
         // Return debts
-        Route::get('/returns/hotel/{taxType}', [ReturnDebtController::class, 'index'])->name('hotel.index');
-        Route::get('/returns/tour/{taxType}', [ReturnDebtController::class, 'index'])->name('tour.index');
-        Route::get('/returns/restaurant/{taxType}', [ReturnDebtController::class, 'index'])->name('restaurant.index');
-        Route::get('/returns/petroleum/{taxType}', [ReturnDebtController::class, 'index'])->name('petroleum.index');
-        Route::get('/returns/vat/{taxType}', [ReturnDebtController::class, 'index'])->name('vat.index');
-        Route::get('/returns/port/{taxType}', [ReturnDebtController::class, 'index'])->name('port.index');
-        Route::get('/returns/mno/{taxType}', [ReturnDebtController::class, 'index'])->name('mno.index');
-        Route::get('/returns/bfo/{taxType}', [ReturnDebtController::class, 'index'])->name('bfo.index');
-        Route::get('/returns/stamp-duty/{taxType}', [ReturnDebtController::class, 'index'])->name('stamp-duty.index');
-        Route::get('/returns/lump-sum/{taxType}', [ReturnDebtController::class, 'index'])->name('lump-sum.index');
-        Route::get('/returns/emt/{taxType}', [ReturnDebtController::class, 'index'])->name('emt.index');
-        Route::get('/returns/sea/{taxType}', [ReturnDebtController::class, 'index'])->name('sea.index');
-        Route::get('/returns/airport/{taxType}', [ReturnDebtController::class, 'index'])->name('airport.index');
+        Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
+        Route::get('/returns/recovery-measure/{debtId}', [ReturnDebtController::class, 'recovery'])->name('debt.recovery');
+        Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('debt.show');
+        Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('debt.showOverdue');
+        Route::get('/demand-notice/send/{debtId}', [ReturnDebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
+
+        Route::get('/waivers', [ReturnDebtController::class, 'waivers'])->name('waivers.index');
+        Route::get('/waivers/{waiverId}', [ReturnDebtController::class, 'approval'])->name('waivers.approval');
+
+        Route::get('/assessments', [AssessmentDebtController::class, 'index'])->name('assessments.index');
+
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
@@ -457,10 +466,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/view/lease/payment/{id}', [LandLeaseController::class, 'viewLeasePayment'])->name('view.lease.payment');
         Route::get('/agreement-doc/{path}', [LandLeaseController::class, 'getAgreementDocument'])->name('get.lease.document');
         Route::get('/generate-report', [LandLeaseController::class, 'generateReport'])->name('generate.report');
+        Route::get('/payment-report', [LandLeaseController::class, 'paymentReport'])->name('payment.report');
         Route::get('/agents', [LandLeaseController::class, 'agentsList'])->name('agents');
         Route::get('/agent/status-change/{payload}', [LandLeaseController::class, 'agentStatusChange'])->name('agent.status.change');
         Route::get('/agent/create', [LandLeaseController::class, 'createAgent'])->name('agent.create');
         Route::get('/download-report-pdf/{dates}', [LandLeaseController::class, 'downloadLandLeaseReportPdf'])->name('download.report.pdf');
+        Route::get('/payment/download-report-pdf/{dates}', [LandLeaseController::class, 'downloadLandLeasePaymentReportPdf'])->name('payment.download.report.pdf');
     });
 
     //Tax Clearance

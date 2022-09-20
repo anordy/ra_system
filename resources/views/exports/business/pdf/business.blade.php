@@ -57,8 +57,8 @@
             <tr>
                 <th style="text-align:center;" colspan="10">
                     <strong class="zrb">ZANZIBAR REVENUE BOARD</strong><br>
-                    {{-- <strong>RELIEF APPLLICATIONS</strong><br>
-                        <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
+                    {{-- <strong>RELIEF APPLLICATIONS</strong><br> --}}
+                    {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>  --}}
                 </th>
             </tr>
         </thead>
@@ -67,19 +67,18 @@
     <table class="table">
         <thead class="tableHead">
             <tr>
-                <th style="text-align:center; border: 1px solid black;">
+                <th style="text-align:center; border-collapse:collapse;border: 1px solid black;">
                     <strong>S/N</strong>
                 </th>
-                <th style="text-align:center; border: 1px solid black;">
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Business</strong>
                 </th>
-                <th style="text-align:center; border: 1px solid black;">
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Location</strong>
                 </th>
-
-                {{-- <th style="text-align:center; border: 1px solid black;">
-                    <strong>Tax Type</strong>
-                </th> --}}
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Tax Region</strong>
+                </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Business Category</strong>
                 </th>
@@ -93,6 +92,13 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Region</strong>
                 </th>
+            
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>District</strong>
+                </th>
+                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    <strong>Ward</strong>
+                </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Physical Address</strong>
                 </th>
@@ -101,18 +107,18 @@
         <tbody>
             @foreach ($records as $index => $record)
                 <tr>
-                    <td style="text-align:center; border: 1px solid black;">
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $index + 1 }}
                     </td>
-                    <td style="text-align:center; border: 1px solid black;">
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->business->name ?? '-' }}
                     </td>
-                    <td style="text-align:center; border: 1px solid black;">
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->name }}
                     </td>
-                    {{-- <td style="text-align:center; border: 1px solid black;">
-                        {{ $record-> }}
-                    </td> --}}
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->taxRegion->name ?? '-'}}
+                    </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->business->category->name ?? '-' }}
                     </td>
@@ -124,6 +130,12 @@
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->region->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->district->name ?? '-' }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->ward->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->physical_address ?? '-' }}

@@ -19,10 +19,10 @@
 
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 <div id="paid-approval" class="tab-pane fade active show">
-                    @livewire('assesments.waiver-approval-table', ['category' => 'objection', 'payment' => 'complete'])
+                    @livewire('assesments.dispute-approval-table', ['category' => 'objection', 'payment' => 'complete'])
                 </div>
                 <div id="pending-approval" class="tab-pane fade">
-                    @livewire('assesments.waiver-approval-table', ['category' => 'objection', 'payment' => 'unpaid'])
+                    @livewire('assesments.dispute-unpaid-approval-table', ['category' => 'objection', 'payment' => 'unpaid'])
                 </div>
                 <div id="approved-approval" class="tab-pane fade">
                     @livewire('assesments.waiver.waiver-table', ['category' => 'objection', 'status' => 'approved'])
