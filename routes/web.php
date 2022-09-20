@@ -12,6 +12,7 @@
  */
 
 use App\Http\Controllers\AllPdfController;
+use App\Http\Controllers\Assesments\DisputeController;
 use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Assesments\WaiverObjectionController;
@@ -37,7 +38,6 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
-use App\Http\Controllers\Reports\Dispute\DisputeReportController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
 use App\Http\Controllers\EducationLevelController;
@@ -75,6 +75,7 @@ use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
 use App\Http\Controllers\Reports\Claims\ClaimReportController;
+use App\Http\Controllers\Reports\Dispute\DisputeReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -263,6 +264,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/waiverobjection/show/{waiver_id}', [WaiverObjectionController::class, 'approval'])->name('waiverobjection.approval');
         Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
         Route::get('/waiverobjection/create/location/{location_id}/tax/{tax_type_id}', [WaiverObjectionController::class, 'create'])->name('waiverobjection.create');
+
+        //Dispute
+        Route::get('/dispute/index', [DisputeController::class, 'index'])->name('dispute.index');
+        Route::get('/dispute/approval/{waiver_id}', [DisputeController::class, 'approval'])->name('dispute.approval');
+        Route::get('/dispute/files/{waiver_id}', [DisputeController::class, 'files'])->name('dispute.files');
+        Route::get('/dispute/show/{waiver_id}', [DisputeController::class, 'show'])->name('dispute.show');
+
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
@@ -392,7 +400,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/disputes', [DisputeReportController::class, 'index'])->name('disputes');
         Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
         Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
-
 
         Route::get('/claims', [ClaimReportController::class, 'init'])->name('claims.init');
         Route::get('/claims/preview/{parameters}', [ClaimReportController::class, 'preview'])->name('claims.preview');
