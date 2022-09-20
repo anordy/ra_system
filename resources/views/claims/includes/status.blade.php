@@ -22,4 +22,10 @@
         <i class="bi bi-record-circle mr-1"></i>
         Correction
     </span>
+@elseif($row->status === \App\Enum\TaxClaimStatus::REJECTED)
+    <span class="badge badge-danger py-1 px-2"
+          style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
+        <i class="bi bi-x-circle mr-1"></i>
+        Rejected
+    </span>
 @endif
