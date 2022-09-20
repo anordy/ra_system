@@ -19,14 +19,11 @@ class PortReturnController extends Controller
             abort(403);
         }
 
-        $paidData = $this->returnCardReportForPaidReturns(PortReturn::class, PortReturn::getTableName(), PortReturnPenalty::getTableName());
-
-        $unpaidData = $this->returnCardReportForUnpaidReturns(PortReturn::class, PortReturn::getTableName(), PortReturnPenalty::getTableName());
-
-        $vars      = $this->getSummaryData(PortReturn::query());
+        $cardOne   = 'returns.port.port-card-one';
+        $cardTwo   = 'returns.port.port-card-two';
         $tableName = 'returns.port.port-return-table';
 
-        return view('returns.port.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+        return view('returns.port.index', compact('cardOne', 'cardTwo', 'tableName'));
     }
 
     public function show($return_id)

@@ -4,29 +4,21 @@ namespace App\Http\Controllers\Returns\StampDuty;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\StampDuty\StampDutyReturnPenalty;
-use App\Traits\ReturnCardReport;
-use App\Traits\ReturnSummaryCardTrait;
 use Illuminate\Support\Facades\Gate;
 
 class StampDutyReturnController extends Controller
 {
-    use ReturnCardReport, ReturnSummaryCardTrait;
-
     public function index()
     {
         if (!Gate::allows('return-stamp-duty-return-view')) {
             abort(403);
         }
-        $paidData = $this->returnCardReportForPaidReturns(StampDutyReturn::class, StampDutyReturn::getTableName(), StampDutyReturnPenalty::getTableName());
 
-        $unpaidData = $this->returnCardReportForUnpaidReturns(StampDutyReturn::class, StampDutyReturn::getTableName(), StampDutyReturnPenalty::getTableName());
-
-        $vars = $this->getSummaryData(StampDutyReturn::query());
-
+        $cardOne   = 'returns.stamp-duty.stamp-duty-card-one';
+        $cardTwo   = 'returns.stamp-duty.stamp-duty-card-two';
         $tableName ='returns.stamp-duty.stamp-duty-returns-table';
 
-        return view('returns.stamp-duty.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+        return view('returns.stamp-duty.index', compact('cardOne', 'cardTwo', 'tableName'));
     }
 
     public function show($returnId)

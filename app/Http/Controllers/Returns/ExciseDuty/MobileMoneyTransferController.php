@@ -19,15 +19,12 @@ class MobileMoneyTransferController extends Controller
         if (!Gate::allows('return-mobile-money-transfer-view')) {
             abort(403);
         }
-        $paidData = $this->returnCardReportForPaidReturns(MmTransferReturn::class, MmTransferReturn::getTableName(), MmTransferPenalty::getTableName());
 
-        $unpaidData = $this->returnCardReportForUnpaidReturns(MmTransferReturn::class, MmTransferReturn::getTableName(), MmTransferPenalty::getTableName());
-
-        $vars = $this->getSummaryData(MmTransferReturn::query());
-
+        $cardOne   = 'returns.excise-duty.mobile-money-card-one';
+        $cardTwo   = 'returns.excise-duty.mobile-money-card-two';
         $tableName ='returns.excise-duty.mobile-money-transfer-table';
 
-        return view('returns.excise-duty.mobile-money-transfer.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+        return view('returns.excise-duty.mobile-money-transfer.index', compact('cardOne', 'cardTwo', 'tableName'));
     }
 
     public function show($return_id)
