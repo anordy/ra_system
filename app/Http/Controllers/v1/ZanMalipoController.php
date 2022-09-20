@@ -6,21 +6,12 @@ use App\Enum\BillStatus;
 use App\Enum\DisputeStatus;
 use App\Enum\InstallmentStatus;
 use App\Enum\LeaseStatus;
-use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\Disputes\Dispute;
 use App\Models\Installment\InstallmentItem;
-use App\Models\LandLease;
 use App\Models\LandLeaseDebt;
 use App\Models\LeasePayment;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
@@ -284,6 +275,7 @@ class ZanMalipoController extends Controller
                     $this->registerWorkflow(get_class($dispute), $dispute->id);
                     $this->doTransition('application_submitted', []);
                     $dispute->app_status = DisputeStatus::SUBMITTED;
+                    $dispute->payment_status = BillStatus::COMPLETE;
                     $dispute->save();
                 }
             }
@@ -415,27 +407,27 @@ class ZanMalipoController extends Controller
         }
     }
 
-
     use LandLeaseTrait;
-    private function updateLeasePayment($bill){
-        
+    private function updateLeasePayment($bill)
+    {
+
         try {
             if ($bill->billable_type == LeasePayment::class) {
                 $updateLeasePayment = $bill->billable;
 
                 if ($bill->paidAmount() >= $bill->amount) {
-                    
+
                     $nowDate = Carbon::now();
                     $due_date = Carbon::parse($updateLeasePayment->due_date);
-                    
-                    if($nowDate->month == $due_date->month && $nowDate->year == $due_date->year){
+
+                    if ($nowDate->month == $due_date->month && $nowDate->year == $due_date->year) {
                         $status = LeaseStatus::ON_TIME_PAYMENT;
-                    }elseif($nowDate < $due_date && $nowDate->year <= $due_date->year){
+                    } elseif ($nowDate < $due_date && $nowDate->year <= $due_date->year) {
                         $status = LeaseStatus::IN_ADVANCE_PAYMENT;
-                    } elseif($nowDate > $due_date){
+                    } elseif ($nowDate > $due_date) {
                         $status = LeaseStatus::LATE_PAYMENT;
                     }
-                    $updateLeasePayment->status = $status;                
+                    $updateLeasePayment->status = $status;
                 } else {
 
                     $updateLeasePayment->status = LeaseStatus::PAID_PARTIALLY;
@@ -445,14 +437,13 @@ class ZanMalipoController extends Controller
                 $updateLeasePayment->paid_at = Carbon::now();
                 $updateLeasePayment->save();
 
-
                 if ($updateLeasePayment->debt) {
                     $updateDebt = LandLeaseDebt::find($updateLeasePayment->debt->id);
                     $updateDebt->status = LeaseStatus::COMPLETE;
                     $updateDebt->outstanding_amount = $updateLeasePayment->outstanding_amount;
                     $updateDebt->save();
                 }
-                
+
             }
         } catch (\Exception $e) {
             Log::error($e);

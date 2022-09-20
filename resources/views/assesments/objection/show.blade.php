@@ -3,14 +3,12 @@
 @section('title', 'View objection')
 
 @section('content')
-    {{-- @if ($business->status === \App\Models\BusinessStatus::CORRECTION)
-        <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business->id }}" />
-    @endif --}}
+
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
-        <li class="nav-item" role="presentation">
+        {{-- <li class="nav-item" role="presentation">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                 aria-selected="true">Complainant</a>
-        </li>
+        </li> --}}
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="dispute-tab" data-toggle="tab" href="#dispute" role="tab" aria-controls="dispute"
                 aria-selected="false">Tax In Dispute</a>
