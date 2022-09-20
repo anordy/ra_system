@@ -31,11 +31,12 @@ class ReturnFilter extends Component
         $optionStartYear   = 2020;
         $this->optionYears = range($optionStartYear, date('Y'));
 
-        //add All & Range to year options
+        //add All to year options
         $this->optionYears[] = 'All';
-        $this->optionYears[] = 'Custom Range';
         //sort array
         rsort($this->optionYears);
+        //add Range to year options
+        $this->optionYears[] = 'Custom Range';
     }
     
     public function fillter()
