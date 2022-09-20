@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\TaxClearance;
 
+use App\Enum\LeaseStatus;
 use PDF;
 use Carbon\Carbon;
 use App\Models\Debts\Debt;
@@ -22,6 +23,8 @@ use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\LandLeaseDebt;
+use App\Models\LeasePayment;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\StampDuty\StampDutyReturn;
@@ -58,13 +61,20 @@ class TaxClearanceController extends Controller
             ->with('businessLocation.business')
             ->first();
 
-        $debts = Debt::where('business_location_id', $taxClearence->business_location_id)
+
+        $tax_return_debts = TaxReturn::where('location_id', $taxClearence->business_location_id)
             ->where('business_id', $taxClearence->business_id)
-            ->where('status', '!=', ReturnStatus::COMPLETE)
+            ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+            ->where('payment_status', '!=', ReturnStatus::COMPLETE)
             ->with('installment')
             ->get();
 
-        return view('tax-clearance.clearance-request', compact('debts', 'taxClearence'));
+        $landLeaseDebts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
+        ->where('status', LeaseStatus::PENDING)
+        ->get();
+
+        $debts = [];
+        return view('tax-clearance.clearance-request', compact('tax_return_debts', 'taxClearence', 'debts', 'landLeaseDebts'));
     }
 
     public function approval($requestId)
@@ -88,9 +98,13 @@ class TaxClearanceController extends Controller
             ->with('installment')
             ->get();
 
+        $landLeaseDebts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
+        ->where('status', LeaseStatus::PENDING)
+        ->get();
+
         $debts = [];
 
-        return view('tax-clearance.approval', compact('tax_return_debts', 'taxClearence', 'debts'));
+        return view('tax-clearance.approval', compact('tax_return_debts', 'taxClearence', 'debts', 'landLeaseDebts'));
     }
 
     public function generateReturnsDebts($business_location_id)

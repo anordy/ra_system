@@ -238,6 +238,10 @@ class PermissionSeeder extends Seeder
 
             # Managerial Report
             ['name' => 'managerial-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-excel', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-pdf', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-preview', 'sys_module_id' => 20],
 
             # Extenstion
             ['name' => 'payment-extension-view', 'sys_module_id' => 21],

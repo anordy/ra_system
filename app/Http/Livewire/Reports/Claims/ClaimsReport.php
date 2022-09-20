@@ -41,8 +41,6 @@ class ClaimsReport extends Component
     public $to;
     public $today;
 
-    public $returnName;
-
     protected function rules()
     {
         return [
@@ -79,16 +77,15 @@ class ClaimsReport extends Component
             $this->reset('month', 'quater', 'semiAnnual', 'period');
         }
 
-        if ($propertyName == 'payment_report_type') {
-            $this->reset('month', 'quater', 'semiAnnual', 'period', 'year');
+        if ($this->status == 'rejected' or $this->status == 'pending') {
+            $this->payment_status = '';
         }
 
-        if ($propertyName == 'filing_report_type') {
-            $this->reset('month', 'quater', 'semiAnnual', 'period', 'year');
-        }
-
-        if ($propertyName == 'type') {
-            $this->reset('filing_report_type', 'payment_report_type', 'month', 'quater', 'semiAnnual', 'period', 'year');
+        if ($this->duration == 'yearly') {
+            $this->from = '';
+            $this->to = '';
+        } else {
+            $this->year = '';
         }
     }
 
