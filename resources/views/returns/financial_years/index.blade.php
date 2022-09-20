@@ -6,13 +6,14 @@
     <div class="card">
         <div class="card-header">
             <div class="text-uppercase font-weight-bold">Financial Year Configuration</div>
-            <div class="card-tools">
+            @can('setting-financial-year-add')
+                <div class="card-tools">
                     <button class="btn btn-info btn-sm"
                             onclick="Livewire.emit('showModal', 'returns.financial-years.add-year-modal')"><i
                                 class="fa fa-plus-circle"></i> Add
                     </button>
-
-            </div>
+                </div>
+            @endcan
         </div>
 
         <div class="card-body">

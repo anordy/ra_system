@@ -74,6 +74,7 @@ use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Claims\ClaimReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -392,6 +393,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
         Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
 
+
+        Route::get('/claims', [ClaimReportController::class, 'init'])->name('claims.init');
+        Route::get('/claims/preview/{parameters}', [ClaimReportController::class, 'preview'])->name('claims.preview');
+        Route::get('/claims/download-report-pdf/{data}', [ClaimReportController::class, 'exportClaimReportPdf'])->name('claim.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
