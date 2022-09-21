@@ -129,28 +129,28 @@
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Waived Penalty Percentage</span>
                         <p class="my-1">{{ number_format($waiver->penalty_rate, 2) }} % of
-                            {{ number_format($waiver->debt->penalty, 2) }}
+                            {{ number_format($waiver->debt->penalty_amount, 2) }}
                         </p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Waived Interest Percentage</span>
                         <p class="my-1"> {{ number_format($waiver->interest_rate, 2) }} % of
-                            {{ number_format($waiver->debt->interest, 2) }}
+                            {{ number_format($waiver->debt->interest_amount, 2) }}
                         </p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->principal, 2) }}
+                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->principal_amount, 2) }}
                         </p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->penalty, 2) }}
+                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->penalty_amount, 2) }}
                         </p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->interest, 2) }}
+                        <p class="my-1">{{ $waiver->debt->currency }}. {{ number_format($waiver->debt->interest_amount, 2) }}
                         </p>
                     </div>
                     <div class="col-md-4 mb-3">

@@ -61,7 +61,7 @@
                 <hr>
                 <div class="row m-2 pt-3">
 
-                    @if (count($debt->recoveryMeasure->measures) > 0)
+                    @if (count($debt->recoveryMeasure->measures ?? []) > 0)
                         @foreach ($debt->recoveryMeasure->measures as $key => $recovery_measure)
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Measure Type</span>
@@ -78,9 +78,6 @@
             </div>
     @endif
 
-    {{-- TODO: Display only if not approved  --}}
-    @if ($debt->recoveryMeasure->status != 'approved') 
-        @livewire('approval.recovery-measure-approval-processing', ['debt' => $debt])
-    @endif
+    @livewire('approval.recovery-measure-approval-processing', ['debt' => $debt])
 </div>
 </div>

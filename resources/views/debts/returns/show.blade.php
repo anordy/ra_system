@@ -22,7 +22,7 @@
                 @if (count($tax_return->demandNotices) > 0)
                     <a href="#tab5" class="nav-item nav-link font-weight-bold">Demand Notices</a>
                 @endif
-                @if (count($tax_return->recoveryMeasure->measures) > 0)
+                @if ($tax_return->recoveryMeasure)
                 <a href="#tab6" class="nav-item nav-link font-weight-bold">Assigned Recovery Measures</a>
                 @endif
                 @if ($tax_return->recoveryMeasure)
@@ -32,7 +32,7 @@
 
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show m-4">
-                    @if (count($tax_return->recoveryMeasure->measures) == 0)
+                    @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned')
                         <div class="card-tools">
                                 <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"  class="btn btn-info btn-sm text-white" style="color: white !important;"><i
                                     class="fa fa-plus text-white"></i>
@@ -49,7 +49,7 @@
                     <livewire:debt.debt-penalties :penalties="$tax_return->return->penalties ?? []" />
                 </div>
                 <div id="tab4" class="tab-pane fade  m-4">
-                    @include('debts.waiver-details', ['tax_return' => $tax_return])
+                    @include('debts.returns.waiver-details', ['tax_return' => $tax_return])
                 </div>
                 <div id="tab5" class="tab-pane fade m-4">
                     <livewire:debt.demand-notice.demand-notice-table debtId="{{ $tax_return->id }}" />
@@ -59,7 +59,7 @@
                     <hr>
                     <div class="row m-2 pt-3">
     
-                        @if (count($tax_return->recoveryMeasure->measures) > 0)
+                        @if ($tax_return->recoveryMeasure)
                             @foreach ($tax_return->recoveryMeasure->measures as $key => $recovery_measure)
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Measure Type</span>
