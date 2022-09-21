@@ -42,4 +42,8 @@ class ZmBill extends Model
     public function billable(){
         return $this->morphTo();
     }
+
+    public function createdBy(){
+        return $this->morphTo('createdby');
+    }
 }
