@@ -10,9 +10,8 @@ use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
 use App\Models\Debts\DebtWaiver;
 use App\Models\Debts\DebtPenalty;
+use App\Models\Debts\DemandNotice;
 use App\Models\Debts\RecoveryMeasure;
-use App\Models\Debts\DebtDemandNotice;
-use App\Models\Debts\SentDemandNotice;
 use App\Models\Installment\Installment;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Extension\ExtensionRequest;
@@ -102,7 +101,7 @@ class TaxReturn extends Model
 
     public function demandNotices()
     {
-        return $this->morphMany(DebtDemandNotice::class, 'debt');
+        return $this->morphMany(DemandNotice::class, 'debt');
     }
 
     public function waiver(){

@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Enum\ReturnCategory;
 use App\Jobs\DemandNotice\SendDemandNoticeEmail;
 use App\Models\Debts\Debt;
+use App\Models\Returns\TaxReturn;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -42,16 +44,14 @@ class DailyDemandNoticeCommand extends Command
     public function handle()
     {
         Log::channel('demandNotice')->info('Daily Demand notice process started');
-        $this->runDemandNotices();
+        $this->runReturnsDemandNotices();
         Log::channel('demandNotice')->info('Daily Demand notice process ended');
     }
 
-    protected function runDemandNotices()
+    protected function runReturnsDemandNotices()
     {
-        Log::channel('demandNotice')->info("Daily Demand notice for returns and assesments");
-        $debts = Debt::where('demand_notice_count', '<', 3)
-            ->whereRaw("TIMESTAMPDIFF(DAY, debts.curr_due_date, CURDATE()) >= 30")
-            ->whereNotIn('status', ['completed', 'paid-by-debt'])
+        Log::channel('demandNotice')->info("Daily Demand notice for tax returns");
+        $debts = TaxReturn::where('return_category', ReturnCategory::OVERDUE)
             ->get();
 
         foreach ($debts as $debt) {

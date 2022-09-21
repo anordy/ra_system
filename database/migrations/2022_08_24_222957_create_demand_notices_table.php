@@ -1,10 +1,11 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Enum\ReturnCategory;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-class CreateDebtDemandNoticesTable extends Migration
+class CreateDemandNoticesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +14,13 @@ class CreateDebtDemandNoticesTable extends Migration
      */
     public function up()
     {
-        Schema::create('debt_demand_notices', function (Blueprint $table) {
+        Schema::create('demand_notices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('debt_id');
             $table->unsignedBigInteger('debt_type');
             $table->enum('sent_by', ['job', 'user']);
+            $table->dateTime('sent_on');
+            $table->enum('category', ReturnCategory::getConstants())->default('normal');
             $table->unsignedBigInteger('sent_by_id')->nullable();
             $table->timestamps();
         });
