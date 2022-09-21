@@ -378,20 +378,20 @@ class TaxAuditApprovalProcessing extends Component
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
-                    $assessment->status = ReturnStatus::CN_GENERATING;
+                    $assessment->payment_status = ReturnStatus::CN_GENERATING;
                     $assessment->save();
 
                     $this->flash('success', 'A control number has been generated successful.');
                 } else {
 
                     session()->flash('error', 'Control number generation failed, try again later');
-                    $assessment->status = ReturnStatus::CN_GENERATION_FAILED;
+                    $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                 }
 
                 $assessment->save();
             } else {
                 // We are local
-                $assessment->status = ReturnStatus::CN_GENERATED;
+                $assessment->payment_status = ReturnStatus::CN_GENERATED;
                 $assessment->save();
 
                 // Simulate successful control no generation

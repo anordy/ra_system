@@ -22,14 +22,11 @@ class BfoExciseDutyController extends Controller
         if (!Gate::allows('return-bfo-excise-duty-return-view')) {
             abort(403);
         }
-        $paidData = $this->returnCardReportForPaidReturns(BfoReturn::class, BfoReturn::getTableName(), BfoPenalty::getTableName());
-
-        $unpaidData = $this->returnCardReportForUnpaidReturns(BfoReturn::class, BfoReturn::getTableName(), BfoPenalty::getTableName());
-
-        $vars      = $this->getSummaryData(BfoReturn::query());
+        $cardOne   = 'returns.bfo-excise-duty.bfo-card-one';
+        $cardTwo   = 'returns.bfo-excise-duty.bfo-card-two';
         $tableName = 'returns.bfo-excise-duty.bfo-excise-duty-table';
 
-        return view('returns.excise-duty.bfo.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+        return view('returns.excise-duty.bfo.index', compact('cardOne', 'cardTwo', 'tableName'));
     }
 
     public function show($return_id)

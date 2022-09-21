@@ -6,11 +6,14 @@ use Carbon\Carbon;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\MmTransferReturn;
+use App\Traits\ReturnFilterTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 
 class MobileMoneyTransferTable extends DataTableComponent
 {
+    use  ReturnFilterTrait;
+    
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];
 
@@ -38,25 +41,11 @@ class MobileMoneyTransferTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $data   = $this->data;
         $filter = (new MmTransferReturn)->newQuery();
 
-        if ($data == []) {
-            $filter->whereMonth('mm_transfer_returns.created_at', '=', date('m'));
-            $filter->whereYear('mm_transfer_returns.created_at', '=', date('Y'));
-        }
-        if (isset($data['type']) && $data['type'] != 'all') {
-            $filter->Where('return_category', $data['type']);
-        }
-        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
-            $filter->whereMonth('mm_transfer_returns.created_at', '=', $data['month']);
-        }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
-            $filter->whereYear('mm_transfer_returns.created_at', '=', $data['year']);
-        }
-        if (isset($data['year']) && $data['year'] == 'Custom Range') {
-            $filter->whereBetween('mm_transfer_returns.created_at', [$data['from'], $data['to']]);
-        }
+        $returnTable = MmTransferReturn::getTableName();
+
+        $filter = $this->dataFilter($filter, $this->data, $returnTable);
 
         return $filter->with('business', 'business.taxpayer', 'businessLocation')->orderBy('mm_transfer_returns.created_at', 'desc');
     }

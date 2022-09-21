@@ -57,8 +57,8 @@
             <tr>
                 <th style="text-align:center;" colspan="10">
                     <strong class="zrb">ZANZIBAR REVENUE BOARD</strong><br>
-                    {{-- <strong>RELIEF APPLLICATIONS</strong><br>
-                        <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong> --}}
+                    {{-- <strong>RELIEF APPLLICATIONS</strong><br> --}}
+                    {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>  --}}
                 </th>
             </tr>
         </thead>
@@ -92,6 +92,7 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Region</strong>
                 </th>
+            
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>District</strong>
                 </th>

@@ -20,6 +20,7 @@ use App\Models\Returns\Vat\VatReturnConfig;
 use App\Models\TaxType;
 use App\Traits\ReturnConfigurationTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ReturnController extends Controller
 {
@@ -32,11 +33,17 @@ class ReturnController extends Controller
 
     public function config()
     {
+        if (!Gate::allows('setting-return-configuration-view')) {
+            abort(403);
+        }
         return view('returns.return-configs.taxtypes');
     }
 
     public function create($id, $code)
     {
+        if (!Gate::allows('setting-return-configuration-add')) {
+            abort(403);
+        }
         $taxtype_id = decrypt($id);
         $code       = decrypt($code);
 
@@ -45,6 +52,9 @@ class ReturnController extends Controller
 
     public function edit($taxtype_id, $code, $config_id)
     {
+        if (!Gate::allows('setting-return-configuration-edit')) {
+            abort(403);
+        }
         $taxtype_id = decrypt($taxtype_id);
         $code       = decrypt($code);
         $config_id  = decrypt($config_id);
@@ -54,6 +64,10 @@ class ReturnController extends Controller
 
     public function showReturnConfigs($id)
     {
+        if (!Gate::allows('setting-return-configuration-view')) {
+            abort(403);
+        }
+
         $id = decrypt($id);
 
         $code  = $this->getTaxTypeCode($id);

@@ -19,14 +19,11 @@ class EmTransactionController extends Controller
             abort(403);
         }
 
-        $paidData = $this->returnCardReportForPaidReturns(EmTransactionReturn::class, EmTransactionReturn::getTableName(), EmTransactionPenalty::getTableName());
+        $cardOne   = 'returns.em-transaction.em-card-one';
+        $cardTwo   = 'returns.em-transaction.em-card-two';
+        $tableName ='returns.em-transaction.em-transactions-table';
 
-        $unpaidData = $this->returnCardReportForUnpaidReturns(EmTransactionReturn::class, EmTransactionReturn::getTableName(), EmTransactionPenalty::getTableName());
-
-        $vars          = $this->getSummaryData(EmTransactionReturn::query());
-        $tableName     ='returns.em-transaction.em-transactions-table';
-
-        return view('returns.em-transaction.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+        return view('returns.em-transaction.index', compact('cardTwo', 'cardOne', 'tableName'));
     }
 
     public function show($return_id)
