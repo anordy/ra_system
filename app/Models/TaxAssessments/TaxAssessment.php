@@ -31,10 +31,6 @@ class TaxAssessment extends Model
         return $this->belongsTo(Business::class, 'business_id');
     }
 
-    public function debt(){
-        return $this->morphOne(Debt::class, 'debt');
-    }
-
     public function location()
     {
         return $this->belongsTo(BusinessLocation::class, 'location_id');

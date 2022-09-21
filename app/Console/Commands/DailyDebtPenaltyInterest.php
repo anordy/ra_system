@@ -69,7 +69,6 @@ class DailyDebtPenaltyInterest extends Command
          */
         $tax_returns = TaxReturn::selectRaw('tax_returns.*, TIMESTAMPDIFF(month, filing_due_date, NOW()) as periods, TIMESTAMPDIFF(month, curr_payment_due_date, NOW()) as penatableMonths')
             ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
-            ->whereRaw("TIMESTAMPDIFF(DAY, tax_returns.curr_payment_due_date, CURDATE()) = 0")
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
@@ -110,7 +109,6 @@ class DailyDebtPenaltyInterest extends Command
          */
         $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, TIMESTAMPDIFF(month, curr_payment_due_date, NOW()) as periods, TIMESTAMPDIFF(month, curr_payment_due_date, NOW()) as penatableMonths')
             ->whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
-            ->whereRaw("TIMESTAMPDIFF(DAY, tax_assessments.curr_payment_due_date, CURDATE()) = 0")
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 

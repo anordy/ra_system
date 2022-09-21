@@ -188,10 +188,6 @@
                                 <span class="font-weight-bold text-uppercase">Total Amount</span>
                                 <p class="my-1">{{ number_format($waiver->debt->total_amount, 2) ?? '' }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
-                                <p class="my-1">{{ number_format($waiver->debt->outstanding_amount, 2) ?? '' }}</p>
-                            </div>
                         </div>
                     </div>
                 </div>
