@@ -988,6 +988,7 @@
                 </ul>
             </li>
         @endcan
+
         @can('system')
             <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
