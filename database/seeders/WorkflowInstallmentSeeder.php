@@ -24,9 +24,9 @@ class WorkflowInstallmentSeeder extends Seeder
         $supports =  ['App\Models\Installment\InstallmentRequest'];
         $places = [
             'initial' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
+                'owner' => 'taxpayer',
+                'operator_type' => 'user',
+                'operators' => []
             ],
             'debt_manager' => [
                 'owner' => 'staff',

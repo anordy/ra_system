@@ -137,9 +137,14 @@
                             <a href="{{ route('returns.vat-return.index') }}">VAT Tax Returns</a>
                         </li>
                     @endcan
-                    @can('return-port-return-view')
-                        <li class="{{ request()->is('e-filling/port*') ? 'active' : '' }}">
-                            <a href="{{ route('returns.port.index') }}">Port Tax Returns</a>
+                    @can('return-airport-return-view') 
+                       <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
+                            <a href="{{ route('returns.airport.index') }}">AirPort Tax Returns</a>
+                        </li>
+                    @endcan
+                    @can('return-seaport-return-view')
+                        <li class="{{ request()->is('e-filing/seaport*') ? 'active' : '' }}">
+                            <a href="{{ route('returns.seaport.index') }}">SeaPort Tax Returns</a>
                         </li>
                     @endcan
                     @can('return-bfo-excise-duty-return-view')
@@ -990,6 +995,7 @@
                 </ul>
             </li>
         @endcan
+
         @can('system')
             <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>

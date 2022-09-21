@@ -66,7 +66,8 @@ trait ReturnFilterTrait
     //paid Returns
     public function paidReturns($returnClass, $returnTableName, $penaltyTableName)
     {
-        $penaltyData = $returnClass->where("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+        $returnClass1   = clone $returnClass;
+        $penaltyData    = $returnClass->where("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
             DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totalLateFiling'),
             DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totalLatePayment'),
@@ -75,10 +76,10 @@ trait ReturnFilterTrait
         ->groupBy('return_id')
         ->get();
 
-        $returnQuery = $returnClass->where('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
+        $returnQuery = $returnClass1->where($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
 
         return  [
-            'totalTaxAmount'   => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
+            'totalTaxAmount'   => $returnQuery->sum('total_amount_due'),
             'totalLateFiling'  => $penaltyData->sum('totalLateFiling'),
             'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
             'totalRate'        => $penaltyData->sum('totalRate'),
@@ -88,6 +89,8 @@ trait ReturnFilterTrait
     //unpaid Returns
     public function unPaidReturns($returnClass, $returnTableName, $penaltyTableName)
     {
+        $returnClass1   = clone $returnClass;
+
         $penaltyData = $returnClass->whereNotIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
             DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totalLateFiling'),
@@ -97,10 +100,10 @@ trait ReturnFilterTrait
         ->groupBy('return_id')
         ->get();
 
-        $returnQuery = $returnClass->whereNotIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
+        $returnQuery = $returnClass1->whereNotIn($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
 
         return  [
-            'totalTaxAmount'   => $returnQuery->sum("{$returnTableName}.total_amount_due_with_penalties"),
+            'totalTaxAmount'   => $returnQuery->sum("{$returnTableName}.total_amount_due"),
             'totalLateFiling'  => $penaltyData->sum('totalLateFiling'),
             'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
             'totalRate'        => $penaltyData->sum('totalRate'),

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Returns\Hotel;
 
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\TaxType;
 use App\Traits\ReturnFilterTrait;
 use Livewire\Component;
 
@@ -23,10 +24,13 @@ class TourCardOne extends Component
 
     public function mount()
     {
-        $returnTable = HotelReturn::getTableName();
-        $filter      = (new HotelReturn())->newQuery();
-        $filter      = $this->dataFilter($filter, $this->data, $returnTable);
-        $this->vars  = $this->getSummaryData($filter);
+        $returnTable   = HotelReturn::getTableName();
+        $taxType       = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
+        $tour          = (new HotelReturn())->newQuery();
+        
+        $filter        = $tour->where('tax_type_id', $taxType->id);
+        $filter        = $this->dataFilter($filter, $this->data, $returnTable);
+        $this->vars    = $this->getSummaryData($filter);
     }
 
     public function render()

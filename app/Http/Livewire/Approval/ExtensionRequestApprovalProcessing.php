@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Approval;
 use App\Enum\ExtensionRequestStatus;
 use App\Models\Debts\Debt;
 use App\Models\Returns\TaxReturn;
+use App\Traits\PaymentsTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ExtensionRequestApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, LivewireAlert, PaymentsTrait;
 
     public $modelId;
     public $modelName;
@@ -59,7 +60,11 @@ class ExtensionRequestApprovalProcessing extends Component
                 $taxReturn->update([
                     'curr_payment_due_date' => $this->subject->extend_to
                 ]);
-                // TODO: Log this change
+
+                // If extended date is greater than current bill expiration date.
+                if ($this->subject->extend_to->greaterThan($taxReturn->bill->expire_date)){
+                    $this->updateBill($taxReturn->bill, $this->subject->extend_to);
+                }
                 $this->subject->save();
             }
 

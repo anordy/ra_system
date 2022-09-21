@@ -2,23 +2,23 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\DebtPaymentMethod;
+use App\Enum\ApplicationStatus;
 use App\Enum\ExtensionRequestStatus;
 use App\Enum\InstallmentRequestStatus;
 use App\Enum\InstallmentStatus;
-use App\Models\Debts\Debt;
+use App\Enum\PaymentMethod;
 use App\Models\Installment\Installment;
 use App\Models\Returns\TaxReturn;
+use App\Models\TaxType;
 use App\Traits\PaymentsTrait;
+use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
-use App\Models\TaxType;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Log;
-use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class InstallmentRequestApprovalProcessing extends Component
 {
@@ -75,7 +75,8 @@ class InstallmentRequestApprovalProcessing extends Component
                 // Update debt details
                 $taxReturn->update([
                     'curr_payment_due_date' => $this->subject->installment_to,
-                    'payment_method' => DebtPaymentMethod::INSTALLMENT
+                    'payment_method' => PaymentMethod::INSTALLMENT,
+                    'application_status' => ApplicationStatus::INSTALLMENT
                 ]);
 
                 // Cancel Control No.

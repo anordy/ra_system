@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Returns\Hotel;
 
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\TaxType;
 use App\Traits\ReturnFilterTrait;
 use Livewire\Component;
 
@@ -24,7 +25,9 @@ class RestaurantCardOne extends Component
     public function mount()
     {
         $returnTable = HotelReturn::getTableName();
-        $filter      = (new HotelReturn())->newQuery();
+        $taxType     = TaxType::where('code', TaxType::RESTAURANT)->first();
+        $restaurant  = (new HotelReturn())->newQuery();
+        $filter      = $restaurant->where('tax_type_id', $taxType->id);
         $filter      = $this->dataFilter($filter, $this->data, $returnTable);
         $this->vars  = $this->getSummaryData($filter);
     }

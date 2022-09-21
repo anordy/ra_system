@@ -48,7 +48,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-tour-operation-view', 'sys_module_id' => 5],
             ['name' => 'return-restaurant-levy-view', 'sys_module_id' => 5],
             ['name' => 'return-vat-return-view', 'sys_module_id' => 5],
-            ['name' => 'return-port-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-airport-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-seaport-return-view', 'sys_module_id' => 5],
             ['name' => 'return-stamp-duty-return-view', 'sys_module_id' => 5],
             ['name' => 'return-bfo-excise-duty-return-view', 'sys_module_id' => 5],
             ['name' => 'return-mno-excise-duty-return-view', 'sys_module_id' => 5],
@@ -145,46 +146,60 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-user-add', 'sys_module_id' => 18],
             ['name' => 'setting-user-edit', 'sys_module_id' => 18],
             ['name' => 'setting-user-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-user-change-password','sys_module_id'=>18],
+            ['name' => 'setting-user-change-role','sys_module_id'=>18],
+            ['name' => 'setting-user-change-status','sys_module_id'=>18],
+
             ['name' => 'setting-role-view', 'sys_module_id' => 18],
             ['name' => 'setting-role-add', 'sys_module_id' => 18],
             ['name' => 'setting-role-edit', 'sys_module_id' => 18],
             ['name' => 'setting-role-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-country-view', 'sys_module_id' => 18],
             ['name' => 'setting-country-add', 'sys_module_id' => 18],
             ['name' => 'setting-country-edit', 'sys_module_id' => 18],
             ['name' => 'setting-country-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-region-view', 'sys_module_id' => 18],
             ['name' => 'setting-region-add', 'sys_module_id' => 18],
             ['name' => 'setting-region-edit', 'sys_module_id' => 18],
             ['name' => 'setting-region-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-district-view', 'sys_module_id' => 18],
             ['name' => 'setting-district-add', 'sys_module_id' => 18],
             ['name' => 'setting-district-edit', 'sys_module_id' => 18],
             ['name' => 'setting-district-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-ward-view', 'sys_module_id' => 18],
             ['name' => 'setting-ward-add', 'sys_module_id' => 18],
             ['name' => 'setting-ward-edit', 'sys_module_id' => 18],
             ['name' => 'setting-ward-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-bank-view', 'sys_module_id' => 18],
             ['name' => 'setting-bank-add', 'sys_module_id' => 18],
             ['name' => 'setting-bank-edit', 'sys_module_id' => 18],
             ['name' => 'setting-bank-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-exchange-rate-view', 'sys_module_id' => 18],
             ['name' => 'setting-exchange-rate-add', 'sys_module_id' => 18],
             ['name' => 'setting-exchange-rate-edit', 'sys_module_id' => 18],
             ['name' => 'setting-exchange-rate-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-education-level-view', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-add', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-edit', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-business-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-business-category-add', 'sys_module_id' => 18],
             ['name' => 'setting-business-category-edit', 'sys_module_id' => 18],
             ['name' => 'setting-business-category-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-tax-type-view', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-isic-level-one-view', 'sys_module_id' => 18],
             ['name' => 'setting-isic-level-one-add', 'sys_module_id' => 18],
             ['name' => 'setting-isic-level-one-edit', 'sys_module_id' => 18],
@@ -201,14 +216,17 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-isic-level-four-add', 'sys_module_id' => 18],
             ['name' => 'setting-isic-level-four-edit', 'sys_module_id' => 18],
             ['name' => 'setting-isic-level-four-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-business-file-view', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-add', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-edit', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-tax-region-view', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-delete', 'sys_module_id' => 18],
+            
             ['name' => 'setting-mvr-make-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-model-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transmission-type-view', 'sys_module_id' => 18],
