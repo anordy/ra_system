@@ -778,7 +778,6 @@
                         <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License
                             Classes</a>
                     </li>
-                @endcan
                 @can('setting-role-view')
                     <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
                         <a href="{{ route('settings.roles.index') }}">Roles</a>
@@ -989,6 +988,7 @@
                 </ul>
             </li>
         @endcan
+
         @can('system')
             <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>
