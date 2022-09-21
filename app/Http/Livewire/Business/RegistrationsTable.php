@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
 use App\Models\BusinessStatus;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -48,9 +47,10 @@ class RegistrationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZIN(HQ)', 'headquarter.zin')
-                ->sortable()
-                ->searchable(),
+            Column::make('ZIN(HQ)', 'id')
+                ->format(function ($value, $row){
+                    return $row->headquarter->zin;
+                }),
             Column::make('Business Name', 'name')
                 ->sortable()
                 ->searchable(),
