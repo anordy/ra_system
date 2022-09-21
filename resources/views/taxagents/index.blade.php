@@ -23,29 +23,15 @@
 
             <div class="tab-content card" id="myTabContent">
 
-                <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
-                    <div class=" disp-Info text-center mb-2">
-                        Requests needed for verification
-                    </div>
+                <div class="tab-pane p-4 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                     <livewire:tax-agent.verification-requests-table/>
-
                 </div>
-                <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
-                    <div class="disp-Info text-center mb-2">
-                        Requests needed for approval
-                    </div>
-
+                <div class="tab-pane p-4" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                     <livewire:tax-agent.tax-agent-table/>
-
                 </div>
 
-                <div class="tab-pane p-2" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
-                    <div class="disp-Info text-center mb-2">
-                        Rejected Requests
-                    </div>
-
+                <div class="tab-pane p-4" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
                     <livewire:tax-agent.rejected-tax-agent-table/>
-
                 </div>
 
             </div>
