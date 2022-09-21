@@ -2,6 +2,7 @@
 
 use App\Enum\DisputeStatus;
 use App\Enum\ReturnApplicationStatus;
+use App\Enum\ReturnCategory;
 use App\Enum\TaxClaimStatus;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
@@ -43,7 +44,7 @@ class CreateStampDutyReturnsTable extends Migration
 
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('claim_status', TaxClaimStatus::getConstants())->default(TaxClaimStatus::NO_CLAIM);
-            $table->enum('return_category', ['normal', 'debt']);
+            $table->enum('return_category', ReturnCategory::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->softDeletes();
             $table->timestamps();

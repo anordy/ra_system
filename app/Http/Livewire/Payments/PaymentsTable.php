@@ -44,6 +44,8 @@ class PaymentsTable extends DataTableComponent
             Column::make('Payer Name', 'payer_name'),
             Column::make('Payer Email', 'payer_email'),
             Column::make('Description', 'description'),
+            Column::make('Actions', 'id')
+                ->view('payments.includes.actions')
         ];
     }
 
