@@ -568,12 +568,6 @@
                         <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
                             <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
-
-                        @can('managerial-claim-report-view')
-                            <li class="{{ request()->is('reports/claims*') ? 'active' : '' }}">
-                                <a href="{{ route('reports.claims.init') }}">Claim Reports</a>
-                            </li>
-                        @endcan
                     @endcan
 
                 </ul>
@@ -788,6 +782,158 @@
                         <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License
                             Classes</a>
                     </li>
+                    @can('setting-role-view')
+                        <li class="{{ request()->is('settings/roles*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.roles.index') }}">Roles</a>
+                        </li>
+                    @endcan
+                    @can('setting-country-view')
+                        <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.country.index') }}">Countries</a>
+                        </li>
+                    @endcan
+                    @can('setting-region-view')
+                        <li class="{{ request()->is('settings/region*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.region.index') }}">Region</a>
+                        </li>
+                    @endcan
+                    @can('setting-district-view')
+                        <li class="{{ request()->is('settings/district*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.district.index') }}">District</a>
+                        </li>
+                    @endcan
+                    @can('setting-ward-view')
+                        <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.ward.index') }}">Ward</a>
+                        </li>
+                    @endcan
+                    @can('setting-banks-view')
+                        <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.banks.index') }}">Banks</a>
+                        </li>
+                    @endcan
+                    @can('setting-exchange-rate-view')
+                        <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
+                        </li>
+                    @endcan
+                    @can('setting-education-level-view')
+                        <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.education-level.index') }}">Education Level</a>
+                        </li>
+                    @endcan
+                    @can('setting-business-categories-view')
+                        <li class="{{ request()->is('settings/business-categories*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.business-categories.index') }}">Business categories</a>
+                        </li>
+                    @endcan
+                    @can('setting-tax-type-view')
+                        <li class="{{ request()->is('settings/taxtypes*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.taxtypes.index') }}">Tax Types</a>
+                        </li>
+                    @endcan
+                    @can('setting-isic-level-one-view')
+                        <li class="{{ request()->is('settings/isic1*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.isic1.index') }}">ISIC Level 1</a>
+                        </li>
+                    @endcan
+                    @can('setting-isic-level-two-view')
+                        <li class="{{ request()->is('settings/isic2*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.isic2.index') }}">ISIC Level 2</a>
+                        </li>
+                    @endcan
+                    @can('setting-isic-level-three-view')
+                        <li class="{{ request()->is('settings/isic3*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.isic3.index') }}">ISIC Level 3</a>
+                        </li>
+                    @endcan
+                    @can('setting-isic-level-four-view')
+                        <li class="{{ request()->is('settings/isic4*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.isic4.index') }}">ISIC Level 4</a>
+                        </li>
+                    @endcan
+                    @can('setting-country-view')
+                        <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.business-files.index') }}">Business Files</a>
+                        </li>
+                    @endcan
+                    @can('setting-region-view')
+                        <li class="{{ request()->is('settings/tax-regions*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.tax-regions.index') }}">Tax Regions</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-make-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrMake') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrMake') }}">Motor Vehicle Make</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-model-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrModel') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrModel') }}">Motor Vehicle Model</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-transmission-type-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrTransmissionType') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransmissionType') }}">Motor Vehicle
+                                Transmission</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-fuel-type-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrFuelType') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrFuelType') }}">Motor vehicle Fuel Type</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-class-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrClass') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrClass') }}">Motor Vehicle Class</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-color-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrColor') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrColor') }}">Motor Vehicle Color</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-body-type-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrBodyType') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrBodyType') }}">Motor Vehicle Body Type</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-plate-size-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrPlateSize') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrPlateSize') }}">Motor Vehicle Plate Size</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-fee-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrFee') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrFee') }}">Motor Vehicle Fees</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-deregistration-reason-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrDeRegistrationReason') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrDeRegistrationReason') }}">De Registration
+                                Reasons</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-ownership-transfer-reason-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrOwnershipTransferReason') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrOwnershipTransferReason') }}">Transfer
+                                Reasons</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-transfer-category-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrTransferCategory') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferCategory') }}">Transfer
+                                Categories</a>
+                        </li>
+                    @endcan
+                    @can('setting-mvr-transfer-fee-view')
+                        <li class="{{ request()->is('settings/mvr-generic/MvrTransferFee') ? 'active' : '' }}">
+                            <a href="{{ route('settings.mvr-generic.index', 'MvrTransferFee') }}">Transfer Fees</a>
+                        </li>
+                    @endcan
+                    <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License Classes</a>
+                    </li>
                     <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlLicenseDuration') }}">Driver's License
                             Duration</a>
@@ -810,6 +956,21 @@
                     <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'CourtLevel') }}">Court Levels</a>
                     </li>
+                    <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index','DlFee') }}">Driver's License Fees</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/CaseStage') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index','CaseStage') }}">Case Stages</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/CaseOutcome') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index','CaseOutcome') }}">Case Outcomes</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/CaseDecision') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index','CaseDecision') }}">Case Decision</a>
+                    </li>
+                    <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
+                        <a href="{{ route('settings.mvr-generic.index','CourtLevel') }}">Court Levels</a>
+                    </li>
 
                     @can('setting-financial-year-view')
                         <li class="{{ request()->is('settings/financial-years') ? 'active' : '' }}">
@@ -831,6 +992,7 @@
                 </ul>
             </li>
         @endcan
+
         @can('system')
             <li class="{{ request()->is('system*') ? 'active' : '' }} mb-5">
                 <a href="#system" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">System</a>

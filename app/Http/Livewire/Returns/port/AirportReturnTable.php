@@ -4,12 +4,15 @@ namespace App\Http\Livewire\Returns\Port;
 
 use App\Models\Returns\Port\PortReturn;
 use App\Models\TaxType;
+use App\Traits\ReturnFilterTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class AirportReturnTable extends DataTableComponent
 {
+    use  ReturnFilterTrait;
+
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data = [];
 

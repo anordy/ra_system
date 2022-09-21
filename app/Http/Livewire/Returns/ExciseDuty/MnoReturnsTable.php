@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Returns\ExciseDuty;
 
 use App\Models\Returns\ExciseDuty\MnoReturn;
+use App\Traits\ReturnFilterTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -10,6 +11,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class MnoReturnsTable extends DataTableComponent
 {
+    use  ReturnFilterTrait;
+
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];
 
@@ -30,25 +33,11 @@ class MnoReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $data   = $this->data;
         $filter = (new MnoReturn)->newQuery();
 
-        if ($data == []) {
-            $filter->whereMonth('mno_returns.created_at', '=', date('m'));
-            $filter->whereYear('mno_returns.created_at', '=', date('Y'));
-        }
-        if (isset($data['type']) && $data['type'] != 'all') {
-            $filter->Where('return_category', $data['type']);
-        }
-        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
-            $filter->whereMonth('mno_returns.created_at', '=', $data['month']);
-        }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
-            $filter->whereYear('mno_returns.created_at', '=', $data['year']);
-        }
-        if (isset($data['year']) && $data['year'] == 'Custom Range') {
-            $filter->whereBetween('mno_returns.created_at', [$data['from'], $data['to']]);
-        }
+        $returnTable = MnoReturn::getTableName();
+
+        $filter = $this->dataFilter($filter, $this->data, $returnTable);
 
         return $filter->orderBy('mno_returns.created_at', 'desc');
     }

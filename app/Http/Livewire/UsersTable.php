@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Traits\AuditTrait;
 use Exception;
 use id;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -47,7 +48,6 @@ class UsersTable extends DataTableComponent
                     } elseif ($value == 'F') {
                         return 'Female';
                     }
-
                 })
                 ->sortable()
                 ->searchable(),
@@ -63,13 +63,13 @@ class UsersTable extends DataTableComponent
             Column::make('Status', 'id')
                 ->format(function ($value, $row) {
                     if ($value == auth()->user()->id) {
-
-                    } else if ($row->status == 1) {
+                        //
+                    } else if ($row->status == 1 && auth()->user()->can('setting-user-change-status')) {
                         return <<< HTML
                         <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock-open"></i> </button>
                     HTML;
-                    } else {
-                        return <<< HTML
+                    } else if ($row->status != 1 && auth()->user()->can('setting-user-change-status')) {
+                        return  <<< HTML
                         <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
                     HTML;
                     }
@@ -77,25 +77,38 @@ class UsersTable extends DataTableComponent
                 ->html(true),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
-                    if ($value == auth()->user()->id) {
-                        return <<< HTML
-                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>
-                    HTML;
-                    } else {
-                        return <<< HTML
-                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>
-                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                    HTML;
+                    $edit = '';
+                    $changePwd = '';
+                    $delete = '';
+
+                    if (auth()->user()->can('setting-user-edit')) {
+                        $edit = <<< HTML
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                HTML;
                     }
+                    if (auth()->user()->can('setting-user-change-password')) {
+                        $changePwd = <<< HTML
+                                    <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>
+                                HTML;
+                    }
+                    if (auth()->user()->can('setting-user-delete') && $value != auth()->user()->id) {
+                        $delete = <<< HTML
+                                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                HTML;
+                    }
+
+                    return $edit . ' ' . $changePwd . ' ' . $delete;
                 })
                 ->html(true),
+
             Column::make('Role Action', 'id')
                 ->format(function ($value, $row) {
-                    return <<< HTML
-                    <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal',$value)"><i class="fa fa-edit"></i> Change Role </button>
-                HTML;
+                    if (auth()->user()->can('setting-user-change-role')) {
+                        return <<< HTML
+                                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal',$value)"><i class="fa fa-user-tag"></i> </button>
+                                HTML;
+                    }
+                    return '';
                 })
                 ->html(true),
         ];
@@ -103,6 +116,10 @@ class UsersTable extends DataTableComponent
 
     public function delete($id)
     {
+        if (!Gate::allows('setting-user-delete')) {
+            abort(403);
+        }
+
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
@@ -121,6 +138,10 @@ class UsersTable extends DataTableComponent
 
     public function activate($id, $status)
     {
+        if (!Gate::allows('setting-user-change-status')) {
+            abort(403);
+        }
+
         $this->alert('warning', 'Are you sure you want to change user status ?', [
             'position' => 'center',
             'toast' => false,

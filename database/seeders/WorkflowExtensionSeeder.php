@@ -24,9 +24,9 @@ class WorkflowExtensionSeeder extends Seeder
         $supports =  ['App\Models\Extension\ExtensionRequest'];
         $places = [
             'initial' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
+                'owner' => 'taxpayer',
+                'operator_type' => 'user',
+                'operators' => []
             ],
             'debt_manager' => [
                 'owner' => 'staff',
