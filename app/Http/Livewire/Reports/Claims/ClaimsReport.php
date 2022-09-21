@@ -9,6 +9,7 @@ use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Traits\ClaimReportTrait;
 use App\Traits\ReturnReportTrait;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
@@ -40,8 +41,6 @@ class ClaimsReport extends Component
     public $from;
     public $to;
     public $today;
-
-    public $returnName;
 
     protected function rules()
     {
@@ -79,21 +78,23 @@ class ClaimsReport extends Component
             $this->reset('month', 'quater', 'semiAnnual', 'period');
         }
 
-        if ($propertyName == 'payment_report_type') {
-            $this->reset('month', 'quater', 'semiAnnual', 'period', 'year');
+        if ($this->status == 'rejected' or $this->status == 'pending') {
+            $this->payment_status = '';
         }
 
-        if ($propertyName == 'filing_report_type') {
-            $this->reset('month', 'quater', 'semiAnnual', 'period', 'year');
-        }
-
-        if ($propertyName == 'type') {
-            $this->reset('filing_report_type', 'payment_report_type', 'month', 'quater', 'semiAnnual', 'period', 'year');
+        if ($this->duration == 'yearly') {
+            $this->from = '';
+            $this->to = '';
+        } else {
+            $this->year = '';
         }
     }
 
     public function preview()
     {
+        if (!Gate::allows('managerial-claim-report-preview')) {
+            abort(403);
+        }
         $this->validate();
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
@@ -106,6 +107,9 @@ class ClaimsReport extends Component
 
     public function exportPdf()
     {
+        if (!Gate::allows('managerial-claim-report-pdf')) {
+            abort(403);
+        }
         $this->validate();
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
@@ -119,6 +123,9 @@ class ClaimsReport extends Component
 
     public function exportExcel()
     {
+        if (!Gate::allows('managerial-claim-report-excel')) {
+            abort(403);
+        }
         $this->validate();
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);

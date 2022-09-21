@@ -245,25 +245,32 @@
 
     <div class="row mt-3">
         <div class="col-md-12 d-flex justify-content-end">
+            @can('managerial-claim-report-preview')
             <div x-data>
                 <button class="btn btn-warning ml-2" wire:click="preview">
                     <i class="bi bi-eye-fill"></i>
                     Preview Report
                 </button>
             </div>
+            @endcan
+
+            @can('managerial-claim-report-excel')
             <button class="btn btn-success ml-2" wire:click="exportExcel " wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                    wire:target="exportExcel"></i>
                 Export to Excel
             </button>
+            @endcan
 
+            @can('managerial-claim-report-pdf')
             <button class="btn btn-danger ml-2" wire:click="exportPdf" wire:loading.attr="disabled">
                 <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="exportPdf"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                    wire:target="exportPdf"></i>
                 Export to Pdf
             </button>
+            @endcan
         </div>
     </div>
 

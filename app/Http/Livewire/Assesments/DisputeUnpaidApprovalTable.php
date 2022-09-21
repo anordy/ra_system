@@ -26,9 +26,7 @@ class DisputeUnpaidApprovalTable extends DataTableComponent
 
         return Dispute::query()
             ->where('disputes.category', $this->category)
-            ->where('app_status', DisputeStatus::SUBMITTED)
             ->whereNotIn('disputes.payment_status', [BillStatus::COMPLETE])
-        // ->whereNotIn('disputes.app_status', [DisputeStatus::APPROVED])
             ->orderBy('disputes.created_at', 'desc');
 
     }

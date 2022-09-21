@@ -6,13 +6,16 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\Vat\VatReturn;
+use App\Traits\ReturnFilterTrait;
 
 class VatReturnTable extends DataTableComponent
 {
-    protected $model     = VatReturn::class;
+    use  ReturnFilterTrait;
+
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $status;
-    public $data = [];
+    public $data     = [];
+    protected $model = VatReturn::class;
 
     public function configure(): void
     {
@@ -27,26 +30,11 @@ class VatReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $data   = $this->data;
         $filter = (new VatReturn)->newQuery();
 
-        if ($data == []) {
-            $filter->whereMonth('vat_returns.created_at', '=', date('m'));
-            $filter->whereYear('vat_returns.created_at', '=', date('Y'));
-        }
-        
-        if (isset($data['type']) && $data['type'] != 'all') {
-            $filter->Where('return_category', $data['type']);
-        }
-        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
-            $filter->whereMonth('vat_returns.created_at', '=', $data['month']);
-        }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
-            $filter->whereYear('vat_returns.created_at', '=', $data['year']);
-        }
-        if (isset($data['year']) && $data['year'] == 'Custom Range') {
-            $filter->whereBetween('vat_returns.created_at', [$data['from'], $data['to']]);
-        }
+        $returnTable = VatReturn::getTableName();
+
+        $filter = $this->dataFilter($filter, $this->data, $returnTable);
     
         return $filter->select('editing_count', 'taxpayers.last_name', 'taxpayers.first_name')->with('business', 'business.taxpayer')->orderBy('vat_returns.created_at', 'desc');
     }

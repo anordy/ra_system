@@ -48,7 +48,7 @@
 
                         <div class="form-group col-lg-6">
                             <label class="control-label">Amount</label>
-                            <input type="text" class="form-control" wire:model.lazy="amount" id="amount">
+                            <input x-data x-mask:dynamic="$money($input)" value="{{$this->manualValidation($amount)}}" type="text" class="form-control" wire:model.lazy="amount" id="amount">
                             @error('amount')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
