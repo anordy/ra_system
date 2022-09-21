@@ -51,4 +51,36 @@ class TaxInvestigation extends Model
         return $this->hasMany(TaxInvestigationOfficer::class, 'investigation_id', 'id');
     }
     
+    public function taxInvestigationLocations(){
+        return $this->hasMany(TaxInvestigationLocation::class);
+    }
+
+    public function taxInvestigationLocationNames(){
+        $locations = null;
+        foreach ($this->taxInvestigationLocations as $key => $taxInvestigationLocation) {
+            if($key!=0){
+                $locations .= ', '; 
+            }
+            $locations .= $taxInvestigationLocation->businessLocation->name . ' ( '. $taxInvestigationLocation->businessLocation->zin .' )' ;
+            
+        }
+        return $locations;
+    }
+
+    public function taxInvestigationTaxTypes(){
+        return $this->hasMany(TaxInvestigationTaxType::class);
+    }
+
+
+    public function taxInvestigationTaxTypeNames(){
+        $taxType = null;
+        foreach ($this->taxInvestigationTaxTypes as $key => $taxInvestigationTaxType) {
+            if($key!=0){
+                $taxType .= ', '; 
+            }
+            $taxType .= $taxInvestigationTaxType->taxType->code;
+            
+        }
+        return $taxType;
+    }
 }
