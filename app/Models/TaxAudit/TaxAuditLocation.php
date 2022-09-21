@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\TaxAudit;
 
+use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class LandLeaseDebt extends Model
+class TaxAuditLocation extends Model
 {
     use HasFactory;
-    protected $table = 'land_lease_debts';
     protected $guarded = [];
 
-    public function LeasePayment(){
-        return $this->belongsTo(LeasePayment::class, 'lease_payment_id');
+    public function taxAudit(){
+        return $this->belongsTo(TaxAudit::class, 'tax_audit_id');
     }
 
     public function businessLocation(){

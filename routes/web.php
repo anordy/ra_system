@@ -74,8 +74,6 @@ use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
-use App\Http\Controllers\Reports\Claims\ClaimReportController;
-use App\Http\Controllers\Reports\Dispute\DisputeReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -288,8 +286,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
         Route::resource('/petroleum', PetroleumReturnController::class);
+        // airport
+        Route::get('/airport/index', [PortReturnController::class, 'airport'])->name('airport.index');
 
-        Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
+        // seaport
+        Route::get('/seaport/index', [PortReturnController::class, 'seaport'])->name('seaport.index');
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
         Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
@@ -402,9 +403,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
         Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
 
-        Route::get('/claims', [ClaimReportController::class, 'init'])->name('claims.init');
-        Route::get('/claims/preview/{parameters}', [ClaimReportController::class, 'preview'])->name('claims.preview');
-        Route::get('/claims/download-report-pdf/{data}', [ClaimReportController::class, 'exportClaimReportPdf'])->name('claim.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {

@@ -5,14 +5,15 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Region Management</h5>
+    <div class="card rounded-0">
+        <div class="card-header bg-white font-weight-bold text-uppercase">
+            Region Management
             <div class="card-tools">
                 <button class="btn btn-info btn-sm"
                     onclick="Livewire.emit('showModal', 'region-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
-                    Add</button>
+                        class="bi bi-plus-circle-fill mr-1"></i>
+                    Add New Region
+                </button>
             </div>
         </div>
 

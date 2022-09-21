@@ -49,8 +49,10 @@ class PrintController extends Controller
                 $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
                 return $pdf->stream();
             case TaxType::LUMPSUM_PAYMENT:
-                $returnView = 'print.returns.includes.lumpsum';
-                break;
+                $pdf = PDF::loadView('print.returns.lumpsum', ['return' => $taxReturn->return]);
+                $pdf->setPaper('a4', 'portrait');
+                $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+                return $pdf->stream();
             default:
                 return;
         }

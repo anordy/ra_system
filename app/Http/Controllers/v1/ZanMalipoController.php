@@ -278,6 +278,16 @@ class ZanMalipoController extends Controller
                     $dispute->payment_status = BillStatus::COMPLETE;
                     $dispute->save();
                 }
+            }elseif ($bill->billable_type == TaxAssessment::class ){
+                if ($bill->paidAmount() >= $bill->amount) {
+                    $assessment = $bill->billable;
+                    $assessment->payment_status = BillStatus::COMPLETE;
+                    $assessment->save();
+                } else {
+                    $assessment = $bill->billable;
+                    $assessment->payment_status = BillStatus::PAID_PARTIALLY;
+                    $assessment->save();
+                }
             }
         } catch (\Exception $e) {
             Log::error($e);
