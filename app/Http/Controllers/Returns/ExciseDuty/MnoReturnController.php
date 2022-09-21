@@ -21,14 +21,11 @@ class MnoReturnController extends Controller
 
     public function index()
     {
-        $paidData = $this->returnCardReportForPaidReturns(MnoReturn::class, MnoReturn::getTableName(), MnoPenalty::getTableName());
-
-        $unpaidData = $this->returnCardReportForUnpaidReturns(MnoReturn::class, MnoReturn::getTableName(), MnoPenalty::getTableName());
-
-        $vars      = $this->getSummaryData(MnoReturn::query());
+        $cardOne   = 'returns.excise-duty.mno-card-one';
+        $cardTwo   = 'returns.excise-duty.mno-card-two';
         $tableName = 'returns.excise-duty.mno-returns-table';
 
-        return view('returns.excise-duty.mno.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+        return view('returns.excise-duty.mno.index', compact('cardTwo', 'cardOne', 'tableName'));
     }
 
     public function show($id)

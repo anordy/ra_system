@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use App\Models\Returns\EmTransactionReturn;
+use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
 
 class EmTransactionsTable extends DataTableComponent
 {
+    use  ReturnFilterTrait;
+
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];
 
@@ -38,25 +41,10 @@ class EmTransactionsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $data   = $this->data;
-        $filter = (new EmTransactionReturn)->newQuery();
+        $filter      = (new EmTransactionReturn)->newQuery();
+        $returnTable = EmTransactionReturn::getTableName();
 
-        if ($data == []) {
-            $filter->whereMonth('em_transaction_returns.created_at', '=', date('m'));
-            $filter->whereYear('em_transaction_returns.created_at', '=', date('Y'));
-        }
-        if (isset($data['type']) && $data['type'] != 'all') {
-            $filter->Where('return_category', $data['type']);
-        }
-        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
-            $filter->whereMonth('em_transaction_returns.created_at', '=', $data['month']);
-        }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
-            $filter->whereYear('em_transaction_returns.created_at', '=', $data['year']);
-        }
-        if (isset($data['year']) && $data['year'] == 'Custom Range') {
-            $filter->whereBetween('em_transaction_returns.created_at', [$data['from'], $data['to']]);
-        }
+        $filter = $this->dataFilter($filter, $this->data, $returnTable);
 
         return $filter->with('business', 'business.taxpayer', 'businessLocation')->orderBy('em_transaction_returns.created_at', 'desc');
     }
