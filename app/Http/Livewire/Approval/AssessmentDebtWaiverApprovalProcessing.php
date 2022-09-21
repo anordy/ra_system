@@ -8,15 +8,16 @@ use App\Models\TaxType;
 use Livewire\Component;
 use App\Models\WaiverStatus;
 use App\Jobs\Bill\CancelBill;
-use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
 use App\Traits\PaymentsTrait;
 use Livewire\WithFileUploads;
 use App\Models\Debts\DebtWaiver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\Debt\GenerateControlNo;
+use Illuminate\Support\Facades\Gate;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
 
 class AssessmentDebtWaiverApprovalProcessing extends Component
 {
@@ -74,6 +75,9 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+        if (!Gate::allows('debt-management-debts-waive')) {
+            abort(403);
+        }
 
         if ($this->checkTransition('debt_manager_review')) {
 
@@ -174,7 +178,9 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
 
     public function reject($transtion)
     {
-
+        if (!Gate::allows('debt-management-debts-waive')) {
+            abort(403);
+        }
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = WaiverStatus::CORRECTION;

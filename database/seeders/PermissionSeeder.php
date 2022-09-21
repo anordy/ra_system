@@ -95,6 +95,8 @@ class PermissionSeeder extends Seeder
 
             # Debt Management
             ['name' => 'debt-management-debts-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-debts-waive', 'sys_module_id' => 14],
+            ['name' => 'debt-management-debts-recovery-measure', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-overdue-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-waiver-debt-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-assessment-debt-view', 'sys_module_id' => 14],

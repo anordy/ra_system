@@ -14,6 +14,7 @@ use App\Models\Debts\DebtWaiver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\Debt\GenerateControlNo;
+use Illuminate\Support\Facades\Gate;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -73,7 +74,9 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-
+        if (!Gate::allows('debt-management-debts-waive')) {
+            abort(403);
+        }
         if ($this->checkTransition('debt_manager_review')) {
 
         }
@@ -173,7 +176,9 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
     public function reject($transtion)
     {
-
+        if (!Gate::allows('debt-management-debts-waive')) {
+            abort(403);
+        }
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = WaiverStatus::CORRECTION;
