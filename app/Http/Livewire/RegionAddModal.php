@@ -13,13 +13,14 @@ class RegionAddModal extends Component
 
     use LivewireAlert;
 
-    public $name;
+    public $name, $location;
 
 
     protected function rules()
     {
         return [
             'name' => 'required|min:2|unique:regions',
+            'location' => 'required',
         ];
     }
 
@@ -30,6 +31,7 @@ class RegionAddModal extends Component
         try{
             Region::create([
                 'name' => $this->name,
+                'location' => $this->location
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){

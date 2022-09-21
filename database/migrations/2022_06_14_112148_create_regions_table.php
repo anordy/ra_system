@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Region;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,7 @@ class CreateRegionsTable extends Migration
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->enum('location', [Region::PEMBA, Region::UNGUJA]);
             $table->timestamps();
         });
     }
