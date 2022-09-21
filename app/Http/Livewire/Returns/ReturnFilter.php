@@ -7,30 +7,36 @@ use Livewire\Component;
 class ReturnFilter extends Component
 {
     public $payment_type;
-    public $year;
-    public $month;
-    public $from;
-    public $to;
+    public $penaltyTable;
+    public $returnTable;
     public $optionYears;
     public $tableName;
+    public $cardOne;
+    public $cardTwo;
+    public $month;
+    public $year;
+    public $from;
+    public $to;
 
-    public function mount($tablename)
+    public function mount($tablename, $cardOne, $cardTwo)
     {
         //set current year at first
         $this->year      = date('Y');
-        $this->period    = 'Monthly';
-        $this->tableName = $tablename;
         $this->month     = strval(intval(date('m')));
-
+        $this->period    = 'Monthly';
+        $this->cardOne   = $cardOne;
+        $this->cardTwo   = $cardTwo;
+        $this->tableName = $tablename;
         //get options for years
         $optionStartYear   = 2020;
         $this->optionYears = range($optionStartYear, date('Y'));
 
-        //add All & Range to year options
+        //add All to year options
         $this->optionYears[] = 'All';
-        $this->optionYears[] = 'Custom Range';
         //sort array
         rsort($this->optionYears);
+        //add Range to year options
+        $this->optionYears[] = 'Custom Range';
     }
     
     public function fillter()
@@ -44,6 +50,8 @@ class ReturnFilter extends Component
         ];
 
         $this->emitTo($this->tableName, 'filterData', $filters);
+        $this->emitTo($this->cardOne, 'filterData', $filters);
+        $this->emitTo($this->cardTwo, 'filterData', $filters);
     }
 
     public function render()

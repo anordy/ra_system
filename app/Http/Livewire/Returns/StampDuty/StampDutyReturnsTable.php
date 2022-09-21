@@ -6,9 +6,12 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Traits\ReturnFilterTrait;
 
 class StampDutyReturnsTable extends DataTableComponent
 {
+    use  ReturnFilterTrait;
+
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];
 
@@ -29,25 +32,11 @@ class StampDutyReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $data   = $this->data;
         $filter = (new StampDutyReturn)->newQuery();
 
-        if ($data == []) {
-            $filter->whereMonth('stamp_duty_returns.created_at', '=', date('m'));
-            $filter->whereYear('stamp_duty_returns.created_at', '=', date('Y'));
-        }
-        if (isset($data['type']) && $data['type'] != 'all') {
-            $filter->Where('return_category', $data['type']);
-        }
-        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
-            $filter->whereMonth('stamp_duty_returns.created_at', '=', $data['month']);
-        }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
-            $filter->whereYear('stamp_duty_returns.created_at', '=', $data['year']);
-        }
-        if (isset($data['year']) && $data['year'] == 'Custom Range') {
-            $filter->whereBetween('stamp_duty_returns.created_at', [$data['from'], $data['to']]);
-        }
+        $returnTable = StampDutyReturn::getTableName();
+
+        $filter = $this->dataFilter($filter, $this->data, $returnTable);
 
         return $filter->with('business')->orderBy('stamp_duty_returns.created_at', 'DESC');
     }
