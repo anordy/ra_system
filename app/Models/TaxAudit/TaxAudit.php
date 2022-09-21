@@ -50,5 +50,38 @@ class TaxAudit extends Model
     {
         return $this->hasMany(TaxAuditOfficer::class, 'audit_id', 'id');
     }
+
+    public function taxAuditLocations(){
+        return $this->hasMany(TaxAuditLocation::class);
+    }
+
+    public function taxAuditLocationNames(){
+        $locations = null;
+        foreach ($this->taxAuditLocations as $key => $taxAuditLocation) {
+            if($key!=0){
+                $locations .= ', '; 
+            }
+            $locations .= $taxAuditLocation->businessLocation->name . ' ( '. $taxAuditLocation->businessLocation->zin .' )' ;
+            
+        }
+        return $locations;
+    }
+
+    public function taxAuditTaxTypes(){
+        return $this->hasMany(TaxAuditTaxType::class);
+    }
+
+
+    public function taxAuditTaxTypeNames(){
+        $taxType = null;
+        foreach ($this->taxAuditTaxTypes as $key => $taxAuditTaxType) {
+            if($key!=0){
+                $taxType .= ', '; 
+            }
+            $taxType .= $taxAuditTaxType->taxType->code;
+            
+        }
+        return $taxType;
+    }
     
 }

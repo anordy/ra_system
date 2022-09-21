@@ -69,12 +69,12 @@ class TaxClearanceController extends Controller
             ->with('installment')
             ->get();
 
-        $landLeaseDebts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
+        $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
         ->where('status', LeaseStatus::PENDING)
         ->get();
 
         $debts = [];
-        return view('tax-clearance.clearance-request', compact('tax_return_debts', 'taxClearence', 'debts', 'landLeaseDebts'));
+        return view('tax-clearance.clearance-request', compact('tax_return_debts', 'taxClearence', 'debts', 'land_lease_debts'));
     }
 
     public function approval($requestId)
@@ -98,13 +98,13 @@ class TaxClearanceController extends Controller
             ->with('installment')
             ->get();
 
-        $landLeaseDebts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
+        $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
         ->where('status', LeaseStatus::PENDING)
         ->get();
 
         $debts = [];
 
-        return view('tax-clearance.approval', compact('tax_return_debts', 'taxClearence', 'debts', 'landLeaseDebts'));
+        return view('tax-clearance.approval', compact('tax_return_debts', 'taxClearence', 'debts', 'land_lease_debts'));
     }
 
     public function generateReturnsDebts($business_location_id)

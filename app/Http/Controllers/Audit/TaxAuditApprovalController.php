@@ -16,6 +16,7 @@ class TaxAuditApprovalController extends Controller
     public function edit($id){
 
         $audit = TaxAudit::with('assessment', 'officers')->find(decrypt($id));
+        // return $audit->taxAuditLocationNames();
         return view('audit.approval.approval', compact('audit'));
 
     }
