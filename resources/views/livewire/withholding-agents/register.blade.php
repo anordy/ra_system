@@ -1,10 +1,10 @@
-<div class="card">
-
+<div class="card rounded-0">
+    <div class="card-header bg-white font-weight-bold text-uppercase">
+        Main Details
+    </div>
     <div class="card-body">
         <div class="pt-1">
             <div class="border-0">
-                <h6 class="card-title text-uppercase mx-4">Main Details</h6>
-                <hr>
                 <div class="row mx-4 mt-2">
                     <div class="col-md-4 form-group">
                         <label for="tin">Tax Identification No. (TIN)</label>
@@ -125,11 +125,15 @@
                     </div>
                 </div>
             </div>
-
-            <div class="mt-4 border-0">
-                <h6 class="card-title text-uppercase mx-4">Assign Responsible Person</h6>
-                <hr>
-                <div class="row mx-4 mt-2">
+        </div>
+    </div>
+    <div class="card-header bg-white font-weight-bold text-uppercase">
+        Assign Responsible Person
+    </div>
+    <div class="card-body">
+        <div>
+            <div class=" border-0">
+                <div class="row mx-4">
 
                     <div class="col-md-4 form-group">
                         <label for="reference_no">Responsible person ZRB Reference No.</label>

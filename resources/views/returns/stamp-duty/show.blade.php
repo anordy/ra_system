@@ -15,8 +15,8 @@
         </div>
         <div class="card-body">
             <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#installment-items" class="nav-item nav-link font-weight-bold active">Return Details</a>
-                <a href="#payment-structure" class="nav-item nav-link font-weight-bold ">Payment Structure</a>
+                <a href="#installment-items" class="nav-item nav-link font-weight-bold active">Return Summary</a>
+                <a href="#payment-structure" class="nav-item nav-link font-weight-bold ">Return Details</a>
                 <a href="#penalties" class="nav-item nav-link font-weight-bold ">Penalties</a>
             </nav>
             <div class="tab-content px-2 pt-3 pb-2 border">
@@ -70,7 +70,14 @@
                             <tr>
                                 <td>{{ $item->config->name }}</td>
                                 <td>{{ number_format($item->value) }}</td>
-                                <td>{{ $item->config->rate_type === 'percentage' . '%' ? $item->config->rate : $item->config->rate_usd }}</td>
+                                @if($item->config->rate_applicable)
+                                    <td>
+                                        {{ $item->config->rate ?? $item->config->rate_usd }}
+                                        {{ $item->config->rate_type === 'percentage' ? '%' : ''}}
+                                    </td>
+                                @else
+                                    <td class="bg-secondary"></td>
+                                @endif
                                 <td>{{ number_format($item->vat) }}</td>
                             </tr>
                         @endforeach
@@ -121,6 +128,14 @@
                         @endif
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank" class="btn btn-info">
+                        <i class="bi bi-printer-fill mr-2"></i>
+                        Print Return
+                    </a>
                 </div>
             </div>
         </div>

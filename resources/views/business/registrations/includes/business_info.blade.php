@@ -21,7 +21,6 @@
 
         <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank"
             aria-selected="false">Bank Accounts</a>
-
     </li>
     @if ($business->hotel)
         <li class="nav-item" role="presentation">
@@ -29,6 +28,10 @@
                 aria-selected="false">Hotel Information</a>
         </li>
     @endif
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="business-attachment-tab" data-toggle="tab" href="#business-attachment" role="tab" aria-controls="business-attachment"
+           aria-selected="false">Business Attachments</a>
+    </li>
 </ul>
 
 <div class="tab-content bg-white border shadow-sm" id="myTabContent">
@@ -594,14 +597,9 @@
             </div>
         </div>
     @endif
-</div>
 
-<div class="card shadow-sm my-4 rounded-0">
-    <div class="card-header font-weight-bold bg-white">
-        Business Attachments
-    </div>
-    <div class="card-body">
-        <div class="row">
+    <div class="tab-pane fade" id="business-attachment" role="tabpanel" aria-labelledby="business-attachment-tab">
+        <div class="row pt-3 px-3">
             @foreach ($business->files as $file)
                 <div class="col-md-4">
                     <a class="file-item" target="_blank" href="{{ route('business.file', encrypt($file->id)) }}">
@@ -619,11 +617,11 @@
                 @if ($partner->tin)
                     <div class="col-md-4">
                         <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
-                            class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                             class="p-2 mb-3 d-flex rounded-sm align-items-center">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <a target="_blank"
-                                href="{{ route('business.tin.file', encrypt($partner->taxpayer_id)) }}"
-                                style="font-weight: 500;" class="ml-1">
+                               href="{{ route('business.tin.file', encrypt($partner->taxpayer_id)) }}"
+                               style="font-weight: 500;" class="ml-1">
                                 TIN Certificate - {{ $partner->taxpayer->full_name }}
                                 (<b>{{ $partner->taxpayer->reference_no }}</b>)
                                 <i class="bi bi-arrow-up-right-square ml-1"></i>
@@ -635,10 +633,10 @@
             @if ($business->taxpayer->tin_location)
                 <div class="col-md-4">
                     <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
-                        class="p-2 mb-3 d-flex rounded-sm align-items-center">
+                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                         <a target="_blank" href="{{ route('business.tin.file', encrypt($business->taxpayer_id)) }}"
-                            style="font-weight: 500;" class="ml-1">
+                           style="font-weight: 500;" class="ml-1">
                             TIN Certificate - {{ $business->taxpayer->full_name }}
                             (<b>{{ $business->taxpayer->reference_no }}</b>)
                             <i class="bi bi-arrow-up-right-square ml-1"></i>

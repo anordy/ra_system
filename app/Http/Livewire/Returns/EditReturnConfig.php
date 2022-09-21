@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Returns;
 use App\Models\Currency;
 use App\Traits\ReturnConfigurationTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -43,6 +44,10 @@ class EditReturnConfig extends Component
 
     public function update()
     {
+        if (!Gate::allows('setting-return-configuration-edit')) {
+            abort(403);
+        }
+
         DB::beginTransaction();
         try {
             $payload = [
@@ -54,6 +59,7 @@ class EditReturnConfig extends Component
                 'rate_applicable'=>$this->rate_applicable,
                 'rate_type'=>$this->rate_type,
                 'currency'=>$this->currency,
+                'rate'=>$this->rate,
                 'rate_usd'=>$this->rate_usd,
             ];
             $this->configs->update($payload);

@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaPaymentConfigurationHistory;
+use App\Traits\ValidationTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,9 +25,13 @@ class TaxAgentFeeModal extends Component
         {
             $this->currency = 'TZS';
         }
-        else
+        elseif($this->nationality == '0')
         {
             $this->currency = 'USD';
+        }
+        else
+        {
+            $this->currency = '';
         }
     }
 
@@ -34,18 +39,21 @@ class TaxAgentFeeModal extends Component
     {
         $validate = $this->validate([
             'category' => 'required',
-            'amount' => 'required|numeric',
+            'amount' => 'required|regex:/^[\d\s,]*$/',
             'duration' => 'required',
             'nationality' => 'required',
             'currency' => 'required'
         ],
             [
-                'nationality.required' => 'This field is required'
+                'nationality.required' => 'This field is required',
+                'amount.regex'=>'The amount must be an integer',
             ]
         );
 
         DB::beginTransaction();
         try {
+            $this->amount = (int)str_replace(',', '', $this->amount);
+
             $fee = TaPaymentConfiguration::query()
                 ->where('category', '=', $this->category)
                 ->where('is_citizen', $this->nationality)

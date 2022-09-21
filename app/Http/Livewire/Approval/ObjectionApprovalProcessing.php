@@ -32,13 +32,17 @@ class ObjectionApprovalProcessing extends Component
     public $penaltyPercent, $penaltyAmount, $penaltyAmountDue, $interestAmountDue;
     public $interestPercent, $interestAmount, $dispute, $assesment, $total, $principal_amount_due;
     public $natureOfAttachment, $noticeReport, $settingReport;
+    public $principal, $penalty, $interest;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->dispute = Dispute::find($this->modelId);
+        $this->principal = $this->dispute->tax_in_dispute;
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+         $this->penalty = $this->assessment->penalty_amount;
+        $this->interest = $this->assessment->interest_amount;
         $this->taxTypes = TaxType::all();
         $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
         $this->registerWorkflow($modelName, $modelId);
@@ -125,14 +129,14 @@ class ObjectionApprovalProcessing extends Component
         if ($this->checkTransition('commisioner_review')) {
             $this->complete = "1";
 
-            $this->validate([
-                'interestPercent' => ['required', 'numeric'],
-                'penaltyPercent' => ['required', 'numeric'],
-            ]);
+            // $this->validate([
+            //     'interestPercent' => ['required', 'numeric'],
+            //     'penaltyPercent' => ['required', 'numeric'],
+            // ]);
             DB::beginTransaction();
 
             try {
-                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->assessment->principal_amount, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
+                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
 
                 // Generate control number for waived application
                 $billitems = [
@@ -186,21 +190,21 @@ class ObjectionApprovalProcessing extends Component
                 if (config('app.env') != 'local') {
                     $response = ZmCore::sendBill($zmBill->id);
                     if ($response->status === ZmResponse::SUCCESS) {
-                        $this->dispute->status = ReturnStatus::CN_GENERATING;
+                        $this->dispute->payment_status = ReturnStatus::CN_GENERATING;
                         $this->dispute->save();
 
                         $this->flash('success', 'A control number has been generated successful.');
                     } else {
 
                         session()->flash('error', 'Control number generation failed, try again later');
-                        $this->dispute->status = ReturnStatus::CN_GENERATION_FAILED;
+                        $this->dispute->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                     }
 
                     $this->dispute->save();
                 } else {
 
                     // We are local
-                    // $this->dispute->status = ReturnStatus::CN_GENERATED;
+                    $this->dispute->payment_status = ReturnStatus::CN_GENERATED;
                     $this->dispute->save();
 
                     // Simulate successful control no generation
@@ -254,15 +258,14 @@ class ObjectionApprovalProcessing extends Component
                 DB::beginTransaction();
 
                 try {
-
                     $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal_amount_due, $this->assessment->penalty_amount, $this->assessment->interest_amount, $this->dispute->tax_deposit);
                     $total_deposit = $this->principal_amount_due + $this->assessment->interest_amount + $this->assessment->penalty_amount;
 
                     // Generate control number for waived application
                     $billitems = [
                         [
-                            'billable_id' => $this->dispute->id,
-                            'billable_type' => get_class($this->dispute),
+                            'billable_id' => $this->assessment->id,
+                            'billable_type' => get_class($this->assessment),
                             'use_item_ref_on_pay' => 'N',
                             'amount' => $total_deposit,
                             'currency' => 'TZS',
@@ -310,21 +313,21 @@ class ObjectionApprovalProcessing extends Component
                     if (config('app.env') != 'local') {
                         $response = ZmCore::sendBill($zmBill->id);
                         if ($response->status === ZmResponse::SUCCESS) {
-                            $this->dispute->status = ReturnStatus::CN_GENERATING;
+                            $this->dispute->payment_status = ReturnStatus::CN_GENERATING;
                             $this->dispute->save();
 
                             $this->flash('success', 'A control number has been generated successful.');
                         } else {
 
                             session()->flash('error', 'Control number generation failed, try again later');
-                            $this->dispute->status = ReturnStatus::CN_GENERATION_FAILED;
+                            $this->dispute->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                         }
 
                         $this->dispute->save();
                     } else {
 
                         // We are local
-                        // $this->dispute->status = ReturnStatus::CN_GENERATED;
+                        $this->dispute->payment_status = ReturnStatus::CN_GENERATED;
                         $this->dispute->save();
 
                         // Simulate successful control no generation

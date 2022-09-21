@@ -446,6 +446,15 @@
                     you have not filled any return for this month
                 </div>
             @endif
+
+            <div class="row mt-3">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <a href="{{ route('returns.print', encrypt($return->tax_return->id)) }}" target="_blank" class="btn btn-info">
+                        <i class="bi bi-printer-fill mr-2"></i>
+                        Print Return
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
