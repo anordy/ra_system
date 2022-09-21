@@ -6,6 +6,8 @@ use App\Enum\TaxAuditStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\TaxAudit\TaxAudit;
+use App\Models\TaxAudit\TaxAuditLocation;
+use App\Models\TaxAudit\TaxAuditTaxType;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -48,11 +50,13 @@ class TaxAuditInitiateTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZRB No', 'location.zin'),
+            // Column::make('ZRB No', 'location.zin'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
-            Column::make('Business Location', 'location.name'),
-            Column::make('TaxType', 'taxType.name'),
+            // Column::make('Business Location', 'id')
+            // ->label(fn ($row) => $row->location_id != 0 ? $row->location->name : ''),
+            // Column::make('TaxType', 'id')
+            // ->label(fn ($row) => $row->tax_type_id != 0 ? $row->taxType->name : ''),
             Column::make('Period From', 'period_from'),
             Column::make('Period To', 'period_to'),
             Column::make('Created By', 'created_by_id')

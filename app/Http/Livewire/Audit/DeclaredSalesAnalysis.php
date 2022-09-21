@@ -49,11 +49,10 @@ class DeclaredSalesAnalysis extends Component
     public $withoutPurchases = false;
     public $returnTypeTable;
 
-    public function mount($audit)
+    public function mount($audit, $tax_type_id, $location_id)
     {
-        $this->taxType = TaxType::find($audit->tax_type_id);
-        $this->branch = BusinessLocation::find($audit->location_id);
-
+        $this->taxType = TaxType::find($tax_type_id);
+        $this->branch = BusinessLocation::find($location_id);
         $this->start_date = $this->validateDate($audit->period_from) ? $audit->period_from : Carbon::now();
         $this->end_date = $this->validateDate($audit->period_to) ? $audit->period_to : Carbon::now();
 

@@ -274,27 +274,26 @@
                                 <thead>
                                     <tr>
                                         <th>Tax Type</th>
+                                        <th>Year</th>
                                         <th>Principal Amount</th>
                                         <th>Penalty Amount</th>
-                                        <th>Interest Amount</th>
                                         <th>Total Debt</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($tax_return_debts))
-                                        @foreach ($tax_return_debts as $debt)
+                                    @if (count($land_lease_debts))
+                                        @foreach ($land_lease_debts as $debt)
                                             <tr>
-                                                <td>{{ $debt->taxtype->name }}</td>
+                                                <td>{{ $debt->businessLocation->name }}</td>
                                                 <td>
-                                                    {{ number_format($debt->principal, 2) }}
+                                                    {{$debt->LeasePayment->financialYear->code}}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->original_total_amount, 2) }}
                                                     {{ $debt->currency }}
                                                 </td>
                                                 <td>
                                                     {{ number_format($debt->penalty, 2) }}
-                                                    {{ $debt->currency }}
-                                                </td>
-                                                <td>
-                                                    {{ number_format($debt->interest, 2) }}
                                                     {{ $debt->currency }}
                                                 </td>
                                                 <td>

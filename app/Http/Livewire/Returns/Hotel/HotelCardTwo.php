@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Returns\Hotel;
 
 use App\Models\Returns\HotelReturns\HotelReturn;
 use App\Models\Returns\HotelReturns\HotelReturnPenalty;
+use App\Models\TaxType;
 use App\Traits\ReturnFilterTrait;
 use Livewire\Component;
 
@@ -27,7 +28,9 @@ class HotelCardTwo extends Component
     {
         $penaltyTable  = HotelReturnPenalty::getTableName();
         $returnTable   = HotelReturn::getTableName();
-        $filter        = (new HotelReturn())->newQuery();
+        $hotel         = (new HotelReturn())->newQuery();
+        $taxType       = TaxType::where('code', TaxType::HOTEL)->first();
+        $filter        = $hotel->where('tax_type_id', $taxType->id);
 
         $filter  = $this->dataFilter($filter, $this->data, $returnTable);
         $filters = clone $filter;
