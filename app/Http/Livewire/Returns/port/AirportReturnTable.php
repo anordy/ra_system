@@ -3,21 +3,22 @@
 namespace App\Http\Livewire\Returns\Port;
 
 use App\Models\Returns\Port\PortReturn;
+use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class PortReturnTable extends DataTableComponent
+class AirportReturnTable extends DataTableComponent
 {
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
-    public $data         = [];
+    public $data = [];
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class'   => 'table-bordered table-sm',
+            'class' => 'table-bordered table-sm',
         ]);
     }
 
@@ -29,7 +30,9 @@ class PortReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $data   = $this->data;
+        $data = $this->data;
+        $tax = TaxType::where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->first();
+
         $filter = (new PortReturn)->newQuery();
 
         if ($data == []) {
@@ -49,21 +52,22 @@ class PortReturnTable extends DataTableComponent
             $filter->whereBetween('port_returns.created_at', [$data['from'], $data['to']]);
         }
 
-        return $filter->orderBy('port_returns.created_at', 'desc');
+        return $filter->where('tax_type_id', $tax->id)->orderBy('port_returns.created_at', 'desc');
+
     }
 
     public function columns(): array
     {
         return [
             Column::make('TIN', 'business.tin')
-                 ->sortable()
-                 ->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
             Column::make('Branch Location', 'branch.name')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable(),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),

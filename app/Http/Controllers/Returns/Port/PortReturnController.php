@@ -13,7 +13,7 @@ class PortReturnController extends Controller
 {
     use PortReturnCardReport, ReturnSummaryCardTrait;
 
-    public function index()
+    public function airport()
     {
         if (!Gate::allows('return-port-return-view')) {
             abort(403);
@@ -26,7 +26,23 @@ class PortReturnController extends Controller
         $vars      = $this->getSummaryData(PortReturn::query());
         $tableName = 'returns.port.port-return-table';
 
-        return view('returns.port.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+        return view('returns.port.airport', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+    }
+
+        public function seaport()
+    {
+        if (!Gate::allows('return-port-return-view')) {
+            abort(403);
+        }
+
+        $paidData = $this->returnCardReportForPaidReturns(PortReturn::class, PortReturn::getTableName(), PortReturnPenalty::getTableName());
+
+        $unpaidData = $this->returnCardReportForUnpaidReturns(PortReturn::class, PortReturn::getTableName(), PortReturnPenalty::getTableName());
+
+        $vars      = $this->getSummaryData(PortReturn::query());
+        $tableName = 'returns.port.port-return-table';
+
+        return view('returns.port.seaport', compact('vars', 'paidData', 'unpaidData', 'tableName'));
     }
 
     public function show($return_id)
