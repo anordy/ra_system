@@ -74,6 +74,7 @@ use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Debts\DebtReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -402,6 +403,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/disputes', [DisputeReportController::class, 'index'])->name('disputes');
         Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
         Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
+
+        // Debt Reports
+        Route::get('/debts', [DebtReportController::class, 'index'])->name('debts');
+        Route::get('/debts/preview/{parameters}', [DebtReportController::class, 'preview'])->name('debts.preview');
+        Route::get('/debts/download-report-pdf/{data}', [DebtReportController::class, 'exportDebtReportPdf'])->name('debts.download.pdf');
 
     });
 
