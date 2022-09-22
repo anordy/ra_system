@@ -13,8 +13,10 @@ class EmCardTwo extends Component
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     protected $data;
-    public $paidReturns;
-    public $unPaidReturns;
+    public $paidReturnsUSD;
+    public $paidReturnsTZS;
+    public $unPaidReturnsUSD;
+    public $unPaidReturnsTZS;
 
     public function filterData($data)
     {
@@ -30,10 +32,20 @@ class EmCardTwo extends Component
         $filter        = (new EmTransactionReturn())->newQuery();
 
         $filter  = $this->dataFilter($filter, $this->data, $returnTable);
-        $filters = clone $filter;
+        $filter1 = clone $filter;
+        $filter2 = clone $filter;
 
-        $this->paidReturns   = $this->paidReturns($filter, $returnTable, $penaltyTable);
-        $this->unPaidReturns = $this->unPaidReturns($filters, $returnTable, $penaltyTable);
+        $USD = $filter1->where($returnTable . '.currency', 'USD');
+        $TZS = $filter2->where($returnTable . '.currency', 'TZS');
+
+        $TZS1 = clone $TZS;
+        $USD1 = clone $USD;
+
+        $this->paidReturnsUSD = $this->paidReturns($USD, $returnTable, $penaltyTable);
+        $this->paidReturnsTZS = $this->paidReturns($TZS, $returnTable, $penaltyTable);
+
+        $this->unPaidReturnsUSD = $this->unPaidReturns($USD1, $returnTable, $penaltyTable);
+        $this->unPaidReturnsTZS = $this->unPaidReturns($TZS1, $returnTable, $penaltyTable);
     }
 
     public function render()
