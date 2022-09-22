@@ -16,7 +16,7 @@ class DailyTaxTypeEffectiveDateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'daily:tax_change';
+    protected $signature = 'daily:tax-effective-date';
 
     /**
      * The console command description.

@@ -3,20 +3,20 @@
 @section('title', 'Investigation Preview')
 
 @section('content')
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-            aria-selected="true">Investigation Report</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-            aria-selected="false">Returns Information</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-            aria-selected="false">Approval Details</a>
-    </li>
-</ul>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                aria-selected="true">Investigation Report</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                aria-selected="false">Returns Information</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
+                aria-selected="false">Approval Details</a>
+        </li>
+    </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="card mt-2">
@@ -28,7 +28,7 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
                             <p class="my-1">{{ $investigation->business->tin ?? '' }}</p>
-                        </div> 
+                        </div>
                         <div class="col-md-8 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
                             <p class="my-1">{{ $investigation->taxInvestigationTaxTypeNames() ?? '' }}</p>
@@ -144,7 +144,11 @@
             @endif
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            @livewire('investigation.declared-sales-analysis-instances', ['investigation' => $investigation])
+            @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
+                @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation, 'tax_type_id' => $investigation->tax_type_id, 'location_id' => $investigation->location_id])
+            @else
+                @livewire('investigation.declared-sales-analysis-instances', ['investigation' => $investigation])
+            @endif
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">

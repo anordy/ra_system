@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\TaxType;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -26,6 +27,10 @@ class TaxTypeAddModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-tax-type-add')) {
+            abort(403);
+        }
+
         $this->validate();
         try{
             TaxType::create([

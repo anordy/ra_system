@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use App\TaxAgentFee;
+use Illuminate\Support\Facades\Gate;
 
 class TaxAgentFeeModal extends Component
 {
@@ -37,6 +38,10 @@ class TaxAgentFeeModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('tax-consultant-fee-configuration-add')) {
+            abort(403);
+        }
+
         $validate = $this->validate([
             'category' => 'required',
             'amount' => 'required|regex:/^[\d\s,]*$/',

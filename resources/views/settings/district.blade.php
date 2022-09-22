@@ -9,10 +9,12 @@ Districts
         <div class="card-header">
             <h5 class="text-uppercase">Districts Management</h5>
             <div class="card-tools">
-                <button class="btn btn-info btn-sm"
+                @can('setting-district-add')
+                    <button class="btn btn-info btn-sm"
                     onclick="Livewire.emit('showModal', 'district-add-modal')"><i
                         class="fa fa-plus-circle"></i>
                     Add</button>
+                @endcan
             </div>
         </div>
 

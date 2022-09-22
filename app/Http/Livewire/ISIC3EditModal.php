@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -42,6 +43,10 @@ class ISIC3EditModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-isic-level-three-edit')) {
+            abort(403);
+        }
+
         $this->validate();
         try {
             $this->isic3->update([

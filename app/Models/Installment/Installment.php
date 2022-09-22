@@ -71,4 +71,8 @@ class Installment extends Model
 
         return $this->installment_from->addMonths($this->items()->where('status', BillStatus::COMPLETE)->count() + 1);
     }
+
+    public function files(){
+        return $this->hasMany(InstallmentRequestFile::class);
+    }
 }

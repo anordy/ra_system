@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\Debt\DemandNotice;
 
+use App\Models\Debts\DemandNotice;
 use Carbon\Carbon;
-use App\Models\Debts\DebtDemandNotice;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -23,7 +23,7 @@ class DemandNoticeTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return DebtDemandNotice::where('debt_id', $this->debtId)->orderBy('debt_demand_notices.created_at', 'desc');
+        return DemandNotice::where('debt_id', $this->debtId)->orderBy('debt_demand_notices.created_at', 'desc');
     }
 
     public function configure(): void

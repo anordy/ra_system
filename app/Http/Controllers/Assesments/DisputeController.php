@@ -8,6 +8,7 @@ use App\Models\DisputeAttachment;
 use App\Models\Disputes\Dispute;
 use App\Models\TaxAssessments\TaxAssessment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class DisputeController extends Controller
 {
