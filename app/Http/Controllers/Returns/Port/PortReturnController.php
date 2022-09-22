@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Returns\Port;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\Port\PortReturnPenalty;
 use App\Traits\PortReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
 use Illuminate\Support\Facades\Gate;
@@ -13,17 +12,30 @@ class PortReturnController extends Controller
 {
     use PortReturnCardReport, ReturnSummaryCardTrait;
 
-    public function index()
+    public function airport()
     {
-        if (!Gate::allows('return-port-return-view')) {
+        if (!Gate::allows('return-airport-return-view')) {
             abort(403);
         }
+        $cardOne = 'returns.port.air-port-card-one';
+        $cardTwo = 'returns.port.air-port-card-two';
 
-        $cardOne   = 'returns.port.port-card-one';
-        $cardTwo   = 'returns.port.port-card-two';
         $tableName = 'returns.port.port-return-table';
 
-        return view('returns.port.index', compact('cardOne', 'cardTwo', 'tableName'));
+        return view('returns.port.airport', compact('cardOne', 'cardTwo', 'tableName'));
+    }
+
+    public function seaport()
+    {
+        if (!Gate::allows('return-seaport-return-view')) {
+            abort(403);
+        }
+        $cardOne = 'returns.port.sea-port-card-one';
+        $cardTwo = 'returns.port.sea-port-card-two';
+
+        $tableName = 'returns.port.port-return-table';
+
+        return view('returns.port.seaport', compact('cardOne', 'cardTwo', 'tableName'));
     }
 
     public function show($return_id)

@@ -16,7 +16,7 @@
 @section('content')
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold">
-            Return details for the VAT tax return month
+            Return details for the VAT tax return for the return month
             of {{$return->financialMonth->name}} {{$return->financialMonth->year->code}}
         </div>
         <div class="card-body">
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <span class="font-weight-bold text-uppercase">Business Location</span>
-                                    <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
+                                    <p class="my-1">{{ $return->businessLocation->name ?? 'Head Quarter' }}</p>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <span class="font-weight-bold text-uppercase">TIN No</span>
@@ -132,23 +132,13 @@
                         <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                             <div class="card">
                                 <div class="card-body">
-                                    @if(!empty($return->method_used))
                                         <div class="d-flex justify-content-end">
                                             <div class="pb-2" style="width: 160px">
                                                 <label>Exemption Method Used</label>
-                                                <input readonly class="form-control" type="text" value="@if($return->method_used == 'method_one') Method One @else Method Two @endif">
+                                                <input readonly class="form-control" type="text" value="{{ $return->method_used ?? 'No Method Used' }}">
                                             </div>
 
                                         </div>
-                                    @else
-                                        <div class="d-flex justify-content-end">
-                                            <div class="pb-2" style="width: 150px">
-                                                <label>Exemption Method Used</label>
-                                                <input readonly class="form-control" type="text" value="No Method Used">
-                                            </div>
-
-                                        </div>
-                                    @endif
                                     <table class="table table-bordered ">
                                         <thead>
                                         <th style="width: 40%">Item Name</th>
@@ -158,69 +148,55 @@
                                         </thead>
                                         <tbody>
                                         @foreach ($return->items as $item)
+                                            @if($item->config->code == 'ITH')
+                                                @if($return->business->business_type =='hotel')
+                                                    <tr>
+                                                        <td>{{ $item->config->name }}</td>
+                                                        <td class="text-right">{{ number_format($item->value) }} <strong>(No.
+                                                                of bed nights)</strong></td>
+                                                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
+                                                            @if($item->config->rate_type =='percentage')
+                                                                %
+                                                            @else
+                                                                {{$item->config->currency}}
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
+                                                            <strong>{{$return->currency}}</strong></td>
+                                                    </tr>
+                                                @endif
+                                            @elseif($item->config->code == 'ITE')
+                                                @if($return->business->business_type =='electricity')
+                                                    <tr>
+                                                        <td>{{ $item->config->name }}</td>
+                                                        <td class="text-right">{{ number_format($item->value) }}
+                                                            <strong>{{$item->config->currency}}</strong></td>
+                                                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
+                                                            @if($item->config->rate_type =='percentage')
+                                                                %
+                                                            @else
+                                                                {{$item->config->currency}}
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
+                                                            <strong>{{$return->currency}}</strong></td>
+                                                    </tr>
+                                                @endif
 
-                                            @if ($item->config->rate == 0 && $item->config->col_type != 'exemptedMethodOne')
+                                            @elseif($item->config->code != 'TIT' && $item->config->code != 'TITM1')
                                                 <tr>
                                                     <td>{{ $item->config->name }}</td>
                                                     <td class="text-right">{{ number_format($item->value) }}
                                                         <strong>  {{ $item->config->currency}}</strong></td>
-                                                    <td class="table-active"></td>
+                                                    <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
+                                                        @if($item->config->rate_type =='percentage')
+                                                            %
+                                                        @endif
+                                                    </td>
                                                     <td class="text-right">{{ number_format($item->vat,2) }}
                                                         <strong>{{$return->currency}}</strong></td>
                                                 </tr>
-                                            @else
-                                                @if($item->config->code == 'ITH')
-                                                    @if($return->business->business_type =='hotel')
-                                                        <tr>
-                                                            <td>{{ $item->config->name }}</td>
-                                                            <td class="text-right">{{ number_format($item->value) }} <strong>(No.
-                                                                    of bed nights)</strong></td>
-                                                            <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
-                                                                @if($item->config->rate_type =='percentage')
-                                                                    %
-                                                                @else
-                                                                    {{$item->config->currency}}
-                                                                @endif
-                                                            </td>
-                                                            <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
-                                                                <strong>{{$return->currency}}</strong></td>
-                                                        </tr>
-                                                    @endif
-                                                @elseif($item->config->code == 'ITE')
-                                                    @if($return->business->business_type =='electricity')
-                                                        <tr>
-                                                            <td>{{ $item->config->name }}</td>
-                                                            <td class="text-right">{{ number_format($item->value) }}
-                                                                <strong>{{$item->config->currency}}</strong></td>
-                                                            <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
-                                                                @if($item->config->rate_type =='percentage')
-                                                                    %
-                                                                @else
-                                                                    {{$item->config->currency}}
-                                                                @endif
-                                                            </td>
-                                                            <td class="text-right">{{ number_format($return->infrastructure_tax,2) }}
-                                                                <strong>{{$return->currency}}</strong></td>
-                                                        </tr>
-                                                    @endif
-
-                                                @elseif($item->config->code != 'TIT' && $item->config->code != 'TITM1')
-                                                    <tr>
-                                                        <td>{{ $item->config->name }}</td>
-                                                        <td class="text-right">{{ number_format($item->value) }}
-                                                            <strong>  {{ $item->config->currency}}</strong></td>
-                                                        <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
-                                                            @if($item->config->rate_type =='percentage')
-                                                                %
-                                                            @endif
-                                                        </td>
-                                                        <td class="text-right">{{ number_format($item->vat,2) }}
-                                                            <strong>{{$return->currency}}</strong></td>
-                                                    </tr>
-                                                @endif
                                             @endif
-
-
                                         @endforeach
                                         </tbody>
 
@@ -253,7 +229,7 @@
                                             <td colspan="2" class="table-active"></td>
                                             <th class="text-right">
                                                 @if($return->claim_status == \App\Enum\TaxClaimStatus::CLAIM)
-                                                    ({{number_format($return->total_vat_payable, 2, '.',',')}})
+                                                    ({{number_format(abs($return->total_output_tax - $return->total_input_tax), 2, '.',',')}})
                                                 @else
                                                     {{number_format($return->total_vat_payable, 2, '.',',')}}
                                                 @endif

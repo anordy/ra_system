@@ -16,21 +16,25 @@ class DistrictSeeder extends Seeder
     public function run()
     {
         $ungujaDistricts = ['Kaskazini A','Kaskazini B'];
-        $unguja = Region::where('name','Unguja')->first();
-        foreach($ungujaDistricts as $name){
-            District::updateOrCreate([
-                'name'=> $name,
-                'region_id' => $unguja->id,
-            ]);
+        $ungujaRegions = Region::where('location', Region::UNGUJA)->get();
+        foreach ($ungujaRegions as $region){
+            foreach($ungujaDistricts as $name){
+                District::updateOrCreate([
+                    'name'=> $name,
+                    'region_id' => $region->id,
+                ]);
+            }
         }
 
-        $pembaDistricts = ['Micheweni','Wete'];
-        $pemba = Region::where('name','Pemba')->first();
-        foreach($pembaDistricts as $name){
-            District::updateOrCreate([
-                'name'=> $name,
-                'region_id' => $pemba->id,
-            ]);
+        $pembaDistricts = ['Micheweni', 'Wete'];
+        $pembaRegions = Region::where('location', Region::PEMBA)->get();
+        foreach ($pembaRegions as $pembaRegion) {
+            foreach($pembaDistricts as $name){
+                District::updateOrCreate([
+                    'name'=> $name,
+                    'region_id' => $pembaRegion->id,
+                ]);
+            }
         }
     }
 }

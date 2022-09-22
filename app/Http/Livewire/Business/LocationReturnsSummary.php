@@ -15,6 +15,7 @@ class LocationReturnsSummary extends Component
         $this->totalUSD = $this->location->taxReturns()->where('currency', 'USD')->sum('total_amount');
         $this->outstanding = $this->location->taxReturns()->where('currency', 'TZS')->sum('outstanding_amount');
         $this->outstandingUSD = $this->location->taxReturns()->where('currency', 'USD')->sum('outstanding_amount');
+        $this->hasUSD = $this->location->taxReturns()->where('currency', 'USD')->count();
     }
 
     public function render(){

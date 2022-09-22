@@ -39,3 +39,17 @@ function getNumberOrdinal($number) {
     else
         return $number. $ends[$number % 10];
 }
+
+function getUser($id)
+{
+    $user = User::query()->select('fname', 'lname')->where('id', $id)->first();
+    $user = $user->fname . ' ' . $user->lname;
+    return $user;
+}
+
+function getRole($id)
+{
+    $user = User::query()->findOrFail($id);
+    $role = $user->role->name;
+    return $role;
+}

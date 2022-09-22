@@ -43,6 +43,12 @@ class RegionTable extends DataTableComponent
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Location', 'location')
+                ->sortable()
+                ->searchable()
+            ->format(function($value){
+                return ucfirst($value);
+            }),
             Column::make('Action', 'id')
                 ->format(function ($value) {
                     $edit = '';
@@ -50,13 +56,13 @@ class RegionTable extends DataTableComponent
                     
                     if(Gate::allows('setting-region-edit')){
                         $edit =  <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="bi bi-pencil-fill mr-1"></i> Edit</button>
                     HTML;
                     }
                     
                     if(Gate::allows('setting-region-delete')){
                     $delete = <<< HTML
-                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash2-fill mr-1"></i> Delete</button>
                     HTML;
                     }
                     return $edit . $delete;

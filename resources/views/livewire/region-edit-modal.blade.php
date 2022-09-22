@@ -16,6 +16,17 @@
                         @enderror
                     </div>
                 </div>
+                <div class="form-group col-lg-12">
+                    <label class="control-label">Location</label>
+                    <select wire:model="location" class="form-control">
+                        <option></option>
+                        <option value="{{ \App\Models\Region::UNGUJA }}">Unguja</option>
+                        <option value="{{ \App\Models\Region::PEMBA }}">Pemba</option>
+                    </select>
+                    @error('location')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

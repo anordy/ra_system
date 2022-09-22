@@ -48,7 +48,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-tour-operation-view', 'sys_module_id' => 5],
             ['name' => 'return-restaurant-levy-view', 'sys_module_id' => 5],
             ['name' => 'return-vat-return-view', 'sys_module_id' => 5],
-            ['name' => 'return-port-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-airport-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-seaport-return-view', 'sys_module_id' => 5],
             ['name' => 'return-stamp-duty-return-view', 'sys_module_id' => 5],
             ['name' => 'return-bfo-excise-duty-return-view', 'sys_module_id' => 5],
             ['name' => 'return-mno-excise-duty-return-view', 'sys_module_id' => 5],
@@ -95,6 +96,8 @@ class PermissionSeeder extends Seeder
 
             # Debt Management
             ['name' => 'debt-management-debts-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-debts-waive', 'sys_module_id' => 14],
+            ['name' => 'debt-management-debts-recovery-measure', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-overdue-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-waiver-debt-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-assessment-debt-view', 'sys_module_id' => 14],

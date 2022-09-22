@@ -16,7 +16,7 @@ class OverdueAssessmentDebtsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return TaxAssessment::query()->where('assessment_step', ReturnCategory::OVERDUE)->orderBy('tax_assessments.created_at', 'desc');
+        return TaxAssessment::where('assessment_step', ReturnCategory::OVERDUE)->orderBy('tax_assessments.created_at', 'desc');
     }
 
     public function configure(): void
@@ -26,8 +26,7 @@ class OverdueAssessmentDebtsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['business_id','tax_type_id', 'business_location_id']);
-
+        $this->setAdditionalSelects(['tax_assessments.business_id', 'tax_type_id', 'tax_assessments.location_id']);
     }
 
     public function columns(): array
@@ -36,26 +35,28 @@ class OverdueAssessmentDebtsTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Tax Payer', 'business.taxpayer.first_name')
+            Column::make('Location', 'location.name')
                 ->sortable()
-                ->searchable()
-                ->format(function ($value, $row) {
-                    return "{$row->business->taxpayer->first_name} {$row->business->taxpayer->last_name}";
-                }),
+                ->searchable(),
             Column::make('Tax Type', 'taxtype.name'),
-            Column::make('Penalty', 'penalty')
+            Column::make('Principal', 'principal_amount')
                 ->format(function ($value, $row) {
-                    return number_format($row->penalty, 2);
+                    return number_format($row->principal_amount, 2);
                 }),
-            Column::make('Interest', 'interest')
+            Column::make('Penalty', 'penalty_amount')
                 ->format(function ($value, $row) {
-                    return number_format($row->interest, 2);
+                    return number_format($row->penalty_amount, 2);
                 }),
-            Column::make('Total Debt', 'total_amount')
+            Column::make('Interest', 'interest_amount')
+                ->format(function ($value, $row) {
+                    return number_format($row->interest_amount, 2);
+                }),
+            Column::make('Total', 'total_amount')
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount, 2);
                 }),
-            Column::make('Status', 'application_step')->view('debts.includes.status'),
+            Column::make('Status', 'payment_status')->view('debts.assessments.includes.status'),
+            Column::make('Actions', 'id')->view('debts.assessments.includes.actions'),
         ];
     }
 }

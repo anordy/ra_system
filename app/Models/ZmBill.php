@@ -13,6 +13,10 @@ class ZmBill extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'expire_date' => 'datetime'
+    ];
+
     public function bill_items(){
         return $this->hasMany(ZmBillItem::class, 'zm_bill_id');
     }
@@ -37,5 +41,9 @@ class ZmBill extends Model
     }
     public function billable(){
         return $this->morphTo();
+    }
+
+    public function createdBy(){
+        return $this->morphTo('createdby');
     }
 }

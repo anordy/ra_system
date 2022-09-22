@@ -1,5 +1,4 @@
 <html>
-
 <head>
     <title></title>
     <style>
@@ -167,24 +166,36 @@
         </thead>
     </table>
     @php($bill = $return->tax_return->latestBill())
-    <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
-    <tbody>
-    <tr>
-        <th width="20%">Bill Description</th>
-        <td colspan="2">{{ $bill->description }}</td>
-    </tr>
-    @foreach ($bill->bill_items as $item)
-        <tr>
-            <th width="20%">Bill Item</th>
-            <td>{{ $item->taxType->name }}</td>
-            <th>{{ number_format($item->amount, 2) }}</th>
-        </tr>
-    @endforeach
-    <tr class="bg-secondary">
-        <th colspan="2">Total Billed Amount</th>
-        <th class="text-right">{{ number_format($bill->amount, 2) }} {{ $bill->currency }}</th>
-    </tr>
-    </tbody>
-</table>
+    @if($bill)
+        <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
+            <tbody>
+            <tr>
+                <th width="20%">Bill Description</th>
+                <td colspan="2">{{ $bill->description }}</td>
+            </tr>
+            @foreach ($bill->bill_items as $item)
+                <tr>
+                    <th width="20%">Bill Item</th>
+                    <td>{{ $item->taxType->name }}</td>
+                    <th>{{ number_format($item->amount, 2) }}</th>
+                </tr>
+            @endforeach
+            <tr class="bg-secondary">
+                <th colspan="2">Total Billed Amount</th>
+                <th class="text-right">{{ number_format($bill->amount, 2) }} {{ $bill->currency }}</th>
+            </tr>
+            </tbody>
+        </table>
+    @else
+        <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
+            <thead>
+            <tr>
+                <td class="text-center">
+                    Return has no bill.
+                </td>
+            </tr>
+            </thead>
+        </table>
+    @endif
 </body>
 </html>

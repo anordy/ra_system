@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Enum\ApplicationStatus;
 use App\Enum\BillStatus;
-use App\Enum\DebtPaymentMethod;
 use App\Enum\InstallmentStatus;
 use App\Enum\PaymentMethod;
 use App\Models\Installment\Installment;
@@ -26,7 +26,7 @@ class UpdateInstallmentState extends Command
      *
      * @var string
      */
-    protected $description = 'Update installments and debt state.';
+    protected $description = 'Update installments and tax return(debt) state. This command should be run on daily basis.';
 
     /**
      * Create a new command instance.
@@ -54,7 +54,6 @@ class UpdateInstallmentState extends Command
     }
 
     public function updateInstallment($installment){
-        // get full paid items count
         $itemsCount = $installment->items()->where('status', BillStatus::COMPLETE)->count();
 
         if ($itemsCount >= $installment->installment_count){
@@ -62,25 +61,24 @@ class UpdateInstallmentState extends Command
             $installment->update([
                 'status' => InstallmentStatus::COMPLETE
             ]);
-            // Mark debt as complete
-            $installment->debt->update([
-                'status' => ReturnStatus::COMPLETE
+
+            $installment->taxReturn->update([
+                'payment_status' => ReturnStatus::COMPLETE
             ]);
 
-            // Mark return as paid by debt
-            $installment->debt->debt->update([
+            $installment->taxReturn->return->update([
                 'status' => ReturnStatus::PAID_BY_DEBT
             ]);
 
         } elseif($installment->getNextPaymentDate() && $installment->getNextPaymentDate()->lessThan(Carbon::today())) {
-            // Mark as FORFEIT
             $installment->update([
-                'status' => InstallmentStatus::CANCELLED
+                'status' => InstallmentStatus::CANCELLED,
+                'cancellation_reason' => "Installment was skipped, cancelled by system."
             ]);
 
-            // Return debt to normal
-            $installment->debt->update([
-                'app_step' => DebtPaymentMethod::NORMAL
+            $installment->taxReturn->update([
+                'application_status' => ApplicationStatus::NORMAL,
+                'payment_method' => PaymentMethod::FULL
             ]);
         }
 

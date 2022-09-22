@@ -42,17 +42,10 @@ class TaxInvestigationApprovalTable extends DataTableComponent
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             Column::make('user_type', 'user_id')->hideIf(true),
-            Column::make('Z_Number', 'pinstance.location.zin')
-                ->label(fn ($row) => $row->pinstance->location->zin ?? '')
-                ->searchable(),
             Column::make('TIN', 'pinstance.business.tin')
                 ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
-            Column::make('Business Location', 'pinstance.location.name')
-                ->label(fn ($row) => $row->pinstance->location->name ?? ''),
-            Column::make('Tax Type', 'pinstance.taxType.name')
-                ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
             Column::make('Period From', 'pinstance.period_from')
                 ->label(fn ($row) => $row->pinstance->period_from ?? ''),
             Column::make('Period To', 'pinstance.period_to')
