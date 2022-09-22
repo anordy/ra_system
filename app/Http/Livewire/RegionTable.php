@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Region;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -49,10 +50,23 @@ class RegionTable extends DataTableComponent
                 return ucfirst($value);
             }),
             Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="bi bi-pencil-fill mr-1"></i> Edit</button>
+                ->format(function ($value) {
+                    $edit = '';
+                    $delete = '';
+                    
+                    if(Gate::allows('setting-region-edit')){
+                        $edit =  <<< HTML
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="bi bi-pencil-fill mr-1"></i> Edit</button>
+                    HTML;
+                    }
+                    
+                    if(Gate::allows('setting-region-delete')){
+                    $delete = <<< HTML
                     <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="bi bi-trash2-fill mr-1"></i> Delete</button>
-                HTML)
+                    HTML;
+                    }
+                    return $edit . $delete;
+                })
                 ->html(true),
         ];
     }
@@ -60,6 +74,10 @@ class RegionTable extends DataTableComponent
 
     public function delete($id)
     {
+        if (!Gate::allows('setting-region-add')) {
+            abort(403);
+        }
+
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,

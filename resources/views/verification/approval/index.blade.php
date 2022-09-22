@@ -14,10 +14,12 @@
             </nav>
 
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
-                <div id="all-businesses" class="tab-pane fade active show card p-2">
+                <div id="all-businesses" class="tab-pane fade active show p-2"> <br><br>
+                    @livewire('returns.return-filter', ['tablename' => $paidAproval, 'cardOne' => '', 'cardTwo' => '']) <br>
                     @livewire('verification.verification-approval-table')
                 </div>
-                <div id="pending-approval" class="tab-pane fade card p-2">
+                <div id="pending-approval" class="tab-pane fade  p-2"> <br><br>
+                    @livewire('returns.return-filter', ['tablename' => $unPaidAproval, 'cardOne' => '', 'cardTwo' => '']) <br>
                     @livewire('verification.verification-unpaid-approval-table')
                 </div>
             </div>
@@ -34,4 +36,3 @@
         });
     </script>
 @endsection
-

@@ -9,6 +9,7 @@ use App\Notifications\NewUserNotification;
 use Exception;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
@@ -70,6 +71,10 @@ class UserAddModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-user-add')) {
+            abort(403);
+        }
+
         $this->validate();
         try {
             $user = User::create([

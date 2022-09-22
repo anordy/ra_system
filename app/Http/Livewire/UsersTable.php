@@ -64,11 +64,11 @@ class UsersTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if ($value == auth()->user()->id) {
                         //
-                    } else if ($row->status == 1 && auth()->user()->can('setting-user-change-status')) {
+                    } else if ($row->status == 1 && Gate::allows('setting-user-change-status')) {
                         return <<< HTML
                         <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock-open"></i> </button>
                     HTML;
-                    } else if ($row->status != 1 && auth()->user()->can('setting-user-change-status')) {
+                    } else if ($row->status != 1 && Gate::allows('setting-user-change-status')) {
                         return  <<< HTML
                         <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
                     HTML;
@@ -81,34 +81,33 @@ class UsersTable extends DataTableComponent
                     $changePwd = '';
                     $delete = '';
 
-                    if (auth()->user()->can('setting-user-edit')) {
+                    if (Gate::allows('setting-user-edit')) {
                         $edit = <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
                     }
-                    if (auth()->user()->can('setting-user-change-password')) {
+                    if (Gate::allows('setting-user-change-password')) {
                         $changePwd = <<< HTML
                                     <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>
                                 HTML;
                     }
-                    if (auth()->user()->can('setting-user-delete') && $value != auth()->user()->id) {
+                    if (Gate::allows('setting-user-delete') && $value != auth()->user()->id) {
                         $delete = <<< HTML
                                     <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                                 HTML;
                     }
 
-                    return $edit . ' ' . $changePwd . ' ' . $delete;
+                    return $edit . $changePwd . $delete;
                 })
                 ->html(true),
 
             Column::make('Role Action', 'id')
                 ->format(function ($value, $row) {
-                    if (auth()->user()->can('setting-user-change-role')) {
+                    if (Gate::allows('setting-user-change-role')) {
                         return <<< HTML
                                     <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal',$value)"><i class="fa fa-user-tag"></i> </button>
                                 HTML;
                     }
-                    return '';
                 })
                 ->html(true),
         ];
