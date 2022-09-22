@@ -656,6 +656,11 @@
                             <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
                         </li>
                     @endcan
+                    @can('setting-interest-rate-view')
+                        <li class="{{ request()->is('settings/interest-rates*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.interest-rates.index') }}">Interest Rate</a>
+                        </li>
+                    @endcan
                     @can('setting-education-level-view')
                         <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
                             <a href="{{ route('settings.education-level.index') }}">Education Level</a>
@@ -808,11 +813,7 @@
                         <a href="{{ route('settings.banks.index') }}">Banks</a>
                     </li>
                 @endcan
-                @can('setting-exchange-rate-view')
-                    <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
-                    </li>
-                @endcan
+                
                 @can('setting-education-level-view')
                     <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
                         <a href="{{ route('settings.education-level.index') }}">Education Level</a>

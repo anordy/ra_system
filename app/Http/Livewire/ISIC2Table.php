@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\ISIC2;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -51,10 +52,24 @@ class ISIC2Table extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'i-s-i-c2-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
+                ->format(function ($value) {
+                    $edit = '';
+                    $delete = '';
+
+                    if (Gate::allows('setting-isic-level-two-edit')) {
+                        $edit = <<< HTML
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'i-s-i-c2-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                    HTML;
+                    }
+
+                    if (Gate::allows('setting-isic-level-two-delete')) {
+                        $delete = <<< HTML
+                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                    HTML;
+                    }
+
+                    return $edit . $delete;
+                })
                 ->html(true),
         ];
     }

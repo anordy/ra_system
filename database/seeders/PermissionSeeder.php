@@ -153,6 +153,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-role-add', 'sys_module_id' => 18],
             ['name' => 'setting-role-edit', 'sys_module_id' => 18],
             ['name' => 'setting-role-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-role-assign-permission', 'sys_module_id' => 18],
 
             ['name' => 'setting-country-view', 'sys_module_id' => 18],
             ['name' => 'setting-country-add', 'sys_module_id' => 18],
@@ -183,6 +184,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-exchange-rate-add', 'sys_module_id' => 18],
             ['name' => 'setting-exchange-rate-edit', 'sys_module_id' => 18],
             ['name' => 'setting-exchange-rate-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-interest-rate-view', 'sys_module_id' => 18],
+            ['name' => 'setting-interest-rate-add', 'sys_module_id' => 18],
+            ['name' => 'setting-interest-rate-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-interest-rate-delete', 'sys_module_id' => 18],
 
             ['name' => 'setting-education-level-view', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-add', 'sys_module_id' => 18],
@@ -225,6 +231,14 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-tax-region-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-financial-year-add', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-year-view', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-add', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-view', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-extend', 'sys_module_id' => 18],
+            ['name' => 'setting-return-configuration-view', 'sys_module_id' => 18],
+            ['name' => 'setting-return-configuration-edit', 'sys_module_id' => 18],
             
             ['name' => 'setting-mvr-make-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-model-view', 'sys_module_id' => 18],
@@ -239,19 +253,14 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-fee-view', 'sys_module_id' => 18],
-            ['name' => 'setting-financial-year-add', 'sys_module_id' => 18],
-            ['name' => 'setting-financial-year-view', 'sys_module_id' => 18],
-            ['name' => 'setting-financial-month-add', 'sys_module_id' => 18],
-            ['name' => 'setting-financial-month-view', 'sys_module_id' => 18],
-            ['name' => 'setting-financial-month-extend', 'sys_module_id' => 18],
-            ['name' => 'setting-return-configuration-view', 'sys_module_id' => 18],
-            ['name' => 'setting-return-configuration-edit', 'sys_module_id' => 18],
+            
 
             # System
             ['name' => 'system-audit-trail-view', 'sys_module_id' => 19],
             ['name' => 'system-workflow-view', 'sys_module_id' => 19],
             ['name' => 'system-workflow-configure', 'sys_module_id' => 19],
             ['name' => 'system-all-pdfs-view', 'sys_module_id' => 19],
+
 
             # Managerial Report
             ['name' => 'managerial-report-view', 'sys_module_id' => 20],
@@ -260,12 +269,15 @@ class PermissionSeeder extends Seeder
             ['name' => 'managerial-claim-report-pdf', 'sys_module_id' => 20],
             ['name' => 'managerial-claim-report-preview', 'sys_module_id' => 20],
 
+
             # Extenstion
             ['name' => 'payment-extension-view', 'sys_module_id' => 21],
+
 
             # Installment
             ['name' => 'payment-installment-view', 'sys_module_id' => 22],
             ['name' => 'payment-installment-request-view', 'sys_module_id' => 22],
+            
 
             # Relief Management
             ['name' => 'relief-ministries-view', 'sys_module_id' => 23],

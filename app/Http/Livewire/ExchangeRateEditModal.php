@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\ExchangeRate;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -30,6 +31,10 @@ class ExchangeRateEditModal extends Component
     public function submit()
     {
         $this->validate();
+        if (!Gate::allows('setting-exchange-rate-edit')) {
+            abort(403);
+        }
+
         try {
             $this->exchange_rate->update([
                 'mean' => $this->mean,

@@ -3,8 +3,9 @@
 namespace App\Http\Livewire;
 
 use App\Models\Region;
-
+use App\Models\Role;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -26,6 +27,10 @@ class RegionEditModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-region-edit')) {
+            abort(403);
+        }
+
         $this->validate();
         try {
             $this->region->update([
