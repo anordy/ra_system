@@ -1,5 +1,6 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
+
 body {
     font-family: "Poppins", sans-serif;
     background: #fafafa;
@@ -125,7 +126,7 @@ a[data-toggle="collapse"] {
     margin-bottom: 8px !important;
     /*margin-top: 1px;*/
     border-bottom: 2px solid #97363a;
-    box-shadow: 0 .325rem .15rem rgba(0,0,0,.075) !important;
+    box-shadow: 0 .325rem .15rem rgba(0, 0, 0, .075) !important;
 }
 
 .form-control {
@@ -144,16 +145,18 @@ a[data-toggle="collapse"] {
 }
 
 .tab-content {
-    padding: 0!important;
+    padding: 0 !important;
 }
 
-.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
     color: #495057;
     background-color: #fff;
     border-top: 2px solid #97363a;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
     color: #fff;
     background-color: #996566;
 }
@@ -363,20 +366,25 @@ a[data-toggle="collapse"] {
     .steps-header {
         display: none
     }
+
     .steps-body,
     .step {
         display: block
     }
+
     .step {
         border-right: 0;
         border-bottom: 1px dashed #e7e7e7
     }
+
     .step:last-child {
         border-bottom: 0
     }
+
     .has-indicator {
         padding: 1rem .75rem
     }
+
     .has-indicator .step-indicator {
         display: inline-block;
         position: static;
@@ -441,26 +449,26 @@ LIVEWIRE TABS
 }
 
 .bg-c-blue {
-    background: linear-gradient(45deg,#f27474,#97363a);
+    background: linear-gradient(45deg, #f27474, #97363a);
 }
 
 .bg-c-green {
-    background: linear-gradient(45deg,#f27474,#97363a);
+    background: linear-gradient(45deg, #f27474, #97363a);
 }
 
 .bg-c-yellow {
-    background: linear-gradient(45deg,#f27474,#97363a);
+    background: linear-gradient(45deg, #f27474, #97363a);
 }
 
 .bg-c-pink {
-    background: linear-gradient(45deg,#f27474,#97363a);
+    background: linear-gradient(45deg, #f27474, #97363a);
 }
 
 
 .card {
     border-radius: 5px;
-    -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
-    box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+    box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
     border: none;
     margin-bottom: 30px;
     -webkit-transition: all 0.3s ease-in-out;
@@ -513,7 +521,9 @@ LIVEWIRE TABS
     background-color: #00b32036 !important;
 }
 
-.btn, input, select {
+.btn,
+input,
+select {
     border-radius: 0 !important;
 }
 
@@ -554,14 +564,14 @@ LIVEWIRE TABS
 /* ---------------------------------------------------
     LOGIN PAGE
 ----------------------------------------------------- */
-#logo{
+#logo {
     display: block;
     position: absolute;
     top: -60px;
     width: 120px;
     height: 120px;
     padding: 10px;
-    left:35%;
+    left: 35%;
     border: 1px solid #7c7c7c;
     border-radius: 50%;
     background: #fff;
@@ -571,7 +581,9 @@ LIVEWIRE TABS
     z-index: 20000 !important;
 }
 
-[x-cloak] { display: none !important; }
+[x-cloak] {
+    display: none !important;
+}
 
 .spinner-border-xs {
     width: 0.8rem;
@@ -591,13 +603,11 @@ div.table-bordered {
     border: none;
 }
 
-.modal-header
-{
+.modal-header {
     border-bottom: 1px solid #97363a;
     padding: 12px 22px !important;
 }
 
-.modal-title
-{
+.modal-title {
     font-weight: bold;
 }

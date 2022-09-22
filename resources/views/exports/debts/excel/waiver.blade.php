@@ -63,37 +63,50 @@
                     {{ $index + 1 }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->business->name ?? '-' }}
+                    {{ $record->debt->business->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->location->name ?? '-' }}
+                    {{ $record->debt->location->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->taxType->name ?? '-' }}
+                    {{ $record->debt->taxType->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->currency ?? '-' }}
+                    {{ $record->debt->currency ?? '-' }}
+                </td>
+                @if ($record->debt_type === 'App\Models\Returns\TaxReturn')
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->debt->principal === null ? '-' : number_format($record->debt->principal, 2) }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->debt->interest === null ? '-' : number_format($record->debt->interest, 2) }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->debt->penalty === null ? '-' : number_format($record->debt->penalty, 2) }}
+                    </td>
+                @elseif($record->debt_type === 'App\Models\TaxAssessments\TaxAssessment')
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->debt->principal_amount === null ? '-' : number_format($record->debt->principal_amount, 2) }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->debt->interest_amount === null ? '-' : number_format($record->debt->interest_amount, 2) }}
+                    </td>
+                    <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                        {{ $record->debt->penalty_amount === null ? '-' : number_format($record->debt->penalty_amount, 2) }}
+                    </td>
+                @endif
+
+                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                    {{ $record->debt->total_amount === null ? '-' : number_format($record->debt->total_amount, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->principal===null?'-':number_format($record->principal, 2) }}
+                    {{ $record->debt->outstanding_amount === null ? '-' : number_format($record->debt->outstanding_amount, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->interest===null?'-':number_format($record->interest, 2) }}
+                    {{ $record->debt->curr_payment_due_date == null ? '-' : date('M, d Y', strtotime($record->debt->payment_due_date)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->penalty===null?'-':number_format($record->penalty, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->total_amount===null?'-':number_format($record->total_amount, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->outstanding_amount===null?'-':number_format($record->outstanding_amount, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->payment_due_date==null?'-':date('M, d Y', strtotime($record->payment_due_date)) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->application_status }}
+                    {{ $record->status }}
                 </td>
             </tr>
         @endforeach

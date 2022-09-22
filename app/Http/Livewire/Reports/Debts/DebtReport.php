@@ -114,7 +114,7 @@ class DebtReport extends Component
             return;
         }
         $this->alert('success', 'Exporting Pdf File');
-        return redirect()->route('reports.assessments.download.pdf', encrypt(json_encode($parameters)));
+        return redirect()->route('reports.debts.download.pdf', encrypt(json_encode($parameters)));
     }
 
     public function preview()
