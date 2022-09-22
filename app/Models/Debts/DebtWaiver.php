@@ -16,7 +16,7 @@ class DebtWaiver extends Model
 
     public function debt()
     {
-        return $this->belongsTo(TaxReturn::class, 'tax_return_id');
+        return $this->morphTo();
     }
 
     public function taxpayer()

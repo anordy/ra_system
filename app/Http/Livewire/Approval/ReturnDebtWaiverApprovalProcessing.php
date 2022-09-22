@@ -6,7 +6,6 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\TaxType;
 use Livewire\Component;
-use App\Models\Debts\Debt;
 use App\Models\WaiverStatus;
 use App\Jobs\Bill\CancelBill;
 use App\Traits\PaymentsTrait;
@@ -15,14 +14,15 @@ use App\Models\Debts\DebtWaiver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\Debt\GenerateControlNo;
+use Illuminate\Support\Facades\Gate;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class DebtWaiverApprovalProcessing extends Component
+class ReturnDebtWaiverApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, LivewireAlert;
     public $modelId;
-    public $tax_return;
+    public $debt;
     public $modelName;
     public $comments;
     public $waiverReport;
@@ -37,10 +37,10 @@ class DebtWaiverApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->debt_waiver = DebtWaiver::find($this->modelId);
-        $this->tax_return = $this->debt_waiver->debt;
+        $this->debt = $this->debt_waiver->debt;
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $modelId);
-        $this->forwardToCommisioner = $this->canForwardToCommisioner($this->tax_return);
+        $this->forwardToCommisioner = $this->canForwardToCommisioner($this->debt);
     }
 
     public function updated($propertyName)
@@ -51,7 +51,7 @@ class DebtWaiverApprovalProcessing extends Component
             } elseif ($this->penaltyPercent < 0 || !is_numeric($this->penaltyPercent)) {
                 $this->penaltyPercent = null;
             }
-            $this->penaltyAmount = ($this->tax_return->penalty * $this->penaltyPercent) / 100;
+            $this->penaltyAmount = ($this->debt->penalty * $this->penaltyPercent) / 100;
         }
 
         if ($propertyName == "interestPercent") {
@@ -60,12 +60,12 @@ class DebtWaiverApprovalProcessing extends Component
             } elseif ($this->interestPercent < 0 || !is_numeric($this->interestPercent)) {
                 $this->interestPercent = null;
             }
-            $this->interestAmount = ($this->tax_return->interest * $this->interestPercent) / 100;
+            $this->interestAmount = ($this->debt->interest * $this->interestPercent) / 100;
         }
 
-        $this->penaltyAmountDue = $this->tax_return->penalty - $this->penaltyAmount;
-        $this->interestAmountDue = $this->tax_return->interest - $this->interestAmount;
-        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->tax_return->principal);
+        $this->penaltyAmountDue = $this->debt->penalty - $this->penaltyAmount;
+        $this->interestAmountDue = $this->debt->interest - $this->interestAmount;
+        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->debt->principal);
 
         $this->penaltyAmountDue = round($this->penaltyAmountDue, 2);
         $this->interestAmountDue = round($this->interestAmountDue, 2);
@@ -74,7 +74,9 @@ class DebtWaiverApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-
+        if (!Gate::allows('debt-management-debts-waive')) {
+            abort(403);
+        }
         if ($this->checkTransition('debt_manager_review')) {
 
         }
@@ -92,7 +94,7 @@ class DebtWaiverApprovalProcessing extends Component
                         'interest_rate' => $this->interestPercent ?? 0
                     ]);
 
-                    $this->tax_return->update([
+                    $this->debt->update([
                         'penalty' => $this->penaltyAmountDue,
                         'interest' => $this->interestAmountDue,
                         'total_amount' => $this->total,
@@ -104,11 +106,11 @@ class DebtWaiverApprovalProcessing extends Component
                     $this->subject->save();
     
                     $now = Carbon::now();
-                    if ($this->tax_return->bill) {
-                        CancelBill::dispatch($this->tax_return->bill, 'Debt has been waived')->delay($now->addSeconds(10));
-                        GenerateControlNo::dispatch($this->tax_return)->delay($now->addSeconds(10));
+                    if ($this->debt->bill) {
+                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
+                        GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                     } else {
-                        GenerateControlNo::dispatch($this->tax_return)->delay($now->addSeconds(10));
+                        GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                     }
     
                     DB::commit();
@@ -134,7 +136,7 @@ class DebtWaiverApprovalProcessing extends Component
                     'interest_rate' => $this->interestPercent ?? 0
                 ]);
 
-                $this->tax_return->update([
+                $this->debt->update([
                     'penalty' => $this->penaltyAmountDue,
                     'interest' => $this->interestAmountDue,
                     'total_amount' => $this->total,
@@ -146,11 +148,11 @@ class DebtWaiverApprovalProcessing extends Component
                 $this->subject->status = WaiverStatus::APPROVED;
                 $this->subject->save();
 
-                if ($this->tax_return->bill) {
-                    CancelBill::dispatch($this->tax_return->bill, 'Debt has been waived')->delay($now->addSeconds(10));
-                    GenerateControlNo::dispatch($this->tax_return)->delay($now->addSeconds(10));
+                if ($this->debt->bill) {
+                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
+                    GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                 } else {
-                    GenerateControlNo::dispatch($this->tax_return)->delay($now->addSeconds(10));
+                    GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                 }
 
                 DB::commit();
@@ -174,7 +176,9 @@ class DebtWaiverApprovalProcessing extends Component
 
     public function reject($transtion)
     {
-
+        if (!Gate::allows('debt-management-debts-waive')) {
+            abort(403);
+        }
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = WaiverStatus::CORRECTION;
@@ -187,7 +191,7 @@ class DebtWaiverApprovalProcessing extends Component
                     'comments' => 'required',
                 ]);
                 $this->subject->status = WaiverStatus::REJECTED;
-                $this->tax_return->update(['application_status' => 'normal']);
+                $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
             }
 
@@ -196,7 +200,7 @@ class DebtWaiverApprovalProcessing extends Component
                     'comments' => 'required',
                 ]);
                 $this->subject->status = WaiverStatus::REJECTED;
-                $this->tax_return->update(['application_status' => 'normal']);
+                $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
             }
 
@@ -228,7 +232,7 @@ class DebtWaiverApprovalProcessing extends Component
 
     public function render()
     {
-        return view('livewire.approval.debt-waiver-approval-processing');
+        return view('livewire.approval.return-debt-waiver-approval-processing');
     }
 
 }

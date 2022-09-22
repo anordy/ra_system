@@ -3,7 +3,6 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-
                     <div class="col-md-12">
                         <table class="table table-bordered">
                             <tbody>
@@ -23,7 +22,10 @@
                                         <div class="input-group @error($penaltyPercent) is-invalid @enderror">
                                             <input class="form-control @error($penaltyPercent) is-invalid @enderror"
                                                 wire:model="penaltyPercent" type="number" min=0 max=100
-                                                {{-- wire:change="calculatePenalty()" --}} />
+                                                @if ($debt_waiver->category == 'interest')
+                                                    disabled
+                                                @endif
+                                            />
                                             @error($penaltyPercent)
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -38,7 +40,10 @@
                                         <div class="input-group @error($interestPercent) is-invalid @enderror">
                                             <input class="form-control @error($interestPercent) is-invalid @enderror"
                                                 wire:model="interestPercent" type="number" min=0 max=50
-                                                {{-- wire:change="calculatePenalty()" --}} />
+                                                @if ($debt_waiver->category == 'penalty')
+                                                    disabled
+                                                @endif
+                                                 />
                                             @error($interestPercent)
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -55,13 +60,13 @@
                                     </td>
 
                                     <td>
-                                        {{ $this->waiverObjection->taxVerificationAssesment->penalty_amount }}
+                                        {{ number_format($this->debt->penalty_amount, 2) }}
                                     </td>
                                     <td>
                                         Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiverObjection->taxVerificationAssesment->interest_amount }}
+                                        {{ number_format($this->debt->interest_amount, 2) }}
                                     </td>
 
                                 </tr>
@@ -71,13 +76,13 @@
                                         Waived Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $penaltyAmount ?? 'N/A' }}
+                                        {{ number_format($penaltyAmount, 2) ?? 'N/A' }}
                                     </td>
                                     <td>
                                         Waived Interest Amount
                                     </td>
                                     <td>
-                                        {{ $interestAmount ?? 'N/A' }}
+                                        {{ number_format($interestAmount, 2) ?? 'N/A' }}
                                     </td>
 
                                 </tr>
@@ -86,31 +91,35 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiverObjection->taxVerificationAssesment->penalty_amount - $penaltyAmount }}
+                                        {{ number_format($this->debt->penalty_amount - $penaltyAmount, 2) }}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->waiverObjection->taxVerificationAssesment->interest_amount - $interestAmount }}
+                                        {{ number_format($this->debt->interest_amount - $interestAmount, 2) }}
                                     </td>
 
                                 </tr>
 
 
-
-
-                            </tbody>
-                            <tfoot>
+                                <tr>
+                                    <td class="card-footer text-center">
+                                        Principal Amount
+                                    </td>
+                                    <td colspan="4" class="font-weight-bold text-center">
+                                        {{ number_format($debt->principal_amount, 2) }}
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td class="card-footer text-center">
                                         Total Amount Due
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($total) }}
+                                        {{ number_format($total, 2) }}
                                     </td>
                                 </tr>
-                            </tfoot>
+                            </tbody>
                         </table>
                     </div>
                 </div>

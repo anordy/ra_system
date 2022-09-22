@@ -74,6 +74,7 @@ use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Debts\DebtReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -404,6 +405,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
         Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
 
+        // Debt Reports
+        Route::get('/debts', [DebtReportController::class, 'index'])->name('debts');
+        Route::get('/debts/preview/{parameters}', [DebtReportController::class, 'preview'])->name('debts.preview');
+        Route::get('/debts/download-report-pdf/{data}', [DebtReportController::class, 'exportDebtReportPdf'])->name('debts.download.pdf');
+
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -440,14 +446,18 @@ Route::middleware(['auth'])->group(function () {
         // Return debts
         Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
         Route::get('/returns/recovery-measure/{debtId}', [ReturnDebtController::class, 'recovery'])->name('debt.recovery');
-        Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('debt.show');
-        Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('debt.showOverdue');
-        Route::get('/demand-notice/send/{debtId}', [ReturnDebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
+        Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('return.show');
+        Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('return.showOverdue');
+        Route::get('/demand-notice/send/{debtId}', [ReturnDebtController::class, 'sendDemandNotice'])->name('return.sendDemandNotice');
 
         Route::get('/waivers', [ReturnDebtController::class, 'waivers'])->name('waivers.index');
-        Route::get('/waivers/{waiverId}', [ReturnDebtController::class, 'approval'])->name('waivers.approval');
+        Route::get('/returns/waiver/show/{waiverId}', [ReturnDebtController::class, 'approval'])->name('returns.waivers.approval');
 
         Route::get('/assessments', [AssessmentDebtController::class, 'index'])->name('assessments.index');
+        Route::get('/assesments/show/{assessment_id}', [AssessmentDebtController::class, 'show'])->name('assessment.show');
+        Route::get('/assessment/waiver/show/{assessment_id}', [AssessmentDebtController::class, 'showWaiver'])->name('assessment.waiver.show');
+        Route::get('/assessments/waiver/show/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('assessments.waivers.approval');
+
 
     });
 

@@ -60,13 +60,13 @@
                                     </td>
 
                                     <td>
-                                        {{ number_format($this->tax_return->penalty, 2) }}
+                                        {{ number_format($this->debt->penalty, 2) }}
                                     </td>
                                     <td>
                                         Interest Amount
                                     </td>
                                     <td>
-                                        {{ number_format($this->tax_return->interest, 2) }}
+                                        {{ number_format($this->debt->interest, 2) }}
                                     </td>
 
                                 </tr>
@@ -91,13 +91,13 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{ number_format($this->tax_return->penalty- $penaltyAmount, 2) }}
+                                        {{ number_format($this->debt->penalty- $penaltyAmount, 2) }}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{ number_format($this->tax_return->interest - $interestAmount, 2) }}
+                                        {{ number_format($this->debt->interest - $interestAmount, 2) }}
                                     </td>
 
                                 </tr>
@@ -108,7 +108,7 @@
                                         Principal Amount
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ number_format($tax_return->principal, 2) }}
+                                        {{ number_format($debt->principal, 2) }}
                                     </td>
                                 </tr>
                                 <tr>

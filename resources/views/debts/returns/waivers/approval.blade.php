@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Waiver Details')
+@section('title', 'Return Waiver Details')
 
 @section('content')
 
@@ -20,12 +20,12 @@
 
             <div class="tab-content bg-white border shadow-sm" id="waiverContent">
                 <div class="tab-pane fade show active" id="waiverInfo" role="tabpanel" aria-labelledby="waiverInfo-tab">
-                    @include('debts.waivers.show')
-                    <livewire:approval.debt-waiver-approval-processing modelName='App\Models\Debts\DebtWaiver'
+                    @include('debts.returns.waivers.show')
+                    <livewire:approval.return-debt-waiver-approval-processing modelName='App\Models\Debts\DebtWaiver'
                         modelId="{{ $waiver->id }}" />
                 </div>
 
-                <div class="tab-pane fade" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
+                <div class="tab-pane fade m-2" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
                     <livewire:approval.approval-history-table modelName='App\Models\Debts\DebtWaiver'
                         modelId="{{ $waiver->id }}" />
                 </div>

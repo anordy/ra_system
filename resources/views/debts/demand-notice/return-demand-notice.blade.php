@@ -163,7 +163,7 @@
                     </div>
                 </div>
                 <div class="flex-container">
-                    ZRB NO. <span class="dot">{{ $debt->location->zin }}</span>
+                    ZRB NO. <span class="dot">{{ $tax_return->location->zin }}</span>
                     <div class="txt-area">
                         <textarea name="" id="" cols="30" rows="10"></textarea>
                     </div>
@@ -183,8 +183,8 @@
                 <small> REF: OUTSTANDING TAX LIABILITY</small> <br><br>
 
                 <P>
-                    Examination of your tax account shows that as on <span class="dot">{{ $now }}</span> a balance of {{ $debt->currency }}
-                    <span class="dot">{{ number_format($debt->outstanding_amount, 2) }}</span> was owing to Zanzibar Revenue Board. This balance is inclusive of
+                    Examination of your tax account shows that as on <span class="dot">{{ $now }}</span> a balance of {{ $tax_return->currency }}
+                    <span class="dot">{{ number_format($tax_return->outstanding_amount, 2) }}</span> was owing to Zanzibar Revenue Board. This balance is inclusive of
                     penalty, fine and/or fine for failure to pay assessed tax, fine, penalty, interest or raised an
                     objection to any assessment or to appeal within the time allowed under the Zanzibar appeal Act No. 1
                     of
@@ -201,27 +201,27 @@
                             <th class="w-20">Tax <br /> Type</th>
                             <th class="w-20">Tax Assessment No.</th>
                             <th class="w-20">Period Month/Year</th>
-                            <th class="w-20">Amount of Tax {{ $debt->currency }}</th>
-                            <th class="w-20">Penalty {{ $debt->currency }}</th>
-                            <th class="w-20">Interest {{ $debt->currency }}</th>
-                            <th class="w-20">Fine <br /> {{ $debt->currency }}</th>
-                            <th class="w-20">Sub-Total {{ $debt->currency }}</th>
-                            <th class="w-20">Amout Paid {{ $debt->currency }}</th>
-                            <th class="w-20">Balance Outstanding {{ $debt->currency }}</th>
+                            <th class="w-20">Amount of Tax {{ $tax_return->currency }}</th>
+                            <th class="w-20">Penalty {{ $tax_return->currency }}</th>
+                            <th class="w-20">Interest {{ $tax_return->currency }}</th>
+                            <th class="w-20">Fine <br /> {{ $tax_return->currency }}</th>
+                            <th class="w-20">Sub-Total {{ $tax_return->currency }}</th>
+                            <th class="w-20">Amout Paid {{ $tax_return->currency }}</th>
+                            <th class="w-20">Balance Outstanding {{ $tax_return->currency }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="w-20">{{ $debt->taxtype->name }}</td>
+                            <td class="w-20">{{ $tax_return->taxtype->name }}</td>
                             <td class="w-20">N/A</td>
-                            <td class="w-20">{{ Carbon\Carbon::create($debt->last_due_date)->format('m Y') }}</td>
-                            <td class="w-20">{{ number_format($debt->principal_amount, 2) }}</td>
-                            <td class="w-20">{{ number_format($debt->penalty, 2) }}</td>
-                            <td class="w-20">{{ number_format($debt->interest, 2) }}</td>
+                            <td class="w-20">{{ Carbon\Carbon::create($tax_return->filing_due_date)->format('m Y') }}</td>
+                            <td class="w-20">{{ number_format($tax_return->principal, 2) }}</td>
+                            <td class="w-20">{{ number_format($tax_return->penalty, 2) }}</td>
+                            <td class="w-20">{{ number_format($tax_return->interest, 2) }}</td>
                             <td class="w-20">N/A</td>
-                            <td class="w-20">{{ number_format($debt->total_amount, 2) }}</td>
-                            <td class="w-20">{{ number_format($debt->total_amount - $debt->outstanding_amount, 2) }}</td>
-                            <td class="w-20">{{ number_format($debt->outstanding_amount, 2) }}</td>
+                            <td class="w-20">{{ number_format($tax_return->total_amount, 2) }}</td>
+                            <td class="w-20">{{ number_format($tax_return->total_amount - $tax_return->outstanding_amount, 2) }}</td>
+                            <td class="w-20">{{ number_format($tax_return->outstanding_amount, 2) }}</td>
                         </tr>
 
                     </tbody>
@@ -231,7 +231,7 @@
 
             <div class="body-section">
                 <p>
-                    Payment of the amount owing should be made within {{ $paid_within_days }} working days, failure of which recovery
+                    Payment of the amount owing should be made within 30 working days, failure of which recovery
                     proceeding
                     will be instated upon you without further notice. If you disagree with the above figure(s) you are
                     advised to contact the under signed officer immediately for reconciliation..

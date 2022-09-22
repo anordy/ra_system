@@ -24,10 +24,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('daily:notice')->everyMinute()->runInBackground();
         $schedule->command('daily:debt')->everyMinute()->runInBackground();
         $schedule->command('daily:reopen-business')->everyMinute()->runInBackground();
         $schedule->command('daily:debt-penalty')->everyMinute()->runInBackground();
+        $schedule->command('daily:return-notice')->everyMinute()->runInBackground();
+        $schedule->command('daily:debt-notice')->everyMinute()->runInBackground();
+        $schedule->command('daily:tax-effective-date')->everyMinute()->runInBackground();
+
     }
 
     /**
