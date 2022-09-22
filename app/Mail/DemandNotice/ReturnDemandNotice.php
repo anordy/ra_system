@@ -37,7 +37,8 @@ class ReturnDemandNotice extends Mailable
      */
     public function build()
     {
-        DB::beginTransaction();
+        $paid_within_days = 30;
+
         try {
             DemandNotice::create([
                 'debt_id' => $this->payload['return']->id,
@@ -45,25 +46,23 @@ class ReturnDemandNotice extends Mailable
                 'sent_by' => 'job',
                 'sent_on' => Carbon::today(),
                 'category' => 'normal',
-                'paid_within_days' => 30
+                'paid_within_days' => $paid_within_days
             ]);
 
             $tax_return = $this->payload['return'];
     
             $now = Carbon::now()->format('d M Y');
     
-            $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('tax_return', 'now'));
+            $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('tax_return', 'now', 'paid_within_days'));
     
             $pdf->setPaper('a4', 'portrait');
             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
     
-            $email = $this->markdown('emails.demand-notice.return-demand-notice')->subject("ZRB Demand Notice - " . strtoupper($tax_return->business->name));
+            $email = $this->markdown('emails.demand-notice.return-demand-notice')->subject("ZRB Return Debt Demand Notice - " . strtoupper($tax_return->business->name));
             $email->attachData($pdf->output(), "{$tax_return->business->name}_demand_notice.pdf");
             return $email;
-            DB::commit();
         } catch (Exception $e) {
             Log::error($e);
-            DB::rollBack();
             dd($e);
         }
    

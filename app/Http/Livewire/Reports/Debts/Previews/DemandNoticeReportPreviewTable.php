@@ -68,25 +68,24 @@ class DemandNoticeReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("Currency", "id")
+                Column::make("Due Date", "id")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return $row->debt->currency;
+                        return $row->debt->curr_payment_due_date;
                     }
                 ),
-
-            Column::make("Paid Within", "paid_within_days")
+            Column::make("Paid Within (Days)", "paid_within_days")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return number_format($value, 2);
+                        return number_format($value);
                     }
                 ),
 
-                Column::make("Sent On", "sent_on")
+            Column::make("Sent On", "sent_on")
                 ->searchable()
                 ->sortable()
                 ->format(
@@ -95,6 +94,15 @@ class DemandNoticeReportPreviewTable extends DataTableComponent
                     }
                 ),
 
+                Column::make("Next Notice Date", "next_notify_date")
+                ->searchable()
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return $value;
+                    }
+                ),
+            
         ];
     }
 }
