@@ -570,6 +570,11 @@
                         <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
                             <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
+                        @can('managerial-claim-report-view')
+                            <li class="{{ request()->is('reports/claims*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.claims.init') }}">Claim Reports</a>
+                            </li>
+                        @endcan
                         <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
                             <a href="{{ route('reports.debts') }}">Debt Reports</a>
                         </li>
