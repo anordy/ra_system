@@ -24,6 +24,8 @@ class CreateDebtWaiversTable extends Migration
             $table->text('reason')->nullable();
             $table->float('penalty_rate')->nullable();
             $table->float('interest_rate')->nullable();
+            $table->float('penalty_amount')->nullable();
+            $table->float('interest_amount')->nullable();
             $table->string('waiver_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();

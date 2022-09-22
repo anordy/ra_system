@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ReturnDemandNotice extends Mailable
@@ -36,6 +37,7 @@ class ReturnDemandNotice extends Mailable
      */
     public function build()
     {
+        DB::beginTransaction();
         try {
             DemandNotice::create([
                 'debt_id' => $this->payload['return']->id,
@@ -58,8 +60,10 @@ class ReturnDemandNotice extends Mailable
             $email = $this->markdown('emails.demand-notice.return-demand-notice')->subject("ZRB Demand Notice - " . strtoupper($tax_return->business->name));
             $email->attachData($pdf->output(), "{$tax_return->business->name}_demand_notice.pdf");
             return $email;
+            DB::commit();
         } catch (Exception $e) {
             Log::error($e);
+            DB::rollBack();
             dd($e);
         }
    

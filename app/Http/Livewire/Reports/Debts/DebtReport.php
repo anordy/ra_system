@@ -2,7 +2,10 @@
 
 namespace App\Http\Livewire\Reports\Debts;
 
+use App\Exports\Debts\AssessmentDebtReportExport;
 use App\Exports\Debts\DebtReturnReportExport;
+use App\Exports\Debts\DebtWaiverReportExport;
+use App\Exports\Debts\DemandNoticeReportExport;
 use App\Models\FinancialYear;
 use App\Traits\DebtReportTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -48,7 +51,7 @@ class DebtReport extends Component
     public function mount()
     {
         $this->optionYears = FinancialYear::pluck('code');
-        $this->optionReportTypes = ["Returns", "Assessments", "Waiver", "Installment", "Demand Notice"];
+        $this->optionReportTypes = ["Returns", "Assessments", "Waiver", "Installment", "Demand-Notice"];
         $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
         $this->optionSemiAnnuals = ["1st-Semi-Annual", "2nd-Semi-Annual"];
         $this->optionQuarters = ["1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter"];
@@ -89,7 +92,16 @@ class DebtReport extends Component
             $title = "Debt Report for {$report_type}-{$parameters['year']}";
         }
         $this->alert('success', 'Exporting Excel File');
-        return Excel::download(new DebtReturnReportExport($records, $title, $parameters), $fileName);
+
+        if ($parameters['report_type'] == 'Assessments') {
+            return Excel::download(new AssessmentDebtReportExport($records, $title, $parameters), $fileName);
+        } else if ($parameters['report_type'] == 'Returns') {
+            return Excel::download(new DebtReturnReportExport($records, $title, $parameters), $fileName);
+        } else if ($parameters['report_type'] == 'Waiver') {
+            return Excel::download(new DebtWaiverReportExport($records, $title, $parameters), $fileName);
+        }else if ($parameters['report_type'] == 'Demand Notice') {
+            return Excel::download(new DemandNoticeReportExport($records, $title, $parameters), $fileName);
+        }
     }
 
     public function exportPdf()

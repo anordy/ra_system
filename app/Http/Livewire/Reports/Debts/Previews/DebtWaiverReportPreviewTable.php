@@ -2,7 +2,8 @@
 
 namespace App\Http\Livewire\Reports\Debts\Previews;
 
-use App\Models\TaxType;
+use App\Models\Returns\TaxReturn;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Traits\DebtReportTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -10,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 
-class ReturnDebtReportPreviewTable extends DataTableComponent
+class DebtWaiverReportPreviewTable extends DataTableComponent
 {
     use LivewireAlert, DebtReportTrait;
 
@@ -20,7 +21,6 @@ class ReturnDebtReportPreviewTable extends DataTableComponent
     public function mount($parameters)
     {
         $this->parameters = $parameters;
-        $this->lumpsump = TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->first();
     }
 
     public function builder(): Builder
@@ -36,92 +36,97 @@ class ReturnDebtReportPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_returns.location_id', 'tax_returns.financial_month_id', 'tax_returns.created_at', 'tax_returns.filed_by_id', 'tax_returns.filed_by_type', 'tax_returns.return_id', 'tax_returns.return_type']);
+        $this->setAdditionalSelects(['debt_type', 'interest_amount', 'penalty_amount']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make('return_id', 'return_type')->hideIf(true),
+            Column::make('debt_id', 'debt_id')->hideIf(true),
 
-            Column::make("Business", "business_id")
+            Column::make("Business", "id")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return $row->business->name;
+                        return $row->debt->business->name;
                     }
                 ),
 
-            Column::make("Business Location", "location_id")
+            Column::make("Business Location", "id")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return $row->location->name;
+                        return $row->debt->location->name;
                     }
                 ),
 
-            Column::make("Tax Type", "tax_type_id")
+            Column::make("Tax Type", "id")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return $row->taxType->name;
+                        return $row->debt->taxType->name;
                     }
                 ),
 
-            Column::make("Currency", "currency")
-                ->searchable()
-                ->sortable(),
-
-            Column::make("Actual Amount", "total_amount")
+            Column::make("Waiver Type", "category")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return number_format($row->return->total_amount_due_with_penalties, 2);
-                    }
-                ),
-
-            Column::make("Accumulated Amount", "total_amount")
-                ->searchable()
-                ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        $accumulated = $row->total_amount - $row->return->total_amount_due_with_penalties;
-                        return number_format($accumulated, 2);
-                    }
-                ),
-
-            Column::make("Outstanding Amount", "outstanding_amount")
-                ->searchable()
-                ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        return number_format($value, 2);
-                    }
-                ),
-
-            Column::make("Payment Due Date", "payment_due_date")
-                ->searchable()
-                ->sortable()
-                ->format(
-                    function ($value, $row) {
-                        if (!$value) {
-                            return '-';
+                        if ($value === 'interest') {
+                            return 'Interest';
+                        } else if ($value === 'penalty') {
+                            return 'Penalty';
+                        } else if ($value === 'both') {
+                            return 'Penalty & Interest';
                         }
-                        return date('M, d Y', strtotime($value));
                     }
                 ),
-            Column::make("Status", "application_status")
+
+            Column::make("Currency", "id")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return $value;
+                        return $row->debt->currency;
                     }
                 ),
+
+            Column::make("Actual Amount", "id")
+                ->searchable()
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        if (get_class($row->debt) === TaxReturn::class) {
+                            return number_format($row->debt->return->total_amount_due_with_penalties, 2);
+                        } else if (get_class($row->debt) === TaxAssessment::class) {
+                            return number_format($row->debt->original_total_amount, 2);
+                        }
+                    }
+                ),
+
+            Column::make("Waived Amount", "penalty_amount")
+                ->searchable()
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        $waived_amount = $row->penalty_amount + $row->interest_amount;
+                        return number_format($waived_amount, 2);
+                    }
+                ),
+
+            Column::make("Balance", "penalty_amount")
+                ->searchable()
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return number_format($row->debt->total_amount, 2);
+                    }
+                ),
+
         ];
     }
 }

@@ -93,7 +93,9 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 try {
                     $this->debt_waiver->update([
                         'penalty_rate' => $this->penaltyPercent ?? 0,
-                        'interest_rate' => $this->interestPercent ?? 0
+                        'interest_rate' => $this->interestPercent ?? 0,
+                        'penalty_amount' => $this->penaltyAmount ?? 0,
+                        'interest_amount' => $this->interestAmount ?? 0,
                     ]);
 
                     $this->debt->update([
@@ -135,7 +137,9 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             try {
                 $this->debt_waiver->update([
                     'penalty_rate' => $this->penaltyPercent ?? 0,
-                    'interest_rate' => $this->interestPercent ?? 0
+                    'interest_rate' => $this->interestPercent ?? 0,
+                    'penalty_amount' => $this->penaltyAmount ?? 0,
+                    'interest_amount' => $this->interestAmount ?? 0,
                 ]);
 
                 $this->debt->update([

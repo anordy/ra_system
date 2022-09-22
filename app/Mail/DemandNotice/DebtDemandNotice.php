@@ -12,6 +12,7 @@ use App\Models\Debts\DemandNotice;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use App\Models\TaxAssessments\TaxAssessment;
+use Illuminate\Support\Facades\DB;
 
 class DebtDemandNotice extends Mailable
 {
@@ -38,7 +39,9 @@ class DebtDemandNotice extends Mailable
     public function build()
     {
         $debt = $this->payload['debt'];
+        // dd(get_class($debt));
 
+        DB::beginTransaction();
         try {
             DemandNotice::create([
                 'debt_id' => $this->payload['debt']->id,
@@ -55,7 +58,7 @@ class DebtDemandNotice extends Mailable
     
             if (get_class($debt) === TaxReturn::class) {
                 $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('debt', 'now', 'paid_within_days'));
-    
+                    
                 $pdf->setPaper('a4', 'portrait');
                 $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         
@@ -72,8 +75,10 @@ class DebtDemandNotice extends Mailable
                 $email->attachData($pdf->output(), "{$this->payload['debt']->business->name}_demand_notice.pdf");
                 return $email;
             }
+            DB::commit();
         } catch (Exception $e) {
             Log::error($e);
+            DB::rollBack();
         }
 
     }

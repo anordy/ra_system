@@ -13,7 +13,7 @@ use App\Traits\ReturnReportTrait;
 
 // use Maatwebsite\Excel\Concerns\FromCollection;
 
-class DebtReturnReportExport implements FromView, WithEvents, ShouldAutoSize
+class DemandNoticeReportExport implements FromView, WithEvents, ShouldAutoSize
 {
     use ReturnReportTrait;
 
@@ -64,6 +64,6 @@ class DebtReturnReportExport implements FromView, WithEvents, ShouldAutoSize
         $records = $this->records->get();
         $title = $this->title;
         $parameters = $this->parameters;
-        return view('exports.debts.excel.return', compact('records', 'title', 'parameters'));
+        return view('exports.debts.excel.demand-notice', compact('records', 'title', 'parameters'));
     }
 }
