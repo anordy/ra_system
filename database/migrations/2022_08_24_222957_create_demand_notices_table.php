@@ -19,6 +19,8 @@ class CreateDemandNoticesTable extends Migration
             $table->unsignedBigInteger('debt_id');
             $table->unsignedBigInteger('debt_type');
             $table->enum('sent_by', ['job', 'user']);
+            $table->integer('paid_within_days');
+            $table->dateTime('next_notify_date')->nullable();
             $table->dateTime('sent_on');
             $table->enum('category', ReturnCategory::getConstants())->default('normal');
             $table->unsignedBigInteger('sent_by_id')->nullable();

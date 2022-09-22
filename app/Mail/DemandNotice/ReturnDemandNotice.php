@@ -42,7 +42,8 @@ class ReturnDemandNotice extends Mailable
                 'debt_type' => TaxReturn::class,
                 'sent_by' => 'job',
                 'sent_on' => Carbon::today(),
-                'category' => 'normal'
+                'category' => 'normal',
+                'paid_within_days' => 30
             ]);
 
             $tax_return = $this->payload['return'];

@@ -72,7 +72,7 @@ class DailyDebtCalculateCommand extends Command
          */
         $tax_returns = TaxReturn::selectRaw('tax_returns.*, TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) as days_passed')
             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-            ->whereRaw("TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) > 30")
+            ->whereRaw("TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) > 60")
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
@@ -83,7 +83,7 @@ class DailyDebtCalculateCommand extends Command
                  * 1. return_category from normal to debt
                  * 2. application_step from filing to debt
                  */
-                if ($tax_return->days_passed < 30) {
+                if ($tax_return->days_passed < 60) {
                     $tax_return->update([
                         'return_category' => ReturnCategory::DEBT,
                         'application_step' => ApplicationStep::DEBT
@@ -129,7 +129,7 @@ class DailyDebtCalculateCommand extends Command
                 /**
                  * Mark assessment process as debt if days_passed is less than 30
                  */
-                if ($tax_assessment->days_passed < 30) {
+                if ($tax_assessment->days_passed < 60) {
                     $tax_assessment->update([
                         'assessment_step' => ApplicationStep::DEBT
                     ]);
