@@ -4,8 +4,8 @@
 @section('title', 'Airport Return')
 
 @section('content')
-    <livewire:returns.port.port-card-one />
-    <livewire:returns.port.port-card-two />
+    <livewire:returns.port.air-port-card-one />
+    <livewire:returns.port.air-port-card-two />
 
     <div class="card mt-3 rounded-0">
         <div class="card-header text-uppercase font-weight-bold bg-white">

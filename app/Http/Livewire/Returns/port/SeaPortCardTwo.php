@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Livewire\Returns\StampDuty;
+namespace App\Http\Livewire\Returns\Port;
 
-use App\Models\Returns\StampDuty\StampDutyReturn;
-use App\Models\Returns\StampDuty\StampDutyReturnPenalty;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\Returns\Port\PortReturnPenalty;
+use App\Models\TaxType;
 use App\Traits\ReturnFilterTrait;
 use Livewire\Component;
 
-class StampDutyCardTwo extends Component
+class SeaPortCardTwo extends Component
 {
     use ReturnFilterTrait;
 
@@ -27,9 +28,12 @@ class StampDutyCardTwo extends Component
 
     public function mount()
     {
-        $penaltyTable  = StampDutyReturnPenalty::getTableName();
-        $returnTable   = StampDutyReturn::getTableName();
-        $filter        = (new StampDutyReturn())->newQuery();
+        $tax = TaxType::where('code', TaxType::SEA_SERVICE_TRANSPORT_CHARGE)->first();
+
+        $penaltyTable  = PortReturnPenalty::getTableName();
+        $returnTable   = PortReturn::getTableName();
+        $filter        = (new PortReturn())->newQuery();
+        $filter        = $filter->where('tax_type_id', $tax->id);
 
         $filter  = $this->dataFilter($filter, $this->data, $returnTable);
         $filter1 = clone $filter;
@@ -47,9 +51,9 @@ class StampDutyCardTwo extends Component
         $this->unPaidReturnsUSD = $this->unPaidReturns($USD1, $returnTable, $penaltyTable);
         $this->unPaidReturnsTZS = $this->unPaidReturns($TZS1, $returnTable, $penaltyTable);
     }
-
+    
     public function render()
     {
-        return view('livewire.returns.stamp-duty.stamp-duty-card-two');
+        return view('livewire.returns.port.sea-port-card-two');
     }
 }

@@ -3,10 +3,11 @@
 namespace App\Http\Livewire\Returns\Port;
 
 use App\Models\Returns\Port\PortReturn;
+use App\Models\TaxType;
 use App\Traits\ReturnFilterTrait;
 use Livewire\Component;
 
-class PortCardOne extends Component
+class SeaPortCardOne extends Component
 {
     use ReturnFilterTrait;
 
@@ -23,14 +24,18 @@ class PortCardOne extends Component
 
     public function mount()
     {
+        $tax = TaxType::where('code', TaxType::SEA_SERVICE_TRANSPORT_CHARGE)->first();
+
         $returnTable = PortReturn::getTableName();
         $filter      = (new PortReturn())->newQuery();
+        $filter      = $filter->where('parent', 0);
+        $filter      = $filter->where('tax_type_id', $tax->id);
         $filter      = $this->dataFilter($filter, $this->data, $returnTable);
         $this->vars  = $this->getSummaryData($filter);
     }
 
     public function render()
     {
-        return view('livewire.returns.port.port-card-one');
+        return view('livewire.returns.port.sea-port-card-one');
     }
 }

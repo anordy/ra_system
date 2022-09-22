@@ -6,14 +6,22 @@
                 <div class="">
                     <div class="">
                         Paid:
-                        <h5 class=""><span>{{ number_format($paidReturns['totalTaxAmount'], 2) }}</span><span
-                                class="h6 ml-1">Tsh</span></h5>
+                        <h5 class=""><span>{{ number_format($paidReturnsTZS['totalTaxAmount'], 2) }}</span><span
+                                class="h6 ml-1">TZS</span>
+                        </h5>
+                        <h5 class=""><span>{{ number_format($paidReturnsUSD['totalTaxAmount'], 2) }}</span><span
+                                class="h6 ml-1">USD</span>
+                        </h5>
                     </div>
                     <div class="">
                         Unpaid:
                         <h5 class="">
-                            <span>{{ number_format($unPaidReturns['totalTaxAmount'], 2) }}</span><span
-                                class="h6 ml-1">Tsh</span>
+                            <span>{{ number_format($unPaidReturnsTZS['totalTaxAmount'], 2) }}</span><span
+                                class="h6 ml-1">TZS</span>
+                        </h5>
+                        <h5 class="">
+                            <span>{{ number_format($unPaidReturnsUSD['totalTaxAmount'], 2) }}</span><span
+                                class="h6 ml-1">USD</span>
                         </h5>
                     </div>
                 </div>
@@ -31,15 +39,23 @@
                     <div class="">
                         Paid:
                         <h5 class="">
-                            <span>{{ number_format($paidReturns['totalLateFiling'], 2) }}</span><span
-                                class="h6 ml-1">Tsh</span>
+                            <span>{{ number_format($paidReturnsTZS['totalLateFiling'], 2) }}</span><span
+                                class="h6 ml-1">TZS</span>
+                        </h5>
+                        <h5 class="">
+                            <span>{{ number_format($paidReturnsUSD['totalLateFiling'], 2) }}</span><span
+                                class="h6 ml-1">USD</span>
                         </h5>
                     </div>
                     <div class="">
                         Unpaid:
                         <h5 class="">
-                            <span>{{ number_format($unPaidReturns['totalLateFiling'], 2) }}</span><span
-                                class="h6 ml-1">Tsh</span>
+                            <span>{{ number_format($unPaidReturnsTZS['totalLateFiling'], 2) }}</span><span
+                                class="h6 ml-1">TZS</span>
+                        </h5>
+                        <h5 class="">
+                            <span>{{ number_format($unPaidReturnsUSD['totalLateFiling'], 2) }}</span><span
+                                class="h6 ml-1">USD</span>
                         </h5>
                     </div>
                 </div>
@@ -56,15 +72,23 @@
                     <div class="">
                         Paid:
                         <h5 class="">
-                            <span>{{ number_format($paidReturns['totalLatePayment'], 2) }}</span><span
-                                class="h6 ml-1">Tsh</span>
+                            <span>{{ number_format($paidReturnsTZS['totalLatePayment'], 2) }}</span><span
+                                class="h6 ml-1">TZS</span>
+                        </h5>
+                        <h5 class="">
+                            <span>{{ number_format($paidReturnsUSD['totalLatePayment'], 2) }}</span><span
+                                class="h6 ml-1">USD</span>
                         </h5>
                     </div>
                     <div class="">
                         Unpaid:
                         <h5 class="">
-                            <span>{{ number_format($unPaidReturns['totalLatePayment'], 2) }}</span><span
-                                class="h6 ml-1">Tsh</span>
+                            <span>{{ number_format($unPaidReturnsTZS['totalLatePayment'], 2) }}</span><span
+                                class="h6 ml-1">TZS</span>
+                        </h5>
+                        <h5 class="">
+                            <span>{{ number_format($unPaidReturnsUSD['totalLatePayment'], 2) }}</span><span
+                                class="h6 ml-1">USD</span>
                         </h5>
                     </div>
                 </div>
@@ -80,13 +104,21 @@
                 <div class="">
                     <div class="">
                         Paid:
-                        <h5 class=""><span>{{ number_format($paidReturns['totalRate'], 2) }}</span><span
-                                class="h6 ml-1">Tsh</span></h5>
+                        <h5 class=""><span>{{ number_format($paidReturnsTZS['totalRate'], 2) }}</span><span
+                                class="h6 ml-1">TZS</span>
+                        </h5>
+                        <h5 class=""><span>{{ number_format($paidReturnsUSD['totalRate'], 2) }}</span><span
+                                class="h6 ml-1">USD</span>
+                        </h5>
                     </div>
                     <div class="">
                         Unpaid:
-                        <h5 class=""><span>{{ number_format($unPaidReturns['totalRate'], 2) }}</span><span
-                                class="h6 ml-1">Tsh</span></h5>
+                        <h5 class=""><span>{{ number_format($unPaidReturnsTZS['totalRate'], 2) }}</span><span
+                                class="h6 ml-1">TZS</span>
+                        </h5>
+                        <h5 class=""><span>{{ number_format($unPaidReturnsUSD['totalRate'], 2) }}</span><span
+                                class="h6 ml-1">USD</span>
+                        </h5>
                     </div>
                 </div>
             </div>
