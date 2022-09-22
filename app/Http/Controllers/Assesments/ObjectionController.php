@@ -16,8 +16,4 @@ class ObjectionController extends Controller
          return view('assesments.objection.index');
     }
 
-    public function edit()
-    {
-        return view('assesments.objection.edit');
-    }
 }

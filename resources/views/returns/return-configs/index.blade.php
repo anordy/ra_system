@@ -16,10 +16,10 @@
     <div class="card">
         <div class="card-header ">
             <h6 class="text-capitalize">{{$code}} return configurations</h6>
-            <div class="card-tools">
-                <a href="{{route('settings.return-config.create', [encrypt($id), encrypt($code)])}}" class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i>
-                    New Configuration</a>
-            </div>
+{{--            <div class="card-tools">--}}
+{{--                <a href="{{route('settings.return-config.create', [encrypt($id), encrypt($code)])}}" class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i>--}}
+{{--                    New Configuration</a>--}}
+{{--            </div>--}}
         </div>
         <div class="card-body">
             <table class="table table-bordered myTable">

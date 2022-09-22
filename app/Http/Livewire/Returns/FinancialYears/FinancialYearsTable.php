@@ -39,13 +39,17 @@ class FinancialYearsTable extends DataTableComponent
             Column::make("Code", "code")
                 ->sortable()->searchable(),
             Column::make("Status", "active")
-                ->sortable()->searchable(),
+                ->sortable()->searchable()
+                ->format(function ($value) {
+                    if ($value == '0') {
+                        return 'Active';
+                    } elseif ($value == 'F') {
+                        return 'Inctive';
+                    }
+
+                }),
             Column::make("Created At", "created_at")
                 ->sortable()->searchable(),
-//            Column::make("duration", "duration")
-//                ->view('taxagents.includes.duration'),
-//            Column::make("No of days/months/years", "no_of_days")
-//                ->view('taxagents.includes.no_of_days'),
         ];
     }
 }

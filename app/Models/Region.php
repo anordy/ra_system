@@ -10,8 +10,12 @@ class Region extends Model implements Auditable
 {
     use HasFactory, \OwenIt\Auditing\Auditable;
 
+    public const UNGUJA = 'unguja';
+    public const PEMBA = 'pemba';
+
     protected $fillable = [
-        'name'
+        'name',
+        'location'
    ];
 
     public function taxagent()

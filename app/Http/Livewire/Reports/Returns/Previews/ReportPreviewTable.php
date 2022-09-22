@@ -22,7 +22,7 @@ class ReportPreviewTable extends DataTableComponent
     {
         // dd($parameters);
         $this->parameters = $parameters;
-        $this->lumpsump = TaxType::where('code',TaxType::LUMPSUM_PAYMENT)->first();
+        $this->lumpsump = TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->first();
     }
 
     public function builder(): Builder
@@ -39,7 +39,7 @@ class ReportPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_returns.location_id', 'tax_returns.financial_month_id', 'tax_returns.created_at', 'tax_returns.filed_by_id', 'tax_returns.filed_by_type','tax_returns.return_id']);
+        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_returns.location_id', 'tax_returns.financial_month_id', 'tax_returns.created_at', 'tax_returns.filed_by_id', 'tax_returns.filed_by_type', 'tax_returns.return_id']);
     }
 
     public function columns(): array
@@ -51,7 +51,7 @@ class ReportPreviewTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return date('d/m/Y', strtotime($value));
                 }),
-                
+
             Column::make("Business", "business_id")
                 ->searchable()
                 ->sortable()
@@ -69,7 +69,7 @@ class ReportPreviewTable extends DataTableComponent
                         return $row->location->name;
                     }
                 ),
-            
+
             Column::make("Tax Type", "tax_type_id")
                 ->searchable()
                 ->sortable()
@@ -84,12 +84,11 @@ class ReportPreviewTable extends DataTableComponent
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        if($row->tax_type_id == $this->lumpsump->id){
-                            return LumpSumReturn::where('id',$row->return_id)->first()->quarter_name ?? '-';
-                        }else{
+                        if ($row->tax_type_id == $this->lumpsump->id) {
+                            return LumpSumReturn::where('id', $row->return_id)->first()->quarter_name ?? '-';
+                        } else {
                             return $row->financialMonth->name;
                         }
-                        
                     }
                 ),
 

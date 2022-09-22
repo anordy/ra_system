@@ -9,11 +9,11 @@ trait ReturnSummaryCardTrait
     public function getSummaryData($model)
     {
         $m1 = clone $model;
-        $m2= clone $model;
-        $m3= clone $model;
-        $m4= clone $model;
-        $m5= clone $model;
-        $m6= clone $model;
+        $m2 = clone $model;
+        $m3 = clone $model;
+        $m4 = clone $model;
+        $m5 = clone $model;
+        $m6 = clone $model;
         //first day of the month
         $from = Carbon::now()->firstOfMonth()->toDateTimeString();
 

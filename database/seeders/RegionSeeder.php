@@ -14,10 +14,12 @@ class RegionSeeder extends Seeder
      */
     public function run()
     {
-        $regions = ['Unguja','Pemba'];
+        $regions = ['Unguja Kaskazini','Pemba Kaskazini', 'Unguja Kusini', 'Pemba Kusini'];
+
         foreach($regions as $region){
             Region::updateOrCreate([
-                'name'=>$region
+                'name' => $region,
+                'location' => strtolower(explode(' ', $region)[0])
             ]);
         }
     }

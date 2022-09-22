@@ -25,43 +25,39 @@
                 </div>
                 <div class="card-body">
                     <div class="row m-2">
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
                             <p class="my-1">{{ $audit->business->tin ?? '' }}</p>
                         </div> 
-                        <div class="col-md-3 mb-3">
-                            <span class="font-weight-bold text-uppercase">ZIN</span>
-                            <p class="my-1">{{ $audit->location->zin ?? '' }}</p>
-                        </div> 
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-8 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $audit->taxtype->name ?? '' }}</p>
+                            <p class="my-1">{{ $audit->taxAuditTaxTypeNames() ?? '' }}</p>
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
                             <p class="my-1">{{ $audit->business->name ?? '' }}</p>
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-8 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Location</span>
-                            <p class="my-1">{{ $audit->branch->name ?? 'Head Quarter' }}</p>
+                            <p class="my-1">{{ $audit->taxAuditLocationNames() ?? 'Head Quarter' }}</p>
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Auditing From</span>
                             <p class="my-1">{{ $audit->period_from ?? '' }}</p>
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Auditing To</span>
                             <p class="my-1">{{ $audit->period_to ?? '' }}</p>
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Audit Date</span>
                             <p class="my-1">{{ $audit->auditing_date ?? '' }}</p>
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Scope</span>
                             <p class="my-1">{{ $audit->scope ?? '' }}</p>
                         </div>
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Intension</span>
                             <p class="my-1">{{ $audit->intension ?? '' }}</p>
                         </div>
@@ -176,7 +172,8 @@
             @endif
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            @livewire('audit.declared-sales-analysis', ['audit' => $audit])
+            {{-- @livewire('audit.declared-sales-analysis', ['audit' => $audit]) --}}
+            {{-- @livewire('audit.declared-sales-analysis-instances', ['audit' => $audit]) --}}
            
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">

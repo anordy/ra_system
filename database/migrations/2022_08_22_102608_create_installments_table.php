@@ -27,6 +27,7 @@ class CreateInstallmentsTable extends Migration
             $table->decimal('amount', 20, 2);
             $table->enum('currency', ['TZS', 'USD', 'EUR']);
             $table->enum('status', InstallmentStatus::getConstants())->default(InstallmentStatus::ACTIVE);
+            $table->string('cancellation_reason')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

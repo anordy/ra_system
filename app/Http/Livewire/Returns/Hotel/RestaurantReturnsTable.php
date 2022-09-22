@@ -6,11 +6,14 @@ use Carbon\Carbon;
 use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Traits\ReturnFilterTrait;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class RestaurantReturnsTable extends DataTableComponent
 {
+    use  ReturnFilterTrait;
+
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $status;
     public $data = [];
@@ -33,26 +36,11 @@ class RestaurantReturnsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $data   = $this->data;
-        $tax    = TaxType::where('code', TaxType::RESTAURANT)->first();
-        $filter = (new HotelReturn)->newQuery();
+        $tax         = TaxType::where('code', TaxType::RESTAURANT)->first();
+        $filter      = (new HotelReturn)->newQuery();
+        $returnTable = HotelReturn::getTableName();
 
-        if ($data == []) {
-            $filter->whereMonth('hotel_returns.created_at', '=', date('m'));
-            $filter->whereYear('hotel_returns.created_at', '=', date('Y'));
-        }
-        if (isset($data['type']) && $data['type'] != 'all') {
-            $filter->Where('return_category', $data['type']);
-        }
-        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
-            $filter->whereMonth('hotel_returns.created_at', '=', $data['month']);
-        }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
-            $filter->whereYear('hotel_returns.created_at', '=', $data['year']);
-        }
-        if (isset($data['year']) && $data['year'] == 'Custom Range') {
-            $filter->whereBetween('hotel_returns.created_at', [$data['from'], $data['to']]);
-        }
+        $filter = $this->dataFilter($filter, $this->data, $returnTable);
     
         return $filter->where('tax_type_id', $tax->id)->orderBy('hotel_returns.created_at', 'desc');
     }

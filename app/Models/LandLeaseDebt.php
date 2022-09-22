@@ -15,4 +15,8 @@ class LandLeaseDebt extends Model
     public function LeasePayment(){
         return $this->belongsTo(LeasePayment::class, 'lease_payment_id');
     }
+
+    public function businessLocation(){
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
+    }
 }

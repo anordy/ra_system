@@ -6,21 +6,12 @@ use App\Enum\BillStatus;
 use App\Enum\DisputeStatus;
 use App\Enum\InstallmentStatus;
 use App\Enum\LeaseStatus;
-use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\Disputes\Dispute;
 use App\Models\Installment\InstallmentItem;
-use App\Models\LandLease;
 use App\Models\LandLeaseDebt;
 use App\Models\LeasePayment;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\Petroleum\PetroleumReturn;
 use App\Models\Returns\Port\PortReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
@@ -284,7 +275,18 @@ class ZanMalipoController extends Controller
                     $this->registerWorkflow(get_class($dispute), $dispute->id);
                     $this->doTransition('application_submitted', []);
                     $dispute->app_status = DisputeStatus::SUBMITTED;
+                    $dispute->payment_status = BillStatus::COMPLETE;
                     $dispute->save();
+                }
+            }elseif ($bill->billable_type == TaxAssessment::class ){
+                if ($bill->paidAmount() >= $bill->amount) {
+                    $assessment = $bill->billable;
+                    $assessment->payment_status = BillStatus::COMPLETE;
+                    $assessment->save();
+                } else {
+                    $assessment = $bill->billable;
+                    $assessment->payment_status = BillStatus::PAID_PARTIALLY;
+                    $assessment->save();
                 }
             }
         } catch (\Exception $e) {
@@ -415,27 +417,85 @@ class ZanMalipoController extends Controller
         }
     }
 
+    // TODO: Remove on production
+    public function consultant(Request $request)
+    {
+        if (config('app.env') != 'local') {
+            Log::alert('Bypassing payments on production.');
+        }
+
+        if ($request->control_number) {
+            $bill = ZmBill::where('control_number', $request->control_number)->firstOrFail();
+        } else {
+            $request->validate([
+                'bill_id' => 'required',
+            ]);
+
+            $bill = ZmBill::findOrFail($request->bill_id);
+        }
+
+        try {
+            DB::beginTransaction();
+            $payment = ZmPayment::query()->insert([
+                'zm_bill_id' => $bill->id,
+                'trx_id' => rand(100000, 1000000),
+                'sp_code' => 'SP20007',
+                'pay_ref_id' => rand(100000, 1000000),
+                'control_number' => $bill->control_number,
+                'bill_amount' => $bill->amount,
+                'paid_amount' => $bill->amount,
+                'bill_pay_opt' => $bill->payment_option,
+                'currency' => $bill->currency,
+                'trx_time' => Carbon::now()->toDateTimeString(),
+                'usd_pay_channel' => 'BANK',
+                'payer_phone_number' => '0753' . rand(100000, 900000),
+                'payer_email' => 'meshackf1@gmail.com',
+                'payer_name' => 'John Doe',
+                'psp_receipt_number' => 'RST' . rand(10000, 90000),
+                'psp_name' => 'BANK 1',
+                'ctr_acc_num' => rand(100000000, 900000000),
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ]);
+
+            if ($bill->paidAmount() >= $bill->amount) {
+                $bill->status = 'paid';
+            } else {
+                $bill->status = 'partially';
+            }
+
+            $bill->paid_amount = $bill->paidAmount();
+            $bill->save();
+
+            DB::commit();
+            return $payment;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
+    }
 
     use LandLeaseTrait;
-    private function updateLeasePayment($bill){
-        
+    private function updateLeasePayment($bill)
+    {
+
         try {
             if ($bill->billable_type == LeasePayment::class) {
                 $updateLeasePayment = $bill->billable;
 
                 if ($bill->paidAmount() >= $bill->amount) {
-                    
+
                     $nowDate = Carbon::now();
                     $due_date = Carbon::parse($updateLeasePayment->due_date);
-                    
-                    if($nowDate->month == $due_date->month && $nowDate->year == $due_date->year){
+
+                    if ($nowDate->month == $due_date->month && $nowDate->year == $due_date->year) {
                         $status = LeaseStatus::ON_TIME_PAYMENT;
-                    }elseif($nowDate < $due_date && $nowDate->year <= $due_date->year){
+                    } elseif ($nowDate < $due_date && $nowDate->year <= $due_date->year) {
                         $status = LeaseStatus::IN_ADVANCE_PAYMENT;
-                    } elseif($nowDate > $due_date){
+                    } elseif ($nowDate > $due_date) {
                         $status = LeaseStatus::LATE_PAYMENT;
                     }
-                    $updateLeasePayment->status = $status;                
+                    $updateLeasePayment->status = $status;
                 } else {
 
                     $updateLeasePayment->status = LeaseStatus::PAID_PARTIALLY;
@@ -445,14 +505,13 @@ class ZanMalipoController extends Controller
                 $updateLeasePayment->paid_at = Carbon::now();
                 $updateLeasePayment->save();
 
-
                 if ($updateLeasePayment->debt) {
                     $updateDebt = LandLeaseDebt::find($updateLeasePayment->debt->id);
                     $updateDebt->status = LeaseStatus::COMPLETE;
                     $updateDebt->outstanding_amount = $updateLeasePayment->outstanding_amount;
                     $updateDebt->save();
                 }
-                
+
             }
         } catch (\Exception $e) {
             Log::error($e);

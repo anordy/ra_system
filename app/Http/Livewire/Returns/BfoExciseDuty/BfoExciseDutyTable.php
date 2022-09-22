@@ -8,10 +8,13 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Models\Returns\ReturnStatus;
+use App\Traits\ReturnFilterTrait;
 use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyTable extends DataTableComponent
 {
+    use  ReturnFilterTrait;
+
     protected $model     = BfoReturn::class;
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 
@@ -27,6 +30,10 @@ class BfoExciseDutyTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class'   => 'table-bordered table-sm',
+        ]);
     }
 
     public function filterData($data)
@@ -37,25 +44,10 @@ class BfoExciseDutyTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $data   = $this->data;
-        $filter = (new BfoReturn)->newQuery();
-        
-        if ($data == []) {
-            $filter->whereMonth('bfo_returns.created_at', '=', date('m'));
-            $filter->whereYear('bfo_returns.created_at', '=', date('Y'));
-        }
-        if (isset($data['type']) && $data['type'] != 'all') {
-            $filter->Where('return_category', $data['type']);
-        }
-        if (isset($data['month']) && $data['month'] != 'all' && $data['year'] != 'Custom Range') {
-            $filter->whereMonth('bfo_returns.created_at', '=', $data['month']);
-        }
-        if (isset($data['year']) && $data['year'] != 'All' && $data['year'] != 'Custom Range') {
-            $filter->whereYear('bfo_returns.created_at', '=', $data['year']);
-        }
-        if (isset($data['year']) && $data['year'] == 'Custom Range') {
-            $filter->whereBetween('bfo_returns.created_at', [$data['from'], $data['to']]);
-        }
+        $filter      = (new BfoReturn)->newQuery();
+        $returnTable = BfoReturn::getTableName();
+
+        $filter = $this->dataFilter($filter, $this->data, $returnTable);
     
         return $filter->with('business', 'business.taxpayer', 'businessLocation')->orderBy('bfo_returns.created_at', 'desc');
     }
