@@ -137,8 +137,8 @@
                             <a href="{{ route('returns.vat-return.index') }}">VAT Tax Returns</a>
                         </li>
                     @endcan
-                    @can('return-airport-return-view') 
-                       <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
+                    @can('return-airport-return-view')
+                        <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
                             <a href="{{ route('returns.airport.index') }}">AirPort Tax Returns</a>
                         </li>
                     @endcan

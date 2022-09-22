@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Verification;
 
-
 use App\Models\Verification\TaxVerification;
 use App\Models\WorkflowTask;
+use App\Traits\ReturnFilterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -13,15 +13,27 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerificationApprovalTable extends DataTableComponent
 {
+    use LivewireAlert, ReturnFilterTrait;
 
-    use LivewireAlert;
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+    
+    public $data = [];
 
     public $model = WorkflowTask::class;
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->emit('$refresh');
+    }
+
     public function builder(): Builder
     {
-        return WorkflowTask::query()
-            ->with('pinstance', 'user')
+        $returnTable = WorkflowTask::getTableName();
+        $filter      = (new WorkflowTask)->newQuery();
+        $filter      = $this->dataFilter($filter, $this->data, $returnTable);
+
+        return $filter->with('pinstance', 'user')
             ->where('pinstance_type', TaxVerification::class)
             ->where('status', '!=', 'completed')
             ->where('owner', 'staff')
@@ -34,7 +46,7 @@ class VerificationApprovalTable extends DataTableComponent
         $this->setAdditionalSelects('pinstance_type', 'user_type');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
     }
 
@@ -57,6 +69,7 @@ class VerificationApprovalTable extends DataTableComponent
             Column::make('Filled By', 'pinstance.created_by_id')
                 ->label(function ($row) {
                     $user = $row->pinstance->createdBy;
+
                     return $user->full_name ?? '';
                 }),
             Column::make('Filled On', 'created_at')
@@ -64,7 +77,6 @@ class VerificationApprovalTable extends DataTableComponent
             Column::make('Action', 'pinstance_id')
                 ->view('verification.approval.action')
                 ->html(true),
-
         ];
     }
 }
