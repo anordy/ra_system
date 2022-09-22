@@ -349,7 +349,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/applications', ReliefApplicationsController::class);
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
         Route::get('/generate-report', [ReliefGenerateReportController::class, 'index'])->name('generate.report');
-        Route::get('/download-report-pdf/{dates}', [ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
+        Route::get('/download-report-pdf/{payload}', [ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
+        Route::get('/generate-report/report-preview/{payload}', [ReliefGenerateReportController::class, 'reportPreview'])->name('report.preview');
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {

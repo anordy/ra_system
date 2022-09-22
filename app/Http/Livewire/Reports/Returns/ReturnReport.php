@@ -182,7 +182,6 @@ class ReturnReport extends Component
             $this->alert('error', 'No Records Found in the selected criteria');
             return;
         }
-
         if ($this->parameters['year'] == 'all') {
             $fileName = $this->parameters['tax_type_name'] . '_' . $this->parameters['filing_report_type'] . '.xlsx';
             $title = $this->parameters['filing_report_type'] . ' For' . $this->parameters['tax_type_name'];
