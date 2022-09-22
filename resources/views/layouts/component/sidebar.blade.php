@@ -137,13 +137,15 @@
                             <a href="{{ route('returns.vat-return.index') }}">VAT Tax Returns</a>
                         </li>
                     @endcan
-                    @can('return-port-return-view')
-                            <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
-                                <a href="{{ route('returns.airport.index') }}">AirPort Tax Returns</a>
-                            </li>
-                            <li class="{{ request()->is('e-filing/seaport*') ? 'active' : '' }}">
-                                <a href="{{ route('returns.seaport.index') }}">SeaPort Tax Returns</a>
-                            </li>
+                    @can('return-airport-return-view') 
+                       <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
+                            <a href="{{ route('returns.airport.index') }}">AirPort Tax Returns</a>
+                        </li>
+                    @endcan
+                    @can('return-seaport-return-view')
+                        <li class="{{ request()->is('e-filing/seaport*') ? 'active' : '' }}">
+                            <a href="{{ route('returns.seaport.index') }}">SeaPort Tax Returns</a>
+                        </li>
                     @endcan
                     @can('return-bfo-excise-duty-return-view')
                         <li class="{{ request()->is('e-filling/bfo-excise-duty*') ? 'active' : '' }}">
@@ -932,7 +934,8 @@
                         </li>
                     @endcan
                     <li class="{{ request()->is('settings/mvr-generic/DlLicenseClass') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License Classes</a>
+                        <a href="{{ route('settings.mvr-generic.index', 'DlLicenseClass') }}">Driver's License
+                            Classes</a>
                     </li>
                     <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlLicenseDuration') }}">Driver's License
@@ -957,19 +960,19 @@
                         <a href="{{ route('settings.mvr-generic.index', 'CourtLevel') }}">Court Levels</a>
                     </li>
                     <li class="{{ request()->is('settings/mvr-generic/DlFee') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','DlFee') }}">Driver's License Fees</a>
+                        <a href="{{ route('settings.mvr-generic.index', 'DlFee') }}">Driver's License Fees</a>
                     </li>
                     <li class="{{ request()->is('settings/mvr-generic/CaseStage') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','CaseStage') }}">Case Stages</a>
+                        <a href="{{ route('settings.mvr-generic.index', 'CaseStage') }}">Case Stages</a>
                     </li>
                     <li class="{{ request()->is('settings/mvr-generic/CaseOutcome') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','CaseOutcome') }}">Case Outcomes</a>
+                        <a href="{{ route('settings.mvr-generic.index', 'CaseOutcome') }}">Case Outcomes</a>
                     </li>
                     <li class="{{ request()->is('settings/mvr-generic/CaseDecision') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','CaseDecision') }}">Case Decision</a>
+                        <a href="{{ route('settings.mvr-generic.index', 'CaseDecision') }}">Case Decision</a>
                     </li>
                     <li class="{{ request()->is('settings/mvr-generic/CourtLevel') ? 'active' : '' }}">
-                        <a href="{{ route('settings.mvr-generic.index','CourtLevel') }}">Court Levels</a>
+                        <a href="{{ route('settings.mvr-generic.index', 'CourtLevel') }}">Court Levels</a>
                     </li>
 
                     @can('setting-financial-year-view')

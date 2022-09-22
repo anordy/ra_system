@@ -171,10 +171,20 @@ class VerifyAction extends Component
                 $agent->verified_at = now();
                 $agent->save();
 
+                if ($agent->status == TaxAgentStatus::CORRECTION)
+                {
+                    $final = TaxAgentStatus::VERIFIED;
+                    $initial = TaxAgentStatus::CORRECTION;
+                }
+                else
+                {
+                    $final = TaxAgentStatus::VERIFIED;
+                    $initial = TaxAgentStatus::PENDING;
+                }
                 $approval = new TaxAgentApproval();
                 $approval->tax_agent_id = $agent->id;
-                $approval->initial_status = TaxAgentStatus::DRAFTING;
-                $approval->destination_status = TaxAgentStatus::VERIFIED;
+                $approval->initial_status = $initial;
+                $approval->destination_status = $final;
                 $approval->comment = $comment;
                 $approval->approved_by_id = Auth::id();
                 $approval->approved_at = now();
@@ -221,10 +231,21 @@ class VerifyAction extends Component
             $agent->first_rejected_at = now();
             $agent->save();
 
+            if ($agent->status == TaxAgentStatus::CORRECTION)
+            {
+                $final = TaxAgentStatus::REJECTED;
+                $initial = TaxAgentStatus::CORRECTION;
+            }
+            else
+            {
+                $final = TaxAgentStatus::REJECTED;
+                $initial = TaxAgentStatus::PENDING;
+            }
+
             $approval = new TaxAgentApproval();
             $approval->tax_agent_id = $agent->id;
-            $approval->initial_status = TaxAgentStatus::DRAFTING;
-            $approval->destination_status = TaxAgentStatus::REJECTED;
+            $approval->initial_status = $initial;
+            $approval->destination_status = $final;
             $approval->comment = $comment;
             $approval->approved_by_id = Auth::id();
             $approval->approved_at = now();
@@ -232,7 +253,7 @@ class VerifyAction extends Component
 
             $taxpayer = Taxpayer::query()->find($agent->taxpayer_id);
             $taxpayer->notify(new DatabaseNotification(
-                $subject = 'TAX-AGENT VERIFICATION',
+                $subject = 'TAX-CONSULTANT VERIFICATION',
                 $message = 'Your application has been rejected please correct and resubmit',
                 $href = 'taxagent.apply',
                 $hrefText = 'view'

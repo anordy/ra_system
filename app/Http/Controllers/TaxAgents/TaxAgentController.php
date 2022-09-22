@@ -128,13 +128,6 @@ class TaxAgentController extends Controller
         return view('taxagents.request-agent-show', compact('agent', 'id'));
     }
 
-    public function getUser($id)
-    {
-        $user = User::query()->select('fname', 'lname')->where('id', $id)->first();
-        $user = $user->fname . ' ' . $user->lname;
-        return $user;
-    }
-
     public function showVerificationAgentRequest($id)
     {
         if (!Gate::allows('tax-consultant-registration-view')) {

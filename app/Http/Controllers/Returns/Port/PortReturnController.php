@@ -14,7 +14,7 @@ class PortReturnController extends Controller
 
     public function airport()
     {
-        if (!Gate::allows('return-port-return-view')) {
+        if (!Gate::allows('return-airport-return-view')) {
             abort(403);
         }
         $cardOne = 'returns.port.air-port-card-one';
@@ -27,7 +27,7 @@ class PortReturnController extends Controller
 
     public function seaport()
     {
-        if (!Gate::allows('return-port-return-view')) {
+        if (!Gate::allows('return-seaport-return-view')) {
             abort(403);
         }
         $cardOne = 'returns.port.sea-port-card-one';

@@ -59,7 +59,9 @@ class SeaportReturnTable extends DataTableComponent
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),
-
+            Column::make('Currency', 'currency')
+                ->sortable()
+                ->searchable(),
             Column::make('Infrastructure', 'infrastructure_tax')
                 ->sortable(),
             Column::make('Infrastructure(ZNZ-TM)', 'infrastructure_znz_tm')

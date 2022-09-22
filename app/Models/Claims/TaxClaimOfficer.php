@@ -11,6 +11,12 @@ class TaxClaimOfficer extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'claim_id' => 'integer',
+    ];
+
     protected $guarded = [];
 
     public function taxClaim()

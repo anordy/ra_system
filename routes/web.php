@@ -128,6 +128,7 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/pay', [ZanMalipoController::class, 'pay']); // TODO: remove on production
+Route::get('/consultant-pay', [ZanMalipoController::class, 'consultant']); // TODO: remove on production
 
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
@@ -482,6 +483,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('payments.')->prefix('payments')->group(function () {
         Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
+        Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 
     Route::prefix('mvr')->as('mvr.')->group(function () {

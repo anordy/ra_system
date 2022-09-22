@@ -17,7 +17,7 @@
                     </div>
                 @endif
                 <div class="row">
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-12 form-group">
                         <label>Select Business</label>
                         <select wire:model="business_id" class="form-control @error('business_id') is-invalid @enderror"
                             wire:change="businessChange($event.target.value)">
@@ -35,8 +35,8 @@
 
                     <div class="col-md-6 form-group">
                         <label>Select Location</label>
-                        <select wire:model="location_id"
-                            class="form-control @error('location_id') is-invalid @enderror">
+                        <select wire:model="location_ids" multiple
+                            class="form-control @error('location_ids') is-invalid @enderror">
                             <option value="">Select Branch</option>
                             @if ($locations)
                                 @foreach ($locations as $location)
@@ -46,7 +46,7 @@
                                 @endforeach
                             @endif
                         </select>
-                        @error('location_id')
+                        @error('location_ids')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -55,8 +55,8 @@
 
                     <div class="col-md-6 form-group">
                         <label>Tax Type</label>
-                        <select wire:model="tax_type_id"
-                            class="form-control @error('tax_type_id') is-invalid @enderror">
+                        <select wire:model="tax_type_ids" multiple
+                            class="form-control @error('tax_type_ids') is-invalid @enderror">
                             <option value="">Select Tax Type</option>
                             @if ($taxTypes)
                                 @foreach ($taxTypes as $taxType)
@@ -64,7 +64,7 @@
                                 @endforeach
                             @endif
                         </select>
-                        @error('tax_type_id')
+                        @error('tax_type_ids')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
