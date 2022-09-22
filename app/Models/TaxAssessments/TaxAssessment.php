@@ -11,6 +11,7 @@ use App\Models\BusinessLocation;
 use App\Models\Disputes\Dispute;
 use App\Models\Debts\DebtPenalty;
 use App\Models\TaxAudit\TaxAudit;
+use App\Models\Debts\DemandNotice;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Verification\TaxVerification;
 use App\Models\Investigation\TaxInvestigation;
@@ -81,5 +82,10 @@ class TaxAssessment extends Model
 
     public function penalties(){
         return $this->morphMany(DebtPenalty::class, 'debt');
+    }
+
+    public function demandNotices()
+    {
+        return $this->morphMany(DemandNotice::class, 'debt');
     }
 }

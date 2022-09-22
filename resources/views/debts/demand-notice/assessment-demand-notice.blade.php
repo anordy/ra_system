@@ -216,8 +216,8 @@
                             <td class="w-20">N/A</td>
                             <td class="w-20">{{ Carbon\Carbon::create($debt->last_due_date)->format('m Y') }}</td>
                             <td class="w-20">{{ number_format($debt->principal_amount, 2) }}</td>
-                            <td class="w-20">{{ number_format($debt->penalty, 2) }}</td>
-                            <td class="w-20">{{ number_format($debt->interest, 2) }}</td>
+                            <td class="w-20">{{ number_format($debt->penalty_amount, 2) }}</td>
+                            <td class="w-20">{{ number_format($debt->interest_amount, 2) }}</td>
                             <td class="w-20">N/A</td>
                             <td class="w-20">{{ number_format($debt->total_amount, 2) }}</td>
                             <td class="w-20">{{ number_format($debt->total_amount - $debt->outstanding_amount, 2) }}</td>

@@ -72,7 +72,7 @@ class DailyDebtCalculateCommand extends Command
          */
         $tax_returns = TaxReturn::selectRaw('tax_returns.*, TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) as days_passed')
             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-            ->whereRaw("TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) > 60")
+            ->whereRaw("TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) > 60") // Since filing due date is of last month
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
