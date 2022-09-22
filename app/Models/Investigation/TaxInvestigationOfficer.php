@@ -10,6 +10,12 @@ class TaxInvestigationOfficer extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'investigation_id' => 'integer',
+    ];
+
     protected $guarded = [];
 
     public function taxInvestigation()

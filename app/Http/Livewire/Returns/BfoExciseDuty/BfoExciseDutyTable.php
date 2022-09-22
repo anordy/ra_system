@@ -30,6 +30,10 @@ class BfoExciseDutyTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class'   => 'table-bordered table-sm',
+        ]);
     }
 
     public function filterData($data)

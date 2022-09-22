@@ -105,7 +105,7 @@ class TaxClaimApprovalProcessing extends Component
                 'user_id' => $this->teamMember,
             ]);
 
-            $operators = [$this->teamLeader, $this->teamMember];
+            $operators = [intval($this->teamLeader), intval($this->teamMember)];
         }
 
         if ($this->checkTransition('verification_results')) {
