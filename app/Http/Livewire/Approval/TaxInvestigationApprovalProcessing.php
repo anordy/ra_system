@@ -184,7 +184,7 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $this->subject->save();
 
-                $operators = [$this->teamLeader, $this->teamMember];
+                $operators = [intval($this->teamLeader), intval($this->teamMember)];
             }
 
             if ($this->checkTransition('conduct_investigation')) {
