@@ -172,8 +172,11 @@
             @endif
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            {{-- @livewire('audit.declared-sales-analysis', ['audit' => $audit]) --}}
-            {{-- @livewire('audit.declared-sales-analysis-instances', ['audit' => $audit]) --}}
+           @if ($audit->location_id != 0 && $audit->tax_type_id != 0)
+                @livewire('audit.declared-sales-analysis', ['audit' => $audit, 'tax_type_id' => $audit->tax_type_id, 'location_id' => $audit->location_id])
+            @else
+                @livewire('audit.declared-sales-analysis-instances', ['audit' => $audit])
+            @endif
            
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">

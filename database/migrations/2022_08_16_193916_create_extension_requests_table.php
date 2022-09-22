@@ -22,7 +22,6 @@ class CreateExtensionRequestsTable extends Migration
             $table->unsignedBigInteger('tax_type_id');
             $table->text('reasons');
             $table->text('ground');
-            $table->string('attachment')->nullable();
             $table->dateTime('extend_from')->nullable();
             $table->dateTime('extend_to')->nullable();
             $table->string('marking')->nullable();

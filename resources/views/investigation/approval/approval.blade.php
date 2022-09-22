@@ -147,7 +147,11 @@
                 modelId="{{ $investigation->id }}" />
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            @livewire('investigation.declared-sales-analysis-instances', ['investigation' => $investigation])
+               @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
+                @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation, 'tax_type_id' => $investigation->tax_type_id, 'location_id' => $investigation->location_id])
+            @else
+                @livewire('investigation.declared-sales-analysis-instances', ['investigation' => $investigation])
+            @endif
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">

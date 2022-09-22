@@ -570,6 +570,9 @@
                         <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
                             <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
+                        <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.debts') }}">Debt Reports</a>
+                        </li>
                     @endcan
 
                 </ul>

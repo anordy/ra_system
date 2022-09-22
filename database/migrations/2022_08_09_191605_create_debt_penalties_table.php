@@ -16,7 +16,8 @@ class CreateDebtPenaltiesTable extends Migration
     {
         Schema::create('debt_penalties', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tax_return_id');
+            $table->unsignedBigInteger('debt_id');
+            $table->string('debt_type');
             $table->string('financial_month_name');
             $table->dateTime('start_date');
             $table->dateTime('end_date');

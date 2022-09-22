@@ -149,7 +149,7 @@ class ReliefRegistrations extends Component
 
             DB::commit();
             session()->flash('success', 'Successfully saved');
-            return redirect()->route('reliefs.registrations.index');
+            return redirect()->route('reliefs.applications.index');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());

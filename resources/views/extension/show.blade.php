@@ -40,16 +40,21 @@
                             <span class="font-weight-bold text-uppercase">Status</span>
                             <p class="my-1 text-uppercase">{{ $extension->status }}</p>
                         </div>
-                        @if($extension->attachment)
-                            <div class="col-md-4 mb-3 mt-3">
-                                <span class="font-weight-bold text-uppercase mb-2 d-block">Attachment</span>
-                                <a class="file-item"  target="_blank"  href="{{ route('extension.file', encrypt($extension->attachment)) }}">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
-                                        <span class="font-weight-bold text-uppercase">Attachment</span>
-                                    </div>
-                                </a>
+                        @if($extension->files->count())
+                            <div class="col-md-12 mb-2">
+                                <span class="font-weight-bold text-uppercase">Attachments</span>
                             </div>
+                            @foreach($extension->files as $file)
+                                <div class="col-md-3 mb-3">
+                                    <a class="file-item" target="_blank"
+                                       href="{{ route('extension.file', encrypt($file->location)) }}">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                        <div style="font-weight: 500;" class="ml-1">
+                                            <span class="font-weight-bold text-uppercase">{{ $file->name }}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endforeach
                         @endif
                     </div>
                 </div>
