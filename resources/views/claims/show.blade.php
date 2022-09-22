@@ -51,6 +51,10 @@
                                     <p class="my-1">{{ $claim->business->name }}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Business Location</span>
+                                    <p class="my-1">{{ $claim->location->name ?? 'Headquarter' }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Financial Month</span>
                                     <p class="my-1">{{ $claim->financialMonth->name }}</p>
                                 </div>
