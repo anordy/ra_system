@@ -27,6 +27,7 @@ class TourCardOne extends Component
         $returnTable   = HotelReturn::getTableName();
         $taxType       = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
         $tour          = (new HotelReturn())->newQuery();
+        
         $filter        = $tour->where('tax_type_id', $taxType->id);
         $filter        = $this->dataFilter($filter, $this->data, $returnTable);
         $this->vars    = $this->getSummaryData($filter);

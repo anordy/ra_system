@@ -47,11 +47,8 @@ class TaxInvestigationInitiateTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZRB No', 'location.zin'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
-            Column::make('Business Location', 'location.name'),
-            Column::make('TaxType', 'taxType.name'),
             Column::make('Period From', 'period_from'),
             Column::make('Period To', 'period_to'),
             Column::make('Created By', 'created_by_id')

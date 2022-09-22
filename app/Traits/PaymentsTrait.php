@@ -148,6 +148,18 @@ trait PaymentsTrait {
         }
     }
 
+    public function updateBill(ZmBill $bill, $expireDate){
+        if (!($expireDate instanceof Carbon)){
+            $expireDate = Carbon::make($expireDate);
+        }
+        if (config('app.env') != 'local') {
+            ZmCore::updateBill($bill->id, $expireDate->toDateTimeString()); // Works ?
+        } else {
+            $bill->expire_date = $expireDate->toDateTimeString();
+            $bill->save();
+        }
+    }
+
     public function landLeaseGenerateControlNo($leasePayment, $billItems)
     {
         $taxpayer      = $leasePayment->taxpayer;

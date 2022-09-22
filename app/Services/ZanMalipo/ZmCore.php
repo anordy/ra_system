@@ -264,7 +264,7 @@ class ZmCore
             'BillTrxInf' => [
                 'BillId' => $bill_id,
                 'SpSysId' =>  config('modulesconfig.zm_spsysid'),
-                'BillExprDt' => $expire_date,
+                'BillExprDt' => Carbon::make($expire_date)->format('Y-m-d\TH:i:s'),
             ]
         ];
 

@@ -87,6 +87,7 @@ use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
+use App\Http\Controllers\Returns\PrintController;
 use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
 use App\Http\Controllers\Returns\Queries\NilReturnsController;
 use App\Http\Controllers\Returns\Queries\NonFilersController;
@@ -127,6 +128,7 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/pay', [ZanMalipoController::class, 'pay']); // TODO: remove on production
+Route::get('/consultant-pay', [ZanMalipoController::class, 'consultant']); // TODO: remove on production
 
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
@@ -284,8 +286,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
         Route::resource('/petroleum', PetroleumReturnController::class);
+        // airport
+        Route::get('/airport/index', [PortReturnController::class, 'airport'])->name('airport.index');
 
-        Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
+        // seaport
+        Route::get('/seaport/index', [PortReturnController::class, 'seaport'])->name('seaport.index');
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
         Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
@@ -329,6 +334,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/lump-sum/index', [LumpSumReturnController::class, 'index'])->name('lump-sum.index');
         Route::get('/lump-sum/view/{id}', [LumpSumReturnController::class, 'view'])->name('lump-sum.show');
         Route::get('/lump-sum/history/{filters}', [LumpSumReturnController::class, 'history'])->name('lump-sum.history');
+
+        // Print Returns
+        Route::get('/print/{tax_return_id}', [PrintController::class, 'print'])->name('print');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -479,6 +487,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('payments.')->prefix('payments')->group(function () {
         Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
+        Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 
     Route::prefix('mvr')->as('mvr.')->group(function () {

@@ -34,7 +34,8 @@
         "symfony/psr-http-message-bridge": "^2.1",
         "symfony/security-core": "^5.4",
         "torann/geoip": "^3.0",
-        "yajra/laravel-datatables": "^1.5"
+        "yajra/laravel-datatables": "^1.5",
+      "ext-dom": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

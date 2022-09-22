@@ -9,10 +9,11 @@
         <div class="card-header">
             <h5 class="text-uppercase">Wards</h5>
             <div class="card-tools">
-                <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'ward-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
-                    Add</button>
+                @can('setting-ward-add')
+                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-add-modal')">
+                        <i class="fa fa-plus-circle"></i> Add
+                    </button>
+                @endcan
             </div>
         </div>
 

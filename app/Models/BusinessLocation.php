@@ -57,11 +57,11 @@ class BusinessLocation extends Model
                     abort(404);
             }
 
-            switch ($this->region->name){
-                case 'Unguja':
+            switch ($this->region->location){
+                case Region::UNGUJA:
                     $s = $s . '1';
                     break;
-                case 'Pemba':
+                case Region::PEMBA:
                     $s = $s . '2';
                     break;
                 default:
