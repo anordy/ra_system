@@ -49,9 +49,9 @@ class SendSmsFired
      */
     public function handle(SendSms $event)
     {
-        // if(config('app.env') == 'local'){
-        //     return true;
-        // }
+        if(config('app.env') == 'local'){
+            return true;
+        }
         if ($event->service == 'otp') {
             $token = UserOtp::find($event->tokenId);
             SendOTPSMS::dispatch($token->code, $token->user->fullname(), $token->user->phone);
