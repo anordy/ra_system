@@ -52,7 +52,7 @@
                                     <tr>
                                         <td>{{ $mainIndex }}</td>
                                         <td>{{ $project['name'] }}</td>
-                                        <td>{{ $project['sponsor'] }}</td>
+                                        <td class="text-center">{{ $project['sponsor'] }}</td>
                                         <td class="bg-secondary text-right">{{ number_format($project['relievedAmount'], 1) }}
                                         </td>
                                     </tr>
