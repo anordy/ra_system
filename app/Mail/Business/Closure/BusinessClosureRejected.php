@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class BusinessClosureApproved extends Mailable
+class BusinessClosureRejected extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +30,7 @@ class BusinessClosureApproved extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.closure.approved')
-            ->subject("ZRB Temporary Business Closure - " . strtoupper($this->closure->business->name));
+        return $this->markdown('emails.business.closure.rejected')
+            ->subject("ZRB Temporary Business Closure- " . strtoupper($this->closure->business->name));
     }
 }

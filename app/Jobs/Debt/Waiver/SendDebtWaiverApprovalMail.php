@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\Business;
+namespace App\Jobs\Debt\Waiver;
 
-use App\Mail\Business\Closure\BusinessClosureApproved;
+use App\Mail\Debt\DebtWaiverApprovalMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,19 +11,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendBusinessClosureApprovedMail implements ShouldQueue
+class SendDebtWaiverApprovalMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $closure;
+    private $payload;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($closure)
+    public function __construct($payload)
     {
-        $this->closure = $closure;
+        $this->payload = $payload;
     }
 
     /**
@@ -33,8 +33,8 @@ class SendBusinessClosureApprovedMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->closure->business->taxpayer->email){
-            Mail::to($this->closure->business->taxpayer->email)->send(new BusinessClosureApproved($this->closure));
+        if ($this->payload['debt']->business->taxpayer->email){
+            Mail::to($this->payload['debt']->business->taxpayer->email)->send(new DebtWaiverApprovalMail($this->payload));
         }
     }
 }

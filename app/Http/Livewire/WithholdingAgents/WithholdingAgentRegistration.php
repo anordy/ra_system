@@ -57,7 +57,8 @@ class WithholdingAgentRegistration extends Component
         'ward_id' => 'required',
         'title' => 'required',
         'position' => 'required',
-        'date_of_commencing' => 'required'
+        'date_of_commencing' => 'required',
+        'reference_no' => 'required'
     ];
 
     public function mount()

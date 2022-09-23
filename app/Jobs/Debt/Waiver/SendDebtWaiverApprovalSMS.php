@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Jobs\Business;
+namespace App\Jobs\Debt\Waiver;
 
 use App\Http\Controllers\v1\SMSController;
-use App\Models\Business;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,19 +10,19 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class SendBusinessDeregisterApprovedSMS implements ShouldQueue
+class SendDebtWaiverApprovalSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $deregister;
+    private $payload;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($deregister)
+    public function __construct($payload)
     {
-        $this->deregister = $deregister;
+        $this->payload = $payload;
     }
 
     /**
@@ -34,16 +33,9 @@ class SendBusinessDeregisterApprovedSMS implements ShouldQueue
     public function handle()
     {
         $sms_controller = new SMSController;
-        $send_to = $this->deregister->business->taxpayer->mobile;
+        $send_to = $this->payload['debt']->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "ZRB inform that, you have de-registered {$this->deregister->business->name}
-        and no longer an active taxpayer for this business.";
-
-        if ($this->deregister->location) {
-            $customer_message = "ZRB inform that, you have de-registered {$this->deregister->business->name}, {$this->deregister->location->name}
-            and no longer an active taxpayer for this business.";
-        }
-
+        $customer_message = "ZRB inform you that {$this->payload['debt']->taxtype->name} debt waiver for {$this->payload['debt']->business->name} at {$this->payload['debt']->location->name} debt has been approved.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

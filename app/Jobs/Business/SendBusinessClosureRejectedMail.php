@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Business;
 
-use App\Mail\Business\Closure\BusinessClosureApproved;
+use App\Mail\Business\Closure\BusinessClosureCorrection;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendBusinessClosureApprovedMail implements ShouldQueue
+class SendBusinessClosureRejectedMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -34,7 +34,7 @@ class SendBusinessClosureApprovedMail implements ShouldQueue
     public function handle()
     {
         if ($this->closure->business->taxpayer->email){
-            Mail::to($this->closure->business->taxpayer->email)->send(new BusinessClosureApproved($this->closure));
+            Mail::to($this->closure->business->taxpayer->email)->send(new BusinessClosureCorrection($this->closure));
         }
     }
 }

@@ -24,6 +24,7 @@ class ChangesApprovalProcessing extends Component
     public $comments;
     public $business_update_data;
     public $business_id;
+    public $business;
 
 
     public function mount($modelName, $modelId, $businessUpdate)
@@ -38,7 +39,6 @@ class ChangesApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-        $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
@@ -63,8 +63,8 @@ class ChangesApprovalProcessing extends Component
                         'time' => Carbon::now()->format('d-m-Y')
                     ];
 
-                    event(new SendMail('change-business-information', $notification_payload));
-                    event(new SendSms('change-business-information', $notification_payload));
+                    event(new SendMail('change-business-information-approval', $notification_payload));
+                    event(new SendSms('change-business-information-approval', $notification_payload));
                 } else if ($this->business_update_data->type == 'responsible_person') {
                     /** Update business information */
                     $new_values = json_decode($this->business_update_data->new_values, true);
@@ -104,8 +104,8 @@ class ChangesApprovalProcessing extends Component
                         'time' => Carbon::now()->format('d-m-Y')
                     ];
 
-                    event(new SendMail('change-business-information', $notification_payload));
-                    event(new SendSms('change-business-information', $notification_payload));
+                    event(new SendMail('change-business-information-approval', $notification_payload));
+                    event(new SendSms('change-business-information-approval', $notification_payload));
                 }
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
@@ -119,11 +119,25 @@ class ChangesApprovalProcessing extends Component
     public function reject($transtion)
     {
         $this->validate(['comments' => 'required']);
+        $business = Business::findOrFail($this->business_id);
+
         try {
             if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = BusinessStatus::REJECTED;
+                $notification_payload = [
+                    'business' => $business,
+                    'time' => Carbon::now()->format('d-m-Y')
+                ];
+                // event(new SendMail('change-business-information-rejected', $notification_payload));
+                // event(new SendSms('change-business-information-rejected', $notification_payload));
             } else if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
+                $notification_payload = [
+                    'business' => $business,
+                    'time' => Carbon::now()->format('d-m-Y')
+                ];
+                event(new SendMail('change-business-information-correction', $notification_payload));
+                event(new SendSms('change-business-information-correction', $notification_payload));
             }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);

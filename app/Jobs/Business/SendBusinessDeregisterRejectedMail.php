@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Business;
 
-use App\Mail\Business\Closure\BusinessClosureApproved;
+use App\Mail\Business\Deregister\BusinessDeregisterCorrection;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,19 +11,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendBusinessClosureApprovedMail implements ShouldQueue
+class SendBusinessDeregisterRejectedMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $closure;
+    private $deregister;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($closure)
+    public function __construct($deregister)
     {
-        $this->closure = $closure;
+        $this->deregister = $deregister;
     }
 
     /**
@@ -33,8 +33,8 @@ class SendBusinessClosureApprovedMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->closure->business->taxpayer->email){
-            Mail::to($this->closure->business->taxpayer->email)->send(new BusinessClosureApproved($this->closure));
+        if ($this->deregister->business->taxpayer->email){
+            Mail::to($this->deregister->business->taxpayer->email)->send(new BusinessDeregisterCorrection($this->deregister));
         }
     }
 }

@@ -3,26 +3,31 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
-use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\Business;
-use App\Models\TaxAgent;
 use App\Models\Taxpayer;
-use App\Models\WithholdingAgent;
 use App\Models\WaResponsiblePerson;
+use App\Jobs\Debt\SendDebtBalanceSMS;
 use App\Jobs\SendTaxAgentApprovalSMS;
 use App\Jobs\Taxpayer\SendRegistrationSMS;
 use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
 use App\Jobs\Business\SendBusinessApprovedSMS;
 use App\Jobs\SendWithholdingAgentRegistrationSMS;
 use App\Jobs\Business\Branch\SendBranchApprovalSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateSMS;
+use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalSMS;
+use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedSMS;
 use App\Jobs\Business\Branch\SendBranchCorrectionSMS;
 use App\Jobs\Business\SendBusinessClosureApprovedSMS;
+use App\Jobs\Business\SendBusinessClosureRejectedSMS;
 use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
 use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
+use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
+use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
 
 class SendSmsFired
 {
@@ -44,9 +49,9 @@ class SendSmsFired
      */
     public function handle(SendSms $event)
     {
-        if(config('app.env') == 'local'){
-            return true;
-        }
+        // if(config('app.env') == 'local'){
+        //     return true;
+        // }
         if ($event->service == 'otp') {
             $token = UserOtp::find($event->tokenId);
             SendOTPSMS::dispatch($token->code, $token->user->fullname(), $token->user->phone);
@@ -71,27 +76,41 @@ class SendSmsFired
 			$taxpayer = Taxpayer::find($event->tokenId);
 			SendTaxAgentApprovalSMS::dispatch($taxpayer);
 		} else if ($event->service === 'business-closure-approval'){
-            // Token ID is $businessId
-            $business = Business::find($event->tokenId);
-            SendBusinessClosureApprovedSMS::dispatch($business, $business->taxpayer);
+            // Token ID is closure data
+            $closure = $event->tokenId;
+            SendBusinessClosureApprovedSMS::dispatch($closure);
         } else if ($event->service === 'business-closure-correction'){
-            // Token ID is $businessId
-            $business = Business::find($event->tokenId);
-            SendBusinessClosureCorrectionSMS::dispatch($business, $business->taxpayer);
+            // Token ID is $closure
+            $closure = $event->tokenId;
+            SendBusinessClosureCorrectionSMS::dispatch($closure);
+        } else if ($event->service === 'business-closure-rejected'){
+            // Token ID is $closure
+            $closure = $event->tokenId;
+            SendBusinessClosureRejectedSMS::dispatch($closure);
         } else if ($event->service === 'business-deregister-approval'){
-            // Token ID is $businessId
-            $business = Business::find($event->tokenId);
-            SendBusinessDeregisterApprovedSMS::dispatch($business, $business->taxpayer);
+            // Token ID is $deregister
+            $deregister = $event->tokenId;
+            SendBusinessDeregisterApprovedSMS::dispatch($deregister);
         } else if ($event->service === 'business-deregister-correction'){
-            // Token ID is $businessId
-            $business = Business::find($event->tokenId);
-            SendBusinessDeregisterCorrectionSMS::dispatch($business, $business->taxpayer);
-        }else if ($event->service === 'change-tax-type-approval'){
+            // Token ID is $deregister
+            $deregister = $event->tokenId;
+            SendBusinessDeregisterCorrectionSMS::dispatch($deregister);
+        } else if ($event->service === 'business-deregister-rejected'){
+            // Token ID is $deregister
+            $deregister = $event->tokenId;
+            SendBusinessDeregisterRejectedSMS::dispatch($deregister);
+        } else if ($event->service === 'change-tax-type-approval'){
             // Token ID is payload data having all notification details
             SendTaxTypeSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'change-business-information'){
+        } else if ($event->service === 'change-business-information-approval'){
             // Token ID is payload data having all notification details
-            SendBusinessUpdateSMS::dispatch($event->tokenId);
+            SendBusinessUpdateApprovalSMS::dispatch($event->tokenId);
+        }else if ($event->service === 'change-business-information-correction'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateCorrectionSMS::dispatch($event->tokenId);
+        }else if ($event->service === 'change-business-information-rejected'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateRejectedSMS::dispatch($event->tokenId);
         } else if ($event->service === 'branch-approval'){
             // Token ID is payload data having all notification details
             SendBranchApprovalSMS::dispatch($event->tokenId);
@@ -100,6 +119,12 @@ class SendSmsFired
             SendBranchCorrectionSMS::dispatch($event->tokenId);
         }else if ($event->service === 'license-application-submitted'){
             SendFreshApplicationSubmittedSMS::dispatch($event->tokenId);
+        }else if ($event->service === 'debt-waiver-approval'){
+            SendDebtWaiverApprovalSMS::dispatch($event->tokenId);
+        }else if ($event->service === 'debt-waiver-rejected'){
+            SendDebtWaiverRejectedSMS::dispatch($event->tokenId);
+        }else if ($event->service === 'debt-balance'){
+            SendDebtBalanceSMS::dispatch($event->tokenId);
         }
     }
 }

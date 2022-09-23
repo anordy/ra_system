@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Mail\Business\Closure;
+namespace App\Mail\Business\Updates;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class BusinessClosureApproved extends Mailable
+class BusinessInformationRejected extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $closure;
+    public $payload;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($closure)
+    public function __construct($payload)
     {
-        $this->closure = $closure;
+        $this->payload = $payload;
     }
 
     /**
@@ -30,7 +30,6 @@ class BusinessClosureApproved extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.closure.approved')
-            ->subject("ZRB Temporary Business Closure - " . strtoupper($this->closure->business->name));
+        return $this->markdown('emails.business.updates.rejected')->subject("ZRB Change of Business Information - " . strtoupper($this->payload['business']->name));
     }
 }

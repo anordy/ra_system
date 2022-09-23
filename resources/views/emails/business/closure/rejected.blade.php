@@ -3,7 +3,7 @@
 
 Your ZRB temporary business closure for {{ $closure->business->name }} @if ($closure->location)
     , {{ $closure->location->name }}
-@endif requires corrections. 
+@endif has been rejected. 
 
 Login into your account to for more details.
 

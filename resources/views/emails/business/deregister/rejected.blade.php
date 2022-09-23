@@ -3,7 +3,7 @@
 
 Your ZRB business de-registration for {{ $deregister->business->name }} @if ($deregister->location)
     , {{ $deregister->location->name }}
-@endif requires corrections.
+@endif has been rejected.
 
 Login into your account to for more details.
 
