@@ -4,7 +4,6 @@ namespace App\Models\Extension;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
-use App\Models\Debts\Debt;
 use App\Models\Returns\TaxReturn;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,5 +31,9 @@ class ExtensionRequest extends Model
 
     public function location(){
         return $this->belongsTo(BusinessLocation::class, 'location_id');
+    }
+
+    public function files(){
+        return $this->hasMany(ExtensionRequestFile::class);
     }
 }

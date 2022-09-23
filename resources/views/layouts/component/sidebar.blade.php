@@ -137,8 +137,8 @@
                             <a href="{{ route('returns.vat-return.index') }}">VAT Tax Returns</a>
                         </li>
                     @endcan
-                    @can('return-airport-return-view') 
-                       <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
+                    @can('return-airport-return-view')
+                        <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
                             <a href="{{ route('returns.airport.index') }}">AirPort Tax Returns</a>
                         </li>
                     @endcan
@@ -570,6 +570,14 @@
                         <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
                             <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
+                        @can('managerial-claim-report-view')
+                            <li class="{{ request()->is('reports/claims*') ? 'active' : '' }}">
+                                <a href="{{ route('reports.claims.init') }}">Claim Reports</a>
+                            </li>
+                        @endcan
+                        <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.debts') }}">Debt Reports</a>
+                        </li>
                     @endcan
 
                 </ul>
@@ -660,6 +668,11 @@
                     @can('setting-exchange-rate-view')
                         <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
                             <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
+                        </li>
+                    @endcan
+                    @can('setting-interest-rate-view')
+                        <li class="{{ request()->is('settings/interest-rates*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.interest-rates.index') }}">Interest Rate</a>
                         </li>
                     @endcan
                     @can('setting-education-level-view')

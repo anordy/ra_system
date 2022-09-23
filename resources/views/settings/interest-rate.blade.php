@@ -9,10 +9,12 @@
         <div class="card-header">
             <h5 class="text-uppercase">Interest Rates</h5>
             <div class="card-tools">
-                <button class="btn btn-info btn-sm"
-                onclick="Livewire.emit('showModal', 'settings.interest-rate.interest-rate-add-modal')"><i
-                    class="fa fa-plus-circle"></i>
-                Add</button>
+                @can('setting-interest-rate-add')
+                    <button class="btn btn-info btn-sm"
+                    onclick="Livewire.emit('showModal', 'settings.interest-rate.interest-rate-add-modal')"><i
+                        class="fa fa-plus-circle"></i>
+                </button>
+                @endcan
             </div>
         </div>
 

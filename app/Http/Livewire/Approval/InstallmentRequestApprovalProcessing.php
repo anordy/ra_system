@@ -8,6 +8,7 @@ use App\Enum\InstallmentRequestStatus;
 use App\Enum\InstallmentStatus;
 use App\Enum\PaymentMethod;
 use App\Models\Installment\Installment;
+use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxType;
 use App\Traits\PaymentsTrait;
@@ -72,7 +73,7 @@ class InstallmentRequestApprovalProcessing extends Component
                 $this->subject->status = InstallmentRequestStatus::APPROVED;
                 $taxReturn = TaxReturn::findOrFail($this->subject->tax_return_id);
 
-                // Update debt details
+                // Update tax return details
                 $taxReturn->update([
                     'curr_payment_due_date' => $this->subject->installment_to,
                     'payment_method' => PaymentMethod::INSTALLMENT,

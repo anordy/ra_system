@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Audit;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -58,9 +59,13 @@ class AuditLogTable extends DataTableComponent
                 ->searchable()
                 ->format(fn($value, $row, Column $column) => Carbon::create($row->created_at)->diffForHumans()),
             Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'audit-view-modal',$value)"><i class="fa fa-eye"></i> </button>
-                HTML)
+                ->format(function ($value){ 
+                    if(Gate::allows('system-audit-trail-view')) {
+                        return <<< HTML
+                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'audit-view-modal',$value)"><i class="fa fa-eye"></i> </button>
+                        HTML;
+                    }
+                })
                 ->html(true)
         ];
     }

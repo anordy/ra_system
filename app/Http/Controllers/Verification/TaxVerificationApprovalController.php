@@ -19,7 +19,10 @@ class TaxVerificationApprovalController extends Controller
 {
     public function index()
     {
-        return view('verification.approval.index');
+        $paidAproval     = 'verification.verification-approval-table';
+        $unPaidAproval   = 'verification.verification-unpaid-approval-table';
+
+        return view('verification.approval.index', compact('paidAproval', 'unPaidAproval'));
     }
 
     public function edit($id)
@@ -62,8 +65,8 @@ class TaxVerificationApprovalController extends Controller
         } elseif ($return instanceof PortReturn) {
             $viewRender = 'returns.port.details';
 
-           return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
-        }elseif ($return instanceof MnoReturn) {
+            return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
+        } elseif ($return instanceof MnoReturn) {
             $viewRender = 'returns.excise-duty.mno.details';
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
@@ -103,11 +106,10 @@ class TaxVerificationApprovalController extends Controller
             $viewRender = 'returns.port.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
-        }elseif ($return instanceof MnoReturn) {
+        } elseif ($return instanceof MnoReturn) {
             $viewRender = 'returns.excise-duty.mno.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
         }
-
     }
 }

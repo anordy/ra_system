@@ -418,4 +418,111 @@ trait PaymentsTrait {
 
         }
     }
+
+    public function generateAssessmentDebtControlNo($debt)
+    {
+        $taxTypes = TaxType::all();
+
+        $tax_type = TaxType::findOrFail($debt->tax_type_id);
+
+        if ($debt->principal_amount > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->principal_amount,
+                'currency' => $debt->currency,
+                'gfs_code' => $tax_type->gfs_code,
+                'tax_type_id' => $tax_type->id
+            ];
+        }
+
+        if ($debt->penalty_amount > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->penalty_amount,
+                'currency' => $debt->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->first()->id
+            ];
+        }
+
+
+        if ($debt->interest_amount > 0) {
+            $billItems[] = [
+                'billable_id' => $debt->id,
+                'billable_type' => get_class($debt),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $debt->interest_amount,
+                'currency' => $debt->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
+            ];
+        }
+ 
+
+        $taxpayer = $debt->business->taxpayer;
+
+        $payer_type = get_class($taxpayer);
+        $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+        $payer_email = $taxpayer->email;
+        $payer_phone = $taxpayer->mobile;
+        $description = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
+        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $currency = $debt->currency;
+        $createdby_type = 'Job';
+        $createdby_id = null;
+        $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
+        $payer_id = $taxpayer->id;
+        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+        $billableId = $debt->id;
+        $billableType = get_class($debt);
+
+        $zmBill = ZmCore::createBill(
+            $billableId,
+            $billableType,
+            $debt->tax_type_id,
+            $payer_id,
+            $payer_type,
+            $payer_name,
+            $payer_email,
+            $payer_phone,
+            $expire_date,
+            $description,
+            $payment_option,
+            $currency,
+            $exchange_rate,
+            $createdby_id,
+            $createdby_type,
+            $billItems
+        );
+
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                $debt->payment_status = ReturnStatus::CN_GENERATING;
+
+                $debt->save();
+            } else {
+                $debt->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+            }
+
+            $debt->save();
+        } else {
+
+            // We are local
+            $debt->payment_status = ReturnStatus::CN_GENERATED;
+
+            $debt->save();
+
+            // Simulate successful control no generation
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
+            $zmBill->save();
+
+        }
+    }
 }

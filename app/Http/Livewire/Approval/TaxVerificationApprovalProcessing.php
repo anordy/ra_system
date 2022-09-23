@@ -152,7 +152,11 @@ class TaxVerificationApprovalProcessing extends Component
                         'principal_amount' => $this->principalAmount,
                         'interest_amount' => $this->interestAmount,
                         'penalty_amount' => $this->penaltyAmount,
-                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
+                        'original_principal_amount' => $this->principalAmount,
+                        'original_interest_amount' => $this->interestAmount,
+                        'original_penalty_amount' => $this->penaltyAmount,
+                        'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
                     ]);
                 } else {
 
@@ -166,7 +170,11 @@ class TaxVerificationApprovalProcessing extends Component
                         'interest_amount' => $this->interestAmount,
                         'penalty_amount' => $this->penaltyAmount,
                         'outstanding_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
-                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                        'total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount,
+                        'original_principal_amount' => $this->principalAmount,
+                        'original_interest_amount' => $this->interestAmount,
+                        'original_penalty_amount' => $this->penaltyAmount,
+                        'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
                     ]);
                 }
             } else {
@@ -197,6 +205,7 @@ class TaxVerificationApprovalProcessing extends Component
             $this->generateControlNumber();
             $this->subject->assessment->update([
                 'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
             ]);
         } else {
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());

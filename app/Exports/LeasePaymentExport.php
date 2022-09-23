@@ -20,14 +20,16 @@ class LeasePaymentExport implements FromView, WithEvents,ShouldAutoSize
     public $endDate;
     public $status;
     public $date_type;
+    public $taxpayer_id;
 
     //constructor to pass the start and end date
-    public function __construct($startDate, $endDate, $status, $date_type)
+    public function __construct($startDate, $endDate, $status, $date_type, $taxpayer_id)
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->status = $status;
         $this->date_type = $date_type;
+        $this->taxpayer_id = $taxpayer_id;
     }
 
     /**
@@ -81,17 +83,17 @@ class LeasePaymentExport implements FromView, WithEvents,ShouldAutoSize
                 // dd($this->date_type);
                 $leasePayments = LeasePayment::query()->with('taxpayer', 'landLease.region', 'landLease.district', 'landLease.ward')->whereBetween("lease_payments.{$this->date_type}", [$this->startDate, $this->endDate]);
             }
-
-            // $leasePayments = LeasePayment::query()->with('taxpayer', 'landLease.region', 'landLease.district', 'landLease.ward')->whereBetween('lease_payments.created_at', [$this->startDate, $this->endDate]);
         }
 
         if ($this->status) {
-            $leasePayments = clone $leasePayments->where('status', $this->status);
+            $leasePayments = clone $leasePayments->where('lease_payments.status', $this->status);
+        }
+
+        if ($this->taxpayer_id) {
+            $leasePayments = clone $leasePayments->where('lease_payments.taxpayer_id', $this->taxpayer_id);
         }
 
         $leasePayments = clone $leasePayments->get();
-
-        // dd($leasePayments);
 
         $startDate = date('d/m/Y', strtotime($this->startDate));
         $endDate = date('d/m/Y', strtotime($this->endDate));
