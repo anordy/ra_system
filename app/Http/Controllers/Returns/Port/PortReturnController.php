@@ -4,14 +4,10 @@ namespace App\Http\Controllers\Returns\Port;
 
 use App\Http\Controllers\Controller;
 use App\Models\Returns\Port\PortReturn;
-use App\Traits\PortReturnCardReport;
-use App\Traits\ReturnSummaryCardTrait;
 use Illuminate\Support\Facades\Gate;
 
 class PortReturnController extends Controller
 {
-    use PortReturnCardReport, ReturnSummaryCardTrait;
-
     public function airport()
     {
         if (!Gate::allows('return-airport-return-view')) {

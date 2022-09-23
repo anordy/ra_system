@@ -3,7 +3,6 @@
 namespace App\Jobs\Business;
 
 use App\Http\Controllers\v1\SMSController;
-use App\Models\Business;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,15 +14,15 @@ class SendBusinessDeregisterCorrectionSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business;
+    private $deregister;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business)
+    public function __construct($deregister)
     {
-        $this->business = $business;
+        $this->deregister = $deregister;
     }
 
     /**
@@ -34,9 +33,15 @@ class SendBusinessDeregisterCorrectionSMS implements ShouldQueue
     public function handle()
     {
         $sms_controller = new SMSController;
-        $send_to = $this->business->taxpayer->mobile;
+        $send_to = $this->deregister->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your ZRB business registration for ". strtoupper($this->business->name) ." requires additional corrections. Please login into your account for more details.";
+
+        $customer_message = "Your ZRB business registration for {$this->deregister->business->name} requires additional corrections. Please login into your account for more details.";
+
+        if ($this->deregister->location) {
+            $customer_message = "Your ZRB business registration for {$this->deregister->business->name}, {$this->deregister->location->name} requires additional corrections. Please login into your account for more details.";
+        }
+
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

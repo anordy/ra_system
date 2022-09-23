@@ -1,7 +1,9 @@
 @component('mail::message')
-# Hello {{ $business->taxpayer->first_name }},
+# Hello {{ $deregister->business->taxpayer->first_name }},
 
-Your ZRB business de-registration for {{ $business->name }} has been approved.
+Your ZRB business de-registration for {{ $deregister->business->name }} @if ($deregister->location)
+    , {{ $deregister->location->name }}
+@endif has been approved.
 
 Thanks,<br>
 {{ config('app.name') }}

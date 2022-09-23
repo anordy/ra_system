@@ -74,7 +74,9 @@ use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Claims\ClaimReportController;
 use App\Http\Controllers\Reports\Debts\DebtReportController;
+use App\Http\Controllers\Reports\Dispute\DisputeReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -160,6 +162,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
+        Route::resource('/interest-rates', InterestRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
         Route::get('financial-months', [FinancialMonthsController::class, 'index'])->name('financial-months');
@@ -183,7 +186,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
     Route::name('returns.')->prefix('returns')->group(function () {
-        Route::resource('/interest-rates', InterestRateController::class);
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
 
         Route::name('returns.')->prefix('returns')->group(function () {
@@ -405,6 +407,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/disputes', [DisputeReportController::class, 'index'])->name('disputes');
         Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
         Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
+
+        //Claim Report
+        Route::get('/claims', [ClaimReportController::class, 'init'])->name('claims.init');
+        Route::get('/claims/preview/{parameters}', [ClaimReportController::class, 'preview'])->name('claims.preview');
+        Route::get('/claims/download-report-pdf/{data}', [ClaimReportController::class, 'exportClaimReportPdf'])->name('claim.download.pdf');
 
         // Debt Reports
         Route::get('/debts', [DebtReportController::class, 'index'])->name('debts');

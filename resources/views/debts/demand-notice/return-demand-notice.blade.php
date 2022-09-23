@@ -231,7 +231,7 @@
 
             <div class="body-section">
                 <p>
-                    Payment of the amount owing should be made within 30 working days, failure of which recovery
+                    Payment of the amount owing should be made within {{ $paid_within_days }} working days, failure of which recovery
                     proceeding
                     will be instated upon you without further notice. If you disagree with the above figure(s) you are
                     advised to contact the under signed officer immediately for reconciliation..

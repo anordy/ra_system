@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Country;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -30,6 +31,10 @@ class CountryAddModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-country-add')) {
+            abort(403);
+        }
+
         $this->validate();
         try{
             Country::create([

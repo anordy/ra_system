@@ -18,6 +18,10 @@
                 @livewire('reports.debts.previews.return-debt-report-preview-table', ['parameters' => $parameters])
             @elseif ($parameters['report_type'] === 'Assessments')
                 @livewire('reports.debts.previews.assessment-debt-report-preview-table', ['parameters' => $parameters])
+            @elseif ($parameters['report_type'] === 'Waiver')
+                @livewire('reports.debts.previews.debt-waiver-report-preview-table', ['parameters' => $parameters])
+            @elseif ($parameters['report_type'] === 'Demand-Notice')
+                @livewire('reports.debts.previews.demand-notice-report-preview-table', ['parameters' => $parameters])
             @endif
         </div>
     </div>

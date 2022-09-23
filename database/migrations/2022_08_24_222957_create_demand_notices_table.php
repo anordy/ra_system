@@ -17,7 +17,7 @@ class CreateDemandNoticesTable extends Migration
         Schema::create('demand_notices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('debt_id');
-            $table->unsignedBigInteger('debt_type');
+            $table->string('debt_type');
             $table->enum('sent_by', ['job', 'user']);
             $table->integer('paid_within_days');
             $table->dateTime('next_notify_date')->nullable();

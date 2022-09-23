@@ -4,8 +4,10 @@ namespace App\Http\Livewire\Approval;
 
 use Exception;
 use Carbon\Carbon;
+use App\Events\SendSms;
 use App\Models\TaxType;
 use Livewire\Component;
+use App\Events\SendMail;
 use App\Models\WaiverStatus;
 use App\Jobs\Bill\CancelBill;
 use App\Traits\PaymentsTrait;
@@ -93,7 +95,9 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 try {
                     $this->debt_waiver->update([
                         'penalty_rate' => $this->penaltyPercent ?? 0,
-                        'interest_rate' => $this->interestPercent ?? 0
+                        'interest_rate' => $this->interestPercent ?? 0,
+                        'penalty_amount' => $this->penaltyAmount ?? 0,
+                        'interest_amount' => $this->interestAmount ?? 0,
                     ]);
 
                     $this->debt->update([
@@ -114,6 +118,13 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                     } else {
                         GenerateAssessmentDebtControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                     }
+
+                    $notification_payload = [
+                        'debt' => $this->debt,
+                    ];
+    
+                    event(new SendSms('debt-waiver-approval', $notification_payload));
+                    event(new SendMail('debt-waiver-approval', $notification_payload));
     
                     DB::commit();
                 } catch (Exception $e) {
@@ -135,7 +146,9 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             try {
                 $this->debt_waiver->update([
                     'penalty_rate' => $this->penaltyPercent ?? 0,
-                    'interest_rate' => $this->interestPercent ?? 0
+                    'interest_rate' => $this->interestPercent ?? 0,
+                    'penalty_amount' => $this->penaltyAmount ?? 0,
+                    'interest_amount' => $this->interestAmount ?? 0,
                 ]);
 
                 $this->debt->update([
@@ -156,6 +169,13 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 } else {
                     GenerateAssessmentDebtControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                 }
+
+                $notification_payload = [
+                    'debt' => $this->debt,
+                ];
+
+                event(new SendSms('debt-waiver-approval', $notification_payload));
+                event(new SendMail('debt-waiver-approval', $notification_payload));
 
                 DB::commit();
             } catch (Exception $e) {
@@ -195,6 +215,13 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
+
+                $notification_payload = [
+                    'debt' => $this->debt,
+                ];
+
+                event(new SendSms('debt-waiver-rejected', $notification_payload));
+                event(new SendMail('debt-waiver-rejected', $notification_payload));
             }
 
             if ($this->checkTransition('commisioner_reject')) {
@@ -204,6 +231,13 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
+
+                $notification_payload = [
+                    'debt' => $this->debt,
+                ];
+
+                event(new SendSms('debt-waiver-rejected', $notification_payload));
+                event(new SendMail('debt-waiver-rejected', $notification_payload));
             }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);

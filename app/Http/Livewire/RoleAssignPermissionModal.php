@@ -9,6 +9,7 @@ use Livewire\Component;
 use App\Models\SysModule;
 use App\Models\Permission;
 use App\Traits\AuditTrait;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -32,6 +33,10 @@ class RoleAssignPermissionModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-role-assign-permission')) {
+            abort(403);
+        }
+
         try {
             if (isset($this->selectedPermissions)) {
                 $this->role->refreshPermissions($this->selectedPermissions);

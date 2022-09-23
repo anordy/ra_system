@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\EducationLevel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -21,6 +22,10 @@ class EducationLevelAddModal extends Component
     }
     public function submit()
     {
+        if (!Gate::allows('setting-education-level-add')) {
+            abort(403);
+        }
+
         $validate = $this->validate([
             'name'=>'required'
         ]);

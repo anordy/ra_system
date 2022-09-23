@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\ISIC1;
 use App\Models\ISIC2;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -36,6 +37,10 @@ class ISIC2AddModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-isic-level-two-add')) {
+            abort(403);
+        }
+
         $this->validate();
         try{
             ISIC2::create([
