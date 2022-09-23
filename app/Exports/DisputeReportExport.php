@@ -68,3 +68,5 @@ class DisputeReportExport implements FromView, WithEvents, ShouldAutoSize
         return view('exports.disputes.reports.excel.dispute', compact('records', 'title', 'parameters'));
     }
 }
+
+//
