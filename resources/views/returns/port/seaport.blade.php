@@ -3,8 +3,8 @@
 @section('title', 'Seaport Return')
 
 @section('content')
-    <livewire:returns.port.port-card-one />
-    <livewire:returns.port.port-card-two />
+    <livewire:returns.port.sea-port-card-one />
+    <livewire:returns.port.sea-port-card-two />
 
     <div class="card mt-3 rounded-0">
         <div class="card-header text-uppercase font-weight-bold bg-white">

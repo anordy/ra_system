@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Validators\ValidationException;
 
@@ -26,6 +27,9 @@ class ISIC1ImportModal extends Component
     }
 
     public function submit(){
+        if (!Gate::allows('setting-isic-level-one-add')) {
+            abort(403);
+        }
         $this->validate();
         try{
             $import = new ISIC1Import;

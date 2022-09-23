@@ -48,11 +48,15 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Application Status</span>
-                            <p class="my-1">{{ $return->getApplicationStatus() }}</p>
+                            <p class="my-1">{{ $return->application_status }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Payment Status</span>
-                            <p class="my-1">{{ $return->getPaymentStatus() }}</p>
+                            <p class="my-1">{{ $return->status }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Return Category</span>
+                            <p class="my-1"><span class="badge badge-info">{{ $return->return_category }}</span></p>
                         </div>
                     </div>
                     <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>

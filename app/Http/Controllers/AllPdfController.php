@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class AllPdfController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('system-all-pdfs-view')) {
+            abort(403);
+        }
+
         return view('layouts.all-pdf.index');
     }
 
@@ -24,9 +29,9 @@ class AllPdfController extends Controller
 
             case 'third-party-payment':
                 $pdf = PDF::loadView('layouts.all-pdf.third-party-payment');
-              
+
                 break;
-                
+
             case 'distress-warant':
                 $pdf = PDF::loadView('layouts.all-pdf.distress-warant');
 
@@ -70,7 +75,7 @@ class AllPdfController extends Controller
 
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-        
+
         return $pdf->stream();
     }
 }

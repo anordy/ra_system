@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\Models\Bank;
 use App\Models\EducationLevel;
+use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -31,6 +33,10 @@ class EducationLevelEditModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-education-level-edit')) {
+            abort(403);
+        }
+
         $this->validate();
         try {
             $this->level->update([

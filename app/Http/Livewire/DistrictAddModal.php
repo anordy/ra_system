@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\District;
 use App\Models\Region;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -35,6 +36,10 @@ class DistrictAddModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-district-add')) {
+            abort(403);
+        }
+
         $this->validate();
         try {
             District::create([

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Workflow;
 
 use App\Models\Workflow;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -52,9 +53,11 @@ class WorkflowConfigTable extends DataTableComponent
             Column::make('Action', 'id')
                 ->format(function ($value) {
                     $url = route('system.workflow.show', encrypt($value));
-                    return <<< HTML
+                    if(Gate::allows('system-workflow-configure')) {
+                        return <<< HTML
                             <a class="btn btn-success rounded btn-sm" href="{$url}" ><i class="bi bi-gear-wide-connected"></i>Configure </a>
                         HTML;
+                    }
                 })->html()
         ];
     }

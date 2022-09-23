@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="card rounded-0">
-        <div class="card-header bg-white font-weight-bold">
+        <div class="card-header bg-white font-weight-bold text-uppercase">
             Debt Details
         </div>
         <div class="card-body">
@@ -46,16 +46,21 @@
                             <span class="font-weight-bold text-uppercase">Status</span>
                             <p class="my-1 text-uppercase">{{ $installment->status }}</p>
                         </div>
-                        @if($installment->attachment)
-                            <div class="col-md-4 mb-3">
-                                <a class="file-item" target="_blank"
-                                   href="{{ route('installment.requests.file', encrypt($installment->attachment)) }}">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
-                                        <span class="font-weight-bold text-uppercase">Attachment</span>
-                                    </div>
-                                </a>
+                        @if($installment->files->count())
+                            <div class="col-md-12 mb-2">
+                                <span class="font-weight-bold text-uppercase">Attachments</span>
                             </div>
+                            @foreach($installment->files as $file)
+                                <div class="col-md-3 mb-3">
+                                    <a class="file-item" target="_blank"
+                                       href="{{ route('installment.requests.file', encrypt($file->location)) }}">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                        <div style="font-weight: 500;" class="ml-1">
+                                            <span class="font-weight-bold text-uppercase">{{ $file->name }}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endforeach
                         @endif
                     </div>
                 </div>

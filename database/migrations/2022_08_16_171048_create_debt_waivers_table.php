@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\WaiverStatus;
-use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -18,12 +17,15 @@ class CreateDebtWaiversTable extends Migration
         Schema::create('debt_waivers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('filed_by_id');
-            $table->unsignedBigInteger('tax_return_id');
+            $table->unsignedBigInteger('debt_id');
+            $table->string('debt_type');
             $table->enum('category', ['penalty', 'interest', 'both']);
             $table->text('ground')->nullable();
             $table->text('reason')->nullable();
             $table->float('penalty_rate')->nullable();
             $table->float('interest_rate')->nullable();
+            $table->float('penalty_amount')->nullable();
+            $table->float('interest_amount')->nullable();
             $table->string('waiver_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
