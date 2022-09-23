@@ -18,12 +18,14 @@ class LandLeaseExport implements FromView, WithEvents,ShouldAutoSize
 {
     public $startDate;
     public $endDate;
+    public $taxpayer_id;
 
     //constructor to pass the start and end date
-    public function __construct($startDate, $endDate)
+    public function __construct($startDate, $endDate, $taxpayer_id)
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->taxpayer_id = $taxpayer_id;
     }
 
     /**
@@ -58,10 +60,13 @@ class LandLeaseExport implements FromView, WithEvents,ShouldAutoSize
         } else {
             $landLeases = LandLease::query()->with('taxpayer', 'region', 'district', 'ward')->whereBetween('land_leases.created_at', [$this->startDate, $this->endDate])->get();
         }
+
+        if ($this->taxpayer_id) {
+            $landLeases = clone $landLeases->where('taxpayer_id', $this->taxpayer_id);
+        }
+
         $startDate = date('d/m/Y', strtotime($this->startDate));
         $endDate = date('d/m/Y', strtotime($this->endDate));
-        // $startDate = $this->startDate;
-        // $endDate = $this->endDate;
         return view('exports.land-lease.excel.land-lease-report',compact('landLeases','startDate','endDate'));
     }
 }

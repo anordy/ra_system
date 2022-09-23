@@ -22,6 +22,7 @@ class LeasePaymentReportTable extends DataTableComponent
     public $dates = [];
     public $status;
     public $date_type;
+    public $taxpayer_id;
 
     protected $listeners = ['refreshTable' => 'refreshTable', 'test'];
 
@@ -30,6 +31,7 @@ class LeasePaymentReportTable extends DataTableComponent
         $dates = $this->dates;
         $status = $this->status;
         $date_type = $this->date_type;
+        $taxpayer_id = $this->taxpayer_id;
 
         if ($dates == []) {
             $model = LeasePayment::query();
@@ -60,6 +62,10 @@ class LeasePaymentReportTable extends DataTableComponent
             $model = clone $model->where('lease_payments.status', $status);
         }
 
+        if ($taxpayer_id) {
+            $model = clone $model->where('lease_payments.taxpayer_id', $taxpayer_id);
+        }
+
         return $model->orderBy('lease_payments.created_at', 'asc');
     }
 
@@ -67,6 +73,7 @@ class LeasePaymentReportTable extends DataTableComponent
     {
         $this->dates = $parameter['dates'];
         $this->status = $parameter['status'];
+        $this->taxpayer_id = $parameter['taxpayer_id'];
         $this->date_type = $parameter['date_type'];
         $this->builder();
     }
