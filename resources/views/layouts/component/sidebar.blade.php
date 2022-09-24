@@ -567,7 +567,7 @@
                         <li class="{{ request()->is('reports/disputes*') ? 'active' : '' }}">
                             <a href="{{ route('reports.disputes') }}">Dispute Reports</a>
                         </li>
-                        <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('reports/business*') ? 'active' : '' }}">
                             <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
                         @can('managerial-claim-report-view')
