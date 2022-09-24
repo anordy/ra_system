@@ -31,28 +31,16 @@
                 <strong>Tax Type</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Currency</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Principal Amount</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Interest Amount</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Penalty Amount</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Total Amount</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Outstanding Amount</strong>
-            </th>
-            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Payment Due Date</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>Status</strong>
+                <strong>Paid Within (Days)</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Sent On</strong>
+            </th>
+            <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                <strong>Next Notice Date</strong>
             </th>
         </tr>
     </thead>
@@ -63,37 +51,25 @@
                     {{ $index + 1 }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->business->name ?? '-' }}
+                    {{ $record->debt->business->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->location->name ?? '-' }}
+                    {{ $record->debt->location->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->taxType->name ?? '-' }}
+                    {{ $record->debt->taxType->name ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->currency ?? '-' }}
+                    {{ $record->debt->curr_payment_due_date }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->principal===null?'-':number_format($record->principal, 2) }}
+                    {{ $record->paid_within_days ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->interest===null?'-':number_format($record->interest, 2) }}
+                    {{ $record->sent_on ?? '-' }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->penalty===null?'-':number_format($record->penalty, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->total_amount===null?'-':number_format($record->total_amount, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{$record->outstanding_amount===null?'-':number_format($record->outstanding_amount, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->payment_due_date==null?'-':date('M, d Y', strtotime($record->payment_due_date)) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->application_status }}
+                    {{ $record->next_notify_date ?? '-' }}
                 </td>
             </tr>
         @endforeach

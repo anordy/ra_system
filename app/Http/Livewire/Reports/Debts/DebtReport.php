@@ -99,7 +99,7 @@ class DebtReport extends Component
             return Excel::download(new DebtReturnReportExport($records, $title, $parameters), $fileName);
         } else if ($parameters['report_type'] == 'Waiver') {
             return Excel::download(new DebtWaiverReportExport($records, $title, $parameters), $fileName);
-        }else if ($parameters['report_type'] == 'Demand Notice') {
+        }else if ($parameters['report_type'] == 'Demand-Notice') {
             return Excel::download(new DemandNoticeReportExport($records, $title, $parameters), $fileName);
         }
     }

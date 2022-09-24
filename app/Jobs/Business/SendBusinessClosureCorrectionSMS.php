@@ -15,15 +15,15 @@ class SendBusinessClosureCorrectionSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business;
+    private $closure;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business)
+    public function __construct($closure)
     {
-        $this->business = $business;
+        $this->closure = $closure;
     }
 
     /**
@@ -34,9 +34,14 @@ class SendBusinessClosureCorrectionSMS implements ShouldQueue
     public function handle()
     {
         $sms_controller = new SMSController;
-        $send_to = $this->business->taxpayer->mobile;
+        $send_to = $this->closure->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your ZRB business registration for ". strtoupper($this->business->name) ." requires additional corrections. Please login into your account for more details.";
+        $customer_message = "Your ZRB business closure for {$this->closure->business->name} requires additional corrections. Please login into your account for more details.";
+
+        if ($this->closure->location) {
+            $customer_message = "Your ZRB business closure for {$this->closure->business->name}, {$this->closure->location->name} requires additional corrections. Please login into your account for more details.";
+        }
+
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

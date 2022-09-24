@@ -39,9 +39,7 @@ class DebtDemandNotice extends Mailable
     public function build()
     {
         $debt = $this->payload['debt'];
-        // dd(get_class($debt));
 
-        DB::beginTransaction();
         try {
             DemandNotice::create([
                 'debt_id' => $this->payload['debt']->id,
@@ -57,8 +55,9 @@ class DebtDemandNotice extends Mailable
             $paid_within_days = $this->payload['paid_within_days'];
     
             if (get_class($debt) === TaxReturn::class) {
-                $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('debt', 'now', 'paid_within_days'));
-                    
+                $tax_return = $this->payload['debt'];
+                $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('tax_return', 'now', 'paid_within_days'));
+
                 $pdf->setPaper('a4', 'portrait');
                 $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         
@@ -75,10 +74,8 @@ class DebtDemandNotice extends Mailable
                 $email->attachData($pdf->output(), "{$this->payload['debt']->business->name}_demand_notice.pdf");
                 return $email;
             }
-            DB::commit();
         } catch (Exception $e) {
             Log::error($e);
-            DB::rollBack();
         }
 
     }

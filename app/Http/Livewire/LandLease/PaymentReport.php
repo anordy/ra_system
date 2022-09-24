@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\LandLease;
 use App\Models\LeasePayment;
+use App\Models\Taxpayer;
 use App\Traits\LeasePaymentReportTrait;
 use Illuminate\Support\Facades\Gate;
 
@@ -24,6 +25,7 @@ class PaymentReport extends Component
     public $semiAnnual;
     public $status;
     public $date_type = "created_at";
+    public $taxpayer_id;
 
     //select options
     public $optionYears;
@@ -31,6 +33,7 @@ class PaymentReport extends Component
     public $optionMonths;
     public $optionQuarters;
     public $optionSemiAnnuals;
+    public $taxpayers;
 
     //hide/show elements
     public $showOptions;
@@ -74,11 +77,12 @@ class PaymentReport extends Component
         $this->showQuarters = false;
         $this->showSemiAnnuals = false;
 
+        $this->taxpayers = Taxpayer::has('leasePayments')->select('id', 'reference_no', 'first_name', 'middle_name', 'last_name', 'email', 'mobile')->get();
+
         $this->emitTo('land-lease.lease-payment-report-table', 'refreshTable',  $this->getParameters());
     }
 
     public function preview(){
-        // dd($this->getStartEndDate());
       $this->emitTo('land-lease.lease-payment-report-table', 'refreshTable',  $this->getParameters());
     }
 
@@ -95,10 +99,12 @@ class PaymentReport extends Component
             if ($this->status) {
                 $exists = LeasePayment::where('lease_payments.status', $this->status)->exists();
             }
+            if ($this->taxpayer_id) {
+                $exists = LeasePayment::where('lease_payments.taxpayer_id', $this->taxpayer_id)->exists();
+            }
             if($exists){
                 $this->alert('success', 'Downloading file');
-                // dd($this->date_type);
-                return Excel::download(new LeasePaymentExport($dates['startDate'], $dates['endDate'], $this->status, $this->date_type), 'Land Leases Payment All Records.xlsx');
+                return Excel::download(new LeasePaymentExport($dates['startDate'], $dates['endDate'], $this->status, $this->date_type, $this->taxpayer_id), 'Land Leases Payment All Records.xlsx');
             }else{
                 $this->alert('error', "No data found.");
             } 
@@ -129,11 +135,14 @@ class PaymentReport extends Component
             $leasePayment = clone $leasePayment->where('lease_payments.status', $this->status);
         }
 
-        $exists = $leasePayment->exists();
+        if ($this->taxpayer_id) {
+            $leasePayment =clone $leasePayment->where('lease_payments.taxpayer_id', $this->taxpayer_id);
+        }
 
+        $exists = $leasePayment->exists();
         if ($exists) {
             $this->alert('success', 'Downloading file');
-            return Excel::download(new LeasePaymentExport($dates['startDate'], $dates['endDate'], $this->status, $this->date_type), 'Land Leases Payment FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
+            return Excel::download(new LeasePaymentExport($dates['startDate'], $dates['endDate'], $this->status, $this->date_type, $this->taxpayer_id), 'Land Leases Payment FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
         } else {
             $this->alert('error', "No data found for the selected period.");
         }
@@ -149,10 +158,17 @@ class PaymentReport extends Component
         if($dates['startDate'] == null || $dates['endDate'] == null) {
             
             $exists = LeasePayment::exists();
+            
             if ($this->status) {
-                $exists = LeasePayment::where('lease_payments.status', $this->status)->exists();
+                $query =LeasePayment::where('lease_payments.status', $this->status);
+            }
+
+            if ($this->taxpayer_id) {
+                $query = clone $query->where('lease_payments.taxpayer_id', $this->taxpayer_id);
             }
             
+            $exists = $query->exists();
+
             if($exists){
                 $this->alert('success', 'Exporting Pdf File');
                 return redirect()->route('land-lease.payment.download.report.pdf', encrypt(json_encode($this->getParameters())));
@@ -182,6 +198,10 @@ class PaymentReport extends Component
         
         if ($this->status) {
             $leasePayment = clone $leasePayment->where('lease_payments.status', $this->status);
+        }
+
+        if ($this->taxpayer_id) {
+            $leasePayment = clone $leasePayment->where('lease_payments.taxpayer_id', $this->taxpayer_id);
         }
 
         $exists = $leasePayment->exists();
@@ -231,6 +251,7 @@ class PaymentReport extends Component
         return [
             'date_type' => $this->date_type,
             'status' => $this->status,
+            'taxpayer_id' => $this->taxpayer_id,
             'dates' => $this->getStartEndDate(),
         ];
     }
@@ -247,7 +268,7 @@ class PaymentReport extends Component
                 'startDate' => date('Y-m-d', strtotime($this->range_start)),
                 'endDate' => date('Y-m-d', strtotime($this->range_end)),
                 'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
-                'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+                'to' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
             ];
 
         } elseif ($this->showMonths) {
