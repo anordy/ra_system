@@ -137,8 +137,8 @@
                             <a href="{{ route('returns.vat-return.index') }}">VAT Tax Returns</a>
                         </li>
                     @endcan
-                    @can('return-airport-return-view') 
-                       <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
+                    @can('return-airport-return-view')
+                        <li class="{{ request()->is('e-filing/airport*') ? 'active' : '' }}">
                             <a href="{{ route('returns.airport.index') }}">AirPort Tax Returns</a>
                         </li>
                     @endcan
@@ -668,6 +668,11 @@
                     @can('setting-exchange-rate-view')
                         <li class="{{ request()->is('settings/exchange-rate*') ? 'active' : '' }}">
                             <a href="{{ route('settings.exchange-rate.index') }}">Exchange Rate</a>
+                        </li>
+                    @endcan
+                    @can('setting-interest-rate-view')
+                        <li class="{{ request()->is('settings/interest-rates*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.interest-rates.index') }}">Interest Rate</a>
                         </li>
                     @endcan
                     @can('setting-education-level-view')

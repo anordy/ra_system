@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class BusinessInformation extends Mailable
+class BusinessInformationCorrection extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,6 +30,6 @@ class BusinessInformation extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.updates.business-information')->subject("ZRB Change of Business Information - " . strtoupper($this->payload['business']->name));
+        return $this->markdown('emails.business.updates.correction')->subject("ZRB Change of Business Information - " . strtoupper($this->payload['business']->name));
     }
 }

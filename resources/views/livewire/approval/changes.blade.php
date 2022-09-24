@@ -41,7 +41,7 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
-                    Confirm
+                    Approve & Complete
                 </button>
             </div>
         @endif

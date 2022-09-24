@@ -21,7 +21,7 @@ trait DebtReportTrait
             $model = TaxAssessment::query();
         }else if ($parameters['report_type'] == 'Installment') {
             $model = Installment::query();
-        }else if ($parameters['report_type'] == 'Demand Notice') {
+        }else if ($parameters['report_type'] == 'Demand-Notice') {
             $model = DemandNotice::query();
         }else if ($parameters['report_type'] == 'Returns') {
             $model = TaxReturn::query()->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE]);

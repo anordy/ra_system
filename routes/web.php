@@ -162,6 +162,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
+        Route::resource('/interest-rates', InterestRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
         Route::get('financial-months', [FinancialMonthsController::class, 'index'])->name('financial-months');
@@ -185,7 +186,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
     Route::name('returns.')->prefix('returns')->group(function () {
-        Route::resource('/interest-rates', InterestRateController::class);
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
 
         Route::name('returns.')->prefix('returns')->group(function () {
@@ -368,6 +368,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
         Route::get('/generate-report', [ReliefGenerateReportController::class, 'index'])->name('generate.report');
         Route::get('/download-report-pdf/{payload}', [ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
+        Route::get('/generate-report/report-preview/ceiling/{payload}', [ReliefGenerateReportController::class, 'ceilingReport'])->name('report.ceiling.preview');
         Route::get('/generate-report/report-preview/{payload}', [ReliefGenerateReportController::class, 'reportPreview'])->name('report.preview');
     });
 

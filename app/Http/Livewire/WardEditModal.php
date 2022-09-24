@@ -6,6 +6,7 @@ use App\Models\District;
 use App\Models\Region;
 use App\Models\Ward;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -49,6 +50,10 @@ class WardEditModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-ward-edit')) {
+            abort(403);
+        }
+
         $this->validate();
         try {
             $this->ward->update([

@@ -111,6 +111,10 @@ class Taxpayer extends Model implements Auditable
         return $this->hasOne(LandLeaseAgent::class, 'taxpayer_id');
     }
 
+    public function landLeases() {
+        return $this->hasMany(LandLease::class);
+    }
+
     public function leasePayments() {
         return $this->hasMany(LeasePayment::class);
     }

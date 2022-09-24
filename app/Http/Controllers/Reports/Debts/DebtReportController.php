@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Reports\Debts;
 
 use App\Http\Controllers\Controller;
-
-use App\Traits\ReturnReportTrait;
+use App\Traits\DebtReportTrait;
 use PDF;
 
 class DebtReportController extends Controller
 {
-    use ReturnReportTrait;
+    use DebtReportTrait;
 
     public function index()
     {
@@ -28,16 +27,44 @@ class DebtReportController extends Controller
         $records = $this->getRecords($parameters);
     
         if($parameters['year']=='all'){
-            $fileName = $parameters['tax_type_name'].'_'.$parameters['filing_report_type'].'.pdf';
-            $title = $parameters['filing_report_type'].' For '.$parameters['tax_type_name'];
+            $fileName = $parameters['report_type'].'_'.$parameters['report_type'].'.pdf';
+            $title = $parameters['report_type'].' For '.$parameters['report_type'];
         }else{
-            $fileName = $parameters['tax_type_name'].'_'.$parameters['filing_report_type'].' - '.$parameters['year'].'.pdf';
-            $title = $parameters['filing_report_type'].' For '.$parameters['tax_type_name'].' '.$parameters['year'];
+            $fileName = $parameters['report_type'].'_'.$parameters['report_type'].' - '.$parameters['year'].'.pdf';
+            $title = $parameters['report_type'].' For '.$parameters['report_type'].' '.$parameters['year'];
         } 
-        $records = $records->get(); 
-        $pdf = PDF::loadView('exports.returns.reports.pdf.return', compact('records', 'title', 'parameters'));
-        $pdf->setPaper('a4', 'landscape');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-        return $pdf->download($fileName);
+
+        if ($parameters['report_type'] === 'Returns') {
+            $records = $records->get(); 
+            $pdf = PDF::loadView('exports.debts.pdf.return', compact('records', 'title', 'parameters'));
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            return $pdf->download($fileName);
+        } else if ($parameters['report_type'] === 'Assessments') {
+            $records = $records->get(); 
+            $pdf = PDF::loadView('exports.debts.pdf.assessment', compact('records', 'title', 'parameters'));
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            return $pdf->download($fileName);
+        } else if ($parameters['report_type'] === 'Installment') {
+            $records = $records->get(); 
+            $pdf = PDF::loadView('exports.debts.pdf.installments', compact('records', 'title', 'parameters'));
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            return $pdf->download($fileName);
+        } else if ($parameters['report_type'] === 'Waiver') {
+            $records = $records->get(); 
+            $pdf = PDF::loadView('exports.debts.pdf.waiver', compact('records', 'title', 'parameters'));
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            return $pdf->download($fileName);
+        } else if ($parameters['report_type'] === 'Demand-Notice') {
+            $records = $records->get(); 
+            $pdf = PDF::loadView('exports.debts.pdf.demand-notice', compact('records', 'title', 'parameters'));
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            return $pdf->download($fileName);
+        }
+
     }
 }

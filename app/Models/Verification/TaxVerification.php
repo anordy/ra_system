@@ -15,6 +15,11 @@ class TaxVerification extends Model
     use HasFactory, WorkflowTrait;
 
     protected $guarded = [];
+    
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
 
     public function taxType()
     {
@@ -55,5 +60,4 @@ class TaxVerification extends Model
     {
         return $this->hasMany(TaxVerificationOfficer::class, 'verification_id', 'id');
     }
-    
 }

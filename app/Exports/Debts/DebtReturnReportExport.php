@@ -64,6 +64,6 @@ class DebtReturnReportExport implements FromView, WithEvents, ShouldAutoSize
         $records = $this->records->get();
         $title = $this->title;
         $parameters = $this->parameters;
-        return view('exports.returns.reports.excel.return', compact('records', 'title', 'parameters'));
+        return view('exports.debts.excel.return', compact('records', 'title', 'parameters'));
     }
 }

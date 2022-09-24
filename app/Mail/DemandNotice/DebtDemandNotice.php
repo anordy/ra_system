@@ -12,6 +12,7 @@ use App\Models\Debts\DemandNotice;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use App\Models\TaxAssessments\TaxAssessment;
+use Illuminate\Support\Facades\DB;
 
 class DebtDemandNotice extends Mailable
 {
@@ -54,8 +55,9 @@ class DebtDemandNotice extends Mailable
             $paid_within_days = $this->payload['paid_within_days'];
     
             if (get_class($debt) === TaxReturn::class) {
-                $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('debt', 'now', 'paid_within_days'));
-    
+                $tax_return = $this->payload['debt'];
+                $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('tax_return', 'now', 'paid_within_days'));
+
                 $pdf->setPaper('a4', 'portrait');
                 $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         

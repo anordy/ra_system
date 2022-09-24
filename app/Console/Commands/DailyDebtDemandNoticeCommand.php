@@ -63,7 +63,7 @@ class DailyDebtDemandNoticeCommand extends Command
             $next_notify_days = 0;
 
             // Send first debt demand notice
-            if (count($debt->demandNotices) == 1) {
+            if (count($debt->demandNotices) == 0) {
                 $paid_within_days = 30;
                 $next_notify_days = 14;
                 $this->sendFirstDemandNotice($debt, $paid_within_days, $next_notify_days);
