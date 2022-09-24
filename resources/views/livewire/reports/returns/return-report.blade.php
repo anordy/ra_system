@@ -21,6 +21,28 @@
             @enderror
         </div>
 
+        @if ($tax_type_code == 'vat')
+            <div class="col-md-4 form-group">
+                <label for="tax_type_id" class="d-flex justify-content-between">
+                    <span>
+                        VAT Type
+                    </span>
+                </label>
+                <select name="vat_type" id="vat_type" wire:model="vat_type"
+                    class="form-control {{ $errors->has('vat_type') ? 'is-invalid' : '' }}">
+                    <option value="">Select VAT Type</option>
+                    @foreach ($optionVatTypes as $vatType)
+                        <option value={{ $vatType }}>{{ $vatType }}</option>
+                    @endforeach
+                </select>
+                @error('vat_type')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+        @endif
+
         <div class="col-md-4 form-group">
             <label for="type" class="d-flex justify-content-between'">
                 <span>
