@@ -27,7 +27,7 @@ class CreateTaxAgentsTable extends Migration
 			$table->text('passport_photo')->nullable();
 			$table->text('cv')->nullable();
 			$table->text('tin_certificate')->nullable();
-			$table->enum('status', ['drafting','pending', 'approved', 'rejected', 'completed', 'verified'])->default('drafting');
+			$table->enum('status', ['drafting','pending', 'approved', 'rejected', 'completed', 'verified','correction'])->default('drafting');
             $table->enum('billing_status', ['control-number-generating','control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->nullable();
 			$table->boolean('is_paid')->default(false);
 			$table->enum('is_first_application', [1,0])->default(1);
