@@ -27,11 +27,11 @@ class TaxAgent extends Model implements Auditable
             DB::beginTransaction();
             $s = 'ZC';
 
-            switch ($this->region->name){
-                case 'Unguja':
+            switch ($this->region->location){
+                case 'unguja':
                     $s = $s . 'U';
                     break;
-                case 'Pemba':
+                case 'pemba':
                     $s = $s . 'P';
                     break;
                 default:
