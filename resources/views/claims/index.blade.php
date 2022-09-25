@@ -15,7 +15,7 @@
                     <livewire:claims.claims-table />
                 </div>
                 <div id="pending-approval" class="tab-pane fade  p-2">
-                    <livewire:claims.claims-table pending="true" />
+                    <livewire:claims.claims-approval-table />
                 </div>
                 <div id="rejected" class="tab-pane fade  p-2">
                     <livewire:claims.claims-table rejected="true" />

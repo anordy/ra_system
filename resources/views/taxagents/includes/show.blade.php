@@ -190,26 +190,31 @@
                                 <td>{{$academicRecord->school_name}}</td>
                                 <td>{{$academicRecord->from}}</td>
                                 <td>{{$academicRecord->to}}</td>
-                                <td>{{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}</td>
+                                <td>{{getEducation($academicRecord->education_level_id)}}</td>
                                 <td>{{$academicRecord->program}}</td>
                                 <td>
+                                    @if($academicRecord->certificate != null)
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'academic_certificate']) }}">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                         <div style="font-weight: 500;" class="ml-1">
-                                            {{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}
+                                            {{getEducation($academicRecord->education_level_id)}}
                                         </div>
                                     </a>
+                                    @endif
                                 </td>
                                 <td>
+                                    @if($academicRecord->transcript != null)
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'academic_transcript']) }}">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                         <div style="font-weight: 500;" class="ml-1">
-                                            {{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}
+                                            {{getEducation($academicRecord->education_level_id)}}
                                         </div>
                                     </a>
+                                    @endif
                                 </td>
+
                             </tr>
                         @endforeach
                         </tbody>
@@ -240,6 +245,7 @@
                                 <td>{{$agentProfessional->date_passed}}</td>
                                 <td>{{$agentProfessional->remarks}}</td>
                                 <td>
+                                    @if($agentProfessional->attachment != null)
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'pro_certificate']) }}">
                                         <i class="bi bi-file-earmark-pdf-fill px-2"
@@ -248,6 +254,7 @@
                                             {{$agentProfessional->body_name}}
                                         </div>
                                     </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -280,6 +287,7 @@
                                 <td>{{$agentTraining->position_held}}</td>
                                 <td>{{$agentTraining->description}}</td>
                                 <td>
+                                    @if($agentTraining->attachment != null)
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'tra_certificate']) }}">
                                         <i class="bi bi-file-earmark-pdf-fill px-2"
@@ -288,6 +296,7 @@
                                             {{$agentTraining->org_name}}
                                         </div>
                                     </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

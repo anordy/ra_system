@@ -9,7 +9,7 @@
         </li>
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
             <a href="{{ route('notifications') }}">Notifications
-                @if (auth()->user()->unreadNotifications->count() > 0)
+                @if (App\Models\Notification::whereNull('read_at')->where('notifiable_type',get_class(auth()->user()))->where('notifiable_id',auth()->id())->count() > 0)
                     <span class="badge badge-light">
                         <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
                 @endif
@@ -567,7 +567,7 @@
                         <li class="{{ request()->is('reports/disputes*') ? 'active' : '' }}">
                             <a href="{{ route('reports.disputes') }}">Dispute Reports</a>
                         </li>
-                        <li class="{{ request()->is('reports/registration*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('reports/business*') ? 'active' : '' }}">
                             <a href="{{ route('reports.business.init') }}">Registration Reports</a>
                         </li>
                         @can('managerial-claim-report-view')

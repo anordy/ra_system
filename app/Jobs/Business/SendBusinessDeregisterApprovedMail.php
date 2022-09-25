@@ -4,7 +4,6 @@ namespace App\Jobs\Business;
 
 use App\Mail\Business\Deregister\BusinessDeregisterApproved;
 use App\Models\Business;
-use App\Models\Taxpayer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,16 +16,16 @@ class SendBusinessDeregisterApprovedMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business;
+    private $deregister;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business)
+    public function __construct($deregister)
     {
 
-        $this->business = $business;
+        $this->deregister = $deregister;
     }
 
     /**
@@ -36,8 +35,8 @@ class SendBusinessDeregisterApprovedMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->business->taxpayer->email){
-            Mail::to($this->business->taxpayer->email)->send(new BusinessDeregisterApproved($this->business, $this->business->taxpayer));
+        if ($this->deregister->business->taxpayer->email){
+            Mail::to($this->deregister->business->taxpayer->email)->send(new BusinessDeregisterApproved($this->deregister));
         }
     }
 }

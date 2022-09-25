@@ -17,16 +17,15 @@ class SendBusinessClosureCorrectionMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business, $taxpayer;
+    private $closure;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business, Taxpayer $taxpayer)
+    public function __construct($closure)
     {
-        $this->business = $business;
-        $this->$taxpayer = $taxpayer;
+        $this->closure = $closure;
     }
 
     /**
@@ -36,8 +35,8 @@ class SendBusinessClosureCorrectionMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->taxpayer->email){
-            Mail::to($this->taxpayer->email)->send(new BusinessClosureCorrection($this->business, $this->taxpayer));
+        if ($this->closure->business->taxpayer->email){
+            Mail::to($this->closure->business->taxpayer->email)->send(new BusinessClosureCorrection($this->closure));
         }
     }
 }

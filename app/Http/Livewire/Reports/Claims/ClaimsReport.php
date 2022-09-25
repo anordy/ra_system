@@ -37,6 +37,7 @@ class ClaimsReport extends Component
     public $taxpayer = 'all';
     public $status;
     public $payment_status;
+    public $payment_method;
     public $duration;
     public $from;
     public $to;
@@ -51,6 +52,7 @@ class ClaimsReport extends Component
             'from' => $this->duration == 'date_range' ? 'required|date' : '',
             'to' => $this->duration == 'date_range' ? 'required|date|after:from' : '',
             'payment_status' => $this->status == 'approved' || $this->status == 'both' ? 'required' : '',
+            'payment_method'=> $this->status == 'approved' || $this->status == 'both' ? 'required' : '',
             'period' => $this->year != 'all' && !empty($this->year) ? 'required' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',
             'quater' => $this->period == 'Quarterly' ? 'required' : '',
@@ -80,6 +82,7 @@ class ClaimsReport extends Component
 
         if ($this->status == 'rejected' or $this->status == 'pending') {
             $this->payment_status = '';
+            $this->payment_method = '';
         }
 
         if ($this->duration == 'yearly') {
@@ -169,6 +172,7 @@ class ClaimsReport extends Component
             'status' => $this->status,
             'duration' => $this->duration,
             'payment_status' => $this->payment_status,
+            'payment_method' => $this->payment_method,
             'from' => $this->from,
             'to' => $this->to,
             'year' => $this->year,

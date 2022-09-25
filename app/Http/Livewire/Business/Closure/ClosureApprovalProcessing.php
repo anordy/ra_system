@@ -67,8 +67,8 @@ class ClosureApprovalProcessing extends Component
                 $this->subject->status = BusinessStatus::APPROVED;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
-                event(new SendSms('business-closure-approval', $this->subject->business_id));
-                event(new SendMail('business-closure-approval', $this->subject->business_id));
+                event(new SendSms('business-closure-approval', $this->subject));
+                event(new SendMail('business-closure-approval', $this->subject));
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
@@ -94,9 +94,13 @@ class ClosureApprovalProcessing extends Component
                         'status' => 'approved'
                     ]);
                 }
+                event(new SendSms('business-closure-rejected', $this->subject));
+                event(new SendMail('business-closure-rejected', $this->subject));
             } else if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
+                event(new SendSms('business-closure-correction', $this->subject));
+                event(new SendMail('business-closure-correction', $this->subject));
             }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);

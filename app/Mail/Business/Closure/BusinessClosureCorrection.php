@@ -2,8 +2,6 @@
 
 namespace App\Mail\Business\Closure;
 
-use App\Models\Business;
-use App\Models\Taxpayer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,17 +9,18 @@ use Illuminate\Queue\SerializesModels;
 
 class BusinessClosureCorrection extends Mailable
 {
-    public $business, $taxpayer;
+    use Queueable, SerializesModels;
+
+    public $closure;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Business $business, Taxpayer $taxpayer)
+    public function __construct($closure)
     {
-        $this->business = $business;
-        $this->taxpayer = $taxpayer;
+        $this->closure = $closure;
     }
 
     /**
@@ -32,6 +31,6 @@ class BusinessClosureCorrection extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.closure.correction')
-            ->subject("ZRB Temporary Business Closure- " . strtoupper($this->business->name));
+            ->subject("ZRB Temporary Business Closure- " . strtoupper($this->closure->business->name));
     }
 }
