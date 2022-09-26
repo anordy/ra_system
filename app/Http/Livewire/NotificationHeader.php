@@ -13,10 +13,15 @@ class NotificationHeader extends Component
     public $unreadNotifications;
     public $unreadNotificationsCount;
 
-    public function mount(){
-        $this->unreadNotifications = auth()->user()->unreadNotifications()->latest()->get();
+    public function mount()
+    {
+        $this->unreadNotifications = Notification::whereNull('read_at')
+            ->where('notifiable_type', get_class(auth()->user()))
+            ->where('notifiable_id', auth()->user()->id)
+            ->latest()
+            ->get();
         $this->unreadNotificationsCount = $this->unreadNotifications->count();
-        $this->hasUnreadNotifications =  $this->unreadNotificationsCount > 0 ? true: false;
+        $this->hasUnreadNotifications =  $this->unreadNotificationsCount > 0 ? true : false;
     }
 
     public function render()
