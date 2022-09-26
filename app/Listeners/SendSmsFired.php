@@ -24,6 +24,7 @@ use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
 use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
 use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
@@ -111,6 +112,9 @@ class SendSmsFired
         }else if ($event->service === 'change-business-information-rejected'){
             // Token ID is payload data having all notification details
             SendBusinessUpdateRejectedSMS::dispatch($event->tokenId);
+        }else if ($event->service === 'change-business-consultant-information-approval'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateApprovalConsultantSMS::dispatch($event->tokenId);
         } else if ($event->service === 'branch-approval'){
             // Token ID is payload data having all notification details
             SendBranchApprovalSMS::dispatch($event->tokenId);
