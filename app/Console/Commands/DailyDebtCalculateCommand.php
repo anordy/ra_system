@@ -68,7 +68,6 @@ class DailyDebtCalculateCommand extends Command
          * Get all tax returns which are normal
          * CONDITION 1: For a return to be debt the filing due date must exceed 30 days to now
          * CONDITION 2: The return is not be paid at all
-         * TODO: filing due date is not okay
          */
         $tax_returns = TaxReturn::selectRaw('tax_returns.*, TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) as days_passed')
             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])

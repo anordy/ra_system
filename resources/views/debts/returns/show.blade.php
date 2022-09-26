@@ -46,7 +46,10 @@
                     @include('debts.returns.return-details', ['tax_return' => $tax_return])
                 </div>
                 <div id="tab3" class="tab-pane fade m-4">
-                    <livewire:debt.debt-penalties :penalties="$tax_return->return->penalties ?? []" />
+                    @php
+                        $penalties = $tax_return->return->penalties->merge($tax_return->penalties ?? []);
+                    @endphp
+                    <livewire:debt.debt-penalties :penalties="$penalties ?? []" />
                 </div>
                 <div id="tab4" class="tab-pane fade  m-4">
                     @include('debts.returns.waiver-details', ['tax_return' => $tax_return])

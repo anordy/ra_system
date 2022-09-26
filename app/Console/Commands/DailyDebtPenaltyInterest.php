@@ -65,10 +65,11 @@ class DailyDebtPenaltyInterest extends Command
          * Get tax returns 
          * CONDITION 1: Return category is either debt or overdue (This qualifies to be penalty calculated)
          * CONDITION 2: Payment status is not complete
-         * CONDITION 3: The current next payment_due_date has reached
+         * CONDITION 3: The current payment_due_date has reached
          */
         $tax_returns = TaxReturn::selectRaw('tax_returns.*, TIMESTAMPDIFF(month, filing_due_date, NOW()) as periods, TIMESTAMPDIFF(month, curr_payment_due_date, NOW()) as penatableMonths')
             ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+            ->whereRaw("TIMESTAMPDIFF(DAY, tax_returns.curr_payment_due_date, CURDATE()) > 0")
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
