@@ -204,7 +204,7 @@
                                 <td>
                                     @if($academicRecord->certificate != null)
                                         <a class="file-item" target="_blank"
-                                           href="{{ route('agent.file', [$agent->id, 'academic_certificate']) }}">
+                                           href="{{ route('agent.academics-file', [$academicRecord->id, 'academic_certificate']) }}">
                                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                             <div style="font-weight: 500;" class="ml-1">
                                                 {{getEducation($academicRecord->education_level_id)}}
@@ -215,7 +215,7 @@
                                 <td>
                                     @if($academicRecord->transcript != null)
                                         <a class="file-item" target="_blank"
-                                           href="{{ route('agent.file', [$agent->id, 'academic_transcript']) }}">
+                                           href="{{ route('agent.academics-file', [$academicRecord->id, 'academic_transcript']) }}">
                                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                             <div style="font-weight: 500;" class="ml-1">
                                                 {{getEducation($academicRecord->education_level_id)}}
@@ -256,7 +256,7 @@
                                 <td>
                                     @if($agentProfessional->attachment != null)
                                         <a class="file-item" target="_blank"
-                                           href="{{ route('agent.file', [$agent->id, 'pro_certificate']) }}">
+                                           href="{{ route('agent.professionals-file', [$agentProfessional->id, 'pro_certificate']) }}">
                                             <i class="bi bi-file-earmark-pdf-fill px-2"
                                                style="font-size: x-large"></i>
                                             <div style="font-weight: 500;" class="ml-1">
@@ -298,7 +298,7 @@
                                 <td>
                                     @if($agentTraining->attachment != null)
                                         <a class="file-item" target="_blank"
-                                           href="{{ route('agent.file', [$agent->id, 'tra_certificate']) }}">
+                                           href="{{ route('agent.trainings-file', [$agentTraining->id, 'tra_certificate']) }}">
                                             <i class="bi bi-file-earmark-pdf-fill px-2"
                                                style="font-size: x-large"></i>
                                             <div style="font-weight: 500;" class="ml-1">

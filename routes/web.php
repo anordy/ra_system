@@ -477,6 +477,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
+    Route::get('agent-academics-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentAcademicFile'])->name('agent.academics-file');
+    Route::get('agent-professionals-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentProfessionalFile'])->name('agent.professionals-file');
+    Route::get('agent-trainings-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentTrainingFile'])->name('agent.trainings-file');
 
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
