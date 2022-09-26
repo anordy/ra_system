@@ -4,7 +4,7 @@ namespace App\Models\Installment;
 
 use App\Models\Business;
 use App\Models\BusinessLocation;
-use App\Models\Returns\TaxReturn;
+use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,8 +21,8 @@ class InstallmentRequest extends Model
         'installment_to' => 'datetime',
     ];
 
-    public function taxReturn(){
-        return $this->belongsTo(TaxReturn::class);
+    public function installable(){
+        return $this->morphTo();
     }
 
     public function business(){
@@ -35,5 +35,9 @@ class InstallmentRequest extends Model
 
     public function files(){
         return $this->hasMany(InstallmentRequestFile::class);
+    }
+
+    public function taxType(){
+        return $this->belongsTo(TaxType::class);
     }
 }

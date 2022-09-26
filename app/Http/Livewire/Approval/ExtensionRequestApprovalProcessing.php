@@ -49,21 +49,21 @@ class ExtensionRequestApprovalProcessing extends Component
 
         try {
             if ($this->checkTransition('debt_manager')) {
-                $this->subject->extend_from = $this->subject->taxReturn->curr_payment_due_date;
+                $this->subject->extend_from = $this->subject->extensible->curr_payment_due_date;
                 $this->subject->extend_to = $this->extendTo;
                 $this->subject->save();
             }
 
             if ($this->checkTransition('accepted')) {
                 $this->subject->status = ExtensionRequestStatus::APPROVED;
-                $taxReturn = TaxReturn::findOrFail($this->subject->tax_return_id);
-                $taxReturn->update([
+                $extensible = $this->subject->extensible_type::findOrFail($this->subject->extensible_id);
+                $extensible->update([
                     'curr_payment_due_date' => $this->subject->extend_to
                 ]);
 
                 // If extended date is greater than current bill expiration date.
-                if ($this->subject->extend_to->greaterThan($taxReturn->bill->expire_date)){
-                    $this->updateBill($taxReturn->bill, $this->subject->extend_to);
+                if ($this->subject->extend_to->greaterThan($extensible->bill->expire_date)){
+                    $this->updateBill($extensible->bill, $this->subject->extend_to);
                 }
                 $this->subject->save();
             }

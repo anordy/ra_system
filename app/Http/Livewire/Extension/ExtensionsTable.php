@@ -16,49 +16,19 @@ class ExtensionsTable extends DataTableComponent
 
     use LivewireAlert;
 
-    public $pending;
     public $rejected;
 
     public function builder(): Builder
     {
-        $builder = ExtensionRequest::query()->orderBy('extension_requests.created_at', 'desc');
-
-        if ($this->pending){
-            return $builder->where('extension_requests.status', ExtensionRequestStatus::PENDING);
-        }
+        $builder = ExtensionRequest::query()
+            ->with('extensible', 'location')
+            ->orderBy('extension_requests.created_at', 'desc');
 
         if ($this->rejected){
             return $builder->where('extension_requests.status', ExtensionRequestStatus::REJECTED);
         }
 
-        return $builder;
-    }
-
-    public function columns(): array
-    {
-        return [
-            Column::make('Business Name', 'business.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Branch Name', 'location.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Outstanding Amount', 'taxReturn.outstanding_amount')
-                ->searchable(),
-            Column::make('Total Amount', 'taxReturn.total_amount')
-                ->sortable()
-                ->searchable(),
-            Column::make('Requested At', 'created_at')
-                ->searchable()
-                ->sortable()
-                ->format(function ($value, $row){
-                    return $value->toDateString();
-                }),
-            Column::make('Status', 'status')
-                ->view('extension.includes.status'),
-            Column::make('Action', 'id')
-                ->view('extension.includes.actions')
-        ];
+        return $builder->where('extension_requests.status', ExtensionRequestStatus::APPROVED);
     }
 
     public function configure(): void
@@ -68,5 +38,41 @@ class ExtensionsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+        $this->setAdditionalSelects('extensible_type', 'extensible_id');
+    }
+
+    public function columns(): array
+    {
+        return [
+            Column::make('Extension ID', 'extensible_id')->hideIf(true),
+            Column::make('ZIN', 'location.zin'),
+            Column::make('Business Name', 'business.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Branch Name', 'location.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Type', 'taxType.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Total Amount', 'extensible.total_amount')
+                ->label(function ($row){
+                    return "{$row->extensible->total_amount} {$row->extensible->currency}";
+                }),
+            Column::make('Outstanding Amount', 'extensible.outstanding_amount')
+                ->label(function ($row){
+                    return "{$row->extensible->outstanding_amount} {$row->extensible->currency}";
+                }),
+            Column::make('Requested At', 'created_at')
+                ->searchable()
+                ->sortable()
+                ->format(function ($value, $row){
+                    return $value->toFormattedDateString();
+                }),
+            Column::make('Status', 'status')
+                ->view('extension.includes.status'),
+            Column::make('Action', 'id')
+                ->view('extension.includes.actions')
+        ];
     }
 }
