@@ -5,7 +5,7 @@
 @section('content')
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold text-uppercase">
-            {{ get_class($installable) == \App\Models\Returns\TaxReturn::class ? 'Debt' : 'Assessment' }} Details
+            Installment Request Details
         </div>
         <div class="card-body">
             <nav class="nav nav-tabs mt-0 border-top-0">
