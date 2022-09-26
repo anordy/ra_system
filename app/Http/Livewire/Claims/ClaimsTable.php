@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Claims;
 
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
+use App\Models\WorkflowTask;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -26,17 +27,14 @@ class ClaimsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        if ($this->pending){
-            return TaxClaim::query()
-                ->where('tax_claims.status', TaxClaimStatus::PENDING)
-                ->orderBy('tax_claims.created_at', 'DESC');
-        }
         if ($this->rejected){
             return TaxClaim::query()
                 ->where('tax_claims.status', TaxClaimStatus::REJECTED)
                 ->orderBy('tax_claims.created_at', 'DESC');
         }
-        return TaxClaim::query()->orderBy('tax_claims.created_at', 'DESC');
+        return TaxClaim::query()
+            ->where('tax_claims.status', TaxClaimStatus::APPROVED)
+            ->orderBy('tax_claims.created_at', 'DESC');
     }
 
     public function columns(): array
@@ -50,7 +48,7 @@ class ClaimsTable extends DataTableComponent
                     $formattedAmount = number_format($row->amount, 2);
                     return "{$row->currency}. {$formattedAmount}";
                 }),
-            Column::make("Owner", "business.owner_designation")
+            Column::make("Tax Type", "taxType.name")
                 ->sortable()
                 ->searchable(),
             Column::make("Mobile", "business.mobile")

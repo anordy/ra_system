@@ -75,6 +75,7 @@ class ReliefGenerateReport extends Component
     public $startMonth;
     public $endMonth;
     public $dates;
+    public $isCeilingReport = false;
 
 
     public function mount()
@@ -84,7 +85,9 @@ class ReliefGenerateReport extends Component
             'project' => 'By Project',
             'sponsor' => 'By Sponsor',
             'supplier' => 'By Supplier',
-            'ministry' => 'By Ministry'];
+            'ministry' => 'By Ministry',
+            'ceiling' => 'Ceiling Report',
+        ];
         $this->reportType = 'project';
         $this->projectSectionId = 'all';
         $this->optionProjectSections = ReliefProject::orderBy('name', 'asc')->get();
@@ -137,7 +140,12 @@ class ReliefGenerateReport extends Component
     {
         $payload = $this->hasRecords();
         if($payload!=false){
-            return redirect()->route('reliefs.report.preview',encrypt(json_encode($payload)));
+            if($payload['parameters']['reportType']=='ceiling'){
+                return redirect()->route('reliefs.report.ceiling.preview',encrypt(json_encode($payload)));
+            }else{
+                return redirect()->route('reliefs.report.preview',encrypt(json_encode($payload)));
+            }
+            
         }
         
     }
@@ -148,9 +156,14 @@ class ReliefGenerateReport extends Component
             abort(403);
         }
         $payload = $this->hasRecords();
+        if($payload['parameters']['reportType']!='ceiling'){
+           $fileName = 'Relief Applications FROM ' . $payload['dates']['from'] . ' TO ' . $payload['dates']['to'];
+        }else{
+            $fileName = 'Relief Ceiling Report FROM ' . $payload['dates']['from'] . ' TO ' . $payload['dates']['to']; 
+        }
         if($payload!=false){
             $this->alert('success', 'Exporting Excel file');
-            return Excel::download(new \App\Exports\ReliefExport($payload), 'Relief Applications FROM ' . $payload['dates']['from'] . ' TO ' . $payload['dates']['to'] . '.xlsx');
+            return Excel::download(new \App\Exports\ReliefExport($payload), $fileName.'.xlsx');
         }
     }
 
@@ -196,6 +209,8 @@ class ReliefGenerateReport extends Component
             }elseif($this->reportType=='sponsor'){
                 $this->showSponsors = true;
                 $this->sponsorId = 'all';
+            }elseif($this->reportType=='ceiling'){
+                $this->isCeilingReport = true;
             }
         }
 
@@ -224,7 +239,6 @@ class ReliefGenerateReport extends Component
                 $this->showSuppliersLocations = false;
             }
         }
-
     }
 
     public function getStartEndDate()
@@ -238,8 +252,8 @@ class ReliefGenerateReport extends Component
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $date->startOfMonth()->format('Y-m-d');
-            $to = $date->endOfMonth()->format('Y-m-d');
+            $from = $date->startOfMonth()->format('d-M-Y');
+            $to = $date->endOfMonth()->format('d-M-Y');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } elseif ($this->showQuarters) {
             if ($this->quater == '1st-Quarter') {
@@ -260,8 +274,8 @@ class ReliefGenerateReport extends Component
             $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
+            $from = $startDate->format('d-M-Y');
+            $to = $endDate->format('d-M-Y');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } elseif ($this->showSemiAnnuals) {
             if ($this->semiAnnual == '1st-Semi-Annual') {
@@ -275,16 +289,16 @@ class ReliefGenerateReport extends Component
             $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
+            $from = $startDate->format('d-M-Y');
+            $to = $endDate->format('d-M-Y');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } else {
             $startDate = \Carbon\Carbon::parse($this->year . "-" . "01" . "-01");
             $endDate = \Carbon\Carbon::parse($this->year . "-" . "12" . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
+            $from = $startDate->format('d-M-Y');
+            $to = $endDate->format('d-M-Y');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         }
     }
@@ -330,6 +344,10 @@ class ReliefGenerateReport extends Component
                 'supplierId' => $this->supplierId,
                 'locationId' => $this->supplierLocationId
             ];
+        }elseif($this->isCeilingReport){
+            return [
+                'reportType' => 'ceiling'
+            ];
         }
     }
 
@@ -351,6 +369,7 @@ class ReliefGenerateReport extends Component
         $this->showMinistries = false;
         $this->showProjects = false;
         $this->showProjectSections = false;
+        $this->isCeilingReport = false;
     }
 
     public function hasRecords()

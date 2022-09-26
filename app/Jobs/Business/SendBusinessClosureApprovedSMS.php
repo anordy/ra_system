@@ -15,15 +15,15 @@ class SendBusinessClosureApprovedSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business;
+    private $closure;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business)
+    public function __construct($closure)
     {
-        $this->business = $business;
+        $this->closure = $closure;
     }
 
     /**
@@ -34,9 +34,14 @@ class SendBusinessClosureApprovedSMS implements ShouldQueue
     public function handle()
     {
         $sms_controller = new SMSController;
-        $send_to = $this->business->taxpayer->mobile;
+        $send_to = $this->closure->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "ZRB inform that, you have temporary closed {$this->business->name}.";
+        $customer_message = "ZRB inform that, your ZRB temporary business closure for {$this->closure->business->name} has been approved. You are required/obliged to submit NIL return to ZRB within the closure period.";
+
+        if ($this->closure->location) {
+            $customer_message = "ZRB inform that, your ZRB temporary business closure for {$this->closure->business->name}, {$this->closure->location->name} has been approved. You are required/obliged to submit NIL return to ZRB within the closure period.";
+        }
+
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

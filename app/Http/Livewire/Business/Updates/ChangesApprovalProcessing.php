@@ -24,6 +24,8 @@ class ChangesApprovalProcessing extends Component
     public $comments;
     public $business_update_data;
     public $business_id;
+    public $business;
+    public $consultant;
 
 
     public function mount($modelName, $modelId, $businessUpdate)
@@ -38,7 +40,6 @@ class ChangesApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-        $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
@@ -63,30 +64,36 @@ class ChangesApprovalProcessing extends Component
                         'time' => Carbon::now()->format('d-m-Y')
                     ];
 
-                    event(new SendMail('change-business-information', $notification_payload));
-                    event(new SendSms('change-business-information', $notification_payload));
+                    event(new SendMail('change-business-information-approval', $notification_payload));
+                    event(new SendSms('change-business-information-approval', $notification_payload));
                 } else if ($this->business_update_data->type == 'responsible_person') {
                     /** Update business information */
                     $new_values = json_decode($this->business_update_data->new_values, true);
                     $business = Business::findOrFail($this->business_id);
-                    $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first();
 
+                    // Get current business consultant
+                    $current_business_consultant = BusinessConsultant::where('business_id', $this->business_id)->latest()->get()->first() ?? null;
+
+                    // If I am not consultant of my business add new consultant
                     if ($new_values['is_own_consultant'] == 0) {
+                        // If consultant exists mark current consultant as removed and add new consultant
                         if ($current_business_consultant) {
                             $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
 
-                            $consultant = BusinessConsultant::create([
+                            $this->consultant = BusinessConsultant::create([
                                 'business_id' => $business->id,
                                 'contract' => $this->business_update_data->agent_contract ?? null,
                                 'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
                             ]);
+                        // If consultant does not exist add new consultant
                         } else {
-                            $consultant = BusinessConsultant::create([
+                            $this->consultant = BusinessConsultant::create([
                                 'business_id' => $business->id,
                                 'contract' => $this->business_update_data->agent_contract ?? null,
                                 'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
                             ]);
                         }
+                    // If I am removing a consultant from my business ie. remove consultant from business
                     } else {
                         if ($current_business_consultant) {
                             $current_business_consultant->update(['status' => 'removed', 'removed_at' => Carbon::now()]);
@@ -104,8 +111,18 @@ class ChangesApprovalProcessing extends Component
                         'time' => Carbon::now()->format('d-m-Y')
                     ];
 
-                    event(new SendMail('change-business-information', $notification_payload));
-                    event(new SendSms('change-business-information', $notification_payload));
+                    event(new SendMail('change-business-information-approval', $notification_payload));
+                    event(new SendSms('change-business-information-approval', $notification_payload));
+
+                    if ($this->consultant) {
+                        $consultant_info = [
+                            'business' => $business,
+                            'consultant' => $this->consultant,
+                            'time' => Carbon::now()->format('d-m-Y')
+                        ];
+                        event(new SendMail('change-business-consultant-information-approval', $consultant_info));
+                        event(new SendSms('change-business-consultant-information-approval', $consultant_info));
+                    }
                 }
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
@@ -119,11 +136,25 @@ class ChangesApprovalProcessing extends Component
     public function reject($transtion)
     {
         $this->validate(['comments' => 'required']);
+        $business = Business::findOrFail($this->business_id);
+
         try {
             if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = BusinessStatus::REJECTED;
+                $notification_payload = [
+                    'business' => $business,
+                    'time' => Carbon::now()->format('d-m-Y')
+                ];
+                // event(new SendMail('change-business-information-rejected', $notification_payload));
+                // event(new SendSms('change-business-information-rejected', $notification_payload));
             } else if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
+                $notification_payload = [
+                    'business' => $business,
+                    'time' => Carbon::now()->format('d-m-Y')
+                ];
+                event(new SendMail('change-business-information-correction', $notification_payload));
+                event(new SendSms('change-business-information-correction', $notification_payload));
             }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);

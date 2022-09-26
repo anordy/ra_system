@@ -7,7 +7,7 @@
             <div class="border-0">
                 <div class="row mx-4 mt-2">
                     <div class="col-md-4 form-group">
-                        <label for="tin">Tax Identification No. (TIN)</label>
+                        <label for="tin">Tax Identification No. (TIN) *</label>
                         <input type="number" maxlength="10" minlength="8" wire:model.lazy="tin" required
                             class="form-control {{ $errors->has('tin') ? 'is-invalid' : '' }}">
                         @error('tin')
@@ -17,7 +17,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="institution_name">Institution Name</label>
+                        <label for="institution_name">Institution Name *</label>
                         <input type="text" wire:model.lazy="institution_name"
                             class="form-control {{ $errors->has('institution_name') ? 'is-invalid' : '' }}">
                         @error('institution_name')
@@ -27,7 +27,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="address">Institution Address</label>
+                        <label for="address">Institution Address *</label>
                         <input type="text" wire:model.lazy="address"
                             class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}">
                         @error('address')
@@ -37,7 +37,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="institution_place">Place Of Institution</label>
+                        <label for="institution_place">Place Of Institution *</label>
                         <input type="text" wire:model.lazy="institution_place" name="institution_place"
                             id="institution_place"
                             class="form-control {{ $errors->has('institution_place') ? 'is-invalid' : '' }}">
@@ -48,7 +48,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="mobile">Institution Contact Number</label>
+                        <label for="mobile">Institution Contact Number *</label>
                         <input type="tel" maxlength="20" wire:model.lazy="mobile" name="mobile" id="mobile"
                             class="form-control {{ $errors->has('mobile') ? 'is-invalid' : '' }}">
                         @error('mobile')
@@ -58,7 +58,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="email">Institution Email Address</label>
+                        <label for="email">Institution Email Address *</label>
                         <input type="email" wire:model.lazy="email" name="email" id="email"
                             class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}">
                         @error('email')
@@ -68,7 +68,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label>Region</label>
+                        <label>Region *</label>
                         <select wire:model.lazy="region_id"
                             class="form-control {{ $errors->has('region_id') ? 'is-invalid' : '' }}">
                             <option></option>
@@ -83,7 +83,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label>District</label>
+                        <label>District *</label>
                         <select wire:model.lazy="district_id"
                             class="form-control {{ $errors->has('district_id') ? 'is-invalid' : '' }}">
                             <option></option>
@@ -98,7 +98,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label>Ward</label>
+                        <label>Ward *</label>
                         <select wire:model.lazy="ward_id"
                             class="form-control {{ $errors->has('ward_id') ? 'is-invalid' : '' }}">
                             <option></option>
@@ -113,7 +113,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="date_of_commencing">Date of Commencing</label>
+                        <label for="date_of_commencing">Date of Commencing *</label>
                         <input type="date" wire:model.lazy="date_of_commencing" name="date_of_commencing"
                             id="date_of_commencing"
                             class="form-control {{ $errors->has('date_of_commencing') ? 'is-invalid' : '' }}">
@@ -136,7 +136,7 @@
                 <div class="row mx-4">
 
                     <div class="col-md-4 form-group">
-                        <label for="reference_no">Responsible person ZRB Reference No.</label>
+                        <label for="reference_no">Responsible person ZRB Reference No. *</label>
                         <input type="text" wire:model.lazy="reference_no" name="reference_no" id="reference_no"
                             class="form-control {{ $errors->has('reference_no') ? 'is-invalid' : '' }}">
                         @error('reference_no')
