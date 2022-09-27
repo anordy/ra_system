@@ -30,33 +30,7 @@ class QuantityCertificateShow extends Component
     public $certificate;
 
 
-    protected function rules()
-    {
-        return [
-            'ship' => 'required',
-            'port' => 'required',
-            'voyage_no' => 'nullable',
-            'ascertained' => 'required|date|before:today',
-            'business' => [
-                'required',
-                'exists:businesses,zin'
-            ],
-            'products.*.config_id' => 'required',
-            'products.*.liters_observed' => 'required|numeric',
-            'products.*.liters_at_20' => 'required|numeric',
-            'products.*.metric_tons' => 'required|numeric',
-        ];
-    }
 
-    protected $messages = [
-        'products.*.config_id.required' => 'Product field required',
-        'products.*.liters_observed.required' => 'Listres observed field is required',
-        'products.*.liters_observed.numeric' => 'Litres observed field must be a number',
-        'products.*.liters_at_20.required' => 'Litres at 20 field is required',
-        'products.*.liters_at_20.numeric' => 'Litres at 20 field must be a number',
-        'products.*.metric_tons.required' => 'Metric tons field is required',
-        'products.*.metric_tons.numeric' => 'Metric tons field must be numeric',
-    ];
 
 
     public function mount($id)
@@ -68,7 +42,7 @@ class QuantityCertificateShow extends Component
         $this->ship = $this->certificate->ship;
         $this->port = $this->certificate->port;
         $this->voyage_no = $this->certificate->voyage_no;
-        $this->business = $this->certificate->business->zin;
+        $this->business = $this->certificate->location->zin;
 
         $this->configs = PetroleumConfig::where('row_type', 'dynamic')
             ->where('col_type', '!=', 'heading')

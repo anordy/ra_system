@@ -31,6 +31,12 @@ class QuantityCertificateController extends Controller
 
     public function edit($id)
     {
+        $certificate =QuantityCertificate::with('business')->find(decrypt($id));
+
+        if(($certificate->status ?? '') == 'filled'){
+            abort(403);
+        }
+
         return view('returns.petroleum.quantity_certificate.edit', compact('id'));
     }
 
@@ -47,6 +53,13 @@ class QuantityCertificateController extends Controller
     public function certificate($id)
     {
         $data = QuantityCertificate::with('business')->find(decrypt($id));
+
+        $certificate = QuantityCertificate::with('business')->find(decrypt($id));
+
+        if(($certificate->status ?? '') == 'filled'){
+            abort(403);
+        }
+
         $view = view('returns.petroleum.quantity_certificate.pdf', compact('data'));
         $html = $view->render();
         $pdf = PDF::loadHTML($html);
