@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Verification;
 
 use App\Enum\TaxVerificationStatus;
 use App\Models\Verification\TaxVerification;
+use App\Traits\ReturnFilterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -12,7 +13,10 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerificationVerifiedTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert,ReturnFilterTrait;
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+    
+    public $data = [];
 
     public $model = TaxVerification::class;
 

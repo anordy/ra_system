@@ -184,7 +184,7 @@ class LandLeaseReportTable extends DataTableComponent
     public function getBusinessZin($id)
     {
         $businessLocation = BusinessLocation::find($id);
-        // dd($businessLocation);
+
         return $businessLocation->zin;
     }
 }

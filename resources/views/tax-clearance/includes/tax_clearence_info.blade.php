@@ -100,31 +100,29 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($debts))
-                                        @foreach ($debts as $debt)
-                                            @if ($debt->taxtype->code == \App\Models\TaxType::VERIFICATION)
-                                                <tr>
-                                                    <td>
-                                                        {{ number_format($debt->original_principal_amount, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->penalty, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->interest, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $debt->installment->installment_count ?? '0'  }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->outstanding_amount, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                </tr>
-                                            @endif
+                                    @if (count($verificateionDebts))
+                                        @foreach ($verificateionDebts as $debt)
+                                            <tr>
+                                                <td>
+                                                    {{ number_format($debt->original_principal_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->penalty_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->interest_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ $debt->installment->installment_count ?? '0'  }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->outstanding_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     @else
                                         <tr>
@@ -160,36 +158,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($debts))
-                                        @foreach ($debts as $debt)
-                                            @if ($debt->taxtype->code == \App\Models\TaxType::AUDIT)
-                                                <tr>
-                                                    <td>
-                                                        {{ number_format($debt->original_principal_amount, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->penalty, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->interest, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $debt->installment->installment_count ?? '0'  }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->outstanding_amount, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                </tr>
-                                            @endif
+                                    @if (count($auditDebts))
+                                        @foreach ($auditDebts as $debt)
+                                            <tr>
+                                                <td>
+                                                    {{ number_format($debt->original_principal_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->penalty_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->interest_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ $debt->installment->installment_count ?? '0'  }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->outstanding_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     @else
                                         <tr>
                                             <td colspan="7" class="text-center py-3">
-                                                No debts for audit.
+                                                No debts for verification.
                                             </td>
                                         </tr>
                                     @endif
@@ -221,36 +217,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($debts))
-                                        @foreach ($debts as $debt)
-                                            @if ($debt->taxtype->code == \App\Models\TaxType::INVESTIGATION)
-                                                <tr>
-                                                    <td>
-                                                        {{ number_format($debt->original_principal_amount, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->penalty, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->interest, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $debt->installment->installment_count ?? '0'  }}
-                                                    </td>
-                                                    <td>
-                                                        {{ number_format($debt->outstanding_amount, 2) }}
-                                                        {{ $debt->currency }}
-                                                    </td>
-                                                </tr>
-                                            @endif
+                                    @if (count($investigationDebts))
+                                        @foreach ($investigationDebts as $debt)
+                                            <tr>
+                                                <td>
+                                                    {{ number_format($debt->original_principal_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->penalty_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->interest_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{ $debt->installment->installment_count ?? '0'  }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($debt->outstanding_amount, 2) }}
+                                                    {{ $debt->currency }}
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     @else
                                         <tr>
                                             <td colspan="7" class="text-center py-3">
-                                                No debts for investigation.
+                                                No debts for verification.
                                             </td>
                                         </tr>
                                     @endif
