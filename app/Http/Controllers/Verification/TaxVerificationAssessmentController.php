@@ -18,7 +18,9 @@ class TaxVerificationAssessmentController extends Controller
 {
     public function index()
     {
-        return view('verification.assessment.index');
+        $tableName = 'verification.verification-assessment-table';
+
+        return view('verification.assessment.index', compact('tableName'));
     }
 
     public function show($id)
@@ -34,13 +36,11 @@ class TaxVerificationAssessmentController extends Controller
             $viewRender = 'returns.lump-sum.details';
 
             return view('verification.approval.approval', compact('return', 'verification', 'viewRender'));
-        }
-         elseif ($return instanceof HotelReturn) {
+        } elseif ($return instanceof HotelReturn) {
             $viewRender = 'returns.hotel.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));
-        } 
-        elseif ($return instanceof StampDutyReturn) {
+        } elseif ($return instanceof StampDutyReturn) {
             $viewRender = 'returns.stamp-duty.details';
 
             return view('verification.approval.preview', compact('return', 'verification', 'viewRender'));

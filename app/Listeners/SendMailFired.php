@@ -27,6 +27,7 @@ use App\Jobs\TaxClearance\SendTaxClearanceRejectedEmail;
 use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
 use App\Jobs\Business\SendBusinessDeregisterRejectedMail;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateRejectedMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
@@ -73,7 +74,7 @@ class SendMailFired
         } else if ($event->service === 'business-registration-correction'){
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            SendBusinessCorrectionMail::dispatch($business, $business->taxpayer);
+            SendBusinessCorrectionMail::dispatch($business, $business->taxpayer, $event->extra['message']);
         }
         else if ($event->service == 'tax-agent-registration-approval') {
 	        $taxpayer = Taxpayer::find($event->tokenId);
@@ -117,7 +118,10 @@ class SendMailFired
         } else if ($event->service === 'change-business-information-rejected'){
             // Token ID is payload data having all notification details
             SendBusinessUpdateRejectedMail::dispatch($event->tokenId);
-        } else if ($event->service === 'branch-approval'){
+        }else if ($event->service === 'change-business-consultant-information-approval'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateApprovalConsultantMail::dispatch($event->tokenId);
+        }  else if ($event->service === 'branch-approval'){
             // Token ID is payload data having all notification details
             SendBranchApprovedMail::dispatch($event->tokenId);
         } else if ($event->service === 'branch-correction'){

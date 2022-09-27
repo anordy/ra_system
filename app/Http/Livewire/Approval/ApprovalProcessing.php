@@ -171,19 +171,6 @@ class ApprovalProcessing extends Component
 
     public function approve($transtion)
     {
-//        if ($this->showLumpsumOptions == false)
-//        {
-//            if (array_intersect($this->exceptionOne, $this->Ids) == $this->exceptionOne)
-//            {
-//                $this->alert('error', 'One business can not have both hotel and vat as tax types');
-//                return redirect()->back();
-//            }
-//            if (array_intersect($this->exceptionTwo, $this->Ids) == $this->exceptionTwo)
-//            {
-//                $this->alert('error', 'One business can not have both stamp duty and vat as tax types');
-//                return redirect()->back();
-//            }
-//        }
 
         if ($this->checkTransition('registration_officer_review')) {
             $this->subject->isiic_i   = $this->isiic_i ?? null;
@@ -269,14 +256,11 @@ class ApprovalProcessing extends Component
 
             if (!$location->generateZin()) {
                 $this->alert('error', 'Something went wrong.');
-
                 return;
             }
 
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
-            $this->subject->status      = BusinessStatus::APPROVED;
-            event(new SendSms('business-registration-approved', $this->subject->id));
-            event(new SendMail('business-registration-approved', $this->subject->id));
+            $this->subject->status = BusinessStatus::APPROVED;
         }
 
         try {
@@ -299,8 +283,6 @@ class ApprovalProcessing extends Component
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
-                event(new SendSms('business-registration-correction', $this->subject->id));
-                event(new SendMail('business-registration-correction', $this->subject->id));
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {

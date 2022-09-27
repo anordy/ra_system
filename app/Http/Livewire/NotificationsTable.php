@@ -99,7 +99,7 @@ class NotificationsTable extends DataTableComponent
             $notification = Notification::find($id);
             if ($notification['data']->href != null) {
                 if ($notification['data']->hrefParameters != null) {
-                    return redirect()->route($notification['data']->href, $notification['data']->hrefParameters);
+                    return redirect()->route($notification['data']->href, encrypt($notification['data']->hrefParameters));
                 }
                 return redirect()->route($notification['data']->href);
             }

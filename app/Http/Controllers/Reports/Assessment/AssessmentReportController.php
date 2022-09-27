@@ -10,6 +10,7 @@ use PDF;
 class AssessmentReportController extends Controller
 {
     use AssessmentReportTrait;
+
     public function index()
     {
         return view('reports.assessment.index');
@@ -18,13 +19,14 @@ class AssessmentReportController extends Controller
     public function preview($parameters)
     {
         $parameters = json_decode(decrypt($parameters), true);
+
         return view('reports.assessment.preview', compact('parameters'));
     }
 
     public function exportAssessmentReportPdf($parameters)
     {
         $parameters = json_decode(decrypt($parameters), true);
-        $records = $this->getRecords($parameters);
+        $records    = $this->getRecords($parameters);
         if ($parameters['tax_type_id'] == 'all') {
             $tax_type = 'All';
         } else {
@@ -32,17 +34,17 @@ class AssessmentReportController extends Controller
         }
 
         if ($parameters['year'] == 'all') {
-            $fileName = $tax_type->name. '_' . 'Assessments' . '.pdf';
-            $title = 'Notice of Assessments'. ' For ' . $tax_type->name;
+            $fileName = $tax_type->name . '_' . 'Assessments' . '.pdf';
+            $title    = 'Notice of Assessments' . ' For ' . $tax_type->name;
         } else {
-            $fileName = $tax_type->name. '_' . 'Assessments' . ' - ' . $parameters['year'] . '.pdf';
-            $title = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
+            $fileName = $tax_type->name . '_' . 'Assessments' . ' - ' . $parameters['year'] . '.pdf';
+            $title    = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
         }
         $records = $records->get();
-        $pdf = PDF::loadView('exports.assessments.reports.pdf.assessment', compact('records', 'title', 'parameters'));
+        $pdf     = PDF::loadView('exports.assessments.reports.pdf.assessment', compact('records', 'title', 'parameters'));
         $pdf->setPaper('a4', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
         return $pdf->download($fileName);
     }
-
 }

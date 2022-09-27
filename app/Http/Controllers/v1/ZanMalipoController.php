@@ -305,13 +305,13 @@ class ZanMalipoController extends Controller
                         'paid_at' => Carbon::now()->toDateTimeString(),
                     ]);
 
-                    $taxReturn = $item->installment->taxReturn;
-                    $taxReturn->update([
-                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount,
+                    $installable = $item->installment->installable;
+                    $installable->update([
+                        'outstanding_amount' => $installable->outstanding_amount - $bill->amount,
                     ]);
 
                     if ($item->installment->getNextPaymentDate()) {
-                        $taxReturn->update([
+                        $installable->update([
                             'curr_payment_due_date' => $item->installment->getNextPaymentDate(),
                         ]);
                     } elseif (!$item->installment->getNextPaymentDate() && ($item->installment->status == InstallmentStatus::ACTIVE)) {
@@ -319,11 +319,11 @@ class ZanMalipoController extends Controller
                             'status' => InstallmentStatus::COMPLETE,
                         ]);
 
-                        $item->installment->taxReturn->update([
+                        $item->installment->installable->update([
                             'status' => ReturnStatus::COMPLETE,
                         ]);
 
-                        $item->installment->taxReturn->return->update([
+                        $item->installment->installable->return->update([
                             'status' => ReturnStatus::COMPLETE,
                         ]);
                     }
@@ -333,8 +333,8 @@ class ZanMalipoController extends Controller
                         'status' => ReturnStatus::PAID_PARTIALLY,
                     ]);
 
-                    $taxReturn = $item->installment->taxReturn;
-                    $taxReturn->update([
+                    $installable = $item->installment->installable;
+                    $installable->update([
                         'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount,
                     ]);
                 }
