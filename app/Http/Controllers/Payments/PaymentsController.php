@@ -27,4 +27,9 @@ class PaymentsController extends Controller
             ->sum('paid_amount');
         return view('payments.complete', compact('usdDaily', 'tzsDaily', 'tzsWeekly', 'usdWeekly'));
     }
+
+    public function show($paymentId){
+        $payment = ZmPayment::findOrFail(decrypt($paymentId));
+        return view('payments.show', compact('payment'));
+    }
 }

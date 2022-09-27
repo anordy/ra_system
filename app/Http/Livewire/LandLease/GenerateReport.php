@@ -8,6 +8,7 @@ use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\LandLease;
+use App\Models\Taxpayer;
 use Illuminate\Support\Facades\Gate;
 
 class GenerateReport extends Component
@@ -19,6 +20,7 @@ class GenerateReport extends Component
     public $month;
     public $quater;
     public $semiAnnual;
+    public $taxpayer_id;
 
     //select options
     public $optionYears;
@@ -26,6 +28,7 @@ class GenerateReport extends Component
     public $optionMonths;
     public $optionQuarters;
     public $optionSemiAnnuals;
+    public $taxpayers;
 
     //hide/show elements
     public $showOptions;
@@ -71,7 +74,9 @@ class GenerateReport extends Component
         $this->showQuarters = false;
         $this->showSemiAnnuals = false;
 
-        $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getStartEndDate());
+        $this->taxpayers = Taxpayer::has('landLeases')->select('id', 'reference_no', 'first_name', 'middle_name', 'last_name', 'email', 'mobile')->get();
+
+        $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getParameters());
     }
 
     public function render()
@@ -80,8 +85,8 @@ class GenerateReport extends Component
     }
 
     public function preview(){
-        // dd($this->getStartEndDate());
-      $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getStartEndDate());
+
+      $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getParameters());
     }
 
     public function export()
@@ -90,20 +95,28 @@ class GenerateReport extends Component
             abort(403);
         }
         $dates = $this->getStartEndDate();
+
         if($dates['startDate'] == null || $dates['endDate'] == null) {
             $exists = LandLease::exists();
+            if ($this->taxpayer_id) {
+                $exists = LandLease::where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
+            }
+            
             if($exists){
                 $this->alert('success', 'Downloading file');
-                return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'Land Leases All Records.xlsx');
+                return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate'], $this->taxpayer_id), 'Land Leases All Records.xlsx');
             }else{
                 $this->alert('error', "No data found.");
-            } 
+            }
         }
 
         $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
+        if ($this->taxpayer_id) {
+            $exists =LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
+        }
         if ($exists) {
             $this->alert('success', 'Downloading file');
-            return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate']), 'Land Leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
+            return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate'], $this->taxpayer_id), 'Land Leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
         } else {
             $this->alert('error', "No data found for the selected period.");
         }
@@ -117,17 +130,26 @@ class GenerateReport extends Component
         $dates = $this->getStartEndDate();
         if($dates['startDate'] == null || $dates['endDate'] == null) {
             $exists = LandLease::exists();
+            if ($this->taxpayer_id) {
+                $exists = LandLease::where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
+            }
             if($exists){
                 $this->alert('success', 'Exporting Pdf File');
-                return redirect()->route('land-lease.download.report.pdf', encrypt(json_encode($dates)));
+                return redirect()->route('land-lease.download.report.pdf', encrypt($this->getParameters()));
             }else{
                 $this->alert('error', "No data found.");
             } 
         }
+
         $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
+
+        if ($this->taxpayer_id) {
+            $exists = LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
+        }
+
         if ($exists) {
             $this->alert('success', 'Exporting Pdf File');
-            return redirect()->route('land-lease.download.report.pdf', encrypt(json_encode($dates)));
+            return redirect()->route('land-lease.download.report.pdf', encrypt($this->getParameters()));
         } else {
             $this->alert('error', "No data found for the selected period.");
         }
@@ -161,9 +183,9 @@ class GenerateReport extends Component
             }
         }
 
-        // dd('updated');
+
        $this->selectedDates = $this->getStartEndDate();
-    //    dd($this->selectedDates);
+
 
     }
 
@@ -175,12 +197,12 @@ class GenerateReport extends Component
                 'endDate' => null,
             ];
         } elseif ($this->year == "Custom Range") {
-            // dd('here');
+
             return [
                 'startDate' => date('Y-m-d', strtotime($this->range_start)),
                 'endDate' => date('Y-m-d', strtotime($this->range_end)),
                 'from' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
-                'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
+                'to' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
             ];
 
         } elseif ($this->showMonths) {
@@ -237,6 +259,16 @@ class GenerateReport extends Component
             $to = $endDate->format('Y-m-d');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         }
+
+        
+    }
+
+    public function getParameters()
+    {
+        return [
+            'taxpayer_id' => $this->taxpayer_id,
+            'dates' => $this->getStartEndDate(),
+        ];
     }
 
 }

@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between">
-                <h6>Registration Details</h6>
+                <h6 class="text-capitalize">Details for {{$agent->taxpayer->first_name.' '.$agent->taxpayer->middle_name.' '.$agent->taxpayer->last_name}} as Tax Consultant</h6>
                 <a class="btn btn-info" href="{{ route('taxagents.active') }}">
                     <i class="bi bi-arrow-return-left mr-2"></i>
                     Back

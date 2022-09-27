@@ -26,11 +26,11 @@ class Taxpayer extends Model implements Auditable
             DB::beginTransaction();
             $s = 'Z';
 
-            switch ($this->region->name){
-                case 'Unguja':
+            switch ($this->region->location){
+                case Region::UNGUJA:
                     $s = $s . 'U';
                     break;
-                case 'Pemba':
+                case Region::PEMBA:
                     $s = $s . 'P';
                     break;
                 default:
@@ -109,6 +109,10 @@ class Taxpayer extends Model implements Auditable
     public function landLeaseAgent()
     {
         return $this->hasOne(LandLeaseAgent::class, 'taxpayer_id');
+    }
+
+    public function landLeases() {
+        return $this->hasMany(LandLease::class);
     }
 
     public function leasePayments() {

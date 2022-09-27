@@ -4,13 +4,13 @@
 
 @section('content')
     <div class="card rounded-0">
-        <div class="card-header bg-white font-weight-bold">
-            Debt Details
+        <div class="card-header bg-white font-weight-bold text-uppercase">
+            Installment Request Details
         </div>
         <div class="card-body">
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#request-details" class="nav-item nav-link font-weight-bold active">Request Details</a>
-                <a href="#debt-details" class="nav-item nav-link font-weight-bold">Debt Details</a>
+                <a href="#debt-details" class="nav-item nav-link font-weight-bold">{{ get_class($installable) == \App\Models\Returns\TaxReturn::class ? 'Debt' : 'Assessment' }} Details</a>
                 <a href="#approval-history" class="nav-item nav-link font-weight-bold">Approval History</a>
             </nav>
             <div class="tab-content px-2 pt-3 pb-2 border">
@@ -46,50 +46,102 @@
                             <span class="font-weight-bold text-uppercase">Status</span>
                             <p class="my-1 text-uppercase">{{ $installment->status }}</p>
                         </div>
-                        @if($installment->attachment)
-                            <div class="col-md-4 mb-3">
-                                <a class="file-item" target="_blank"
-                                   href="{{ route('installment.requests.file', encrypt($installment->attachment)) }}">
-                                    <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                    <div style="font-weight: 500;" class="ml-1">
-                                        <span class="font-weight-bold text-uppercase">Attachment</span>
-                                    </div>
-                                </a>
+                        @if($installment->files->count())
+                            <div class="col-md-12 mb-2">
+                                <span class="font-weight-bold text-uppercase">Attachments</span>
                             </div>
+                            @foreach($installment->files as $file)
+                                <div class="col-md-3 mb-3">
+                                    <a class="file-item" target="_blank"
+                                       href="{{ route('installment.requests.file', encrypt($file->location)) }}">
+                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                        <div style="font-weight: 500;" class="ml-1">
+                                            <span class="font-weight-bold text-uppercase">{{ $file->name }}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endforeach
                         @endif
                     </div>
                 </div>
                 <div id="debt-details" class="tab-pane fade p-4">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Status</span>
-                            <p class="my-1">{{ $taxReturn->application_step }}</p>
+                    @if(get_class($installable) == \App\Models\Returns\TaxReturn::class)
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Status</span>
+                                <p class="my-1">{{ $installable->application_step }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Tax Type</span>
+                                <p class="my-1">{{ $installable->taxType->name }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Due Date</span>
+                                <p class="my-1">{{ $installable->curr_payment_due_date->toFormattedDateString() }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Principal Amount</span>
+                                <p class="my-1">{{ $installable->currency }}. {{ number_format($installable->principal, 2) }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Penalty</span>
+                                <p class="my-1">{{ $installable->currency }}. {{ number_format($installable->penalty, 2) }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Interest</span>
+                                <p class="my-1">{{ $installable->currency }}. {{ number_format($installable->interest, 2) }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
+                                <p class="my-1">{{ $installable->currency }}. {{ number_format($installable->outstanding_amount, 2) }}</p>
+                            </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $taxReturn->taxType->name }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Due Date</span>
-                            <p class="my-1">{{ $taxReturn->curr_payment_due_date->toFormattedDateString() }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                            <p class="my-1">{{ $taxReturn->currency }}. {{ number_format($taxReturn->principal, 2) }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Penalty</span>
-                            <p class="my-1">{{ $taxReturn->currency }}. {{ number_format($taxReturn->penalty, 2) }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Interest</span>
-                            <p class="my-1">{{ $taxReturn->currency }}. {{ number_format($taxReturn->interest, 2) }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
-                            <p class="my-1">{{ $taxReturn->currency }}. {{ number_format($taxReturn->outstanding_amount, 2) }}</p>
-                        </div>
-                    </div>
+                    @endif
+
+                    @if(get_class($installable) == \App\Models\TaxAssessments\TaxAssessment::class)
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Business Name</span>
+                                <p class="my-1">{{ $installable->business->name }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">ZIN</span>
+                                <p class="my-1">{{ $installable->location->zin }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Mobile</span>
+                                <p class="my-1">{{ $installable->business->mobile }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Email</span>
+                                <p class="my-1">{{ $installable->business->email }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Tax Type</span>
+                                <p class="my-1">{{ $installable->taxType->name }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Payment Due Date</span>
+                                <p class="my-1">{{ $installable->curr_payment_due_date->toFormattedDateString() }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Principal Amount</span>
+                                <p class="my-1">{{ $installable->currency }}. {{ number_format($installable->principal, 2) }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Penalty</span>
+                                <p class="my-1">{{ $installable->currency }}. {{ number_format($installable->penalty, 2) }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Interest</span>
+                                <p class="my-1">{{ $installable->currency }}. {{ number_format($installable->interest, 2) }}</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
+                                <p class="my-1">{{ $installable->currency }}. {{ number_format($installable->outstanding_amount, 2) }}</p>
+                            </div>
+                            </div>
+                    @endif
                 </div>
                 <div id="approval-history" class="tab-pane fade p-4">
                     <livewire:approval.approval-history-table modelName='App\Models\Installment\InstallmentRequest' modelId="{{ $installment->id }}" />

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\TaxAgents;
 
 use App\Http\Controllers\Controller;
 use App\Models\TaxAgent;
+use App\Models\TaxAgentAcademicQualification;
+use App\Models\TaxAgentProfessionals;
+use App\Models\TaxAgentTrainingExperience;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,33 +31,42 @@ class TaxAgentFileController extends Controller
             return Storage::disk('local-admin')->response($agent->emp_letter);
         }
 
+        return abort(404);
+    }
+
+    public function getAgentAcademicFile($agentId, $type)
+    {
+
+        $academics = TaxAgentAcademicQualification::find($agentId);
         if ($type == 'academic_certificate') {
-            foreach ($agent->academics as $row)
-            {
-                return Storage::disk('local-admin')->response($row->certificate);
-            }
+            return Storage::disk('local-admin')->response($academics->certificate);
         }
 
         if ($type == 'academic_transcript') {
-            foreach ($agent->academics as $row)
-            {
-                return Storage::disk('local-admin')->response($row->transcript);
-            }
+            return Storage::disk('local-admin')->response($academics->transcript);
         }
 
+        return abort(404);
+    }
+
+    public function getAgentProfessionalFile($agentId, $type)
+    {
+        $pro = TaxAgentProfessionals::find($agentId);
         if ($type == 'pro_certificate') {
-            foreach ($agent->professionals as $row)
-            {
-                return Storage::disk('local-admin')->response($row->attachment);
-            }
+            return Storage::disk('local-admin')->response($pro->attachment);
         }
 
+        return abort(404);
+    }
+
+    public function getAgentTrainingFile($agentId, $type)
+    {
+
+        $training = TaxAgentTrainingExperience::find($agentId);
         if ($type == 'tra_certificate') {
-            foreach ($agent->trainings as $row)
-            {
-                return Storage::disk('local-admin')->response($row->attachment);
-            }
+            return Storage::disk('local-admin')->response($training->attachment);
         }
+
         return abort(404);
     }
 }

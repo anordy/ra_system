@@ -61,15 +61,15 @@ class DisputeApprovalTable extends DataTableComponent
             Column::make('Category', 'pinstance.category')
                 ->label(fn($row) => $row->pinstance->category ?? ''),
             Column::make('Tax In Dispute', 'pinstance.tax_in_dispute')
-                ->label(fn($row) => $row->pinstance->tax_in_dispute ?? ''),
+                ->label(fn($row) => number_format($row->pinstance->tax_in_dispute,2) ?? ''),
             Column::make('Tax Not in Dispute', 'pinstance.tax_not_in_dispute')
-                ->label(fn($row) => $row->pinstance->tax_not_in_dispute ?? ''),
+                ->label(fn($row) => number_format($row->pinstance->tax_not_in_dispute,2) ?? ''),
             Column::make('Tax Deposit', 'pinstance.tax_deposit')
-                ->label(fn($row) => $row->pinstance->tax_deposit ?? ''),
+                ->label(fn($row) => number_format($row->pinstance->tax_deposit,2) ?? ''),
             Column::make('Filled On', 'created_at')
                 ->format(fn($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Action', 'pinstance_id')
-                ->view('investigation.approval.action')
+                ->view('assesments.dispute.includes.action')
                 ->html(true),
         ];
     }

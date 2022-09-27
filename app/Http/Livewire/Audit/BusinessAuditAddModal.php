@@ -4,7 +4,10 @@ namespace App\Http\Livewire\Audit;
 
 use App\Models\Business;
 use App\Models\TaxAudit\TaxAudit;
+use App\Models\TaxAudit\TaxAuditLocation;
+use App\Models\TaxAudit\TaxAuditTaxType;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -18,8 +21,8 @@ class BusinessAuditAddModal extends Component
     public $description;
     public $business;
     public $business_id;
-    public $location_id;
-    public $tax_type_id;
+    public $location_ids;
+    public $tax_type_ids;
     public $intension;
     public $scope;
     public $period_from;
@@ -34,8 +37,8 @@ class BusinessAuditAddModal extends Component
     {
         return [
             'business_id' => 'required',
-            'location_id' => 'required',
-            'tax_type_id' => 'required',
+            'location_ids' => 'required',
+            'tax_type_ids' => 'required',
             'intension' => 'required',
             'scope' => 'required',
             'period_from' => 'required|date',
@@ -62,9 +65,10 @@ class BusinessAuditAddModal extends Component
 
     public function submit()
     {
+        // dd(json_encode($this->tax_type_ids));
         $check = TaxAudit::where('business_id', $this->business_id)
-            ->where('location_id', $this->location_id)
-            ->where('tax_type_id', $this->tax_type_id)
+            ->where('location_id', $this->location_ids)
+            ->where('tax_type_id', $this->tax_type_ids)
             ->whereIn('status', ['draft', 'pending'])
             ->first();
 
@@ -75,12 +79,12 @@ class BusinessAuditAddModal extends Component
             );
         }
         $this->validate();
-
+        DB::beginTransaction();
         try {
-            TaxAudit::create([
+            $taxAudit = TaxAudit::create([
                 'business_id' => $this->business_id,
-                'location_id' => $this->location_id,
-                'tax_type_id' => $this->tax_type_id,
+                'location_id' => count($this->location_ids) <= 1 ? $this->location_ids[0] : 0,
+                'tax_type_id' => count($this->tax_type_ids) <= 1 ? $this->tax_type_ids[0] : 0,
                 'intension' => $this->intension,
                 'scope' => $this->scope,
                 'period_from' => $this->period_from,
@@ -90,9 +94,28 @@ class BusinessAuditAddModal extends Component
                 'status' => 'draft',
                 'origin' => 'manual'
             ]);
+
+            foreach ($this->location_ids as $location_id) {
+                
+                TaxAuditLocation::create([
+                    'tax_audit_id' => $taxAudit->id,
+                    'business_location_id' => $location_id
+                ]);
+            }
+
+            foreach ($this->tax_type_ids as $tax_type_id) {
+                
+                TaxAuditTaxType::create([
+                    'tax_audit_id' => $taxAudit->id,
+                    'business_tax_type_id' => $tax_type_id
+                ]);
+            }
+
+            DB::commit();
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
+            DB::rollBack();
             $this->alert('error', 'Something went wrong');
         }
     }

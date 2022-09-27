@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
 use App\Models\Taxpayer;
+use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,10 @@ class TaxClaim extends Model
 
     public function business(){
         return $this->belongsTo(Business::class);
+    }
+
+    public function taxType(){
+        return $this->belongsTo(TaxType::class);
     }
 
     public function financialMonth(){

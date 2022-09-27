@@ -10,9 +10,8 @@ use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
 use App\Models\Debts\DebtWaiver;
 use App\Models\Debts\DebtPenalty;
+use App\Models\Debts\DemandNotice;
 use App\Models\Debts\RecoveryMeasure;
-use App\Models\Debts\DebtDemandNotice;
-use App\Models\Debts\SentDemandNotice;
 use App\Models\Installment\Installment;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Extension\ExtensionRequest;
@@ -26,6 +25,8 @@ class TaxReturn extends Model
     protected $guarded = [];
 
     protected $casts = [
+        'filing_due_date' => 'date',
+        'payment_due_date' => 'date',
         'curr_filing_due_date' => 'datetime',
         'curr_payment_due_date' => 'datetime'
     ];
@@ -76,10 +77,6 @@ class TaxReturn extends Model
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
-    public function debtWaiver()
-    {
-        return $this->hasOne(DebtWaiver::class, 'tax_return_id');
-    }
 
     public function extensionRequest()
     {
@@ -96,10 +93,6 @@ class TaxReturn extends Model
         return $this->hasOne(Installment::class);
     }
 
-    public function penalties()
-    {
-        return $this->hasMany(DebtPenalty::class, 'tax_return_id');
-    }
 
     public function recoveryMeasure()
     {
@@ -108,6 +101,14 @@ class TaxReturn extends Model
 
     public function demandNotices()
     {
-        return $this->morphMany(DebtDemandNotice::class, 'debt');
+        return $this->morphMany(DemandNotice::class, 'debt');
+    }
+
+    public function waiver(){
+        return $this->morphOne(DebtWaiver::class, 'debt');
+    }
+
+    public function penalties(){
+        return $this->morphMany(DebtPenalty::class, 'debt');
     }
 }

@@ -184,7 +184,7 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $this->subject->save();
 
-                $operators = [$this->teamLeader, $this->teamMember];
+                $operators = [intval($this->teamLeader), intval($this->teamMember)];
             }
 
             if ($this->checkTransition('conduct_investigation')) {
@@ -198,6 +198,10 @@ class TaxInvestigationApprovalProcessing extends Component
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
                             'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'original_principal_amount' => $this->principalAmount,
+                            'original_interest_amount' => $this->interestAmount,
+                            'original_penalty_amount' => $this->penaltyAmount,
+                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
                         ]);
                     } else {
                         TaxAssessment::create([
@@ -210,6 +214,10 @@ class TaxInvestigationApprovalProcessing extends Component
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
                             'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'original_principal_amount' => $this->principalAmount,
+                            'original_interest_amount' => $this->interestAmount,
+                            'original_penalty_amount' => $this->penaltyAmount,
+                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
                         ]);
                     }
                 } else {
@@ -256,6 +264,7 @@ class TaxInvestigationApprovalProcessing extends Component
             $this->generateControlNumber();
             $this->subject->assessment->update([
                 'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
             ]);
         }
     }
@@ -343,19 +352,19 @@ class TaxInvestigationApprovalProcessing extends Component
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($zmBill->id);
                 if ($response->status === ZmResponse::SUCCESS) {
-                    $assessment->status = ReturnStatus::CN_GENERATING;
+                    $assessment->payment_status = ReturnStatus::CN_GENERATING;
                     $assessment->save();
 
                     $this->flash('success', 'A control number for this verification has been generated successfully', [], redirect()->back()->getTargetUrl());
                 } else {
                     session()->flash('error', 'Control number generation failed, try again later');
-                    $assessment->status = ReturnStatus::CN_GENERATION_FAILED;
+                    $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                 }
 
                 $assessment->save();
             } else {
                 // We are local
-                $assessment->status = ReturnStatus::CN_GENERATED;
+                $assessment->payment_status = ReturnStatus::CN_GENERATED;
                 $assessment->save();
 
                 // Simulate successfully control no generation

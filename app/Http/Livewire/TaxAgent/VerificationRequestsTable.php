@@ -27,7 +27,7 @@ class VerificationRequestsTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxAgent::query()
-            ->where('status', '=', TaxAgentStatus::PENDING)->with('region', 'district')
+            ->whereIn('status', [TaxAgentStatus::PENDING, TaxAgentStatus::CORRECTION])->with('region', 'district')
             ->orderByDesc('id');
     }
 

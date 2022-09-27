@@ -16,13 +16,13 @@
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
                 <a href="#tab2" class="nav-item nav-link font-weight-bold">Return Details</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Penalties</a>
-                @if ($tax_return->debtWaiver)
+                @if ($tax_return->waiver)
                     <a href="#tab4" class="nav-item nav-link font-weight-bold">Waiver Details</a>
                 @endif
                 @if (count($tax_return->demandNotices) > 0)
                     <a href="#tab5" class="nav-item nav-link font-weight-bold">Demand Notices</a>
                 @endif
-                @if (count($tax_return->recoveryMeasure->measures) > 0)
+                @if ($tax_return->recoveryMeasure)
                 <a href="#tab6" class="nav-item nav-link font-weight-bold">Assigned Recovery Measures</a>
                 @endif
                 @if ($tax_return->recoveryMeasure)
@@ -32,7 +32,7 @@
 
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show m-4">
-                    @if (count($tax_return->recoveryMeasure->measures) == 0)
+                    @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned')
                         <div class="card-tools">
                                 <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"  class="btn btn-info btn-sm text-white" style="color: white !important;"><i
                                     class="fa fa-plus text-white"></i>
@@ -40,16 +40,19 @@
                                 </a>
                         </div>
                     @endif
-                    @include('debts.details', ['tax_return' => $tax_return])
+                    @include('debts.returns.details', ['tax_return' => $tax_return])
                 </div>
                 <div id="tab2" class="tab-pane fade m-4">
-                    @include('debts.return-details', ['tax_return' => $tax_return])
+                    @include('debts.returns.return-details', ['tax_return' => $tax_return])
                 </div>
                 <div id="tab3" class="tab-pane fade m-4">
-                    <livewire:debt.debt-penalties :penalties="$tax_return->return->penalties ?? []" />
+                    @php
+                        $penalties = $tax_return->return->penalties->merge($tax_return->penalties ?? []);
+                    @endphp
+                    <livewire:debt.debt-penalties :penalties="$penalties ?? []" />
                 </div>
                 <div id="tab4" class="tab-pane fade  m-4">
-                    @include('debts.waiver-details', ['tax_return' => $tax_return])
+                    @include('debts.returns.waiver-details', ['tax_return' => $tax_return])
                 </div>
                 <div id="tab5" class="tab-pane fade m-4">
                     <livewire:debt.demand-notice.demand-notice-table debtId="{{ $tax_return->id }}" />
@@ -59,7 +62,7 @@
                     <hr>
                     <div class="row m-2 pt-3">
     
-                        @if (count($tax_return->recoveryMeasure->measures) > 0)
+                        @if ($tax_return->recoveryMeasure)
                             @foreach ($tax_return->recoveryMeasure->measures as $key => $recovery_measure)
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Measure Type</span>

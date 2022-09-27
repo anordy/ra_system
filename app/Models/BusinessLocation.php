@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Relief\Relief;
+use App\Models\Returns\TaxReturn;
 use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,11 +57,11 @@ class BusinessLocation extends Model
                     abort(404);
             }
 
-            switch ($this->region->name){
-                case 'Unguja':
+            switch ($this->region->location){
+                case Region::UNGUJA:
                     $s = $s . '1';
                     break;
-                case 'Pemba':
+                case Region::PEMBA:
                     $s = $s . '2';
                     break;
                 default:
@@ -126,5 +127,9 @@ class BusinessLocation extends Model
     public function landLeases()
     {
         return $this->hasMany(LandLease::class, 'business_location_id');
+    }
+
+    public function taxReturns(){
+        return $this->hasMany(TaxReturn::class, 'location_id');
     }
 }

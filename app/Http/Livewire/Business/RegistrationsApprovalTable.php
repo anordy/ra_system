@@ -3,10 +3,7 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\Business;
-use App\Models\BusinessStatus;
-use App\Models\Investigation\TaxInvestigation;
 use App\Models\WorkflowTask;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -40,24 +37,14 @@ class RegistrationsApprovalTable extends DataTableComponent
     {
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('Business Name', 'pinstance.name')
-                ->label(fn ($row) => $row->pinstance->name ?? ''),
+            Column::make('Business Name', 'pinstance.business.name')                ->label(fn ($row) => $row->pinstance->name ?? ''),
+
             Column::make('TIN', 'pinstance.tin')
                 ->label(fn ($row) => $row->pinstance->tin ?? ''),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')
                 ->label(fn ($row) => $row->pinstance->reg_no ?? ''),
             Column::make('Mobile', 'pinstance.mobile')
                 ->label(fn ($row) => $row->pinstance->mobile ?? ''),
-//            Column::make('Previous Transition', 'id')
-//                ->format(function ($value, $row) {
-//                    $transtion  = str_replace('_', ' ', $row->pinstancesActive->name ?? '');
-//                    return <<<HTML
-//                       <span class="badge badge-info py-1 px-2"  style="border-radius: 1rem; font-size: 85%">
-//                        <i class="bi bi-clock mr-1"></i>
-//                        {$transtion}
-//                    </span>
-//                    HTML;
-//                })->html(true),
             Column::make('Status', 'pinstance.mobile')
                 ->label(function ($row){
                     return view('business.registrations.includes.approval_status', compact('row'));

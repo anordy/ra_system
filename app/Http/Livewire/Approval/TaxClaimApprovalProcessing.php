@@ -3,9 +3,12 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxClaimStatus;
+use App\Models\Claims\TaxClaim;
 use App\Models\Claims\TaxClaimAssessment;
 use App\Models\Claims\TaxClaimOfficer;
 use App\Models\Claims\TaxCredit;
+use App\Models\Taxpayer;
+use App\Notifications\DatabaseNotification;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
@@ -105,7 +108,7 @@ class TaxClaimApprovalProcessing extends Component
                 'user_id' => $this->teamMember,
             ]);
 
-            $operators = [$this->teamLeader, $this->teamMember];
+            $operators = [intval($this->teamLeader), intval($this->teamMember)];
         }
 
         if ($this->checkTransition('verification_results')) {
@@ -152,6 +155,7 @@ class TaxClaimApprovalProcessing extends Component
             ]);
 
             $this->subject->status = TaxClaimStatus::APPROVED;
+            $this->subject->approved_on = now();
             $this->subject->save();
         }
 
@@ -161,6 +165,16 @@ class TaxClaimApprovalProcessing extends Component
             $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
             $credit->status = TaxClaimStatus::APPROVED;
             $credit->save();
+
+            $claim = TaxClaim::query()->find($this->subject->id);
+            $taxpayer = $claim->taxpayer;
+            $taxpayer->notify(new DatabaseNotification(
+                $subject = 'TAX ClAIM APPROVAL',
+                $message = 'Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been successfully approved',
+                $href = 'claims.show',
+                $hrefText = 'View',
+                $hrefParameters = $this->subject->id,
+            ));
         }
 
         try {

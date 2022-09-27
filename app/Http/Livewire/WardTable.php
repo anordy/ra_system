@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Ward;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -49,10 +50,22 @@ class WardTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
+                ->format(function ($value) {
+                    $edit = '';
+                    $delete = '';
+
+                    if (Gate::allows('setting-ward-edit')) {
+                        $edit =  <<< HTML
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                            HTML;
+                    }
+                    if (Gate::allows('setting-ward-delete')) {
+                        $delete =  <<< HTML
+                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                        HTML;
+                    }
+                    return $edit . ' ' . $delete;
+                })
                 ->html(true),
         ];
     }
@@ -60,6 +73,10 @@ class WardTable extends DataTableComponent
 
     public function delete($id)
     {
+        if (!Gate::allows('setting-ward-delete')) {
+            abort(403);
+        }
+
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,

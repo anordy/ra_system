@@ -7,7 +7,7 @@
         <tr>
             <th style="text-align:center;" colspan="10" height="70">
                 <strong>ZANZIBAR REVENUE AUTHORITY</strong><br>
-                <strong>RELIEF APPLLICATIONS</strong><br>
+                <strong>RELIEF APPLICATIONS</strong><br>
                 <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>
             </th>
         </tr>

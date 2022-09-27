@@ -36,11 +36,8 @@ class TaxInvestigationVerifiedTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Z Number', 'location.zin'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
-            Column::make('Business Location', 'location.name'),
-            Column::make('Tax Type', 'taxType.name'),
             Column::make('Period From', 'period_from'),
             Column::make('Period To', 'period_to'),
             Column::make('Filled By', 'created_by_id')

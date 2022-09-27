@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Exception;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -47,6 +48,10 @@ class UserChangePasswordModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-user-change-password')) {
+            abort(403);
+        }
+
         $this->validate();
         try {
             $this->user->update([
@@ -57,7 +62,7 @@ class UserChangePasswordModal extends Component
             $this->flash('success', 'Password updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            
+
             $this->alert('error', 'Something went wrong');
         }
     }

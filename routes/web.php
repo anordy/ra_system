@@ -12,6 +12,7 @@
  */
 
 use App\Http\Controllers\AllPdfController;
+use App\Http\Controllers\Assesments\DisputeController;
 use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Assesments\WaiverObjectionController;
@@ -37,7 +38,6 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Debt\AssessmentDebtController;
 use App\Http\Controllers\Debt\ReturnDebtController;
-use App\Http\Controllers\Reports\Dispute\DisputeReportController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
 use App\Http\Controllers\EducationLevelController;
@@ -71,8 +71,12 @@ use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Relief\ReliefMinistriestController;
 use App\Http\Controllers\Relief\ReliefProjectController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
+use App\Http\Controllers\Relief\ReliefSponsorController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
+use App\Http\Controllers\Reports\Claims\ClaimReportController;
+use App\Http\Controllers\Reports\Debts\DebtReportController;
+use App\Http\Controllers\Reports\Dispute\DisputeReportController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\BfoExciseDuty\BfoExciseDutyController;
 use App\Http\Controllers\Returns\EmTransaction\EmTransactionController;
@@ -86,6 +90,7 @@ use App\Http\Controllers\Returns\LumpSum\LumpSumReturnController;
 use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\Petroleum\QuantityCertificateController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
+use App\Http\Controllers\Returns\PrintController;
 use App\Http\Controllers\Returns\Queries\AllCreditReturnsController;
 use App\Http\Controllers\Returns\Queries\NilReturnsController;
 use App\Http\Controllers\Returns\Queries\NonFilersController;
@@ -107,7 +112,8 @@ use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\TaxTypeController;
 use App\Http\Controllers\TwoFactorAuthController;
-use App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController;
+use App\Http\Controllers\UpgradeTaxType\QualifiedTaxTypeController;
+use App\Http\Controllers\UpgradeTaxType\UpgradedTaxTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\v1\ZanMalipoController;
 use App\Http\Controllers\VerificationController;
@@ -126,6 +132,7 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/pay', [ZanMalipoController::class, 'pay']); // TODO: remove on production
+Route::get('/consultant-pay', [ZanMalipoController::class, 'consultant']); // TODO: remove on production
 
 Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
 Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
@@ -156,6 +163,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/isic4', ISIC4Controller::class);
         Route::resource('/business-files', BusinessFileController::class);
         Route::resource('/exchange-rate', ExchangeRateController::class);
+        Route::resource('/interest-rates', InterestRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
         Route::get('financial-months', [FinancialMonthsController::class, 'index'])->name('financial-months');
@@ -179,7 +187,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
     Route::name('returns.')->prefix('returns')->group(function () {
-        Route::resource('/interest-rates', InterestRateController::class);
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
 
         Route::name('returns.')->prefix('returns')->group(function () {
@@ -239,8 +246,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
         Route::get('/business-certificate/{location}/taxType/{type}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
 
-        Route::get('/upgrade-tax-types/', [UpgradeTaxtypeController::class, 'index'])->name('upgrade-tax-types.index');
-        Route::get('/upgrade-tax-types/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('upgrade-tax-types.show');
+        Route::get('/qualified-tax-types/', [QualifiedTaxTypeController::class, 'index'])->name('qualified-tax-types.index');
+        Route::get('/qualified-tax-types/show/{id}/{tax_type_id}/{sales}', [QualifiedTaxTypeController::class, 'show'])->name('qualified-tax-types.show');
+
+        Route::get('/upgraded-tax-types/', [UpgradedTaxTypeController::class, 'index'])->name('upgraded-tax-types.index');
+        Route::get('/upgraded-tax-types/show/{id}', [UpgradedTaxTypeController::class, 'show'])->name('upgraded-tax-types.show');
     });
 
     // assesments
@@ -260,6 +270,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/waiverobjection/show/{waiver_id}', [WaiverObjectionController::class, 'approval'])->name('waiverobjection.approval');
         Route::get('/objection/approval/{objection_id}', [ObjectionController::class, 'approval'])->name('objection.approval');
         Route::get('/waiverobjection/create/location/{location_id}/tax/{tax_type_id}', [WaiverObjectionController::class, 'create'])->name('waiverobjection.create');
+
+        //Dispute
+        Route::get('/dispute/index', [DisputeController::class, 'index'])->name('dispute.index');
+        Route::get('/dispute/approval/{waiver_id}', [DisputeController::class, 'approval'])->name('dispute.approval');
+        Route::get('/dispute/files/{waiver_id}', [DisputeController::class, 'files'])->name('dispute.files');
+        Route::get('/dispute/show/{waiver_id}', [DisputeController::class, 'show'])->name('dispute.show');
+
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
@@ -276,8 +293,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('returns.')->prefix('/e-filling')->group(function () {
         Route::resource('/petroleum', PetroleumReturnController::class);
+        // airport
+        Route::get('/airport/index', [PortReturnController::class, 'airport'])->name('airport.index');
 
-        Route::get('/port/index', [PortReturnController::class, 'index'])->name('port.index');
+        // seaport
+        Route::get('/seaport/index', [PortReturnController::class, 'seaport'])->name('seaport.index');
         Route::get('/port/show/{return_id}', [PortReturnController::class, 'show'])->name('port.show');
         Route::get('/port/edit/{return_id}', [PortReturnController::class, 'edit'])->name('port.edit');
 
@@ -321,6 +341,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/lump-sum/index', [LumpSumReturnController::class, 'index'])->name('lump-sum.index');
         Route::get('/lump-sum/view/{id}', [LumpSumReturnController::class, 'view'])->name('lump-sum.show');
         Route::get('/lump-sum/history/{filters}', [LumpSumReturnController::class, 'history'])->name('lump-sum.history');
+
+        // Print Returns
+        Route::get('/print/{tax_return_id}', [PrintController::class, 'print'])->name('print');
     });
 
     Route::name('petroleum.')->prefix('petroleum')->group(function () {
@@ -342,12 +365,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
         Route::resource('/ministries', ReliefMinistriestController::class);
+        Route::resource('/sponsors', ReliefSponsorController::class);
         Route::resource('/registrations', ReliefRegistrationController::class);
         Route::resource('/projects', ReliefProjectController::class);
         Route::resource('/applications', ReliefApplicationsController::class);
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
         Route::get('/generate-report', [ReliefGenerateReportController::class, 'index'])->name('generate.report');
-        Route::get('/download-report-pdf/{dates}', [ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
+        Route::get('/download-report-pdf/{payload}', [ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
+        Route::get('/generate-report/report-preview/ceiling/{payload}', [ReliefGenerateReportController::class, 'ceilingReport'])->name('report.ceiling.preview');
+        Route::get('/generate-report/report-preview/{payload}', [ReliefGenerateReportController::class, 'reportPreview'])->name('report.preview');
     });
 
     Route::name('tax_verifications.')->prefix('tax_verifications')->group(function () {
@@ -386,6 +412,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/disputes/download-report-pdf/{data}', [DisputeReportController::class, 'exportDisputeReportPdf'])->name('disputes.download.pdf');
         Route::get('/disputes/preview/{parameters}', [DisputeReportController::class, 'preview'])->name('disputes.preview');
 
+        //Claim Report
+        Route::get('/claims', [ClaimReportController::class, 'init'])->name('claims.init');
+        Route::get('/claims/preview/{parameters}', [ClaimReportController::class, 'preview'])->name('claims.preview');
+        Route::get('/claims/download-report-pdf/{data}', [ClaimReportController::class, 'exportClaimReportPdf'])->name('claim.download.pdf');
+
+        // Debt Reports
+        Route::get('/debts', [DebtReportController::class, 'index'])->name('debts');
+        Route::get('/debts/preview/{parameters}', [DebtReportController::class, 'preview'])->name('debts.preview');
+        Route::get('/debts/download-report-pdf/{data}', [DebtReportController::class, 'exportDebtReportPdf'])->name('debts.download.pdf');
+
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -422,14 +458,18 @@ Route::middleware(['auth'])->group(function () {
         // Return debts
         Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
         Route::get('/returns/recovery-measure/{debtId}', [ReturnDebtController::class, 'recovery'])->name('debt.recovery');
-        Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('debt.show');
-        Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('debt.showOverdue');
-        Route::get('/demand-notice/send/{debtId}', [ReturnDebtController::class, 'sendDemandNotice'])->name('debt.sendDemandNotice');
+        Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('return.show');
+        Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('return.showOverdue');
+        Route::get('/demand-notice/send/{debtId}', [ReturnDebtController::class, 'sendDemandNotice'])->name('return.sendDemandNotice');
 
         Route::get('/waivers', [ReturnDebtController::class, 'waivers'])->name('waivers.index');
-        Route::get('/waivers/{waiverId}', [ReturnDebtController::class, 'approval'])->name('waivers.approval');
+        Route::get('/returns/waiver/show/{waiverId}', [ReturnDebtController::class, 'approval'])->name('returns.waivers.approval');
 
         Route::get('/assessments', [AssessmentDebtController::class, 'index'])->name('assessments.index');
+        Route::get('/assesments/show/{assessment_id}', [AssessmentDebtController::class, 'show'])->name('assessment.show');
+        Route::get('/assessment/waiver/show/{assessment_id}', [AssessmentDebtController::class, 'showWaiver'])->name('assessment.waiver.show');
+        Route::get('/assessments/waiver/show/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('assessments.waivers.approval');
+
 
     });
 
@@ -441,6 +481,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
+    Route::get('agent-academics-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentAcademicFile'])->name('agent.academics-file');
+    Route::get('agent-professionals-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentProfessionalFile'])->name('agent.professionals-file');
+    Route::get('agent-trainings-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentTrainingFile'])->name('agent.trainings-file');
 
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');
@@ -466,6 +509,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('payments.')->prefix('payments')->group(function () {
         Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
+        Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 
     Route::prefix('mvr')->as('mvr.')->group(function () {

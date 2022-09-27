@@ -31,6 +31,7 @@ class ReturnReport extends Component
     public $optionPaymentReportTypes;
     public $showPreviewTable = false;
     public $activateButtons = false;
+    public $optionVatTypes;
 
     public $year = 'all';
     public $month;
@@ -38,11 +39,13 @@ class ReturnReport extends Component
     public $quater;
     public $semiAnnual;
     public $tax_type_id = 'all';
+    public $tax_type_code = 'all';
     public $type;
     public $filing_report_type = 'All-Filings';
     public $payment_report_type;
     public $range_start;
     public $range_end;
+    public $vat_type = 'All-VAT-Returns';
 
     //extra filters
     public $optionTaxRegions = [];
@@ -54,7 +57,7 @@ class ReturnReport extends Component
     public $district;
     public $ward;
 
-    
+
 
     public $returnName;
     public $parameters;
@@ -66,6 +69,7 @@ class ReturnReport extends Component
             'type' => 'required',
             'year' => 'required',
             'period' => 'required',
+            'vat_type' => $this->tax_type_code == 'vat' ? 'required' : '',
             'range_start' => $this->year == 'range' ? 'required' : '',
             'range_end' => $this->year == 'range' ? 'required' : '',
             'filing_report_type' => $this->type == 'Filing' ? 'required' : '',
@@ -88,6 +92,7 @@ class ReturnReport extends Component
         $this->optionReportTypes = ['Filing', 'Payment'];
         $this->optionFilingTypes = ['All-Filings', 'On-Time-Filings', 'Late-Filings', 'Tax-Claims', 'Nill-Returns'];
         $this->optionPaymentTypes = ['All-Paid-Returns', 'On-Time-Paid-Returns', 'Late-Paid-Returns', 'Unpaid-Returns'];
+        $this->optionVatTypes = ['All-VAT-Returns', 'Hotel-VAT-Returns', 'Electricity-VAT-Returns', 'Local-VAT-Returns'];
 
         //extra filters
         $this->optionTaxRegions = TaxRegion::pluck('name', 'id')->toArray();
@@ -106,9 +111,19 @@ class ReturnReport extends Component
 
     public function updated($propertyName)
     {
+        if ($propertyName == 'tax_type_id') {
+            if($this->tax_type_id != 'all'){
+                $this->tax_type_code = TaxType::find($this->tax_type_id)->code;
+            }else{
+                $this->tax_type_code = 'all';
+            }
+            $this->reset('vat_type');
+        }
+
         if ($propertyName == 'period') {
             $this->reset('month', 'quater', 'semiAnnual');
         }
+
         if ($propertyName == 'year') {
             $this->reset('month', 'quater', 'semiAnnual', 'period');
         }
@@ -144,6 +159,7 @@ class ReturnReport extends Component
         }
     }
 
+    //preview report
     public function preview()
     {
         $this->validate();
@@ -151,47 +167,23 @@ class ReturnReport extends Component
             return;
         };
         $this->parameters = $this->getParameters();
-        // dd($this->parameters);
-        $records = $this->getRecords($this->parameters);
-        if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
-            return;
-        }
-        return redirect()->route('reports.returns.preview', encrypt(json_encode($this->getParameters())));
+        $this->previewReport($this->parameters);
     }
 
+    //export pdf report
     public function exportPdf()
     {
         $this->validate();
         $this->parameters = $this->getParameters();
-        $records = $this->getRecords($this->parameters);
-        if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
-            return;
-        }
-        $this->alert('success', 'Exporting Pdf File');
-        return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($this->parameters)));
+        $this->exportPdfReport($this->parameters);
     }
 
+    //export excel report
     public function exportExcel()
     {
         $this->validate();
         $this->parameters = $this->getParameters();
-        $records = $this->getRecords($this->parameters);
-        if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
-            return;
-        }
-
-        if ($this->parameters['year'] == 'all') {
-            $fileName = $this->parameters['tax_type_name'] . '_' . $this->parameters['filing_report_type'] . '.xlsx';
-            $title = $this->parameters['filing_report_type'] . ' For' . $this->parameters['tax_type_name'];
-        } else {
-            $fileName = $this->parameters['tax_type_name'] . '_' . $this->parameters['filing_report_type'] . ' - ' . $this->parameters['year'] . '.xlsx';
-            $title = $this->parameters['filing_report_type'] . ' For' . $this->parameters['tax_type_name'] . ' ' . $this->parameters['year'];
-        }
-        $this->alert('success', 'Exporting Excel File');
-        return Excel::download(new ReturnReportExport($records, $title, $this->parameters), $fileName);
+        $this->exportExcelReport($this->parameters);
     }
 
 
@@ -201,6 +193,7 @@ class ReturnReport extends Component
             'tax_type_id' => $this->tax_type_id ?? 'all',
             'tax_type_code' => $this->tax_type_id == 'all' ? 'all' : TaxType::find($this->tax_type_id)->code,
             'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns' : TaxType::find($this->tax_type_id)->name,
+            'vat_type' => $this->vat_type,
             'type' => $this->type,
             'year' => $this->year,
             'period' => $this->period,

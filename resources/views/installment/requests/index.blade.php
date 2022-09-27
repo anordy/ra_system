@@ -18,7 +18,7 @@
                     <livewire:installment.installment-requests-table />
                 </div>
                 <div id="pending-approval" class="tab-pane fade p-2">
-                    <livewire:installment.installment-requests-table pending="true" />
+                    <livewire:installment.installment-requests-approval-table />
                 </div>
                 <div id="rejected" class="tab-pane fade p-2">
                     <livewire:installment.installment-requests-table rejected="true" />

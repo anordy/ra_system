@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\Business\Taxtype\SendTaxTypeMail;
+use App\Mail\Business\Taxtype\ChangeTaxType;
 use Exception;
+use Carbon\Carbon;
 use App\Models\BusinessTaxType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +19,7 @@ class DailyTaxTypeEffectiveDateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'daily:tax_change';
+    protected $signature = 'daily:tax-effective-date';
 
     /**
      * The console command description.
@@ -52,7 +55,7 @@ class DailyTaxTypeEffectiveDateCommand extends Command
         DB::beginTransaction();
 
         $tax_type_changes = BusinessTaxTypeChange::where('status', 'approved')
-            ->whereRaw("TIMESTAMPDIFF(DAY, business_tax_type_changes.effective_date, CURDATE()) = 0")
+            ->whereRaw("TIMESTAMPDIFF(DAY, business_tax_type_changes.effective_date, CURDATE()) > 0")
             ->get();
 
         try {
@@ -72,6 +75,13 @@ class DailyTaxTypeEffectiveDateCommand extends Command
                     'status' => 'effective'
                 ]);
 
+                $payload = [
+                    'tax_type' => $current_tax_type,
+                    'tax_change' => $tax_change,
+                    'time' => Carbon::now()->format('d-m-Y')
+                ];
+
+                $this->sendTaxChangeEmail($payload);
             }
 
             DB::commit();
@@ -81,5 +91,11 @@ class DailyTaxTypeEffectiveDateCommand extends Command
             Log::channel('taxEffectiveDate')->error($e);
             DB::rollBack();
         }
+    }
+
+    public function sendTaxChangeEmail($payload)
+    {
+        $now = Carbon::now();
+        SendTaxTypeMail::dispatch($payload)->delay($now->addSeconds(30));
     }
 }

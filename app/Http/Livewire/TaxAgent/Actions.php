@@ -103,11 +103,13 @@ class Actions extends Component
 
             $taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
-				$subject = 'TAX-AGENT APPROVAL',
+				$subject = 'TAX-CONSULTANT APPROVAL',
 				$message = 'Your application has been approved',
 				$href = 'taxagent.apply',
 				$hrefText = 'view'
 			));
+
+            event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id, $agent->reference_no));
 
 			DB::commit();
 			$this->flash('success', 'Request approved successfully');
@@ -145,13 +147,13 @@ class Actions extends Component
 
 			$taxpayer = Taxpayer::find($agent->taxpayer_id);
 			$taxpayer->notify(new DatabaseNotification(
-				$subject = 'TAX-AGENT REJECTED',
+				$subject = 'TAX-CONSULTANT REJECTED',
 				$message = 'Your application has been rejected',
 				$href = 'taxagent.apply',
 				$hrefText = 'view'
 			));
 
-			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id));
+			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id, null));
 			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
 			DB::commit();
 			$this->flash('success', 'Request rejected successfully');

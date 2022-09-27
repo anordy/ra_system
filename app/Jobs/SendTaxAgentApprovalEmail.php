@@ -20,12 +20,13 @@ class SendTaxAgentApprovalEmail implements ShouldQueue
      *
      * @return void
      */
-	public $fullname, $email, $status;
-    public function __construct($fullname, $email, $status)
+	public $fullname, $email, $status, $reference_number;
+    public function __construct($fullname, $email, $status, $reference_number)
     {
         $this->fullname = $fullname;
 		$this->email = $email;
 		$this->status = $status;
+        $this->reference_number = $reference_number;
     }
 
     /**
@@ -35,6 +36,6 @@ class SendTaxAgentApprovalEmail implements ShouldQueue
      */
     public function handle()
     {
-		Mail::to($this->email)->send(new TaxAgentApproval($this->fullname, $this->email, $this->status));
+		Mail::to($this->email)->send(new TaxAgentApproval($this->fullname, $this->email, $this->status, $this->reference_number));
     }
 }

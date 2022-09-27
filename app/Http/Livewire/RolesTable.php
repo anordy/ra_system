@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Role;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -49,15 +50,32 @@ class RolesTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Configure Permission', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$value)"><i class="fas fa-cog"></i></button>
-                HTML)
-                ->html(true),
+            ->format(function ($value) {
+                if (Gate::allows('setting-role-assign-permission')) {
+                    return  <<< HTML
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$value)"><i class="fas fa-cog"></i></button>
+                        HTML;
+                    }
+                })->html(true),
             Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
+                ->format(function ($value) {
+                    $edit = '';
+                    $delete = '';
+
+                    if (Gate::allows('setting-role-edit')) {
+                        $edit =  <<< HTML
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                            HTML;
+                    }
+
+                    if (Gate::allows('setting-role-delete')) {
+                        $delete =  <<< HTML
+                                <button class="btn btn-danger btn-sm" onclick="Livewire.emit('showModal', 'role-delete-modal',$value)"><i class="fa fa-trash"></i> </button>
+                            HTML;
+                    }
+
+                    return $edit . $delete;
+                })
                 ->html(true),
         ];
     }
@@ -76,6 +94,10 @@ class RolesTable extends DataTableComponent
 
     public function delete($id)
     {
+        if (!Gate::allows('setting-role-delete')) {
+            abort(403);
+        }
+
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,

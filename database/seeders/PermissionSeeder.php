@@ -48,7 +48,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-tour-operation-view', 'sys_module_id' => 5],
             ['name' => 'return-restaurant-levy-view', 'sys_module_id' => 5],
             ['name' => 'return-vat-return-view', 'sys_module_id' => 5],
-            ['name' => 'return-port-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-airport-return-view', 'sys_module_id' => 5],
+            ['name' => 'return-seaport-return-view', 'sys_module_id' => 5],
             ['name' => 'return-stamp-duty-return-view', 'sys_module_id' => 5],
             ['name' => 'return-bfo-excise-duty-return-view', 'sys_module_id' => 5],
             ['name' => 'return-mno-excise-duty-return-view', 'sys_module_id' => 5],
@@ -95,6 +96,8 @@ class PermissionSeeder extends Seeder
 
             # Debt Management
             ['name' => 'debt-management-debts-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-debts-waive', 'sys_module_id' => 14],
+            ['name' => 'debt-management-debts-recovery-measure', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-overdue-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-waiver-debt-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-assessment-debt-view', 'sys_module_id' => 14],
@@ -145,46 +148,66 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-user-add', 'sys_module_id' => 18],
             ['name' => 'setting-user-edit', 'sys_module_id' => 18],
             ['name' => 'setting-user-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-user-change-password','sys_module_id'=>18],
+            ['name' => 'setting-user-change-role','sys_module_id'=>18],
+            ['name' => 'setting-user-change-status','sys_module_id'=>18],
+
             ['name' => 'setting-role-view', 'sys_module_id' => 18],
             ['name' => 'setting-role-add', 'sys_module_id' => 18],
             ['name' => 'setting-role-edit', 'sys_module_id' => 18],
             ['name' => 'setting-role-delete', 'sys_module_id' => 18],
+            ['name' => 'setting-role-assign-permission', 'sys_module_id' => 18],
+
             ['name' => 'setting-country-view', 'sys_module_id' => 18],
             ['name' => 'setting-country-add', 'sys_module_id' => 18],
             ['name' => 'setting-country-edit', 'sys_module_id' => 18],
             ['name' => 'setting-country-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-region-view', 'sys_module_id' => 18],
             ['name' => 'setting-region-add', 'sys_module_id' => 18],
             ['name' => 'setting-region-edit', 'sys_module_id' => 18],
             ['name' => 'setting-region-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-district-view', 'sys_module_id' => 18],
             ['name' => 'setting-district-add', 'sys_module_id' => 18],
             ['name' => 'setting-district-edit', 'sys_module_id' => 18],
             ['name' => 'setting-district-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-ward-view', 'sys_module_id' => 18],
             ['name' => 'setting-ward-add', 'sys_module_id' => 18],
             ['name' => 'setting-ward-edit', 'sys_module_id' => 18],
             ['name' => 'setting-ward-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-bank-view', 'sys_module_id' => 18],
             ['name' => 'setting-bank-add', 'sys_module_id' => 18],
             ['name' => 'setting-bank-edit', 'sys_module_id' => 18],
             ['name' => 'setting-bank-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-exchange-rate-view', 'sys_module_id' => 18],
             ['name' => 'setting-exchange-rate-add', 'sys_module_id' => 18],
             ['name' => 'setting-exchange-rate-edit', 'sys_module_id' => 18],
             ['name' => 'setting-exchange-rate-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-interest-rate-view', 'sys_module_id' => 18],
+            ['name' => 'setting-interest-rate-add', 'sys_module_id' => 18],
+            ['name' => 'setting-interest-rate-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-interest-rate-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-education-level-view', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-add', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-edit', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-business-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-business-category-add', 'sys_module_id' => 18],
             ['name' => 'setting-business-category-edit', 'sys_module_id' => 18],
             ['name' => 'setting-business-category-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-tax-type-view', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-type-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-isic-level-one-view', 'sys_module_id' => 18],
             ['name' => 'setting-isic-level-one-add', 'sys_module_id' => 18],
             ['name' => 'setting-isic-level-one-edit', 'sys_module_id' => 18],
@@ -201,14 +224,25 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-isic-level-four-add', 'sys_module_id' => 18],
             ['name' => 'setting-isic-level-four-edit', 'sys_module_id' => 18],
             ['name' => 'setting-isic-level-four-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-business-file-view', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-add', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-edit', 'sys_module_id' => 18],
             ['name' => 'setting-business-file-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-tax-region-view', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-add', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-edit', 'sys_module_id' => 18],
             ['name' => 'setting-tax-region-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-financial-year-add', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-year-view', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-add', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-view', 'sys_module_id' => 18],
+            ['name' => 'setting-financial-month-extend', 'sys_module_id' => 18],
+            ['name' => 'setting-return-configuration-view', 'sys_module_id' => 18],
+            ['name' => 'setting-return-configuration-edit', 'sys_module_id' => 18],
+            
             ['name' => 'setting-mvr-make-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-model-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transmission-type-view', 'sys_module_id' => 18],
@@ -222,6 +256,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-fee-view', 'sys_module_id' => 18],
+            
 
             # System
             ['name' => 'system-audit-trail-view', 'sys_module_id' => 19],
@@ -229,21 +264,34 @@ class PermissionSeeder extends Seeder
             ['name' => 'system-workflow-configure', 'sys_module_id' => 19],
             ['name' => 'system-all-pdfs-view', 'sys_module_id' => 19],
 
+
             # Managerial Report
             ['name' => 'managerial-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-view', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-excel', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-pdf', 'sys_module_id' => 20],
+            ['name' => 'managerial-claim-report-preview', 'sys_module_id' => 20],
+
 
             # Extenstion
             ['name' => 'payment-extension-view', 'sys_module_id' => 21],
 
+
             # Installment
             ['name' => 'payment-installment-view', 'sys_module_id' => 22],
             ['name' => 'payment-installment-request-view', 'sys_module_id' => 22],
+            
 
             # Relief Management
             ['name' => 'relief-ministries-view', 'sys_module_id' => 23],
             ['name' => 'relief-ministries-create', 'sys_module_id' => 23],
             ['name' => 'relief-ministries-edit', 'sys_module_id' => 23],
             ['name' => 'relief-ministries-delete', 'sys_module_id' => 23],
+
+            ['name' => 'relief-sponsors-view', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-create', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-edit', 'sys_module_id' => 23],
+            ['name' => 'relief-sponsors-delete', 'sys_module_id' => 23],
 
             ['name' => 'relief-projects-view', 'sys_module_id' => 23],
             ['name' => 'relief-projects-create', 'sys_module_id' => 23],

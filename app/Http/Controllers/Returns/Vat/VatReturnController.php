@@ -5,29 +5,24 @@ namespace App\Http\Controllers\Returns\Vat;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessStatus;
 use App\Models\Returns\Vat\VatReturn;
-use App\Models\Returns\Vat\VatReturnPenalty;
 use App\Traits\PaymentsTrait;
-use App\Traits\ReturnCardReport;
-use App\Traits\ReturnSummaryCardTrait;
 use Illuminate\Support\Facades\Gate;
 
 class VatReturnController extends Controller
 {
-    use ReturnCardReport, PaymentsTrait,ReturnSummaryCardTrait;
+    use  PaymentsTrait;
 
     public function index()
     {
         if (!Gate::allows('return-vat-return-view')) {
             abort(403);
         }
-        $paidData = $this->returnCardReportForPaidReturns(VatReturn::class, VatReturn::getTableName(), VatReturnPenalty::getTableName());
 
-        $unpaidData = $this->returnCardReportForUnpaidReturns(VatReturn::class, VatReturn::getTableName(), VatReturnPenalty::getTableName());
-
-        $vars       = $this->getSummaryData(VatReturn::query());
+        $cardOne    = 'returns.vat.vat-card-one';
+        $cardTwo    = 'returns.vat.vat-card-two';
         $tableName  = 'returns.vat.vat-return-table';
 
-        return view('returns.vat_returns.index', compact('vars', 'paidData', 'unpaidData', 'tableName'));
+        return view('returns.vat_returns.index', compact('cardOne', 'cardTwo', 'tableName'));
     }
 
     public function show($id)

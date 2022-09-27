@@ -21,7 +21,10 @@ class ReliefProjectListTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return ReliefProjectList::query()->with('ministry')->where('project_id', $this->projectSectionId);
+        return ReliefProjectList::query()
+        ->with('ministry')
+        ->with('sponsor')
+        ->where('project_id', $this->projectSectionId);
     }
 
     protected $listeners = [
@@ -48,7 +51,19 @@ class ReliefProjectListTable extends DataTableComponent
             Column::make("Rate", "rate")
                 ->sortable(),
             Column::make("Ministry", "ministry.name")
-                ->sortable(),
+                ->sortable()
+                ->format(
+                    function($value){
+                        return $value ? $value : '-';
+                    }
+                ),
+            Column::make("Sponsor", "sponsor.acronym")
+                ->sortable()
+                ->format(
+                    function($value){
+                        return $value ? $value : '-';
+                    }
+                ),
             // Column::make('Action', 'id')
             //     ->format(fn ($value) => <<< HTML
             //         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-project-list-edit-modal',$value)"><i class="fa fa-edit"></i> </button>

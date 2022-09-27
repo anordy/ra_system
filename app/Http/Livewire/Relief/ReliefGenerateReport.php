@@ -2,27 +2,42 @@
 
 namespace App\Http\Livewire\Relief;
 
-use App\Http\Controllers\Relief\ReliefGenerateReportController;
+use App\Models\Business;
+use App\Models\BusinessLocation;
 use App\Models\Relief\Relief;
+use App\Models\Relief\ReliefMinistry;
 use App\Models\Relief\ReliefProject;
 use App\Models\Relief\ReliefProjectList;
+use App\Models\Relief\ReliefSponsor;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
-use Carbon\Carbon;
-use PDF;
-use Illuminate\Support\Facades\Gate;
 
 class ReliefGenerateReport extends Component
 {
 
     use LivewireAlert;
-    //values for selects
+    //values for period selects
     public $year;
     public $period;
     public $month;
     public $quater;
     public $semiAnnual;
+
+    //values for report type selects
+    public $reportType;
+    public $projectSectionId;
+    public $projectId;
+    public $ministryId;
+    public $supplierId;
+    public $supplierLocationId;
+    public $sponsorId;
+
+    //filter unique checkboxes
+    public $filterIncludeNonMinistry;
+    public $filterIncludeNonSponsor;
 
     //select options
     public $optionYears;
@@ -30,20 +45,59 @@ class ReliefGenerateReport extends Component
     public $optionMonths;
     public $optionQuarters;
     public $optionSemiAnnuals;
+ 
+    public $optionReportTypes;
+    public $optionProjectSections;
+    public $optionProjects;
+
+    public $optionMinistries;
+
+    public $optionSuppliers;
+    public $optionSupplierLocations;
+    
+    public $optionSponsors;
 
     //hide/show elements
     public $showOptions;
     public $showMonths;
     public $showQuarters;
     public $showSemiAnnuals;
+    public $showMoreFilters;
+
+    public $showProjectSections = true;
+    public $showProjects = false;
+    public $showSponsors = false;
+    public $showSuppliers = false;
+    public $showSuppliersLocations = false;
+    public $showMinistries = false;
 
     //backend variables
     public $startMonth;
     public $endMonth;
     public $dates;
+    public $isCeilingReport = false;
+
 
     public function mount()
     {
+        //set option report types
+        $this->optionReportTypes = [
+            'project' => 'By Project',
+            'sponsor' => 'By Sponsor',
+            'supplier' => 'By Supplier',
+            'ministry' => 'By Ministry',
+            'ceiling' => 'Ceiling Report',
+        ];
+        $this->reportType = 'project';
+        $this->projectSectionId = 'all';
+        $this->optionProjectSections = ReliefProject::orderBy('name', 'asc')->get();
+        $this->projectId = 'all';
+
+        $this->optionMinistries = ReliefMinistry::orderBy('name','asc')->get();
+
+        $this->optionSuppliers = Business::orderBy('name','asc')->get();
+        $this->optionSponsors = ReliefSponsor::orderBy('name','asc')->get();
+
         //set current year at first
         $this->year = date('Y');
         $this->period = 'Monthly';
@@ -62,17 +116,19 @@ class ReliefGenerateReport extends Component
 
         //set values
         $this->optionPeriods = ["Monthly", "Quarterly", "Semi-Annual", "Annual"];
-        // $this->optionPeriods = array(1 => "Monthly", 2 => "Quarterly", 3 => "Semi-Annual", 4 => "Annual");
         $this->optionMonths = array(1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December");
         $this->optionQuarters = array("1st-Quarter", "2nd-Quarter", "3rd-Quarter", "4th-Quarter");
         $this->optionSemiAnnuals = array("1st-Semi-Annual", "2nd-Semi-Annual");
+
         $this->showOptions = true;
         $this->showMonths = true;
         $this->showQuarters = false;
         $this->showSemiAnnuals = false;
+        $this->showMoreFilters = false;
 
-        $this->emitTo('relief.relief-report-table', 'refreshTable', $this->getStartEndDate());
-        $this->emitTo('relief.relief-report-summary', 'refreshSummary', $this->getStartEndDate());
+        $this->filterIncludeNonMinistry = true;
+        $this->filterIncludeNonSponsor = true;
+
     }
 
     public function render()
@@ -82,46 +138,41 @@ class ReliefGenerateReport extends Component
 
     public function preview()
     {
-        $this->emitTo('relief.relief-report-table', 'refreshTable', $this->getStartEndDate());
-        $this->emitTo('relief.relief-report-summary', 'refreshSummary', $this->getStartEndDate());
-        $this->dates = json_encode($this->getStartEndDate());
+        $payload = $this->hasRecords();
+        if($payload!=false){
+            if($payload['parameters']['reportType']=='ceiling'){
+                return redirect()->route('reliefs.report.ceiling.preview',encrypt(json_encode($payload)));
+            }else{
+                return redirect()->route('reliefs.report.preview',encrypt(json_encode($payload)));
+            }
+            
+        }
+        
     }
 
     public function export()
     {
-        if(!Gate::allows('relief-generate-report')){
+        if (!Gate::allows('relief-generate-report')) {
             abort(403);
         }
-        $dates = $this->getStartEndDate();
-        if ($dates['startDate'] == null || $dates['endDate'] == null) {
-            $exists = Relief::exists();
-            if ($exists) {
-                $this->alert('success', 'Exporting Excel file');
-                return Excel::download(new ReliefExport($dates['startDate'], $dates['endDate']), 'land-leases All Records.xlsx');
-            } else {
-                $this->alert('error', "No data found.");
-            }
+        $payload = $this->hasRecords();
+        if($payload['parameters']['reportType']!='ceiling'){
+           $fileName = 'Relief Applications FROM ' . $payload['dates']['from'] . ' TO ' . $payload['dates']['to'];
+        }else{
+            $fileName = 'Relief Ceiling Report FROM ' . $payload['dates']['from'] . ' TO ' . $payload['dates']['to']; 
         }
-
-        $exists = Relief::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
-        if ($exists) {
+        if($payload!=false){
             $this->alert('success', 'Exporting Excel file');
-            return Excel::download(new \App\Exports\ReliefExport($dates), 'Relief Applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
-            // return Excel::download(new Relief    Export($dates['startDate'], $dates['endDate']), 'land-leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
-        } else {
-            // $this->flash('error', 'No records found.');
-            // return redirect()->back()->with('error', 'No data found for the selected period.');
-            $this->alert('error', "No data found for the selected period.");
+            return Excel::download(new \App\Exports\ReliefExport($payload), $fileName.'.xlsx');
         }
     }
 
-    public function updated()
+    public function updated($propertyName)
     {
         if ($this->year == "All") {
             $this->showOptions = false;
         } else {
             $this->showOptions = true;
-
             if ($this->period == "Monthly") {
                 $this->showMonths = true;
                 $this->showQuarters = false;
@@ -141,6 +192,53 @@ class ReliefGenerateReport extends Component
             }
         }
         $this->selectedDates = $this->getStartEndDate();
+
+        //report type
+        if($propertyName=='reportType'){
+            $this->resetAllSelects();
+            if($this->reportType=='project'){
+                $this->showProjectSections = true; 
+                $this->projectSectionId = 'all'; 
+                $this->projectId = 'all';
+            }elseif($this->reportType=='ministry'){
+                $this->showMinistries = true;
+                $this->ministryId = 'all';
+            }elseif($this->reportType=='supplier'){
+                $this->showSuppliers = true;
+                $this->supplierId = 'all';
+            }elseif($this->reportType=='sponsor'){
+                $this->showSponsors = true;
+                $this->sponsorId = 'all';
+            }elseif($this->reportType=='ceiling'){
+                $this->isCeilingReport = true;
+            }
+        }
+
+        //Project Section
+        if ($propertyName == 'projectSectionId') {
+            $this->resetAllSelects();
+            $this->showProjectSections = true; 
+            $this->projectId = 'all';
+            if ($this->projectSectionId != 'all') {
+                $this->optionProjects = ReliefProjectList::orderBy('name','asc')->where('project_id', $this->projectSectionId)->get();
+                $this->showProjects = true;
+            }else{
+                $this->showProjects = false;
+            }
+        }
+
+        //Supplier
+        if ($propertyName == 'supplierId') {
+            $this->resetAllSelects();
+            $this->showSuppliers = true;
+            $this->supplierLocationId = 'all';
+            if ($this->supplierId != 'all') {
+                $this->optionSupplierLocations = BusinessLocation::orderBy('name','asc')->where('business_id', $this->supplierId)->get();
+                $this->showSuppliersLocations = true;
+            }else{
+                $this->showSuppliersLocations = false;
+            }
+        }
     }
 
     public function getStartEndDate()
@@ -154,8 +252,8 @@ class ReliefGenerateReport extends Component
             $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $date->startOfMonth()->format('Y-m-d');
-            $to = $date->endOfMonth()->format('Y-m-d');
+            $from = $date->startOfMonth()->format('d-M-Y');
+            $to = $date->endOfMonth()->format('d-M-Y');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } elseif ($this->showQuarters) {
             if ($this->quater == '1st-Quarter') {
@@ -176,8 +274,8 @@ class ReliefGenerateReport extends Component
             $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
+            $from = $startDate->format('d-M-Y');
+            $to = $endDate->format('d-M-Y');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } elseif ($this->showSemiAnnuals) {
             if ($this->semiAnnual == '1st-Semi-Annual') {
@@ -191,50 +289,165 @@ class ReliefGenerateReport extends Component
             $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
+            $from = $startDate->format('d-M-Y');
+            $to = $endDate->format('d-M-Y');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } else {
             $startDate = \Carbon\Carbon::parse($this->year . "-" . "01" . "-01");
             $endDate = \Carbon\Carbon::parse($this->year . "-" . "12" . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
-            $from = $startDate->format('Y-m-d');
-            $to = $endDate->format('Y-m-d');
+            $from = $startDate->format('d-M-Y');
+            $to = $endDate->format('d-M-Y');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         }
     }
 
     public function exportPdf()
     {
-        if(!Gate::allows('relief-generate-report')){
+        if (!Gate::allows('relief-generate-report')) {
             abort(403);
         }
-        $dates = $this->getStartEndDate();
-        if ($dates['startDate'] == null || $dates['endDate'] == null) {
-            $exists = Relief::exists();
-            if ($exists) {
-                
-                // return Excel::download(new ReliefExport($dates['startDate'], $dates['endDate']), 'land-leases All Records.xlsx');
-                // $this->downloadReliefReportPdf($dates);
-            } else {
-                $this->alert('error', "No data found.");
-            }
-        }
-
-        $exists = Relief::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->exists();
-        if ($exists) {
-            $this->alert('success', "Exporting PDF file.");
-            return redirect()->route('reliefs.download.report.pdf',[encrypt($dates)]);
-        } else {
-            // $this->flash('error', 'No records found.');
-            // return redirect()->back()->with('error', 'No data found for the selected period.');
-            $this->alert('error', "No data found for the selected period.");
+        $payload = $this->hasRecords();
+        if($payload!=false){
+            $this->alert('success', 'Exporting Excel file');
+            return redirect()->route('reliefs.download.report.pdf', [encrypt(json_encode($payload))]);
         }
     }
 
-//     public function downloadReliefReportPdf($dates)
-//     {
-//         return redirect()->route('reliefs.download.report.pdf',[encrypt($dates)]);
-//     }
+    public function toggleFilters()
+    {
+        $this->showMoreFilters = !$this->showMoreFilters;
+    }
+
+    public function getParameters()
+    {
+        if($this->showMinistries){
+            return [
+                'reportType' => 'ministry',
+                'id' => $this->ministryId
+            ];
+        }elseif($this->showSponsors){
+            return [
+                'reportType' => 'sponsor',
+                'id' => $this->sponsorId
+            ];
+        }elseif($this->showProjectSections){
+            return [
+                'reportType' => 'project',
+                'sectionId'=>$this->projectSectionId,
+                'projectId'=>$this->projectId,
+            ];
+        }elseif($this->showSuppliers){
+            return [
+                'reportType' => 'supplier',
+                'supplierId' => $this->supplierId,
+                'locationId' => $this->supplierLocationId
+            ];
+        }elseif($this->isCeilingReport){
+            return [
+                'reportType' => 'ceiling'
+            ];
+        }
+    }
+
+    public function removeItemsOnFalse($items)
+    {
+        foreach ($items as $key => $item) {
+            if ($item == false) {
+                unset($items[$key]);
+            }
+        }
+        return $items;
+    }
+
+    public function resetAllSelects()
+    {
+        $this->showSponsors = false;
+        $this->showSuppliers = false;
+        $this->showSuppliersLocations = false;
+        $this->showMinistries = false;
+        $this->showProjects = false;
+        $this->showProjectSections = false;
+        $this->isCeilingReport = false;
+    }
+
+    public function hasRecords()
+    {
+        $dates = $this->getStartEndDate();
+        $parameters = $this->getParameters();
+        if ($dates == []) {
+            $relief = Relief::query()->orderBy('reliefs.created_at', 'desc');
+        } elseif ($dates['startDate'] == null || $dates['endDate'] == null) {
+            $relief = Relief::query()->orderBy('reliefs.created_at', 'desc');
+        } else {
+            $relief = Relief::query()->whereBetween('reliefs.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('reliefs.created_at', 'asc');
+        }
+
+        if($parameters['reportType']=='project'){
+            if($parameters['sectionId']=='all'){
+                $relief->whereNotNull('reliefs.project_id');
+            }else{
+                $relief->where('reliefs.project_id',$parameters['sectionId']);
+                if($parameters['projectId']=='all'){
+                    $relief->where('reliefs.project_id',$parameters['sectionId'])
+                            ->whereNotNull('reliefs.project_list_id');
+                }else{
+                    $relief->where('reliefs.project_id',$parameters['sectionId'])
+                            ->where('reliefs.project_list_id',$parameters['projectId']);
+                }
+            } 
+        }elseif($parameters['reportType']=='supplier'){
+            if($parameters['supplierId']=='all'){
+                $relief->whereNotNull('reliefs.business_id');
+            }else{
+                $relief->where('reliefs.business_id',$parameters['supplierId']);
+                if($parameters['locationId']=='all'){
+                    $relief->where('reliefs.business_id',$parameters['supplierId'])
+                            ->whereNotNull('reliefs.location_id');
+                }else{
+                    $relief->where('reliefs.business_id',$parameters['supplierId'])
+                            ->where('reliefs.location_id',$parameters['locationId']);
+                }
+            } 
+        }elseif($parameters['reportType']=='sponsor'){
+            if($parameters['id']=='all'){
+                $relief->whereHas('project',function(Builder $query){
+                    $query->whereNotNull('relief_sponsor_id');
+                });
+            }elseif($parameters['id']=='without'){
+                $relief->whereHas('project',function(Builder $query){
+                    $query->whereNull('relief_sponsor_id');
+                });
+            }else{
+                $relief->whereHas('project',function(Builder $query) use ($parameters) {
+                    $query->where('relief_sponsor_id', $parameters['id']);
+                });
+            }
+        }elseif($parameters['reportType']=='ministry'){
+            if($parameters['id']=='all'){
+                $relief->whereHas('project',function(Builder $query){
+                    $query->whereNotNull('ministry_id');
+                });
+            }elseif($parameters['id']=='without'){
+                $relief->whereHas('project',function(Builder $query){
+                    $query->whereNull('ministry_id');
+                });
+            }else{
+                $relief->whereHas('project',function(Builder $query) use ($parameters) {
+                    $query->where('ministry_id', $parameters['id']);
+                });
+            }
+        }
+
+        if($relief->count()<1){
+            $this->alert('error','No Records found in selected criteria');
+            return false;
+        }
+
+        return [
+            'dates' => $dates,
+            'parameters' => $parameters,
+        ];
+    }
 }

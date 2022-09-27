@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Verification;
 
 use App\Enum\TaxVerificationStatus;
 use App\Models\Verification\TaxVerification;
+use App\Traits\ReturnFilterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -12,14 +13,20 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerificationVerifiedTable extends DataTableComponent
 {
-
-    use LivewireAlert;
+    use LivewireAlert,ReturnFilterTrait;
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+    
+    public $data = [];
 
     public $model = TaxVerification::class;
 
     public function builder(): Builder
     {
-        return TaxVerification::query()->with('business', 'location', 'taxType', 'taxReturn')
+        $returnTable = TaxVerification::getTableName();
+        $filter      = (new TaxVerification)->newQuery();
+        $filter      = $this->dataFilter($filter, $this->data, $returnTable);
+
+        return $filter->with('business', 'location', 'taxType', 'taxReturn')
             ->where('tax_verifications.status', TaxVerificationStatus::APPROVED)
             ->orderByDesc('tax_verifications.id');
     }
@@ -30,7 +37,7 @@ class VerificationVerifiedTable extends DataTableComponent
         $this->setAdditionalSelects(['created_by_type', 'tax_return_type']);
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
     }
 
@@ -46,6 +53,7 @@ class VerificationVerifiedTable extends DataTableComponent
             Column::make('Filled By', 'created_by_id')
                 ->format(function ($value, $row) {
                     $user = $row->createdBy()->first();
+
                     return $user->full_name ?? '';
                 }),
             Column::make('Filled On', 'created_at')
@@ -55,7 +63,6 @@ class VerificationVerifiedTable extends DataTableComponent
             Column::make('Action', 'id')
                 ->view('verification.verified.action')
                 ->html(true),
-
         ];
     }
 }

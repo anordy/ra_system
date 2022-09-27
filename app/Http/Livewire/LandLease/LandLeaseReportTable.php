@@ -15,27 +15,34 @@ class LandLeaseReportTable extends DataTableComponent
     use LivewireAlert;
 
     public $dates = [];
+    public $taxpayer_id;
 
     protected $listeners = ['refreshTable' => 'refreshTable', 'test'];
 
     public function builder(): Builder
     {
         $dates = $this->dates;
-
+        $taxpayer_id = $this->taxpayer_id;
+        
         if ($dates == []) {
-            return LandLease::query()->orderBy('land_leases.created_at', 'asc');
+            $model = LandLease::query();
+        } elseif ($dates['startDate'] == null || $dates['endDate'] == null) {
+            $model = LandLease::query();
+        } else {
+            $model =  LandLease::query()->whereBetween('land_leases.created_at', [$dates['startDate'], $dates['endDate']]);
         }
 
-        if ($dates['startDate'] == null || $dates['endDate'] == null) {
-            return LandLease::query()->orderBy('land_leases.created_at', 'asc');
+        if ($taxpayer_id) {
+            $model = clone $model->where('taxpayer_id', $taxpayer_id);
         }
 
-        return LandLease::query()->whereBetween('land_leases.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('land_leases.created_at', 'asc');
+        return $model->orderBy('land_leases.created_at', 'asc');
     }
 
     public function refreshTable($dates)
     {
-        $this->dates = $dates;
+        $this->dates = $dates['dates'];
+        $this->taxpayer_id = $dates['taxpayer_id'];
         $this->builder();
     }
 
@@ -177,7 +184,7 @@ class LandLeaseReportTable extends DataTableComponent
     public function getBusinessZin($id)
     {
         $businessLocation = BusinessLocation::find($id);
-        // dd($businessLocation);
+
         return $businessLocation->zin;
     }
 }

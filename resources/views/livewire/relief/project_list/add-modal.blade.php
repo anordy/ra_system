@@ -44,6 +44,21 @@
                     </div>
 
                     <div class="form-group col-lg-12">
+                        <label class="">Sponsor </label>
+                        <select class="form-control" wire:model.lazy="relief_sponsor_id">
+                            <option value='null' selected>Choose option</option>
+                            @foreach ($sponsors as $row)
+                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('relief_sponsor_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    
+
+                    <div class="form-group col-lg-12">
                         <label class="control-label">Government Notice</label>
                         <input type="file" class="form-control" accept="application/pdf" 
                             wire:model.lazy="government_notice_path" id="government_notice_path">

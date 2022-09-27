@@ -13,8 +13,9 @@ class DatabaseNotification extends Notification
     public $message; //message
     public $href;    // url
     public $hrefText; //url text eg. read more, view
-    public $owner = null;
     public $hrefParameters = null; //parameters
+    public $owner = null;
+    
 
     /**
      * Create a new notification instance.
@@ -81,6 +82,7 @@ class DatabaseNotification extends Notification
             'href'            => $this->href,
             'hrefText'        => $this->hrefText,
             'hrefParameters'  => $this->hrefParameters,
+            'owner'           => $this->owner,
         ];
     }
 }

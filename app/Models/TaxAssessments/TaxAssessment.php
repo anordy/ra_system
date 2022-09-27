@@ -2,17 +2,19 @@
 
 namespace App\Models\TaxAssessments;
 
-use App\Models\Debts\Debt;
-use App\Models\Disputes\Dispute;
+use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
+use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
-use App\Models\Investigation\TaxInvestigation;
+use App\Models\Disputes\Dispute;
+use App\Models\Debts\DebtPenalty;
 use App\Models\TaxAudit\TaxAudit;
-use App\Models\Verification\TaxVerification;
-use App\Models\ZmBill;
+use App\Models\Debts\DemandNotice;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Verification\TaxVerification;
+use App\Models\Investigation\TaxInvestigation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaxAssessment extends Model
@@ -21,6 +23,10 @@ class TaxAssessment extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'curr_payment_due_date' => 'datetime'
+    ];
+
     public function dispute(){
         return $this->belongsTo(Dispute::class);
     }
@@ -28,10 +34,6 @@ class TaxAssessment extends Model
     public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');
-    }
-
-    public function debt(){
-        return $this->morphOne(Debt::class, 'debt');
     }
 
     public function location()
@@ -80,5 +82,14 @@ class TaxAssessment extends Model
     public function payments()
     {
         return $this->bills()->where('status', 'paid');
+    }
+
+    public function penalties(){
+        return $this->morphMany(DebtPenalty::class, 'debt');
+    }
+
+    public function demandNotices()
+    {
+        return $this->morphMany(DemandNotice::class, 'debt');
     }
 }

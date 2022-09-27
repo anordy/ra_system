@@ -33,7 +33,7 @@
                     </div>
                 </div>
             @else
-                @if($agent->status == \App\Models\TaxAgentStatus::PENDING)
+                @if($agent->status == \App\Models\TaxAgentStatus::PENDING or $agent->status == \App\Models\TaxAgentStatus::CORRECTION)
                 <div class="d-flex justify-content-end p-2">
                     <livewire:tax-agent.verify-action :taxagent=$agent></livewire:tax-agent.verify-action>
                 </div>

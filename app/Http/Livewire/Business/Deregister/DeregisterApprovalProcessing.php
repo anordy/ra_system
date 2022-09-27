@@ -57,6 +57,14 @@ class DeregisterApprovalProcessing extends Component
                     // Deregister one location
                     $location = BusinessLocation::findOrFail($this->subject->location_id);
 
+                    // Get new head quarter
+                    if ($this->subject->new_headquarter_id != null) {
+                        $selectedHeadQuarter = BusinessLocation::findOrFail($this->subject->new_headquarter_id);
+                        $selectedHeadQuarter->update([
+                            'is_headquarter' => 1
+                        ]);
+                    }
+
                     $location->update([
                         'status' => BusinessStatus::DEREGISTERED
                     ]);
@@ -65,8 +73,9 @@ class DeregisterApprovalProcessing extends Component
                 $this->subject->status = BusinessStatus::APPROVED;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
-                event(new SendSms('business-deregister-approval', $this->subject->business_id));
-                event(new SendMail('business-deregister-approval', $this->subject->business_id));
+                event(new SendSms('business-deregister-approval', $this->subject));
+                event(new SendMail('business-deregister-approval', $this->subject));
+
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
@@ -79,17 +88,24 @@ class DeregisterApprovalProcessing extends Component
     public function reject($transtion)
     {
         $this->validate(['comments' => 'required']);
-
         try {
-            if ($this->checkTransition('audit_manager_review')) {
-                $this->subject->status = BusinessStatus::CORRECTION;
-            } else if ($this->checkTransition('application_filled_incorrect')) {
-                $this->subject->rejected_on = Carbon::now()->toDateTimeString();
+            if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
 
-                /**
-                 * TODO: Send Email & SMS for correcting the submitted request
-                 */
+                event(new SendSms('business-deregister-correction', $this->subject));
+                event(new SendMail('business-deregister-correction', $this->subject));
+            } 
+            
+            if ($this->checkTransition('commissioner_reject_complete')) {
+                $this->subject->rejected_on = Carbon::now()->toDateTimeString();
+                $this->subject->status = BusinessStatus::REJECTED;
+
+                event(new SendSms('business-deregister-rejected', $this->subject));
+                event(new SendMail('business-deregister-rejected', $this->subject));
+            } 
+            
+            if ($this->checkTransition('commissioner_reject')) {
+                
             }
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());

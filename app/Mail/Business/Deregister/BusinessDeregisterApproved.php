@@ -14,16 +14,16 @@ class BusinessDeregisterApproved extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $business;
+    public $deregister;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($business)
+    public function __construct($deregister)
     {
-        $this->business = $business;
+        $this->deregister = $deregister;
     }
 
     /**
@@ -34,6 +34,6 @@ class BusinessDeregisterApproved extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.deregister.approved')
-            ->subject("ZRB Business De-registration - " . strtoupper($this->business->name));
+            ->subject("ZRB Business De-registration - " . strtoupper($this->deregister->business->name));
     }
 }

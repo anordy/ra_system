@@ -2,10 +2,10 @@
 
 namespace App\Models\Installment;
 
+use App\Enum\BillStatus;
 use App\Enum\InstallmentStatus;
 use App\Models\Business;
 use App\Models\BusinessLocation;
-use App\Models\Debts\Debt;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxType;
 use App\Models\ZmBill;
@@ -33,8 +33,8 @@ class Installment extends Model
         return $this->belongsTo(InstallmentRequest::class, 'installment_request_id');
     }
 
-    public function taxReturn(){
-        return $this->belongsTo(TaxReturn::class);
+    public function installable(){
+        return $this->morphTo();
     }
 
     public function business(){
@@ -54,7 +54,7 @@ class Installment extends Model
     }
 
     public function paidAmount(){
-        return $this->items()->sum('amount');
+        return $this->items()->where('status', BillStatus::COMPLETE)->sum('amount');
     }
 
     /**
@@ -65,10 +65,14 @@ class Installment extends Model
             return false;
         }
 
-        if ($this->items()->count() >= $this->installment_count){
+        if ($this->items()->where('status', BillStatus::COMPLETE)->count() >= $this->installment_count){
             return false;
         }
 
-        return $this->installment_from->addMonths($this->items()->count() + 1);
+        return $this->installment_from->addMonths($this->items()->where('status', BillStatus::COMPLETE)->count() + 1);
+    }
+
+    public function files(){
+        return $this->hasMany(InstallmentRequestFile::class);
     }
 }

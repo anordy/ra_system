@@ -11,6 +11,11 @@ class WorkflowTask extends Model
 
     protected $guarded = [];
 
+    public static function getTableName()
+    {
+        return with(new static)->getTable();
+    }
+
     public function pinstance()
     {
         return $this->morphTo();
@@ -21,7 +26,8 @@ class WorkflowTask extends Model
         return $this->morphTo();
     }
 
-    public function business(){
+    public function business()
+    {
         return $this->morphTo();
     }
 
@@ -37,13 +43,11 @@ class WorkflowTask extends Model
             }
         }
     }
-    
 
-    public function getOperators(){
+    public function getOperators()
+    {
         if ($this->operator_type == 'staff') {
-            
         } elseif ($this->operator_type == 'role') {
-           
         }
     }
 }
