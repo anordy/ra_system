@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use App\Exports\ReturnReportExport;
 use App\Models\Returns\TaxReturn;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 trait ReturnReportTrait
@@ -16,7 +18,7 @@ trait ReturnReportTrait
             $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')
                 ->leftJoin('vat_returns', 'vat_returns.id', 'tax_returns.return_id')
                 ->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
-                
+
             switch ($parameters['vat_type']) {
                 case 'All-VAT-Returns':
                     break;
@@ -95,7 +97,6 @@ trait ReturnReportTrait
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
             $this->alert('error', 'No Records Found in the selected criteria');
-
             return;
         }
 
@@ -107,7 +108,6 @@ trait ReturnReportTrait
             $title    = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'] . ' ' . $parameters['year'];
         }
         $this->alert('success', 'Exporting Excel File');
-
         return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
     }
 

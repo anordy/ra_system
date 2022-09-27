@@ -18,7 +18,9 @@ class TaxVerificationVerifiedController extends Controller
 {
     public function index()
     {
-        return view('verification.verified.index');
+        $tableName ='verification.verification-verified-table';
+
+        return view('verification.verified.index', compact('tableName'));
     }
 
     public function show($id)
