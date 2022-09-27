@@ -80,7 +80,7 @@ class LandLeaseController extends Controller
 
     public function downloadLandLeaseReportPdf($datesJson)
     {
-        // dd($datesJson);
+
         $data = decrypt($datesJson);
         $dates = $data['dates'];
         $taxpayer_id = $data['taxpayer_id'];
@@ -105,14 +105,14 @@ class LandLeaseController extends Controller
         $pdf = PDF::loadView('exports.land-lease.pdf.land-lease-report',compact('landLeases','startDate','endDate'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-        // dd($dates);
+
         return $pdf->download('Land Leases applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.pdf');
     }
 
 
     public function downloadLandLeasePaymentReportPdf($parameter)
     {
-        // dd($parameter);
+
         $data = json_decode(decrypt($parameter),true);
         $dates = $data['dates'];
         $status = $data['status'];
