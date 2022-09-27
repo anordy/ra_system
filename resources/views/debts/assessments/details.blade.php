@@ -11,7 +11,7 @@
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">ZIN No.</span>
-        <p class="my-1">{{ $assessment->location->zin }}</p>
+        <p class="my-1">{{ $assessment->location->zin ??'' }}</p>
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Assessment Step</span>
