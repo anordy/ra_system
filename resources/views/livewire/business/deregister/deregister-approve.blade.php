@@ -31,6 +31,12 @@
                             <p class="my-1">{{ $deregister->location->name }}</p>
                         </div>
                     @endif
+                    @if ($deregister->new_headquarter_id ?? null)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">New Head Quarters</span>
+                        <p class="my-1">{{ $deregister->headquarters->name ?? '' }}</p>
+                    </div>
+                    @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Submitted By</span>
                         <p class="my-1">{{ $deregister->taxpayer->fullname }}</p>

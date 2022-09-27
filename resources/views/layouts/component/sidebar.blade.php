@@ -73,10 +73,16 @@
                         </li>
                     @endcan
                     @can('qualified-tax-types-upgrade-view')
-                        <li class="{{ request()->is('business/upgrade-tax-types*') ? 'active' : '' }}">
-                            <a href="{{ route('business.upgrade-tax-types.index') }}">Qualified Tax Types Upgrade</a>
+                        <li class="{{ request()->is('business/qualified-tax-types*') ? 'active' : '' }}">
+                            <a href="{{ route('business.qualified-tax-types.index') }}">Qualified Tax Types</a>
                         </li>
                     @endcan
+
+                        @can('qualified-tax-types-upgrade-view')
+                            <li class="{{ request()->is('business/upgraded-tax-types*') ? 'active' : '' }}">
+                                <a href="{{ route('business.upgraded-tax-types.index') }}">Upgraded Tax Types</a>
+                            </li>
+                        @endcan
 
                 </ul>
             </li>
