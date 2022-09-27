@@ -3,18 +3,32 @@
 namespace App\Http\Livewire\Returns\Petroleum;
 
 use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Traits\ReturnFilterTrait;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class PetroleumReturnTable extends DataTableComponent
 {
+    use LivewireAlert, ReturnFilterTrait;
+
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+
+    public $data = [];
+
     public function mount()
     {
         if (!Gate::allows('return-petroleum-return-view')) {
             abort(403);
         }
+    }
+
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->emit('$refresh');
     }
 
     public function configure(): void
@@ -28,7 +42,11 @@ class PetroleumReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return PetroleumReturn::query()->orderBy('petroleum_returns.created_at', 'desc');
+        $returnTable = PetroleumReturn::getTableName();
+        $filter      = (new PetroleumReturn)->newQuery();
+        $filter      = $this->dataFilter($filter, $this->data, $returnTable);
+
+        return $filter->orderBy('petroleum_returns.created_at', 'desc');
     }
 
     public function columns(): array

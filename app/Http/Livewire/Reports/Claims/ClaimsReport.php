@@ -143,7 +143,7 @@ class ClaimsReport extends Component
                 $title = 'All Claim reports';
             } else {
                 if ($parameters['status'] != 'both') {
-                    $fileName = 'claim_report.xlsx';
+                    $fileName = $parameters['status'].'_claim_report.xlsx';
                     $title = $parameters['status'] . ' claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
                 } else {
                     $fileName = 'claim_report.xlsx';
@@ -152,7 +152,7 @@ class ClaimsReport extends Component
             }
         } else {
             if ($parameters['status'] != 'both') {
-                $fileName = 'claim_report.xlsx';
+                $fileName = $parameters['status'].'_claim_report.xlsx';
                 $title = $parameters['status'] . ' claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
             } else {
                 $fileName = 'claim_report.xlsx';

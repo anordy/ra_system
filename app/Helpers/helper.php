@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\BusinessTaxTypeChange;
 use App\Models\EducationLevel;
 use App\Models\Role;
 use App\Models\User;
@@ -60,4 +61,19 @@ function getEducation($id)
     $level = EducationLevel::query()->findOrFail($id);
     $level = $level->name;
     return $level;
+}
+
+function checkIfTaxTypeSaved($return)
+{
+    $tax_type_change = BusinessTaxTypeChange::query()
+        ->where('business_id', $return->business_id)
+        ->where('from_tax_type_id', $return->tax_type_id)
+        ->first();
+    if (empty($tax_type_change))
+    {
+        return true;
+    }
+    else{
+        return false;
+    }
 }
