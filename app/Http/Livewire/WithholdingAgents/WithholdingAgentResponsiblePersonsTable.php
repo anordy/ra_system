@@ -26,6 +26,10 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects(['status', 'responsible_person_id', 'officer_id', 'title', 'position', 'created_at']);
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
     public function builder(): Builder
