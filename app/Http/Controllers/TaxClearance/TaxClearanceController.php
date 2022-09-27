@@ -143,7 +143,7 @@ class TaxClearanceController extends Controller
             })
             ->get();
 
-        $verificateionDebts = TaxAssessment::whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+        $verificateionDebts = TaxAssessment::whereHasMorph('assessment', [TaxVerification::class])->whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
                                 ->where('location_id', $taxClearence->business_location_id)
                                 ->get();
 
