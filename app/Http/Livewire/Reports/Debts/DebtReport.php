@@ -6,6 +6,7 @@ use App\Exports\Debts\AssessmentDebtReportExport;
 use App\Exports\Debts\DebtReturnReportExport;
 use App\Exports\Debts\DebtWaiverReportExport;
 use App\Exports\Debts\DemandNoticeReportExport;
+use App\Exports\Debts\InstallmentReportExport;
 use App\Models\FinancialYear;
 use App\Traits\DebtReportTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -101,6 +102,8 @@ class DebtReport extends Component
             return Excel::download(new DebtWaiverReportExport($records, $title, $parameters), $fileName);
         }else if ($parameters['report_type'] == 'Demand-Notice') {
             return Excel::download(new DemandNoticeReportExport($records, $title, $parameters), $fileName);
+        }else if ($parameters['report_type'] == 'Installment') {
+            return Excel::download(new InstallmentReportExport($records, $title, $parameters), $fileName);
         }
     }
 

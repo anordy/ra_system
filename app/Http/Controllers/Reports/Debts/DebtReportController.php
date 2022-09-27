@@ -28,11 +28,11 @@ class DebtReportController extends Controller
     
         if($parameters['year']=='all'){
             $fileName = $parameters['report_type'].'_'.$parameters['report_type'].'.pdf';
-            $title = $parameters['report_type'].' For '.$parameters['report_type'];
-        }else{
+            $title = "Debt Report for " .$parameters['report_type'];
+        } else {
             $fileName = $parameters['report_type'].'_'.$parameters['report_type'].' - '.$parameters['year'].'.pdf';
-            $title = $parameters['report_type'].' For '.$parameters['report_type'].' '.$parameters['year'];
-        } 
+            $title = "Debt Report for " .$parameters['report_type'].' '.$parameters['year'];
+        }
 
         if ($parameters['report_type'] === 'Returns') {
             $records = $records->get(); 
@@ -48,7 +48,7 @@ class DebtReportController extends Controller
             return $pdf->download($fileName);
         } else if ($parameters['report_type'] === 'Installment') {
             $records = $records->get(); 
-            $pdf = PDF::loadView('exports.debts.pdf.installments', compact('records', 'title', 'parameters'));
+            $pdf = PDF::loadView('exports.debts.pdf.installment', compact('records', 'title', 'parameters'));
             $pdf->setPaper('a4', 'landscape');
             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
             return $pdf->download($fileName);
@@ -65,6 +65,5 @@ class DebtReportController extends Controller
             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
             return $pdf->download($fileName);
         }
-
     }
 }
