@@ -85,7 +85,7 @@ class GenerateReport extends Component
     }
 
     public function preview(){
-        // dd($this->getParameters());
+
       $this->emitTo('land-lease.land-lease-report-table', 'refreshTable',  $this->getParameters());
     }
 
@@ -95,7 +95,7 @@ class GenerateReport extends Component
             abort(403);
         }
         $dates = $this->getStartEndDate();
-        // dd($dates);
+
         if($dates['startDate'] == null || $dates['endDate'] == null) {
             $exists = LandLease::exists();
             if ($this->taxpayer_id) {
@@ -183,9 +183,9 @@ class GenerateReport extends Component
             }
         }
 
-        // dd('updated');
+
        $this->selectedDates = $this->getStartEndDate();
-    //    dd($this->selectedDates);
+
 
     }
 
@@ -197,7 +197,7 @@ class GenerateReport extends Component
                 'endDate' => null,
             ];
         } elseif ($this->year == "Custom Range") {
-            // dd('here');
+
             return [
                 'startDate' => date('Y-m-d', strtotime($this->range_start)),
                 'endDate' => date('Y-m-d', strtotime($this->range_end)),

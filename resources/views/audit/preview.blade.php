@@ -105,7 +105,7 @@
                                     <a target="_blank"
                                         href="{{ route('tax_auditing.files.show', encrypt($audit->working_report)) }}"
                                         style="font-weight: 500;" class="ml-1">
-                                        Working Report
+                                        Auditing Working Paper 
                                         <i class="bi bi-arrow-up-right-square ml-1"></i>
                                     </a>
                                 </div>
