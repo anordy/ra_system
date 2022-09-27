@@ -84,12 +84,12 @@ class OwnershipTransferController extends Controller
             $bill = ZmCore::createBill(
                 $request->id,
                 get_class($request),
-                1, //todo: remove
-                $request->agent->id,
-                get_class($request->agent),
-                $request->agent->taxpayer->fullname(),
-                $request->agent->taxpayer->email,
-                ZmCore::formatPhone($request->agent->taxpayer->mobile),
+                6, //todo: remove
+                $request->agent->id ?? $request->new_owner->id,
+                get_class($request->agent ?? $request->new_owner),
+                !empty($request->agent)?$request->agent->taxpayer->fullname() : $request->new_owner->fullname(),
+                !empty($request->agent)? $request->agent->taxpayer->email : $request->new_owner->email,
+                ZmCore::formatPhone(!empty($request->agent)? $request->agent->taxpayer->mobile : $request->new_owner->mobile),
                 Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
                 $fee->description,
                 ZmCore::PAYMENT_OPTION_EXACT,
@@ -102,7 +102,7 @@ class OwnershipTransferController extends Controller
                         'billable_id' => $request->id,
                         'billable_type' => get_class($request),
                         'fee_id' => $fee->id,
-                        'tax_type_id' => 1, //todo: remove
+                        'tax_type_id' => 6, //todo: remove
                         'fee_type' => get_class($fee),
                         'amount' => $amount,
                         'currency' => 'TZS',

@@ -2,13 +2,17 @@
 
 namespace App\Http\Livewire\DriversLicense\Wizard;
 
+use App\Events\SendSms;
 use App\Models\BusinessStatus;
 use App\Models\DlApplicationLicenseClass;
 use App\Models\DlApplicationStatus;
 use App\Models\DlDriversLicense;
 use App\Models\DlDriversLicenseOwner;
+use App\Models\DlFee;
 use App\Models\DlLicenseApplication;
 use App\Services\LivewireWizard\Components\StepComponent;
+use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -47,6 +51,7 @@ class LicenseDetailsStep extends StepComponent
             $this->editable = false;
             $this->classes = $dl->drivers_license_classes;
             $this->restrictions = $dl->license_restrictions;
+            $this->duration_id = $dl->dl_license_duration_id;
             foreach ($this->classes as $class){
                 $this->license_class_ids[$class->dl_license_class_id] = $class->dl_license_class_id;
             }
@@ -78,7 +83,7 @@ class LicenseDetailsStep extends StepComponent
                     'dl_blood_group_id' => $applicant['blood_group_id'],
                     'dl_license_duration_id' => $this->duration_id,
                     'dob'=>$applicant['dob'],
-                    'competence_number'=>$applicant['comp_number'],
+                    'certificate_path'=>$applicant['certificate_path'],
                     'certificate_number'=>$applicant['cert_number'],
                     'confirmation_number'=>$applicant['conf_number'],
                     'license_restrictions'=>$this->restrictions,
@@ -106,12 +111,40 @@ class LicenseDetailsStep extends StepComponent
                     ]
                 );
             }
+            $this->submit($dl_application);
             DB::commit();
             $this->flash('success', 'Request Submitted successfully', [], route('drivers-license.applications.show',encrypt($dl_application->id)));
         }catch (\Exception $e){
             report($e);
             DB::rollBack();
             $this->alert('error', 'Something went wrong');
+        }
+    }
+
+    public function submit($application)
+    {
+        $zmBill = $application->generateBill();
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                session()->flash('success', 'A control number request was sent successful.');
+            } else {
+                session()->flash('error', 'Control number generation failed, try again later');
+            }
+        } else {
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
+            $zmBill->save();
+        }
+        $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id]);
+        if (strtolower($application->type) == 'fresh') {
+            event(new SendSms('license-application-submitted', $application->id));
+            //event(new SendMail('license-application-submitted', $application->id));
+        } else {
+            //todo: customize notification
+            event(new SendSms('license-application-submitted', $application->id));
+            //event(new SendMail('license-application-submitted', $application->id));
         }
     }
 

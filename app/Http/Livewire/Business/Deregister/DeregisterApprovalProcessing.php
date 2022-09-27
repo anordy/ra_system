@@ -57,6 +57,14 @@ class DeregisterApprovalProcessing extends Component
                     // Deregister one location
                     $location = BusinessLocation::findOrFail($this->subject->location_id);
 
+                    // Get new head quarter
+                    if ($this->subject->new_headquarter_id != null) {
+                        $selectedHeadQuarter = BusinessLocation::findOrFail($this->subject->new_headquarter_id);
+                        $selectedHeadQuarter->update([
+                            'is_headquarter' => 1
+                        ]);
+                    }
+
                     $location->update([
                         'status' => BusinessStatus::DEREGISTERED
                     ]);

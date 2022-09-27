@@ -7,13 +7,13 @@
     @if(!empty($motor_vehicle->current_registration))
         <div class="card mt-3">
             <div class="card-header">
-                <h5>Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate #: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
+                <h5>Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate Number: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
                 <div class="card-tools">
                     @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_REGISTERED)
                     <a href="{{route('mvr.certificate-of-registration',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
                        data-bs-toggle="modal" data-bs-target="#confirm-submit-inspection" style="color: #ffffff !important;"><i
                                 class="fa fa-print text-white"></i>
-                        Certificate of Registration</a><!--- todo: Missing format for cert fo registration-->
+                        Certificate of Registration</a>
                     @endif
                 </div>
             </div>
@@ -88,6 +88,23 @@
                         </div>
                     @endif
 
+                    @if(!empty($motor_vehicle->current_registration->plate_number_collection))
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Plate Number Collection Date</span>
+                            <p class="my-1">{{ $motor_vehicle->current_registration->plate_number_collection->collection_date->format('Y-m-d')??' - ' }}</p>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Plate Number Collector Name</span>
+                            <p class="my-1">{{ $motor_vehicle->current_registration->plate_number_collection->collector_name??' - ' }}</p>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Plate Number Collector Phone</span>
+                            <p class="my-1">{{ $motor_vehicle->current_registration->plate_number_collection->collector_phone??' - ' }}</p>
+                        </div>
+                    @endif
+
                 </div>
 
             </div>
@@ -97,7 +114,7 @@
     <!--- Motor Vehicle --->
     <div class="card mt-3">
         <div class="card-header">
-            <h5>Motor Vehicle Details - Chassis #: {{$motor_vehicle->chassis_number}}</h5>
+            <h5>Motor Vehicle Details - Chassis Number: {{$motor_vehicle->chassis_number}}</h5>
             <div class="card-tools">
                 @if($motor_vehicle->registration_status->name == \App\Models\MvrRegistrationStatus::STATUS_INSPECTION)
                     <a href="{{route('mvr.certificate-of-worth',encrypt($motor_vehicle->id))}}" class="btn btn-info btn-sm text-white"
@@ -178,7 +195,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Inspection Report</span>
-                    <p class="my-1"><a href="{{url('storage/'.$motor_vehicle->inspection_report_path)}}">Preview</a></p>
+                    <p class="my-1"><a href="{{route('mvr.files',encrypt($motor_vehicle->inspection_report_path))}}">Preview</a></p>
                 </div>
             </div>
             <hr />

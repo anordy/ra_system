@@ -82,6 +82,11 @@ class MvrMotorVehicleRegistration extends Model
         return $this->hasOne(MvrPersonalizedPlateNumberRegistration::class,'mvr_motor_vehicle_registration_id')->where(['status'=>'ACTIVE'])->latest();
     }
 
+    public function plate_number_collection()
+    {
+        return $this->hasOne(MvrPlateNumberCollection::class,'mvr_registration_id')->latest();
+    }
+
     public function get_latest_bill()
     {
         $bill_item = $this->morphOne(ZmBillItem::class,'billable')->latest()->first();
@@ -171,7 +176,7 @@ class MvrMotorVehicleRegistration extends Model
             ->limit(20) //20 last Golden plate numbers - acceptable range will be 40
             ->get()->pluck('plate_number');
         if (empty($regs[0])){
-            $last_special = 'Z000AA';
+            $last_special = MvrRegistrationType::query()->where(['name'=>MvrRegistrationType::TYPE_PRIVATE_GOLDEN])->first()->initial_plate_number?? 'Z111AA';
         }else{
             $last_special = $regs[count($regs)-1];
         }
@@ -181,7 +186,7 @@ class MvrMotorVehicleRegistration extends Model
             $number = preg_replace('/Z(\d{3})([A-Z]{2})/', '$1', $last_special);
             $alpha = preg_replace('/Z(\d{3})([A-Z]{2})/', '$2', $last_special);
             if ($number==999){
-                $number = 0;
+                $number = 111;
                 $alpha = preg_match('/[A-Z]Z/',$alpha) ? chr(ord(substr($alpha,0,1))+1).'A' : substr($alpha,0,1).chr(ord(substr($alpha,1,1))+1);
             }else{
                 $number+=111;

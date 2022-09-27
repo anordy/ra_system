@@ -37,8 +37,11 @@
                                 <label class="control-label">{{$relation['title']}}</label>
                                 <select wire:model="relation_data.{{$field}}" class="form-control" id="{{$field}}">
                                     <option>Choose option</option>
+                                    @php
+                                        if(is_string($relation['data'])) eval($relation['data'])
+                                    @endphp
                                     @foreach ($relation['data'] as $option)
-                                        <option value="{{ $option['id'] }}">{{ $option['name']?? $option['type'] }}</option>
+                                        <option value="{{ $option['id'] }}">{{ $option['name']?? $option['type'] ?? $option[$relation['value_field']] }}</option>
                                     @endforeach
                                 </select>
                                 @error("relation_data.{$field}")

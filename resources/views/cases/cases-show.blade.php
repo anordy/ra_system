@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', "Case #: $case->case_number")
+@section('title', "Case Number: $case->case_number")
 
 @section('content')
     <div class="card mt-3">
@@ -97,7 +97,7 @@
                    @foreach($case->case_appeals as $appeal)
                         <div class="row">
                            <div class="col-md-12">
-                               <h5>Appeal #: {{$appeal->appeal_number}}</h5>
+                               <h5>Appeal Number: {{$appeal->appeal_number}}</h5>
                                <hr />
                            </div>
                             <div class="col-md-4 mb-3">

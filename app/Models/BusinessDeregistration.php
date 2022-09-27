@@ -24,4 +24,8 @@ class BusinessDeregistration extends Model
     public function location() {
         return $this->belongsTo(BusinessLocation::class, 'location_id');
     }
+
+    public function headquarters() {
+        return $this->belongsTo(BusinessLocation::class, 'new_headquarter_id');
+    }
 }

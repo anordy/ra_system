@@ -27,8 +27,9 @@
                 @endif
             </div>
 
+            @if($type=='fresh' || $type=='renew')
             <div  class="p-1">
-                <label for="zin">License Duration</label>
+                <label for="duration_id">License Duration</label>
                 <select wire:model.lazy="duration_id" class="form-control {{ $errors->has('duration_id') ? 'is-invalid' : '' }}">
                     <option value>Choose type</option>
                     @foreach(\App\Models\DlLicenseDuration::all() as $group)
@@ -41,6 +42,22 @@
                 </div>
                 @enderror
             </div>
+            @else
+                <div  class="p-1">
+                    <label for="duration_id">License Duration</label>
+                    <select wire:model.lazy="duration_id" class="form-control {{ $errors->has('duration_id') ? 'is-invalid' : '' }}" disabled>
+                        <option value>Choose type</option>
+                        @foreach(\App\Models\DlLicenseDuration::query()->where(['id'=>$this->duration_id])->get() as $group)
+                            <option value="{{$group->id}}">{{$group->number_of_years.' - '.$group->description}}</option>
+                        @endforeach
+                    </select>
+                    @error('duration_id')
+                    <div class="invalid-feedback">
+                        {{ $errors->first('duration_id') }}
+                    </div>
+                    @enderror
+                </div>
+            @endif
 
             @if($editable)
                 <div  class="p-1">

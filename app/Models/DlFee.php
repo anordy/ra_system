@@ -35,5 +35,12 @@ class DlFee extends Model
 		'amount',
 		'type',
 		'gfs_code',
+		'dl_license_duration_id',
 	];
+
+
+    public function license_duration()
+    {
+        return $this->belongsTo(DlLicenseDuration::class,'dl_license_duration_id');
+    }
 }

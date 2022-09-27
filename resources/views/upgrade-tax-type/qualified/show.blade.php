@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Upgrade Tax Type')
+@section('title','Qualified Tax Type')
 
 @section('css')
     <style>
@@ -15,7 +15,7 @@
         <div class="card-header d-flex justify-content-between">
             <div>Return Details</div>
             <div>
-                <a class="btn btn-info" href="{{ route('business.upgrade-tax-types.index') }}">
+                <a class="btn btn-info" href="{{ route('business.qualified-tax-types.index') }}">
                     <i class="bi bi-arrow-return-left mr-2"></i>
                     Back
                 </a>
@@ -36,28 +36,20 @@
                             <td class="my-1">{{ $return->business->name  }}</td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold text-uppercase">Business Location Name</td>
-                            <td class="my-1">{{ $return->businessLocation->name  }}</td>
-                        </tr>
-                        <tr>
-                            <td class="font-weight-bold text-uppercase">Tax Region</td>
-                            <td class="my-1">{{ $return->businessLocation->taxRegion->name }}</td>
-                        </tr>
-                        <tr>
                             <td class="font-weight-bold text-uppercase">Date of Business Commencement</td>
                             <td class="my-1">{{date('D, Y-m-d',strtotime($return->businessLocation->date_of_commencing)) }}</td>
                         </tr>
 
+                        <tr>
+                            <td class="font-weight-bold text-uppercase">Tax Type</td>
+                            <td class="my-1">{{$return->taxtype->name }}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="col-md-6">
                     <table class="table">
                         <tbody>
-                        <tr>
-                            <td class="font-weight-bold text-uppercase">Tax Type</td>
-                            <td class="my-1">{{$return->taxtype->name }}</td>
-                        </tr>
                         <tr>
                             <td class="font-weight-bold text-uppercase">Phone</td>
                             <td class="my-1">{{ $return->business->mobile }}</td>
@@ -75,17 +67,11 @@
                 </div>
                 <div class="col-md-12">
                     <div class="d-flex justify-content-end">
-                        @if(empty($changed))
                         <button class="btn btn-primary btn-sm"
                                 onclick="Livewire.emit('showModal', 'upgrade-tax-type.create-modal', {{$return}} )">
                             <i class="bi bi-arrow-up-circle mr-2"></i>
                             Upgrade & Approve
                         </button>
-                        @else
-                            <div class="alert alert-info">
-                                Already upgraded, waiting for the effective date
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>

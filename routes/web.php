@@ -112,7 +112,8 @@ use App\Http\Controllers\Taxpayers\RegistrationsController;
 use App\Http\Controllers\Taxpayers\TaxpayersController;
 use App\Http\Controllers\TaxTypeController;
 use App\Http\Controllers\TwoFactorAuthController;
-use App\Http\Controllers\UpgradeTaxType\UpgradeTaxtypeController;
+use App\Http\Controllers\UpgradeTaxType\QualifiedTaxTypeController;
+use App\Http\Controllers\UpgradeTaxType\UpgradedTaxTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\v1\ZanMalipoController;
 use App\Http\Controllers\VerificationController;
@@ -245,8 +246,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tin-file/{file}', [BusinessFileController::class, 'getTinFile'])->name('tin.file');
         Route::get('/business-certificate/{location}/taxType/{type}', [BusinessFileController::class, 'getCertificate'])->name('certificate');
 
-        Route::get('/upgrade-tax-types/', [UpgradeTaxtypeController::class, 'index'])->name('upgrade-tax-types.index');
-        Route::get('/upgrade-tax-types/show/{id}/{tax_type_id}/{sales}', [UpgradeTaxtypeController::class, 'show'])->name('upgrade-tax-types.show');
+        Route::get('/qualified-tax-types/', [QualifiedTaxTypeController::class, 'index'])->name('qualified-tax-types.index');
+        Route::get('/qualified-tax-types/show/{id}/{tax_type_id}/{sales}', [QualifiedTaxTypeController::class, 'show'])->name('qualified-tax-types.show');
+
+        Route::get('/upgraded-tax-types/', [UpgradedTaxTypeController::class, 'index'])->name('upgraded-tax-types.index');
+        Route::get('/upgraded-tax-types/show/{id}', [UpgradedTaxTypeController::class, 'show'])->name('upgraded-tax-types.show');
     });
 
     // assesments
@@ -543,6 +547,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('internal-search-ot')->where('type', 'plate-number|chassis');
         Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
             ->name('internal-search-wo')->where('type', 'plate-number|chassis');
+        Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
         Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove
         Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove
         Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove
