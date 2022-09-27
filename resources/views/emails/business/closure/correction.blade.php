@@ -1,7 +1,11 @@
 @component('mail::message')
-# Hello {{ $taxpayer->first_name }},
+# Hello {{ $closure->business->taxpayer->first_name }},
 
-Your ZRB temporary business closure for {{ $business->name }} requires corrections, login into your account to for more details.
+Your ZRB temporary business closure for {{ $closure->business->name }} @if ($closure->location)
+    , {{ $closure->location->name }}
+@endif requires corrections. 
+
+Login into your account to for more details.
 
 Thanks,<br>
 {{ config('app.name') }}

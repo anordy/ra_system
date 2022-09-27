@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\EducationLevel;
 use App\Models\Role;
 use App\Models\User;
 
@@ -52,4 +53,11 @@ function getRole($id)
     $user = User::query()->findOrFail($id);
     $role = $user->role->name;
     return $role;
+}
+
+function getEducation($id)
+{
+    $level = EducationLevel::query()->findOrFail($id);
+    $level = $level->name;
+    return $level;
 }

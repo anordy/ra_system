@@ -4,7 +4,8 @@
         <div class="card-body">
             <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab" aria-controls="home"
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#biz" role="tab"
+                       aria-controls="home"
                        aria-selected="true">Business & Application Details</a>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -30,8 +31,16 @@
                 <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                     <div class="row pt-3">
                         <div class="col-md-3 mb-2">
-                            <span class="font-weight-bold text-uppercase">Tax Payer Name</span>
+                            <span class="font-weight-bold text-uppercase">Name</span>
                             <p class="my-1">{{ $agent->taxpayer->first_name}} {{$agent->taxpayer->middle_name}} {{$agent->taxpayer->last_name}}</p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <span class="font-weight-bold text-uppercase">Phone</span>
+                            <p class="my-1">{{ $agent->taxpayer->mobile}}</p>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <span class="font-weight-bold text-uppercase">Email</span>
+                            <p class="my-1">{{ $agent->taxpayer->email}} </p>
                         </div>
                         <div class="col-md-3 mb-2">
                             <span class="font-weight-bold text-uppercase">Tax Payer Reference No</span>
@@ -190,26 +199,31 @@
                                 <td>{{$academicRecord->school_name}}</td>
                                 <td>{{$academicRecord->from}}</td>
                                 <td>{{$academicRecord->to}}</td>
-                                <td>{{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}</td>
+                                <td>{{getEducation($academicRecord->education_level_id)}}</td>
                                 <td>{{$academicRecord->program}}</td>
                                 <td>
-                                    <a class="file-item" target="_blank"
-                                       href="{{ route('agent.file', [$agent->id, 'academic_certificate']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
-                                            {{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}
-                                        </div>
-                                    </a>
+                                    @if($academicRecord->certificate != null)
+                                        <a class="file-item" target="_blank"
+                                           href="{{ route('agent.academics-file', [$academicRecord->id, 'academic_certificate']) }}">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                            <div style="font-weight: 500;" class="ml-1">
+                                                {{getEducation($academicRecord->education_level_id)}}
+                                            </div>
+                                        </a>
+                                    @endif
                                 </td>
                                 <td>
-                                    <a class="file-item" target="_blank"
-                                       href="{{ route('agent.file', [$agent->id, 'academic_transcript']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
-                                            {{\App\Models\EducationLevel::find($academicRecord->education_level_id)->name}}
-                                        </div>
-                                    </a>
+                                    @if($academicRecord->transcript != null)
+                                        <a class="file-item" target="_blank"
+                                           href="{{ route('agent.academics-file', [$academicRecord->id, 'academic_transcript']) }}">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                                            <div style="font-weight: 500;" class="ml-1">
+                                                {{getEducation($academicRecord->education_level_id)}}
+                                            </div>
+                                        </a>
+                                    @endif
                                 </td>
+
                             </tr>
                         @endforeach
                         </tbody>
@@ -240,14 +254,16 @@
                                 <td>{{$agentProfessional->date_passed}}</td>
                                 <td>{{$agentProfessional->remarks}}</td>
                                 <td>
-                                    <a class="file-item" target="_blank"
-                                       href="{{ route('agent.file', [$agent->id, 'pro_certificate']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2"
-                                           style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
-                                            {{$agentProfessional->body_name}}
-                                        </div>
-                                    </a>
+                                    @if($agentProfessional->attachment != null)
+                                        <a class="file-item" target="_blank"
+                                           href="{{ route('agent.professionals-file', [$agentProfessional->id, 'pro_certificate']) }}">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2"
+                                               style="font-size: x-large"></i>
+                                            <div style="font-weight: 500;" class="ml-1">
+                                                {{$agentProfessional->body_name}}
+                                            </div>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -280,14 +296,16 @@
                                 <td>{{$agentTraining->position_held}}</td>
                                 <td>{{$agentTraining->description}}</td>
                                 <td>
-                                    <a class="file-item" target="_blank"
-                                       href="{{ route('agent.file', [$agent->id, 'tra_certificate']) }}">
-                                        <i class="bi bi-file-earmark-pdf-fill px-2"
-                                           style="font-size: x-large"></i>
-                                        <div style="font-weight: 500;" class="ml-1">
-                                            {{$agentTraining->org_name}}
-                                        </div>
-                                    </a>
+                                    @if($agentTraining->attachment != null)
+                                        <a class="file-item" target="_blank"
+                                           href="{{ route('agent.trainings-file', [$agentTraining->id, 'tra_certificate']) }}">
+                                            <i class="bi bi-file-earmark-pdf-fill px-2"
+                                               style="font-size: x-large"></i>
+                                            <div style="font-weight: 500;" class="ml-1">
+                                                {{$agentTraining->org_name}}
+                                            </div>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -376,9 +394,11 @@
                         <td>{{$approval->comment}}</td>
                         <td>
                             @if($approval->approved_by_id != null)
-                                {{getUser($approval->approved_by_id) }} <strong>({{getRole($approval->approved_by_id)}})</strong>
+                                {{getUser($approval->approved_by_id) }} <strong>({{getRole($approval->approved_by_id)}}
+                                    )</strong>
                             @else
-                                {{$agent->taxpayer->first_name.' '.$agent->taxpayer->last_name}} <strong>(Taxpayer)</strong>
+                                {{$agent->taxpayer->first_name.' '.$agent->taxpayer->last_name}}
+                                <strong>(Taxpayer)</strong>
                             @endif
                         </td>
                         <td>{{$approval->approved_at}}</td>

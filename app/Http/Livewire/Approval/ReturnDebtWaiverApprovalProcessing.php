@@ -4,8 +4,10 @@ namespace App\Http\Livewire\Approval;
 
 use Exception;
 use Carbon\Carbon;
+use App\Events\SendSms;
 use App\Models\TaxType;
 use Livewire\Component;
+use App\Events\SendMail;
 use App\Models\WaiverStatus;
 use App\Jobs\Bill\CancelBill;
 use App\Traits\PaymentsTrait;
@@ -114,6 +116,13 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                     } else {
                         GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                     }
+
+                    $notification_payload = [
+                        'debt' => $this->debt,
+                    ];
+
+                    event(new SendSms('debt-waiver-approval', $notification_payload));
+                    event(new SendMail('debt-waiver-approval', $notification_payload));
     
                     DB::commit();
                 } catch (Exception $e) {
@@ -159,6 +168,13 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                     GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
                 }
 
+                $notification_payload = [
+                    'debt' => $this->debt,
+                ];
+
+                event(new SendSms('debt-waiver-approval', $notification_payload));
+                event(new SendMail('debt-waiver-approval', $notification_payload));
+
                 DB::commit();
             } catch (Exception $e) {
                 Log::error($e);
@@ -197,6 +213,13 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
+
+                $notification_payload = [
+                    'debt' => $this->debt,
+                ];
+
+                event(new SendSms('debt-waiver-rejected', $notification_payload));
+                event(new SendMail('debt-waiver-rejected', $notification_payload));
             }
 
             if ($this->checkTransition('commisioner_reject')) {
@@ -206,6 +229,13 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
+
+                $notification_payload = [
+                    'debt' => $this->debt,
+                ];
+
+                event(new SendSms('debt-waiver-rejected', $notification_payload));
+                event(new SendMail('debt-waiver-rejected', $notification_payload));
             }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);

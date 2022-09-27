@@ -33,8 +33,8 @@ class Installment extends Model
         return $this->belongsTo(InstallmentRequest::class, 'installment_request_id');
     }
 
-    public function taxReturn(){
-        return $this->belongsTo(TaxReturn::class);
+    public function installable(){
+        return $this->morphTo();
     }
 
     public function business(){

@@ -15,15 +15,15 @@ class SendBusinessDeregisterApprovedSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business;
+    private $deregister;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business)
+    public function __construct($deregister)
     {
-        $this->business = $business;
+        $this->deregister = $deregister;
     }
 
     /**
@@ -34,10 +34,16 @@ class SendBusinessDeregisterApprovedSMS implements ShouldQueue
     public function handle()
     {
         $sms_controller = new SMSController;
-        $send_to = $this->business->taxpayer->mobile;
+        $send_to = $this->deregister->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "ZRB inform that, you have de-registered {$this->business->name}
+        $customer_message = "ZRB inform that, you have de-registered {$this->deregister->business->name}
         and no longer an active taxpayer for this business.";
+
+        if ($this->deregister->location) {
+            $customer_message = "ZRB inform that, you have de-registered {$this->deregister->business->name}, {$this->deregister->location->name}
+            and no longer an active taxpayer for this business.";
+        }
+
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

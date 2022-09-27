@@ -19,44 +19,14 @@ class InstallmentRequestsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $builder = InstallmentRequest::orderBy('installment_requests.created_at', 'desc');
-
-        if ($this->pending){
-            return $builder->where('installment_requests.status', InstallmentRequestStatus::PENDING);
-        }
+        $builder = InstallmentRequest::with('installable', 'location')
+            ->orderBy('installment_requests.created_at', 'desc');
 
         if ($this->rejected){
             return $builder->where('installment_requests.status', InstallmentRequestStatus::REJECTED);
         }
 
-        return $builder;
-    }
-
-    public function columns(): array
-    {
-        return [
-            Column::make('Business Name', 'business.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Branch Name', 'location.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Outstanding Amount', 'taxReturn.outstanding_amount')
-                ->searchable(),
-            Column::make('Total Amount', 'taxReturn.total_amount')
-                ->sortable()
-                ->searchable(),
-            Column::make('Requested At', 'created_at')
-                ->searchable()
-                ->sortable()
-                ->format(function ($value, $row){
-                    return $value->toDateString();
-                }),
-            Column::make('Status', 'status')
-                ->view('installment.requests.includes.status'),
-            Column::make('Action', 'id')
-                ->view('installment.requests.includes.actions')
-        ];
+        return $builder->where('installment_requests.status', InstallmentRequestStatus::APPROVED);
     }
 
     public function configure(): void
@@ -66,5 +36,41 @@ class InstallmentRequestsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+        $this->setAdditionalSelects('installable_type', 'installable_id');
+    }
+
+    public function columns(): array
+    {
+        return [
+            Column::make('Extension ID', 'installable_id')->hideIf(true),
+            Column::make('ZIN', 'location.zin'),
+            Column::make('Business Name', 'business.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Branch Name', 'location.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Type', 'taxType.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Total Amount', 'installable.total_amount')
+                ->label(function ($row){
+                    return "{$row->installable->total_amount} {$row->installable->currency}";
+                }),
+            Column::make('Outstanding Amount', 'installable.outstanding_amount')
+                ->label(function ($row){
+                    return "{$row->installable->outstanding_amount} {$row->installable->currency}";
+                }),
+            Column::make('Requested At', 'created_at')
+                ->searchable()
+                ->sortable()
+                ->format(function ($value, $row){
+                    return $value->toFormattedDateString();
+                }),
+            Column::make('Status', 'status')
+                ->view('installment.requests.includes.status'),
+            Column::make('Action', 'id')
+                ->view('installment.requests.includes.actions')
+        ];
     }
 }

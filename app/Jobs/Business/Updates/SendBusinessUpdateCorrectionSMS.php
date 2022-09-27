@@ -2,16 +2,16 @@
 
 namespace App\Jobs\Business\Updates;
 
-use App\Mail\Business\Updates\BusinessInformation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Http\Controllers\v1\SMSController;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class SendBusinessUpdateMail implements ShouldQueue
+class SendBusinessUpdateCorrectionSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,8 +33,10 @@ class SendBusinessUpdateMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->payload['business']->taxpayer->email){
-            Mail::to($this->payload['business']->taxpayer->email)->send(new BusinessInformation($this->payload));
-        }
+        $sms_controller = new SMSController;
+        $send_to = $this->payload['business']->taxpayer->mobile;
+        $source = config('modulesconfig.smsheader');
+        $customer_message = "Your request to update business details for {$this->payload['business']->name} require corrections. Please login into your account for more details.";
+        $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

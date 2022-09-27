@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Storage;
 use PDF;
 
+use Illuminate\Support\Facades\Gate;
+
 class LandLeaseController extends Controller
 {
     use LeasePaymentReportTrait;
@@ -20,16 +22,25 @@ class LandLeaseController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('land-lease-view')) {
+            abort(403);
+        }
         return view('land-lease.land-lease-list');
     }
 
     public function view($id)
     {
+        if (!Gate::allows('land-lease-view')) {
+            abort(403);
+        }
         return view('land-lease.view-land-lease', compact('id'));
     }
 
     public function viewLeasePayment($id)
     {
+        if (!Gate::allows('land-lease-edit')) {
+            abort(403);
+        }
         return view('land-lease.view-lease-payment', compact('id'));
     }
 
@@ -40,6 +51,9 @@ class LandLeaseController extends Controller
 
     public function generateReport()
     {
+        if (!Gate::allows('land-lease-generate-report')) {
+            abort(403);
+        }
         return view('land-lease.generate-report');
     }
 
@@ -50,16 +64,24 @@ class LandLeaseController extends Controller
 
     public function createAgent()
     {
+        if (!Gate::allows('land-lease-agent-view')) {
+            abort(403);
+        }
         return view('land-lease.agent-create');
     }
 
     public function agentsList(){
-
+        if (!Gate::allows('land-lease-agent-view')) {
+            abort(403);
+        }
         return view('land-lease.agents');
     }
 
     public function agentStatusChange($payload)
     {
+        if (!Gate::allows('land-lease-agent-view')) {
+            abort(403);
+        }
         $data = json_decode(decrypt($payload),true);
         try {
             if($data['active']){

@@ -63,31 +63,32 @@ class InstallmentRequestApprovalProcessing extends Component
             DB::beginTransaction();
 
             if ($this->checkTransition('debt_manager')) {
-                $this->subject->installment_from = $this->subject->taxReturn->curr_payment_due_date;
-                $this->subject->installment_to = Carbon::make($this->subject->taxReturn->curr_payment_due_date)->addMonths($this->installmentPhases);
+                $this->subject->installment_from = $this->subject->installable->curr_payment_due_date;
+                $this->subject->installment_to = Carbon::make($this->subject->installable->curr_payment_due_date)->addMonths($this->installmentPhases);
                 $this->subject->installment_count = $this->installmentPhases;
                 $this->subject->save();
             }
 
             if ($this->checkTransition('accepted')) {
                 $this->subject->status = InstallmentRequestStatus::APPROVED;
-                $taxReturn = TaxReturn::findOrFail($this->subject->tax_return_id);
+                $installable = $this->subject->installable_type::findOrFail($this->subject->installable_id);
 
                 // Update tax return details
-                $taxReturn->update([
+                $installable->update([
                     'curr_payment_due_date' => $this->subject->installment_to,
                     'payment_method' => PaymentMethod::INSTALLMENT,
                     'application_status' => ApplicationStatus::INSTALLMENT
                 ]);
 
                 // Cancel Control No.
-                if ($taxReturn->bill){
-                    $this->cancelBill($taxReturn->bill, 'Debt shifted to installments');
+                if ($installable->bill){
+                    $this->cancelBill($installable->bill, 'Debt shifted to installments');
                 }
 
                 // Create installment record
                 Installment::create([
-                    'tax_return_id' => $this->subject->tax_return_id,
+                    'installable_type' => $this->subject->installable_type,
+                    'installable_id' => $this->subject->installable_id,
                     'location_id' => $this->subject->location_id,
                     'business_id' => $this->subject->business_id,
                     'tax_type_id' => $this->subject->tax_type_id,
@@ -95,8 +96,8 @@ class InstallmentRequestApprovalProcessing extends Component
                     'installment_from' => $this->subject->installment_from,
                     'installment_to' => $this->subject->installment_to,
                     'installment_count' => $this->subject->installment_count,
-                    'amount' => $taxReturn->outstanding_amount,
-                    'currency' => $taxReturn->currency,
+                    'amount' => $installable->outstanding_amount,
+                    'currency' => $installable->currency,
                     'status' => InstallmentStatus::ACTIVE
                 ]);
 

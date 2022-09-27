@@ -3,6 +3,7 @@
 namespace App\Jobs\Business;
 
 use App\Mail\Business\BusinessApproved;
+use App\Mail\Business\BusinessCorrection;
 use App\Models\Business;
 use App\Models\Taxpayer;
 use Illuminate\Bus\Queueable;
@@ -17,16 +18,17 @@ class SendBusinessCorrectionMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business, $taxpayer;
+    private $business, $taxpayer, $message;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business, Taxpayer $taxpayer)
+    public function __construct(Business $business, Taxpayer $taxpayer, $message)
     {
         $this->business = $business;
         $this->taxpayer = $taxpayer;
+        $this->message = $message;
     }
 
     /**
@@ -37,7 +39,7 @@ class SendBusinessCorrectionMail implements ShouldQueue
     public function handle()
     {
         if ($this->taxpayer->email){
-            Mail::to($this->taxpayer->email)->send(new BusinessApproved($this->business, $this->taxpayer));
+            Mail::to($this->taxpayer->email)->send(new BusinessCorrection($this->business, $this->taxpayer, $this->message));
         }
     }
 }

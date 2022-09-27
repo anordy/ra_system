@@ -19,11 +19,13 @@ class TaxAgentApproval extends Mailable
 	public $fullname;
 	public $email;
     public $status;
-	public function __construct($fullname, $email, $status)
+    public $reference_number;
+	public function __construct($fullname, $email, $status, $reference_number)
 	{
 		$this->fullname = $fullname;
 		$this->email = $email;
 		$this->status = $status;
+        $this->reference_number = $reference_number;
 	}
 
     /**

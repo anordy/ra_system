@@ -368,6 +368,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/get-attachment/{path}', [ReliefApplicationsController::class, 'getAttachment'])->name('get.attachment');
         Route::get('/generate-report', [ReliefGenerateReportController::class, 'index'])->name('generate.report');
         Route::get('/download-report-pdf/{payload}', [ReliefGenerateReportController::class, 'downloadReliefReportPdf'])->name('download.report.pdf');
+        Route::get('/generate-report/report-preview/ceiling/{payload}', [ReliefGenerateReportController::class, 'ceilingReport'])->name('report.ceiling.preview');
         Route::get('/generate-report/report-preview/{payload}', [ReliefGenerateReportController::class, 'reportPreview'])->name('report.preview');
     });
 
@@ -476,6 +477,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('agent-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentFile'])->name('agent.file');
+    Route::get('agent-academics-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentAcademicFile'])->name('agent.academics-file');
+    Route::get('agent-professionals-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentProfessionalFile'])->name('agent.professionals-file');
+    Route::get('agent-trainings-file/{file}/{type}', [TaxAgentFileController::class, 'getAgentTrainingFile'])->name('agent.trainings-file');
 
     Route::name('land-lease.')->prefix('land-lease')->group(function () {
         Route::get('/list', [LandLeaseController::class, 'index'])->name('list');

@@ -2,8 +2,7 @@
 
 namespace App\Mail\Business\Deregister;
 
-use App\Models\Business;
-use App\Models\Taxpayer;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,17 +10,18 @@ use Illuminate\Queue\SerializesModels;
 
 class BusinessDeregisterCorrection extends Mailable
 {
-    public $business, $taxpayer;
+    use Queueable, SerializesModels;
+
+    public $deregister;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Business $business, Taxpayer $taxpayer)
+    public function __construct($deregister)
     {
-        $this->business = $business;
-        $this->taxpayer = $taxpayer;
+        $this->deregister = $deregister;
     }
 
     /**
@@ -32,6 +32,6 @@ class BusinessDeregisterCorrection extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.deregister.correction')
-            ->subject("ZRB Business De-registration - " . strtoupper($this->business->name));
+            ->subject("ZRB Business De-registration - " . strtoupper($this->deregister->business->name));
     }
 }
