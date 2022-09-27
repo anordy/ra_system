@@ -103,6 +103,10 @@ class LandLeaseController extends Controller
     public function downloadLandLeaseReportPdf($datesJson)
     {
 
+        if (!Gate::allows('land-lease-generate-report')) {
+            abort(403);
+        }
+
         $data = decrypt($datesJson);
         $dates = $data['dates'];
         $taxpayer_id = $data['taxpayer_id'];
@@ -134,7 +138,10 @@ class LandLeaseController extends Controller
 
     public function downloadLandLeasePaymentReportPdf($parameter)
     {
-
+        if (!Gate::allows('land-lease-generate-report')) {
+            abort(403);
+        }
+        
         $data = json_decode(decrypt($parameter),true);
         $dates = $data['dates'];
         $status = $data['status'];
