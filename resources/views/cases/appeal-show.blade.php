@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
-@section('title', "Appeal #: $appeal->appeal_number")
+@section('title', "Appeal Number: $appeal->appeal_number")
 
 @section('content')
     <div class="card mt-3">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <h5>Appeal #: {{$appeal->appeal_number}}</h5>
+                    <h5>Appeal Number: {{$appeal->appeal_number}}</h5>
                     <hr />
                 </div>
                 <div class="col-md-4 mb-3">
@@ -41,7 +41,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <h5>Case #: {{$appeal->case_number}}</h5>
+                    <h5>Case Number: {{$appeal->case_number}}</h5>
                     <hr />
                 </div>
                 <div class="col-md-4 mb-3">

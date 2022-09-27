@@ -18,8 +18,8 @@ class MvrFeeTypesTableSeeder extends Seeder
      */
     public function run()
     {
-        MvrFeeType::query()->updateOrcreate(['type' => 'Registration']);
-        MvrFeeType::query()->updateOrcreate(['type' => 'De-Registration']);
-        MvrFeeType::query()->updateOrcreate(['type' => 'Registration Change']);
+        MvrFeeType::query()->updateOrcreate(['type' => MvrFeeType::TYPE_REGISTRATION]);
+        MvrFeeType::query()->updateOrcreate(['type' => MvrFeeType::TYPE_DE_REGISTRATION]);
+        MvrFeeType::query()->updateOrcreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
     }
 }

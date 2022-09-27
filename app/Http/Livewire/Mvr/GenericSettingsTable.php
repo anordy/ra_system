@@ -139,6 +139,7 @@ class GenericSettingsTable extends DataTableComponent
                 Column::make("Amount", "amount")->sortable()->format(fn($value)=>number_format($value).' TZS'),
                 Column::make("GFS Code", "gfs_code")->sortable(),
                 Column::make("Type", "type")->sortable(),
+                Column::make("Duration", "license_duration.number_of_years")->sortable(),
             ],
         ];
 

@@ -79,12 +79,16 @@ class DatabaseSeeder extends Seeder
         $this->call(MvrModelTableSeeder::class);
         $this->call(MvrFeeTypesTableSeeder::class);
         $this->call(MvrTransmissionTypeTableSeeder::class);
+        $this->call(MvrTransferReasonTableSeeder::class);
         $this->call(RecoveryMeasureCategoriesSeeder::class);
         $this->call(WorkflowRecoveryMeasureSeeder::class);
         $this->call(BloodGroupSeeder::class);
         $this->call(DLClassSeeder::class);
         $this->call(DLDurationSeeder::class);
         $this->call(DLFeeSeeder::class);
+        $this->call(DlClassAdditionFeeTableSeeder::class);
+        $this->call(DlClassAdditionFeeTableSeeder::class);
+        $this->call(DlClassAdditionFeeTableSeeder::class);
         $this->call(SequencesTableSeeder::class);
     }
 }

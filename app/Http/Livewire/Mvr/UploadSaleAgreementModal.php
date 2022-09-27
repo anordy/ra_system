@@ -62,7 +62,8 @@ class UploadSaleAgreementModal extends Component
         $this->validate();
         DB::beginTransaction();
         try{
-            $this->agreement_path = $this->agreement->storePubliclyAs('MVR', "Sale-Agreement-{$this->request_id}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->agreement->extension());
+            $path = "MVR-Sale-Agreement-{$this->request_id}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->agreement->extension();
+            $this->agreement_path = $this->agreement->store( $path,'local-admin');
             MvrOwnershipTransfer::query()->find($this->request_id)->update([
                 'agreement_contract_path'=>$this->agreement_path,
                 'mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_APPROVAL])->id,
@@ -72,7 +73,7 @@ class UploadSaleAgreementModal extends Component
             return redirect()->route('mvr.transfer-ownership.show',encrypt($this->request_id));
         }catch(Exception $e){
             Log::error($e);
-            if (Storage::exists($this->agreement_path)) Storage::delete($this->agreement_path);
+            if (Storage::disk('local-admin')->exists($this->agreement_path)) Storage::disk('local-admin')->delete($this->agreement_path);
             DB::rollBack();
             $this->alert('error', 'Something went wrong: '.$e->getMessage());
         }

@@ -34,23 +34,10 @@
                 @enderror
             </div>
 
-            <div  class="p-1">
-                <label for="cert_number">Certificate #</label>
-                <input type="text" wire:model.lazy="cert_number" {{$editable ? '':'disabled'}}
-                       class="form-control {{ $errors->has('cert_number') ? 'is-invalid' : '' }}">
-                @error('cert_number')
-                <div class="invalid-feedback">
-                    {{ $errors->first('cert_number') }}
-                </div>
-                @enderror
-            </div>
-        </div>
-        <div class="col-md-6">
-            <br>
             <div class="p-1">
                 <label for="conf_number">Confirmation #</label>
                 <input type="text" wire:model.lazy="conf_number" {{$editable ? '':'disabled'}}
-                       class="form-control {{ $errors->has('conf_number') ? 'is-invalid' : '' }}">
+                class="form-control {{ $errors->has('conf_number') ? 'is-invalid' : '' }}">
                 @error('conf_number')
                 <div class="invalid-feedback">
                     {{ $errors->first('conf_number') }}
@@ -58,17 +45,31 @@
                 @enderror
             </div>
 
-
-            <div class="p-1">
-                <label for="conf_number">Competence #</label>
-                <input type="text" wire:model.lazy="comp_number" {{$editable ? '':'disabled'}}
-                       class="form-control {{ $errors->has('comp_number') ? 'is-invalid' : '' }}">
-                @error('comp_number')
+        </div>
+        <div class="col-md-6">
+            <br>
+            <div  class="p-1">
+                <label for="cert_number">Certificate of competence number</label>
+                <input type="text" wire:model.lazy="cert_number" {{$editable ? '':'disabled'}}
+                class="form-control {{ $errors->has('cert_number') ? 'is-invalid' : '' }}">
+                @error('cert_number')
                 <div class="invalid-feedback">
-                    {{ $errors->first('comp_number') }}
+                    {{ $errors->first('cert_number') }}
                 </div>
                 @enderror
             </div>
+
+            @if($editable)
+                <div class="p-1">
+                    <label for="conf_number">Certificate of Competence</label>
+                    <input type="file" wire:model.lazy="certificate" class="form-control {{ $errors->has('certificate') ? 'is-invalid' : '' }}">
+                    @error('certificate')
+                    <div class="invalid-feedback">
+                        {{ $errors->first('certificate') }}
+                    </div>
+                    @enderror
+                </div>
+            @endif
 
             @if($type=='duplicate')
                 <div class="p-1">

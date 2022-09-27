@@ -480,7 +480,7 @@
             <a href="#dlSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'true' : 'false' }}"
                 class="dropdown-toggle">Driver's Licenses</a>
-            <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('drivers-license*') ? 'show' : '' }}"
+            <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('rio*') ? 'show' : '' }}"
                 id="dlSubmenu">
                 <li
                     class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">
