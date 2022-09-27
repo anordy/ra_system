@@ -43,6 +43,29 @@
         </div>
 
         @if($status == 'approved' || $status == 'both')
+            <div class="col-md-4 form-group">
+                <label for="payment_status" class="d-flex justify-content-between'">
+                <span>
+                    Payment Method
+                </span>
+                </label>
+                <select name="payment_method" id="payment_method" wire:model="payment_method"
+                        class="form-control {{ $errors->has('payment_method') ? 'is-invalid' : '' }}">
+                    <option value="">select payment method</option>
+                    <option value="full">Full Payment</option>
+                    <option value="installment">Pay By Installment</option>
+                    <option value="all">Both</option>
+
+                </select>
+                @error('payment_method')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+        @endif
+
+        @if($status == 'approved' || $status == 'both')
         <div class="col-md-4 form-group">
             <label for="payment_status" class="d-flex justify-content-between'">
                 <span>

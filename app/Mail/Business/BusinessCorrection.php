@@ -11,17 +11,18 @@ use Illuminate\Queue\SerializesModels;
 
 class BusinessCorrection extends Mailable
 {
-    public $business, $taxpayer;
+    public $business, $taxpayer, $message;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Business $business, Taxpayer $taxpayer)
+    public function __construct(Business $business, Taxpayer $taxpayer, $message)
     {
         $this->business = $business;
         $this->taxpayer = $taxpayer;
+        $this->message = $message;
     }
 
     /**
@@ -32,6 +33,6 @@ class BusinessCorrection extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.correction')
-            ->subject("ZRB Business Registration - " . strtoupper($this->business->name));
+            ->subject("ZRB Business Registration Correction - " . strtoupper($this->business->name));
     }
 }

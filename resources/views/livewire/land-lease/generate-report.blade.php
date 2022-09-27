@@ -14,9 +14,7 @@
                         </span>
                     </label>
                     <select name="year" id="start_month" wire:model="year"
-                        class="form-control {{ $errors->has($year) ? 'is-invalid' : '' }}"
-                        {{-- wire:changed="preview" --}}
-                        >
+                        class="form-control {{ $errors->has($year) ? 'is-invalid' : '' }}">
                         @foreach ($optionYears as $optionYear)
                             <option value="{{ $optionYear }}">
                                 {{ $optionYear }}
@@ -143,6 +141,30 @@
                         </div>
                     @endif
                 @endif
+
+                <div class="col-md-4 form-group">
+                    <label for="taxpayer_id" class="d-flex justify-content-between'">
+                        <span>
+                            Tax Payers
+                        </span>
+                    </label>
+                    <select name="year" id="taxpayer_id" wire:model="taxpayer_id"
+                        class="form-control {{ $errors->has($year) ? 'is-invalid' : '' }}">
+                        <option value="">All</option>
+                        @foreach ($taxpayers as $taxpayer)
+                            <option value="{{ $taxpayer->id }}">
+                                {{ $taxpayer->first_name }}
+                                {{ $taxpayer->middle_name }}
+                                {{ $taxpayer->last_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('taxpayer')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
             </div>
 
             <div class="row mt-3">

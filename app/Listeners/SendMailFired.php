@@ -2,28 +2,36 @@
 
 namespace App\Listeners;
 
-use App\Jobs\Business\SendBusinessApprovedMail;
-use App\Jobs\Business\SendBusinessCorrectionMail;
-use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
-use App\Jobs\SendTaxAgentApprovalEmail;
-use App\Jobs\Taxpayer\SendRegistrationMail;
-use App\Models\Business;
-use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Events\SendMail;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Jobs\SendOTPEmail;
+use App\Models\WaResponsiblePerson;
+use App\Jobs\Debt\SendDebtBalanceMail;
+use App\Jobs\SendTaxAgentApprovalEmail;
+use App\Jobs\Taxpayer\SendRegistrationMail;
+use App\Jobs\Business\Taxtype\SendTaxTypeMail;
+use App\Jobs\Business\SendBusinessApprovedMail;
+use App\Jobs\Business\SendBusinessCorrectionMail;
+use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\Business\Branch\SendBranchApprovedMail;
+use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalMail;
+use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedMail;
 use App\Jobs\Business\Branch\SendBranchCorrectionMail;
 use App\Jobs\Business\SendBusinessClosureApprovedMail;
+use App\Jobs\Business\SendBusinessClosureRejectedMail;
 use App\Jobs\Business\SendBusinessClosureCorrectionMail;
-use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
-use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
-use App\Jobs\Business\Taxtype\SendTaxTypeMail;
-use App\Jobs\Business\Updates\SendBusinessUpdateMail;
-use App\Jobs\SendWithholdingAgentRegistrationEmail;
-use App\Jobs\SendOTPEmail;
 use App\Jobs\TaxClearance\SendTaxClearanceApprovedEmail;
 use App\Jobs\TaxClearance\SendTaxClearanceRejectedEmail;
-use App\Models\WaResponsiblePerson;
+use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
+use App\Jobs\Business\SendBusinessDeregisterRejectedMail;
+use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateRejectedMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
+use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
 
 class SendMailFired
 {
@@ -66,7 +74,7 @@ class SendMailFired
         } else if ($event->service === 'business-registration-correction'){
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            SendBusinessCorrectionMail::dispatch($business, $business->taxpayer);
+            SendBusinessCorrectionMail::dispatch($business, $business->taxpayer, $event->extra['message']);
         }
         else if ($event->service == 'tax-agent-registration-approval') {
 	        $taxpayer = Taxpayer::find($event->tokenId);
@@ -75,28 +83,45 @@ class SendMailFired
 	        $status = $taxpayer->taxagent->is_verified;
 	        SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status);
         } else if ($event->service === 'business-closure-approval'){
-            // Token ID is $businessId
-            $business = Business::find($event->tokenId);
-            SendBusinessClosureApprovedMail::dispatch($business);
+            // Token ID is $closure data
+            $closure = $event->tokenId;
+            SendBusinessClosureApprovedMail::dispatch($closure);
         } else if ($event->service === 'business-closure-correction'){
             // Token ID is $businessId
-            $business = Business::find($event->tokenId);
-            SendBusinessClosureCorrectionMail::dispatch($business, $business->taxpayer);
-        } else if ($event->service === 'business-deregister-approval'){
+            $closure = $event->tokenId;
+            SendBusinessClosureCorrectionMail::dispatch($closure);
+        } else if ($event->service === 'business-closure-rejected'){
             // Token ID is $businessId
-            $business = Business::find($event->tokenId);
-            SendBusinessDeregisterApprovedMail::dispatch($business);
+            $closure = $event->tokenId;
+            SendBusinessClosureRejectedMail::dispatch($closure);
+        } else if ($event->service === 'business-deregister-approval'){
+            // Token ID is $deregister data
+            $deregister = $event->tokenId;
+            SendBusinessDeregisterApprovedMail::dispatch($deregister);
         } else if ($event->service === 'business-deregister-correction'){
             // Token ID is $businessId
-            $business = Business::find($event->tokenId);
-            SendBusinessDeregisterCorrectionMail::dispatch($business, $business->taxpayer);
+            $deregister = $event->tokenId;
+            SendBusinessDeregisterCorrectionMail::dispatch($deregister);
+        } else if ($event->service === 'business-deregister-rejected'){
+            // Token ID is $businessId
+            $deregister = $event->tokenId;
+            SendBusinessDeregisterRejectedMail::dispatch($deregister);
         } else if ($event->service === 'change-tax-type-approval'){
             // Token ID is payload data having all notification details
             SendTaxTypeMail::dispatch($event->tokenId);
-        } else if ($event->service === 'change-business-information'){
+        } else if ($event->service === 'change-business-information-approval'){
             // Token ID is payload data having all notification details
-            SendBusinessUpdateMail::dispatch($event->tokenId);
-        } else if ($event->service === 'branch-approval'){
+            SendBusinessUpdateApprovalMail::dispatch($event->tokenId);
+        } else if ($event->service === 'change-business-information-correction'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateCorrectionMail::dispatch($event->tokenId);
+        } else if ($event->service === 'change-business-information-rejected'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateRejectedMail::dispatch($event->tokenId);
+        }else if ($event->service === 'change-business-consultant-information-approval'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateApprovalConsultantMail::dispatch($event->tokenId);
+        }  else if ($event->service === 'branch-approval'){
             // Token ID is payload data having all notification details
             SendBranchApprovedMail::dispatch($event->tokenId);
         } else if ($event->service === 'branch-correction'){
@@ -110,6 +135,12 @@ class SendMailFired
             SendTaxClearanceRejectedEmail::dispatch($event->tokenId);
         } else if ($event->service === 'license-application-submitted'){
             SendFreshApplicationSubmittedEmail::dispatch($event->tokenId);
+        }else if ($event->service === 'debt-waiver-approval'){
+            SendDebtWaiverApprovalMail::dispatch($event->tokenId);
+        }else if ($event->service === 'debt-waiver-rejected'){
+            SendDebtWaiverRejectedMail::dispatch($event->tokenId);
+        }else if ($event->service === 'debt-balance'){
+            SendDebtBalanceMail::dispatch($event->tokenId);
         }
     }
 }

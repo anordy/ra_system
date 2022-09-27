@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Storage;
 use PDF;
 
+use Illuminate\Support\Facades\Gate;
+
 class LandLeaseController extends Controller
 {
     use LeasePaymentReportTrait;
@@ -20,16 +22,25 @@ class LandLeaseController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('land-lease-view')) {
+            abort(403);
+        }
         return view('land-lease.land-lease-list');
     }
 
     public function view($id)
     {
+        if (!Gate::allows('land-lease-view')) {
+            abort(403);
+        }
         return view('land-lease.view-land-lease', compact('id'));
     }
 
     public function viewLeasePayment($id)
     {
+        if (!Gate::allows('land-lease-edit')) {
+            abort(403);
+        }
         return view('land-lease.view-lease-payment', compact('id'));
     }
 
@@ -40,6 +51,9 @@ class LandLeaseController extends Controller
 
     public function generateReport()
     {
+        if (!Gate::allows('land-lease-generate-report')) {
+            abort(403);
+        }
         return view('land-lease.generate-report');
     }
 
@@ -50,16 +64,24 @@ class LandLeaseController extends Controller
 
     public function createAgent()
     {
+        if (!Gate::allows('land-lease-agent-view')) {
+            abort(403);
+        }
         return view('land-lease.agent-create');
     }
 
     public function agentsList(){
-
+        if (!Gate::allows('land-lease-agent-view')) {
+            abort(403);
+        }
         return view('land-lease.agents');
     }
 
     public function agentStatusChange($payload)
     {
+        if (!Gate::allows('land-lease-agent-view')) {
+            abort(403);
+        }
         $data = json_decode(decrypt($payload),true);
         try {
             if($data['active']){
@@ -80,7 +102,14 @@ class LandLeaseController extends Controller
 
     public function downloadLandLeaseReportPdf($datesJson)
     {
-        $dates = json_decode(decrypt($datesJson),true);
+        if (!Gate::allows('land-lease-generate-report')) {
+            abort(403);
+        }
+        // dd($datesJson);
+        $data = decrypt($datesJson);
+        $dates = $data['dates'];
+        $taxpayer_id = $data['taxpayer_id'];
+
         if ($dates == []) {
             $landLeases = LandLease::query()->orderBy('created_at', 'asc');
         } elseif ($dates['startDate'] == null || $dates['endDate'] == null) {
@@ -88,6 +117,11 @@ class LandLeaseController extends Controller
         } else {
             $landLeases = LandLease::query()->whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->orderBy('created_at', 'asc');
         }
+
+        if ($taxpayer_id) {
+            $landLeases = clone $landLeases->where('land_leases.taxpayer_id', $taxpayer_id);
+        }
+
         $landLeases = $landLeases->get();
         $from = \Carbon\Carbon::parse($dates['startDate']); 
         $to = \Carbon\Carbon::parse($dates['endDate']); 
@@ -96,6 +130,7 @@ class LandLeaseController extends Controller
         $pdf = PDF::loadView('exports.land-lease.pdf.land-lease-report',compact('landLeases','startDate','endDate'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        // dd($dates);
         return $pdf->download('Land Leases applications FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.pdf');
     }
 
@@ -107,6 +142,7 @@ class LandLeaseController extends Controller
         $dates = $data['dates'];
         $status = $data['status'];
         $date_type = $data['date_type'];
+        $taxpayer_id = $data['taxpayer_id'];
 
         if ($dates == []) {
             $leasePayments = LeasePayment::query()->orderBy('created_at', 'asc');
@@ -133,11 +169,16 @@ class LandLeaseController extends Controller
                 $leasePayments = LeasePayment::query()->whereBetween("lease_payments.{$date_type}", [$dates['startDate'], $dates['endDate']]);
             }
 
-            if ($status) {
-                $leasePayments = clone $leasePayments->where('lease_payments.status', $status);
-            }
-
         }
+
+        if ($status) {
+            $leasePayments = clone $leasePayments->where('lease_payments.status', $status);
+        }
+
+        if ($taxpayer_id) {
+            $leasePayments = clone $leasePayments->where('lease_payments.taxpayer_id', $taxpayer_id);
+        }
+
         $leasePayments = $leasePayments->get();
         $from = \Carbon\Carbon::parse($dates['startDate']); 
         $to = \Carbon\Carbon::parse($dates['endDate']); 

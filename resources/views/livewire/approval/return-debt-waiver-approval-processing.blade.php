@@ -39,18 +39,42 @@
         @elseif ($this->checkTransition('crdm_review'))
             <div class="modal-footer p-2 m-0">
                 @if ($forwardToCommisioner)
-                <button button type="button" class="btn btn-primary" wire:click="approve('crdm_review')">Approve
-                    & Forward</button>
+                    <button button type="button" class="btn btn-primary" wire:click="approve('crdm_review')">Approve
+                        & Forward</button>
                 @else
-                    <button type="button" class="btn btn-danger" wire:click="reject('crdm_reject')">Reject</button>
-                    <button type="button" class="btn btn-primary" wire:click="approve('crdm_complete')">Approve & Complete</button>
+                    <button type="button" class="btn btn-danger" wire:click="reject('crdm_reject')">
+                        <div wire:loading wire:target="reject('crdm_reject')">
+                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>Reject
+                    </button>
+                    <button type="button" class="btn btn-primary" wire:click="approve('crdm_complete')">
+                        <div wire:loading wire:target="approve('crdm_complete')">
+                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>Approve & Complete
+                    </button>
                 @endif
             </div>
         @elseif ($this->checkTransition('commissioner_complete'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('commissioner_reject')">Reject</button>
-                <button type="button" class="btn btn-primary" wire:click="approve('commissioner_complete')">Approve &
-                    Complete</button>
+                <button type="button" class="btn btn-danger" wire:click="reject('commissioner_reject')">
+                    <div wire:loading wire:target="reject('commissioner_reject')">
+                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>Reject
+                </button>
+                <button type="button" class="btn btn-primary" wire:click="approve('commissioner_complete')">
+                    <div wire:loading wire:target="approve('commissioner_complete')">
+                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>Approve &
+                    Complete
+                </button>
             </div>
         @endif
 

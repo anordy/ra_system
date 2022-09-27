@@ -3,8 +3,6 @@
 namespace App\Jobs\Business;
 
 use App\Mail\Business\Deregister\BusinessDeregisterCorrection;
-use App\Models\Business;
-use App\Models\Taxpayer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,16 +15,15 @@ class SendBusinessDeregisterCorrectionMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $business, $taxpayer;
+    private $deregister;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Business $business, Taxpayer $taxpayer)
+    public function __construct($deregister)
     {
-        $this->business = $business;
-        $this->$taxpayer = $taxpayer;
+        $this->deregister = $deregister;
     }
 
     /**
@@ -36,8 +33,8 @@ class SendBusinessDeregisterCorrectionMail implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->taxpayer->email){
-            Mail::to($this->taxpayer->email)->send(new BusinessDeregisterCorrection($this->business, $this->taxpayer));
+        if ($this->deregister->business->taxpayer->email){
+            Mail::to($this->deregister->business->taxpayer->email)->send(new BusinessDeregisterCorrection($this->deregister));
         }
     }
 }

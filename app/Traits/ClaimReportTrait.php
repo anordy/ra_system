@@ -2,13 +2,7 @@
 
 namespace App\Traits;
 
-use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\TaxReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\Taxpayer;
-use App\Models\TaxType;
 use Carbon\Carbon;
 
 trait ClaimReportTrait
@@ -66,6 +60,11 @@ trait ClaimReportTrait
                         ->orWhereIn('tax_credits.payment_status', ['paid', 'partially-paid', 'pending'])
                         ->orWhereNull('tax_credits.payment_status');;
                 }
+            }
+
+            if ($parameters['payment_method'] != 'all')
+            {
+                $claim = $claim->where('tax_credits.payment_method', '=', $parameters['payment_method']);
             }
         }
 

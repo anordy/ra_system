@@ -5,6 +5,7 @@ namespace App\Models\Extension;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\Returns\TaxReturn;
+use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,8 +22,8 @@ class ExtensionRequest extends Model
         'extend_to' => 'datetime'
     ];
 
-    public function taxReturn(){
-        return $this->belongsTo(TaxReturn::class);
+    public function extensible(){
+        return $this->morphTo();
     }
 
     public function business(){
@@ -35,5 +36,9 @@ class ExtensionRequest extends Model
 
     public function files(){
         return $this->hasMany(ExtensionRequestFile::class);
+    }
+
+    public function taxType(){
+        return $this->belongsTo(TaxType::class);
     }
 }

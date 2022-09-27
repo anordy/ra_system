@@ -12,32 +12,51 @@ trait ReturnReportTrait
     {
         if ($parameters['tax_type_id'] == 'all') {
             $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id');
+        } elseif ($parameters['tax_type_code'] == 'vat') {
+            $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')
+                ->leftJoin('vat_returns', 'vat_returns.id', 'tax_returns.return_id')
+                ->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
+                
+            switch ($parameters['vat_type']) {
+                case 'All-VAT-Returns':
+                    break;
+                case 'Hotel-VAT-Returns':
+                    $model->where('vat_returns.business_type', 'hotel');
+                    break;
+                case 'Electricity-VAT-Returns':
+                    $model->where('vat_returns.business_type', 'electricity');
+                    break;
+                case 'Local-VAT-Returns':
+                    $model->where('vat_returns.business_type', 'other');
+                    break;
+            }
         } else {
             $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
         }
+
         if ($parameters['type'] == 'Filing') {
             if ($parameters['filing_report_type'] == 'On-Time-Filings') {
-                $returns = clone $model->where('tax_returns.filing_due_date', '>=', 'tax_returns.created_at');
+                $returns = $model->where('tax_returns.filing_due_date', '>=', 'tax_returns.created_at');
             } elseif ($parameters['filing_report_type'] == 'Late-Filings') {
-                $returns = clone $model->where('tax_returns.filing_due_date', '<', 'tax_returns.created_at');
+                $returns = $model->where('tax_returns.filing_due_date', '<', 'tax_returns.created_at');
             } elseif ($parameters['filing_report_type'] == 'All-Filings') {
-                $returns = clone $model;
+                $returns = $model;
             } elseif ($parameters['filing_report_type'] == 'Tax-Claims') {
-                $returns = clone $model->where('tax_returns.has_claim', true);
+                $returns = $model->where('tax_returns.has_claim', true);
             } elseif ($parameters['filing_report_type'] == 'Nill-Returns') {
-                $returns = clone $model->where('tax_returns.is_nill', true);
+                $returns = $model->where('tax_returns.is_nill', true);
             }
         } elseif ($parameters['type'] == 'Payment') {
             if ($parameters['payment_report_type'] == 'On-Time-Paid-Returns') {
-                $returns = clone $model->whereNotNull('tax_returns.paid_at');
+                $returns = $model->whereNotNull('tax_returns.paid_at');
                 $returns = $returns->where('tax_returns.payment_due_date', '>=', 'tax_returns.paid_at');
             } elseif ($parameters['payment_report_type'] == 'Late-Paid-Returns') {
-                $returns = clone $model->whereNotNull('tax_returns.paid_at');
-                $returns = $returns->where('tax_returns.payment_due_date', '<', 'tax_returns.paid_at', );
+                $returns = $model->whereNotNull('tax_returns.paid_at');
+                $returns = $returns->where('tax_returns.payment_due_date', '<', 'tax_returns.paid_at',);
             } elseif ($parameters['payment_report_type'] == 'Unpaid-Returns') {
-                $returns = clone $model->whereNull('tax_returns.paid_at');
+                $returns = $model->whereNull('tax_returns.paid_at');
             } elseif ($parameters['payment_report_type'] == 'All-Paid-Returns') {
-                $returns = clone $model->whereNotNull('tax_returns.paid_at');
+                $returns = $model->whereNotNull('tax_returns.paid_at');
             }
         }
 
