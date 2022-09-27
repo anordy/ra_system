@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
-@section('title','Petroleum Returns History')
+@section('title', 'Petroleum Returns History')
 
 @section('content')
     <div class="card">
         <div class="card-body">
-            @livewire('returns.return-summary',['vars'=>$vars])
-            @livewire('returns.return-card-report', ['paidData' => $paidData, 'unpaidData' => $unpaidData])
+            <livewire:returns.petroleum.petroleum-card-one />
+            <livewire:returns.petroleum.petroleum-card-two />
             @livewire('returns.petroleum.petroleum-return-table')
         </div>
     </div>

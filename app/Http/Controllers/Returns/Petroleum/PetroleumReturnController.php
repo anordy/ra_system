@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Returns\Petroleum;
 
-
 use App\Http\Controllers\Controller;
 use App\Models\BusinessStatus;
 use App\Models\Returns\Petroleum\PetroleumPenalty;
@@ -15,23 +14,17 @@ use Illuminate\Support\Facades\Gate;
 
 class PetroleumReturnController extends Controller
 {
-    use ReturnSummaryCardTrait;
-    
-    use ReturnCardReport;
-
     public function index()
     {
         if (!Gate::allows('return-petroleum-return-view')) {
             abort(403);
         }
 
-        $vars = $this->getSummaryData(PetroleumReturn::query());
+        $tableName = 'returns.petroleum.petroleum-return-table';
+        $cardOne   = 'returns.petroleum.petroleum-card-one';
+        $cardTwo   = 'returns.petroleum.petroleum-card-two';
 
-        $paidData = $this->returnCardReportForPaidReturns(PetroleumReturn::class, PetroleumReturn::getTableName(), PetroleumPenalty::getTableName());
-
-        $unpaidData = $this->returnCardReportForUnpaidReturns(PetroleumReturn::class, PetroleumReturn::getTableName(), PetroleumPenalty::getTableName());
-
-        return view('returns.petroleum.filing.index', compact('vars', 'paidData', 'unpaidData'));
+        return view('returns.petroleum.filing.index', compact('tableName', 'cardOne', 'cardTwo'));
     }
 
     public function create(Request $request)
@@ -39,14 +32,15 @@ class PetroleumReturnController extends Controller
         $location = $request->location;
         $tax_type = $request->tax_type;
         $business = $request->business;
+
         return view('returns.petroleum.filing.filing', compact('location', 'tax_type', 'business'));
     }
-
 
     public function show($return_id)
     {
         $returnId = decrypt($return_id);
-        $return = PetroleumReturn::findOrFail($returnId);
+        $return   = PetroleumReturn::findOrFail($returnId);
+
         return view('returns.petroleum.filing.show', compact('return'));
     }
 
