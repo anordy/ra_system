@@ -74,7 +74,7 @@ class SendMailFired
         } else if ($event->service === 'business-registration-correction'){
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            SendBusinessCorrectionMail::dispatch($business, $business->taxpayer);
+            SendBusinessCorrectionMail::dispatch($business, $business->taxpayer, $event->extra['message']);
         }
         else if ($event->service == 'tax-agent-registration-approval') {
 	        $taxpayer = Taxpayer::find($event->tokenId);

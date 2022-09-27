@@ -11,7 +11,10 @@
 </div>
 <div class="card">
     <div class="card-header text-uppercase font-weight-bold">
-        {{ $parameters['filing_report_type'] }} Report preview for {{ $parameters['tax_type_name'] }} Returns
+        {{ $parameters['type']=='Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'] }} Report preview for {{ $parameters['tax_type_name'] }} Returns 
+        @if ($parameters['dates']['startDate'])
+            From <span class="text-primary">{{date("M, d Y", strtotime($parameters['dates']['from'])) }}</span> To <span class="text-primary">{{ date("M, d Y", strtotime($parameters['dates']['to']))}}</span>
+        @endif
     </div>
     <div class="card-body mt-0">
         @livewire('reports.returns.previews.report-preview-table',['parameters'=>$parameters])

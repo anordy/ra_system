@@ -80,7 +80,7 @@ class LeasePaymentExport implements FromView, WithEvents,ShouldAutoSize
                 ->whereIn("financial_years.code", $years);
 
             }else {
-                // dd($this->date_type);
+
                 $leasePayments = LeasePayment::query()->with('taxpayer', 'landLease.region', 'landLease.district', 'landLease.ward')->whereBetween("lease_payments.{$this->date_type}", [$this->startDate, $this->endDate]);
             }
         }

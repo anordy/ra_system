@@ -23,6 +23,7 @@ use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\Verification\TaxVerification;
 use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\Investigation\TaxInvestigationLocation;
 use App\Models\LandLeaseDebt;
 use App\Models\LeasePayment;
 use App\Models\Returns\HotelReturns\HotelReturn;
@@ -73,8 +74,29 @@ class TaxClearanceController extends Controller
         ->where('status', LeaseStatus::PENDING)
         ->get();
 
-        $debts = [];
-        return view('tax-clearance.clearance-request', compact('tax_return_debts', 'taxClearence', 'debts', 'land_lease_debts'));
+        $locations = [$taxClearence->business_location_id];
+
+        $investigationDebts = TaxAssessment::whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+            ->whereHasMorph('assessment', [TaxInvestigation::class], function($query) use($locations) {
+                $query->whereHas('taxInvestigationLocations', function($q) use($locations) {
+                    $q->whereIn('business_location_id', $locations);
+                });
+            })
+            ->get();
+        
+        $auditDebts = TaxAssessment::whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+            ->whereHasMorph('assessment', [TaxAudit::class], function($query) use($locations) {
+                $query->whereHas('taxAuditLocations', function($q) use($locations) {
+                    $q->whereIn('business_location_id', $locations);
+                });
+            })
+            ->get();
+
+        $verificateionDebts = TaxAssessment::whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+                                ->where('location_id', $taxClearence->business_location_id)
+                                ->get();
+
+        return view('tax-clearance.clearance-request', compact('tax_return_debts', 'taxClearence', 'land_lease_debts', 'investigationDebts', 'auditDebts', 'verificateionDebts'));
     }
 
     public function approval($requestId)
@@ -102,9 +124,30 @@ class TaxClearanceController extends Controller
         ->where('status', LeaseStatus::PENDING)
         ->get();
 
-        $debts = [];
+        
+        $locations = [$taxClearence->business_location_id];
 
-        return view('tax-clearance.approval', compact('tax_return_debts', 'taxClearence', 'debts', 'land_lease_debts'));
+        $investigationDebts = TaxAssessment::whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+            ->whereHasMorph('assessment', [TaxInvestigation::class], function($query) use($locations) {
+                $query->whereHas('taxInvestigationLocations', function($q) use($locations) {
+                    $q->whereIn('business_location_id', $locations);
+                });
+            })
+            ->get();
+        
+        $auditDebts = TaxAssessment::whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+            ->whereHasMorph('assessment', [TaxAudit::class], function($query) use($locations) {
+                $query->whereHas('taxAuditLocations', function($q) use($locations) {
+                    $q->whereIn('business_location_id', $locations);
+                });
+            })
+            ->get();
+
+        $verificateionDebts = TaxAssessment::whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+                                ->where('location_id', $taxClearence->business_location_id)
+                                ->get();
+
+        return view('tax-clearance.approval', compact('tax_return_debts', 'taxClearence', 'land_lease_debts', 'investigationDebts', 'auditDebts', 'verificateionDebts'));
     }
 
     public function generateReturnsDebts($business_location_id)

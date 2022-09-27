@@ -23,9 +23,9 @@ class ExtensionController extends Controller
             abort(403);
         }
         $extension = ExtensionRequest::findOrFail(decrypt($extensionId));
-        $taxReturn = $extension->taxReturn;
+        $extensible = $extension->extensible;
 
-        return view('extension.show', compact('extension', 'taxReturn'));
+        return view('extension.show', compact('extension', 'extensible'));
     }
 
     public function file($file){

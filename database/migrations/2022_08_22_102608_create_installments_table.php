@@ -16,7 +16,8 @@ class CreateInstallmentsTable extends Migration
     {
         Schema::create('installments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tax_return_id');
+            $table->unsignedBigInteger('installable_id');
+            $table->string('installable_type');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('tax_type_id');

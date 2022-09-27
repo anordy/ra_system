@@ -21,6 +21,7 @@ class CreatePetroleumReturnsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('business_location_id');
             $table->string('filed_by_type');
+            $table->unsignedBigInteger('certificate_id')->nullable();
             $table->unsignedBigInteger('filed_by_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('financial_year_id');

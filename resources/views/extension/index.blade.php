@@ -18,7 +18,7 @@
                     <livewire:extension.extensions-table />
                 </div>
                 <div id="pending-approval" class="tab-pane fade p-2">
-                    <livewire:extension.extensions-table pending="true" />
+                    <livewire:extension.extension-approval-table />
                 </div>
                 <div id="rejected" class="tab-pane fade p-2">
                     <livewire:extension.extensions-table rejected="true" />

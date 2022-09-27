@@ -98,8 +98,8 @@ class BusinessWorkflowSeeder extends Seeder
         ];
 
         Workflow::updateOrCreate([
-            'code' => 'BUSSINESS_REGISTRATION',
-            'summary' => 'Bussiness Registraiton Workflow',
+            'code' => 'BUSINESS_REGISTRATION',
+            'summary' => 'Business Registration Workflow',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,

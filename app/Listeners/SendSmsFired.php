@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Jobs\Business\SendBusinessCorrectionSMS;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\Business;
@@ -71,7 +72,7 @@ class SendSmsFired
         } else if ($event->service === 'business-registration-correction'){
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            SendBusinessApprovedSMS::dispatch($business);
+            SendBusinessCorrectionSMS::dispatch($business, $event->extra['message']);
         }
 		else if ($event->service == 'tax-agent-registration-approval') {
 			$taxpayer = Taxpayer::find($event->tokenId);

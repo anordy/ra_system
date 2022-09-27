@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use PDF;
 
+use Illuminate\Support\Facades\Gate;
+
 class ReliefGenerateReportController extends Controller
 {
     //
@@ -21,6 +23,9 @@ class ReliefGenerateReportController extends Controller
 
     public function downloadReliefReportPdf($payload)
     {
+        if (!Gate::allows('relief-generate-report')) {
+            abort(403);
+        }
         $values = json_decode(decrypt($payload), true);
         $dates = $values['dates'];
         $parameters = $values['parameters'];
@@ -160,6 +165,9 @@ class ReliefGenerateReportController extends Controller
 
     public function reportPreview($payload)
     {
+        if (!Gate::allows('relief-generate-report-view')) {
+            abort(403);
+        }
         return view('relief.reports.preview', ['payload' => $payload]);
     }
 
@@ -174,6 +182,9 @@ class ReliefGenerateReportController extends Controller
 
     public function ceilingReport($payload)
     {
+        if (!Gate::allows('relief-generate-report-view')) {
+            abort(403);
+        }
         $values = json_decode(decrypt($payload), true);
         $dates = $values['dates'];
         $parameters = $values['parameters'];

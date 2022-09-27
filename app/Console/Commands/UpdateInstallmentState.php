@@ -62,11 +62,11 @@ class UpdateInstallmentState extends Command
                 'status' => InstallmentStatus::COMPLETE
             ]);
 
-            $installment->taxReturn->update([
+            $installment->installable->update([
                 'payment_status' => ReturnStatus::COMPLETE
             ]);
 
-            $installment->taxReturn->return->update([
+            $installment->installable->return->update([
                 'status' => ReturnStatus::PAID_BY_DEBT
             ]);
 
@@ -76,7 +76,7 @@ class UpdateInstallmentState extends Command
                 'cancellation_reason' => "Installment was skipped, cancelled by system."
             ]);
 
-            $installment->taxReturn->update([
+            $installment->installable->update([
                 'application_status' => ApplicationStatus::NORMAL,
                 'payment_method' => PaymentMethod::FULL
             ]);

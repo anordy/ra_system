@@ -8,6 +8,8 @@ use App\Enum\TaxAuditStatus;
 use App\Enum\TaxClearanceStatus;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Workflow;
@@ -198,6 +200,15 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 if (key($places) == 'rejected') {
                     $subject->app_status = DisputeStatus::REJECTED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
+                }
+            } elseif ($placeName == 'BUSINESS_REGISTRATION') {
+                if (key($places) == 'correct_application') {
+                    event(new SendSms('business-registration-correction', $subject->id, ['message' => $context['comment']]));
+                    event(new SendMail('business-registration-correction', $subject->id, ['message' => $context['comment']]));
+                }
+                if (key($places) == 'completed') {
+                    event(new SendSms('business-registration-approved', $subject->id));
+                    event(new SendMail('business-registration-approved', $subject->id));
                 }
             } else {
                 if (key($place) == 'completed') {
