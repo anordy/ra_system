@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxInvestigationStatus;
+use App\Models\CaseStage;
 use App\Models\Investigation\TaxInvestigationOfficer;
+use App\Models\LegalCase;
 use App\Models\Returns\ReturnStatus;
 use Exception;
 use Carbon\Carbon;
@@ -256,6 +258,17 @@ class TaxInvestigationApprovalProcessing extends Component
 
         if ($this->subject->status == TaxInvestigationStatus::LEGAL)
         {
+
+            $case = LegalCase::query()->create(
+                [
+                    'tax_investigation_id'=>$this->tax_inv_id,
+                    'date_opened'=> Carbon::now(),
+                    'case_number'=> 0,
+                    'case_details'=> 'Added from Investigation Approval',
+                    'court'=> 1,
+                    'case_stage_id'=>CaseStage::query()->firstOrCreate(['name'=>'Case Opening'])->id,
+                ]
+            );
 
         }
         
