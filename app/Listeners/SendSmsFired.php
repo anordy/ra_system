@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Jobs\Business\SendBusinessCorrectionSMS;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\Business;
@@ -24,6 +25,7 @@ use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
 use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
 use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
@@ -70,7 +72,7 @@ class SendSmsFired
         } else if ($event->service === 'business-registration-correction'){
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
-            SendBusinessApprovedSMS::dispatch($business);
+            SendBusinessCorrectionSMS::dispatch($business, $event->extra['message']);
         }
 		else if ($event->service == 'tax-agent-registration-approval') {
 			$taxpayer = Taxpayer::find($event->tokenId);
@@ -111,6 +113,9 @@ class SendSmsFired
         }else if ($event->service === 'change-business-information-rejected'){
             // Token ID is payload data having all notification details
             SendBusinessUpdateRejectedSMS::dispatch($event->tokenId);
+        }else if ($event->service === 'change-business-consultant-information-approval'){
+            // Token ID is payload data having all notification details
+            SendBusinessUpdateApprovalConsultantSMS::dispatch($event->tokenId);
         } else if ($event->service === 'branch-approval'){
             // Token ID is payload data having all notification details
             SendBranchApprovalSMS::dispatch($event->tokenId);

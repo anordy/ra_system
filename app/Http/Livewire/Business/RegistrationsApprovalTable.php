@@ -37,8 +37,8 @@ class RegistrationsApprovalTable extends DataTableComponent
     {
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('Business Name', 'pinstance.name')
-                ->label(fn ($row) => $row->pinstance->name ?? ''),
+            Column::make('Business Name', 'pinstance.business.name')                ->label(fn ($row) => $row->pinstance->name ?? ''),
+
             Column::make('TIN', 'pinstance.tin')
                 ->label(fn ($row) => $row->pinstance->tin ?? ''),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')

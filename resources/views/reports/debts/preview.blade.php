@@ -22,6 +22,8 @@
                 @livewire('reports.debts.previews.debt-waiver-report-preview-table', ['parameters' => $parameters])
             @elseif ($parameters['report_type'] === 'Demand-Notice')
                 @livewire('reports.debts.previews.demand-notice-report-preview-table', ['parameters' => $parameters])
+            @elseif ($parameters['report_type'] === 'Installment')
+                @livewire('reports.debts.previews.installment-report-preview-table', ['parameters' => $parameters])
             @endif
         </div>
     </div>

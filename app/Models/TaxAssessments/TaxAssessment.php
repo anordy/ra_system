@@ -23,6 +23,10 @@ class TaxAssessment extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'curr_payment_due_date' => 'datetime'
+    ];
+
     public function dispute(){
         return $this->belongsTo(Dispute::class);
     }

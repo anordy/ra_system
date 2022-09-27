@@ -14,7 +14,7 @@
                     <div class="form-group col-lg-6">
                         <div class="form-group">
                             <label>From</label>
-                            <input disabled class="form-control" value="{{ \Carbon\Carbon::make($subject->taxReturn->curr_payment_due_date)->toFormattedDateString() }}" />
+                            <input disabled class="form-control" value="{{ \Carbon\Carbon::make($subject->installable->curr_payment_due_date)->toFormattedDateString() }}" />
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
