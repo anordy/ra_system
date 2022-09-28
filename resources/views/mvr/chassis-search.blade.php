@@ -6,8 +6,8 @@
     <div class="card mt-3">
         <div class="card-body">
             <div class="card-header">
-                <h5 class="text-uppercase">Chassis #: {{$chassis}}</h5>
-                <div class="card-tools p-3">
+                <h5 class="text-uppercase">Chassis Number: {{$chassis}}</h5>
+                <div class="card-tools p-4">
                     @can('mvr_initiate_registration')
                     <button class="btn btn-info btn-sm"
                             onclick="Livewire.emit('showModal', 'mvr.chassis-number-search','mvr.chassis-search')"><i

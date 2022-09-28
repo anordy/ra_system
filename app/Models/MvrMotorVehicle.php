@@ -76,6 +76,7 @@ class MvrMotorVehicle extends Model
 	];
 
 	protected $fillable = [
+		'registration_date',
 		'registration_number',
 		'number_of_axle',
 		'chassis_number',

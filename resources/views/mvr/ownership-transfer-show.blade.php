@@ -98,7 +98,7 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Agreement Contract</span>
                     @if(!empty($request->agreement_contract_path))
-                        <p class="my-1"><a href="{{url('storage/'.$request->agreement_contract_path)}}">Preview</a></p>
+                        <p class="my-1"><a href="{{route('mvr.files',encrypt($request->agreement_contract_path))}}">Preview</a></p>
                     @else
                         <p class="my-1 text-danger">Not attached</p>
                     @endif
@@ -126,7 +126,7 @@
     @if(!empty($motor_vehicle->current_registration))
         <div class="card mt-3">
             <div class="card-header">
-                <h5>Current Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate #: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
+                <h5>Current Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate Number: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
             </div>
             <div class="card-body">
                 <div class="row my-2">
@@ -164,7 +164,7 @@
     <!--- Motor Vehicle --->
     <div class="card mt-3">
         <div class="card-header">
-            <h5>Motor Vehicle Details - Chassis #: {{$motor_vehicle->chassis_number}}</h5>
+            <h5>Motor Vehicle Details - Chassis Number: {{$motor_vehicle->chassis_number}}</h5>
         </div>
         <div class="card-body">
             <div class="row my-2">
@@ -220,7 +220,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Inspection Report</span>
-                    <p class="my-1"><a href="{{url('storage/'.$motor_vehicle->inspection_report_path)}}">Preview</a></p>
+                    <p class="my-1"><a href="{{route('mvr.files',encrypt($motor_vehicle->inspection_report_path))}}">Preview</a></p>
                 </div>
             </div>
             <hr />
@@ -286,6 +286,7 @@
     </div>
 
     <!--- Agent --->
+    @if(!empty($request->agent->taxpayer))
     <div class="card mt-3">
         <div class="card-header">
             <h5>Agent</h5>
@@ -321,5 +322,6 @@
 
         </div>
     </div>
+    @endif
 
 @endsection

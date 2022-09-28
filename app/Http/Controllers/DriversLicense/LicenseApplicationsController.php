@@ -47,64 +47,6 @@ class LicenseApplicationsController extends Controller
         return view('driver-license.license-applications-show', compact('application', 'title'));
     }
 
-    public function submit($id)
-    {
-        $id = decrypt($id);
-        $application = DlLicenseApplication::query()->find($id);
-        if (strtolower($application->type) == 'fresh') {
-            $comment = $application->application_status->name == DlApplicationStatus::STATUS_DETAILS_CORRECTION ? 'Initiated' : 'Resubmitted';
-            $transition = $application->application_status->name == DlApplicationStatus::STATUS_DETAILS_CORRECTION ? 'application_corrected' : 'application_submitted';
-            try {
-                DB::beginTransaction();
-                $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_APPROVAL])->id]);
-                $this->registerWorkflow(get_class($application), $application->id);
-                $this->doTransition($transition, ['status' => '', 'comment' => $comment]);
-                if ($transition == 'application_submitted') {
-                    event(new SendSms('license-application-submitted', $application->id));
-                    //event(new SendMail('license-application-submitted', $application->id));
-                }
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                report($e);
-                session()->flash('error', 'Could not update application');
-            }
-        } else {
-            $fee = DlFee::query()->where(['type' => $application->type])->first();
-            if (empty($fee)) {
-                session()->flash('error', "Fee for Drivers license application ({$application->type}) is not configured");
-                return redirect()->back();
-            }
-            try {
-                DB::beginTransaction();
-                $application->update(['dl_application_status_id' => DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id]);
-                $zmBill = $application->generateBill();
-
-                if (config('app.env') != 'local') {
-                    $response = ZmCore::sendBill($zmBill->id);
-                    if ($response->status === ZmResponse::SUCCESS) {
-                        session()->flash('success', 'A control number request was sent successful.');
-                    } else {
-                        session()->flash('error', 'Control number generation failed, try again later');
-                    }
-                } else {
-                    $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                    $zmBill->zan_status = 'pending';
-                    $zmBill->control_number = rand(2000070001000, 2000070009999);
-                    $zmBill->save();
-                }
-
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                report($e);
-                session()->flash('error', 'Could not update application');
-            }
-        }
-
-        return redirect()->route('drivers-license.applications.show', encrypt($id));
-    }
-
     public function simulatePayment($id)
     {
         $id = decrypt($id);

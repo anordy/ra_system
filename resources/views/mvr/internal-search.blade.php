@@ -7,7 +7,7 @@
    @if(!empty($motor_vehicle))
        <div class="card mt-3">
            <div class="card-header">
-               <h5 class="">Search Result - {{$search_type=='chassis'?'Chassis':'Plate'}} #: {{$number}}</h5>
+               <h5 class="">Search Result - {{$search_type=='chassis'?'Chassis':'Plate'}} Number: {{$number}}</h5>
                <div class="card-tools">
                    <button class="btn btn-info btn-sm"
                            onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','{{$result_route ?? 'mvr.internal-search'}}')"><i
@@ -115,7 +115,7 @@
                    </div>
                    <div class="col-md-4 mb-3">
                        <span class="font-weight-bold text-uppercase">Inspection Report</span>
-                       <p class="my-1"><a href="{{url('storage/'.$motor_vehicle->inspection_report_path)}}">Preview</a></p>
+                       <p class="my-1"><a href="{{route('mvr.files',encrypt($motor_vehicle->inspection_report_path))}}">Preview</a></p>
                    </div>
                </div>
                <hr />

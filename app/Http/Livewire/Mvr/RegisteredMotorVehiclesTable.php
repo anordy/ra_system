@@ -43,6 +43,9 @@ class RegisteredMotorVehiclesTable extends DataTableComponent
             Column::make("Registration Type", "id")
                 ->format(fn($id)=>MvrMotorVehicle::query()->find($id)->current_registration->registration_type->name??'')
                 ->sortable(),
+            Column::make("Date", "registration_date")
+                ->format(fn($id)=>MvrMotorVehicle::query()->find($id)->current_registration->registration_type->name??'')
+                ->sortable(),
             Column::make("Chassis No", "chassis_number")
                 ->sortable(),
             Column::make("Axles", "number_of_axle")

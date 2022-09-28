@@ -88,7 +88,7 @@
     @if(!empty($motor_vehicle->current_registration))
         <div class="card mt-3">
             <div class="card-header">
-                <h5>Current Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate #: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
+                <h5>Current Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate Number: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
             </div>
             <div class="card-body">
                 <div class="row my-2">
@@ -118,6 +118,23 @@
                         </p>
                     </div>
 
+                    @if(!empty($motor_vehicle->current_registration->plate_number_collection))
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Plate Number Collection Date</span>
+                            <p class="my-1">{{ $motor_vehicle->current_registration->plate_number_collection->collection_date->format('Y-m-d')??' - ' }}</p>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Plate Number Collector Name</span>
+                            <p class="my-1">{{ $motor_vehicle->current_registration->plate_number_collection->collector_name??' - ' }}</p>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Plate Number Collector Phone</span>
+                            <p class="my-1">{{ $motor_vehicle->current_registration->plate_number_collection->collector_phone??' - ' }}</p>
+                        </div>
+                    @endif
+
                 </div>
 
             </div>
@@ -127,7 +144,7 @@
     <!--- Motor Vehicle --->
     <div class="card mt-3">
         <div class="card-header">
-            <h5>Motor Vehicle Details - Chassis #: {{$motor_vehicle->chassis_number}}</h5>
+            <h5>Motor Vehicle Details - Chassis Number: {{$motor_vehicle->chassis_number}}</h5>
         </div>
         <div class="card-body">
             <div class="row my-2">
@@ -183,7 +200,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Inspection Report</span>
-                    <p class="my-1"><a href="{{url('storage/'.$motor_vehicle->inspection_report_path)}}">Preview</a></p>
+                    <p class="my-1"><a href="{{route('mvr.files',encrypt($motor_vehicle->inspection_report_path))}}">Preview</a></p>
                 </div>
             </div>
             <hr />

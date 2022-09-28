@@ -48,7 +48,7 @@ class DlDriversLicenseOwner extends Model
 		'taxpayer_id',
 		'dl_blood_group_id',
 		'dob',
-		'competence_number',
+		'certificate_path',
 		'certificate_number',
 		'confirmation_number',
 		'photo_path'
