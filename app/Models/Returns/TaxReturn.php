@@ -78,19 +78,16 @@ class TaxReturn extends Model
     }
 
 
-    public function extensionRequest()
-    {
-        return $this->hasOne(ExtensionRequest::class);
+    public function extensionRequest(){
+        return $this->morphOne(ExtensionRequest::class, 'extensible');
     }
 
-    public function installmentRequest()
-    {
-        return $this->hasOne(InstallmentRequest::class);
+    public function installmentRequest(){
+        return $this->morphOne(InstallmentRequest::class, 'installable');
     }
 
-    public function installment()
-    {
-        return $this->hasOne(Installment::class);
+    public function installment(){
+        return $this->morphOne(Installment::class, 'installable');
     }
 
 

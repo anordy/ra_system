@@ -32,10 +32,10 @@
                         </div>
                     @endif
                     @if ($deregister->new_headquarter_id ?? null)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">New Head Quarters</span>
-                        <p class="my-1">{{ $deregister->headquarters->name ?? '' }}</p>
-                    </div>
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">New Head Quarters</span>
+                            <p class="my-1">{{ $deregister->headquarters->name ?? '' }}</p>
+                        </div>
                     @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Submitted By</span>
@@ -54,12 +54,25 @@
                         <p class="my-1">{{ $deregister->reason }}</p>
                     </div>
                 </div>
-                
-                @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' =>$deregister->id])
+
+                @if ($deregister->deregistration_type === 'all')
+                    @livewire('business.deregister.tax-liability', [
+                        'business_id' => $deregister->business_id,
+                        'location_id' => null,
+                    ])
+                @else
+                    @livewire('business.deregister.tax-liability', [
+                        'business_id' => null,
+                        'location_id' => $deregister->location_id,
+                    ])
+                @endif
+
+                @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' => $deregister->id])
             </div>
         </div>
         <div id="tab2" class="tab-pane fade m-2">
-            <livewire:approval.approval-history-table modelName='App\Models\BusinessDeregistration' modelId="{{ $deregister->id }}" />
+            <livewire:approval.approval-history-table modelName='App\Models\BusinessDeregistration'
+                modelId="{{ $deregister->id }}" />
         </div>
     </div>
 </div>
