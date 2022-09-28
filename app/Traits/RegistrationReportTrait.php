@@ -20,7 +20,7 @@ trait RegistrationReportTrait
                 break;
             case 'Business-Reg-By-Nature':
                 $columnName = $this->getIsiicColumnName($parameters['isic_level']);
-                $businessLocations->where($columnName,$parameters['isic_id']);
+                $businessLocations->whereIn($columnName,$parameters['isic_id']);
                 break;
             case 'Business-Reg-By-TaxType':
                 $businessLocations->where('business_tax_type.tax_type_id',$parameters['taxtype_id']);

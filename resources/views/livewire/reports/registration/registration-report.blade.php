@@ -34,7 +34,7 @@
                             ISIC LEVEL I
                         </span>
                     </label>
-                    <select wire:model="isic1Id" class="form-control {{ $errors->has('isic1Id') ? 'is-invalid' : '' }}">
+                    <select wire:model="isic1Id" class="form-control {{ $errors->has('isic1Id') ? 'is-invalid' : '' }}" multiple>
                         <option value="">Select Level</option>
                         @foreach ($optionIsic1s as $isic1)
                             <option value={{ $isic1->id }}>
@@ -53,7 +53,7 @@
                             ISIC LEVEL II
                         </span>
                     </label>
-                    <select wire:model="isic2Id" class="form-control {{ $errors->has('isic2Id') ? 'is-invalid' : '' }}">
+                    <select wire:model="isic2Id" class="form-control {{ $errors->has('isic2Id') ? 'is-invalid' : '' }}" multiple>
                         <option value="">Select Level</option>
                         @foreach ($optionIsic2s as $isic2)
                             <option value={{ $isic2->id }}>
@@ -73,7 +73,7 @@
                         </span>
                     </label>
                     <select wire:model="isic3Id"
-                        class="form-control {{ $errors->has('isic3Id') ? 'is-invalid' : '' }}">
+                        class="form-control {{ $errors->has('isic3Id') ? 'is-invalid' : '' }}" multiple>
                         <option value="">Select Level</option>
                         @foreach ($optionIsic3s as $isic3)
                             <option value={{ $isic3->id }}>
@@ -93,7 +93,7 @@
                         </span>
                     </label>
                     <select wire:model="isic4Id"
-                        class="form-control {{ $errors->has('isic4Id') ? 'is-invalid' : '' }}">
+                        class="form-control {{ $errors->has('isic4Id') ? 'is-invalid' : '' }}" multiple>
                         <option value="">Select Level</option>
                         @foreach ($optionIsic4s as $isic4)
                             <option value={{ $isic4->id }}>
