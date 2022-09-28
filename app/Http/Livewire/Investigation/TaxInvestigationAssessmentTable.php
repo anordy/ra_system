@@ -37,8 +37,7 @@ class TaxInvestigationAssessmentTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('TIN', 'business.tin'),
-            Column::make('Tax Type', 'taxType.name'),
+            Column::make('Business Name', 'business.name'),
             Column::make('Period From', 'period_from'),
             Column::make('Period To', 'period_to'),
             Column::make('Filled By', 'created_by_id')
