@@ -35,7 +35,13 @@ class GenericSettingAddModal extends Component
         MvrFee::class=>[
             ['title'=>'Motor vehicle Registration Type','class'=>MvrRegistrationType::class,'field'=>'mvr_registration_type_id'],
             ['title'=>'Motor vehicle Class','class'=>MvrClass::class,'field'=>'mvr_class_id'],
-            ['title'=>'Fee Type/Category','class'=>MvrFeeType::class,'field'=>'mvr_fee_type_id']]
+            ['title'=>'Motor vehicle Class','class'=>MvrClass::class,'field'=>'mvr_class_id',
+                'dy_data'=>"\$relation['data']=App\Models\MvrRegistrationType::query()->where(['name'=>App\Models\MvrRegistrationType::TYPE_PRIVATE_GOLDEN,'id'=>\$relation_data['mvr_registration_type_id']])->exists()?
+                             App\Models\MvrClass::query()->whereNotIn('category',['C'])->get():App\Models\MvrClass::query()->get();"
+            ],
+            ['title'=>'Fee Type/Category','class'=>MvrFeeType::class,'field'=>'mvr_fee_type_id']
+        ],
+        DlFee::class=>[['title'=>'License Duration','field'=>'dl_license_duration_id', 'class'=>DlLicenseDuration::class,'value_field'=>'number_of_years']],
     ];
 
     private array $enums = [
@@ -184,8 +190,11 @@ class GenericSettingAddModal extends Component
     {
         if (empty($this->relations[$this->model])) return;
         foreach ($this->relations[$this->model] as $foreign){
-            $this->relation_options[$foreign['field']] = ['data'=>$foreign['class']::query()->get(),'title'=>$foreign['title']];
+            $this->relation_options[$foreign['field']] = ['data'=>$foreign['dy_data']??$foreign['class']::query()->get(),'title'=>$foreign['title']];
             $this->relation_data[$foreign['field']] = $this->instance[$foreign['field']]??null;
+            if (isset($foreign['value_field'])){
+                $this->relation_options[$foreign['field']]['value_field'] = $foreign['value_field'];
+            }
         }
     }
 

@@ -79,7 +79,7 @@ class PlateNumbersTable extends DataTableComponent
                         HTML;
                     }elseif(MvrPlateNumberStatus::STATUS_RECEIVED==$mvr->plate_number_status->name){
                         return <<< HTML
-                            <button class="btn btn-outline-primary btn-sm" wire:click="updateToCollected($value)"><i class="fa fa-edit"></i> Update Status</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="Livewire.emit('showModal', 'mvr.plate-number-collection-model',$value)"><i class="fa fa-edit"></i> Update Status</button>
                         HTML;
                     }
                     return '';

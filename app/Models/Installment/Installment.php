@@ -6,7 +6,6 @@ use App\Enum\BillStatus;
 use App\Enum\InstallmentStatus;
 use App\Models\Business;
 use App\Models\BusinessLocation;
-use App\Models\Returns\TaxReturn;
 use App\Models\TaxType;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,6 +54,10 @@ class Installment extends Model
 
     public function paidAmount(){
         return $this->items()->where('status', BillStatus::COMPLETE)->sum('amount');
+    }
+
+    public function scopeActive($query){
+        return $query->where('status', InstallmentStatus::ACTIVE);
     }
 
     /**

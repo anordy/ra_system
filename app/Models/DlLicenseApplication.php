@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $dl_blood_group_id
  * @property int|null $dl_license_duration_id
  * @property Carbon|null $dob
- * @property string|null $competence_number
+ * @property string|null $certificate_path
  * @property string|null $certificate_number
  * @property string|null $confirmation_number
  * @property string|null $photo_path
@@ -34,9 +34,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property DlApplicationStatus $dl_application_status
  * @property DlBloodGroup $dl_blood_group
  * @property DlDriversLicenseOwner|null $dl_drivers_license_owner
- * @property DlLicenseDuration|null $dl_license_duration
+ * @property DlLicenseDuration|null $license_duration
  * @property Taxpayer $taxpayer
- * @property Collection|DlApplicationLicenseClass[] $dl_application_license_classes
+ * @property Collection|DlApplicationLicenseClass[] $application_license_classes
  *
  * @package App\Models
  */
@@ -65,7 +65,7 @@ class DlLicenseApplication extends Model
 		'dl_blood_group_id',
 		'dl_license_duration_id',
 		'dob',
-		'competence_number',
+		'certificate_path',
 		'certificate_number',
 		'confirmation_number',
 		'photo_path',
@@ -90,7 +90,7 @@ class DlLicenseApplication extends Model
 		return $this->belongsTo(DlDriversLicenseOwner::class,'dl_drivers_license_owner_id');
 	}
 
-	public function license_duration()
+        public function license_duration()
 	{
 		return $this->belongsTo(DlLicenseDuration::class,'dl_license_duration_id');
 	}
@@ -118,13 +118,68 @@ class DlLicenseApplication extends Model
 
 
     public function generateBill(){
-        $fee = DlFee::query()->where(['type' => $this->type])->first();
+        $fee = DlFee::query()->where(['type' => $this->type, 'dl_license_duration_id'=>$this->dl_license_duration_id])->first();
         if (empty($fee)){
-           throw new \Exception("Fee for Drivers license application ({$this->type}) is not configured");
+           throw new \Exception("Fee for Drivers license application ({$this->type}/{$this->license_duration->number_of_years} years) is not configured");
         }
         $exchange_rate = 1;
         $amount = $fee->amount;
         $tax_type = TaxType::query()->where(['code'=>TaxType::PUBLIC_SERVICE])->first();
+
+        //check if there is an addition of a class
+        $additional_fee = [];
+        if (strtolower($this->type)=='renew'){
+            $latest_dl = DlDriversLicenseOwner::query()->where(['taxpayer_id'=>$this->taxpayer->id])->first()->drivers_licenses()->latest()->first();
+            $added_classes = count($this->application_license_classes) - count($latest_dl->drivers_license_classes);
+            if ($added_classes>0){
+                $class_fee = DlClassAdditionFee::query()->first();
+                $extra_classes_fee = $added_classes * $class_fee->amount;
+                $additional_fee = [
+                    'billable_id' => $this->id,
+                    'billable_type' => get_class($this),
+                    'fee_id' => $class_fee->id,
+                    'fee_type' => get_class($class_fee),
+                    'tax_type_id' => $tax_type->id,
+                    'amount' => $extra_classes_fee,
+                    'currency' => 'TZS',
+                    'exchange_rate' => $exchange_rate,
+                    'equivalent_amount' => $exchange_rate * $extra_classes_fee,
+                    'gfs_code' => $fee->gfs_code
+                ];
+            }
+        }
+        if (empty($additional_fee)){
+           $items = [
+                [
+                    'billable_id' => $this->id,
+                    'billable_type' => get_class($this),
+                    'fee_id' => $fee->id,
+                    'fee_type' => get_class($fee),
+                    'tax_type_id' => $tax_type->id,
+                    'amount' => $amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => $exchange_rate,
+                    'equivalent_amount' => $exchange_rate * $amount,
+                    'gfs_code' => $fee->gfs_code
+                ]
+            ];
+        }else{
+            $items = [
+                [
+                    'billable_id' => $this->id,
+                    'billable_type' => get_class($this),
+                    'fee_id' => $fee->id,
+                    'fee_type' => get_class($fee),
+                    'tax_type_id' => $tax_type->id,
+                    'amount' => $amount,
+                    'currency' => 'TZS',
+                    'exchange_rate' => $exchange_rate,
+                    'equivalent_amount' => $exchange_rate * $amount,
+                    'gfs_code' => $fee->gfs_code
+                ],
+                $additional_fee
+            ];
+        }
         return ZmCore::createBill(
             $this->id,
             get_class($this),
@@ -141,20 +196,7 @@ class DlLicenseApplication extends Model
             1,
             auth()->user()->id,
             get_class(auth()->user()),
-            [
-                [
-                    'billable_id' => $this->id,
-                    'billable_type' => get_class($this),
-                    'fee_id' => $fee->id,
-                    'fee_type' => get_class($fee),
-                    'tax_type_id' => $tax_type->id,
-                    'amount' => $amount,
-                    'currency' => 'TZS',
-                    'exchange_rate' => $exchange_rate,
-                    'equivalent_amount' => $exchange_rate * $amount,
-                    'gfs_code' => $fee->gfs_code
-                ]
-            ]
+            $items
         );
     }
 }

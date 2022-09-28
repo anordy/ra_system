@@ -108,7 +108,7 @@
     @if(!empty($motor_vehicle->current_registration))
         <div class="card mt-3">
             <div class="card-header">
-                <h5>Current Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate #: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
+                <h5>Current Registration {{!empty($motor_vehicle->current_registration->plate_number)?' - Plate Number: '.$motor_vehicle->current_registration->plate_number:' '}}</h5>
             </div>
             <div class="card-body">
                 <div class="row my-2">
@@ -144,7 +144,7 @@
     <!--- Motor Vehicle --->
     <div class="card mt-3">
         <div class="card-header">
-            <h5>Motor Vehicle Details - Chassis #: {{$motor_vehicle->chassis_number}}</h5>
+            <h5>Motor Vehicle Details - Chassis Number: {{$motor_vehicle->chassis_number}}</h5>
         </div>
         <div class="card-body">
             <div class="row my-2">

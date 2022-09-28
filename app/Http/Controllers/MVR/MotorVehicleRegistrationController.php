@@ -11,12 +11,14 @@ use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRequestStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MotorVehicleRegistrationController extends Controller
 {
@@ -137,4 +139,14 @@ class MotorVehicleRegistrationController extends Controller
         return $pdf->stream();
     }
 
+
+    public function showFile($path)
+    {
+        try {
+            return Storage::disk('local-admin')->response(decrypt($path));
+        } catch (\Exception $e) {
+            report($e);
+        }
+        return abort(404);
+    }
 }

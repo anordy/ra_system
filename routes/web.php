@@ -547,6 +547,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('internal-search-ot')->where('type', 'plate-number|chassis');
         Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
             ->name('internal-search-wo')->where('type', 'plate-number|chassis');
+        Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
         Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove
         Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove
         Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove

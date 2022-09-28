@@ -24,13 +24,18 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MvrFeeType extends Model
 {
-	protected $table = 'mvr_fee_types';
 
-	protected $fillable = [
+    const TYPE_REGISTRATION = 'Registration';
+    const TYPE_DE_REGISTRATION = 'De-Registration';
+    const TYPE_CHANGE_REGISTRATION = 'Change of Registration Particulars';
+
+    protected $table = 'mvr_fee_types';
+
+    protected $fillable = [
 		'type'
 	];
 
-	public function mvr_fees()
+    public function mvr_fees()
 	{
 		return $this->hasMany(MvrFee::class);
 	}

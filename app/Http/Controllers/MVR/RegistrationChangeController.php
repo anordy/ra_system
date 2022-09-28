@@ -62,7 +62,7 @@ class RegistrationChangeController extends Controller
         $id = decrypt($id);
         //Generate control number
         $change_req = MvrRegistrationChangeRequest::query()->find($id);
-        $fee_type = MvrFeeType::query()->firstOrCreate(['type' => 'Registration Change']);
+        $fee_type = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
 
         $fee = MvrFee::query()->where([
             'mvr_registration_type_id' => $change_req->requested_registration_type_id,

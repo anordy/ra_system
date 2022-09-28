@@ -37,7 +37,7 @@ class ApprovalProcessing extends Component
         DB::beginTransaction();
 
         try {
-            $fee = DlFee::query()->where(['type' => $this->subject->type])->first();
+            $fee = DlFee::query()->where(['type' => $this->subject->type, 'dl_license_duration_id'=>$this->subject->dl_license_duration_id])->first();
 
             if (empty($fee)) {
                 $this->alert('error', "Fee for Drivers license application ({$this->subject->type}) is not configured");

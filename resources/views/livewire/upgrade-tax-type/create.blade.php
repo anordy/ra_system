@@ -1,5 +1,5 @@
 <div>
-    @can('qualified-tax-types-upgrade-add')
+    @can('qualified-tax-types-add')
         <button wire:click="upgradeTaxType()" class="btn btn-primary px-3 ml-2" type="button"
                 wire:loading.attr="disabled">
             <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
