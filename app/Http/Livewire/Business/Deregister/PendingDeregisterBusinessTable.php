@@ -17,6 +17,10 @@ class PendingDeregisterBusinessTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects(['business_deregistrations.status']);
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
     public function builder(): Builder

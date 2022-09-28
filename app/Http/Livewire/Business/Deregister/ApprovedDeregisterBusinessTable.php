@@ -17,6 +17,11 @@ class ApprovedDeregisterBusinessTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects([]);
+
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
     public function builder(): Builder
