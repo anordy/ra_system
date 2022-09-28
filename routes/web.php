@@ -173,7 +173,8 @@ Route::middleware(['auth'])->group(function () {
                 ->where('model', 'CourtLevel|CaseDecision|CaseStage|CaseOutcome|CaseStage|DlFee|DlBloodGroup|DlLicenseClass|DlLicenseDuration|MvrTransferFee|MvrOwnershipTransferReason|MvrTransferCategory|MvrDeRegistrationReason|MvrFee|MvrBodyType|MvrClass|MvrFuelType|MvrMake|MvrModel|MvrMotorVehicle|MvrTransmissionType|MvrColor|MvrPlateSize');
         });
         Route::name('return-config.')->prefix('return-config')->group(function () {
-            Route::get('/', [ReturnController::class, 'config'])->name('index');
+            Route::get('/', [ReturnController::class, 'taxTypes'])->name('index');
+            Route::get('/edit/{id}', [ReturnController::class, 'editTaxType'])->name('edit-tax-type');
             Route::get('/show/{id}', [ReturnController::class, 'showReturnConfigs'])->name('show');
             Route::get('/create/{id}/{code}', [ReturnController::class, 'create'])->name('create');
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');

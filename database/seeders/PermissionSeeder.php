@@ -241,8 +241,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-financial-month-add', 'sys_module_id' => 18],
             ['name' => 'setting-financial-month-view', 'sys_module_id' => 18],
             ['name' => 'setting-financial-month-extend', 'sys_module_id' => 18],
+
             ['name' => 'setting-return-configuration-view', 'sys_module_id' => 18],
             ['name' => 'setting-return-configuration-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-return-tax-type-view', 'sys_module_id' => 18],
+            ['name' => 'setting-return-tax-type-edit', 'sys_module_id' => 18],
             
             ['name' => 'setting-mvr-make-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-model-view', 'sys_module_id' => 18],
