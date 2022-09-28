@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxInvestigationStatus;
+use App\Models\CaseStage;
 use App\Models\Investigation\TaxInvestigationOfficer;
+use App\Models\LegalCase;
 use App\Models\Returns\ReturnStatus;
 use Exception;
 use Carbon\Carbon;
@@ -136,9 +138,9 @@ class TaxInvestigationApprovalProcessing extends Component
                     'hasAssessment' => ['required', 'boolean'],
                     'investigationReport' => ['required'],
                     'workingsReport' => [new RequiredIf($this->hasAssessment == "1"), 'nullable'],
-                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
-                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
-                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
+                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
+                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
+                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
                 ]
             );
 
@@ -191,17 +193,21 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $assessment = $this->subject->assessment()->exists();
 
+                $principalAmount = str_replace(',', '', $this->principalAmount);
+                $interestAmount = str_replace(',', '', $this->interestAmount);
+                $penaltyAmount = str_replace(',', '', $this->penaltyAmount);
+
                 if ($this->hasAssessment == "1") {
                     if ($assessment) {
                         $this->subject->assessment()->update([
-                            'principal_amount' => $this->principalAmount,
-                            'interest_amount' => $this->interestAmount,
-                            'penalty_amount' => $this->penaltyAmount,
-                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'original_principal_amount' => $this->principalAmount,
-                            'original_interest_amount' => $this->interestAmount,
-                            'original_penalty_amount' => $this->penaltyAmount,
-                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                            'principal_amount' => $principalAmount,
+                            'interest_amount' => $interestAmount,
+                            'penalty_amount' => $penaltyAmount,
+                            'total_amount' => $penaltyAmount + $interestAmount + $principalAmount,
+                            'original_principal_amount' => $principalAmount,
+                            'original_interest_amount' => $interestAmount,
+                            'original_penalty_amount' => $penaltyAmount,
+                            'original_total_amount' => $principalAmount + $interestAmount + $penaltyAmount
                         ]);
                     } else {
                         TaxAssessment::create([
@@ -210,14 +216,14 @@ class TaxInvestigationApprovalProcessing extends Component
                             'tax_type_id' => $this->taxType->id,
                             'assessment_id' => $this->subject->id,
                             'assessment_type' => get_class($this->subject),
-                            'principal_amount' => $this->principalAmount,
-                            'interest_amount' => $this->interestAmount,
-                            'penalty_amount' => $this->penaltyAmount,
-                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'original_principal_amount' => $this->principalAmount,
-                            'original_interest_amount' => $this->interestAmount,
-                            'original_penalty_amount' => $this->penaltyAmount,
-                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                            'principal_amount' => $principalAmount,
+                            'interest_amount' => $interestAmount,
+                            'penalty_amount' => $penaltyAmount,
+                            'total_amount' => $penaltyAmount + $interestAmount + $principalAmount,
+                            'original_principal_amount' => $principalAmount,
+                            'original_interest_amount' => $interestAmount,
+                            'original_penalty_amount' => $penaltyAmount,
+                            'original_total_amount' => $principalAmount + $interestAmount + $penaltyAmount
                         ]);
                     }
                 } else {
@@ -254,11 +260,11 @@ class TaxInvestigationApprovalProcessing extends Component
         }
 
 
-        if ($this->subject->status == TaxInvestigationStatus::LEGAL)
-        {
+        if ($this->subject->status == TaxInvestigationStatus::LEGAL) {
 
+            $this->addToLegalCase();
         }
-        
+
 
         if ($this->subject->status == TaxInvestigationStatus::APPROVED && $this->subject->assessment()->exists()) {
             $this->generateControlNumber();
@@ -269,9 +275,18 @@ class TaxInvestigationApprovalProcessing extends Component
         }
     }
 
-    public function investigationAdd()
+    public function addToLegalCase()
     {
-        // TODO:: Add
+        LegalCase::query()->create(
+            [
+                'tax_investigation_id' => $this->subject->id,
+                'date_opened' => Carbon::now(),
+                'case_number' => rand(0,3),
+                'case_details' => 'Added from Investigation Approval',
+                'court' => 1,
+                'case_stage_id' => CaseStage::query()->firstOrCreate(['name' => 'Case Opening'])->id ?? 1,
+            ]
+        );
     }
 
     public function generateControlNumber()

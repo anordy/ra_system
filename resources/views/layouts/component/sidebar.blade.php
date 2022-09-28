@@ -120,8 +120,7 @@
         @can('tax-return')
             <li class="{{ request()->is('e-filling*') ? 'active' : '' }}">
                 <a href="#returnsSubmenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is('e-filling*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax
-                    Returns</a>
+                    aria-expanded="{{ request()->is('e-filling*') ? 'true' : 'false' }}" class="dropdown-toggle">Tax Returns</a>
                 <ul class="collapse list-unstyled {{ request()->is('e-filling*') ? 'show' : '' }}" id="returnsSubmenu">
                     @can('return-hotel-levy-view')
                         <li class="{{ request()->is('e-filling/hotel*') ? 'active' : '' }}">
@@ -500,7 +499,7 @@
             <a href="#dlSubmenu" data-toggle="collapse"
                 aria-expanded="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'true' : 'false' }}"
                 class="dropdown-toggle">Driver's Licenses</a>
-            <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('drivers-license*') ? 'show' : '' }}"
+            <ul class="collapse list-unstyled {{ request()->is('drivers-license*') || request()->is('rio*') ? 'show' : '' }}"
                 id="dlSubmenu">
                 <li
                     class="{{ request()->is('drivers-license/applications') || request()->is('drivers-license*') ? 'active' : '' }}">

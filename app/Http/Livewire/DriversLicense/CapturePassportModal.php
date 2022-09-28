@@ -90,7 +90,7 @@ class CapturePassportModal extends Component
                 'taxpayer_id'=>$dla->taxpayer_id,
                 'dl_blood_group_id'=>$dla->dl_blood_group_id,
                 'dob'=>$dla->dob,
-                'competence_number'=>$dla->competence_number,
+                'certificate_path'=>$dla->certificate_path,
                 'certificate_number'=>$dla->certificate_number,
                 'confirmation_number'=>$dla->confirmation_number,
                 'photo_path'=>$dla->photo_path

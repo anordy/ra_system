@@ -50,6 +50,10 @@ class ApplicationInitialStep extends StepComponent
 
     public function nextStep()
     {
+        if (empty($this->type) || empty($this->taxpayer_id)){
+            $this->alert('error', 'Ensure your have provided all the details in this step!');
+            return;
+        }
         parent::nextStep();
     }
 

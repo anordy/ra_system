@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Installment;
 
+use App\Enum\BillStatus;
 use App\Enum\InstallmentRequestStatus;
 use App\Models\ExchangeRate;
 use App\Models\Installment\InstallmentItem;
@@ -34,6 +35,7 @@ class InstallmentPayment extends Component
                 Carbon::now()->toDateTimeString(),
                 $this->installment->getNextPaymentDate()->toDateTimeString()
             ])
+            ->where('status', '!=', BillStatus::COMPLETE)
             ->first();
     }
 
@@ -44,6 +46,7 @@ class InstallmentPayment extends Component
                 Carbon::now()->toDateTimeString(),
                 $this->installment->getNextPaymentDate()->toDateTimeString()
             ])
+            ->where('status', '!=', BillStatus::COMPLETE)
             ->first();
     }
 

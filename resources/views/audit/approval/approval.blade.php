@@ -152,19 +152,19 @@
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                                <p class="my-1">{{ $audit->assessment->principal_amount ?? '' }}</p>
+                                <p class="my-1">{{ number_format($audit->assessment->principal_amount ?? 0, 2) }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ $audit->assessment->interest_amount ?? '' }}</p>
+                                <p class="my-1">{{ number_format($audit->assessment->interest_amount ?? 0, 2) }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                                <p class="my-1">{{ $audit->assessment->penalty_amount ?? '' }}</p>
+                                <p class="my-1">{{ number_format($audit->assessment->penalty_amount ?? 0, 2) }}</p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Total Amount Due</span>
-                                <p class="my-1">{{ $audit->assessment->total_amount ?? '' }}</p>
+                                <p class="my-1">{{ number_format($audit->assessment->total_amount ?? 0, 2) }}</p>
                             </div>
                         </div>
                     </div>

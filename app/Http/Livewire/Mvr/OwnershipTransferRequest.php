@@ -43,10 +43,9 @@ class OwnershipTransferRequest extends Component
         return [
             'reason_id' => 'required',
             'category_id' => 'required',
-            'date_received' => 'required|date',
-            'date_delivered' => 'required|date',
+            'date_received' => 'required|date|before_or_equal:today',
+            'date_delivered' => 'required|date|before_or_equal:today',
             'market_value' => 'required',
-            'agent_id' => 'required',
             'owner_taxpayer_id' => 'required',
         ];
     }
@@ -60,7 +59,6 @@ class OwnershipTransferRequest extends Component
     public function submit()
     {
         $rules = $this->rules();
-        //todo: add this to seeder, sold and other
         if ((MvrOwnershipTransferReason::query()->where(['name'=> MvrOwnershipTransferReason::TRANSFER_REASON_SOLD])->first()->id ?? null) != $this->reason_id){
             $this->sale_date = null;
         }else{

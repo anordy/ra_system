@@ -3,8 +3,8 @@
 @section('title', 'Managerial Reports')
 
 @section('content')
-    <div class="card">
-        <div class="card-header text-uppercase font-weight-bold">
+    <div class="card rounded-0">
+        <div class="card-header text-uppercase font-weight-bold bg-white">
             Debt Reports
         </div>
         <div class="card-body mt-0">

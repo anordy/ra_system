@@ -29,7 +29,7 @@
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">TIN</span>
                             <p class="my-1">{{ $investigation->business->tin ?? '' }}</p>
-                        </div> 
+                        </div>
                         <div class="col-md-8 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
                             <p class="my-1">{{ $investigation->taxInvestigationTaxTypeNames() ?? '' }}</p>
@@ -94,20 +94,23 @@
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Principal Amount</span>
-                                <p class="my-1">{{ $investigation->assessment->principal_amount ?? '' }}</p>
+                                <p class="my-1">{{ number_format($investigation->assessment->principal_amount ?? 0,2) }}
+                                </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Penalty Amount</span>
-                                <p class="my-1">{{ $investigation->assessment->penalty_amount ?? '' }}</p>
+                                <p class="my-1">{{ number_format($investigation->assessment->penalty_amount ?? 0, 2) }}
+                                </p>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Interest Amount</span>
-                                <p class="my-1">{{ $investigation->assessment->interest_amount ?? '' }}</p>
+                                <p class="my-1">{{ number_format($investigation->assessment->interest_amount ?? 0, 2) }}
+                                </p>
                             </div>
 
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Total Amount Due</span>
-                                <p class="my-1">{{ $investigation->assessment->total_amount ?? '' }}</p>
+                                <p class="my-1">{{ number_format($investigation->assessment->total_amount ?? 0, 2) }}</p>
                             </div>
                             @if ($investigation->investigation_report)
                                 <div class="col-md-4">
@@ -147,7 +150,7 @@
                 modelId="{{ $investigation->id }}" />
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-               @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
+            @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
                 @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation, 'tax_type_id' => $investigation->tax_type_id, 'location_id' => $investigation->location_id])
             @else
                 @livewire('investigation.declared-sales-analysis-instances', ['investigation' => $investigation])

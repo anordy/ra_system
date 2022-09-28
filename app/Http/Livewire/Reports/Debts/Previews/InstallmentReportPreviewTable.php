@@ -33,7 +33,7 @@ class InstallmentReportPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['installments.installable_id', 'installable_type', 'amount']);
+        $this->setAdditionalSelects(['installments.installable_id', 'installable_type', 'amount', 'currency']);
     }
 
     public function columns(): array
@@ -68,7 +68,25 @@ class InstallmentReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("From", "installment_from")
+            Column::make("Start Date", "installment_from")
+                ->searchable()
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return $value->toDateString();
+                    }
+                ),
+
+            Column::make("End Date", "installment_to")
+                ->searchable()
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return $value->toDateString();
+                    }
+                ),
+
+            Column::make("Inst. No.", "installment_count")
                 ->searchable()
                 ->sortable()
                 ->format(
@@ -77,33 +95,41 @@ class InstallmentReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("To", "installment_to")
+            Column::make("Total Amount", "id")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return $value;
+                        return number_format($row->amount, 2) . ' ' . $row->currency;
                     }
                 ),
 
-                Column::make("Installment Count", "installment_count")
+            Column::make("Amount per Installment", "id")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return $value;
+                        return number_format($row->amount / $row->installment_count, 2) . ' ' . $row->currency;
                     }
                 ),
 
-            Column::make("Payment per installment", "id")
+            Column::make("Paid Amount", "id")
                 ->searchable()
                 ->sortable()
                 ->format(
                     function ($value, $row) {
-                        return number_format($row->amount / $row->installment_count, 2);
+                        return number_format($row->paidAmount(), 2) . ' ' . $row->currency;
                     }
                 ),
 
+            Column::make("Outstanding Amount", "id")
+                ->searchable()
+                ->sortable()
+                ->format(
+                    function ($value, $row) {
+                        return number_format($row->amount - $row->paidAmount(), 2) . ' ' . $row->currency;
+                    }
+                ),
         ];
     }
 }

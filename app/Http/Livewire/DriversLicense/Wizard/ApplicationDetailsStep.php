@@ -17,7 +17,8 @@ class ApplicationDetailsStep extends StepComponent
     public $cert_number;
     public $type;
     public $conf_number;
-    public $comp_number;
+    public $certificate;
+    public $certificate_path;
     public $editable = true;
 
     /**
@@ -29,7 +30,6 @@ class ApplicationDetailsStep extends StepComponent
     protected $rules = [
         'cert_number' => 'required|min:1',
         'conf_number' => 'required|numeric|min:1',
-        'comp_number' => 'required|numeric|min:1',
         'dob' => 'required|date',
         'blood_group_id' => 'required|numeric',
     ];
@@ -70,10 +70,17 @@ class ApplicationDetailsStep extends StepComponent
     {
         if ($this->type=='duplicate' && empty($this->loss_report_path)){
             $this->rules = array_merge(['loss_report'=>'required|mimes:pdf'],$this->rules);
+        }elseif($this->type=='fresh' && empty($this->certificate)){
+            $this->alert('error', 'Please upload certificate of competence!');
+            return;
         }
         $this->validate();
-        if (!empty($this->loss_report)){
-            $this->loss_report_path = $this->loss_report->storePubliclyAs('Driver-License', "LOSS-REPORT-DRIVERS-LICENSE-{$this->dl_number}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->loss_report->extension());
+        if (!empty($this->loss_report) && !is_array($this->loss_report)){
+            $this->loss_report_path = $this->loss_report->store("Driver-License-LOSS-REPORT-DRIVERS-LICENSE-{$this->dl_number}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->loss_report->extension(),'local-admin');
+        }
+
+        if (!empty($this->certificate)){
+            $this->certificate_path = $this->certificate->store("Driver-License-CERTIFICATE-OF-COMPETENCE-{$this->cert_number}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->certificate->extension(),'local-admin');
         }
         parent::nextStep();
     }

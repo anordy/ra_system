@@ -17,12 +17,6 @@
                            aria-controls="home" aria-selected="true">License</a>
                     </li>
                 @endif
-                @if(strtolower($application->type) == 'fresh')
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="printed-link" data-toggle="tab" href="#pending-approval" role="tab"
-                           aria-controls="profile" aria-selected="false">Approval</a>
-                    </li>
-                @endif
             </ul>
             <hr>
             <div class="tab-content" id="myTabContent">
@@ -90,7 +84,12 @@
 
                         @if(strtolower($application->type)=='fresh')
                             <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Certificate Number</span>
+                                <span class="font-weight-bold text-uppercase">Certificate of competence</span>
+                                <p class="my-1"><a href="{{ route('mvr.files',encrypt($application->certificate_path)) }}">Preview</a></p>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Certificate of competence number</span>
                                 <p class="my-1">{{ $application->certificate_number }}</p>
                             </div>
 
@@ -98,12 +97,13 @@
                                 <span class="font-weight-bold text-uppercase">Confirmation Number</span>
                                 <p class="my-1">{{ $application->confirmation_number }}</p>
                             </div>
-
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Competence Number</span>
-                                <p class="my-1">{{ $application->competence_number }}</p>
-                            </div>
                         @endif
+
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">License Duration</span>
+                            <p class="my-1">{{ $application->license_duration->number_of_years }}</p>
+
+                        </div>
 
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">License Classes</span>
@@ -227,7 +227,7 @@
                             <div class="d-flex justify-content-end  p-2">
                                 @if($application->application_status->name === \App\Models\DlApplicationStatus::STATUS_INITIATED
                                         || $application->application_status->name === \App\Models\DlApplicationStatus::STATUS_DETAILS_CORRECTION)
-                                    <a href="{{route('drivers-license.applications.submit',encrypt($application->id))}}">
+                                    <a href="{{route('drivers-license.',encrypt($application->id))}}">
                                         <button class="btn btn-primary btn-sm "><i
                                                     class="fa fa-check"></i>
                                             Submit
@@ -274,6 +274,7 @@
                                         <p class="my-1">{{ $application->drivers_license->expiry_date->format('Y-m-d') }}</p>
                                     </div>
 
+                                    @if($application->application_status->name === \App\Models\DlApplicationStatus::STATUS_LICENSE_PRINTING)
                                     <div class="col-md-6 mb-3">
                                         <span class="font-weight-bold text-uppercase">Print Drivers License</span>
                                         <p class="my-1">
@@ -282,6 +283,7 @@
                                             </a>
                                         </p>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -294,14 +296,6 @@
                             </div>
                         </div>
                         @endif
-                    </div>
-                @endif
-
-                @if(strtolower($application->type) == 'fresh')
-                    <div class="tab-pane p-2" id="pending-approval" role="tabpanel" aria-labelledby="printed-tab">
-                        <livewire:drivers-license.approval-processing
-                                modelName="{{\App\Models\DlLicenseApplication::class}}"
-                                modelId="{{$application->id}}"/>
                     </div>
                 @endif
 

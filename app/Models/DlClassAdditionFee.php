@@ -10,21 +10,19 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class DlFee
+ * Class DlClassAdditionFee
  * 
  * @property int $id
  * @property string $name
  * @property float $amount
- * @property string $type
- * @property string $gfs_code
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
  * @package App\Models
  */
-class DlFee extends Model
+class DlClassAdditionFee extends Model
 {
-	protected $table = 'dl_fees';
+	protected $table = 'dl_class_addition_fees';
 
 	protected $casts = [
 		'amount' => 'float'
@@ -32,15 +30,6 @@ class DlFee extends Model
 
 	protected $fillable = [
 		'name',
-		'amount',
-		'type',
-		'gfs_code',
-		'dl_license_duration_id',
+		'amount'
 	];
-
-
-    public function license_duration()
-    {
-        return $this->belongsTo(DlLicenseDuration::class,'dl_license_duration_id');
-    }
 }
