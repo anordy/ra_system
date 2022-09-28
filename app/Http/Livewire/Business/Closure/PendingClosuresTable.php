@@ -23,6 +23,11 @@ class PendingClosuresTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects(['is_extended', 'business_temp_closures.status']);
+
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
     public function builder(): Builder

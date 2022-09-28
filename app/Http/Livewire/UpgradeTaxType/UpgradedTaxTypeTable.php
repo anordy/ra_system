@@ -13,6 +13,11 @@ class UpgradedTaxTypeTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
     public function builder(): Builder

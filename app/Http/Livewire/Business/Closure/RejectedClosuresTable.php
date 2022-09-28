@@ -16,6 +16,11 @@ class RejectedClosuresTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setAdditionalSelects(['is_extended']);
+
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered table-sm',
+        ]);
     }
 
     public function builder(): Builder
