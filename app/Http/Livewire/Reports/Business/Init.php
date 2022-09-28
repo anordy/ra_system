@@ -2,10 +2,6 @@
 
 namespace App\Http\Livewire\Reports\Business;
 
-use App\Exports\BusinessRegByLastTurnOverReportExport;
-use App\Exports\BusinessRegByNatureReportExport;
-use App\Exports\BusinessRegByNextTurnOverReportExport;
-use App\Exports\BusinessRegByTaxTypeReportExport;
 use App\Exports\BusinessReportExport;
 use App\Models\BusinessActivity;
 use App\Models\BusinessCategory;
@@ -164,19 +160,19 @@ class Init extends Component
         if ($propertyName == 'isic1Id') {
             $this->reset('isic2Id', 'isic3Id', 'isic4Id', 'optionIsic2s', 'optionIsic3s', 'optionIsic4s');
             if ($this->isic1Id !== null) {
-                $this->optionIsic2s = ISIC2::where('isic1_id', $this->isic1Id)->get();
+                $this->optionIsic2s = ISIC2::whereIn('isic1_id', $this->isic1Id)->get();
             }
         }
         if ($propertyName == 'isic2Id') {
             $this->reset('isic3Id', 'isic4Id', 'optionIsic3s', 'optionIsic4s');
             if ($this->isic2Id !== null) {
-                $this->optionIsic3s = ISIC3::where('isic2_id', $this->isic2Id)->get();
+                $this->optionIsic3s = ISIC3::whereIn('isic2_id', $this->isic2Id)->get();
             }
         }
         if ($propertyName == 'isic3Id') {
             $this->reset('isic4Id', 'optionIsic4s');
             if ($this->isic3Id !== null) {
-                $this->optionIsic4s = ISIC4::where('isic3_id', $this->isic3Id)->get();
+                $this->optionIsic4s = ISIC4::whereIn('isic3_id', $this->isic3Id)->get();
             }
         }
         if ($propertyName == 'year') {

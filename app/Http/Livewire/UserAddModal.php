@@ -2,20 +2,21 @@
 
 namespace App\Http\Livewire;
 
+use Exception;
 use App\Models\Role;
 use App\Models\User;
-use App\Notifications\DatabaseNotification;
-use App\Notifications\NewUserNotification;
-use Exception;
-use Illuminate\Notifications\Notification;
+use ZxcvbnPhp\Zxcvbn;
+use Livewire\Component;
+use App\Events\SendMail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
+use App\Notifications\NewUserNotification;
+use Illuminate\Notifications\Notification;
+use App\Notifications\DatabaseNotification;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
-use ZxcvbnPhp\Zxcvbn;
 
 class UserAddModal extends Component
 {
@@ -98,6 +99,14 @@ class UserAddModal extends Component
                     $hrefText = 'View'
                 ));
             }
+
+            $payload = [
+                'email' => $this->email,
+                'full_name' => "{$this->fname} {$this->lname}",
+                'password' => $this->password
+            ];
+
+            event(new SendMail('admin-registration', $payload));
 
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

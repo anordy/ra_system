@@ -21,7 +21,7 @@ class QualifiedTaxTypeController extends Controller
 {
     public function index()
     {
-        if (!Gate::allows('qualified-tax-types-upgrade-view')) {
+        if (!Gate::allows('qualified-tax-types-view')) {
             abort(403);
         }
         $salesConfigs = HotelReturnConfig::query()->whereIn('code', ['HS', 'RS', 'TOS', 'OS'])->get()->pluck('id');
@@ -67,7 +67,7 @@ class QualifiedTaxTypeController extends Controller
 
     public function show($id, $tax_type_id, $sales)
     {
-        if (!Gate::allows('qualified-tax-types-upgrade-view')) {
+        if (!Gate::allows('qualified-tax-types-view')) {
             abort(403);
         }
         $return_id = decrypt($id);
