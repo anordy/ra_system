@@ -33,9 +33,10 @@ class InstallmentItemsTable extends DataTableComponent
                 ->format(function($value, $row){
                     return $row->bill->bill_payments->first()->psp_receipt_number;
                 }),
-            Column::make('Amount', 'amount')
-                ->sortable()
-                ->searchable(),
+            Column::make('Paid Amount', 'amount')
+                ->format(function ($value, $row){
+                    return number_format($value,2) . ' ' . $row->currency;
+                }),
             Column::make('Currency', 'currency')
                 ->sortable()
                 ->searchable(),
@@ -45,6 +46,8 @@ class InstallmentItemsTable extends DataTableComponent
                 ->format(function ($value){
                     return $value ?? '-';
                 }),
+            Column::make('Actions', 'status')
+                ->view('installment.includes.installment-items-actions'),
         ];
     }
 
