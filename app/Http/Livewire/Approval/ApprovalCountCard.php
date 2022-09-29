@@ -22,25 +22,35 @@ class ApprovalCountCard extends Component
 
         switch ($modelName) {
             case 'TaxVerification':
-                $model = TaxVerification::class;
+                $model = TaxAudit::class;
+                $workflowPending = WorkflowTask::where('pinstance_type', $model)
+                    ->where('owner', 'staff')
+                    ->whereJsonContains('operators', $user_id)
+                    ->get();
+
                 $workflow = WorkflowTask::where('pinstance_type', $model)
                     ->where('user_type', get_class(auth()->user()))
                     ->where('user_id', $user_id)
                     ->get();
 
-                $this->pending = $workflow->where('status', 'running')->count();
+                $this->pending = $workflowPending->count();
                 $this->rejected = $workflow->where('status', 'rejected')->count();
                 $this->approved = $workflow->where('status', 'completed')->count();
                 break;
 
             case 'TaxAudit':
                 $model = TaxAudit::class;
+                $workflowPending = WorkflowTask::where('pinstance_type', $model)
+                    ->where('owner', 'staff')
+                    ->whereJsonContains('operators', $user_id)
+                    ->get();
+
                 $workflow = WorkflowTask::where('pinstance_type', $model)
                     ->where('user_type', get_class(auth()->user()))
                     ->where('user_id', $user_id)
                     ->get();
 
-                $this->pending = $workflow->where('status', 'running')->count();
+                $this->pending = $workflowPending->count();
                 $this->rejected = $workflow->where('status', 'rejected')->count();
                 $this->approved = $workflow->where('status', 'completed')->count();
                 break;
