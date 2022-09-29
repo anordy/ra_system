@@ -14,6 +14,7 @@
             </div>
         </div>
         <div class="card-body">
+            @livewire('approval.approval-count-card', ['modelName' => 'TaxAudit'])
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
