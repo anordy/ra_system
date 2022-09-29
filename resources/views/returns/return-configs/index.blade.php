@@ -65,7 +65,11 @@
                         {{\App\Http\Controllers\Returns\ReturnController::getFinancialYear($config->financial_year_id)}}
                         </td>
                         <td>
-                            <a href="{{route('settings.return-config.edit', [encrypt($id), encrypt($code),encrypt($config->id)])}}" class="btn btn-outline-success"><i class="bi bi-pencil "></i>Edit</a>
+                            @can('setting-return-configuration-edit')
+                            <a href="{{route('settings.return-config.edit', [encrypt($id), encrypt($code),encrypt($config->id)])}}" class="btn btn-outline-success">
+                                <i class="bi bi-pencil "></i>Edit
+                            </a>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach

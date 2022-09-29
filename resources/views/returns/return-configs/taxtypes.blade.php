@@ -3,7 +3,7 @@
 @section('css')
 @endsection
 
-@section('title','Returns Taxtypes')
+@section('title','Return Tax Types')
 
 @section('content')
     <div class="card">

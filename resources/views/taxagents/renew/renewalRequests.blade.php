@@ -26,22 +26,16 @@
             <div class="tab-content card" id="myTabContent">
 
                 <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
-                    <div class="text-center pb-2">
-                        Requests needed for verification
-                    </div>
+
                     <livewire:tax-agent.renew.pending-table />
                 </div>
                 <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
-                    <div class="text-center pb-2">
-                        Requests needed for approval
-                    </div>
+
                     <livewire:tax-agent.renew.verified-table />
                 </div>
 
                 <div class="tab-pane p-2" id="approved" role="tabpanel" aria-labelledby="approved-tab">
-                    <div class="text-center pb-2">
-                        Approved Requests
-                    </div>
+
                     <livewire:tax-agent.renew.approved-table />
                 </div>
 

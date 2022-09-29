@@ -69,6 +69,7 @@
         </div>
 
         <div class="col-md-12 d-flex justify-content-end">
+            @can('setting-return-configuration-edit')
             <button type="button" class="btn btn-success px-5" wire:click='update' wire:loading.attr="disabled">
                 <div wire:loading.delay wire:target="update">
                     <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
@@ -77,6 +78,7 @@
                 </div>
                 Update
             </button>
+            @endcan
         </div>
 
     </div>
