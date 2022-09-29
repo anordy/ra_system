@@ -1033,11 +1033,11 @@
                             <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                         </li>
                     @endcan
-                    @can('system-all-pdfs-view')
+                    {{-- @can('system-all-pdfs-view')
                         <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                             <a href="{{ route('pdf.all') }}">All PDF's</a>
                         </li>
-                    @endcan
+                    @endcan --}}
                 </ul>
             </li>
         @endcan

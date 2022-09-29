@@ -8,6 +8,7 @@
             Tax Returns Verification Approval
         </div>
         <div class="card-body">
+            @livewire('approval.approval-count-card', ['modelName' => 'TaxVerification'])
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
                 <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Unpaid Returns</a>
