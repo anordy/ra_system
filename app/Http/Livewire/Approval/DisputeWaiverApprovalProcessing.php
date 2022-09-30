@@ -1,0 +1,223 @@
+<?php
+
+namespace App\Http\Livewire\Approval;
+
+use Exception;
+use Carbon\Carbon;
+use App\Models\TaxType;
+use Livewire\Component;
+use App\Enum\DisputeStatus;
+use App\Jobs\Bill\CancelBill;
+use App\Jobs\Dispute\GenerateAssessmentDisputeControlNo;
+use App\Traits\PaymentsTrait;
+use Livewire\WithFileUploads;
+use App\Models\Disputes\Dispute;
+use App\Services\ZanMalipo\ZmCore;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Models\Returns\ReturnStatus;
+use Illuminate\Support\Facades\Auth;
+use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\WorkflowProcesssingTrait;
+use App\Traits\TaxAssessmentDisputeTrait;
+use App\Models\TaxAssessments\TaxAssessment;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+
+class DisputeWaiverApprovalProcessing extends Component
+{
+    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait, PaymentsTrait, LivewireAlert;
+    public $modelId;
+    public $modelName;
+    public $comments;
+    public $disputeReport;
+    public $taxTypes;
+    public $complete = '0';
+    public $penaltyPercent, $penaltyAmount, $penaltyAmountDue, $interestAmountDue;
+    public $interestPercent, $interestAmount, $dispute, $assesment, $total, $principal_amount_due;
+    public $natureOfAttachment, $noticeReport, $settingReport;
+    public $principal, $penalty, $interest;
+
+    public function mount($modelName, $modelId)
+    {
+        $this->modelName = $modelName;
+        $this->modelId = $modelId;
+        $this->dispute = Dispute::find($this->modelId);
+        $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+        $this->penalty = $this->assessment->penalty_amount;
+        $this->interest = $this->assessment->interest_amount;
+        $this->principal = $this->assessment->principal_amount;
+        $this->taxTypes = TaxType::all();
+        $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
+        $this->total = $this->assessment->outstanding_amount;
+        $this->registerWorkflow($modelName, $modelId);
+    }
+
+    public function updated($propertyName)
+    {
+        if ($propertyName == "penaltyPercent") {
+            if ($this->penaltyPercent > 100) {
+                $this->penaltyPercent = 100;
+            } elseif ($this->penaltyPercent < 0 || !is_numeric($this->penaltyPercent)) {
+                $this->penaltyPercent = null;
+            }
+            $this->penaltyAmount = ($this->assessment->penalty_amount * $this->penaltyPercent) / 100;
+        }
+
+        if ($propertyName == "interestPercent") {
+            if ($this->interestPercent > 50) {
+                $this->interestPercent = 50;
+            } elseif ($this->interestPercent < 0 || !is_numeric($this->interestPercent)) {
+                $this->interestPercent = null;
+            }
+            $this->interestAmount = ($this->assessment->interest_amount * $this->interestPercent) / 100;
+        }
+
+        $this->penaltyAmountDue = $this->assessment->penalty_amount - $this->penaltyAmount;
+        $this->interestAmountDue = $this->assessment->interest_amount - $this->interestAmount;
+        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->assessment->principal_amount);
+    }
+
+    public function approve($transtion)
+    {
+        $taxType = $this->subject->taxType;
+        $this->taxTypes = TaxType::where('code', 'disputes')->first();
+
+        if ($this->checkTransition('objection_manager_review')) {
+
+            $this->validate(
+                [
+                    'disputeReport' => 'required|mimes:pdf',
+                ]
+            );
+
+            $disputeReport = "";
+            if ($this->disputeReport) {
+                $disputeReport = $this->disputeReport->store('waiver_report', 'local-admin');
+            }
+
+            $dispute = Dispute::find($this->modelId);
+
+            DB::beginTransaction();
+            try {
+
+                $dispute->update([
+                    'dispute_report' => $disputeReport ?? '',
+                ]);
+
+                DB::commit();
+            } catch (\Exception $e) {
+                Log::error($e);
+                DB::rollBack();
+                $this->alert('error', 'Something went wrong.');
+            }
+
+        }
+
+        if ($this->checkTransition('chief_assurance_review')) {
+
+        }
+
+        if ($this->checkTransition('commisioner_review')) {
+            $this->complete = "1";
+
+            $this->validate([
+                'interestPercent' => ['required', 'numeric'],
+                'penaltyPercent' => ['required', 'numeric'],
+            ]);
+            DB::beginTransaction();
+
+            try {
+
+                $this->subject->update([
+                    'penalty_rate' => $this->penaltyPercent ?? 0,
+                    'interest_rate' => $this->interestPercent ?? 0,
+                    'penalty_amount' => $this->penaltyAmount ?? 0,
+                    'interest_amount' => $this->interestAmount ?? 0,
+                ]);
+
+                $this->assessment->update([
+                    'penalty_amount' => $this->penaltyAmountDue,
+                    'interest_amount' => $this->interestAmountDue,
+                    'total_amount' => $this->total,
+                    'outstanding_amount' => $this->total,
+                    'application_status' => 'waiver',
+                ]);
+
+                $this->subject->app_status = DisputeStatus::APPROVED;
+                $this->subject->save();
+
+                $now = Carbon::now();
+
+                // Generate control number for waived application
+                if ($this->assessment->bill) {
+                    CancelBill::dispatch($this->assessment->bill, 'Assessment dispute has been waived')->delay($now->addSeconds(10));
+                    GenerateAssessmentDisputeControlNo::dispatch($this->assessment)->delay($now->addSeconds(10));
+                } else {
+                    GenerateAssessmentDisputeControlNo::dispatch($this->assessment)->delay($now->addSeconds(10));
+                }
+
+                DB::commit();
+            } catch (Exception $e) {
+                Log::error($e);
+                throw $e;
+                $this->alert('error', 'Something went wrong');
+            }
+
+        }
+
+        try {
+            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->alert('error', 'Something went wrong.');
+            return;
+        }
+    }
+
+    public function reject($transtion)
+    {
+        $this->validate([
+            'comments' => 'required',
+        ]);
+
+        try {
+            if ($this->checkTransition('application_filled_incorrect')) {
+
+            }
+
+            if ($this->checkTransition('chief_assurance_reject')) {
+
+            }
+
+            if ($this->checkTransition('commisioner_reject')) {
+
+                DB::beginTransaction();
+
+                try {
+                    $this->subject->app_status = DisputeStatus::REJECTED;
+                    $this->subject->save();
+                    DB::commit();
+                } catch (Exception $e) {
+                    Log::error($e);
+                    throw $e;
+                    $this->alert('error', 'Something went wrong');
+                }
+
+            }
+
+            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+        } catch (Exception $e) {
+            Log::error($e);
+            return;
+        }
+        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+    public function render()
+    {
+        return view('livewire.approval.dispute-waiver-approval-processing');
+    }
+
+}

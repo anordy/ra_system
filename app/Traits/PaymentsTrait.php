@@ -525,4 +525,111 @@ trait PaymentsTrait {
 
         }
     }
+
+    public function generateWaivedAssessmentDisputeControlNo($assessment)
+    {
+        $taxTypes = TaxType::all();
+
+        $tax_type = TaxType::findOrFail($assessment->tax_type_id);
+
+        if ($assessment->principal_amount > 0) {
+            $billItems[] = [
+                'billable_id' => $assessment->id,
+                'billable_type' => get_class($assessment),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $assessment->principal_amount,
+                'currency' => $assessment->currency,
+                'gfs_code' => $tax_type->gfs_code,
+                'tax_type_id' => $tax_type->id
+            ];
+        }
+
+        if ($assessment->penalty_amount > 0) {
+            $billItems[] = [
+                'billable_id' => $assessment->id,
+                'billable_type' => get_class($assessment),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $assessment->penalty_amount,
+                'currency' => $assessment->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->first()->id
+            ];
+        }
+
+
+        if ($assessment->interest_amount > 0) {
+            $billItems[] = [
+                'billable_id' => $assessment->id,
+                'billable_type' => get_class($assessment),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $assessment->interest_amount,
+                'currency' => $assessment->currency,
+                'gfs_code' => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
+            ];
+        }
+ 
+
+        $taxpayer = $assessment->business->taxpayer;
+
+        $payer_type = get_class($taxpayer);
+        $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+        $payer_email = $taxpayer->email;
+        $payer_phone = $taxpayer->mobile;
+        $description = "{$assessment->taxtype->name} dispute waiver for {$assessment->business->name} {$assessment->location->name}";
+        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $currency = $assessment->currency;
+        $createdby_type = 'Job';
+        $createdby_id = null;
+        $exchange_rate = $assessment->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $assessment->currency)->first()->mean;
+        $payer_id = $taxpayer->id;
+        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+        $billableId = $assessment->id;
+        $billableType = get_class($assessment);
+
+        $zmBill = ZmCore::createBill(
+            $billableId,
+            $billableType,
+            $assessment->tax_type_id,
+            $payer_id,
+            $payer_type,
+            $payer_name,
+            $payer_email,
+            $payer_phone,
+            $expire_date,
+            $description,
+            $payment_option,
+            $currency,
+            $exchange_rate,
+            $createdby_id,
+            $createdby_type,
+            $billItems
+        );
+
+        if (config('app.env') != 'local') {
+            $response = ZmCore::sendBill($zmBill->id);
+            if ($response->status === ZmResponse::SUCCESS) {
+                $assessment->payment_status = ReturnStatus::CN_GENERATING;
+
+                $assessment->save();
+            } else {
+                $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+            }
+
+            $assessment->save();
+        } else {
+
+            // We are local
+            $assessment->payment_status = ReturnStatus::CN_GENERATED;
+
+            $assessment->save();
+
+            // Simulate successful control no generation
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
+            $zmBill->save();
+
+        }
+    }
 }

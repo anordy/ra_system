@@ -64,6 +64,28 @@
                         {{ $dispute->category }}
                     </span>
                 </div>
+                @if ($dispute->waiver_category)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Waiver Type</span>
+                    <p class="my-1">
+                        @if ($dispute->waiver_category == 'interest')
+                            Interest
+                        @elseif($dispute->waiver_category == 'penalty')
+                            Penalty
+                        @else
+                            Penalty & Interest
+                        @endif
+                    </p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Waived Penalty Rate</span>
+                    <p class="my-1">{{ $dispute->penalty_rate }}%</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Waived Interest Rate</span>
+                    <p class="my-1">{{ $dispute->interest_rate }}%</p>
+                </div>
+                @endif
                 @if ($business->business_type === \App\Models\BusinessType::HOTEL)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Business Type</span>

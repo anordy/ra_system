@@ -18,7 +18,7 @@
             <div class="tab-content bg-white border shadow-sm" id="waiverContent">
                 <div class="tab-pane fade show active" id="waiverInfo" role="tabpanel" aria-labelledby="waiverInfo-tab">
                     @include('assesments.waiver.includes.objection_info')
-                    <livewire:approval.objection-approval-processing modelName='App\Models\Disputes\Dispute'
+                    <livewire:approval.dispute-waiver-approval-processing modelName='App\Models\Disputes\Dispute'
                         modelId="{{ $dispute->id }}" />
                 </div>
 
