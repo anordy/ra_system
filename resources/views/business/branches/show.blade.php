@@ -151,6 +151,58 @@
                                 </div>
                             </div>
                         </div>
+
+                        @if ($hotel = $location->hotel)
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="text-uppercase">Hotel Details</h6>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Company Name</span>
+                                        <p class="my-1">{{ $hotel->company_name }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Management Company</span>
+                                        <p class="my-1">{{ $hotel->management_company }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Hotel Location</span>
+                                        <p class="my-1">{{ $hotel->hotel_location }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Number of Rooms</span>
+                                        <p class="my-1">{{ $hotel->number_of_rooms }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Number of Single Rooms</span>
+                                        <p class="my-1">{{ $hotel->number_of_single_rooms }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Number of Double Rooms</span>
+                                        <p class="my-1">{{ $hotel->number_of_double_rooms }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Number of Other Rooms</span>
+                                        <p class="my-1">{{ $hotel->number_of_other_rooms }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Hotel Capacity</span>
+                                        <p class="my-1">{{ $hotel->hotel_capacity }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Average Charging Rate (Per night per person for bed
+                                            and breakfast)</span>
+                                        <p class="my-1">{{ number_format($hotel->average_rate ?? 0, 2) }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Other Services</span>
+                                        <p class="my-1">{{ $hotel->other_services }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     </div>
                         
             

@@ -2,15 +2,25 @@
 
 namespace App\Models;
 
-use App\Models\Relief\Relief;
-use App\Models\Returns\TaxReturn;
-use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Ward;
+use App\Models\Region;
+use App\Models\Business;
+use App\Models\District;
+use App\Models\Taxpayer;
+use App\Models\LandLease;
+use App\Models\TaxRegion;
+use App\Models\BusinessHotel;
+use App\Models\Relief\Relief;
+use App\Traits\WorkflowTrait;
+use App\Models\BusinessCategory;
+use App\Models\Returns\TaxReturn;
+use Illuminate\Support\Facades\DB;
+use App\Models\TaxClearanceRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BusinessLocation extends Model
 {
@@ -131,5 +141,10 @@ class BusinessLocation extends Model
 
     public function taxReturns(){
         return $this->hasMany(TaxReturn::class, 'location_id');
+    }
+
+    public function hotel()
+    {
+        return $this->hasOne(BusinessHotel::class, 'location_id');
     }
 }
