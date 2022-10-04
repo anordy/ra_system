@@ -32,77 +32,77 @@ class NonFilersController extends Controller
     {
         $id = $this->getTaxType(TaxType::VAT)->id;
         $model = VatReturn::class;
-        $vat = $this->return($model, $id);
+        $vat = $this->return($model, $id) ?? [];
         if (count($vat) > 0) {
             $result = $this->saveNonFiler($vat, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::HOTEL)->id;
         $model = HotelReturn::class;
-        $hotel = $this->return($model, $id);
+        $hotel = $this->return($model, $id) ?? [];
         if (count($hotel) > 0) {
             $result = $this->saveNonFiler($hotel, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::STAMP_DUTY)->id;
         $model = StampDutyReturn::class;
-        $stamp = $this->return($model, $id);
+        $stamp = $this->return($model, $id) ?? [];
         if (count($stamp) > 0) {
             $result = $this->saveNonFiler($stamp, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::LUMPSUM_PAYMENT)->id;
         $model = LumpSumReturn::class;
-        $lump = $this->return($model, $id);
+        $lump = $this->return($model, $id) ?? [];
         if (count($lump) > 0) {
             $result = $this->saveNonFiler($lump, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::EXCISE_DUTY_MNO)->id;
         $model = MnoReturn::class;
-        $mno = $this->return($model, $id);
+        $mno = $this->return($model, $id) ?? [];
         if (count($mno) > 0) {
             $result = $this->saveNonFiler($mno, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::ELECTRONIC_MONEY_TRANSACTION)->id;
         $model = EmTransactionReturn::class;
-        $em = $this->return($model, $id);
+        $em = $this->return($model, $id) ?? [];
         if (count($em) > 0) {
             $result = $this->saveNonFiler($em, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::MOBILE_MONEY_TRANSFER)->id;
         $model = MmTransferReturn::class;
-        $mm = $this->return($model, $id);
+        $mm = $this->return($model, $id) ?? [];
         if (count($mm) > 0) {
             $result = $this->saveNonFiler($mm, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::PETROLEUM)->id;
         $model = PetroleumReturn::class;
-        $petroleum = $this->return($model, $id);
+        $petroleum = $this->return($model, $id) ?? [];
         if (count($petroleum) > 0) {
             $result = $this->saveNonFiler($petroleum, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::EXCISE_DUTY_BFO)->id;
         $model = BfoReturn::class;
-        $bfo = $this->return($model, $id);
+        $bfo = $this->return($model, $id) ?? [];
         if (count($bfo) > 0) {
             $result = $this->saveNonFiler($bfo, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::AIRPORT_SERVICE_SAFETY_FEE)->id;
         $model = PortReturn::class;
-        $airport = $this->return($model, $id);
+        $airport = $this->return($model, $id) ?? [];
         if (count($airport) > 0) {
             $result = $this->saveNonFiler($airport, $model, $id);
         }
 
         $id = $this->getTaxType(TaxType::SEA_SERVICE_TRANSPORT_CHARGE)->id;
         $model = PortReturn::class;
-        $seaport = $this->return($model, $id);
+        $seaport = $this->return($model, $id) ?? [];
         if (count($seaport) > 0) {
             $result = $this->saveNonFiler($seaport, $model, $id);
         }
@@ -127,10 +127,13 @@ class NonFilersController extends Controller
     public function return($modelName, $taxTypeId)
     {
         $businessTaxType = BusinessTaxType::query()->where('tax_type_id', $taxTypeId)->get();
+        $business_id = [];
         foreach ($businessTaxType as $item) {
             $business_id[] = $item->business_id;
         }
         $business_location = BusinessLocation::query()->whereIn('business_id', $business_id)->get();
+
+        $business_lo = [];
         foreach ($business_location as $value) {
             $business_lo[] = $value->id;
             $date_of_commencing[] = $value->date_of_commencing;
