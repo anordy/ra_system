@@ -17,6 +17,7 @@ class BusinessDeregestrations extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id')->nullable();
+            $table->unsignedBigInteger('tax_audit_id')->nullable();
             $table->unsignedBigInteger('new_headquarter_id')->nullable();
             $table->timestamp('deregistration_date');
             $table->enum('deregistration_type', ['all', 'location'])->default('location');
