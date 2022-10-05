@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxAuditStatus;
+use App\Events\SendMail;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -200,6 +201,10 @@ class TaxAuditApprovalProcessing extends Component
                     'audit_id' => $this->subject->id,
                     'user_id' => $this->teamMember,
                 ]);
+
+                
+                $taxpayer = $this->subject->business->taxpayer;
+                event(new SendMail('audit-notification-to-taxpayer', $taxpayer));
 
                 $operators = [intval($this->teamLeader), intval($this->teamMember)];
             }

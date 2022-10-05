@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Models\UserOtp;
 use App\Events\SendMail;
 use App\Jobs\Admin\SendAdminRegistrationEmail;
+use App\Jobs\Audit\SendEmailToTaxPayer;
 use App\Models\Business;
 use App\Models\Taxpayer;
 use App\Jobs\SendOTPEmail;
@@ -54,9 +55,9 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
-            return true;
-        }
+        // if(config('app.env') == 'local'){
+        //     return true;
+        // }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
@@ -144,6 +145,8 @@ class SendMailFired
             SendDebtWaiverRejectedMail::dispatch($event->tokenId);
         }else if ($event->service === 'debt-balance'){
             SendDebtBalanceMail::dispatch($event->tokenId);
+        } else if ($event->service === 'audit-notification-to-taxpayer'){
+            SendEmailToTaxPayer::dispatch($event->tokenId);
         }
     }
 }
