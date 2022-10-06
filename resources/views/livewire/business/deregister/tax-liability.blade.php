@@ -1,5 +1,19 @@
 <div class="mb-3">
-    <h6 class="text-uppercase">Tax Liability</h6>
+    <div class="d-flex justify-content-between">
+        <div>
+            <h6 class="text-uppercase">Tax Liability</h6>
+        </div>
+        <div>
+            @if ($can_initiate_audit && !$deregister->audit)
+                <button class="btn btn-info btn-sm"
+                    onclick="Livewire.emit('showModal', 'business.deregister.initiate-audit-modal', {{ $deregister_id }})">
+                    <i class="fa fa-plus-circle"></i>
+                    Initiate Audit
+                </button>
+            @endif
+        </div>
+    </div>
+    <hr>
 
     <div>
         <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
@@ -40,6 +54,7 @@
                                 <table class="table table-md">
                                     <thead>
                                         <tr>
+                                            <th>Location</th>
                                             <th>Tax Type</th>
                                             <th>Principal Amount</th>
                                             <th>Penalty Amount</th>

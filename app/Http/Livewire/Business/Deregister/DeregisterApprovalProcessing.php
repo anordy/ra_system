@@ -20,6 +20,7 @@ class DeregisterApprovalProcessing extends Component
     public $modelId;
     public $modelName;
     public $comments;
+    public $deregister;
 
 
     public $officers = [];
@@ -30,6 +31,7 @@ class DeregisterApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = $modelId;
         $this->registerWorkflow($modelName, $modelId);
+        $this->deregister = $modelName::findOrFail($modelId);
     }
 
 

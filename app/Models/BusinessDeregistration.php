@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\WorkflowTrait;
 use App\Models\BusinessLocation;
+use App\Models\TaxAudit\TaxAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -27,5 +28,9 @@ class BusinessDeregistration extends Model
 
     public function headquarters() {
         return $this->belongsTo(BusinessLocation::class, 'new_headquarter_id');
+    }
+
+    public function audit() {
+        return $this->belongsTo(TaxAudit::class, 'tax_audit_id');
     }
 }
