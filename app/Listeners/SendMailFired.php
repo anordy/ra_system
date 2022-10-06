@@ -5,6 +5,8 @@ namespace App\Listeners;
 use App\Models\UserOtp;
 use App\Events\SendMail;
 use App\Jobs\Admin\SendAdminRegistrationEmail;
+use App\Jobs\Audit\ExitPreliminaryEmailToTaxPayer;
+use App\Jobs\Audit\SendEmailToTaxPayer;
 use App\Models\Business;
 use App\Models\Taxpayer;
 use App\Jobs\SendOTPEmail;
@@ -144,6 +146,10 @@ class SendMailFired
             SendDebtWaiverRejectedMail::dispatch($event->tokenId);
         }else if ($event->service === 'debt-balance'){
             SendDebtBalanceMail::dispatch($event->tokenId);
+        } else if ($event->service === 'audit-notification-to-taxpayer'){
+            SendEmailToTaxPayer::dispatch($event->tokenId);
+        } else if ($event->service === 'exit-minutes-and-preliminary-report-to-the-taxpayer'){
+            ExitPreliminaryEmailToTaxPayer::dispatch($event->tokenId);
         }
     }
 }
