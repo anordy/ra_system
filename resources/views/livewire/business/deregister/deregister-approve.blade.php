@@ -46,9 +46,15 @@
                         <p class="my-1">{{ $deregister->deregistration_date }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Status</span>
+                        <span class="font-weight-bold text-uppercase">De-registration Status</span>
                         <p class="my-1">{{ $deregister->status }}</p>
                     </div>
+                    @if ($deregister->audit)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Tax Audit Status</span>
+                        <p class="my-1">{{ $deregister->audit->status }}</p>
+                    </div>
+                    @endif
                     <div class="col-md-12 mb-3">
                         <span class="font-weight-bold text-uppercase">Reason for De-registration</span>
                         <p class="my-1">{{ $deregister->reason }}</p>
@@ -59,11 +65,13 @@
                     @livewire('business.deregister.tax-liability', [
                         'business_id' => $deregister->business_id,
                         'location_id' => null,
+                        'deregister_id' => $deregister->id
                     ])
                 @else
                     @livewire('business.deregister.tax-liability', [
                         'business_id' => null,
                         'location_id' => $deregister->location_id,
+                        'deregister_id' => $deregister->id
                     ])
                 @endif
 

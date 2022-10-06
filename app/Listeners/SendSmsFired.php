@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Jobs\Audit\SendSmsToTaxPayer;
 use App\Jobs\Business\SendBusinessCorrectionSMS;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
@@ -130,6 +131,8 @@ class SendSmsFired
             SendDebtWaiverRejectedSMS::dispatch($event->tokenId);
         }else if ($event->service === 'debt-balance'){
             SendDebtBalanceSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'audit-notification-to-taxpayer'){
+            SendSmsToTaxPayer::dispatch($event->tokenId);
         }
     }
 }

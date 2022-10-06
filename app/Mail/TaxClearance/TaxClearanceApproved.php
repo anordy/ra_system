@@ -38,6 +38,6 @@ class TaxClearanceApproved extends Mailable
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
-        return $this->markdown('emails.taxclearance.taxclearanceapproved')->attachData($pdf->output(), "tax_clearance_certificate.pdf");;
+        return $this->markdown('emails.taxclearance.taxclearanceapproved')->attachData($pdf->output(), "tax_clearance_certificate.pdf")->subject('Tax Clearance Application');
     }
 }

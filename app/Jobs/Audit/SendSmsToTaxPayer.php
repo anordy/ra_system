@@ -1,27 +1,22 @@
 <?php
 
-namespace App\Jobs\TaxClearance;
+namespace App\Jobs\Audit;
 
-use App\Mail\TaxClearance\TaxClearanceApproved;
-use App\Mail\UserRegistration;
+use App\Http\Controllers\v1\SMSController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
-class SendTaxClearanceApprovedEmail implements ShouldQueue {
+class SendSmsToTaxPayer implements ShouldQueue
+{
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $payload;
-
+    private $payload;
     /**
      * Create a new job instance.
-     *
-     * @param $_password
      *
      * @return void
      */
@@ -37,7 +32,12 @@ class SendTaxClearanceApprovedEmail implements ShouldQueue {
      */
     public function handle()
     {
-        $taxpayer = $this->payload[1]->business->taxpayer;
-        Mail::to($taxpayer->email)->send(new TaxClearanceApproved($this->payload));
+        //
+        $sms_controller = new SMSController;
+        $send_to = $this->payload->mobile;
+        $sendToName = $this->payload->first_name;
+        $source = config('modulesconfig.smsheader');
+        $customer_message = "Hello {{ $sendToName }}, Your have been selected to be audited, two weeks before auditing you will be notified and specified the exact date.";
+        $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

@@ -1,27 +1,23 @@
 <?php
 
-namespace App\Jobs\TaxClearance;
+namespace App\Jobs\Audit;
 
-use App\Mail\TaxClearance\TaxClearanceApproved;
-use App\Mail\UserRegistration;
+use App\Mail\Audit\AuditSendEmailTaxpayer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class SendTaxClearanceApprovedEmail implements ShouldQueue {
+class SendEmailToTaxPayer implements ShouldQueue
+{
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $payload;
-
+    private $payload;
     /**
      * Create a new job instance.
-     *
-     * @param $_password
      *
      * @return void
      */
@@ -30,6 +26,7 @@ class SendTaxClearanceApprovedEmail implements ShouldQueue {
         $this->payload = $payload;
     }
 
+
     /**
      * Execute the job.
      *
@@ -37,7 +34,9 @@ class SendTaxClearanceApprovedEmail implements ShouldQueue {
      */
     public function handle()
     {
-        $taxpayer = $this->payload[1]->business->taxpayer;
-        Mail::to($taxpayer->email)->send(new TaxClearanceApproved($this->payload));
+        //
+        $taxpayerName = $this->payload->first_name;
+        $email = $this->payload->email;
+        Mail::to($email)->send(new AuditSendEmailTaxpayer($taxpayerName));
     }
 }
