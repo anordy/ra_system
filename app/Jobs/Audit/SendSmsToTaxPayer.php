@@ -2,16 +2,15 @@
 
 namespace App\Jobs\Audit;
 
-use App\Mail\Audit\AuditSendEmailTaxpayer;
+use App\Http\Controllers\v1\SMSController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
 
-class SendEmailToTaxPayer implements ShouldQueue
+class SendSmsToTaxPayer implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,7 +25,6 @@ class SendEmailToTaxPayer implements ShouldQueue
         $this->payload = $payload;
     }
 
-
     /**
      * Execute the job.
      *
@@ -35,8 +33,11 @@ class SendEmailToTaxPayer implements ShouldQueue
     public function handle()
     {
         //
-        $taxpayerName = $this->payload->first_name;
-        $email = $this->payload->email;
-        Mail::to($email)->send(new AuditSendEmailTaxpayer($taxpayerName));
+        $sms_controller = new SMSController;
+        $send_to = $this->payload->mobile;
+        $sendToName = $this->payload->first_name;
+        $source = config('modulesconfig.smsheader');
+        $customer_message = "Hello {{ $sendToName }}, Your have been selected to be audited, two weeks before auditing you will be notified and specified the exact date.";
+        $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

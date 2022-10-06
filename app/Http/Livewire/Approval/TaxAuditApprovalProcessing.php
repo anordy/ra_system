@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxAuditStatus;
 use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -205,6 +206,7 @@ class TaxAuditApprovalProcessing extends Component
                 
                 $taxpayer = $this->subject->business->taxpayer;
                 event(new SendMail('audit-notification-to-taxpayer', $taxpayer));
+                event(new SendSms('audit-notification-to-taxpayer', $taxpayer));
 
                 $operators = [intval($this->teamLeader), intval($this->teamMember)];
             }
@@ -285,6 +287,10 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->save();
             }
 
+            //Send Exit Minute and Preliminary reports
+            if ($this->subject->exit_minutes != null && $this->subject->preliminary_report != null) {
+                event(new SendMail('send-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
+            }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
             DB::commit();

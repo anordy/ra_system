@@ -148,7 +148,7 @@ class SendMailFired
             SendDebtBalanceMail::dispatch($event->tokenId);
         } else if ($event->service === 'audit-notification-to-taxpayer'){
             SendEmailToTaxPayer::dispatch($event->tokenId);
-        } else if ($event->service === 'exit-minutes-and-preliminary-report-to-the-taxpayer'){
+        } else if ($event->service === 'send-report-to-taxpayer'){
             ExitPreliminaryEmailToTaxPayer::dispatch($event->tokenId);
         }
     }
