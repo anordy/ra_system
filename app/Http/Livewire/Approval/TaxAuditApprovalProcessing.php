@@ -50,7 +50,7 @@ class TaxAuditApprovalProcessing extends Component
     public $assessmentReport;
 
     public $hasAssessment;
-    
+
     public $taxTypes;
     public $taxType;
 
@@ -66,7 +66,7 @@ class TaxAuditApprovalProcessing extends Component
         $this->taxTypes = TaxType::all();
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::AUDIT);
 
-        
+
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
@@ -135,13 +135,13 @@ class TaxAuditApprovalProcessing extends Component
                 ]
             );
 
-            if($this->preliminaryReport != $this->subject->preliminary_report){
+            if ($this->preliminaryReport != $this->subject->preliminary_report) {
                 $this->validate([
                     'preliminaryReport' => 'required|mimes:pdf|max:1024'
                 ]);
             }
 
-            if($this->workingReport != $this->subject->working_report){
+            if ($this->workingReport != $this->subject->working_report) {
                 $this->validate([
                     'workingReport' => 'required|mimes:pdf|max:1024'
                 ]);
@@ -159,13 +159,13 @@ class TaxAuditApprovalProcessing extends Component
                 ]
             );
 
-            if($this->exitMinutes != $this->subject->exit_minutes){
+            if ($this->exitMinutes != $this->subject->exit_minutes) {
                 $this->validate([
                     'exitMinutes' => 'required|mimes:pdf|max:1024'
                 ]);
             }
 
-            if($this->finalReport != $this->subject->final_report){
+            if ($this->finalReport != $this->subject->final_report) {
                 $this->validate([
                     'finalReport' => 'required|mimes:pdf|max:1024'
                 ]);
@@ -177,7 +177,7 @@ class TaxAuditApprovalProcessing extends Component
 
             $operators = [];
             if ($this->checkTransition('assign_officers')) {
-    
+
                 $this->subject->auditing_date = $this->auditingDate;
                 $this->periodFrom = $this->subject->period_from;
                 $this->periodTo = $this->subject->period_to;
@@ -203,7 +203,7 @@ class TaxAuditApprovalProcessing extends Component
                     'user_id' => $this->teamMember,
                 ]);
 
-                
+
                 $taxpayer = $this->subject->business->taxpayer;
                 event(new SendMail('audit-notification-to-taxpayer', $taxpayer));
                 event(new SendSms('audit-notification-to-taxpayer', $taxpayer));
@@ -213,14 +213,14 @@ class TaxAuditApprovalProcessing extends Component
 
 
             if ($this->checkTransition('conduct_audit')) {
-                
+
                 $preliminaryReport = $this->preliminaryReport;
-                if($this->preliminaryReport != $this->subject->preliminary_report){
+                if ($this->preliminaryReport != $this->subject->preliminary_report) {
                     $preliminaryReport = $this->preliminaryReport->store('audit', 'local-admin');
                 }
-    
+
                 $workingReport = $this->workingReport;
-                if($this->workingReport != $this->subject->working_report){
+                if ($this->workingReport != $this->subject->working_report) {
                     $workingReport = $this->workingReport->store('audit', 'local-admin');
                 }
 
@@ -229,7 +229,7 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if($this->checkTransition('preliminary_report_review')){
+            if ($this->checkTransition('preliminary_report_review')) {
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
 
@@ -272,13 +272,12 @@ class TaxAuditApprovalProcessing extends Component
                 }
 
                 $exitMinutes = $this->exitMinutes;
-                if($this->exitMinutes != $this->subject->exit_minutes){
+                if ($this->exitMinutes != $this->subject->exit_minutes) {
                     $exitMinutes = $this->exitMinutes->store('audit', 'local-admin');
-                    
                 }
-    
+
                 $finalReport = $this->finalReport;
-                if($this->finalReport != $this->subject->final_report){
+                if ($this->finalReport != $this->subject->final_report) {
                     $finalReport = $this->finalReport->store('audit', 'local-admin');
                 }
 
@@ -294,20 +293,19 @@ class TaxAuditApprovalProcessing extends Component
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
             DB::commit();
+
+            if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
+                $this->generateControlNumber();
+                $this->subject->assessment->update([
+                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                ]);
+            }
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
-        }
-
-        if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
-            $this->generateControlNumber();
-            $this->subject->assessment->update([
-                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-            ]);
-        } else {
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         }
     }
 
@@ -392,14 +390,13 @@ class TaxAuditApprovalProcessing extends Component
                     $assessment->payment_status = ReturnStatus::CN_GENERATING;
                     $assessment->save();
 
-                    $this->flash('success', 'A control number has been generated successful.');
+                    $this->alert('success', 'A control number has been generated successful.');
                 } else {
 
-                    session()->flash('error', 'Control number generation failed, try again later');
                     $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+                    $assessment->save();
+                    $this->alert('error', 'Control number generation failed, try again later');
                 }
-
-                $assessment->save();
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -411,7 +408,7 @@ class TaxAuditApprovalProcessing extends Component
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
 
-                $this->flash('success', 'A control number for this verification has been generated successflu');
+                $this->alert('success', 'A control number for this verification has been generated successflu');
             }
             DB::commit();
         } catch (Exception $e) {

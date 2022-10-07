@@ -193,22 +193,21 @@ class TaxVerificationApprovalProcessing extends Component
         }
         Db::beginTransaction();
         try {
-
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
+            DB::commit();
+            if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
+                $this->generateControlNumber();
+                $this->subject->assessment->update([
+                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                ]);
+            }
+
+            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
             DB::rollBack();
             $this->alert('error', 'Something went wrong');
-        }
-        DB::commit();
-        if ($this->subject->status == TaxVerificationStatus::APPROVED && $this->subject->assessment()->exists()) {
-            $this->generateControlNumber();
-            $this->subject->assessment->update([
-                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-            ]);
-        } else {
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         }
     }
 
@@ -224,14 +223,13 @@ class TaxVerificationApprovalProcessing extends Component
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
             $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments, 'operators' => $operators]);
+            DB::commit();
+            $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            return;
+            $this->alert('error', 'Something went wrong');
         }
-
-        DB::commit();
-        $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
 
@@ -315,15 +313,13 @@ class TaxVerificationApprovalProcessing extends Component
                 if ($response->status === ZmResponse::SUCCESS) {
                     $assessment->payment_status = ReturnStatus::CN_GENERATING;
                     $assessment->save();
-
-                    $this->flash('success', 'A control number has been generated successful.');
+                    $this->alert('success', 'A control number has been generated successful.');
                 } else {
-
-                    session()->flash('error', 'Control number generation failed, try again later');
                     $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-                }
+                    $assessment->save();
 
-                $assessment->save();
+                    $this->alert('error', 'Control number generation failed, Try again later');
+                }
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -334,8 +330,7 @@ class TaxVerificationApprovalProcessing extends Component
                 $zmBill->zan_status = 'pending';
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
-
-                $this->flash('success', 'A control number for this verification has been generated successflu');
+                $this->alert('success', 'A control number for this verification has been generated successfully');
             }
             DB::commit();
         } catch (Exception $e) {
