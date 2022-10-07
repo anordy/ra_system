@@ -2,28 +2,30 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\TaxAuditStatus;
-use App\Events\SendMail;
 use App\Events\SendSms;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Role;
-use App\Models\TaxAssessments\TaxAssessment;
-use App\Models\TaxAudit\TaxAuditOfficer;
-use App\Models\TaxType;
-use App\Models\User;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use App\Traits\WorkflowProcesssingTrait;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\TaxType;
+use Livewire\Component;
+use App\Events\SendMail;
+use App\Enum\TaxAuditStatus;
+use Livewire\WithFileUploads;
+use App\Services\ZanMalipo\ZmCore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Returns\ReturnStatus;
+use Illuminate\Support\Facades\Auth;
+use App\Models\BusinessDeregistration;
+use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
+use App\Models\TaxAudit\TaxAuditOfficer;
+use App\Traits\WorkflowProcesssingTrait;
+use App\Notifications\DatabaseNotification;
 use Illuminate\Validation\Rules\RequiredIf;
+use App\Models\TaxAssessments\TaxAssessment;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class TaxAuditApprovalProcessing extends Component
 {
@@ -65,7 +67,6 @@ class TaxAuditApprovalProcessing extends Component
     {
         $this->taxTypes = TaxType::all();
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::AUDIT);
-
 
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
@@ -243,6 +244,7 @@ class TaxAuditApprovalProcessing extends Component
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
                             'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                             'original_principal_amount' => $this->principalAmount,
                             'original_interest_amount' => $this->interestAmount,
                             'original_penalty_amount' => $this->penaltyAmount,
@@ -259,6 +261,7 @@ class TaxAuditApprovalProcessing extends Component
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
                             'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                             'original_principal_amount' => $this->principalAmount,
                             'original_interest_amount' => $this->interestAmount,
                             'original_penalty_amount' => $this->penaltyAmount,
@@ -290,6 +293,27 @@ class TaxAuditApprovalProcessing extends Component
             if ($this->subject->exit_minutes != null && $this->subject->preliminary_report != null) {
                 event(new SendMail('send-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
             }
+            
+            if ($this->checkTransition('accepted')) {
+                // Notify audit manager to continue with business/location de-registration request if exists
+                $deregister = BusinessDeregistration::where('tax_audit_id', $this->subject->id)->get()->first();
+
+                if ($deregister) {
+                    $auditManagerRole = Role::where('name', 'Audit Manager')->get()->first();
+                    $auditManager = User::where('role_id', $auditManagerRole->id)->get()->first();
+
+                    if ($auditManager) {
+                        $auditManager->notify(new DatabaseNotification(
+                            $subject = "{$deregister->business->name} audit has been completed",
+                            $message = "{$deregister->business->name} audit for deregistration has been completed",
+                            $href = 'business.viewDeregistration',
+                            $hrefText = 'View',
+                            $hrefParameters = $deregister->id
+                        ));
+                    }
+                }
+            }
+
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
             DB::commit();
