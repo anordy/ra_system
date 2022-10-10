@@ -20,6 +20,12 @@ class VerificationVerifiedTable extends DataTableComponent
 
     public $model = TaxVerification::class;
 
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->emit('$refresh');
+    }
+
     public function builder(): Builder
     {
         $returnTable = TaxVerification::getTableName();
