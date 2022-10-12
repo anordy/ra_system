@@ -79,7 +79,7 @@ class ZanMalipoController extends Controller
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
-                        $billable->status = ReturnStatus::CN_GENERATED;
+                        $billable->payment_status = ReturnStatus::CN_GENERATED;
                         $billable->save();
                     } catch (\Exception $e) {
                         Log::error($e);
@@ -96,7 +96,7 @@ class ZanMalipoController extends Controller
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
-                        $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+                        $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
                         $billable->save();
                     } catch (\Exception $e) {
                         Log::error($e);
