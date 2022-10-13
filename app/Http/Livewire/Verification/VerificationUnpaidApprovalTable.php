@@ -60,7 +60,11 @@ class VerificationUnpaidApprovalTable extends DataTableComponent
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),
-            Column::make('Tax Type', 'taxType.name'),
+            Column::make('Tax Type', 'taxType.name'), 
+            Column::make('Control Number', 'tax_return_id')
+                ->label(function($row){
+                    return $row->taxReturn->tax_return->bill->control_number ?? '';
+                }),
             Column::make('Filled By', 'created_by_id')
                 ->format(function ($value, $row) {
                     $user = $row->createdBy()->first();

@@ -2,28 +2,30 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\TaxAuditStatus;
-use App\Events\SendMail;
 use App\Events\SendSms;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Role;
-use App\Models\TaxAssessments\TaxAssessment;
-use App\Models\TaxAudit\TaxAuditOfficer;
-use App\Models\TaxType;
-use App\Models\User;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use App\Traits\WorkflowProcesssingTrait;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\TaxType;
+use Livewire\Component;
+use App\Events\SendMail;
+use App\Enum\TaxAuditStatus;
+use Livewire\WithFileUploads;
+use App\Services\ZanMalipo\ZmCore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Returns\ReturnStatus;
+use Illuminate\Support\Facades\Auth;
+use App\Models\BusinessDeregistration;
+use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
+use App\Models\TaxAudit\TaxAuditOfficer;
+use App\Traits\WorkflowProcesssingTrait;
+use App\Notifications\DatabaseNotification;
 use Illuminate\Validation\Rules\RequiredIf;
+use App\Models\TaxAssessments\TaxAssessment;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class TaxAuditApprovalProcessing extends Component
 {
@@ -50,7 +52,7 @@ class TaxAuditApprovalProcessing extends Component
     public $assessmentReport;
 
     public $hasAssessment;
-    
+
     public $taxTypes;
     public $taxType;
 
@@ -66,7 +68,6 @@ class TaxAuditApprovalProcessing extends Component
         $this->taxTypes = TaxType::all();
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::AUDIT);
 
-        
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
@@ -135,13 +136,13 @@ class TaxAuditApprovalProcessing extends Component
                 ]
             );
 
-            if($this->preliminaryReport != $this->subject->preliminary_report){
+            if ($this->preliminaryReport != $this->subject->preliminary_report) {
                 $this->validate([
                     'preliminaryReport' => 'required|mimes:pdf|max:1024'
                 ]);
             }
 
-            if($this->workingReport != $this->subject->working_report){
+            if ($this->workingReport != $this->subject->working_report) {
                 $this->validate([
                     'workingReport' => 'required|mimes:pdf|max:1024'
                 ]);
@@ -159,13 +160,13 @@ class TaxAuditApprovalProcessing extends Component
                 ]
             );
 
-            if($this->exitMinutes != $this->subject->exit_minutes){
+            if ($this->exitMinutes != $this->subject->exit_minutes) {
                 $this->validate([
                     'exitMinutes' => 'required|mimes:pdf|max:1024'
                 ]);
             }
 
-            if($this->finalReport != $this->subject->final_report){
+            if ($this->finalReport != $this->subject->final_report) {
                 $this->validate([
                     'finalReport' => 'required|mimes:pdf|max:1024'
                 ]);
@@ -177,7 +178,7 @@ class TaxAuditApprovalProcessing extends Component
 
             $operators = [];
             if ($this->checkTransition('assign_officers')) {
-    
+
                 $this->subject->auditing_date = $this->auditingDate;
                 $this->periodFrom = $this->subject->period_from;
                 $this->periodTo = $this->subject->period_to;
@@ -203,7 +204,7 @@ class TaxAuditApprovalProcessing extends Component
                     'user_id' => $this->teamMember,
                 ]);
 
-                
+
                 $taxpayer = $this->subject->business->taxpayer;
                 event(new SendMail('audit-notification-to-taxpayer', $taxpayer));
                 event(new SendSms('audit-notification-to-taxpayer', $taxpayer));
@@ -213,14 +214,14 @@ class TaxAuditApprovalProcessing extends Component
 
 
             if ($this->checkTransition('conduct_audit')) {
-                
+
                 $preliminaryReport = $this->preliminaryReport;
-                if($this->preliminaryReport != $this->subject->preliminary_report){
+                if ($this->preliminaryReport != $this->subject->preliminary_report) {
                     $preliminaryReport = $this->preliminaryReport->store('audit', 'local-admin');
                 }
-    
+
                 $workingReport = $this->workingReport;
-                if($this->workingReport != $this->subject->working_report){
+                if ($this->workingReport != $this->subject->working_report) {
                     $workingReport = $this->workingReport->store('audit', 'local-admin');
                 }
 
@@ -229,7 +230,7 @@ class TaxAuditApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            if($this->checkTransition('preliminary_report_review')){
+            if ($this->checkTransition('preliminary_report_review')) {
                 $operators = $this->subject->officers->pluck('user_id')->toArray();
             }
 
@@ -243,6 +244,7 @@ class TaxAuditApprovalProcessing extends Component
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
                             'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                             'original_principal_amount' => $this->principalAmount,
                             'original_interest_amount' => $this->interestAmount,
                             'original_penalty_amount' => $this->penaltyAmount,
@@ -259,6 +261,7 @@ class TaxAuditApprovalProcessing extends Component
                             'interest_amount' => $this->interestAmount,
                             'penalty_amount' => $this->penaltyAmount,
                             'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                             'original_principal_amount' => $this->principalAmount,
                             'original_interest_amount' => $this->interestAmount,
                             'original_penalty_amount' => $this->penaltyAmount,
@@ -272,13 +275,12 @@ class TaxAuditApprovalProcessing extends Component
                 }
 
                 $exitMinutes = $this->exitMinutes;
-                if($this->exitMinutes != $this->subject->exit_minutes){
+                if ($this->exitMinutes != $this->subject->exit_minutes) {
                     $exitMinutes = $this->exitMinutes->store('audit', 'local-admin');
-                    
                 }
-    
+
                 $finalReport = $this->finalReport;
-                if($this->finalReport != $this->subject->final_report){
+                if ($this->finalReport != $this->subject->final_report) {
                     $finalReport = $this->finalReport->store('audit', 'local-admin');
                 }
 
@@ -291,9 +293,39 @@ class TaxAuditApprovalProcessing extends Component
             if ($this->subject->exit_minutes != null && $this->subject->preliminary_report != null) {
                 event(new SendMail('send-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
             }
+            
+            if ($this->checkTransition('accepted')) {
+                // Notify audit manager to continue with business/location de-registration request if exists
+                $deregister = BusinessDeregistration::where('tax_audit_id', $this->subject->id)->get()->first();
+
+                if ($deregister) {
+                    $auditManagerRole = Role::where('name', 'Audit Manager')->get()->first();
+                    $auditManager = User::where('role_id', $auditManagerRole->id)->get()->first();
+
+                    if ($auditManager) {
+                        $auditManager->notify(new DatabaseNotification(
+                            $subject = "{$deregister->business->name} audit has been completed",
+                            $message = "{$deregister->business->name} audit for deregistration has been completed",
+                            $href = 'business.viewDeregistration',
+                            $hrefText = 'View',
+                            $hrefParameters = $deregister->id
+                        ));
+                    }
+                }
+            }
+
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
             DB::commit();
+
+            if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
+                $this->generateControlNumber();
+                $this->subject->assessment->update([
+                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                ]);
+            }
+
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
@@ -395,14 +427,13 @@ class TaxAuditApprovalProcessing extends Component
                     $assessment->payment_status = ReturnStatus::CN_GENERATING;
                     $assessment->save();
 
-                    $this->flash('success', 'A control number has been generated successful.');
+                    $this->alert('success', 'A control number has been generated successful.');
                 } else {
 
-                    session()->flash('error', 'Control number generation failed, try again later');
                     $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+                    $assessment->save();
+                    $this->alert('error', 'Control number generation failed, try again later');
                 }
-
-                $assessment->save();
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -414,7 +445,7 @@ class TaxAuditApprovalProcessing extends Component
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
 
-                $this->flash('success', 'A control number for this verification has been generated successflu');
+                $this->alert('success', 'A control number for this verification has been generated successflu');
             }
             DB::commit();
         } catch (Exception $e) {

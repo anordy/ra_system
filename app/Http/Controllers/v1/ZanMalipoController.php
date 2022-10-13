@@ -79,7 +79,13 @@ class ZanMalipoController extends Controller
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
-                        $billable->status = ReturnStatus::CN_GENERATED;
+
+                        if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
+                            $billable->payment_status = ReturnStatus::CN_GENERATED;
+                        } else {
+                            $billable->status = ReturnStatus::CN_GENERATED;
+                        }
+
                         $billable->save();
                     } catch (\Exception $e) {
                         Log::error($e);
@@ -96,7 +102,13 @@ class ZanMalipoController extends Controller
                     $this->installable))) {
                     try {
                         $billable = $bill->billable;
-                        $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+
+                        if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
+                            $billable->payment_status = ReturnStatus::CN_GENERATED;
+                        } else {
+                            $billable->status = ReturnStatus::CN_GENERATED;
+                        }
+                        
                         $billable->save();
                     } catch (\Exception $e) {
                         Log::error($e);

@@ -204,6 +204,7 @@ class TaxInvestigationApprovalProcessing extends Component
                             'interest_amount' => $interestAmount,
                             'penalty_amount' => $penaltyAmount,
                             'total_amount' => $penaltyAmount + $interestAmount + $principalAmount,
+                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                             'original_principal_amount' => $principalAmount,
                             'original_interest_amount' => $interestAmount,
                             'original_penalty_amount' => $penaltyAmount,
@@ -220,6 +221,7 @@ class TaxInvestigationApprovalProcessing extends Component
                             'interest_amount' => $interestAmount,
                             'penalty_amount' => $penaltyAmount,
                             'total_amount' => $penaltyAmount + $interestAmount + $principalAmount,
+                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
                             'original_principal_amount' => $principalAmount,
                             'original_interest_amount' => $interestAmount,
                             'original_penalty_amount' => $penaltyAmount,
@@ -250,29 +252,32 @@ class TaxInvestigationApprovalProcessing extends Component
             }
 
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
-
+            
             DB::commit();
+
+            if ($this->subject->status == TaxInvestigationStatus::LEGAL) {
+                $this->addToLegalCase();
+            }
+    
+            if ($this->subject->status == TaxInvestigationStatus::APPROVED && $this->subject->assessment()->exists()) {
+                $this->generateControlNumber();
+                $this->subject->assessment->update([
+                    'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                    'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
+                ]);
+            }
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong');
+
+            return;
         }
 
 
-        if ($this->subject->status == TaxInvestigationStatus::LEGAL) {
+     
 
-            $this->addToLegalCase();
-        }
-
-
-        if ($this->subject->status == TaxInvestigationStatus::APPROVED && $this->subject->assessment()->exists()) {
-            $this->generateControlNumber();
-            $this->subject->assessment->update([
-                'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-                'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
-            ]);
-        }
     }
 
     public function addToLegalCase()
@@ -281,7 +286,7 @@ class TaxInvestigationApprovalProcessing extends Component
             [
                 'tax_investigation_id' => $this->subject->id,
                 'date_opened' => Carbon::now(),
-                'case_number' => rand(0,3),
+                'case_number' => rand(0, 3),
                 'case_details' => 'Added from Investigation Approval',
                 'court' => 1,
                 'case_stage_id' => CaseStage::query()->firstOrCreate(['name' => 'Case Opening'])->id ?? 1,
@@ -369,14 +374,12 @@ class TaxInvestigationApprovalProcessing extends Component
                 if ($response->status === ZmResponse::SUCCESS) {
                     $assessment->payment_status = ReturnStatus::CN_GENERATING;
                     $assessment->save();
-
-                    $this->flash('success', 'A control number for this verification has been generated successfully', [], redirect()->back()->getTargetUrl());
+                    $this->alert('success', 'A control number for this verification has been generated successfully');
                 } else {
-                    session()->flash('error', 'Control number generation failed, try again later');
                     $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+                    $assessment->save();
+                    $this->alert('error', 'Control number generation failed, try again later');
                 }
-
-                $assessment->save();
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -387,8 +390,7 @@ class TaxInvestigationApprovalProcessing extends Component
                 $zmBill->zan_status = 'pending';
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
-
-                $this->flash('success', 'A control number for this verification has been generated successfully', [], redirect()->back()->getTargetUrl());
+                $this->alert('success', 'A control number for this verification has been generated successfully');
             }
             DB::commit();
         } catch (Exception $e) {

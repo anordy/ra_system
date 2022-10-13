@@ -33,7 +33,7 @@ class ReturnDebtController extends Controller
             abort(403);
         }
         $waiver = DebtWaiver::findOrFail(decrypt($waiverId));
-        $files = DebtWaiverAttachment::where('debt_id', $waiver->id)->get();
+        $files = DebtWaiverAttachment::where('waiver_id', $waiver->id)->get();
         return view('debts.returns.waivers.approval', compact('waiver', 'files'));
     }
 
