@@ -306,6 +306,9 @@ class TaxAuditApprovalProcessing extends Component
                 'payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
                 'curr_payment_due_date' => Carbon::now()->addDays(30)->toDateTimeString(),
             ]);
+
+            event(new SendMail('audit-approved-notification', $this->subject->business->taxpayer));
+
         } else {
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         }

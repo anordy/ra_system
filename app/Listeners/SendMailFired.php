@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Models\UserOtp;
 use App\Events\SendMail;
 use App\Jobs\Admin\SendAdminRegistrationEmail;
+use App\Jobs\audit\AuditApprovedNotificationEmail;
 use App\Jobs\Audit\ExitPreliminaryEmailToTaxPayer;
 use App\Jobs\Audit\SendEmailToTaxPayer;
 use App\Models\Business;
@@ -35,6 +36,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateApprovalMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateRejectedMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
+use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
 
 class SendMailFired
 {
@@ -150,6 +152,10 @@ class SendMailFired
             SendEmailToTaxPayer::dispatch($event->tokenId);
         } else if ($event->service === 'send-report-to-taxpayer'){
             ExitPreliminaryEmailToTaxPayer::dispatch($event->tokenId);
+        } else if ($event->service === 'send-assessment-report-to-taxpayer'){
+            SendAssessmentReportEmailToTaxPayer::dispatch($event->tokenId);
+        } else if ($event->service === 'audit-approved-notification'){
+            AuditApprovedNotificationEmail::dispatch($event->tokenId);
         }
     }
 }

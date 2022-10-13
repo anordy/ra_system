@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxVerificationStatus;
+use App\Events\SendMail;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Role;
@@ -190,6 +191,10 @@ class TaxVerificationApprovalProcessing extends Component
 
             $this->subject->assessment_report = $assessmentReport;
             $this->subject->save();
+
+            if ($this->assessmentReport != $this->subject->assessment_report) {
+                event(new SendMail('send-assessment-report-to-taxpayer', [$this->subject->business->taxpayer, $this->subject]));
+            }
         }
         Db::beginTransaction();
         try {

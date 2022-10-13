@@ -34,7 +34,7 @@ class SendReportToTaxPayer extends Mailable
         
         $audit = $this->payload[1];
         
-        $email = $this->markdown('emails.audit.send-report-to-taxpayer')->subject('Exit Minute and Preliminary Reports');
+        $email = $this->markdown('emails.audit.send-report-to-taxpayer')->subject('Exit Minute and Preliminary Report');
 
         $exitPdf = Storage::disk('local-admin')->response($audit->exit_minutes);
         $preliminaryPdf = Storage::disk('local-admin')->response($audit->preliminary_report);
@@ -56,7 +56,7 @@ class SendReportToTaxPayer extends Mailable
                 $email->attach($filePath, $fileParameters);
             }
         }
-        
+
         return $email;
     }
 }
