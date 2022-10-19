@@ -3,7 +3,6 @@
 @section('title', 'Payment Details')
 
 @section('content')
-    @php($bill = $payment->bill)
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold text-uppercase">
             Bill Details
@@ -18,7 +17,7 @@
                     <span class="font-weight-bold text-uppercase">Status</span>
                     <p class="my-1 text-uppercase">{{ $bill->status }}</p>
                 </div>
-                @if($bill->cancellation_reason)
+                @if ($bill->cancellation_reason)
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Cancellation Reason</span>
                         <p class="my-1">{{ $payment->cancellation_reason }}</p>
@@ -28,7 +27,7 @@
                     <span class="font-weight-bold text-uppercase">Bill Amount</span>
                     <p class="my-1">{{ number_format($bill->amount, 2) }} {{ $bill->currency }}</p>
                 </div>
-                @if($bill->currency != 'TZS')
+                @if ($bill->currency != 'TZS')
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Equivalent Amount</span>
                         <p class="my-1">{{ number_format($bill->equivalent_amount, 2) }} TZS</p>
@@ -54,35 +53,39 @@
             <x-bill-structure :bill="$bill" :withCard="false" />
         </div>
     </div>
+
+
     <div class="card rounded-0">
         <div class="card-header bg-white font-weight-bold text-uppercase">
             Payment Details
         </div>
-        <div class="card-body">
+        <div class="card-body p-2">
             <div class="row">
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Payer Name</span>
-                    <p class="my-1">{{ $payment->payer_name }}</p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Payer Email</span>
-                    <p class="my-1">{{ $payment->payer_email }}</p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Payer Mobile</span>
-                    <p class="my-1">{{ $payment->payer_mobile ?: 'N/A' }}</p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Paid Amount</span>
-                    <p class="my-1">{{ number_format($payment->paid_amount, 2) }} {{ $payment->currency }}</p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Paid At</span>
-                    <p class="my-1">{{ $payment->trx_time->toDayDateTimeString() }}</p>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Payment Receipt No.</span>
-                    <p class="my-1">{{ $payment->psp_receipt_number }}</p>
+                <div class="col-md-12 table-responsive">
+                    <table class="table table-sm  table-bordered">
+                        <thead>
+                            <th>Payer Name</th>
+                            <th>Payer Mobile</th>
+                            <th>Payer Email</th>
+                            <th>Paid Amount</th>
+                            <th>Paid At</th>
+                            <th>Payment Receipt No</th>
+                        </thead>
+                        <tbody>
+                            @foreach ($bill->bill_payments as $payment)
+                                <tr>
+                                    <td>{{ $payment->payer_name }}</td>
+                                    <td>{{ $payment->payer_mobile ?: 'N/A' }}</td>
+                                    <td>{{ $payment->payer_email ?: 'N/A' }}</td>
+                                    <td>{{ number_format($payment->paid_amount, 2) }} {{ $payment->currency }}</td>
+                                    <td>{{ $payment->trx_time->toDayDateTimeString() }}</td>
+                                    <td>{{ $payment->psp_receipt_number }}</td>
+                                </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>

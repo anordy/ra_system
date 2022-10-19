@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payments;
 
 use App\Http\Controllers\Controller;
+use App\Models\ZmBill;
 use App\Models\ZmPayment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
@@ -29,7 +30,7 @@ class PaymentsController extends Controller
     }
 
     public function show($paymentId){
-        $payment = ZmPayment::findOrFail(decrypt($paymentId));
-        return view('payments.show', compact('payment'));
+        $bill = ZmBill::with('bill_payments')->findOrFail(decrypt($paymentId));
+        return view('payments.show', compact('bill'));
     }
 }
