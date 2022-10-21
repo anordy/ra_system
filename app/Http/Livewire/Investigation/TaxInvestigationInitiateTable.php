@@ -54,7 +54,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             Column::make('Created By', 'created_by_id')
                 ->label(fn ($row) => $row->createdBy->full_name ?? ''),
             Column::make('Created On', 'created_at')
-                ->label(fn ($row) => Carbon::create($row->created_at ?? null)->toDayDateTimeString()),
+                ->format(fn ($value) => Carbon::create($value ?? null)->toDayDateTimeString()),
             Column::make('Action', 'id')
                 ->format(function ($value) {
                     return <<<HTML

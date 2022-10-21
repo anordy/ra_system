@@ -21,6 +21,7 @@ class PaymentsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects('tax_type_id');
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -41,6 +42,10 @@ class PaymentsTable extends DataTableComponent
             Column::make('Currency', 'currency')
                 ->sortable()
                 ->searchable(),
+            Column::make('Tax Type', 'tax_type_id')
+                ->label(fn ($row) => $row->taxType->name ?? 'N/A')
+                ->sortable()
+                ->searchable(),
             Column::make('Payer Name', 'payer_name'),
             Column::make('Payer Email', 'payer_email'),
             Column::make('Description', 'description'),
@@ -48,5 +53,4 @@ class PaymentsTable extends DataTableComponent
                 ->view('payments.includes.actions')
         ];
     }
-
 }

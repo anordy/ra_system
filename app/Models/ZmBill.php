@@ -46,4 +46,9 @@ class ZmBill extends Model
     public function createdBy(){
         return $this->morphTo('createdby');
     }
+
+    public function taxType()
+    {
+        return $this->belongsTo(TaxType::class);
+    }
 }
