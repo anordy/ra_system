@@ -196,6 +196,7 @@ class TaxInvestigationApprovalProcessing extends Component
                 $principalAmount = str_replace(',', '', $this->principalAmount);
                 $interestAmount = str_replace(',', '', $this->interestAmount);
                 $penaltyAmount = str_replace(',', '', $this->penaltyAmount);
+                $totalAMount = ($penaltyAmount + $interestAmount + $principalAmount);
 
                 if ($this->hasAssessment == "1") {
                     if ($assessment) {
@@ -203,8 +204,8 @@ class TaxInvestigationApprovalProcessing extends Component
                             'principal_amount' => $principalAmount,
                             'interest_amount' => $interestAmount,
                             'penalty_amount' => $penaltyAmount,
-                            'total_amount' => $penaltyAmount + $interestAmount + $principalAmount,
-                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'total_amount' => $totalAMount,
+                            'outstanding_amount' => $totalAMount,
                             'original_principal_amount' => $principalAmount,
                             'original_interest_amount' => $interestAmount,
                             'original_penalty_amount' => $penaltyAmount,
@@ -220,8 +221,8 @@ class TaxInvestigationApprovalProcessing extends Component
                             'principal_amount' => $principalAmount,
                             'interest_amount' => $interestAmount,
                             'penalty_amount' => $penaltyAmount,
-                            'total_amount' => $penaltyAmount + $interestAmount + $principalAmount,
-                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
+                            'total_amount' => $totalAMount,
+                            'outstanding_amount' => $totalAMount,
                             'original_principal_amount' => $principalAmount,
                             'original_interest_amount' => $interestAmount,
                             'original_penalty_amount' => $penaltyAmount,

@@ -74,10 +74,11 @@ class ApproveAction extends Component
             $data = (object)$value['data'];
             $req = RenewTaxAgentRequest::query()->find($data->id);
 
-            $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen', 'currency')
+            $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen', 'currency', 'duration')
                 ->where('category', 'Renewal Fee')
-                ->where('is_citizen', $req->tax_agent->taxpayer_id)
+                ->where('is_citizen', $req->tax_agent->taxpayer->is_citizen)
                 ->first();
+                
             $req->status = TaxAgentStatus::APPROVED;
             $req->renew_first_date = Carbon::now();
             $req->renew_expire_date = Carbon::now()->addYear($fee->duration)->toDateTimeString();

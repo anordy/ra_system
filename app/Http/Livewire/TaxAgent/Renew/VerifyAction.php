@@ -84,7 +84,7 @@ class VerifyAction extends Component
 
             $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen', 'currency')
                 ->where('category', 'Renewal Fee')
-                ->where('is_citizen', $req->tax_agent->taxpayer_id)
+                ->where('is_citizen', $taxpayer->is_citizen)
                 ->first();
             $amount = $fee->amount;
             $used_currency = $fee->currency;

@@ -50,10 +50,6 @@
                             <p class="my-1">{{ $investigation->period_to ?? '' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Investigation Date</span>
-                            <p class="my-1">{{ $investigation->investigationing_date ?? '' }}</p>
-                        </div>
-                        <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Scope</span>
                             <p class="my-1">{{ $investigation->scope ?? '' }}</p>
                         </div>
