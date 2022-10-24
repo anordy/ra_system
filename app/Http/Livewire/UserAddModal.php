@@ -85,6 +85,7 @@ class UserAddModal extends Component
                 'gender' => $this->gender,
                 'email' => $this->email,
                 'phone' => $this->phone,
+                'status' => 1,
                 'password' => Hash::make($this->password),
             ]);
 
