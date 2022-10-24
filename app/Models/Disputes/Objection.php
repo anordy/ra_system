@@ -6,10 +6,11 @@ use App\Models\Verification\TaxVerificationAssessment;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Objection extends Model
+class Objection extends Model implements Auditable
 {
-    use HasFactory ,WorkflowTrait;
+    use HasFactory ,WorkflowTrait, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 

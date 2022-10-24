@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class DlFee
@@ -22,8 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class DlFee extends Model
+class DlFee extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
+
 	protected $table = 'dl_fees';
 
 	protected $casts = [

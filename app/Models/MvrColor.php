@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class MvrColor
@@ -22,9 +23,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class MvrColor extends Model
+class MvrColor extends Model implements Auditable
 {
-	use SoftDeletes;
+	use SoftDeletes, \OwenIt\Auditing\Auditable;
 	protected $table = 'mvr_colors';
 
 	protected $fillable = [

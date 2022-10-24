@@ -6,10 +6,11 @@ use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Debts\DebtRecoveryMeasure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class RecoveryMeasure extends Model
+class RecoveryMeasure extends Model implements Auditable
 {
-    use HasFactory, WorkflowTrait;
+    use HasFactory, WorkflowTrait, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 

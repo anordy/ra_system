@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class DlBloodGroup
@@ -23,8 +24,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class DlBloodGroup extends Model
+class DlBloodGroup extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
+
 	protected $table = 'dl_blood_groups';
 
 	protected $fillable = [

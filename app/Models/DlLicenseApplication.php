@@ -11,6 +11,7 @@ use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class DlLicenseApplication
@@ -40,10 +41,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class DlLicenseApplication extends Model
+class DlLicenseApplication extends Model implements Auditable
 {
 
-    use WorkflowTrait;
+    use WorkflowTrait, \OwenIt\Auditing\Auditable;
 
 	protected $table = 'dl_license_applications';
 

@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class MvrMotorVehicleRegistration
@@ -28,8 +29,10 @@ use Illuminate\Support\Facades\DB;
  *
  * @package App\Models
  */
-class MvrMotorVehicleRegistration extends Model
+class MvrMotorVehicleRegistration extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
 	protected $table = 'mvr_motor_vehicle_registration';
 	public $timestamps = true;
 

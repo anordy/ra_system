@@ -5,7 +5,6 @@ namespace App\Models\TaxAssessments;
 use App\Models\ZmBill;
 use App\Models\TaxType;
 use App\Models\Business;
-use App\Models\Debts\Debt;
 use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
 use App\Models\Disputes\Dispute;
@@ -16,10 +15,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Verification\TaxVerification;
 use App\Models\Investigation\TaxInvestigation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class TaxAssessment extends Model
+
+class TaxAssessment extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 

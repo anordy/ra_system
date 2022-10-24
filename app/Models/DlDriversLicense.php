@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class DlDriversLicense
@@ -30,8 +31,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class DlDriversLicense extends Model
+class DlDriversLicense extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
+
     const STATUS_DAMAGED_OR_LOST ='LOST/DAMAGED';
     const STATUS_EXPIRED ='EXPIRED';
 

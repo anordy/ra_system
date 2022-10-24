@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class MvrFeeType
@@ -22,8 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class MvrFeeType extends Model
+class MvrFeeType extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
 
     const TYPE_REGISTRATION = 'Registration';
     const TYPE_DE_REGISTRATION = 'De-Registration';

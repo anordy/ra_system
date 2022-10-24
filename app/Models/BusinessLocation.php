@@ -21,10 +21,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class BusinessLocation extends Model
+class BusinessLocation extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes,WorkflowTrait;
+    use HasFactory, SoftDeletes,WorkflowTrait, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 

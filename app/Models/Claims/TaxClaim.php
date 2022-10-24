@@ -5,16 +5,17 @@ namespace App\Models\Claims;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\FinancialMonth;
-use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class TaxClaim extends Model
+
+class TaxClaim extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, WorkflowTrait;
+    use HasFactory, SoftDeletes, WorkflowTrait, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
