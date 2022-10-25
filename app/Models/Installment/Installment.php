@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Installment extends Model
+class Installment extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 

@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class MvrClass
@@ -21,9 +22,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class MvrClass extends Model
+class MvrClass extends Model implements Auditable
 {
-	use SoftDeletes;
+	use SoftDeletes, \OwenIt\Auditing\Auditable;
 	protected $table = 'mvr_classes';
 
 	protected $fillable = [

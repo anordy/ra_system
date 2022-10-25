@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Yajra\DataTables\Html\Editor\Fields\BelongsTo;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class InterestRate extends Model
+class InterestRate extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded =[];
 }

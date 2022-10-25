@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class MvrWrittenOff
@@ -22,8 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class MvrWrittenOff extends Model
+class MvrWrittenOff extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
+
 	protected $table = 'mvr_written_off';
 
 	protected $casts = [

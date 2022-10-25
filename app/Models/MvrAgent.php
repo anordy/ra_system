@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class MvrAgent
@@ -31,9 +32,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class MvrAgent extends Model
+class MvrAgent extends Model implements Auditable
 {
-	use SoftDeletes;
+	use SoftDeletes, \OwenIt\Auditing\Auditable;
 	protected $table = 'mvr_agents';
 
 	protected $casts = [

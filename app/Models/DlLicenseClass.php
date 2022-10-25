@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class DlLicenseClass
@@ -24,8 +25,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class DlLicenseClass extends Model
+class DlLicenseClass extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
+
 	protected $table = 'dl_license_classes';
 
 	protected $fillable = [

@@ -9,10 +9,11 @@ use App\Models\BusinessLocation;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\TaxAssessments\TaxAssessment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class TaxVerification extends Model
+class TaxVerification extends Model implements Auditable
 {
-    use HasFactory, WorkflowTrait;
+    use HasFactory, WorkflowTrait, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
     

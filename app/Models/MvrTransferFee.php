@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class MvrTransferFee
@@ -21,8 +22,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class MvrTransferFee extends Model
+class MvrTransferFee extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
+
 	protected $table = 'mvr_transfer_fees';
 
 	protected $casts = [

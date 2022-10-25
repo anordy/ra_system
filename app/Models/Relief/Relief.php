@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\User;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Relief extends Model
+class Relief extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
     protected $guarded = [];
 
     public function projectSection()

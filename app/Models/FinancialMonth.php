@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Models\Returns\HotelReturns\HotelReturn;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class FinancialMonth extends Model
+class FinancialMonth extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 

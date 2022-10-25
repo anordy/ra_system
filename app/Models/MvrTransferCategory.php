@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class MvrTransferCategory
@@ -19,8 +20,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class MvrTransferCategory extends Model
+class MvrTransferCategory extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
+
 	protected $table = 'mvr_transfer_categories';
 
 	protected $fillable = [

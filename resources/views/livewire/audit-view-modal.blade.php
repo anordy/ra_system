@@ -12,19 +12,31 @@
                 @endif
 
                 @if($event == 'updated' || $event == 'created' || $event == 'deleted' || $event == 'deactivated' || $event == 'activated')
-                    <div class="row">
-                        <div class="col">
-                            <h6 class="text-uppercase">Old Values</h6>
-                            @foreach (json_decode($old_values, true) as $key => $value)
-                                <strong>{{ str_replace("_"," ",$key) }}</strong> : {{ $value }} <br>
-                            @endforeach
-                        </div>
-                        <div class="col">
-                            <h6 class="text-uppercase">New Values</h6>
-                            @foreach (json_decode($new_values, true) as $key => $value)
-                                <strong>{{ str_replace("_"," ",$key) }}</strong> : {{ $value }} <br>
-                            @endforeach
-                        </div>
+                    <div class="row m-4">
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead>
+                                <th style="width: 20%">Property</th>
+                                <th style="width: 30%">Old Values</th>
+                                <th style="width: 30%">New Values</th>
+                            </thead>
+                            <tbody>
+                        @foreach(json_decode($old_values, true) as $key => $value)
+                        
+                            <tr>
+                                <th>{{ str_replace("_"," ",$key) }}</th>
+                                <td style="background: #ffe9e9">{{ $value }}</td>
+                                <td style="background: #e9ffe9">
+                                @php
+                                    $new_changes = json_decode($new_values);
+                                @endphp
+                                {{ $new_changes->$key }}
+                                </td>
+                            </tr>
+
+                        @endforeach
+                    </tbody>
+
+                    </table>
                     </div>           
                 @endif
             </div>
