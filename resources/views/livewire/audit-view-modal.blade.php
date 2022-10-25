@@ -40,9 +40,6 @@
                         </div>
                    
                     </div>
-                @if($audit->event=='logged in' || $audit->event == 'logged out')
-                    <h6 class="text-uppercase">{{ $audit->event }} at: {{ $audit->created_at }}</h5>
-                @endif
 
                 @if($audit->event == 'updated' || $audit->event == 'created' || $audit->event == 'deleted' || $audit->event == 'deactivated' || $audit->event == 'activated')
                     <div class="row m-4">
