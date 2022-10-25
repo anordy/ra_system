@@ -22,7 +22,12 @@ class Audit extends Model
     public const REJECTED = 'rejected';
     public const ASSIGNED = 'assigned';
 
-    public function user() {
-        return $this->belongsTo(User::class, 'user_id');
+
+    public function user(){
+        return $this->morphTo('user');
+    }
+
+    public function auditable(){
+        return $this->morphTo('auditable');
     }
 }
