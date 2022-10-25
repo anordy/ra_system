@@ -717,7 +717,7 @@
                         </li>
                     @endcan
                     @can('setting-country-view')
-                        <li class="{{ request()->is('settings/country*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('settings/business-files*') ? 'active' : '' }}">
                             <a href="{{ route('settings.business-files.index') }}">Business Files</a>
                         </li>
                     @endcan
