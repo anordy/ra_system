@@ -90,7 +90,7 @@
                     {{$record->outstanding_amount===null?'-':number_format($record->outstanding_amount, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->payment_due_date==null?'-':date('M, d Y', strtotime($record->payment_due_date)) }}
+                    {{ $record->curr_payment_due_date==null?'-':date('M, d Y', strtotime($record->curr_payment_due_date)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->application_status }}

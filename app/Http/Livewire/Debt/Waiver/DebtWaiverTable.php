@@ -54,6 +54,8 @@ class DebtWaiverTable extends DataTableComponent
                         return 'Penalty & Interest';
                     }
                 }),
+            Column::make('Requested On', 'created_at')
+                ->format(fn ($value, $row) => $value),
             Column::make('Status', 'status')
                 ->view('debts.waivers.includes.status'),
             Column::make('Action', 'id')

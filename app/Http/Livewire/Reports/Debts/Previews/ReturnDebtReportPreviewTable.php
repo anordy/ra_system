@@ -103,7 +103,7 @@ class ReturnDebtReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("Payment Due Date", "payment_due_date")
+            Column::make("Payment Due Date", "curr_payment_due_date")
                 ->searchable()
                 ->sortable()
                 ->format(
