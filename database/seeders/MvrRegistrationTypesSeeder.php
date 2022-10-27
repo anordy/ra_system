@@ -17,7 +17,7 @@ class MvrRegistrationTypesSeeder extends Seeder
     {
         $data = [
            ['mvr_registration_type_category_id'=>1,'name'=>MvrRegistrationType::TYPE_PRIVATE_ORDINARY,'plate_number_pattern'=>'SMZ([0-9]{4})A','plate_number_color'=>'Black and White','initial_plate_number'=>'','external_defined'=>0],
-           ['mvr_registration_type_category_id'=>1,'name'=>MvrRegistrationType::TYPE_PRIVATE_GOLDEN,'plate_number_color'=>'Black and White','initial_plate_number'=>'','external_defined'=>0],
+           ['mvr_registration_type_category_id'=>1,'name'=>MvrRegistrationType::TYPE_PRIVATE_GOLDEN,'plate_number_color'=>'Black and White','initial_plate_number'=>'Z111AA','external_defined'=>0],
            ['mvr_registration_type_category_id'=>1,'name'=>MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED,'plate_number_color'=>'Black and White','initial_plate_number'=>'','external_defined'=>0],
            ['mvr_registration_type_category_id'=>2,'name'=>MvrRegistrationType::TYPE_COMMERCIAL_TAXI,'plate_number_color'=>'Black and White','initial_plate_number'=>'','external_defined'=>0],
            ['mvr_registration_type_category_id'=>2,'name'=>MvrRegistrationType::TYPE_COMMERCIAL_PRIVATE_HIRE,'plate_number_color'=>'Black and White','initial_plate_number'=>'','external_defined'=>0],

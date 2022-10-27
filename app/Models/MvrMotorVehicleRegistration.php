@@ -179,7 +179,10 @@ class MvrMotorVehicleRegistration extends Model implements Auditable
             ->limit(20) //20 last Golden plate numbers - acceptable range will be 40
             ->get()->pluck('plate_number');
         if (empty($regs[0])){
-            $last_special = MvrRegistrationType::query()->where(['name'=>MvrRegistrationType::TYPE_PRIVATE_GOLDEN])->first()->initial_plate_number?? 'Z111AA';
+            $last_special = MvrRegistrationType::query()->where(['name'=>MvrRegistrationType::TYPE_PRIVATE_GOLDEN])->first()->initial_plate_number;
+            if (!$last_special){
+                $last_special = 'Z111AA';
+            }
         }else{
             $last_special = $regs[count($regs)-1];
         }
