@@ -875,7 +875,7 @@
     </ul>
 
     <div class="profile d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center justify-content-between">
+        <a href="{{ route('account') }}" class="d-flex align-items-center justify-content-between">
             <div>
                 <i class="far fa-2x fa-user-circle"></i>
             </div>
@@ -883,7 +883,7 @@
                 <div>{{ auth()->user()->fullname() }}</div>
                 <div>{{ auth()->user()->role->name ?? '' }}</div>
             </div>
-        </div>
+        </a>
 
         <div class="pr-1">
             <a class="text-white" href="{{ route('logout') }}"
