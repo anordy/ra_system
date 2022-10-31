@@ -14,7 +14,7 @@
                         <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px">
                     </div>
                     <h5 class="bg-white text-uppercase text-center" style="padding-top: 70px;padding-bottom: 10px;">
-                        ZRB Staff Login
+                        ZIDRAS Staff Login
                     </h5>
 
                     @if (session()->has('success'))
