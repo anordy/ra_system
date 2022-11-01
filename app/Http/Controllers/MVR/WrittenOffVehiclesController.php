@@ -49,7 +49,7 @@ class WrittenOffVehiclesController extends Controller
         $motor_vehicle = $this->searchRegistered($type,$number);
         $search_type = ucwords(preg_replace('/-/',' ',$type));
         $action = 'mvr.written-off-motor-vehicle';
-        $result_route = 'mvr.internal-search-ow';
+        $result_route = 'mvr.internal-search-wo';
         return view('mvr.internal-search',compact('motor_vehicle','search_type','number','action','result_route'));
     }
 

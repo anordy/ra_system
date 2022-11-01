@@ -62,8 +62,10 @@ class DeRegisterRequestsTable extends DataTableComponent
                 ->sortable(),
             Column::make("Received Date", "date_received")
                 ->sortable(),
-            Column::make("Agent Name", "mvr_agent_id")->format(fn($id)=>MvrAgent::query()->find($id)->taxpayer->fullname())
-                ->sortable(),
+            Column::make("Agent Name", "mvr_agent_id")->format(function($id){
+                $agent = MvrAgent::query()->find($id);
+                return !empty($agent)? $agent->taxpayer->fullname():'';
+            }),
             Column::make("Status", "request_status.name")
                 ->sortable(),
             Column::make('Action', 'id')

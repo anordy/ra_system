@@ -186,7 +186,7 @@
                <h5 class="text-uppercase">Search Results - {{$search_type}}: {{$number}}</h5>
                <div class="card-tools">
                    <button class="btn btn-info btn-sm"
-                           onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','mvr.internal-search')"><i
+                           onclick="Livewire.emit('showModal', 'mvr.chassis-number-internal-search','{{$result_route ?? 'mvr.internal-search'}}')"><i
                                class="fa fa-plus-circle"></i>
                        New Search</button>
                </div>

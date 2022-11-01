@@ -9,6 +9,7 @@ use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
+use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
@@ -77,7 +78,9 @@ class MotorVehicleRegistrationController extends Controller
                     'mvr_registration_status_id'=>$status->id
                 ]);
 
-            if ($reg_type->external_defined != 1){
+            if ($reg_type->name == MvrRegistrationType::TYPE_PRIVATE_GOLDEN){
+                $plate_number = $reg->plate_number;
+            }else if ($reg_type->external_defined != 1){
                 $plate_number = MvrMotorVehicleRegistration::getNexPlateNumber($reg_type,$mv->class);
             }
 

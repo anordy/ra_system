@@ -60,6 +60,7 @@ class ApproveRegistration extends Component
             $this->plate_number = null;
         }elseif(!(MvrRegistrationType::query()->whereIn('name',[
                 MvrRegistrationType::TYPE_PRIVATE_PERSONALIZED,
+                MvrRegistrationType::TYPE_PRIVATE_GOLDEN,
                 MvrRegistrationType::TYPE_DIPLOMATIC
             ])->where(['id'=>$this->registration_type_id])->exists() || MvrRegistrationType::query()->find($this->registration_type_id)->external_defined==1)) {
             $this->plate_number = null;

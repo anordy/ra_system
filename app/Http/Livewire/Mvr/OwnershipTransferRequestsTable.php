@@ -64,7 +64,10 @@ class OwnershipTransferRequestsTable extends DataTableComponent
                 ->sortable(),
             Column::make("New Owner", "owner_taxpayer_id")->format(fn($id)=>Taxpayer::query()->find($id)->fullname())
                 ->sortable(),
-            Column::make("Agent Name", "mvr_agent_id")->format(fn($id)=>MvrAgent::query()->find($id)->taxpayer->fullname())
+            Column::make("Agent Name", "mvr_agent_id")->format(function($id){
+                $agent = MvrAgent::query()->find($id);
+                return !empty($agent)? $agent->taxpayer->fullname():'';
+            })
                 ->sortable(),
             Column::make("Status", "request_status.name")
                 ->sortable(),
