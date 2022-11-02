@@ -36,8 +36,7 @@ class CreateTaxpayersTable extends Migration
 
             $table->unsignedBigInteger('region_id')->nullable();
 
-            $table->string('work_permit')->nullable();
-            $table->string('residence_permit')->nullable();
+            $table->string('permit_number')->nullable();
 
             $table->boolean('is_citizen');
             $table->boolean('is_first_login')->default(true);
