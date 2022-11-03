@@ -2,12 +2,8 @@
 
 namespace App\Services\Api;
 
-use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-
 class ApiAuthenticationService
 {
-    use LivewireAlert;
 
     public function getAccessToken()
     {
