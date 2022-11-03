@@ -41,16 +41,19 @@ class ObjectionApprovalProcessing extends Component
         $this->dispute = Dispute::find($this->modelId);
         $this->principal = $this->dispute->tax_in_dispute;
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
-         $this->penalty = $this->assessment->penalty_amount;
+        $this->penalty = $this->assessment->penalty_amount;
         $this->interest = $this->assessment->interest_amount;
         $this->taxTypes = TaxType::all();
         $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
+        $this->total = ($this->penalty + $this->interest + $this->principal) - ($this->dispute->tax_deposit);
+
         $this->registerWorkflow($modelName, $modelId);
 
     }
 
     public function updated($propertyName)
     {
+
         if ($propertyName == "penaltyPercent") {
             if ($this->penaltyPercent > 100) {
                 $this->penaltyPercent = 100;
@@ -67,15 +70,26 @@ class ObjectionApprovalProcessing extends Component
                 $this->interestPercent = null;
             }
             $this->interestAmount = ($this->assessment->interest_amount * $this->interestPercent) / 100;
+            
         }
 
-        $this->penaltyAmountDue = $this->assessment->penalty_amount - $this->penaltyAmount;
-        $this->interestAmountDue = $this->assessment->interest_amount - $this->interestAmount;
-        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->assessment->principal_amount) - ($this->dispute->tax_deposit);
+        if ($propertyName == "interestPercent" || $propertyName == "penaltyPercent") {
+            $this->penalty = $this->assessment->penalty_amount - $this->penaltyAmount;
+            $this->interest = $this->assessment->interest_amount - $this->interestAmount;
+            $this->total = ($this->penalty + $this->interest + $this->assessment->principal_amount) - ($this->dispute->tax_deposit);
+        }
+
+        if ($propertyName == "penalty" || $propertyName == "interest") {
+            // $this->penaltyAmountDue = $this->penalty;
+            // $this->interestAmountDue = $this->interest;
+            $this->total = ($this->penalty + $this->interest + $this->principal) - ($this->dispute->tax_deposit);
+        }
+
     }
 
     public function approve($transtion)
     {
+        // dd($this->total, $this->principal, $this->penalty, $this->interest);
         $taxType = $this->subject->taxType;
         $this->taxTypes = TaxType::where('code', 'disputes')->first();
 
@@ -136,7 +150,7 @@ class ObjectionApprovalProcessing extends Component
             DB::beginTransaction();
 
             try {
-                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
+                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penalty, $this->interest, $this->dispute->tax_deposit);
 
                 // Generate control number for waived application
                 $billitems = [

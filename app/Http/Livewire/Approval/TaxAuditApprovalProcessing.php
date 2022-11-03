@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BusinessDeregistration;
+use App\Models\Investigation\TaxInvestigation;
 use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
 use App\Models\TaxAudit\TaxAuditOfficer;
@@ -25,6 +26,7 @@ use App\Traits\WorkflowProcesssingTrait;
 use App\Notifications\DatabaseNotification;
 use Illuminate\Validation\Rules\RequiredIf;
 use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\TaxAudit\TaxAudit;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class TaxAuditApprovalProcessing extends Component
@@ -349,7 +351,16 @@ class TaxAuditApprovalProcessing extends Component
     public function generateControlNumber()
     {
         $assessment = $this->subject->assessment;
-        $taxType = $this->subject->taxType;
+        $taxType = null;
+        if ($this->subject->tax_type_id == 0) {
+            if ($this->subject->assessment->assessment_type == TaxAudit::class ) {
+                $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxAuditTaxTypeNames();
+            } else if ($this->subject->assessment->assessment_type == TaxInvestigation::class ) {
+                $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxInvestigationTaxTypeNames();
+            }    
+        } else {
+            $taxType = $this->subject->taxType;
+        }
 
         DB::beginTransaction();
 
@@ -390,7 +401,7 @@ class TaxAuditApprovalProcessing extends Component
             $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
             $payer_email = $taxpayer->email;
             $payer_phone = $taxpayer->mobile;
-            $description = "Verification for {$taxType->name} ";
+            $description = "Auditing for {$taxType}";
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'TZS';
             $createdby_type = get_class(Auth::user());
@@ -445,7 +456,7 @@ class TaxAuditApprovalProcessing extends Component
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
 
-                $this->alert('success', 'A control number for this verification has been generated successflu');
+                $this->alert('success', 'A control number for this verification has been generated successfully');
             }
             DB::commit();
         } catch (Exception $e) {

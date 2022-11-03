@@ -39,7 +39,7 @@
                                     <td>
                                         <div class="input-group @error($interestPercent) is-invalid @enderror">
                                             <input class="form-control @error($interestPercent) is-invalid @enderror"
-                                                wire:model="interestPercent" type="number" min=0 max=50
+                                                wire:model="interestPercent" type="number" min=0 max=100
                                                 @if ($dispute->waiver_category == 'penalty')
                                                 disabled
                                             @endif />

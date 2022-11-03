@@ -8,6 +8,10 @@
             <a class="nav-link" id="dispute-tab" data-toggle="tab" href="#dispute" role="tab"
                 aria-controls="dispute" aria-selected="false">Tax In Dispute</a>
         </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="assessment-histories-tab" data-toggle="tab" href="#assessment-histories" role="tab"
+                aria-controls="assessment-histories" aria-selected="false">Assessment History</a>
+        </li>
 
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="ground-tab" data-toggle="tab" href="#ground" role="tab" aria-controls="ground"
@@ -135,6 +139,16 @@
 
             </div>
             {{-- @endif --}}
+
+        </div>
+
+        <div class="tab-pane fade" id="assessment-histories" role="tabpanel" aria-labelledby="assessment-histories-tab">
+            <div class="col-md-12 mt-1">
+                <h6 class="pt-3 mb-0 font-weight-bold">Assessment History</h6>
+                <hr class="mt-2 mb-3" />
+                <livewire:assesments.assessment-history-table modelName='App\Models\TaxAssessments\TaxAssessmentHistory'
+                        modelId="{{ $assesment->id }}" />
+            </div>
 
         </div>
 

@@ -120,10 +120,10 @@ class DisputeWaiverApprovalProcessing extends Component
         if ($this->checkTransition('commisioner_review')) {
             $this->complete = "1";
 
-            $this->validate([
-                'interestPercent' => ['required', 'numeric'],
-                'penaltyPercent' => ['required', 'numeric'],
-            ]);
+            // $this->validate([
+            //     'interestPercent' => ['required', 'numeric'],
+            //     'penaltyPercent' => ['required', 'numeric'],
+            // ]);
             DB::beginTransaction();
 
             try {
