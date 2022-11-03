@@ -10,6 +10,7 @@ use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -69,12 +70,13 @@ class RegistrationsController extends Controller
         }
 
         $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
+        $kyc->verified_by = Auth::id();
         $kyc->save();
 
         try {
             DB::beginTransaction();
 
-            $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at'])->toArray();
+            $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at', 'verified_by'])->toArray();
             $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
             $password = substr(str_shuffle($permitted_chars), 0, 8);
             $data['password'] = Hash::make($password);
