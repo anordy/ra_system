@@ -3,10 +3,14 @@
 namespace App\Http\Livewire\Taxpayers\Details;
 
 use App\Http\Controllers\v1\ImmigrationController;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
 class Passport extends Component
 {
+    use LivewireAlert;
 
     public $kyc;
     public $passport;
@@ -21,7 +25,12 @@ class Passport extends Component
     public function validatePassport()
     {
         $immigration_controller = new ImmigrationController;
-        $this->passport = $immigration_controller->getPassportData($this->kyc->id_number, $this->kyc->permit_number);
+        try {
+            $this->passport = $immigration_controller->getPassportData($this->kyc->id_number, $this->kyc->permit_number);
+        } catch (Exception $e) {
+            Log::error($e);
+            return $this->alert('error', 'Something went wrong');
+        }
     }
 
     public function compareProperties($kyc_property, $immigration_property)
