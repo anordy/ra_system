@@ -105,9 +105,6 @@
                     <strong>Penalty %</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Total Outstanding</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Status</strong>
                 </th>
             </tr>
@@ -157,9 +154,6 @@
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->interest_rate === null ? '-' : number_format($record->interest_rate, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->debt->curr_payment_due_date == null ? '-' : date('M, d Y', strtotime($record->debt->payment_due_date)) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->status }}
