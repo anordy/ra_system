@@ -196,6 +196,26 @@ class DeclaredSalesAnalysis extends Component
         $this->headersMno = $headers;
     }
 
+    protected function mmTransfer()
+    {
+        $salesConfigs = MmTransferConfig::where('code', '!=', 'TotalEMT')->get()->pluck('id');
+        $headers = MmTransferConfig::where('code', '!=', 'TotalEMT')->get()->pluck('name');
+
+        $yearReturnGroup = MmTransferReturnItem::select('mm_transfer_configs.code', 'mm_transfer_return_items.value', 'mm_transfer_return_items.vat', 'seven_days_financial_months.name as month', 'financial_years.name as year')
+            ->leftJoin('mm_transfer_configs', 'mm_transfer_configs.id', 'mm_transfer_return_items.config_id')
+            ->leftJoin('mm_transfer_returns', 'mm_transfer_returns.id', 'mm_transfer_return_items.return_id')
+            ->leftJoin('seven_days_financial_months', 'seven_days_financial_months.id', 'mm_transfer_returns.financial_month_id')
+            ->leftJoin('financial_years', 'financial_years.id', 'seven_days_financial_months.financial_year_id')
+            ->whereIn('config_id', $salesConfigs)
+            ->get()->groupBy(['year', 'month']);
+
+        $yearData = $this->formatDataArray($yearReturnGroup);
+
+        $this->withoutPurchases = true;
+        $this->returns = $yearData;
+        $this->headersMmTransfer = $headers;
+    }
+
     protected function petroleum()
     {
         $salesConfigs = PetroleumConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');

@@ -156,9 +156,9 @@ class TaxAuditApprovalProcessing extends Component
                     'finalReport' => 'required',
                     'exitMinutes' => 'required',
                     'hasAssessment' => ['required', 'boolean'],
-                    'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
-                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
-                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
+                    'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
+                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
+                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
                 ]
             );
 
@@ -242,15 +242,15 @@ class TaxAuditApprovalProcessing extends Component
                 if ($this->hasAssessment == "1") {
                     if ($assessment) {
                         $this->subject->assessment()->update([
-                            'principal_amount' => $this->principalAmount,
-                            'interest_amount' => $this->interestAmount,
-                            'penalty_amount' => $this->penaltyAmount,
-                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'original_principal_amount' => $this->principalAmount,
-                            'original_interest_amount' => $this->interestAmount,
-                            'original_penalty_amount' => $this->penaltyAmount,
-                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                            'principal_amount' => str_replace(',', '', $this->principalAmount),
+                            'interest_amount' => str_replace(',', '', $this->interestAmount),
+                            'penalty_amount' => str_replace(',', '', $this->penaltyAmount),
+                            'total_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
+                            'outstanding_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
+                            'original_principal_amount' => str_replace(',', '', $this->principalAmount),
+                            'original_interest_amount' => str_replace(',', '', $this->interestAmount),
+                            'original_penalty_amount' => str_replace(',', '', $this->penaltyAmount),
+                            'original_total_amount' => str_replace(',', '', $this->principalAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->penaltyAmount)
                         ]);
                     } else {
                         TaxAssessment::create([
@@ -259,15 +259,15 @@ class TaxAuditApprovalProcessing extends Component
                             'tax_type_id' => $this->taxType->id,
                             'assessment_id' => $this->subject->id,
                             'assessment_type' => get_class($this->subject),
-                            'principal_amount' => $this->principalAmount,
-                            'interest_amount' => $this->interestAmount,
-                            'penalty_amount' => $this->penaltyAmount,
-                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'original_principal_amount' => $this->principalAmount,
-                            'original_interest_amount' => $this->interestAmount,
-                            'original_penalty_amount' => $this->penaltyAmount,
-                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                            'principal_amount' => str_replace(',', '', $this->principalAmount),
+                            'interest_amount' => str_replace(',', '', $this->interestAmount),
+                            'penalty_amount' => str_replace(',', '', $this->penaltyAmount),
+                            'total_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
+                            'outstanding_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
+                            'original_principal_amount' => str_replace(',', '', $this->principalAmount),
+                            'original_interest_amount' => str_replace(',', '', $this->interestAmount),
+                            'original_penalty_amount' => str_replace(',', '', $this->penaltyAmount),
+                            'original_total_amount' => str_replace(',', '', $this->principalAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->penaltyAmount)
                         ]);
                     }
                 } else {

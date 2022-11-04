@@ -298,7 +298,6 @@ class TaxInvestigationApprovalProcessing extends Component
     public function generateControlNumber()
     {
         $assessment = $this->subject->assessment;
-        $taxType = $this->subject->taxType;
 
         DB::beginTransaction();
 
@@ -339,7 +338,7 @@ class TaxInvestigationApprovalProcessing extends Component
             $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
             $payer_email = $taxpayer->email;
             $payer_phone = $taxpayer->mobile;
-            $description = "Verification for {$taxType->name} ";
+            $description = "Verification for {$this->taxType->name} ";
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'TZS';
             $createdby_type = get_class(Auth::user());

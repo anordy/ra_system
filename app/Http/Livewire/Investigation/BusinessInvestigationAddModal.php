@@ -115,7 +115,6 @@ class BusinessInvestigationAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            dd($e);
             DB::rollBack();
             $this->alert('error', 'Something went wrong');
         }

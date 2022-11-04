@@ -90,13 +90,13 @@
                                         Due Penalty Amount
                                     </td>
                                     <td>
-                                        {{ $this->penalty - $penaltyAmount }}
+                                        {{ number_format($this->penalty - $penaltyAmount) }}
                                     </td>
                                     <td>
                                         Due Interest Amount
                                     </td>
                                     <td>
-                                        {{ $this->interest - $interestAmount }}
+                                        {{ number_format($this->interest - $interestAmount) }}
                                     </td>
 
                                 </tr>
@@ -115,7 +115,7 @@
                                         Total waived amount
                                     </td>
                                     <td colspan="4" class="font-weight-bold text-center">
-                                        {{ $penaltyAmountDue + $interestAmountDue }}
+                                        {{ number_format($penaltyAmountDue + $interestAmountDue) }}
                                     </td>
                                 </tr>
                                 <tr>
