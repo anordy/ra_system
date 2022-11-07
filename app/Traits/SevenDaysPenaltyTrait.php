@@ -30,7 +30,6 @@ trait SevenDaysPenaltyTrait
 
         $paymentStructure = [];
         $penaltyRate = PenaltyRate::where('financial_year_id', $financialMonth->year->id)->where('code', 'PFMobilesTrans')->firstOrFail()->rate;
-        // dd($taxAmount);
         $penaltableAMountForPerticularMonth = $penaltyRate;
         for ($i = 0; $i < $diffInMonths; $i++) {
             if($i === 0){
@@ -47,7 +46,6 @@ trait SevenDaysPenaltyTrait
                 $penaltableAMountForPerticularMonth = $penaltableAmount;
                 $date->addMonth();
             }
-            // dd($penaltableAMountForPerticularMonth);
             $penaltableAmount = $penaltableAMountForPerticularMonth + $penaltyRate;
 
             $paymentStructure[] = [

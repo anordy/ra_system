@@ -419,8 +419,6 @@ class DeclaredSalesAnalysis extends Component
             $yearData[$keyYear] = $quarterData;
         }
 
-        // dd($yearData);
-
         return $yearData;
     }
 

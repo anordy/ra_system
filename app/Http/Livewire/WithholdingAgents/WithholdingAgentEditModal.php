@@ -112,7 +112,6 @@ class WithholdingAgentEditModal extends Component
 
         } catch (Exception $e) {
             Log::error($e);
-            dd($e);
             $this->alert('error', 'Something went wrong');
         }
     }

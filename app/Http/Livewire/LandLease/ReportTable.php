@@ -36,10 +36,8 @@ class ReportTable extends Component
 
     public function updated()
     {
-        dd('test');
         $date = new \DateTime();
         $date->setDate(2020, intval($this->startMonth), 1);
         $date->modify('last day of this month');
-        dd($date->format('d'));
     }
 }

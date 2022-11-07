@@ -28,7 +28,6 @@ class ViewLeasePayment extends Component
     public function mount($enc_id)
     {
         $this->leasePayment = LeasePayment::find(decrypt($enc_id));
-        // dd($this->leasePayment->landLease);
         $this->taxType = TaxType::where('code', TaxType::LAND_LEASE)->first();
     }
 
