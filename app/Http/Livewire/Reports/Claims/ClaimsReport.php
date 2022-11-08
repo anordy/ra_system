@@ -3,17 +3,13 @@
 namespace App\Http\Livewire\Reports\Claims;
 
 use App\Exports\ClaimsReportExport;
-use App\Exports\ReturnReportExport;
 use App\Models\FinancialYear;
 use App\Models\Taxpayer;
-use App\Models\TaxType;
 use App\Traits\ClaimReportTrait;
-use App\Traits\ReturnReportTrait;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
-use function Symfony\Component\String\s;
 
 class ClaimsReport extends Component
 {
@@ -51,8 +47,8 @@ class ClaimsReport extends Component
             'year' => $this->duration == 'yearly' ? 'required' : '',
             'from' => $this->duration == 'date_range' ? 'required|date' : '',
             'to' => $this->duration == 'date_range' ? 'required|date|after:from' : '',
-            'payment_status' => $this->status == 'approved' || $this->status == 'both' ? 'required' : '',
-            'payment_method'=> $this->status == 'approved' || $this->status == 'both' ? 'required' : '',
+            'payment_status' => $this->status == 'approved' || $this->status == 'all' ? 'required' : '',
+            'payment_method'=> $this->status == 'approved' || $this->status == 'all' ? 'required' : '',
             'period' => $this->year != 'all' && !empty($this->year) ? 'required' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',
             'quater' => $this->period == 'Quarterly' ? 'required' : '',
@@ -142,7 +138,7 @@ class ClaimsReport extends Component
                 $fileName = 'claim_report.xlsx';
                 $title = 'All Claim reports';
             } else {
-                if ($parameters['status'] != 'both') {
+                if ($parameters['status'] != 'all') {
                     $fileName = $parameters['status'].'_claim_report.xlsx';
                     $title = $parameters['status'] . ' claim reports from ' . $parameters['dates']['from'] . ' to ' . $parameters['dates']['to'] . '';
                 } else {
@@ -151,7 +147,7 @@ class ClaimsReport extends Component
                 }
             }
         } else {
-            if ($parameters['status'] != 'both') {
+            if ($parameters['status'] != 'all') {
                 $fileName = $parameters['status'].'_claim_report.xlsx';
                 $title = $parameters['status'] . ' claim reports from ' . $parameters['from'] . ' to ' . $parameters['to'] . '';
             } else {

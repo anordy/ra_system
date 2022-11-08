@@ -33,7 +33,7 @@
                 <option value="approved">Approved</option>
                 <option value="rejected">Rejected</option>
                 <option value="pending">Pending</option>
-                <option value="both">Both</option>
+                <option value="all">All</option>
             </select>
             @error('status')
             <div class="invalid-feedback">
@@ -42,7 +42,7 @@
             @enderror
         </div>
 
-        @if($status == 'approved' || $status == 'both')
+        @if($status == 'approved' || $status == 'all')
             <div class="col-md-4 form-group">
                 <label for="payment_status" class="d-flex justify-content-between'">
                 <span>
@@ -54,7 +54,7 @@
                     <option value="">select payment method</option>
                     <option value="full">Full Payment</option>
                     <option value="installment">Pay By Installment</option>
-                    <option value="all">Both</option>
+                    <option value="all">All</option>
 
                 </select>
                 @error('payment_method')
@@ -65,7 +65,7 @@
             </div>
         @endif
 
-        @if($status == 'approved' || $status == 'both')
+        @if($status == 'approved' || $status == 'all')
         <div class="col-md-4 form-group">
             <label for="payment_status" class="d-flex justify-content-between'">
                 <span>
@@ -78,7 +78,7 @@
                 <option value="pending">Pending</option>
                 <option value="paid">Paid</option>
                 <option value="partially-paid">Partially Paid</option>
-                <option value="all">Both</option>
+                <option value="all">All</option>
 
             </select>
             @error('payment_status')
