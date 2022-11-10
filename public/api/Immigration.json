@@ -1,0 +1,31 @@
+{
+    "code": "1",
+    "message": "Success",
+    "data": [
+        {
+            "FirstName": "ALLY",
+            "MiddleName": "SAID",
+            "SurName": "DADA",
+            "OtherNames": "",
+            "BirthDate": "1992-08-13",
+            "Gender": "Male",
+            "MaritalStatus": "Single",
+            "PassportNumber": "66666666",
+            "PassportType": "Ordinary",
+            "IssuedCountry": "ARGENTINA",
+            "PptCity": "BBB",
+            "IssuedDate": "2014-02-03",
+            "ExpiryDate": "2024-02-04",
+            "PresentNationality": "ARGENTINE",
+            "BrelaRegistrationNo": "",
+            "CompanyName": "Sadick",
+            "ResidencePermitNumber": "RPHB00001320A00",
+            "ResidencePermitType": "CLASS B",
+            "ResidenceIssuedDate": "2019-12-05",
+            "ResidenceExpireDate": "2021-01-06"
+        }
+    ],
+    "signature": 1
+}
+
+

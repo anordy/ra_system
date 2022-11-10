@@ -8,7 +8,7 @@
             </label>
             <select name="report_type" id="report_type" wire:model="report_type"
                 class="form-control {{ $errors->has('report_type') ? 'is-invalid' : '' }}">
-                <option value="all">All</option>
+                {{-- <option value="all">All</option> --}}
                 @foreach ($optionReportTypes as $type)
                     <option value={{ $type }}>
                         {{ $type }}</option>

@@ -31,8 +31,8 @@ class CreateKYCSTable extends Migration
 
             $table->unsignedBigInteger('region_id')->nullable();
 
-            $table->string('work_permit')->nullable(); // nullable
-            $table->string('residence_permit')->nullable(); // nullable
+            $table->string('permit_number')->nullable();
+            $table->bigInteger('verified_by')->nullable();
 
             $table->boolean('is_citizen');
             $table->unsignedBigInteger('country_id');
