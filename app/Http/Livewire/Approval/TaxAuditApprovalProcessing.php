@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Returns\ReturnStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BusinessDeregistration;
+use App\Models\Investigation\TaxInvestigation;
 use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
 use App\Models\TaxAudit\TaxAuditOfficer;
@@ -25,6 +26,7 @@ use App\Traits\WorkflowProcesssingTrait;
 use App\Notifications\DatabaseNotification;
 use Illuminate\Validation\Rules\RequiredIf;
 use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\TaxAudit\TaxAudit;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class TaxAuditApprovalProcessing extends Component
@@ -154,9 +156,9 @@ class TaxAuditApprovalProcessing extends Component
                     'finalReport' => 'required',
                     'exitMinutes' => 'required',
                     'hasAssessment' => ['required', 'boolean'],
-                    'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
-                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
-                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
+                    'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
+                    'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
+                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],
                 ]
             );
 
@@ -240,15 +242,15 @@ class TaxAuditApprovalProcessing extends Component
                 if ($this->hasAssessment == "1") {
                     if ($assessment) {
                         $this->subject->assessment()->update([
-                            'principal_amount' => $this->principalAmount,
-                            'interest_amount' => $this->interestAmount,
-                            'penalty_amount' => $this->penaltyAmount,
-                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'original_principal_amount' => $this->principalAmount,
-                            'original_interest_amount' => $this->interestAmount,
-                            'original_penalty_amount' => $this->penaltyAmount,
-                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                            'principal_amount' => str_replace(',', '', $this->principalAmount),
+                            'interest_amount' => str_replace(',', '', $this->interestAmount),
+                            'penalty_amount' => str_replace(',', '', $this->penaltyAmount),
+                            'total_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
+                            'outstanding_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
+                            'original_principal_amount' => str_replace(',', '', $this->principalAmount),
+                            'original_interest_amount' => str_replace(',', '', $this->interestAmount),
+                            'original_penalty_amount' => str_replace(',', '', $this->penaltyAmount),
+                            'original_total_amount' => str_replace(',', '', $this->principalAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->penaltyAmount)
                         ]);
                     } else {
                         TaxAssessment::create([
@@ -257,15 +259,15 @@ class TaxAuditApprovalProcessing extends Component
                             'tax_type_id' => $this->taxType->id,
                             'assessment_id' => $this->subject->id,
                             'assessment_type' => get_class($this->subject),
-                            'principal_amount' => $this->principalAmount,
-                            'interest_amount' => $this->interestAmount,
-                            'penalty_amount' => $this->penaltyAmount,
-                            'total_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'outstanding_amount' => $this->penaltyAmount + $this->interestAmount + $this->principalAmount,
-                            'original_principal_amount' => $this->principalAmount,
-                            'original_interest_amount' => $this->interestAmount,
-                            'original_penalty_amount' => $this->penaltyAmount,
-                            'original_total_amount' => $this->principalAmount + $this->interestAmount + $this->penaltyAmount
+                            'principal_amount' => str_replace(',', '', $this->principalAmount),
+                            'interest_amount' => str_replace(',', '', $this->interestAmount),
+                            'penalty_amount' => str_replace(',', '', $this->penaltyAmount),
+                            'total_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
+                            'outstanding_amount' => str_replace(',', '', $this->penaltyAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->principalAmount),
+                            'original_principal_amount' => str_replace(',', '', $this->principalAmount),
+                            'original_interest_amount' => str_replace(',', '', $this->interestAmount),
+                            'original_penalty_amount' => str_replace(',', '', $this->penaltyAmount),
+                            'original_total_amount' => str_replace(',', '', $this->principalAmount) + str_replace(',', '', $this->interestAmount) + str_replace(',', '', $this->penaltyAmount)
                         ]);
                     }
                 } else {
@@ -349,7 +351,16 @@ class TaxAuditApprovalProcessing extends Component
     public function generateControlNumber()
     {
         $assessment = $this->subject->assessment;
-        $taxType = $this->subject->taxType;
+        $taxType = null;
+        if ($this->subject->tax_type_id == 0) {
+            if ($this->subject->assessment->assessment_type == TaxAudit::class ) {
+                $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxAuditTaxTypeNames();
+            } else if ($this->subject->assessment->assessment_type == TaxInvestigation::class ) {
+                $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxInvestigationTaxTypeNames();
+            }    
+        } else {
+            $taxType = $this->subject->taxType;
+        }
 
         DB::beginTransaction();
 
@@ -390,7 +401,7 @@ class TaxAuditApprovalProcessing extends Component
             $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
             $payer_email = $taxpayer->email;
             $payer_phone = $taxpayer->mobile;
-            $description = "Verification for {$taxType->name} ";
+            $description = "Auditing for {$taxType}";
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency = 'TZS';
             $createdby_type = get_class(Auth::user());
@@ -445,7 +456,7 @@ class TaxAuditApprovalProcessing extends Component
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
 
-                $this->alert('success', 'A control number for this verification has been generated successflu');
+                $this->alert('success', 'A control number for this verification has been generated successfully');
             }
             DB::commit();
         } catch (Exception $e) {

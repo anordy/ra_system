@@ -36,7 +36,6 @@ class InterestRateAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            dd($e);
             $this->alert('error', 'Something went wrong');
         }
     }

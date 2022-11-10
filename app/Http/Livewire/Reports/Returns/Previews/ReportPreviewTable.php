@@ -20,7 +20,6 @@ class ReportPreviewTable extends DataTableComponent
 
     public function mount($parameters)
     {
-        // dd($parameters);
         $this->parameters = $parameters;
         $this->lumpsump = TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->first();
     }
@@ -28,7 +27,6 @@ class ReportPreviewTable extends DataTableComponent
     public function builder(): Builder
     {
         $mnos = $this->getRecords($this->parameters);
-        // dd($mnos->get());
         return $mnos;
     }
 

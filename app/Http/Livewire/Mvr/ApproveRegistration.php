@@ -151,7 +151,7 @@ class ApproveRegistration extends Component
                 $zmBill->zan_status = 'pending';
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
-                $this->flash('success', 'A control number for this verification has been generated successflu');
+                $this->flash('success', 'A control number for this verification has been generated successfully');
             }
             DB::commit();
             return redirect()->to(route('mvr.show', encrypt($this->motor_vehicle_id)));

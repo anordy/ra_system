@@ -117,13 +117,15 @@ class DisputeWaiverApprovalProcessing extends Component
 
         }
 
+        $approveNotification = 'Approved successfully';
+
         if ($this->checkTransition('commisioner_review')) {
             $this->complete = "1";
 
-            $this->validate([
-                'interestPercent' => ['required', 'numeric'],
-                'penaltyPercent' => ['required', 'numeric'],
-            ]);
+            // $this->validate([
+            //     'interestPercent' => ['required', 'numeric'],
+            //     'penaltyPercent' => ['required', 'numeric'],
+            // ]);
             DB::beginTransaction();
 
             try {
@@ -157,6 +159,8 @@ class DisputeWaiverApprovalProcessing extends Component
                 }
 
                 DB::commit();
+
+                $approveNotification = 'Approved and control number has been generated successful';
             } catch (Exception $e) {
                 Log::error($e);
                 throw $e;
@@ -167,7 +171,7 @@ class DisputeWaiverApprovalProcessing extends Component
 
         try {
             $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            $this->flash('success', $approveNotification, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);

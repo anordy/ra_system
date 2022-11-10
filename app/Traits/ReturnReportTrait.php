@@ -80,7 +80,6 @@ trait ReturnReportTrait
 
     public function getSelectedRecords($returns, $parameters)
     {
-        // dd($returns->get() ,$parameters);
         $dates = $parameters['dates'];
         if ($dates == []) {
             return $returns->orderBy('tax_returns.created_at', 'asc');

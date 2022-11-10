@@ -153,7 +153,6 @@ class ReliefRegistrations extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            // dd($e->getMessage());
             $this->alert('error', 'Something went wrong');
         }
     }

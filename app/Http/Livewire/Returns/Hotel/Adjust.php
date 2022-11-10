@@ -201,7 +201,6 @@ class Adjust extends Component
             $edit_count = $this->return->edited_count + 1;
 
             $diffInTotalAmount = $this->total - $this->return->total_amount_due;
-            // dd($diffInTotalAmount);
 
             // store penalty amount in this table
             $payload = [
@@ -221,10 +220,8 @@ class Adjust extends Component
             $penaltyArr = $this->getPenaltArrays($this->fillingMonth, $this->total, $this->taxTypeCurrency);
 
             if(count($this->return->penalties) > 0){
-            // dd($this->return->penalties);
 
                 $this->return->penalties()->delete();
-                // dd('dhjd');
 
                 if (count($penaltyArr) > 0) {
                     foreach($penaltyArr as $penaltItem){
