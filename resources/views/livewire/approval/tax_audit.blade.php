@@ -153,7 +153,7 @@
                     @if ($hasAssessment)
                         <div class="form-group col-lg-6">
                             <label class="control-label">Principal Amount</label>
-                            <input type="text" class="form-control @error('principalAmount') is-invalid @enderror"
+                            <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control @error('principalAmount') is-invalid @enderror"
                                 wire:model.lazy="principalAmount">
                             @error('principalAmount')
                                 <span class="text-danger">{{ $message }}</span>
@@ -161,7 +161,7 @@
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Interest Amount</label>
-                            <input type="text" class="form-control @error('interestAmount') is-invalid @enderror"
+                            <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control @error('interestAmount') is-invalid @enderror"
                                 wire:model.lazy="interestAmount">
                             @error('interestAmount')
                                 <span class="text-danger">{{ $message }}</span>
@@ -169,7 +169,7 @@
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Penalty Amount</label>
-                            <input type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
+                            <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control @error('penaltyAmount') is-invalid @enderror"
                                 wire:model.lazy="penaltyAmount">
                             @error('penaltyAmount')
                                 <span class="text-danger">{{ $message }}</span>

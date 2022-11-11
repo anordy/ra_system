@@ -65,7 +65,6 @@ class BusinessAuditAddModal extends Component
 
     public function submit()
     {
-        // dd(json_encode($this->tax_type_ids));
         $check = TaxAudit::where('business_id', $this->business_id)
             ->where('location_id', $this->location_ids)
             ->where('tax_type_id', $this->tax_type_ids)

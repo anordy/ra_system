@@ -99,13 +99,10 @@
                     <strong>Penalty Amount</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Total Amount</strong>
+                    <strong>Interest %</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Outstanding Amount</strong>
-                </th>
-                <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Payment Due Date</strong>
+                    <strong>Penalty %</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Status</strong>
@@ -153,13 +150,10 @@
                 @endif
 
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->debt->total_amount === null ? '-' : number_format($record->debt->total_amount, 2) }}
+                    {{ $record->penalty_rate === null ? '-' : number_format($record->penalty_rate, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->debt->outstanding_amount === null ? '-' : number_format($record->debt->outstanding_amount, 2) }}
-                </td>
-                <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    {{ $record->debt->curr_payment_due_date == null ? '-' : date('M, d Y', strtotime($record->debt->payment_due_date)) }}
+                    {{ $record->interest_rate === null ? '-' : number_format($record->interest_rate, 2) }}
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     {{ $record->status }}

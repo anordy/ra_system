@@ -45,7 +45,6 @@ class LandLeaseView extends Component
         DB::beginTransaction();
 
         try {
-            // dd($this->landLease->payment_amount,$this->taxType->gfs_code);
             $billitems = [
                 [
                     'billable_id' => $this->landLease->id,

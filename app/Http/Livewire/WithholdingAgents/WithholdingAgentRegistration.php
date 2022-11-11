@@ -49,7 +49,7 @@ class WithholdingAgentRegistration extends Component
         'institution_name' => 'required',
         'institution_place' => 'required',
         'email' => 'required|email|unique:withholding_agents,email',
-        'mobile' => 'required|unique:withholding_agents,mobile|max:20',
+        'mobile' => 'required|unique:withholding_agents,mobile|digits_between:10,10',
         'address' => 'required',
         'responsible_person_id' => 'required',
         'region_id' => 'required',

@@ -63,7 +63,6 @@ class ReturnDemandNotice extends Mailable
             return $email;
         } catch (Exception $e) {
             Log::error($e);
-            dd($e);
         }
    
 

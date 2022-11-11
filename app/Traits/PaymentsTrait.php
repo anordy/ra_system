@@ -11,10 +11,12 @@ use App\Models\Debts\Debt;
 use App\Enum\PaymentStatus;
 use App\Models\ExchangeRate;
 use App\Models\BusinessTaxType;
+use App\Models\Investigation\TaxInvestigation;
 use App\Services\ZanMalipo\ZmCore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Returns\ReturnStatus;
+use App\Models\TaxAudit\TaxAudit;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ZanMalipo\ZmResponse;
 
@@ -572,11 +574,17 @@ trait PaymentsTrait {
 
         $taxpayer = $assessment->business->taxpayer;
 
+        if ($assessment->assessment_type == TaxAudit::class ) {
+            $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxAuditLocationNames() ?? 'Multiple business locations';
+        } else if ($assessment->assessment_type == TaxInvestigation::class ) {
+            $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxInvestigationLocationNames() ?? 'Multiple business locations';
+        }
+        
         $payer_type = get_class($taxpayer);
         $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
         $payer_email = $taxpayer->email;
         $payer_phone = $taxpayer->mobile;
-        $description = "{$assessment->taxtype->name} dispute waiver for {$assessment->business->name} {$assessment->location->name}";
+        $description = "{$assessment->taxtype->name} dispute waiver for {$assessment->business->name} in {$assessmentLocations}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $assessment->currency;
         $createdby_type = 'Job';

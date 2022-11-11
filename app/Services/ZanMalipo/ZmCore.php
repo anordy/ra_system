@@ -79,8 +79,6 @@ class ZmCore
 
             $equivalent_amount = $bill_amount * $exchange_rate;
 
-            // dd($bill_items, $currency, $exchange_rate, $bill_amount);
-
             $zm_bill = new ZmBill([
                 'billable_id' => $billable_id,
                 'billable_type' => $billable_type,

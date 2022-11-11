@@ -61,7 +61,6 @@ trait RegistrationReportTrait
                 }
             }
         }
-        // dd($businessLocations->get());
         return $businessLocations;
     }
 

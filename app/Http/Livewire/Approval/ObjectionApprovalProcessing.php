@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Validation\Rules\RequiredIf;
 
 class ObjectionApprovalProcessing extends Component
 {
@@ -33,6 +34,7 @@ class ObjectionApprovalProcessing extends Component
     public $interestPercent, $interestAmount, $dispute, $assesment, $total, $principal_amount_due;
     public $natureOfAttachment, $noticeReport, $settingReport;
     public $principal, $penalty, $interest;
+    public $propertyName;
 
     public function mount($modelName, $modelId)
     {
@@ -41,16 +43,19 @@ class ObjectionApprovalProcessing extends Component
         $this->dispute = Dispute::find($this->modelId);
         $this->principal = $this->dispute->tax_in_dispute;
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
-         $this->penalty = $this->assessment->penalty_amount;
+        $this->penalty = $this->assessment->penalty_amount;
         $this->interest = $this->assessment->interest_amount;
-        $this->taxTypes = TaxType::all();
+        $this->taxTypes = TaxType::where('code', 'disputes')->first();
         $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
+        $this->total = ($this->penalty + $this->interest + $this->principal) - ($this->dispute->tax_deposit);
+
         $this->registerWorkflow($modelName, $modelId);
 
     }
 
     public function updated($propertyName)
     {
+        $this->propertyName = $propertyName;
         if ($propertyName == "penaltyPercent") {
             if ($this->penaltyPercent > 100) {
                 $this->penaltyPercent = 100;
@@ -67,17 +72,29 @@ class ObjectionApprovalProcessing extends Component
                 $this->interestPercent = null;
             }
             $this->interestAmount = ($this->assessment->interest_amount * $this->interestPercent) / 100;
+            
+        }
+        
+        if ($propertyName == "interestPercent" || $propertyName == "penaltyPercent") {
+            $this->penalty = $this->assessment->penalty_amount - $this->penaltyAmount;
+            $this->interest = $this->assessment->interest_amount - $this->interestAmount;
+            $this->total = ($this->penalty + $this->interest + $this->assessment->principal_amount) - ($this->dispute->tax_deposit);
         }
 
-        $this->penaltyAmountDue = $this->assessment->penalty_amount - $this->penaltyAmount;
-        $this->interestAmountDue = $this->assessment->interest_amount - $this->interestAmount;
-        $this->total = ($this->penaltyAmountDue + $this->interestAmountDue + $this->assessment->principal_amount) - ($this->dispute->tax_deposit);
+        if ($propertyName == "penalty" || $propertyName == "interest") {
+            // $this->penaltyAmountDue = $this->penalty;
+            // $this->interestAmountDue = $this->interest;
+            $this->total = ( str_replace(',', '', $this->penalty) + str_replace(',', '', $this->interest) + str_replace(',', '', $this->principal)) - ($this->dispute->tax_deposit);
+        }
+
     }
 
     public function approve($transtion)
     {
-        $taxType = $this->subject->taxType;
-        $this->taxTypes = TaxType::where('code', 'disputes')->first();
+        
+        $this->penalty = str_replace(',', '', $this->penalty);
+        $this->interest = str_replace(',', '', $this->interest);
+        $this->principal = str_replace(',', '', $this->principal);
 
         if ($this->checkTransition('objection_manager_review')) {
 
@@ -113,6 +130,8 @@ class ObjectionApprovalProcessing extends Component
                     'setting_report' => $settingReport ?? '',
                 ]);
 
+                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penalty, $this->interest, $this->dispute->tax_deposit);
+
                 DB::commit();
             } catch (\Exception $e) {
                 Log::error($e);
@@ -129,14 +148,17 @@ class ObjectionApprovalProcessing extends Component
         if ($this->checkTransition('commisioner_review')) {
             $this->complete = "1";
 
-            // $this->validate([
-            //     'interestPercent' => ['required', 'numeric'],
-            //     'penaltyPercent' => ['required', 'numeric'],
-            // ]);
+            if ($this->propertyName == "interestPercent" || $this->propertyName == "penaltyPercent") {
+                $this->validate([
+                    'interestPercent' => ['required', 'numeric'],
+                    'penaltyPercent' => ['required', 'numeric'],
+                ]);
+            }
+            
             DB::beginTransaction();
 
             try {
-                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penaltyAmountDue, $this->interestAmountDue, $this->dispute->tax_deposit);
+                $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penalty, $this->interest, $this->dispute->tax_deposit);
 
                 // Generate control number for waived application
                 $billitems = [
@@ -218,7 +240,6 @@ class ObjectionApprovalProcessing extends Component
                 DB::commit();
             } catch (Exception $e) {
                 Log::error($e);
-                throw $e;
                 $this->alert('error', 'Something went wrong');
             }
 
@@ -238,11 +259,9 @@ class ObjectionApprovalProcessing extends Component
     public function reject($transtion)
     {
 
-        // $this->validate([
-        //     'comments' => 'required',
-        //     'interestPercent' => [new RequiredIf($this->complete == "1"), 'nullable', 'numeric'],
-        //     'penaltyPercent' => [new RequiredIf($this->complete == "1"), 'nullable', 'numeric'],
-        // ]);
+        $this->validate([
+            'comments' => 'required|string',
+        ]);
 
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
@@ -254,10 +273,11 @@ class ObjectionApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('commisioner_reject')) {
-
+                
                 DB::beginTransaction();
 
                 try {
+                    
                     $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal_amount_due, $this->assessment->penalty_amount, $this->assessment->interest_amount, $this->dispute->tax_deposit);
                     $total_deposit = $this->principal_amount_due + $this->assessment->interest_amount + $this->assessment->penalty_amount;
 
@@ -273,7 +293,7 @@ class ObjectionApprovalProcessing extends Component
                             'tax_type_id' => $this->taxTypes->id,
                         ],
                     ];
-
+                    
                     $taxpayer = $this->subject->business->taxpayer;
 
                     $payer_type = get_class($taxpayer);
@@ -309,7 +329,7 @@ class ObjectionApprovalProcessing extends Component
                         $createdby_type,
                         $billitems
                     );
-
+                    
                     if (config('app.env') != 'local') {
                         $response = ZmCore::sendBill($zmBill->id);
                         if ($response->status === ZmResponse::SUCCESS) {
@@ -352,6 +372,7 @@ class ObjectionApprovalProcessing extends Component
             Log::error($e);
             return;
         }
+        
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 

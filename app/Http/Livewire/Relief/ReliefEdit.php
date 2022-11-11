@@ -184,7 +184,6 @@ class ReliefEdit extends Component
         } catch (\Exception$e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            // dd($e->getMessage());
             $this->alert('error', 'Something went wrong');
         }
 
@@ -262,7 +261,6 @@ class ReliefEdit extends Component
 
     public function calculateAmountPayable($i)
     {
-        // dd('test');
         $costPerItem = is_numeric($this->items[$i]['costPerItem']) ? $this->items[$i]['costPerItem'] : 0;
         $quantity = is_numeric($this->items[$i]['quantity']) ? $this->items[$i]['quantity'] : 0;
         $this->items[$i]['amount'] = $costPerItem * $quantity;

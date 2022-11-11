@@ -20,5 +20,11 @@ return [
     'zm_spcode' => env('ZAN_MALIPO_SP_CODE'),
     'zm_spsysid' => env('ZAN_MALIPO_SP_SYS_ID'),
     'zm_subspcode' => env('ZAN_MALIPO_SUB_SP_CODE'),
+
+    // IMMIGRATION API
+    'immigration_test_api' => env('API_SERVER_URL'),
+    'immigration_live_api' => env('API_SERVER_URL'),
+    'api_server_username' => 'immigration',
+    'api_server_password' => 'password'
 ]
 ?>
