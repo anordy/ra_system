@@ -8,16 +8,13 @@
         Header always append X-Frame-Options SAMEORIGIN
         Header set X-Content-Type-Options nosniff
         Header unset X-Powered-By
-        Header always set Content-Security-Policy "default-src 'self'; style-src fonts.googleapis.com 'self' 'nonce-custom_style'; script-src 'self' 'nonce-custom_script'; font-src 'self' fonts.gstatic.com"
     </IfModule>
 
     <IfModule security2_module>
         SecRuleEngine on
         ServerTokens Min
         SecServerSignature " "
-    </IfModule> 
-
-    ServerSignature Off
+    </IfModule>
 
     RewriteEngine On
 
