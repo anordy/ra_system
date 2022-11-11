@@ -3,17 +3,32 @@
     Login
 @endsection
 
+@section('styles')
+<style nonce="custom_style">
+    .card-body-margin{
+        margin-left: 10px;
+        margin-right:10px;
+    }
+    .card-margin {
+        margin-top: 60px; margin-bottom:10px;
+    }
+    .card-header{
+        padding-top: 70px;padding-bottom: 10px;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="middle-box ">
 
     <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-md-12" style="margin-left: 10px;margin-right:10px">
-            <div class="card rounded" style="margin-top: 60px; margin-bottom:10px">
-                <div class="card-body">
+        <div class="col-md-12">
+            <div class="card rounded card-margin">
+                <div class="card-body card-body-margin">
                     <div class="text-center">
                         <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px">
                     </div>
-                    <h5 class="bg-white text-uppercase text-center" style="padding-top: 70px;padding-bottom: 10px;">
+                    <h5 class="bg-white text-uppercase text-center card-header" >
                         ZIDRAS Staff Login
                     </h5>
 
@@ -52,7 +67,7 @@
                                 <label class="form-label" for="captcha">Captcha</label>
                                 <div class="d-flex">
                                     <span id="captcha_label">{!! captcha_img('flat') !!}</span>
-                                    <button style="flex: 1" type="button" class="btn btn-outline-success ml-2" onclick="captchaReload()">
+                                    <button type="button" class="btn btn-outline-success ml-2 d-flex flex-1" onclick="captchaReload()">
                                         <i class='bi bi-arrow-clockwise mr-1'></i>
                                         Reload
                                     </button>
@@ -68,7 +83,7 @@
                             </div>
 
                             <button class="btn btn-info px-5" type="submit">Login</button>
-                            <p class="text-primary mt-1 float-right"><a style="text-decoration: none" href="{{ url('password/reset') }}">Forgot
+                            <p class="text-primary mt-1 float-right text-decoration-none"><a href="{{ url('password/reset') }}">Forgot
                                     password ?</a>
                             </p>
                         </div>
@@ -88,7 +103,7 @@
 
 
 @section('scripts')
-<script>
+<script nonce="custom_script">
     function captchaReload() {
             $.ajax({
                 type: 'GET',

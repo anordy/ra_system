@@ -25,11 +25,6 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => ['logout']]);
     }
 
-    public function redirectTo()
-    {
-        return redirect()->route('home');
-    }
-
     public function showLoginForm()
     {
         return view('auth.login');
