@@ -9,13 +9,13 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class PaymentsTable extends DataTableComponent
+class PendingPaymentsTable extends DataTableComponent
 {
     use LivewireAlert;
 
     public function builder(): Builder
     {
-        return ZmBill::whereHas('bill_payments')->where('status', PaymentStatus::PAID)->orderBy('created_at', 'DESC');
+        return ZmBill::whereIn('status', [PaymentStatus::CANCELLED, PaymentStatus::PENDING])->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
@@ -52,6 +52,7 @@ class PaymentsTable extends DataTableComponent
             Column::make('Payer Name', 'payer_name'),
             Column::make('Payer Email', 'payer_email'),
             Column::make('Description', 'description'),
+            Column::make('Status', 'status'),
             Column::make('Actions', 'id')
                 ->view('payments.includes.actions')
         ];

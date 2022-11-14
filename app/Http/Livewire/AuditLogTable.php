@@ -16,23 +16,14 @@ class AuditLogTable extends DataTableComponent
     use LivewireAlert;
 
     public function builder(): Builder {
-        return Audit::query()->join('users', 'users.id', '=', 'audits.user_id')->orderBy('created_at', 'DESC');
+        return Audit::query()->with('user')->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['auditable_type', 'tags', 'new_values', 'auditable_id']);
-        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
-            if ($column->isField('id')) {
-                return [
-                    'style' => 'width: 20%;',
-                ];
-            }
-
-            return [];
-        });
-
+        $this->setAdditionalSelects(['auditable_type', 'tags', 'new_values', 'auditable_id', 'user_type']);
+    
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -47,7 +38,11 @@ class AuditLogTable extends DataTableComponent
             Column::make('Log', 'user_id')
                 ->sortable()
                 ->searchable()
-                ->format(fn($value, $row, Column $column) => $row->user->fullname(). ' ' .$row->event . ' '. preg_split('[\\\]', $row->auditable_type)[2]),
+                ->format(function($value, $row){
+                    $name = $row->user->full_name ?? '';
+                    $model_name = explode('\\',$row->auditable_type);
+                    return $name .' - '. end($model_name);
+                }),
             Column::make('Action', 'event')
                 ->sortable()
                 ->searchable(),
@@ -57,7 +52,7 @@ class AuditLogTable extends DataTableComponent
             Column::make('Time', 'created_at')
                 ->sortable()
                 ->searchable()
-                ->format(fn($value, $row, Column $column) => Carbon::create($row->created_at)->diffForHumans()),
+                ->format(fn($value, $row) => Carbon::create($row->created_at)->diffForHumans()),
             Column::make('Action', 'id')
                 ->format(function ($value){ 
                     if(Gate::allows('system-audit-trail-view')) {

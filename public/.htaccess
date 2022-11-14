@@ -7,6 +7,13 @@
         Header set X-XSS-Protection "1; mode=block"
         Header always append X-Frame-Options SAMEORIGIN
         Header set X-Content-Type-Options nosniff
+        Header unset X-Powered-By
+    </IfModule>
+
+    <IfModule security2_module>
+        SecRuleEngine on
+        ServerTokens Min
+        SecServerSignature " "
     </IfModule>
 
     RewriteEngine On
@@ -27,4 +34,5 @@
 
     RewriteCond %{REQUEST_METHOD} ^TRACE
     RewriteRule .* - [F]
+
 </IfModule>

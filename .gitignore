@@ -21,3 +21,4 @@ composer.lock
 public/.DS_Store
 public/js/app.js
 public/cert/*.pfx
+.valetphprc

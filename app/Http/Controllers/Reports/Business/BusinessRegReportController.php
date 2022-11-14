@@ -24,7 +24,7 @@ class BusinessRegReportController extends Controller
         $parameters = json_decode(decrypt($data),true);
         $records = $this->getBusinessBuilder($parameters)->get();
 
-        $pdf = PDF::loadView('exports.business.pdf.business',compact('records'));
+        $pdf = PDF::loadView('exports.business.pdf.business',compact('records', 'parameters'));
         $pdf->setPaper('a4', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download('Business.pdf');

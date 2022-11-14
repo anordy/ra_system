@@ -1,15 +1,33 @@
 @extends('layouts.login')
+@section('styles')
+    <style nonce="custom_style">
+        .card-body-margin {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .card-margin {
+            margin-top: 60px;
+            margin-bottom: 10px;
+        }
+
+        .card-header {
+            padding-top: 60px;
+            padding-bottom: 20px;
+        }
+    </style>
+@endsection
 @section('content')
 <div class="middle-box ">
 
     <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-md-12" style="margin-left: 10px;margin-right:10px">
-            <div class="card rounded" style="margin-top: 60px; margin-bottom:10px">
+        <div class="col-md-12">
+            <div class="card rounded card-margin">
                 <div class="card-body">
                     <div class="text-center">
                         <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px">
                     </div>
-                    <h5 class="bg-white text-uppercase text-center" style="padding-top: 70px;padding-bottom: 10px;">
+                    <h5 class="bg-white text-uppercase text-center card-header">
                         OTP VERIFICATION
                     </h5>
 
@@ -22,6 +40,7 @@
 
                     <form method="POST" action="{{ route('twoFactorAuth.confirm') }}" novalidate>
                         @csrf
+                      <div class="mt-2">
                         <div class="text-center">
                             <label class="">Please enter verification code sent either on<br> E-mail/Phone number
                             </label>
@@ -46,21 +65,22 @@
 
                             <div class="mt-2"></div>
                         </div>
+                      </div>
 
                     </form>
                     <div>
                         <form action="{{ route('twoFactorAuth.resend') }}" method="POST" novalidate>
                             @csrf
-                            <div class="mt-3">
+                            <div class="mt-3 inline-block">
                                 <span>Didn't get the code </span>
-                                <button type="submit" title="Re-send" class="btn btn-link btn-xs">
+                                <button type="submit" title="Re-send" class="btn btn-link">
                                     Resend Token
                                 </button>
                             </div>
                         </form>
 
                         <div class="mt-3">
-                            <a href="{{ route('login') }}" class="text-decoration-none ms-3"> Login</a>
+                            <a href="{{ route('login') }}" class="btn-link">Click to Return to Login</a>
                         </div>
                     </div>
                 </div>
@@ -77,7 +97,7 @@
 
 
 @section('scripts')
-<script>
+<script nonce="custom_script">
     document.addEventListener("DOMContentLoaded", function(event) {
 
             function OTPInput() {

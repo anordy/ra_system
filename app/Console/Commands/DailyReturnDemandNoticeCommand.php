@@ -43,16 +43,16 @@ class DailyReturnDemandNoticeCommand extends Command
      */
     public function handle()
     {
-        Log::channel('demandNotice')->info('Daily Demand notice process started');
+        Log::channel('dailyJobs')->info('Daily Demand notice process started');
         $this->runReturnsDemandNotices();
-        Log::channel('demandNotice')->info('Daily Demand notice process ended');
+        Log::channel('dailyJobs')->info('Daily Demand notice process ended');
     }
 
     protected function runReturnsDemandNotices()
     {
-        Log::channel('demandNotice')->info("Daily Demand notice for tax returns");
+        Log::channel('dailyJobs')->info("Daily Demand notice for tax returns");
         // TODO: Improve query
-        $tax_returns = TaxReturn::with('demandNotices')->where('return_category', ReturnCategory::NORMAL)
+        $tax_returns = TaxReturn::with('dailyJobs')->where('return_category', ReturnCategory::NORMAL)
             ->get();
 
         foreach ($tax_returns as $tax_return) {

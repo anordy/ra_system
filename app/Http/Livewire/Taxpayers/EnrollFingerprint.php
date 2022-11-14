@@ -13,7 +13,7 @@ class EnrollFingerprint extends Component
     public $kyc;
     public $error;
 
-    public $selectedStep = 'biometric';
+    public $selectedStep = 'details';
     public $userVerified = false;
     public $verifyingUser = false;
 

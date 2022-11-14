@@ -45,9 +45,9 @@ class DailyTaxTypeEffectiveDateCommand extends Command
      */
     public function handle()
     {
-        Log::channel('taxEffectiveDate')->info('Daily Tax Type Change Effective Date Marking process started');
+        Log::channel('dailyJobs')->info('Daily Tax Type Change Effective Date Marking process started');
         $this->initEffectiveDate();
-        Log::channel('taxEffectiveDate')->info('Daily Tax Type Change Effective Date Marking process ended');
+        Log::channel('dailyJobs')->info('Daily Tax Type Change Effective Date Marking process ended');
     }
 
     protected function initEffectiveDate()
@@ -85,10 +85,10 @@ class DailyTaxTypeEffectiveDateCommand extends Command
             }
 
             DB::commit();
-            Log::channel('taxEffectiveDate')->info('Daily Tax Type Change Effective Date Marking process ended');
+            Log::channel('dailyJobs')->info('Daily Tax Type Change Effective Date Marking process ended');
         } catch (Exception $e) {
-            Log::channel('taxEffectiveDate')->info('Daily Tax Type Change Effective Date Marking process ended with an error');
-            Log::channel('taxEffectiveDate')->error($e);
+            Log::channel('dailyJobs')->info('Daily Tax Type Change Effective Date Marking process ended with an error');
+            Log::channel('dailyJobs')->error($e);
             DB::rollBack();
         }
     }

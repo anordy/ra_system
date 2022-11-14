@@ -11,7 +11,7 @@
         <span class="font-weight-bold text-uppercase">Mobile</span>
         <p class="my-1">{{ $kyc->mobile }}</p>
     </div>
-    @if($kyc->alt_mobile)
+    @if ($kyc->alt_mobile)
         <div class="col-md-4 mb-3">
             <span class="font-weight-bold text-uppercase">Alternative Mobile</span>
             <p class="my-1">{{ $kyc->alt_mobile }}</p>
@@ -21,29 +21,6 @@
         <span class="font-weight-bold text-uppercase">Nationality</span>
         <p class="my-1">{{ $kyc->country->nationality }}</p>
     </div>
-
-</div>
-<hr />
-<div class="row">
-    <div class="col-md-4 mb-3">
-        <span class="font-weight-bold text-uppercase">{{ $kyc->identification->name }} No.</span>
-        <p class="my-1">{{ $kyc->id_number }}</p>
-    </div>
-    @if($kyc->work_permit)
-        <div class="col-md-4 mb-3">
-            <span class="font-weight-bold text-uppercase">Residence Permit</span>
-            <p class="my-1">{{ $kyc->work_permit }}</p>
-        </div>
-    @endif
-    @if($kyc->residence_permit)
-        <div class="col-md-4 mb-3">
-            <span class="font-weight-bold text-uppercase">Work Permit</span>
-            <p class="my-1">{{ $kyc->residence_permit }}</p>
-        </div>
-    @endif
-</div>
-<hr />
-<div class="row">
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Location</span>
         <p class="my-1">{{ $kyc->region->name }}</p>
@@ -57,3 +34,11 @@
         <p class="my-1">{{ $kyc->physical_address }}</p>
     </div>
 </div>
+
+@if ($kyc->id_type == 1)
+    <p>Nida Verification</p>
+@elseif ($kyc->id_type == 2)
+    <livewire:taxpayers.details.zanid :kyc="$kyc" />
+@elseif ($kyc->id_type == 3)
+    <livewire:taxpayers.details.passport :kyc="$kyc" />
+@endif
