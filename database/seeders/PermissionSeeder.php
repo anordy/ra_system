@@ -143,6 +143,7 @@ class PermissionSeeder extends Seeder
 
             # Manage Payments
             ['name' => 'manage-payments-view', 'sys_module_id' => 17],
+            ['name' => 'manage-payments-edit', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],

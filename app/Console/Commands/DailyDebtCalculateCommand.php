@@ -49,11 +49,11 @@ class DailyDebtCalculateCommand extends Command
      */
     public function handle()
     {
-        Log::channel('debtCollection')->info('Daily Debt Marking process started');
+        Log::channel('dailyJobs')->info('Daily Debt Marking process started');
         $financialMonth = $this->getCurrentFinancialMonth();
         $this->markReturnAsDebt($financialMonth);
         $this->markAssessmentAsDebt();
-        Log::channel('debtCollection')->info('Daily Debt Marking process ended');
+        Log::channel('dailyJobs')->info('Daily Debt Marking process ended');
     }
 
     /**
@@ -61,7 +61,7 @@ class DailyDebtCalculateCommand extends Command
      */
     protected function markReturnAsDebt($financialMonth)
     {
-        Log::channel('debtCollection')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process started");
+        Log::channel('dailyJobs')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process started");
         DB::beginTransaction();
 
         /**
@@ -101,10 +101,10 @@ class DailyDebtCalculateCommand extends Command
             }
 
             DB::commit();
-            Log::channel('debtCollection')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process ended");
+            Log::channel('dailyJobs')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process ended");
         } catch (Exception $e) {
-            Log::channel('debtCollection')->info('Daily Debt calculation process ended with error');
-            Log::channel('debtCollection')->error($e);
+            Log::channel('dailyJobs')->info('Daily Debt calculation process ended with error');
+            Log::channel('dailyJobs')->error($e);
             DB::rollBack();
         }
     }
@@ -114,7 +114,7 @@ class DailyDebtCalculateCommand extends Command
      */
     protected function markAssessmentAsDebt()
     {
-        Log::channel('debtCollection')->info("Daily Debt marking for assessment process started");
+        Log::channel('dailyJobs')->info("Daily Debt marking for assessment process started");
         DB::beginTransaction();
 
         $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, TIMESTAMPDIFF(DAY, tax_assessments.payment_due_date, CURDATE()) as days_passed')
@@ -143,10 +143,10 @@ class DailyDebtCalculateCommand extends Command
             }
 
             DB::commit();
-            Log::channel('debtCollection')->info("Daily Debt marking for assessment process ended");
+            Log::channel('dailyJobs')->info("Daily Debt marking for assessment process ended");
         } catch (Exception $e) {
-            Log::channel('debtCollection')->info('Daily Debt marking for assessment process ended with error');
-            Log::channel('debtCollection')->error($e);
+            Log::channel('dailyJobs')->info('Daily Debt marking for assessment process ended with error');
+            Log::channel('dailyJobs')->error($e);
             DB::rollBack();
         }
     }

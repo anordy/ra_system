@@ -57,6 +57,14 @@
             <tr>
                 <th style="text-align:center;" colspan="10">
                     <strong class="zrb">ZANZIBAR REVENUE BOARD</strong><br>
+                    <strong>Business Registration Report on </strong>
+                    @if ($parameters['year'] === 'all')
+                        <strong>overall period of time</strong>
+                    @elseif ($parameters['year'] === 'range')
+                        <strong>From {{ $parameters['range_start'] }} To {{ $parameters['range_end'] }} </strong>
+                    @else
+                        <strong>{{ $parameters['year'] }}</strong>
+                    @endif
                     {{-- <strong>RELIEF APPLLICATIONS</strong><br> --}}
                     {{-- <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>  --}}
                 </th>
@@ -82,7 +90,7 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Business Category</strong>
                 </th>
-    
+
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Taxpayer</strong>
                 </th>
@@ -92,7 +100,7 @@
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>Region</strong>
                 </th>
-            
+
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     <strong>District</strong>
                 </th>
@@ -117,7 +125,7 @@
                         {{ $record->name }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->taxRegion->name ?? '-'}}
+                        {{ $record->taxRegion->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->business->category->name ?? '-' }}
@@ -144,7 +152,7 @@
             @endforeach
         </tbody>
     </table>
-    
+
     <br>
 </body>
 

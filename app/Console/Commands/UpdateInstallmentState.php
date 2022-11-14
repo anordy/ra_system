@@ -45,11 +45,11 @@ class UpdateInstallmentState extends Command
      */
     public function handle()
     {
-        Log::channel('installment')->info('Installment update process started');
+        Log::channel('dailyJobs')->info('Installment update process started');
         foreach (Installment::where('status', InstallmentStatus::ACTIVE)->get() as $installment){
             $this->updateInstallment($installment);
         }
-        Log::channel('installment')->info('Installment update process ended');
+        Log::channel('dailyJobs')->info('Installment update process ended');
         return 1;
     }
 
@@ -57,7 +57,7 @@ class UpdateInstallmentState extends Command
         $itemsCount = $installment->items()->where('status', BillStatus::COMPLETE)->count();
 
         if ($itemsCount >= $installment->installment_count){
-            Log::channel('installment')->info('Manually marking installment as complete.');
+            Log::channel('dailyJobs')->info('Manually marking installment as complete.');
             $installment->update([
                 'status' => InstallmentStatus::COMPLETE
             ]);
@@ -82,6 +82,6 @@ class UpdateInstallmentState extends Command
             ]);
         }
 
-        Log::channel('installment')->info($itemsCount);
+        Log::channel('dailyJobs')->info($itemsCount);
     }
 }

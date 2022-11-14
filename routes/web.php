@@ -512,6 +512,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('payments.')->prefix('payments')->group(function () {
         Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
+        Route::get('/pending', [PaymentsController::class, 'pending'])->name('pending');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 

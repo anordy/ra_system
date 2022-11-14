@@ -41,13 +41,13 @@ class DailyCreditReturnsCommand extends Command
      */
     public function handle()
     {
-        Log::channel('creditReturns')->info('Daily Credit Return collection process started');
+        Log::channel('dailyJobs')->info('Daily Credit Return collection process started');
         $hotel_returns = $this->getAllHotelSales()['return'];
         $vat_returns = $this->getAllVatSales()['return'];
         $stamp_duty_returns = $this->getAllStampDutySales()['return'];
         $vat_tax_type_id = $this->getAllVatSales()['vat_tax_type_id'];
         $stamp_tax_type_id = $this->getAllStampDutySales()['stamp_duty_tax_type_id'];
         $hotel_tax_type_id = $this->getAllHotelSales()['hotel_tax_type_id'];
-        Log::channel('creditReturns')->info('Daily Credit Return collection ended');
+        Log::channel('dailyJobs')->info('Daily Credit Return collection ended');
     }
 }

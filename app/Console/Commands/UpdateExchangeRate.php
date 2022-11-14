@@ -40,11 +40,11 @@ class UpdateExchangeRate extends Command
      */
     public function handle()
     {
-        Log::channel('debtCollection')->info('Daily Save exchange rates from bot api start');
+        Log::channel('dailyJobs')->info('Daily Save exchange rates from bot api start');
         DB::beginTransaction();
         $this->saveExchangeRate();
         DB::commit();
-        Log::channel('debtCollection')->info('Daily Save exchange rates from bot api ended');
+        Log::channel('dailyJobs')->info('Daily Save exchange rates from bot api ended');
     }
 
     public function saveExchangeRate()

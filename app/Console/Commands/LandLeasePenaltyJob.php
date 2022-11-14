@@ -52,11 +52,11 @@ class LandLeasePenaltyJob extends Command
      */
     public function handle()
     {
-        Log::channel('emergency')->info('Daily Land Lease Penalty Calculation started');
+        Log::channel('dailyJobs')->info('Daily Land Lease Penalty Calculation started');
         DB::beginTransaction();
         $this->penaltyCalculation();
         DB::commit();
-        Log::channel('emergency')->info('Daily Land Lease Penalty Calculation ended');
+        Log::channel('dailyJobs')->info('Daily Land Lease Penalty Calculation ended');
     }
 
     public function penaltyCalculation()

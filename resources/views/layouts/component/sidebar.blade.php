@@ -624,8 +624,13 @@
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
                     @can('manage-payments-view')
+                    <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.pending') }}">Pending Payments</a>
+                    </li>
+                    @endcan
+                    @can('manage-payments-view')
                         <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
-                            <a href="{{ route('payments.complete') }}">Complete Payments</a>
+                            <a href="{{ route('payments.complete') }}">Completed Payments</a>
                         </li>
                     @endcan
                 </ul>

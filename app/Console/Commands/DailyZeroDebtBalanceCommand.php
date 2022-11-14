@@ -45,16 +45,16 @@ class DailyZeroDebtBalanceCommand extends Command
      */
     public function handle()
     {
-        Log::channel('debtZeroBalance')->info('Daily Debt Zero Balance process started');
+        Log::channel('dailyJobs')->info('Daily Debt Zero Balance process started');
         // TODO: Don't send notification if already sent
         $this->runReturnsCheck();
         $this->runAssessmentsCheck();
-        Log::channel('debtZeroBalance')->info('Daily Debt Zero Balance process ended');
+        Log::channel('dailyJobs')->info('Daily Debt Zero Balance process ended');
     }
 
     protected function runReturnsCheck()
     {
-        Log::channel('debtZeroBalance')->info("Daily Debt Zero Balance for tax returns");
+        Log::channel('dailyJobs')->info("Daily Debt Zero Balance for tax returns");
         $tax_returns = TaxReturn::query()->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
             ->where('payment_status', ReturnStatus::COMPLETE)
             ->where('tax_returns.outstanding_amount', 0)
@@ -67,7 +67,7 @@ class DailyZeroDebtBalanceCommand extends Command
 
     protected function runAssessmentsCheck()
     {
-        Log::channel('debtZeroBalance')->info("Daily Debt Zero Balance for tax returns");
+        Log::channel('dailyJobs')->info("Daily Debt Zero Balance for tax returns");
         $tax_assessments = TaxAssessment::query()->whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
             ->where('payment_status', ReturnStatus::COMPLETE)
             ->where('tax_assessments.outstanding_amount', 0)

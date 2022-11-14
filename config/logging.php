@@ -100,14 +100,9 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
-        'debtCollection' => [
+        'dailyJobs' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/debt/laravel.log'),
-            'level' => env('LOG_LEVEL', 'debug'),
-        ],
-        'installment' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/installment/laravel.log'),
+            'path' => storage_path('logs/jobs/daily-job/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
     ],

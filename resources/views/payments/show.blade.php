@@ -4,9 +4,17 @@
 
 @section('content')
     <div class="card rounded-0">
-        <div class="card-header bg-white font-weight-bold text-uppercase">
-            Bill Details
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div class="text-uppercase font-weight-bold">Bill Details</div>
+            <div class="card-tools">
+                @if ($bill->status != 'cancelled')
+                <button class="btn btn-danger text-white mr-2" onclick="Livewire.emit('showModal', 'payments.actions.cancel-bill', {{ $bill->id }})">
+                    Cancel Bill
+                </button>
+                @endif
+            </div>
         </div>
+
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3 mb-3">
@@ -20,7 +28,7 @@
                 @if ($bill->cancellation_reason)
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Cancellation Reason</span>
-                        <p class="my-1">{{ $payment->cancellation_reason }}</p>
+                        <p class="my-1">{{ $bill->cancellation_reason }}</p>
                     </div>
                 @endif
                 <div class="col-md-3 mb-3">

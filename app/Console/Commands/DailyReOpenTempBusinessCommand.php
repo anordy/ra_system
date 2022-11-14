@@ -45,9 +45,9 @@ class DailyReOpenTempBusinessCommand extends Command
      */
     public function handle()
     {
-        Log::channel('reopenBusiness')->info('Daily reopen business process started');
+        Log::channel('dailyJobs')->info('Daily reopen business process started');
         $this->reopenTempClosedBusinesses();
-        Log::channel('reopenBusiness')->info('Daily Debt collection ended');
+        Log::channel('dailyJobs')->info('Daily Debt collection ended');
     }
 
     /**
@@ -93,10 +93,10 @@ class DailyReOpenTempBusinessCommand extends Command
             }
 
             DB::commit();
-            Log::channel('reopenBusiness')->info("Daily reopen business process ended");
+            Log::channel('dailyJobs')->info("Daily reopen business process ended");
         } catch(Exception $e) {
-            Log::channel('reopenBusiness')->info('Daily reopen business process ended with error');
-            Log::channel('reopenBusiness')->error($e);
+            Log::channel('dailyJobs')->info('Daily reopen business process ended with error');
+            Log::channel('dailyJobs')->error($e);
             DB::rollBack();
         }
 

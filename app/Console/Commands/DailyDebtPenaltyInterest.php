@@ -52,10 +52,10 @@ class DailyDebtPenaltyInterest extends Command
      */
     public function handle()
     {
-        Log::channel('debtCollection')->info('Daily Debt penalties and interest collection and calculations started');
+        Log::channel('dailyJobs')->info('Daily Debt penalties and interest collection and calculations started');
         $this->generateReturnsDebtPenalty();
         $this->generateAssessmentDebtPenalty();
-        Log::channel('debtCollection')->info('Daily Debt penalties and interest collection and calculations ended');
+        Log::channel('dailyJobs')->info('Daily Debt penalties and interest collection and calculations ended');
     }
 
     public function generateReturnsDebtPenalty()

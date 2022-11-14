@@ -29,6 +29,13 @@ class PaymentsController extends Controller
         return view('payments.complete', compact('usdDaily', 'tzsDaily', 'tzsWeekly', 'usdWeekly'));
     }
 
+    public function pending(){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
+        return view('payments.pending');
+    }
+
     public function show($paymentId){
         $bill = ZmBill::with('bill_payments')->findOrFail(decrypt($paymentId));
         return view('payments.show', compact('bill'));
