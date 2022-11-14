@@ -6,6 +6,7 @@ use App\Enum\BillStatus;
 use App\Enum\DisputeStatus;
 use App\Enum\InstallmentStatus;
 use App\Enum\LeaseStatus;
+use App\Enum\TaxAssessmentStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendZanMalipoSMS;
 use App\Models\Disputes\Dispute;
@@ -281,14 +282,25 @@ class ZanMalipoController extends Controller
                     $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->first()->billable;
 
                     $assessment = $bill->billable;
-                    $assessment->payment_status = BillStatus::PAID_PARTIALLY;
-                    $assessment->save();
+                    
+                    if ($assessment->app_status == TaxAssessmentStatus::WAIVER_AND_OBJECTION) {
 
-                    $this->registerWorkflow(get_class($dispute), $dispute->id);
-                    $this->doTransition('application_submitted', []);
-                    $dispute->app_status = DisputeStatus::SUBMITTED;
+                        $assessment->payment_status = BillStatus::COMPLETE;
+                        $assessment->save();
+                        
+                    } else {
+                        $assessment->payment_status = BillStatus::PAID_PARTIALLY;
+                        $assessment->save();
+
+                        $this->registerWorkflow(get_class($dispute), $dispute->id);
+                        $this->doTransition('application_submitted', []);
+                        $dispute->app_status = DisputeStatus::SUBMITTED;
+                    }
+
                     $dispute->payment_status = BillStatus::COMPLETE;
                     $dispute->save();
+
+                    
                 }
             }elseif ($bill->billable_type == TaxAssessment::class ){
                 if ($bill->paidAmount() >= $bill->amount) {
