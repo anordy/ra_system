@@ -27,11 +27,6 @@
 
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-md-12">
-                @if (session()->has('success'))
-                    <div class="alert alert-success">
-                        {{ session()->get('success') }}
-                    </div>
-                @endif
                 <div class="card rounded card-margin">
                     <div class="card-body card-body-margin">
                         <div class="text-center">
@@ -40,7 +35,11 @@
                         <h5 class="bg-white text-uppercase text-center card-header">
                             ZIDRAS Staff Login
                         </h5>
-
+                        @if (session()->has('success'))
+                            <div class="alert alert-success">
+                                {{ session()->get('success') }}
+                            </div>
+                        @endif
                         <form method="POST" action="{{ route('login') }}" novalidate autocomplete="off">
                             @csrf
                             <div class="mt-2">
