@@ -23,10 +23,10 @@ class ImmigrationController extends Controller
 
     public function getPassportData($passportNumber, $permitNumber)
     {
-        // if(config('app.env') == 'local'){
-        //     $response   = json_decode(file_get_contents(public_path() . '/api/Immigration.json'), true)['data'][0];
-        //     return $response;
-        // }
+        if(config('app.env') == 'local'){
+            $response   = json_decode(file_get_contents(public_path() . '/api/Immigration.json'), true)['data'][0];
+            return $response;
+        }
 
         $immigration_endpoint = config('modulesconfig.immigration_test_api') . '/immigration/lookupTest';
 
