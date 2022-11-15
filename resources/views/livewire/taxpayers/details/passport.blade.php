@@ -161,16 +161,10 @@
         <hr>
         <div class="row">
             <div class="col-md-12 d-flex justify-content-end">
-                <button class="btn btn-danger ml-1" wire:click="nextStep" wire:loading.attr="disabled">
-                    <i class="bi bi-x-lg ml-1" wire:loading.remove wire:target="nextStep"></i>
-                    <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                        wire:target="nextStep"></i>
+                <button class="btn btn-danger ml-1">
                         Reject
                 </button>
-                <button class="btn btn-success ml-1" wire:click="nextStep" wire:loading.attr="disabled">
-                    <i class="bi bi-check-lg ml-1" wire:loading.remove wire:target="nextStep"></i>
-                    <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                        wire:target="nextStep"></i>
+                <button class="btn btn-success ml-1">
                         Accept
                 </button>
             </div>
