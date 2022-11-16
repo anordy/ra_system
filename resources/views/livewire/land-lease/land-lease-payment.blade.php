@@ -88,7 +88,7 @@
                 <div class="col-md-12 mt-3">
                     <span class="font-weight-bold text-uppercase">Gepg Status:</span> 
                     <span>
-                        {{ \App\Services\ZanMalipo\GepgResponse::getResponseCodeStatus($bill->zan_trx_sts_code)['message'] }}
+                        {{ $this->getGepgStatus($bill->zan_trx_sts_code) }}
                     </span>
                 </div>
             </div>

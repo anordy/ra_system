@@ -4,6 +4,7 @@ namespace App\Http\Livewire\LandLease;
 
 use App\Models\LeasePayment;
 use App\Models\TaxType;
+use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Gate;
 
 class LandLeasePayment extends Component
 {
-    use LivewireAlert, PenaltyTrait, PaymentsTrait;
+    use LivewireAlert, PenaltyTrait, PaymentsTrait, GepgResponse;
 
     public $landLease;
     public $leasePayment;
@@ -29,6 +30,11 @@ class LandLeasePayment extends Component
             return redirect()->route('land-lease.taxpayer.list');
         }
         $this->landLease = $landLease;
+    }
+
+    public function getGepgStatus($code)
+    {
+        return $this->getResponseCodeStatus($code)['message'];
     }
 
     public function regenerate(){
