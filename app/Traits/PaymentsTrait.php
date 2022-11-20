@@ -367,8 +367,8 @@ trait PaymentsTrait {
         $description = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $debt->currency;
-        $createdby_type = 'Job';
-        $createdby_id = null;
+        $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
+        $createdby_id   = Auth::id() !=null ? Auth::id() : null;
         $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
@@ -474,8 +474,8 @@ trait PaymentsTrait {
         $description = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $debt->currency;
-        $createdby_type = 'Job';
-        $createdby_id = null;
+        $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
+        $createdby_id   = Auth::id() !=null ? Auth::id() : null;
         $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
@@ -587,8 +587,8 @@ trait PaymentsTrait {
         $description = "{$assessment->taxtype->name} dispute waiver for {$assessment->business->name} in {$assessmentLocations}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $assessment->currency;
-        $createdby_type = 'Job';
-        $createdby_id = null;
+        $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
+        $createdby_id   = Auth::id() !=null ? Auth::id() : null;
         $exchange_rate = $assessment->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $assessment->currency)->first()->mean;
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();

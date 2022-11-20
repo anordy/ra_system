@@ -1,12 +1,14 @@
-<div wire:init="verifyUser">
+<div>
     <div class="tabs">
         <button class="tab-item {{ $selectedStep === 'details' ? 'active' : '' }}" wire:click="changeStep('details')">
             Taxpayer Details
         </button>
-        <button class="tab-item {{ $selectedStep === 'biometric' ? 'active' : '' }}"
-            wire:click="changeStep('biometric')">
-            Biometric Enrollment
-        </button>
+        @if (!empty($kyc->authorities_verified_at))
+            <button class="tab-item {{ $selectedStep === 'biometric' ? 'active' : '' }}"
+                wire:click="changeStep('biometric')">
+                Biometric Enrollment
+            </button>
+        @endif
     </div>
 
     @if ($selectedStep === 'biometric' && $error)
