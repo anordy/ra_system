@@ -1,3 +1,5 @@
+<h6 class="text-uppercase mt-2 ml-2">Original Return Figure</h6>
+<hr>
 <div class="row m-2 pt-3">
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Principal Amount</span>
