@@ -7,6 +7,7 @@ use App\Events\SendSms;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\BusinessStatus;
+use App\Models\BusinessType;
 use App\Models\Currency;
 use App\Models\ISIC1;
 use App\Models\ISIC2;
@@ -40,6 +41,8 @@ class ApprovalProcessing extends Component
     public $selectedTaxTypes = [];
     public $taxRegions;
     public $selectedTaxRegion;
+    public $isBusinessElectric = false;
+    public $isBusinessLTO = false;
 
     public $isiiciList   = [];
     public $isiiciiList  = [];
@@ -196,6 +199,13 @@ class ApprovalProcessing extends Component
 
             $business = Business::findOrFail($this->subject->id);
 
+            $business->is_business_lto = $this->isBusinessLTO;
+
+            if ($this->isBusinessElectric == true) {
+                $business->business_type = BusinessType::ELECTRICITY;
+            }
+
+            $business->save();
             $business->headquarter->tax_region_id = $this->selectedTaxRegion;
             $business->headquarter->save();
             $business->taxTypes()->detach();

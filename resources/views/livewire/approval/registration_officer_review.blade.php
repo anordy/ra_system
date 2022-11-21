@@ -92,6 +92,43 @@
         </div>
     </div>
 
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">Business Type Configurations</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" wire:model.lazy="isBusinessElectric">
+                                Is Business Electric
+                            </label>
+                            @error('isBusinessElectric')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" wire:model.lazy="isBusinessLTO">
+                                Is Business LTO
+                            </label>
+                            @error('isBusinessLTO')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
     <div class="col-md-12">
         <div class="card">
