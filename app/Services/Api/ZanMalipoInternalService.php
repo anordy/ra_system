@@ -2,7 +2,10 @@
 
 namespace App\Services\Api;
 
+use App\Models\Returns\TaxReturn;
 use Illuminate\Support\Facades\Log;
+use App\Models\Returns\ReturnStatus;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Services\Api\ApiAuthenticationService;
 
 class ZanMalipoInternalService
@@ -47,7 +50,24 @@ class ZanMalipoInternalService
             Log::error($err);
         }
         curl_close($curl);
-        return json_decode($response, true);
+        $res = json_decode($response, true);
+        $billable = $bill->billable;
+
+        if ($res['data']['status_code'] === 7101) {
+            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
+                $billable->payment_status = ReturnStatus::CN_GENERATING;
+            } else {
+                $billable->status = ReturnStatus::CN_GENERATING;
+            }
+        } else {
+            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
+                $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+            } else {
+                $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+            }
+        }
+        $billable->save();
+        return $res;
     }
 
     /**
