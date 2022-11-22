@@ -2,24 +2,25 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\ApplicationStatus;
-use App\Enum\ExtensionRequestStatus;
-use App\Enum\InstallmentRequestStatus;
-use App\Enum\InstallmentStatus;
-use App\Enum\PaymentMethod;
-use App\Models\Installment\Installment;
-use App\Models\Returns\ReturnStatus;
-use App\Models\Returns\TaxReturn;
-use App\Models\TaxType;
-use App\Traits\PaymentsTrait;
-use App\Traits\WorkflowProcesssingTrait;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
+use App\Models\TaxType;
+use Livewire\Component;
+use App\Enum\PaymentMethod;
+use App\Jobs\Bill\CancelBill;
+use App\Traits\PaymentsTrait;
+use Livewire\WithFileUploads;
+use App\Enum\ApplicationStatus;
+use App\Enum\InstallmentStatus;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Enum\ExtensionRequestStatus;
+use App\Models\Returns\ReturnStatus;
+use App\Enum\InstallmentRequestStatus;
+use App\Models\Installment\Installment;
+use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 
 class InstallmentRequestApprovalProcessing extends Component
 {
@@ -82,7 +83,8 @@ class InstallmentRequestApprovalProcessing extends Component
 
                 // Cancel Control No.
                 if ($installable->bill){
-                    $this->cancelBill($installable->bill, 'Debt shifted to installments');
+                    $now = Carbon::now();
+                    CancelBill::dispatch($installable->bill, 'Debt shifted to installments')->delay($now->addSeconds(10));
                 }
 
                 // Create installment record
