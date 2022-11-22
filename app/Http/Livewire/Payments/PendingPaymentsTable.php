@@ -15,7 +15,7 @@ class PendingPaymentsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return ZmBill::whereIn('status', [PaymentStatus::CANCELLED, PaymentStatus::PENDING])->orderBy('created_at', 'DESC');
+        return ZmBill::whereIn('status', [PaymentStatus::PENDING])->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
