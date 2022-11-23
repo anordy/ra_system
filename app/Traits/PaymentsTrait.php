@@ -11,17 +11,18 @@ use App\Models\Debts\Debt;
 use App\Enum\PaymentStatus;
 use App\Models\ExchangeRate;
 use App\Models\BusinessTaxType;
-use App\Models\Investigation\TaxInvestigation;
+use App\Models\TaxAudit\TaxAudit;
 use App\Services\ZanMalipo\ZmCore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Returns\ReturnStatus;
-use App\Models\TaxAudit\TaxAudit;
-use App\Models\Verification\TaxVerification;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Models\Investigation\TaxInvestigation;
+use App\Services\Api\ZanMalipoInternalService;
 
-trait PaymentsTrait {
+trait PaymentsTrait
+{
 
     /**
      * @param ZmBill $bill
@@ -32,15 +33,9 @@ trait PaymentsTrait {
         DB::beginTransaction();
         try {
             $return = $bill->billable;
-            $response = ZmCore::sendBill($bill);
+
             if (config('app.env') != 'local') {
-                if ($response->status === ZmResponse::SUCCESS)
-                {
-                    $return->status = ReturnStatus::CN_GENERATING;
-                } else {
-                    $return->status = ReturnStatus::CN_GENERATION_FAILED;
-                }
-                $return->save();
+                $sendBill = (new ZanMalipoInternalService)->createBill($bill);
             } else {
                 // We are local
                 $return->status = ReturnStatus::CN_GENERATED;
@@ -54,7 +49,7 @@ trait PaymentsTrait {
             }
             DB::commit();
             return true;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
             return false;
@@ -67,7 +62,8 @@ trait PaymentsTrait {
      * @return void
      * @throws \DOMException
      */
-    public function generateControlNo($return, $billItems){
+    public function generateControlNo($return, $billItems)
+    {
         $taxpayer = $return->taxpayer;
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->first();
         $exchange_rate = 1;
@@ -111,20 +107,7 @@ trait PaymentsTrait {
         );
 
         if (config('app.env') != 'local') {
-            $response = ZmCore::sendBill($bill->id);
-            if ($response->status === ZmResponse::SUCCESS)
-            {
-                $return->status = ReturnStatus::CN_GENERATING;
-                $return->save();
-
-                $this->flash('success', 'Your return was submitted, you will receive your payment information shortly.');
-            } else {
-                session()->flash('error', 'Control number generation failed, try again later');
-                $return->status = ReturnStatus::CN_GENERATION_FAILED;
-            }
-
-            $return->save();
-
+            $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
             // We are local
             $return->status = ReturnStatus::CN_GENERATED;
@@ -141,9 +124,10 @@ trait PaymentsTrait {
     }
 
 
-    public function cancelBill(ZmBill $bill, $cancellationReason){
+    public function cancelBill(ZmBill $bill, $cancellationReason)
+    {
         if (config('app.env') != 'local') {
-            ZmCore::cancelBill($bill->id, $cancellationReason); // Works ?
+            $cancelBill = (new ZanMalipoInternalService)->cancelBill($bill, $cancellationReason);
         } else {
             $bill->status = PaymentStatus::CANCELLED;
             $bill->cancellation_reason = $cancellationReason ?? '';
@@ -151,12 +135,13 @@ trait PaymentsTrait {
         }
     }
 
-    public function updateBill(ZmBill $bill, $expireDate){
-        if (!($expireDate instanceof Carbon)){
+    public function updateBill(ZmBill $bill, $expireDate)
+    {
+        if (!($expireDate instanceof Carbon)) {
             $expireDate = Carbon::make($expireDate);
         }
         if (config('app.env') != 'local') {
-            ZmCore::updateBill($bill->id, $expireDate->toDateTimeString()); // Works ?
+            $updateBill = (new ZanMalipoInternalService)->updateBill($bill, $expireDate->toDateTimeString());
         } else {
             $bill->expire_date = $expireDate->toDateTimeString();
             $bill->save();
@@ -166,8 +151,8 @@ trait PaymentsTrait {
     public function landLeaseGenerateControlNo($leasePayment, $billItems)
     {
         $taxpayer      = $leasePayment->taxpayer;
-        $tax_type      = TaxType::where('code','land-lease')->first();
-        $exchange_rate  = ExchangeRate::where('currency', 'USD')->first()->mean; 
+        $tax_type      = TaxType::where('code', 'land-lease')->first();
+        $exchange_rate  = ExchangeRate::where('currency', 'USD')->first()->mean;
 
         $payer_type     = get_class($taxpayer);
         $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
@@ -203,23 +188,8 @@ trait PaymentsTrait {
         );
 
         if (config('app.env') != 'local') {
-
-            $response = ZmCore::sendBill($bill->id);
-            if ($response->status === ZmResponse::SUCCESS) {
-
-                $leasePayment->status = LeaseStatus::CN_GENERATING;
-                $this->flash('success', 'Your landLease was submitted, you will receive your payment information shortly.');
-
-            } else {
-
-                session()->flash('error', 'Control number generation failed, try again later');
-                $leasePayment->status = LeaseStatus::CN_GENERATION_FAILED;
-            }
-
-            $leasePayment->save();
-            
+            $createBill = (new ZanMalipoInternalService)->createBill($bill);
         } else {
-            
             // We are local
             $leasePayment->status = LeaseStatus::CN_GENERATED;
             $leasePayment->save();
@@ -241,12 +211,13 @@ trait PaymentsTrait {
      * @return float|int|void
      * @throws \Exception
      */
-    public function getTransactionFee($amount, $currency, $exchangeRate = null){
-        if ($currency != 'TZS' && (!is_numeric($exchangeRate) || $exchangeRate <= 0)){
+    public function getTransactionFee($amount, $currency, $exchangeRate = null)
+    {
+        if ($currency != 'TZS' && (!is_numeric($exchangeRate) || $exchangeRate <= 0)) {
             throw new \Exception('Please provide exchange rate for non TZS currency');
         }
 
-        if ($currency != 'TZS'){
+        if ($currency != 'TZS') {
             $amount = $amount * $exchangeRate;
         }
 
@@ -286,7 +257,8 @@ trait PaymentsTrait {
      * @return void
      * @throws \DOMException
      */
-    public function sendBill($bill, $billable){
+    public function sendBill($bill, $billable)
+    {
         if (config('app.env') != 'local') {
             $response = ZmCore::sendBill($bill->id);
             if ($response->status === ZmResponse::SUCCESS) {
@@ -357,7 +329,7 @@ trait PaymentsTrait {
                 'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
             ];
         }
- 
+
 
         $taxpayer = $debt->business->taxpayer;
 
@@ -368,8 +340,8 @@ trait PaymentsTrait {
         $description = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $debt->currency;
-        $createdby_type = 'Job';
-        $createdby_id = null;
+        $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
+        $createdby_id   = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
@@ -396,16 +368,7 @@ trait PaymentsTrait {
         );
 
         if (config('app.env') != 'local') {
-            $response = ZmCore::sendBill($zmBill->id);
-            if ($response->status === ZmResponse::SUCCESS) {
-                $debt->payment_status = ReturnStatus::CN_GENERATING;
-
-                $debt->save();
-            } else {
-                $debt->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-            }
-
-            $debt->save();
+            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
         } else {
 
             // We are local
@@ -418,7 +381,6 @@ trait PaymentsTrait {
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = rand(2000070001000, 2000070009999);
             $zmBill->save();
-
         }
     }
 
@@ -464,7 +426,7 @@ trait PaymentsTrait {
                 'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
             ];
         }
- 
+
 
         $taxpayer = $debt->business->taxpayer;
 
@@ -475,8 +437,8 @@ trait PaymentsTrait {
         $description = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $debt->currency;
-        $createdby_type = 'Job';
-        $createdby_id = null;
+        $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
+        $createdby_id   = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
@@ -503,16 +465,7 @@ trait PaymentsTrait {
         );
 
         if (config('app.env') != 'local') {
-            $response = ZmCore::sendBill($zmBill->id);
-            if ($response->status === ZmResponse::SUCCESS) {
-                $debt->payment_status = ReturnStatus::CN_GENERATING;
-
-                $debt->save();
-            } else {
-                $debt->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-            }
-
-            $debt->save();
+            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
         } else {
 
             // We are local
@@ -525,7 +478,6 @@ trait PaymentsTrait {
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = rand(2000070001000, 2000070009999);
             $zmBill->save();
-
         }
     }
 
@@ -571,12 +523,13 @@ trait PaymentsTrait {
                 'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->first()->id
             ];
         }
- 
+
 
         $taxpayer = $assessment->business->taxpayer;
-        if ($assessment->assessment_type == TaxAudit::class ) {
+
+        if ($assessment->assessment_type == TaxAudit::class) {
             $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxAuditLocationNames() ?? 'Multiple business locations';
-        } else if ($assessment->assessment_type == TaxInvestigation::class ) {
+        } else if ($assessment->assessment_type == TaxInvestigation::class) {
             $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxInvestigationLocationNames() ?? 'Multiple business locations';
         } else if ($assessment->assessment_type == TaxVerification::class) {
             $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->location->name ?? 'Multiple business locations';
@@ -590,8 +543,8 @@ trait PaymentsTrait {
         $description = "{$assessment->taxtype->name} dispute waiver for {$assessment->business->name} in {$assessmentLocations}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $assessment->currency;
-        $createdby_type = 'Job';
-        $createdby_id = null;
+        $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
+        $createdby_id   = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $assessment->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $assessment->currency)->first()->mean;
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
@@ -618,16 +571,7 @@ trait PaymentsTrait {
         );
 
         if (config('app.env') != 'local') {
-            $response = ZmCore::sendBill($zmBill->id);
-            if ($response->status === ZmResponse::SUCCESS) {
-                $assessment->payment_status = ReturnStatus::CN_GENERATING;
-
-                $assessment->save();
-            } else {
-                $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-            }
-
-            $assessment->save();
+            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
         } else {
 
             // We are local
@@ -640,7 +584,6 @@ trait PaymentsTrait {
             $zmBill->zan_status = 'pending';
             $zmBill->control_number = rand(2000070001000, 2000070009999);
             $zmBill->save();
-
         }
     }
 }

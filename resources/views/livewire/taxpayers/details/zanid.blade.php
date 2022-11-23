@@ -5,7 +5,7 @@
             <span class="font-weight-bold text-uppercase">{{ $kyc->identification->name }} No.</span>
             <p class="my-1">{{ $kyc->id_number }}</p>
         </div>
-        @if (!$zanid_data)
+        @if (empty($kyc->authorities_verified_at))
             <div class="col-md-4 mb-3">
                 <button wire:click="validateZanID" wire:loading.attr="disabled" class="btn btn-info btn-sm">
                     <div wire:loading wire:target="validateZanID">
@@ -77,22 +77,24 @@
             </div>
         </div>
         <hr>
+        @if (empty($kyc->authorities_verified_at))
         <div class="row">
             <div class="col-md-12 d-flex justify-content-end">
-                <button class="btn btn-danger ml-1" wire:click="nextStep" wire:loading.attr="disabled">
-                    <i class="bi bi-x-lg ml-1" wire:loading.remove wire:target="nextStep"></i>
+                <button class="btn btn-danger ml-1" wire:click="rejectIncomingData" wire:loading.attr="disabled">
+                    <i class="bi bi-x-lg ml-1" wire:loading.remove wire:target="rejectIncomingData"></i>
                     <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                        wire:target="nextStep"></i>
+                        wire:target="rejectIncomingData"></i>
                         Reject
                 </button>
-                <button class="btn btn-success ml-1" wire:click="nextStep" wire:loading.attr="disabled">
-                    <i class="bi bi-check-lg ml-1" wire:loading.remove wire:target="nextStep"></i>
+                <button class="btn btn-success ml-1" wire:click="acceptIncomingData" wire:loading.attr="disabled">
+                    <i class="bi bi-check-lg ml-1" wire:loading.remove wire:target="acceptIncomingData"></i>
                     <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                        wire:target="nextStep"></i>
+                        wire:target="acceptIncomingData"></i>
                         Accept
                 </button>
             </div>
         </div>
+        @endif
     @endif
 </div>
 </div>

@@ -9,7 +9,7 @@
             <span class="font-weight-bold text-uppercase">Permit Number</span>
             <p class="my-1">{{ $kyc->permit_number }}</p>
         </div>
-        @if (!$passport)
+        @if (empty($kyc->authorities_verified_at))
             <div class="col-md-4 mb-3">
                 <button wire:click="validatePassport" wire:loading.attr="disabled" class="btn btn-info btn-sm">
                     <div wire:loading wire:target="validatePassport">
@@ -159,16 +159,24 @@
             </div>
         </div>
         <hr>
+        @if (empty($kyc->authorities_verified_at))
         <div class="row">
             <div class="col-md-12 d-flex justify-content-end">
-                <button class="btn btn-danger ml-1">
+                <button class="btn btn-danger ml-1" wire:click="rejectIncomingData" wire:loading.attr="disabled">
+                    <i class="bi bi-x-lg ml-1" wire:loading.remove wire:target="rejectIncomingData"></i>
+                    <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                        wire:target="rejectIncomingData"></i>
                         Reject
                 </button>
-                <button class="btn btn-success ml-1">
+                <button class="btn btn-success ml-1" wire:click="acceptIncomingData" wire:loading.attr="disabled">
+                    <i class="bi bi-check-lg ml-1" wire:loading.remove wire:target="acceptIncomingData"></i>
+                    <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
+                        wire:target="acceptIncomingData"></i>
                         Accept
                 </button>
             </div>
         </div>
+        @endif
     @endif
 </div>
 </div>

@@ -6,16 +6,6 @@
     <div class="card rounded-0">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <div class="text-uppercase font-weight-bold">Bill Details</div>
-            <div class="card-tools">
-                <button class="btn btn-info text-white mr-2" onclick="Livewire.emit('showModal', 'payments.actions.update-bill', {{ $bill->id }})">
-                    Update Bill
-                </button>
-                @if ($bill->status != 'cancelled')
-                <button class="btn btn-danger text-white mr-2" onclick="Livewire.emit('showModal', 'payments.actions.cancel-bill', {{ $bill->id }})">
-                    Cancel Bill
-                </button>
-                @endif
-            </div>
         </div>
 
         <div class="card-body">

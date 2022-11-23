@@ -98,6 +98,7 @@ class ZmCore
                 'status' => 'pending',
                 'createdby_id' => $createdby_id,
                 'createdby_type' => $createdby_type,
+                'origin' => $createdby_type == null ? 'job' : 'user'
             ]);
 
             $zm_bill->save();

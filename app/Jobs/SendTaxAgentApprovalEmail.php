@@ -36,6 +36,8 @@ class SendTaxAgentApprovalEmail implements ShouldQueue
      */
     public function handle()
     {
-		Mail::to($this->email)->send(new TaxAgentApproval($this->fullname, $this->email, $this->status, $this->reference_number));
+        if ($this->email) {
+            Mail::to($this->email)->send(new TaxAgentApproval($this->fullname, $this->email, $this->status, $this->reference_number));
+        }
     }
 }

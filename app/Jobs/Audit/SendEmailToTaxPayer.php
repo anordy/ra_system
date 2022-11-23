@@ -37,6 +37,8 @@ class SendEmailToTaxPayer implements ShouldQueue
         //
         $taxpayerName = $this->payload->first_name;
         $email = $this->payload->email;
-        Mail::to($email)->send(new AuditSendEmailTaxpayer($taxpayerName));
+        if ($email) {
+            Mail::to($email)->send(new AuditSendEmailTaxpayer($taxpayerName));
+        }
     }
 }

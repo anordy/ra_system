@@ -33,8 +33,9 @@ class SendAssessmentReportEmailToTaxPayer implements ShouldQueue
      */
     public function handle()
     {
-        //
         $email = $this->payload[0]->email;
-        Mail::to($email)->send(new AssessmentReportEmailToTaxPayeryer($this->payload));
+        if ($email) {
+            Mail::to($email)->send(new AssessmentReportEmailToTaxPayeryer($this->payload));
+        }
     }
 }
