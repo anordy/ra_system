@@ -531,8 +531,11 @@ trait PaymentsTrait
             $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxAuditLocationNames() ?? 'Multiple business locations';
         } else if ($assessment->assessment_type == TaxInvestigation::class) {
             $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxInvestigationLocationNames() ?? 'Multiple business locations';
+        } else if ($assessment->assessment_type == TaxVerification::class) {
+            $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->location->name ?? 'Multiple business locations';
+        } else {
+            $assessmentLocations = 'Business location';
         }
-
         $payer_type = get_class($taxpayer);
         $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
         $payer_email = $taxpayer->email;

@@ -187,7 +187,6 @@ class ApprovalProcessing extends Component
                 'isiic_iii'                      => 'required',
                 'isiic_iv'                       => 'required',
                 'selectedTaxTypes'               => 'required',
-                'comments'                       => 'required',
                 'selectedTaxTypes.*.currency'    => 'required',
                 'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
                 'selectedTaxRegion'              => 'required|exists:tax_regions,id',
@@ -248,10 +247,6 @@ class ApprovalProcessing extends Component
             }
         }
 
-        $this->validate([
-            'comments' => 'required',
-        ]);
-
         if ($this->checkTransition('director_of_trai_review')) {
             $location = BusinessLocation::where('business_id', $this->subject->id)
                 ->where('is_headquarter', true)
@@ -263,10 +258,22 @@ class ApprovalProcessing extends Component
             if ($lumpsum != null) {
                 $lumpsum->update(['business_location_id' => $location->id]);
             }
-
-            if (!$location->generateZin()) {
+            
+            if ($location->ztnPrefix()) {
+                
+                if (!$location->generateZ()) {
+                    
+                    $this->alert('error', 'Something went wrong.');
+                    return;
+                }
+                
+            } else {
                 $this->alert('error', 'Something went wrong.');
                 return;
+            }
+
+            if (!$location->business->taxTypes->where('code', 'vat')->isEmpty()) {
+                $location->generateVrn();
             }
 
             $this->subject->verified_at = Carbon::now()->toDateTimeString();

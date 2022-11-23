@@ -91,7 +91,7 @@
         <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
         <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
         <span class="embed taxpayer-name">{{ $location->business->tin ?? '' }}</span>
-        <span class="embed reg-no">{{ $location->zin ?? '' }}</span>
+        <span class="embed reg-no">{{ $certificateNumber ?? '' }}</span>
         <span class="embed tax-types">{{ $tax->name }}</span>
         <span class="embed location">
             {{ $location->street }}, {{ $location->district->name }}, {{ $location->region->name }}

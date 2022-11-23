@@ -21,29 +21,34 @@ class TaxRegionsSeeder extends Seeder
                 'prefix' => '01',
             ],
             [
+                'code' => 'lto',
+                'name' => 'LTO',
+                'prefix' => '02',
+            ],
+            [
                 'code' => 'mjini',
                 'name' => 'Mjini',
-                'prefix' => '02',
+                'prefix' => '03',
             ],
             [
                 'code' => 'kaskazini-unguja',
                 'name' => 'Kaskazini Unguja',
-                'prefix' => '03',
+                'prefix' => '04',
             ],
             [
                 'code' => 'kusini-unguja',
                 'name' => 'Kusini Unguja',
-                'prefix' => '04',
+                'prefix' => '05',
             ],
             [
                 'code' => 'kaskazini-pemba',
                 'name' => 'Kaskazini Pemba',
-                'prefix' => '05',
+                'prefix' => '06',
             ],
             [
                 'code' => 'kusini-pemba',
                 'name' => 'Kusini Pemba',
-                'prefix' => '06',
+                'prefix' => '07',
             ],
         ];
 

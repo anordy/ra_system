@@ -69,11 +69,13 @@ class BusinessFileController extends Controller
         $tax = TaxType::find($taxTypeId);
         $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
 
+        $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
+
         $code = 'ZIN: ' . $location->zin . ", " .
             'Business Name: ' . $location->business->name . ", " .
             'Tax Type: ' . $tax->name . ", " .
             'Location: ' . "{$location->street}, {$location->district->name}, {$location->region->name}";
-
+        
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
@@ -92,12 +94,26 @@ class BusinessFileController extends Controller
         header('Content-Type: ' . $result->getMimeType());
 
         $dataUri = $result->getDataUri();
-
-        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType'));
+        
+        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
         return $pdf->stream();
 
+    }
+
+    public function generateCertificateNumber($location, $taxTypePrefix){
+        $certificateNumber = $location->business->ztn_number;
+        $taxRegionPrefix = $location->taxRegion->prefix;
+        $ztn_location_number = $location->ztn_location_number;
+
+        //If business is hotel and tax type is VAT change to Hotel VAT Prefix
+        if ($location->business->business_type == 'hotel' && $taxTypePrefix == 'A') {
+            $taxTypePrefix = 'B';
+        }
+        
+        $certificateNumber = $certificateNumber.'-'.$taxRegionPrefix.$taxTypePrefix.$ztn_location_number;
+        return $certificateNumber;
     }
 }

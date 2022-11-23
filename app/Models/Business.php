@@ -160,4 +160,6 @@ class Business extends Model implements Auditable
     public function taxClearanceRequest(){
         return $this->hasMany(TaxClearanceRequest::class);
     }
+
+    
 }
