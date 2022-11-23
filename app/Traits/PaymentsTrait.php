@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxAudit\TaxAudit;
+use App\Models\Verification\TaxVerification;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ZanMalipo\ZmResponse;
 
@@ -573,13 +574,15 @@ trait PaymentsTrait {
  
 
         $taxpayer = $assessment->business->taxpayer;
-
         if ($assessment->assessment_type == TaxAudit::class ) {
             $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxAuditLocationNames() ?? 'Multiple business locations';
         } else if ($assessment->assessment_type == TaxInvestigation::class ) {
             $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->taxInvestigationLocationNames() ?? 'Multiple business locations';
+        } else if ($assessment->assessment_type == TaxVerification::class) {
+            $assessmentLocations = $assessment->assessment_type::find($assessment->assessment_id)->location->name ?? 'Multiple business locations';
+        } else {
+            $assessmentLocations = 'Business location';
         }
-        
         $payer_type = get_class($taxpayer);
         $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
         $payer_email = $taxpayer->email;

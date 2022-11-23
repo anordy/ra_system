@@ -20,5 +20,11 @@ class DateConfigurationSeeder extends Seeder
             'code' => 'validMonthDays',
             'value' => 30
         ]);
+
+        DateConfiguration::updateOrCreate([
+            'name' => 'LandLease: Months before review (i.e. prevent over a year in advance payment)',
+            'code' => 'MonthsBeforeReview',
+            'value' => 12
+        ]);
     }
 }
