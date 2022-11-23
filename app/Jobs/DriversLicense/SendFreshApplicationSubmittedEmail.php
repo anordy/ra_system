@@ -36,21 +36,24 @@ class SendFreshApplicationSubmittedEmail implements ShouldQueue
     public function handle()
     {
         $application = DlLicenseApplication::query()->find($this->application_id);
-		Mail::to($application->taxpayer->email)->send(new class($application) extends Mailable
-        {
-            use Queueable, SerializesModels;
-            private $application;
 
-            public function __construct($application)
+        if ($application->taxpayer->email) {
+            Mail::to($application->taxpayer->email)->send(new class($application) extends Mailable
             {
-                $this->application = $application;
-            }
-
-            public function build()
-            {
-                return $this->markdown('emails.drivers-license.application-submitted',['application'=>$this->application])
-                    ->subject('Drivers License Application');
-            }
-        });
+                use Queueable, SerializesModels;
+                private $application;
+    
+                public function __construct($application)
+                {
+                    $this->application = $application;
+                }
+    
+                public function build()
+                {
+                    return $this->markdown('emails.drivers-license.application-submitted',['application'=>$this->application])
+                        ->subject('Drivers License Application');
+                }
+            });
+        }
     }
 }

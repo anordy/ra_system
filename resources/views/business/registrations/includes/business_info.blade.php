@@ -135,6 +135,16 @@
                 <p class="my-1">{{ $business->activityType->name }}</p>
             </div>
             <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">Type of Business</span>
+                <p class="my-1">{{ $business->business_type }}</p>
+            </div>
+            @if ($business->is_business_lto)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">LTO Business</span>
+                    <p class="my-1">Yes</p>
+                </div>
+            @endif
+            <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Currency</span>
                 <p class="my-1">{{ $business->currency->iso }}</p>
             </div>

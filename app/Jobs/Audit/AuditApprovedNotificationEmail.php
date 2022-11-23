@@ -36,6 +36,8 @@ class AuditApprovedNotificationEmail implements ShouldQueue
         //
         $taxpayerName = $this->payload->first_name;
         $email = $this->payload->email;
-        Mail::to($email)->send(new AuditApprovedEmail($taxpayerName));
+        if ($email) {
+            Mail::to($email)->send(new AuditApprovedEmail($taxpayerName));
+        }
     }
 }

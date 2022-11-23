@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Enum\ExtensionRequestStatus;
-use App\Models\Debts\Debt;
-use App\Models\Returns\TaxReturn;
-use App\Traits\PaymentsTrait;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Livewire\Component;
+use App\Models\Debts\Debt;
+use App\Jobs\Bill\UpdateBill;
+use App\Traits\PaymentsTrait;
+use App\Models\Returns\TaxReturn;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Enum\ExtensionRequestStatus;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -63,7 +64,8 @@ class ExtensionRequestApprovalProcessing extends Component
 
                 // If extended date is greater than current bill expiration date.
                 if ($this->subject->extend_to->greaterThan($extensible->bill->expire_date)){
-                    $this->updateBill($extensible->bill, $this->subject->extend_to);
+                    $now = Carbon::now();
+                    UpdateBill::dispatch($extensible->bill, $this->subject->extend_to)->delay($now->addSeconds(2));
                 }
                 $this->subject->save();
             }

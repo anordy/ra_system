@@ -14,7 +14,6 @@
 
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
-                <a href="#tab2" class="nav-item nav-link font-weight-bold">Return Details</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Penalties</a>
                 @if ($tax_return->waiver)
                     <a href="#tab4" class="nav-item nav-link font-weight-bold">Waiver Details</a>
@@ -41,9 +40,6 @@
                         </div>
                     @endif
                     @include('debts.returns.details', ['tax_return' => $tax_return])
-                </div>
-                <div id="tab2" class="tab-pane fade m-4">
-                    @include('debts.returns.return-details', ['tax_return' => $tax_return])
                 </div>
                 <div id="tab3" class="tab-pane fade m-4">
                     @php

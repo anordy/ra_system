@@ -35,8 +35,9 @@ class ExitPreliminaryEmailToTaxPayer implements ShouldQueue
      */
     public function handle()
     {
-        //
         $email = $this->payload[0]->email;
-        Mail::to($email)->send(new SendReportToTaxPayer($this->payload));
+        if ($email) {
+            Mail::to($email)->send(new SendReportToTaxPayer($this->payload));
+        }
     }
 }

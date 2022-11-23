@@ -39,6 +39,7 @@ class CreateZmBillsTable extends Migration
             $table->string('zan_trx_sts_code')->nullable();
             $table->unsignedBigInteger('createdby_id')->nullable();
             $table->string('createdby_type')->nullable();
+            $table->enum('origin', ['user', 'job'])->default("user");
             $table->timestamps();
         });
     }

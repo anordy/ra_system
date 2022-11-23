@@ -32,24 +32,6 @@ class EnrollFingerprint extends Component
         }
     }
 
-    public function verifyUser()
-    {
-        if ($this->userVerified === false) {
-            $this->verifyingUser = true;
-
-            $response = $this->updateUser($this->kyc);
-
-            $this->verifyingUser = false;
-
-            if (!$response) {
-                $this->error = "Could not verify user from the authorities. Try again later.";
-            } else {
-                $this->error = '';
-                $this->userVerified = true;
-            }
-        }
-    }
-
     public function enrolled($hand, $finger)
     {
         $check = Biometric::where('hand', $hand)

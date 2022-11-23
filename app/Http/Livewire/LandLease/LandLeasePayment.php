@@ -41,12 +41,13 @@ class LandLeasePayment extends Component
         if(!Gate::allows('land-lease-generate-control-number')){
             abort(403);
         }
-        $response = $this->regenerateControlNo($this->landLease->bill());
+        $response = $this->regenerateControlNo($this->leasePayment->bill());
         if ($response){
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
-            return redirect()->back()->getTargetUrl();
+            $this->leasePayment = get_class($this->leasePayment)::find($this->leasePayment->id);
+        } else {
+            $this->alert('error', 'Control number could not be generated, please try again later.');
         }
-        $this->alert('error', 'Control number could not be generated, please try again later.');
     }
 
     public function generate()

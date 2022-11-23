@@ -36,6 +36,8 @@ class SendOTPEmail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->email)->send(new TwoFactorAuth($this->code, $this->username));
+        if ($this->email) {
+            Mail::to($this->email)->send(new TwoFactorAuth($this->code, $this->username));
+        }
     }
 }

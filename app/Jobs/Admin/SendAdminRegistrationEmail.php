@@ -44,6 +44,8 @@ class SendAdminRegistrationEmail implements ShouldQueue {
      */
     public function handle()
     {
-        Mail::to($this->email)->send(new AdminRegistrationMail($this->full_name, $this->email, $this->password));
+        if ($this->email) {
+            Mail::to($this->email)->send(new AdminRegistrationMail($this->full_name, $this->email, $this->password));
+        }
     }
 }

@@ -38,6 +38,8 @@ class SendTaxClearanceApprovedEmail implements ShouldQueue {
     public function handle()
     {
         $taxpayer = $this->payload[1]->business->taxpayer;
-        Mail::to($taxpayer->email)->send(new TaxClearanceApproved($this->payload));
+        if ($taxpayer->email) {
+            Mail::to($taxpayer->email)->send(new TaxClearanceApproved($this->payload));
+        }
     }
 }

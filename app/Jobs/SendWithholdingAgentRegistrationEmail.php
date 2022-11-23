@@ -40,6 +40,8 @@ class SendWithholdingAgentRegistrationEmail implements ShouldQueue {
      */
     public function handle()
     {
-        Mail::to($this->email)->send(new WithholdingAgentRegistration($this->full_name, $this->institution_name, $this->email));
+        if ($this->email) {
+            Mail::to($this->email)->send(new WithholdingAgentRegistration($this->full_name, $this->institution_name, $this->email));
+        }
     }
 }

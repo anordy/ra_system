@@ -11,6 +11,8 @@ class KYC extends Model implements Auditable
 {
     protected $table = 'kycs';
 
+    protected $guarded = [];
+
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     public function region(){

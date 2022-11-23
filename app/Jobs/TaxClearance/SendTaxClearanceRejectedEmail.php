@@ -39,6 +39,8 @@ class SendTaxClearanceRejectedEmail implements ShouldQueue {
     public function handle()
     {
         $taxpayer = $this->payload->taxpayer;
-        Mail::to($taxpayer->email)->send(new TaxClearanceRejected($this->payload));
+        if ($taxpayer->email) {
+            Mail::to($taxpayer->email)->send(new TaxClearanceRejected($this->payload));
+        }
     }
 }

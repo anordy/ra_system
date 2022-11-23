@@ -41,6 +41,9 @@ class CreateBusinessesTable extends Migration
             // Tax Filling Person
             $table->boolean('is_own_consultant')->default(true);
 
+            // Business LTO (Large Taxpayer)
+            $table->boolean('is_business_lto')->default(false);
+
             // Not sure
             $table->dateTime('reg_date')->nullable();
             $table->string('marking')->nullable();

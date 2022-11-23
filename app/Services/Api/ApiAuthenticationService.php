@@ -7,7 +7,7 @@ class ApiAuthenticationService
 
     public function getAccessToken()
     {
-        $loginApiUrl = config('modulesconfig.immigration_test_api') . '/login';
+        $loginApiUrl = config('modulesconfig.api_url') . '/login';
 
         $payload = [
             'username' => config('modulesconfig.api_server_username'),

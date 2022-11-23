@@ -11,4 +11,6 @@ class BusinessType extends Model
 
     public const HOTEL = 'hotel';
     public const OTHER = 'other';
+    public const ELECTRICITY = 'electricity';
+
 }

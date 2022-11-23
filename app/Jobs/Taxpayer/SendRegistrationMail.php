@@ -35,6 +35,8 @@ class SendRegistrationMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->taxpayer->email)->send(new Registration($this->taxpayer, $this->code));
+        if ($this->taxpayer->email) {
+            Mail::to($this->taxpayer->email)->send(new Registration($this->taxpayer, $this->code));
+        }
     }
 }

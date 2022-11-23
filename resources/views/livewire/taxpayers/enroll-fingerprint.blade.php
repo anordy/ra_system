@@ -1,4 +1,4 @@
-<div wire:init="verifyUser">
+<div>
     <div class="tabs">
         <button class="tab-item {{ $selectedStep === 'details' ? 'active' : '' }}" wire:click="changeStep('details')">
             Taxpayer Details
