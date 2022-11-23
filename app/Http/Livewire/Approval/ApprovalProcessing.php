@@ -256,7 +256,6 @@ class ApprovalProcessing extends Component
                     $this->alert('error', 'Something went wrong.');
                     return;
                 }
-
                 
             } else {
                 $this->alert('error', 'Something went wrong.');
