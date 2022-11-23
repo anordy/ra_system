@@ -15,6 +15,7 @@ class CreateZmReconTransTable extends Migration
     {
         Schema::create('zm_recon_trans', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('recon_id');
             $table->string('SpBillId', 50)->nullable();
             $table->double('BillCtrNum',12)->nullable();
             $table->string('pspTrxId', 200)->nullable();
