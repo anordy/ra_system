@@ -633,6 +633,11 @@
                             <a href="{{ route('payments.complete') }}">Completed Payments</a>
                         </li>
                     @endcan
+                    @can('manage-payments-view')
+                    <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
+                    </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

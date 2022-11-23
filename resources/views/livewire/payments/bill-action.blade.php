@@ -26,7 +26,7 @@
         @if ($action == 'update')
             <div class="form-group col-md-4">
                 <label class="control-label">New Expiration Date</label>
-                <input type="date" class="form-control" wire:model.lazy="new_expiration_date"
+                <input type="date" min="{{ $today }}" class="form-control" wire:model.lazy="new_expiration_date"
                     id="new_expiration_date">
                 @error('new_expiration_date')
                     <span class="text-danger">{{ $message }}</span>

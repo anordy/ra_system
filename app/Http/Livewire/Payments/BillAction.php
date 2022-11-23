@@ -11,11 +11,12 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Jobs\Bill\CancelBill as CancelBillJob;
 use App\Jobs\Bill\UpdateBill as UpdateBillJob;
 use App\Models\ZmBill;
+use App\Traits\PaymentsTrait;
 
 class BillAction extends Component
 {
-    use LivewireAlert;
-
+    use LivewireAlert, PaymentsTrait;
+    public $today;
     public $bill, $control_number, $cancellation_reason, $new_expiration_date, $action;
 
     protected $listeners = [
@@ -31,9 +32,11 @@ class BillAction extends Component
 
     public function mount()
     {
+        $this->today = Carbon::today()->format('Y-m-d');
     }
 
-    public function billAction() {
+    public function billAction()
+    {
         $this->validate();
 
         if (!Gate::allows('manage-payments-edit')) {
@@ -63,20 +66,33 @@ class BillAction extends Component
             $this->alert('error', 'Control number not found');
             return true;
         }
-        
-        try {
-            $now = Carbon::now();
 
-            if ($this->action == 'cancel') {
-                CancelBillJob::dispatch($bill, $this->cancellation_reason)->delay($now->addSeconds(2));
+
+        $now = Carbon::now();
+
+        if ($this->action == 'cancel') {
+            try {
+                $cancelBill = $this->cancelBill($bill, $this->cancellation_reason);
+                // If response returns error exit
                 $this->flash('success', 'Bill cancellation request has been sent', [], redirect()->back()->getTargetUrl());
-            } else if ($this->action == 'update') {
-                UpdateBillJob::dispatch($bill, $this->new_expiration_date)->delay($now->addSeconds(2));
-                $this->flash('success', 'Bill update request has been sent', [], redirect()->back()->getTargetUrl());
+            } catch (Exception $e) {
+                Log::error($e);
+                $this->alert('error', 'Something went wrong');
             }
-        } catch (Exception $e) {
-            Log::error($e);
-            $this->alert('error', 'Something went wrong');
+        } else if ($this->action == 'update') {
+            try {
+               $this->updateBill($bill, $this->new_expiration_date);
+                // dd($updateBill);
+                // If response returns error exit
+                // if (array_key_exists('error', $updateBill)) {
+                //     $this->flash('error', 'Something went wrong');
+                //     return true;
+                // }
+                $this->flash('success', 'Bill update request has been sent', [], redirect()->back()->getTargetUrl());
+            } catch (Exception $e) {
+                Log::error($e);
+                $this->alert('error', 'Something went wrong');
+            }
         }
     }
 

@@ -513,6 +513,9 @@ Route::middleware(['auth'])->group(function () {
     Route::name('payments.')->prefix('payments')->group(function () {
         Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
         Route::get('/pending', [PaymentsController::class, 'pending'])->name('pending');
+        Route::get('/recons/{reconId}', [PaymentsController::class, 'recons'])->name('recons');
+        Route::get('/recons/transaction/{transactionId}', [PaymentsController::class, 'viewReconTransaction'])->name('recons.transaction');
+        Route::get('/recon-enquire', [PaymentsController::class, 'reconEnquire'])->name('recon.enquire');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 

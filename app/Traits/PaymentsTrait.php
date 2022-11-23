@@ -126,7 +126,7 @@ trait PaymentsTrait
 
     public function cancelBill(ZmBill $bill, $cancellationReason)
     {
-        if (config('app.env') != 'local') {
+        if (config('app.env') == 'local') {
             $cancelBill = (new ZanMalipoInternalService)->cancelBill($bill, $cancellationReason);
         } else {
             $bill->status = PaymentStatus::CANCELLED;
@@ -140,7 +140,7 @@ trait PaymentsTrait
         if (!($expireDate instanceof Carbon)) {
             $expireDate = Carbon::make($expireDate);
         }
-        if (config('app.env') != 'local') {
+        if (config('app.env') == 'local') {
             $updateBill = (new ZanMalipoInternalService)->updateBill($bill, $expireDate->toDateTimeString());
         } else {
             $bill->expire_date = $expireDate->toDateTimeString();
