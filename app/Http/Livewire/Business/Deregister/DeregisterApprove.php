@@ -2,12 +2,8 @@
 
 namespace App\Http\Livewire\Business\Deregister;
 
-use Exception;
 use Livewire\Component;
 use App\Models\Business;
-use App\Models\BusinessStatus;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Models\BusinessDeregistration;
 use Jantinnerezo\LivewireAlert\LivewireAlert;

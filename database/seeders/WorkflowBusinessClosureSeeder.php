@@ -60,6 +60,11 @@ class WorkflowBusinessClosureSeeder extends Seeder
                 'to'   => 'compliance_officer',
                 'condition' => '',
             ],
+            'compliance_officer_reject' => [
+                'from' => 'compliance_officer',
+                'to'   => 'compliance_manager',
+                'condition' => '',
+            ],
             'compliance_officer_review' => [
                 'from' => 'compliance_officer',
                 'to'   => 'completed',

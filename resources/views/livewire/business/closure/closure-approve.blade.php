@@ -33,18 +33,18 @@
                     @endif
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Closing Date</span>
-                        <p class="my-1">{{ $temp_closure->closing_date }}</p>
+                        <p class="my-1">{{  Carbon\Carbon::parse($temp_closure->closing_date)->toFormattedDateString() }}</p>
                     </div>
                     @if ($temp_closure->reopening_date)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Re-opened On</span>
-                        <p class="my-1">{{ $temp_closure->reopening_date }}</p>
+                        <p class="my-1">{{ Carbon\Carbon::parse($temp_closure->reopening_date)->toFormattedDateString() }}</p>
                     </div>
                     @endif
                     @if ($temp_closure->extended_from_id)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Previous Opening Date</span>
-                            <p class="my-1">{{ $temp_closure->extends->opening_date }}</p>
+                            <p class="my-1">{{  Carbon\Carbon::parse($temp_closure->extends->opening_date)->toFormattedDateString() }}</p>
                         </div>
                     @endif
                     <div class="col-md-4 mb-3">
@@ -53,7 +53,7 @@
                                 Extended
                             @endif Opening Date
                         </span>
-                        <p class="my-1">{{ $temp_closure->opening_date }}</p>
+                        <p class="my-1">{{ Carbon\Carbon::parse($temp_closure->opening_date)->toFormattedDateString() }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Status</span>

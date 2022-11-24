@@ -83,20 +83,26 @@ class ClosureApprovalProcessing extends Component
         $this->validate(['comments' => 'required']);
 
         try {
-            if ($this->checkTransition('compliance_officer_reject')) {
-                $this->subject->rejected_on = Carbon::now()->toDateTimeString();
-                $this->subject->status = BusinessStatus::REJECTED;
 
-                if ($this->subject->extended_from_id != null) {
-                    $previous_closure = BusinessTempClosure::findOrFail($this->subject->extended_from_id);
-                    $previous_closure->update([
-                        'show_extension' => true,
-                        'status' => 'approved'
-                    ]);
-                }
-                event(new SendSms('business-closure-rejected', $this->subject));
-                event(new SendMail('business-closure-rejected', $this->subject));
-            } else if ($this->checkTransition('application_filled_incorrect')) {
+            if ($this->checkTransition('compliance_officer_reject')) {
+
+            }
+            // if ($this->checkTransition('compliance_officer_reject')) {
+            //     $this->subject->rejected_on = Carbon::now()->toDateTimeString();
+            //     $this->subject->status = BusinessStatus::REJECTED;
+
+            //     if ($this->subject->extended_from_id != null) {
+            //         $previous_closure = BusinessTempClosure::findOrFail($this->subject->extended_from_id);
+            //         $previous_closure->update([
+            //             'show_extension' => true,
+            //             'status' => 'approved'
+            //         ]);
+            //     }
+            //     event(new SendSms('business-closure-rejected', $this->subject));
+            //     event(new SendMail('business-closure-rejected', $this->subject));
+            // } 
+            
+            if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->rejected_on = Carbon::now()->toDateTimeString();
                 $this->subject->status = BusinessStatus::CORRECTION;
                 event(new SendSms('business-closure-correction', $this->subject));

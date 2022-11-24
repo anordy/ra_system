@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">De-registration Date</span>
-                        <p class="my-1">{{ $deregister->deregistration_date }}</p>
+                        <p class="my-1">{{ Carbon\Carbon::parse($deregister->deregistration_date)->toFormattedDateString() }}</p>
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">De-registration Status</span>
