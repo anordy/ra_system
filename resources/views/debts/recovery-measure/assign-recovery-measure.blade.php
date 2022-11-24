@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-<div class="card-body pb-0">
     <nav class="nav nav-tabs mt-0 border-top-0">
         <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
         <a href="#tab2" class="nav-item nav-link font-weight-bold">Approval History</a>
@@ -19,8 +18,6 @@
                 modelId="{{ $debtId }}" />
         </div>
     </div>
-</div>
-
 @endsection
 
 @section('scripts')

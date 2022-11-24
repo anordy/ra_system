@@ -25,6 +25,7 @@ class CreateTaxAgentsTable extends Migration
 			$table->string('emp_status');
 			$table->text('emp_letter')->nullable();
 			$table->text('passport_photo')->nullable();
+			$table->text('approval_letter')->nullable();
 			$table->text('cv')->nullable();
 			$table->text('tin_certificate')->nullable();
 			$table->enum('status', ['drafting','pending', 'approved', 'rejected', 'completed', 'verified','correction'])->default('drafting');
