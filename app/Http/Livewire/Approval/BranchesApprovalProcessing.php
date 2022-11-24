@@ -39,11 +39,15 @@ class BranchesApprovalProcessing extends Component
         }
 
         if ($this->checkTransition('director_of_trai_review')) {
-            if (!$this->subject->generateZin()) {
+            if (!$this->subject->generateZ()) {
                 $this->alert('error', 'Something went wrong.');
                 return;
             }
 
+            if (!$this->subject->business->taxTypes->where('code', 'vat')->isEmpty()) {
+                $this->subject->generateVrn();
+            }
+            
             $lump_sum_payemnt = LumpSumPayment::where('business_id', $this->subject->business_id)->first() ?? null;
 
             if ($lump_sum_payemnt != null) {

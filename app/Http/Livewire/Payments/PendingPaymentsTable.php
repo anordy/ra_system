@@ -35,7 +35,10 @@ class PendingPaymentsTable extends DataTableComponent
         return [
             Column::make('Control No.', 'control_number')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return $value ? $value : 'N/A';
+                }),
             Column::make('Bill Amount', 'amount')
                 ->sortable()
                 ->searchable()

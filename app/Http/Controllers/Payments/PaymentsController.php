@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Payments;
 use App\Http\Controllers\Controller;
 use App\Models\ZmBill;
 use App\Models\ZmPayment;
+use App\Models\ZmRecon;
+use App\Models\ZmReconTran;
+use App\Services\ZanMalipo\GepgResponse;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 
 class PaymentsController extends Controller
 {
+    use GepgResponse;
+
     public function complete(){
         if (!Gate::allows('manage-payments-view')) {
             abort(403);
@@ -36,8 +41,29 @@ class PaymentsController extends Controller
         return view('payments.pending');
     }
 
+    public function reconEnquire(){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
+        return view('payments.recon-enquiries');
+    }
+
+    public function recons($reconId){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
+        $recon = ZmRecon::findOrFail(decrypt($reconId));
+        $reconStatus = $this->getResponseCodeStatus($recon->ReconcStsCode)['message'];
+        return view('payments.recons', compact('recon', 'reconStatus'));
+    }
+
     public function show($paymentId){
         $bill = ZmBill::with('bill_payments')->findOrFail(decrypt($paymentId));
         return view('payments.show', compact('bill'));
+    }
+
+    public function viewReconTransaction($transactionId) {
+        $transaction = ZmReconTran::findOrFail(decrypt($transactionId));
+        return view('payments.show-recon-transaction', compact('transaction'));
     }
 }

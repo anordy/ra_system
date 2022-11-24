@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Arr;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class BusinessLocation extends Model implements Auditable
@@ -41,6 +42,7 @@ class BusinessLocation extends Model implements Auditable
     {
         return $this->belongsTo(TaxRegion::class, 'tax_region_id');
     }
+
 
     public function generateZin(){
         if ($this->zin){
@@ -147,5 +149,151 @@ class BusinessLocation extends Model implements Auditable
     public function hotel()
     {
         return $this->hasOne(BusinessHotel::class, 'location_id');
+    }
+
+    public function generateVrn(){
+        
+        try {
+            
+            $vrn = null;
+            // Append region prefix
+            switch ($this->region->location){
+                case Region::UNGUJA:
+                    $vrn = $vrn . '07';
+                    $mainRegion = MainRegion::find(1);
+                    break;
+                case Region::PEMBA:
+                    $vrn = $vrn . '08';
+                    $mainRegion = MainRegion::find(2);
+                    break;
+                default:
+                    abort(404);
+            }
+
+            if(!$this->business->taxTypes->where('code', 'excise-duty-mno')->isEmpty()){
+                $vat_category = 3;
+                $value = $mainRegion->mno_vat + 1;
+                $attribute = 'mno_vat';
+            } else {
+                $vat_category = 1;
+                $value = $mainRegion->vat_local + 1;
+                $attribute = 'vat_local';
+            }
+
+            if ($this->business->business_type == BusinessType::HOTEL) {
+                $vat_category = 2;
+                $value = $mainRegion->hotel_vat + 1;
+                $attribute = 'hotel_vat';
+            }
+
+            $vrn = $vrn . $vat_category;
+            $mainRegion->$attribute = $value;
+            $mainRegion->save();
+
+            //Append Number 000001 - 999999
+            $vrn = $vrn . str_pad($value, 5, "0", STR_PAD_LEFT);
+            $vrn = $vrn . Arr::random(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U","V","W","X","Y","Z"]) ;
+
+            
+            $this->vrn = $vrn;
+            $this->save();
+
+            return true;
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return false;
+        }
+    }
+
+    public function ztnPrefix(){
+
+        try {
+            
+            $ztn_number = 'Z';
+
+            // Append region prefix
+            switch ($this->region->location){
+                case Region::UNGUJA:
+                    $ztn_number = $ztn_number . '05';
+                    $mainRegion = MainRegion::find(1);
+                    break;
+                case Region::PEMBA:
+                    $ztn_number = $ztn_number . '06';
+                    $mainRegion = MainRegion::find(2);
+                    break;
+                default:
+                    abort(404);
+            }
+
+            // Append year
+            $ztn_number = $ztn_number . Carbon::now()->format('y');
+
+            $taxRegion = $this->taxRegion;
+            $value = $mainRegion->registration_count + 1;
+
+            //Append Number 000001 - 999999
+            $ztn_number = $ztn_number . str_pad($value, 5, "0", STR_PAD_LEFT);
+
+            $mainRegion->registration_count = $value;
+            $mainRegion->save();
+            $taxRegion->registration_count += 1;
+            $taxRegion->save();
+
+            $business = $this->business;
+            $business->ztn_number = $ztn_number;
+            $business->save();
+
+            return true;
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return false;
+        }
+    }
+
+    public function generateZ(){
+        
+        try{
+            $business = $this->business;
+
+            if (!$this->taxRegion){
+                abort(404);
+            }
+
+            $region = $this->taxRegion;
+
+            if ($this->business->is_business_lto) {
+                $ztnLocationNumber = 02;
+            } else{
+                $ztnLocationNumber = $region->prefix;
+            }
+            
+
+            $no_of_existing_branches = $business->locations->where('status', '!=',BusinessStatus::PENDING)->count();
+
+            if ($this->is_headquarter) {
+                $ztnLocationNumber = $ztnLocationNumber . 0;
+                $this->ztn_location_number = 0;
+            } else {
+                $ztnLocationNumber = $ztnLocationNumber . $no_of_existing_branches;
+                $this->ztn_location_number = $no_of_existing_branches;
+                $no_of_existing_branches += 1;
+            }
+            
+            $business->no_of_branches = $no_of_existing_branches;
+            $business->save();
+
+            $this->zin = $business->ztn_number.'-'.$ztnLocationNumber;
+            
+            $this->save();
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return false;
+        }
     }
 }

@@ -31,6 +31,10 @@ class TaxAgentFileController extends Controller
             return Storage::disk('local-admin')->response($agent->emp_letter);
         }
 
+        if ($type == 'approval_letter') {
+            return Storage::disk('local-admin')->response($agent->approval_letter);
+        }
+
         return abort(404);
     }
 

@@ -34,6 +34,14 @@
                             <p class="my-1">{{ $return->taxpayer->full_name ?? '' }}</p>
                         </div>
                         <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Phone Numbers</span>
+                            <p class="my-1">{{ $return->taxpayer->mobile ?? '' }} {{ $return->taxpayer->alt_mobile ? '/ '.$return->taxpayer->alt_mobile : '' }} </p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <span class="font-weight-bold text-uppercase">Email</span>
+                            <p class="my-1">{{ $return->taxpayer->email ?? '' }}</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Financial Year</span>
                             <p class="my-1">{{ $return->financialYear->name ?? '' }}</p>
                         </div>

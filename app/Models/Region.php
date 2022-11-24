@@ -14,8 +14,10 @@ class Region extends Model implements Auditable
     public const PEMBA = 'pemba';
 
     protected $fillable = [
+        'code',
         'name',
-        'location'
+        'location',
+        'registration_count',
    ];
 
     public function taxagent()

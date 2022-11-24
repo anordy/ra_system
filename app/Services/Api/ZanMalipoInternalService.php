@@ -44,10 +44,11 @@ class ZanMalipoInternalService
         ));
 
         $response = curl_exec($curl);
-        $err = curl_error($curl);
-        if(curl_errno($curl)){
-            $err = curl_error($curl);
-            Log::error($err);
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if ($statusCode != 200) {
+            curl_close($curl);
+            throw new \Exception($response);
         }
         curl_close($curl);
         $res = json_decode($response, true);
@@ -57,13 +58,13 @@ class ZanMalipoInternalService
             if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATING;
             } else {
-                $billable->status = ReturnStatus::CN_GENERATING;
+                $billable->statusCode = ReturnStatus::CN_GENERATING;
             }
         } else {
             if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
             } else {
-                $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+                $billable->statusCode = ReturnStatus::CN_GENERATION_FAILED;
             }
         }
         $billable->save();
@@ -103,11 +104,13 @@ class ZanMalipoInternalService
         ));
 
         $response = curl_exec($curl);
-        $err = curl_error($curl);
-        if(curl_errno($curl)){
-            $err = curl_error($curl);
-            Log::error($err);
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if ($statusCode != 200) {
+            curl_close($curl);
+            throw new \Exception($response);
         }
+
         curl_close($curl);
         return json_decode($response, true);
     }
@@ -146,19 +149,21 @@ class ZanMalipoInternalService
         ));
 
         $response = curl_exec($curl);
-        $err = curl_error($curl);
-        if(curl_errno($curl)){
-            $err = curl_error($curl);
-            Log::error($err);
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if ($statusCode != 200) {
+            curl_close($curl);
+            throw new \Exception($response);
         }
+
         curl_close($curl);
         return json_decode($response, true);
     }
 
     /**
-     * Send Reconciliation 
+     * Request Reconciliation 
      */
-    public function sendRecon()
+    public function requestRecon($recon_id)
     {
         $zanmalipo_internal = config('modulesconfig.api_url') . '/zanmalipo-internal/sendRecon';
 
@@ -166,6 +171,7 @@ class ZanMalipoInternalService
         $authorization = "Authorization: Bearer ". $access_token;
 
         $payload = [
+            'recon_id' => $recon_id
         ];
 
         $curl = curl_init();
@@ -186,10 +192,11 @@ class ZanMalipoInternalService
         ));
 
         $response = curl_exec($curl);
-        $err = curl_error($curl);
-        if(curl_errno($curl)){
-            $err = curl_error($curl);
-            Log::error($err);
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if ($statusCode != 200) {
+            curl_close($curl);
+            throw new \Exception($response);
         }
         curl_close($curl);
         return json_decode($response, true);

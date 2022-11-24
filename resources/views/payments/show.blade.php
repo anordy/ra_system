@@ -48,7 +48,9 @@
                 </div>
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Bill Created By</span>
-                    <p class="my-1">{{ $bill->createdBy->fullName }}</p>
+                    <p class="my-1">
+                        {{ $bill->createdBy->fullName ?? '' }}
+                    </p>
                 </div>
             </div>
             <x-bill-structure :bill="$bill" :withCard="false" />
