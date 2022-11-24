@@ -1,5 +1,4 @@
-<div class="card">
-    <div class="card-body">
+<div class="card-body">
         <nav class="nav nav-tabs mt-0 border-top-0">
             <a href="#tab1" class="nav-item nav-link font-weight-bold active">Temporary Closure Details</a>
             <a href="#tab2" class="nav-item nav-link font-weight-bold">Approval History</a>
@@ -94,13 +93,11 @@
 
                 @livewire('business.closure.closure-approval-processing', ['modelName' => 'App\Models\BusinessTempClosure', 'modelId' => $temp_closure->id])
             </div>
-            <div id="tab2" class="tab-pane fade">
+            <div id="tab2" class="tab-pane fade m-4">
                 <livewire:approval.approval-history-table modelName='App\Models\BusinessTempClosure'
                     modelId="{{ $temp_closure->id }}" />
             </div>
         </div>
-
-    </div>
 </div>
 
 @section('scripts')

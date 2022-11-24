@@ -14,6 +14,7 @@
                 <a href="#tab2" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
                 <a href="#tab1" class="nav-item nav-link font-weight-bold">Approved Closures</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Closures</a>
+                <a href="#tab4" class="nav-item nav-link font-weight-bold">Reopened Closures</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab2" class="tab-pane fade active show m-2">
@@ -24,6 +25,9 @@
                 </div>
                 <div id="tab3" class="tab-pane fade m-2">
                     @livewire('business.closure.rejected-closures-table')
+                </div>
+                <div id="tab4" class="tab-pane fade m-2">
+                    @livewire('business.closure.reopened-closures-table')
                 </div>
             </div>
         </div>
