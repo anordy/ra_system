@@ -23,7 +23,7 @@
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Rate</label>
+                        <label class="control-label">Rate (%)</label>
                         <input type="number" class="form-control" wire:model.lazy="rate" id="rate">
                         @error('rate')
                             <span class="text-danger">{{ $message }}</span>
