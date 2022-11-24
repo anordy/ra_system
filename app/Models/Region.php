@@ -16,6 +16,7 @@ class Region extends Model implements Auditable
     protected $fillable = [
         'code',
         'name',
+        'location',
         'registration_count',
    ];
 

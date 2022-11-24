@@ -21,11 +21,6 @@ class TaxRegionsSeeder extends Seeder
                 'prefix' => '01',
             ],
             [
-                'code' => 'lto',
-                'name' => 'LTO',
-                'prefix' => '02',
-            ],
-            [
                 'code' => 'mjini',
                 'name' => 'Mjini',
                 'prefix' => '03',

@@ -17,27 +17,27 @@ class ReliefProjectSeeder extends Seeder
         //
         ReliefProject::create([
             "name"=>"NGOs",
-            "description"=>"Taasisi isizo ya Kiserikali",
+            "description"=>"Non-Governmental Organization",
             "created_by"=>1,
         ]);
         ReliefProject::create([
-            "name"=>"Taasisi ya kibalozi ",
-            "description"=>"Taasisi za kibalozi ",
+            "name"=>"Consular institutions",
+            "description"=>"Consular institutions",
             "created_by"=>1,
         ]);
         ReliefProject::create([
-            "name"=>"Shirika la umoja wa mataifa",
+            "name"=>"United Nations Organizations",
             "description"=>"Taasisi za mashirika ya umoja wa mataifa",
             "created_by"=>1,
         ]);
         ReliefProject::create([
-            "name"=>"Ufadhili na mashirika ya wahisani",
-            "description"=>"Miradi chini ya ufadhili na mashirika ya wahisani",
+            "name"=>"Funding and charitable organizations",
+            "description"=>"Projects under the sponsorship of charitable organizations",
             "created_by"=>1,
         ]);
         ReliefProject::create([
             "name"=>"ZIPA",
-            "description"=>"Miradi iliyosajiliwa na ZIPA",
+            "description"=>"Projects registered with ZIPA",
             "created_by"=>1,
         ]);
     }

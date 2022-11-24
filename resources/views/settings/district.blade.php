@@ -11,9 +11,10 @@ Districts
             <div class="card-tools">
                 @can('setting-district-add')
                     <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'district-add-modal')"><i
+                        onclick="Livewire.emit('showModal', 'district-add-modal')"><i
                         class="fa fa-plus-circle"></i>
-                    Add</button>
+                        Add District
+                    </button>
                 @endcan
             </div>
         </div>

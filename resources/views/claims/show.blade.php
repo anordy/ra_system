@@ -178,7 +178,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Payment per Phase</span>
-                            <p class="my-1">{{ $credit->amount / $credit->installments_count }} {{ $credit->currency }}</p>
+                            <p class="my-1">{{ number_format($credit->amount / $credit->installments_count, 2) }} {{ $credit->currency }}</p>
                         </div>
                     @endif
                 </div>

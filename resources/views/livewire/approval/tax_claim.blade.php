@@ -86,7 +86,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Payment per month</label>
-                            <input class="form-control" disabled value="{{ $this->calcMoney() }} {{ $this->subject->currency }}">
+                            <input class="form-control" disabled value="{{ number_format($this->calcMoney(), 2) }} {{ $this->subject->currency }}">
                         </div>
                     @endif
                 </div>
