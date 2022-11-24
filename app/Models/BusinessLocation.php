@@ -263,7 +263,12 @@ class BusinessLocation extends Model implements Auditable
 
             $region = $this->taxRegion;
 
-            $ztnLocationNumber = $region->prefix;
+            if ($this->business->is_business_lto) {
+                $ztnLocationNumber = 02;
+            } else{
+                $ztnLocationNumber = $region->prefix;
+            }
+            
 
             $no_of_existing_branches = $business->locations->where('status', '!=',BusinessStatus::PENDING)->count();
 

@@ -41,6 +41,19 @@ class WardSeeder extends Seeder
         }
 
 
+        $KaskaziniBWards = ['Done Mchagani','Donge Karange','Donge Kipange','Donge Mbiji','Donge Mnyimbi','Donge Mtambile','Donge Vijibweni','Fujoni','Kinduni', 'Kiomba Mvua', 'Kiombero', 'Kitope', 'Kiwengwa', 'Mahonda', 'Makoba', 'Manga Pwani', 'Mgambo', 'Misufini', 'Mkadini', 'Muwanda', 'Pangeni', 'Upenja', 'Zingwe Zingwe'];
+        $kaskaziniB = District::where('name', 'Kaskazini B')->get();
+
+        foreach ($kaskaziniB as $district) {
+            foreach ($KaskaziniBWards as $name) {
+                Ward::updateOrCreate([
+                    'name' => $name,
+                    'district_id' => $district->id,
+                ]);
+            }
+        }
+
+
         $WeteWards = ['Bopwe', 'Fundo', 'Gando', 'Jadida', 'Kangagani', 'Kipangani', 'Kisiwani', 'Kizimbani', 'Kojani', 'Limbani', 'Mchanga', 'Mdogo', 'Mtambwe', 'Ole', 'Pandani', 'Selemu', 'Shengejuu', 'Utaani'];
         $Wete = District::where('name', 'Wete')->get();
 

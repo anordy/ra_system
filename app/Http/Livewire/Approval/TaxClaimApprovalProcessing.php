@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\NotIn;
 use App\Traits\WorkflowProcesssingTrait;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class TaxClaimApprovalProcessing extends Component
@@ -41,6 +42,7 @@ class TaxClaimApprovalProcessing extends Component
     public $subRoles = [];
 
     public $task;
+    public $installmentAmount;
 
     public function mount($modelName, $modelId)
     {
@@ -65,13 +67,23 @@ class TaxClaimApprovalProcessing extends Component
         }
     }
 
+    public function updated($propertyName){
+        if ($propertyName == 'paymentType') {
+            $this->installmentCount = 1;
+        }
+    }
+
     public function calcMoney()
     {
-        try {
-            return $this->subject->amount / $this->installmentCount;
-        } catch (Exception $exception) {
-            return 0;
-        }
+       if ($this->installmentCount > 0) {
+            try {
+                return $this->subject->amount / (int)$this->installmentCount;
+            } catch (Exception $exception) {
+                Log::error($exception .', '. Auth::user());
+                return $this->alert('error', 'Something went wrong');
+            }
+       }
+        
     }
 
     public function approve($transtion)

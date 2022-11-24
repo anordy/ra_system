@@ -94,7 +94,7 @@
         <span class="embed reg-no">{{ $certificateNumber ?? '' }}</span>
         <span class="embed tax-types">{{ $tax->name }}</span>
         <span class="embed location">
-            {{ $location->street }}, {{ $location->district->name }}, {{ $location->region->name }}
+            {{ $location->district->name }}, {{ $location->region->name }}
         </span>
         <span class="embed commencing-date">
             {{ $location->date_of_commencing->toFormattedDateString() }}
