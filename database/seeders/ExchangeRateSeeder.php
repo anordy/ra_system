@@ -19,7 +19,7 @@ class ExchangeRateSeeder extends Seeder
         $exchange_rates = [
             [
                 'currency' => 'USD',
-                'mean' => '2304.6342	',
+                'mean' => '2350',
                 'spot_buying' => '2293.1683',
                 'spot_selling' => '2316.1',
                 'exchange_date' => Carbon::now(),

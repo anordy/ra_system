@@ -4,8 +4,14 @@
         <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
             <span class="font-weight-bold text-uppercase">GEPG Status</span>
             <p class="my-1">
-                @if ($bill_change->clb_status)
-                    {{ $this->getGepgStatus($bill_change->clb_status) }}
+                @if ($bill_change)
+                    @if ($bill_change->ack_status && $bill_change->clb_status)
+                        {{ $this->getGepgStatus($bill_change->clb_status) }}
+                    @else
+                        {{ $this->getGepgStatus($bill_change->ack_status) }}
+                    @endif
+                @else
+                    Pending
                 @endif
             </p>
         </div>
