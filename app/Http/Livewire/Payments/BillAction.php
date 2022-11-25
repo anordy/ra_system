@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\ZmBill;
+use App\Models\ZmBillChange;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\PaymentsTrait;
 
@@ -16,7 +17,7 @@ class BillAction extends Component
 {
     use LivewireAlert, PaymentsTrait, GepgResponse;
     public $today;
-    public $bill, $control_number, $cancellation_reason, $new_expiration_date, $action;
+    public $bill, $bill_change, $control_number, $cancellation_reason, $new_expiration_date, $action;
 
     protected $listeners = [
         'submit'
@@ -54,8 +55,10 @@ class BillAction extends Component
         ]);
     }
 
-    public function refresh() {
-        $this->bill = ZmBill::where('control_number', $this->control_number)->latest()->first();
+    public function refresh()
+    {
+        // $this->bill = ZmBill::where('control_number', $this->control_number)->latest()->first();
+        $this->bill_change = ZmBillChange::where('zm_bill_id', $this->bill->id)->latest()->first();
     }
 
 
@@ -72,24 +75,20 @@ class BillAction extends Component
             try {
                 $this->cancelBill($this->bill, $this->cancellation_reason);
                 $this->refresh();
-                session()->flash('success', "{$this->getGepgStatus($this->bill->zan_trx_sts_code)}");
                 $this->alert('success', 'Bill cancellation request has been sent');
             } catch (Exception $e) {
                 Log::error($e);
-                $this->refresh();
-                session()->flash('error', "{$this->getGepgStatus($this->bill->zan_trx_sts_code)}");
                 $this->alert('error', 'Something went wrong');
             }
         } else if ($this->action == 'update') {
             try {
-               $this->updateBill($this->bill, $this->new_expiration_date);
-               $this->refresh();
-               session()->flash('success', "{$this->getGepgStatus($this->bill->zan_trx_sts_code)}");
-               $this->alert('success', 'Bill update request has been sent');
+                $this->new_expiration_date = Carbon::create($this->new_expiration_date);
+                $this->new_expiration_date->addHours(6)->addMinute();
+                $this->updateBill($this->bill, $this->new_expiration_date);
+                $this->refresh();
+                $this->alert('success', 'Bill update request has been sent');
             } catch (Exception $e) {
                 Log::error($e);
-                $this->refresh();
-                session()->flash('error', "{$this->getGepgStatus($this->bill->zan_trx_sts_code)}");
                 $this->alert('error', 'Something went wrong');
             }
         }

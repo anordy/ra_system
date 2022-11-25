@@ -1,22 +1,16 @@
 <div>
-    <div class="mx-4">
-        @if (session()->has('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <b>GEPG STATUS: </b> {{ session()->get('error') }}.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-        @if (session()->has('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <b>GEPG STATUS: </b> {{ session()->get('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+    @if ($bill)
+    <div class="row mx-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
+        <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
+            <span class="font-weight-bold text-uppercase">GEPG Status</span>
+            <p class="my-1">
+                @if ($bill_change->clb_status)
+                    {{ $this->getGepgStatus($bill_change->clb_status) }}
+                @endif
+            </p>
+        </div>
     </div>
+    @endif
 
     <div class="row mx-4 mt-2">
         <div class="form-group col-md-4">
