@@ -1,38 +1,23 @@
 <?php
 
-namespace App\Http\Livewire\Business;
+namespace App\Http\Livewire\Finance;
 
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Yajra\DataTables\Services\DataTable;
 
-class RegistrationsTable extends DataTableComponent
+class TaxpayerLedgerTable extends DataTableComponent
 {
-    
     use LivewireAlert;
-
-    public $rejected = false;
-    public $pending = false;
-    public $approved = true;
 
     public function builder(): Builder
     {
-        if ($this->rejected){
-            return Business::where('businesses.status', BusinessStatus::REJECTED)->orderBy('businesses.created_at', 'desc');
-        }
-
-        if ($this->approved){
-            return Business::where('businesses.status', BusinessStatus::APPROVED)->orderBy('businesses.created_at', 'desc');
-        }
-
-        if ($this->pending){
-            return Business::where('businesses.status', BusinessStatus::PENDING)->orderBy('businesses.created_at', 'desc');
-        }
-
-        return Business::where('businesses.status', '!=', BusinessStatus::DRAFT)->orderBy('businesses.created_at', 'desc');
+        return Business::whereNotIn('businesses.status', [BusinessStatus::DRAFT, BusinessStatus::PENDING, BusinessStatus::REJECTED, BusinessStatus::CORRECTION])->orderBy('businesses.created_at', 'desc');
     }
 
     public function configure(): void
@@ -57,8 +42,7 @@ class RegistrationsTable extends DataTableComponent
             Column::make('Status', 'status')
                 ->view('business.registrations.includes.status'),
             Column::make('Action', 'id')
-                ->view('business.registrations.includes.actions')
+                ->view('finance.includes.actions')
         ];
     }
-
 }

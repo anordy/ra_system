@@ -319,6 +319,9 @@ class PermissionSeeder extends Seeder
             ['name' => 'relief-generate-report-view', 'sys_module_id' => 23],
             ['name' => 'relief-generate-report', 'sys_module_id' => 23],
 
+            # Manage Finances
+            ['name' => 'view-taxpayer-ledgers', 'sys_module_id' => 24],
+
         ];
 
         foreach ($data as $row) {

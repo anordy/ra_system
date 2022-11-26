@@ -161,5 +161,13 @@ class Business extends Model implements Auditable
         return $this->hasMany(TaxClearanceRequest::class);
     }
 
+    public function businessLocationIDs(){
+        $locationIds = [];
+        foreach ($this->locations as $key => $location) {
+            // $locationIds[] = $location->id;
+            array_push($locationIds, $location->id);
+        }
+        return $locationIds;
+    }
     
 }

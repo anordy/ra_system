@@ -112,6 +112,7 @@ use App\Http\Controllers\Returns\Petroleum\PetroleumReturnController;
 use App\Http\Controllers\Returns\StampDuty\StampDutyReturnController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
 use App\Http\Controllers\DriversLicense\LicenseApplicationsController;
+use App\Http\Controllers\Finances\FinanceController;
 use App\Http\Controllers\Reports\Business\BusinessRegReportController;
 use App\Http\Controllers\Investigation\TaxInvestigationFilesController;
 use App\Http\Controllers\Reports\Assessment\AssessmentReportController;
@@ -590,4 +591,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/control-number/retry/{id}', [LicenseApplicationsController::class, 'retryControlNumber'])->name('control-number.retry');
+
+    // Finance
+    Route::name('finance.')->prefix('finance')->group(function () {
+        Route::get('/taxpayer/ledger', [FinanceController::class, 'taxpayerLedgersList'])->name('taxpayer.ledgers');
+        Route::get('/taxpayer/ledger/{id}', [FinanceController::class, 'taxpayerLedger'])->name('taxpayer.ledger.details');
+    });
 });

@@ -642,6 +642,21 @@
             </li>
         @endcan
 
+        @can('finance-management')
+            <li class="{{ request()->is('finance*') ? 'active' : '' }}">
+                <a href="#finance" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    Finance Management
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('finance*') ? 'show' : '' }}" id="finance">
+                    @can('view-taxpayer-ledgers')
+                        <li class="{{ request()->is('finance/taxpayer/ledger*') ? 'active' : '' }}">
+                            <a href="{{ route('finance.taxpayer.ledgers') }}">Taxpayer Ledgers</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
         @can('setting')
             <li class="{{ request()->is('settings*') ? 'active' : '' }}">
                 <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Settings</a>

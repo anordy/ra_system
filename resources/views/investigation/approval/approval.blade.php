@@ -9,7 +9,7 @@
                 aria-selected="true">Investigation Report</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+            <a class="nav-link" id="return-infos-tab" data-toggle="tab" href="#return-infos" role="tab" aria-controls="return-infos"
                 aria-selected="false">Returns Information</a>
         </li>
         <li class="nav-item">
@@ -145,7 +145,7 @@
             <livewire:approval.tax-investigation-approval-processing modelName='{{ get_class($investigation) }}'
                 modelId="{{ $investigation->id }}" />
         </div>
-        <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-pane fade card p-2" id="return-infos" role="tabpanel" aria-labelledby="return-infos-tab">
             @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
                 @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation, 'tax_type_id' => $investigation->tax_type_id, 'location_id' => $investigation->location_id])
             @else

@@ -7,6 +7,11 @@
                     <div class="card-header" id="headingTwo">
                         <h5 class="mb-0">
                             {{ $location->businessLocation->name }}
+                            @if ($location->businessLocation->is_headquarter)
+                                <span>
+                                    ( Headquater )
+                                </span>
+                            @endif
                             <span class="ml-2">
                                 <i class="bi bi-chevron-double-down"></i>
                             </span>
