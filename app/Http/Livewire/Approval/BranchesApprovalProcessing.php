@@ -91,8 +91,6 @@ class BranchesApprovalProcessing extends Component
             'time' => Carbon::now()->format('d-m-Y')
         ];
 
-        event(new SendSms('branch-correction', $notification_payload));
-        event(new SendMail('branch-correction', $notification_payload));
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
