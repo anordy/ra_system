@@ -62,7 +62,6 @@ class RequestRecon extends Component
 
     public function submit()
     {
-        DB::beginTransaction();
         try {
             $recon = ZmRecon::create([
                 'TnxDt' => $this->transaction_date,
@@ -73,14 +72,11 @@ class RequestRecon extends Component
             
             // If response returns error rollback recon request
             if (array_key_exists('error', $enquireRecon)) {
-                DB::rollBack();
                 $this->alert('error', 'Something went wrong');
                 return true;
             }
-            DB::commit();
             return redirect()->route('payments.recons', encrypt($recon->id));
         } catch (Exception $e) {
-            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong');
         }

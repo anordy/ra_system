@@ -3,10 +3,10 @@
 namespace App\Services\Api;
 
 use App\Models\Returns\TaxReturn;
-use Illuminate\Support\Facades\Log;
 use App\Models\Returns\ReturnStatus;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Services\Api\ApiAuthenticationService;
+use Illuminate\Support\Facades\Auth;
 
 class ZanMalipoInternalService
 {
@@ -83,7 +83,8 @@ class ZanMalipoInternalService
 
         $payload = [
             'bill_id' => $bill->id,
-            'reason' => $cancellationReason
+            'reason' => $cancellationReason,
+            'staff_id' => Auth::id()
         ];
 
         $curl = curl_init();
@@ -128,7 +129,8 @@ class ZanMalipoInternalService
 
         $payload = [
             'bill_id' => $bill->id,
-            'expire_date' => $expireDate
+            'expire_date' => $expireDate,
+            'staff_id' => Auth::id()
         ];
 
         $curl = curl_init();

@@ -68,8 +68,8 @@ trait PaymentsTrait
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->first();
         $exchange_rate = 1;
 
-        if ($tax_type->currency !== 'TZS') {
-            $bot_rate = ExchangeRate::where('currency', $tax_type->currency)->first();
+        if ($tax_type->currency != 'TZS') {
+            $bot_rate = ExchangeRate::where('currency', $tax_type->currency)->where('business_id', $return->business_id)->first();
             $exchange_rate = $bot_rate->mean;
         }
 
@@ -128,6 +128,7 @@ trait PaymentsTrait
     {
         if (config('app.env') != 'local') {
             $cancelBill = (new ZanMalipoInternalService)->cancelBill($bill, $cancellationReason);
+            return $cancelBill;
         } else {
             $bill->status = PaymentStatus::CANCELLED;
             $bill->cancellation_reason = $cancellationReason ?? '';
@@ -142,6 +143,7 @@ trait PaymentsTrait
         }
         if (config('app.env') != 'local') {
             $updateBill = (new ZanMalipoInternalService)->updateBill($bill, $expireDate->toDateTimeString());
+            return $updateBill;
         } else {
             $bill->expire_date = $expireDate->toDateTimeString();
             $bill->save();
