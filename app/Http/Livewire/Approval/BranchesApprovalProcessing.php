@@ -33,7 +33,9 @@ class BranchesApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+
         if ($this->checkTransition('registration_officer_review')) {
+            $this->validate(['selectedTaxRegion' => 'required']);
             $this->subject->tax_region_id = $this->selectedTaxRegion;
             $this->subject->save();
         }
