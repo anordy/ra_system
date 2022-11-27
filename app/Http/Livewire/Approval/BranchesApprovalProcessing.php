@@ -33,7 +33,9 @@ class BranchesApprovalProcessing extends Component
 
     public function approve($transtion)
     {
+
         if ($this->checkTransition('registration_officer_review')) {
+            $this->validate(['selectedTaxRegion' => 'required']);
             $this->subject->tax_region_id = $this->selectedTaxRegion;
             $this->subject->save();
         }
@@ -91,8 +93,6 @@ class BranchesApprovalProcessing extends Component
             'time' => Carbon::now()->format('d-m-Y')
         ];
 
-        event(new SendSms('branch-correction', $notification_payload));
-        event(new SendMail('branch-correction', $notification_payload));
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
