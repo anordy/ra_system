@@ -10,6 +10,7 @@ use App\Enum\LeaseStatus;
 use App\Models\Debts\Debt;
 use App\Enum\PaymentStatus;
 use App\Models\ExchangeRate;
+use App\Models\ZmBillChange;
 use App\Models\BusinessTaxType;
 use App\Models\TaxAudit\TaxAudit;
 use App\Services\ZanMalipo\ZmCore;
@@ -147,6 +148,15 @@ trait PaymentsTrait
         } else {
             $bill->expire_date = $expireDate->toDateTimeString();
             $bill->save();
+
+            $bill_change = ZmBillChange::create([
+                'zm_bill_id' => $bill->id,
+                'expire_date' => Carbon::parse($expireDate)->toDateTimeString(),
+                'category' => 'update',
+                'staff_id' => Auth::id(),
+                'ack_date' => Carbon::now()->toDateTimeString(),
+                'ack_status' => ZmResponse::SUCCESS,
+            ]);
         }
     }
 

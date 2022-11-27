@@ -1,7 +1,11 @@
 <div>
     @if ($bill)
-    <div class="row mx-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
-        <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
+    <div class="row mx-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
+        <div class="col-md-4" >
+            <span class="font-weight-bold text-uppercase">Control No</span>
+            <p class="my-1">{{ $bill->control_number ?? '' }}</p>
+        </div>
+        <div class="col-md-4">
             <span class="font-weight-bold text-uppercase">GEPG Status</span>
             <p class="my-1">
                 @if ($bill_change)
@@ -15,6 +19,18 @@
                 @endif
             </p>
         </div>
+        @if ($bill_change && $bill_change->category == 'update')
+        <div class="col-md-4" >
+            <span class="font-weight-bold text-uppercase">Expire Date</span>
+            <p class="my-1">{{ \Carbon\Carbon::parse($bill_change->expire_date)->format('d M Y H:m:i')  }}</p>
+        </div>
+        @endif
+        @if ($bill_change && $bill_change->category == 'cancel')
+        <div class="col-md-4" >
+            <span class="font-weight-bold text-uppercase">Cancellation Reason</span>
+            <p class="my-1">{{ $bill_change->cancel_reason ?? 'N/A'  }}</p>
+        </div>
+        @endif
     </div>
     @endif
 

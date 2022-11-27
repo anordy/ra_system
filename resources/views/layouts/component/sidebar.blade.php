@@ -634,6 +634,16 @@
                         </li>
                     @endcan
                     @can('manage-payments-view')
+                    <li class="{{ request()->is('payments/cancelled*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.cancelled') }}">Cancelled Payments</a>
+                    </li>
+                    @endcan
+                    @can('manage-payments-view')
+                    <li class="{{ request()->is('payments/failed*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.failed') }}">Failed Payments</a>
+                    </li>
+                    @endcan
+                    @can('manage-payments-view')
                     <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
                         <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
                     </li>

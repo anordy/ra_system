@@ -41,6 +41,20 @@ class PaymentsController extends Controller
         return view('payments.pending');
     }
 
+    public function cancelled(){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
+        return view('payments.cancelled');
+    }
+
+    public function failed(){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
+        return view('payments.failed');
+    }
+
     public function reconEnquire(){
         if (!Gate::allows('manage-payments-view')) {
             abort(403);

@@ -514,6 +514,8 @@ Route::middleware(['auth'])->group(function () {
     Route::name('payments.')->prefix('payments')->group(function () {
         Route::get('/complete', [PaymentsController::class, 'complete'])->name('complete');
         Route::get('/pending', [PaymentsController::class, 'pending'])->name('pending');
+        Route::get('/cancelled', [PaymentsController::class, 'cancelled'])->name('cancelled');
+        Route::get('/failed', [PaymentsController::class, 'failed'])->name('failed');
         Route::get('/recons/{reconId}', [PaymentsController::class, 'recons'])->name('recons');
         Route::get('/recons/transaction/{transactionId}', [PaymentsController::class, 'viewReconTransaction'])->name('recons.transaction');
         Route::get('/recon-enquire', [PaymentsController::class, 'reconEnquire'])->name('recon.enquire');
