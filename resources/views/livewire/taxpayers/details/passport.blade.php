@@ -60,7 +60,7 @@
                             <td>{{ strtoupper($kyc->last_name) }}</td>
                             <td>{{ $passport['SurName'] }}</td>
                             @if ($this->compareProperties($kyc->last_name, $passport['SurName']))
-                                <td class="table-succes">{{ $matchesText }}</td>
+                                <td class="table-success">{{ $matchesText }}</td>
                             @else
                                 <td class="table-danger">{{ $notValidText }}</td>
                             @endif
@@ -70,7 +70,7 @@
                             <td>{{ strtoupper($kyc->country->nationality) }}</td>
                             <td>{{ $passport['PresentNationality'] }}</td>
                             @if ($this->compareProperties($kyc->country->nationality, $passport['PresentNationality']))
-                                <td class="table-succes">{{ $matchesText }}</td>
+                                <td class="table-success">{{ $matchesText }}</td>
                             @else
                                 <td class="table-danger">{{ $notValidText }}</td>
                             @endif

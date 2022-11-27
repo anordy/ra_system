@@ -176,6 +176,12 @@ class ApprovalProcessing extends Component
     {
 
         if ($this->checkTransition('registration_officer_review')) {
+
+            if ($this->subject->bpra_verification_status === BusinessStatus::PENDING) {
+                $this->alert('warning', 'You must verify business information from BPRA to proceed!');
+                return;
+            }
+
             $this->subject->isiic_i   = $this->isiic_i ?? null;
             $this->subject->isiic_ii  = $this->isiic_ii ?? null;
             $this->subject->isiic_iii = $this->isiic_iii ?? null;
@@ -259,10 +265,9 @@ class ApprovalProcessing extends Component
                 $lumpsum->update(['business_location_id' => $location->id]);
             }
             
-            if ($location->ztnPrefix()) {
+            if ($location->ztnGeneration()) {
                 
                 if (!$location->generateZ()) {
-                    
                     $this->alert('error', 'Something went wrong.');
                     return;
                 }

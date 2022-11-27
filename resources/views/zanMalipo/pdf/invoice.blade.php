@@ -106,16 +106,8 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" class="padding-left td-title">Payment Ref</td>
-                <td colspan="2" class="td-content">:
-                    @if ($bill->bill_payments->count()>0)
-                       <small>{{ $bill->bill_payments()->latest()->first()->pay_ref_id }}</small>
-                    @endif
-                </td>
-            </tr>
-            <tr>
                 <td colspan="2" class="padding-left td-title">Service Provider Code</td>
-                <td colspan="2" class="td-content">: {{ config('gepg.sp_code') }} </td>
+                <td colspan="2" class="td-content">: {{ config('modulesconfig.sp_code') }} </td>
             </tr>
             <tr>
                 <td colspan="2" class="padding-left td-title">Payer Name</td>
@@ -180,11 +172,11 @@
                 <td colspan="3">: HEAD QUARTER</td>
             </tr>
             <tr>
-                <td>Printed By</td>
+                <td>PrintIssueded By</td>
                 <td colspan="3">: {{ $bill->payer_name }}</td>
             </tr>
             <tr>
-                <td>Printed On</td>
+                <td>Issued On</td>
                 <td colspan="3">: {{ date('d-M-Y', strtotime(date('Y-m-d H:i:s'))) }}</td>
             </tr>
             <tr>

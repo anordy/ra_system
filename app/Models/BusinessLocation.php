@@ -206,7 +206,7 @@ class BusinessLocation extends Model implements Auditable
         }
     }
 
-    public function ztnPrefix(){
+    public function ztnGeneration(){
 
         try {
             
@@ -223,6 +223,7 @@ class BusinessLocation extends Model implements Auditable
                     $mainRegion = MainRegion::find(2);
                     break;
                 default:
+                    Log::error("Invalid Main Region selected!");
                     abort(404);
             }
 
@@ -258,6 +259,7 @@ class BusinessLocation extends Model implements Auditable
             $business = $this->business;
 
             if (!$this->taxRegion){
+                Log::error("There is no tax region");
                 abort(404);
             }
 
@@ -285,7 +287,6 @@ class BusinessLocation extends Model implements Auditable
             $business->save();
 
             $this->zin = $business->ztn_number.'-'.$ztnLocationNumber;
-            
             $this->save();
 
             DB::commit();

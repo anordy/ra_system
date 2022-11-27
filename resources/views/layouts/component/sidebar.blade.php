@@ -67,11 +67,11 @@
                             <a href="{{ route('business.updatesRequests') }}">Business Updates Requests</a>
                         </li>
                     @endcan
-{{--                    @can('taxtype-change-request-view')--}}
-{{--                        <li class="{{ request()->is('business/change-taxtype*') ? 'active' : '' }}">--}}
-{{--                            <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>--}}
-{{--                        </li>--}}
-{{--                    @endcan--}}
+                    @can('taxtype-change-request-view')
+                        <li class="{{ request()->is('business/change-taxtype*') ? 'active' : '' }}">
+                            <a href="{{ route('business.taxTypeRequests') }}">Tax Type Changes Requests</a>
+                        </li>
+                    @endcan
                     @can('qualified-tax-types-view')
                         <li class="{{ request()->is('business/qualified-tax-types*') ? 'active' : '' }}">
                             <a href="{{ route('business.qualified-tax-types.index') }}">Qualified Tax Types</a>

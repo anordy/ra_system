@@ -80,7 +80,9 @@
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Tax Identification No. (TIN)</span>
                 <p class="my-1">{{ $business->tin }}</p>
-                @if (isset($verified))
+                
+                {{-- Start Will be implementated after TRA intergration --}}
+                {{-- @if (isset($verified))
                     @if ($verified == 'verified')
                         <span class="font-weight-light text-success">
                             <i class="fa fa-check" aria-hidden="true"></i>
@@ -96,7 +98,9 @@
                     <a href="{{ route('verification.tin', encrypt($business->id)) }}">
                         <button class="btn btn-info">Verify TIN Number</button>
                     </a>
-                @endif
+                @endif --}}
+                {{--End Will be implementated after TRA intergration --}}
+                
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
