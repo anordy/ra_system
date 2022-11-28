@@ -23,10 +23,22 @@ class RequestRecon extends Component
         'submit'
     ];
 
-    protected $rules = [
-        'transaction_date' => 'required',
-        'recon_type' => 'required',
-    ];
+    protected function rules(){
+        return [
+            'recon_type' => 'required',
+            'transaction_date' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $yesterday = Carbon::now()->subDay();
+                    $transaction_date = Carbon::parse($value);
+                   $diff_date = $transaction_date->diffInDays($yesterday);
+                    if($diff_date  >= 7) {
+                        $fail('You cant request reconciliation for this date');
+                    }
+                }
+            ]
+        ];
+    }
 
     public function mount()
     {
