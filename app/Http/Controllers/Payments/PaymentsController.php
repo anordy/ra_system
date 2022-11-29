@@ -7,13 +7,11 @@ use App\Models\ZmBill;
 use App\Models\ZmPayment;
 use App\Models\ZmRecon;
 use App\Models\ZmReconTran;
-use App\Services\ZanMalipo\GepgResponse;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 
 class PaymentsController extends Controller
 {
-    use GepgResponse;
 
     public function complete(){
         if (!Gate::allows('manage-payments-view')) {
@@ -67,8 +65,7 @@ class PaymentsController extends Controller
             abort(403);
         }
         $recon = ZmRecon::findOrFail(decrypt($reconId));
-        $reconStatus = $this->getResponseCodeStatus($recon->ReconcStsCode)['message'];
-        return view('payments.recons', compact('recon', 'reconStatus'));
+        return view('payments.recons', compact('recon'));
     }
 
     public function show($paymentId){

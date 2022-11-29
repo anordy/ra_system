@@ -69,7 +69,7 @@ class ZmFeeHelper
             'use_item_ref_on_pay' => 'N',
             'amount' => round($fee, 2),
             'currency' => $currency,
-            'gfs_code' => '116101',
+            'gfs_code' => $item['gfs_code'],
             'tax_type_id' => TaxType::where('code', TaxType::GOVERNMENT_FEE)->firstOrFail()->id,
         ];
 
