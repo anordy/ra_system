@@ -2,9 +2,13 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Models\BusinessDirector;
+use App\Models\BusinessShare;
+use App\Models\BusinessShareholder;
 use App\Models\BusinessStatus;
 use App\Services\Api\BpraInternalService;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -18,6 +22,9 @@ class BpraVerification extends Component
     public $matchesText = 'Match';
     public $notValidText = 'Mismatch';
     public $bpraResponse = [];
+    public $shareholders;
+    public $directors;
+    public $shares;
 
     public function mount($business){
         $this->business = $business;
@@ -30,13 +37,12 @@ class BpraVerification extends Component
         try {
             $this->bpraResponse = $bpraService->getData($this->business);
             
-            if ($this->bpraResponse) {
+            if ($this->bpraResponse['businessData']) {
                 $this->requestSuccess = true;
-                DB::beginTransaction();
-                $this->business->bpra_no = $this->bpraResponse['reg_number'];
-                $this->business->bpra_verification_status = $this->bpraResponse['reg_number'] === $this->business->reg_no ? BusinessStatus::APPROVED : BusinessStatus::REJECTED;
-                $this->business->save();
-                DB::commit();
+
+                $this->directors = $this->bpraResponse['directors'];
+                $this->shareholders = $this->bpraResponse['shareHolders'];
+                $this->shares = $this->bpraResponse['listShareHolderShares'];
             } else {
                 $this->alert('error', 'Something went wrong');
             }
@@ -55,6 +61,38 @@ class BpraVerification extends Component
         $bpra_property = strtolower($bpra_property);
 
         return $kyc_property === $bpra_property ? true : false;
+    }
+
+    public function confirm(){
+        try {
+            DB::beginTransaction();
+            $this->business->bpra_no = $this->bpraResponse['businessData']['reg_number'];
+            $this->business->bpra_verification_status = BusinessStatus::APPROVED;
+            $this->business->save();
+
+            BusinessDirector::insert($this->directors);
+            BusinessShareholder::insert($this->shareholders);
+
+            foreach ($this->shares as $share) {
+                $shareHolderID = BusinessShareholder::where('national_id', $share['item'])->value('id');
+
+                BusinessShare::create([
+                    'business_id' =>$this->business->id,
+                    'share_holder_id' =>$shareHolderID,
+                    'shareholder_name' => $share['shareholder_name'],
+                    'share_class' => $share['share_class'],
+                    'number_of_shares' => $share['number_of_shares'],
+                    'currency' => $share['currency'],
+                    'number_of_shares_taken' => $share['number_of_shares_taken'],
+                    'number_of_shares_paid' => $share['number_of_shares_paid'],
+                ]);
+            }
+            DB::commit();
+            $this->alert('success', 'Bpra Verification Completed.');
+        } catch (\Throwable $e) {
+            Log::error($e .','. Auth::user());
+            $this->alert('error', 'Something went wrong');
+        }
     }
 
     public function render()

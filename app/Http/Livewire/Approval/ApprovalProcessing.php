@@ -5,7 +5,10 @@ namespace App\Http\Livewire\Approval;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Business;
+use App\Models\BusinessDirector;
 use App\Models\BusinessLocation;
+use App\Models\BusinessShare;
+use App\Models\BusinessShareholder;
 use App\Models\BusinessStatus;
 use App\Models\BusinessType;
 use App\Models\Currency;
@@ -53,6 +56,11 @@ class ApprovalProcessing extends Component
 
     public $Ids, $exceptionOne, $exceptionTwo;
 
+    public $directors;
+    public $shareholders;
+    public $shares;
+
+
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
@@ -93,6 +101,10 @@ class ApprovalProcessing extends Component
                 'currency'    => '',
             ];
         }
+
+        $this->directors = BusinessDirector::where('business_id', $this->subject->id)->get();
+        $this->shareholders = BusinessShareholder::where('business_id', $this->subject->id)->get();
+        $this->shares = BusinessShare::where('business_id', $this->subject->id)->get();
     }
 
     public function isiiciChange($value)
