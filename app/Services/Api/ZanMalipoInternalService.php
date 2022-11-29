@@ -2,11 +2,14 @@
 
 namespace App\Services\Api;
 
+use App\Models\TaxAgent;
+use App\Models\BillingStatus;
+use App\Models\TaxAgentStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\Returns\ReturnStatus;
+use Illuminate\Support\Facades\Auth;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Services\Api\ApiAuthenticationService;
-use Illuminate\Support\Facades\Auth;
 
 class ZanMalipoInternalService
 {
@@ -57,12 +60,21 @@ class ZanMalipoInternalService
         if ($res['data']['status_code'] === 7101) {
             if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATING;
-            } else {
+            } else if ($bill->billable_type == TaxAgent::class) {
+                $billable->status = TaxAgentStatus::VERIFIED;
+                $billable->billing_status = BillingStatus::CN_GENERATED;
+                $billable->verifier_id = Auth::id();
+                $billable->verifier_true_comment = ''; // Not necessary to have comments on approval
+                $billable->verified_at = now();
+            } else  {
                 $billable->statusCode = ReturnStatus::CN_GENERATING;
             }
         } else {
             if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+            } else if ($bill->billable_type == TaxAgent::class) {
+                $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
+                $billable->status = TaxAgentStatus::PENDING;
             } else {
                 $billable->statusCode = ReturnStatus::CN_GENERATION_FAILED;
             }

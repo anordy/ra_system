@@ -2,20 +2,14 @@
 
 namespace App\Http\Livewire\TaxAgent;
 
-use App\Models\ExchangeRate;
-use App\Models\Returns\ReturnStatus;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
-use App\Models\BillingStatus;
 use App\Models\TaxAgentApproval;
 use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
-use App\Models\User;
 use App\Notifications\DatabaseNotification;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use Carbon\Carbon;
+use App\Traits\PaymentsTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +19,7 @@ use Livewire\Component;
 
 class VerifyAction extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, PaymentsTrait;
 
     public $taxagent;
 
@@ -78,27 +72,18 @@ class VerifyAction extends Component
 
     public function toggleStatus($value)
     {
-        DB::beginTransaction();
         try {
             $comment = $value['value'];
             $data = (object)$value['data'];
             $agent = TaxAgent::findOrFail($data->id);
-            $taxpayer = Taxpayer::findOrFail($agent->taxpayer_id);
             $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
                 ->where('category', 'Registration Fee')
                 ->where('is_citizen', $agent->taxpayer->is_citizen)
                 ->first();
             $amount = $fee->amount;
             $used_currency = $fee->currency;
-            $duration = $fee->duration;
-            if ($used_currency != 'TZS') {
-                $rate = ExchangeRate::query()->where('currency', $used_currency)
-                    ->first(); //letter will be fetched from BOT API
-                $rate = $rate->mean;
-            } else {
-                $rate = 1;
-            }
             $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
+
             $billitems = [
                 [
                     'billable_id' => $agent->id,
@@ -113,103 +98,24 @@ class VerifyAction extends Component
                 ]
             ];
 
-            $payer_type = get_class($taxpayer);
-            $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-            $payer_email = $taxpayer->email;
-            $payer_phone = $taxpayer->mobile;
-            $description = 'Tax Consultant Registration Fee';
-            $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-            $currency = $used_currency;
-            $createdby_type = get_class(User::query()->findOrFail(Auth::id()));
-            $exchange_rate = $rate;
-            $createdby_id = Auth::id();
-            $payer_id = $taxpayer->id;
-            $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-            $billableId = $agent->id;
-            $billableType = get_class($agent);
 
-            $zmBill = ZmCore::createBill(
-                $billableId,
-                $billableType,
-                $tax_type->id,
-                $payer_id,
-                $payer_type,
-                $payer_name,
-                $payer_email,
-                $payer_phone,
-                $expire_date,
-                $description,
-                $payment_option,
-                $currency,
-                $exchange_rate,
-                $createdby_id,
-                $createdby_type,
-                $billitems
-            );
-
-            if (config('app.env') != 'local') {
-                $response = ZmCore::sendBill($zmBill->id);
-                if ($response->status === ZmResponse::SUCCESS) {
-                    $agent->status = TaxAgentStatus::VERIFIED;
-                    $agent->billing_status = BillingStatus::CN_GENERATED;
-                    $agent->verifier_id = Auth::id();
-                    $agent->verifier_true_comment = $comment;
-                    $agent->verified_at = now();
-                    $agent->save();
-                } else {
-                    $agent->billing_status = BillingStatus::CN_GENERATION_FAILED;
-                    $agent->status = TaxAgentStatus::PENDING;
-                    $agent->save();
-                }
-
+            if ($amount > 0) {
+                $this->generateTaxAgentControlNo($agent, $billitems, $comment);
             } else {
-                // We are local
-                $agent->status = TaxAgentStatus::VERIFIED;
-                $agent->billing_status = BillingStatus::CN_GENERATED;
-                $agent->verifier_id = Auth::id();
-                $agent->verifier_true_comment = $comment;
-                $agent->verified_at = now();
-                $agent->save();
-
-                if ($agent->status == TaxAgentStatus::CORRECTION)
-                {
-                    $final = TaxAgentStatus::VERIFIED;
-                    $initial = TaxAgentStatus::CORRECTION;
-                }
-                else
-                {
-                    $final = TaxAgentStatus::VERIFIED;
-                    $initial = TaxAgentStatus::PENDING;
-                }
-                $approval = new TaxAgentApproval();
-                $approval->tax_agent_id = $agent->id;
-                $approval->initial_status = $initial;
-                $approval->destination_status = $final;
-                $approval->comment = $comment;
-                $approval->approved_by_id = Auth::id();
-                $approval->approved_at = now();
-                $approval->save();
-
-                // Simulate successful control no generation
-                $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-                $zmBill->zan_status = 'pending';
-                $zmBill->control_number = rand(2000070001000, 2000070009999);
-                $zmBill->save();
+                $this->alert('error', 'Invalid amount provided');
             }
 
-            $taxpayer->notify(new DatabaseNotification(
+            $agent->taxpayer->notify(new DatabaseNotification(
                 $subject = 'TAX CONSULTANT VERIFICATION',
                 $message = 'Your application has been verified',
                 $href = 'taxagent.apply',
                 $hrefText = 'view'
             ));
 
-            DB::commit();
             $this->flash('success', 'Request verified successfully');
             return redirect()->route('taxagents.requests');
 
         } catch (Exception $e) {
-            DB::rollBack();
             Log::error($e);
             report($e);
             $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
