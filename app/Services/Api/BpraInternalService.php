@@ -3,6 +3,7 @@
 namespace App\Services\Api;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class BpraInternalService
@@ -11,15 +12,14 @@ class BpraInternalService
 
     public function getData($business){
 
-        $bpra_internal = config('modulesconfig.api_url') . '/bpra/get/data';
+        $bpra_internal = config('modulesconfig.api_url') . '/get_entity_full';
+        $access_token = (new ApiAuthenticationService)->getAccessToken();
 
-        // $access_token = (new ApiAuthenticationService)->getAccessToken();
-        $access_token = null;
         if ($access_token) {
             $authorization = "Authorization: Bearer ". $access_token;
 
             $payload = [
-                'reg_number' => $business->reg_no
+                'registration_no' => $business->reg_no
             ];
     
             $curl = curl_init();
@@ -49,14 +49,31 @@ class BpraInternalService
             }
             curl_close($curl);
             $res = json_decode($response, true);
+
+            $business->authorities_verified_at = Carbon::now();
+            $business->save();
+
+            if ($res) {
+                return [
+                    'reg_number' => $res['data']['reg_number'],
+                    'business_name' => $res['data']['entity_name'],
+                    'reg_date' => $res['data']['reg_date'],
+                    'mob_phone' => $res['data']['mob_phone'],
+                    'email' => $res['data']['email'],
+                ];
+            } else {
+                return [
+                    'reg_number' => '',
+                    'business_name' => '',
+                    'reg_date' => '',
+                    'mob_phone' => '',
+                    'email' => '',
+                ];
+            }
+            
+        } else {
+            Log::error('Error On Access token Authentication from Api Server!');
+            return [];
         }
-
-        $business->authorities_verified_at = Carbon::now();
-        $business->save();
-
-        return $res = [
-            'business_name' => 'BPRA TEST Now',
-            'reg_number' => '536473589',
-        ];
     }
 }

@@ -29,12 +29,18 @@ class BpraVerification extends Component
         $bpraService = new BpraInternalService;
         try {
             $this->bpraResponse = $bpraService->getData($this->business);
-            $this->requestSuccess = true;
-            DB::beginTransaction();
-            $this->business->bpra_no = $this->bpraResponse['reg_number'];
-            $this->business->bpra_verification_status = $this->bpraResponse['reg_number'] === $this->business->reg_no ? BusinessStatus::APPROVED : BusinessStatus::REJECTED;
-            $this->business->save();
-            DB::commit();
+            
+            if ($this->bpraResponse) {
+                $this->requestSuccess = true;
+                DB::beginTransaction();
+                $this->business->bpra_no = $this->bpraResponse['reg_number'];
+                $this->business->bpra_verification_status = $this->bpraResponse['reg_number'] === $this->business->reg_no ? BusinessStatus::APPROVED : BusinessStatus::REJECTED;
+                $this->business->save();
+                DB::commit();
+            } else {
+                $this->alert('error', 'Something went wrong');
+            }
+            
         } catch (Exception $e) {
             $this->requestSuccess = false;
             Log::error($e);

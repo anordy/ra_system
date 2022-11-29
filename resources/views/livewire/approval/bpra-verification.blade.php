@@ -63,7 +63,7 @@
                         <tr>
                             <th>Business No</th>
                             <td>{{ strtoupper($business->reg_no) }}</td>
-                            <td>{{ ucfirst($bpraResponse['reg_number']) }}</td>
+                            <td>{{ $bpraResponse['reg_number'] != '' ? ucfirst($bpraResponse['reg_number']) : 'No data found' }}</td>
                             @if ($this->compareProperties($business->reg_no, $bpraResponse['reg_number']))
                                 <td class="table-success">{{ $matchesText }}</td>
                             @else
@@ -73,13 +73,38 @@
                         <tr>
                             <th>Business Name</th>
                             <td>{{ strtoupper($business->name) }}</td>
-                            <td>{{ ucfirst($bpraResponse['business_name']) }}</td>
+                            <td>{{ $bpraResponse['business_name'] != '' ? ucfirst($bpraResponse['business_name']) : 'No data found' }}</td>
                             @if ($this->compareProperties($business->name, $bpraResponse['business_name']))
                                 <td class="table-success">{{ $matchesText }}</td>
                             @else
                                 <td class="table-danger">{{ $notValidText }}</td>
                             @endif
                         </tr>
+                        <tr>
+                            <th>Phone Number</th>
+                            <td>{{ strtoupper('255' . substr($business->mobile, 1)) }}</td>
+                            <td>{{ $bpraResponse['mob_phone'] != '' ? ucfirst($bpraResponse['mob_phone']) : 'No data found' }}</td>
+                            @if ($this->compareProperties( '255' . substr($business->mobile, 1), $bpraResponse['mob_phone']))
+                                <td class="table-success">{{ $matchesText }}</td>
+                            @else
+                                <td class="table-danger">{{ $notValidText }}</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ $business->email }}</td>
+                            <td>{{ $bpraResponse['email'] != '' ? ucfirst($bpraResponse['email']) : 'No data found' }}</td>
+                            @if ($this->compareProperties($business->email, $bpraResponse['email']))
+                                <td class="table-success">{{ $matchesText }}</td>
+                            @else
+                                <td class="table-danger">{{ $notValidText }}</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th>Registration Date</th>
+                            <td></td>
+                            <td>{{ $bpraResponse['reg_date'] != '' ? ucfirst($bpraResponse['reg_date']) : 'No data found' }}</td>
+                            <td class="table-secondary"></td>
                     </tbody>
                 </table>
             </div>
