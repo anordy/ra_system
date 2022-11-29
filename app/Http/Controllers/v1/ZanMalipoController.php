@@ -22,6 +22,7 @@ use App\Models\ZmPayment;
 use App\Services\ZanMalipo\XmlWrapper;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmSignatureHelper;
+use App\Traits\AfterPaymentEvents;
 use App\Traits\LandLeaseTrait;
 use App\Traits\TaxVerificationTrait;
 use Carbon\Carbon;
@@ -32,7 +33,7 @@ use Spatie\ArrayToXml\ArrayToXml;
 
 class ZanMalipoController extends Controller
 {
-    use TaxVerificationTrait;
+    use TaxVerificationTrait, AfterPaymentEvents;
 
     private $billable = [
         PortReturn::class,
@@ -359,7 +360,7 @@ class ZanMalipoController extends Controller
 
                     $installable = $item->installment->installable;
                     $installable->update([
-                        'outstanding_amount' => $taxReturn->outstanding_amount - $bill->amount,
+                        'outstanding_amount' => $installable->outstanding_amount - $bill->amount,
                     ]);
                 }
             }

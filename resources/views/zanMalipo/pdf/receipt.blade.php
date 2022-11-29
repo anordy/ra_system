@@ -125,7 +125,7 @@
             </tr>
             <tr>
                 <td colspan="2" class="padding-left td-title">Service Provider Code</td>
-                <td colspan="2" class="td-content">: {{ config('gepg.sp_code') }} </td>
+                <td colspan="2" class="td-content">: {{ config('modulesconfig.sp_code') }} </td>
             </tr>
             <tr>
                 <td colspan="2" class="padding-left td-title">Payer Name</td>
@@ -167,6 +167,11 @@
         <br>
 
         <table width="100%">
+            <tr>
+                <td>Bill reference</td>
+                <td colspan="3" class="bold">:
+                    {{ $bill->id }}</td>
+            </tr>
             <tr>
                 <td>Amount in Words</td>
                 <td colspan="3" class="bold">:
