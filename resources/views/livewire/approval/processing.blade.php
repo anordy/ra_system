@@ -20,37 +20,37 @@
                     </div>
                 </div>
 
-                @if ($subject->bpra_verification_status === \App\Models\BusinessStatus::APPROVED)
+                @if ($subject->bpra_verification_status === \App\Models\BusinessStatus::APPROVED && (count($directors) || count($shareholders) || count($shares)))
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card-body mt-0 p-2">
                                 <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist"
                                     style="margin-bottom: 0;">
-                                    @if ($directors)
+                                    @if (count($directors))
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link active" id="directors-tab" data-toggle="tab"
                                                 href="#directors" role="tab" aria-controls="directors"
                                                 aria-selected="true">Directors</a>
                                         </li>
                                     @endif
-                                    @if ($shareholders)
+                                    @if (count($shareholders))
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link" id="shareholders-tab" data-toggle="tab"
                                                 href="#shareholders" role="tab" aria-controls="shareholders"
                                                 aria-selected="false">Shareholders</a>
                                         </li>
                                     @endif
-                                    @if ($shares)
+                                    @if (count($shares))
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link" id="shares_distribution-tab" data-toggle="tab"
                                                 href="#shares_distribution" role="tab"
                                                 aria-controls="shares_distribution"
-                                                aria-selected="false">Shareholders</a>
+                                                aria-selected="false">Shares & Distribution</a>
                                         </li>
                                     @endif
                                 </ul>
                                 <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-                                    @if ($directors)
+                                    @if (count($directors))
                                         <div class="tab-pane fade show active" id="directors" role="tabpanel"
                                             aria-labelledby="directors-tab">
                                             <div class="row m-1 p-3">
@@ -102,7 +102,7 @@
                                         </div>
                                     @endif
 
-                                    @if ($shareholders)
+                                    @if (count($shareholders))
                                         <div class="tab-pane fade" id="shareholders" role="tabpanel"
                                             aria-labelledby="shareholders-tab">
                                             <div class="row m-1 p-3">
@@ -151,7 +151,7 @@
                                         </div>
                                     @endif
 
-                                    @if ($shares)
+                                    @if (count($shares))
                                         <div class="tab-pane fade" id="shares_distribution" role="tabpanel"
                                             aria-labelledby="shares_distribution-tab">
                                             <div class="row m-1 p-3">
