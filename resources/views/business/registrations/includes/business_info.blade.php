@@ -270,6 +270,18 @@
                     <span class="font-weight-bold text-uppercase">Street</span>
                     <p class="my-1">{{ $location->street }}</p>
                 </div>
+                @if ($location->po_box)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">PO Box</span>
+                    <p class="my-1">{{ $location->po_box }}</p>
+                </div>
+                @endif
+                @if ($location->fax)
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Fax Number</span>
+                    <p class="my-1">{{ $location->fax }}</p>
+                </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Physical Address</span>
                     <p class="my-1">{{ $location->physical_address }}</p>
