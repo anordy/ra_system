@@ -54,6 +54,7 @@ class BpraInternalService
             
             $business->authorities_verified_at = Carbon::now();
             $business->save();
+              
 
             if ($res) {
 
