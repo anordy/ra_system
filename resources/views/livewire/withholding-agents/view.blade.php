@@ -4,7 +4,7 @@
 </nav>
 <div class="tab-content px-2 card pt-3 pb-2">
     <div id="tab1" class="tab-pane fade active show m-2">
-        <h6 class="text-uppercase">Main Details</h6>
+        <h6 class="text-uppercase mx-4">Main Details</h6>
         <hr>
 
         <div class="row m-4 pt-3">
@@ -29,6 +29,14 @@
                 <p class="my-1">{{ $withholding_agent->mobile }}</p>
             </div>
             <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">Institution Alt Contact Number</span>
+                <p class="my-1">{{ $withholding_agent->alt_mobile ?? 'N/A' }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">Institution Fax Number</span>
+                <p class="my-1">{{ $withholding_agent->fax ?? 'N/A' }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Institution Email Address</span>
                 <p class="my-1">{{ $withholding_agent->email }}</p>
             </div>
@@ -46,7 +54,7 @@
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Date of Commencing</span>
-                <p class="my-1">{{ $withholding_agent->date_of_commencing }}</p>
+                <p class="my-1">{{ \Carbon\Carbon::parse($withholding_agent->date_of_commencing)->format('d M Y') }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Status</span>

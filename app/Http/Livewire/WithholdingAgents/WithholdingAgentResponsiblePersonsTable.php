@@ -25,7 +25,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['status', 'responsible_person_id', 'officer_id', 'title', 'position', 'created_at']);
+        $this->setAdditionalSelects(['status', 'responsible_person_id', 'officer_id', 'business_id', 'title', 'position', 'created_at']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -47,6 +47,12 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
             Column::make('Responsible Person', 'responsible_person_id')
                 ->label(function ($row) {
                     return "{$row->taxpayer->first_name} {$row->taxpayer->last_name}";
+                })
+                ->sortable()
+                ->searchable(),
+            Column::make('Business Name', 'business_id')
+                ->label(function ($row) {
+                    return "{$row->business->name}";
                 })
                 ->sortable()
                 ->searchable(),

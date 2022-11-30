@@ -9,6 +9,7 @@ use App\Models\Region;
 use App\Events\SendSms;
 use Livewire\Component;
 use App\Events\SendMail;
+use App\Models\Business;
 use App\Models\District;
 use App\Models\Taxpayer;
 use App\Models\WithholdingAgent;
@@ -26,23 +27,13 @@ class WithholdingAgentRegistration extends Component
     public $districts = [];
     public $responsible_persons = [];
     public $wards = [];
-    public $region_id;
-    public $district_id;
-    public $ward_id;
-    public $tin;
-    public $institution_name;
-    public $institution_place;
-    public $address;
-    public $mobile;
-    public $email;
-    public $responsible_person_id;
-    public $officer_id;
-    public $title;
-    public $position;
-    public $date_of_commencing;
+    public $region_id, $district_id, $ward_id, $tin, $institution_name, $institution_place, $address;
+    public $fax, $alt_mobile, $mobile, $email, $responsible_person_id, $officer_id, $title, $position, $date_of_commencing;
     public $reference_no;
     public $search_triggered = false;
-    public $taxpayer;
+    public $taxpayer, $ztnNumber;
+    public $search_business = false;
+    public $business;
 
     protected $rules = [
         'tin' => 'required|integer|min:8',
@@ -50,6 +41,8 @@ class WithholdingAgentRegistration extends Component
         'institution_place' => 'required',
         'email' => 'required|email|unique:withholding_agents,email',
         'mobile' => 'required|unique:withholding_agents,mobile|digits_between:10,10',
+        'alt_mobile' => 'nullable|unique:withholding_agents,alt_mobile|digits_between:10,10',
+        'fax' => 'nullable',
         'address' => 'required',
         'responsible_person_id' => 'required',
         'region_id' => 'required',
@@ -58,7 +51,6 @@ class WithholdingAgentRegistration extends Component
         'title' => 'required',
         'position' => 'required',
         'date_of_commencing' => 'required',
-        'reference_no' => 'required'
     ];
 
     public function mount()
@@ -95,6 +87,8 @@ class WithholdingAgentRegistration extends Component
                 'institution_place' => $this->institution_place,
                 'email' => $this->email,
                 'mobile' => $this->mobile,
+                'fax' => $this->fax,
+                'alt_mobile' => $this->alt_mobile,
                 'address' => $this->address,
                 'date_of_commencing' => $this->date_of_commencing,
                 'region_id' => $this->region_id,
@@ -108,7 +102,9 @@ class WithholdingAgentRegistration extends Component
                 'title' => $this->title,
                 'position' => $this->position,
                 'officer_id' => auth()->user()->id,
+                'business_id' => $this->business->id
             ];
+
             $withholding_agent_resp_person = $withholding_agent->responsiblePersons()->create($withholding_agent_resp_person_data);
 
             DB::commit();
@@ -124,21 +120,32 @@ class WithholdingAgentRegistration extends Component
         }
     }
 
-    public function searchResponsiblePerson()
+    public function searchResponsibleDetails()
     {
-        $this->search_triggered = true;
+        $this->validate(['ztnNumber' => 'required', 'reference_no' => 'required']);
 
-        $taxpayer = Taxpayer::query()->where(['reference_no' => $this->reference_no])->first();
+        $taxpayer = Taxpayer::where(['reference_no' => $this->reference_no])->first();
+        $business = Business::where('ztn_number', $this->ztnNumber)->first();
 
-        if (!empty($taxpayer)) {
+        if (!empty($business) && !empty($taxpayer)) {
+            $this->business = $business;
             $this->taxpayer = $taxpayer;
+
+            if ($business->responsible_person_id != $taxpayer->id) {
+                $this->alert('warning', 'Provided reference number does not belong on the business provided');
+                return false;
+            }
+
+            $this->responsible_person_id = $this->taxpayer->id ?? null;
+
         } else {
+            $this->business = null;
             $this->taxpayer = null;
         }
 
-        $this->responsible_person_id = $this->taxpayer->id ?? null;
+        $this->search_triggered = true;
+        
     }
-
 
     public function render()
     {

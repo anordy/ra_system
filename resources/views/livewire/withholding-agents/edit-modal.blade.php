@@ -58,6 +58,26 @@
                     @enderror
                 </div>
                 <div class="col-md-4 form-group">
+                    <label for="alt_mobile">Institution Alternative Contact Number</label>
+                    <input type="text" maxlength="10" wire:model.lazy="alt_mobile" name="alt_mobile" id="alt_mobile"
+                        class="form-control {{ $errors->has('alt_mobile') ? 'is-invalid' : '' }}">
+                    @error('alt_mobile')
+                        <div class="invalid-feedback">
+                            {{ $errors->first('alt_mobile') }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="fax">Institution Fax Number</label>
+                    <input type="text" maxlength="10" wire:model.lazy="fax" name="fax" id="fax"
+                        class="form-control {{ $errors->has('mobile') ? 'is-invalid' : '' }}">
+                    @error('fax')
+                        <div class="invalid-feedback">
+                            {{ $errors->first('fax') }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="col-md-4 form-group">
                     <label for="email">Institution Email Address</label>
                     <input type="email" wire:model.lazy="email" name="email" id="email"
                         class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}">
