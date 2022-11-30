@@ -72,23 +72,31 @@ class BpraVerification extends Component
             $this->business->bpra_verification_status = BusinessStatus::APPROVED;
             $this->business->save();
 
-            BusinessDirector::insert($this->directors);
-            BusinessShareholder::insert($this->shareholders);
-
-            foreach ($this->shares as $share) {
-                $shareHolderID = BusinessShareholder::where('national_id', $share['item'])->value('id');
-
-                BusinessShare::create([
-                    'business_id' =>$this->business->id,
-                    'share_holder_id' =>$shareHolderID,
-                    'shareholder_name' => $share['shareholder_name'],
-                    'share_class' => $share['share_class'],
-                    'number_of_shares' => $share['number_of_shares'],
-                    'currency' => $share['currency'],
-                    'number_of_shares_taken' => $share['number_of_shares_taken'],
-                    'number_of_shares_paid' => $share['number_of_shares_paid'],
-                ]);
+            if ($this->directors) {
+                BusinessDirector::insert($this->directors);
             }
+            
+            if ($this->shareholders) {
+                BusinessShareholder::insert($this->shareholders);
+            }
+            
+            if ($this->shareholders) {
+                foreach ($this->shares as $share) {
+                    $shareHolderID = BusinessShareholder::where('national_id', $share['item'])->value('id');
+    
+                    BusinessShare::create([
+                        'business_id' =>$this->business->id,
+                        'share_holder_id' =>$shareHolderID,
+                        'shareholder_name' => $share['shareholder_name'],
+                        'share_class' => $share['share_class'],
+                        'number_of_shares' => $share['number_of_shares'],
+                        'currency' => $share['currency'],
+                        'number_of_shares_taken' => $share['number_of_shares_taken'],
+                        'number_of_shares_paid' => $share['number_of_shares_paid'],
+                    ]);
+                }
+            }
+             
             DB::commit();
             $this->alert('success', 'Bpra Verification Completed.');
         } catch (\Throwable $e) {
