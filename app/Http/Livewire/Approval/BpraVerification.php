@@ -66,7 +66,9 @@ class BpraVerification extends Component
     public function confirm(){
         try {
             DB::beginTransaction();
-            $this->business->bpra_no = $this->bpraResponse['businessData']['reg_number'];
+            if ($this->bpraResponse['businessData']['reg_number']) {
+                $this->business->bpra_no = $this->bpraResponse['businessData']['reg_number'];
+            }
             $this->business->bpra_verification_status = BusinessStatus::APPROVED;
             $this->business->save();
 

@@ -60,7 +60,6 @@ class ApprovalProcessing extends Component
     public $shareholders;
     public $shares;
 
-
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;

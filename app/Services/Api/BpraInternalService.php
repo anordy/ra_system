@@ -80,6 +80,7 @@ class BpraInternalService
                             'third_line' => $entityData['third_line'],
                             'email' => $entityData['email'],
                             'mob_phone' => $entityData['mob_phone'],
+                            'created_at' => Carbon::now(),
                         ];
                     }
 
@@ -103,6 +104,7 @@ class BpraInternalService
                                 'mob_phone' => $entityData['mob_phone'],
                                 'entity_name' => $entityData['entity_name'],
                                 'full_address' => $entityData['full_address'],
+                                'created_at' => Carbon::now(),
                             ];
                         }
                 }
