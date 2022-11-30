@@ -195,9 +195,11 @@ class BusinessLocation extends Model implements Auditable
             $vrn = $vrn . Arr::random(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","R","S","T","U","V","W","X","Y","Z"]) ;
 
             
-            $this->vrn = $vrn;
+            $this->business->vrn = $vrn;
+            $this->business->save();
+            $this->vrn = $this->business->vrn;
             $this->save();
-
+            DB::commit();
             return true;
         } catch (\Exception $e){
             DB::rollBack();

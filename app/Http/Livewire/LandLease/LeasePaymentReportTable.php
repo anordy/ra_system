@@ -96,9 +96,9 @@ class LeasePaymentReportTable extends DataTableComponent
             Column::make('DP Number', 'landLease.dp_number')
                 ->searchable()
                 ->sortable(),
-            Column::make('Name', 'landLease.businessLocation.id')
+            Column::make('Name', 'landLease.id')
                 ->format(function ($value, $row) {
-                    $landLease = LandLease::find($row->id);
+                    $landLease = LandLease::select('category', 'business_location_id', 'taxpayer_id', 'name')->find($value);
                     if ($landLease->category == 'business') {
                         return $this->getBusinessName($landLease->business_location_id);
                     } else {
@@ -149,9 +149,9 @@ class LeasePaymentReportTable extends DataTableComponent
             Column::make('Contact Person', 'landLease.id')
                 ->format(
                     function ($value, $row) {
-                        $landLease = LandLease::find($value);
+                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'name')->find($value);
                         if ($landLease->is_registered == 1) {
-                            $taxpayer = Taxpayer::find($landLease->taxpayer_id);
+                            $taxpayer = Taxpayer::select('first_name', 'last_name')->find($landLease->taxpayer_id);
                             return $taxpayer->first_name .' '. $taxpayer->last_name;
                         } else {
                             return $landLease->name;
@@ -160,12 +160,12 @@ class LeasePaymentReportTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make('Phone Number', 'id')
+            Column::make('Phone Number', 'landLease.id')
                 ->format(
                     function ($value, $row) {
-                        $landLease = LandLease::find($value);
+                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'phone')->find($value);
                         if ($landLease->is_registered == 1) {
-                            $taxpayer = Taxpayer::find($landLease->taxpayer_id);
+                            $taxpayer = Taxpayer::select('mobile')->find($landLease->taxpayer_id);
                             return $taxpayer->mobile;
                         } else {
                             return $landLease->phone;
