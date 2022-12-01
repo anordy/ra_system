@@ -15,6 +15,7 @@ class Zanid extends Component
     use LivewireAlert;
 
     public $kyc;
+    public $is_verified_triggered = false;
     public $zanid_data;
     public $matchesText = 'Match';
     public $notValidText = 'Mismatch';
@@ -31,6 +32,7 @@ class Zanid extends Component
 
     public function validateZanID()
     {
+         $this->is_verified_triggered = true;
          $zanid_controller = new ZanIDController;
          $this->zanid_data = $zanid_controller->getZanIDData($this->kyc->id_number);
     }

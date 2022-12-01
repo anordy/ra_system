@@ -29,9 +29,7 @@ class ImmigrationController extends Controller
         }
 
         $immigration_endpoint = config('modulesconfig.immigration_test_api') . '/immigration/lookupTest';
-
         $access_token = (new ApiAuthenticationService)->getAccessToken();
-
         $authorization = "Authorization: Bearer ". $access_token;
 
         $payload = [

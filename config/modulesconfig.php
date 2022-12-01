@@ -22,7 +22,7 @@ return [
     'zm_subspcode' => env('ZAN_MALIPO_SUB_SP_CODE'),
     'sp_code' => 'SP20011',
 
-    // IMMIGRATION API
+    // API SERVER CREDENTIALS
     'api_url' => env('API_SERVER_URL'),
     'api_server_username' => 'immigration',
     'api_server_password' => 'password'

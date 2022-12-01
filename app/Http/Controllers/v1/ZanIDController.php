@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Services\Api\ApiAuthenticationService;
 
 class ZanIDController extends Controller
 {
@@ -19,9 +20,17 @@ class ZanIDController extends Controller
 
     public function getZanIDData($zanIDNumber)
     {
+        $zanid_endpoint = config('modulesconfig.api_url') . '/zanid-internal/lookup';
+        $access_token = (new ApiAuthenticationService)->getAccessToken();
+        $authorization = "Authorization: Bearer ". $access_token;
+        
+        $payload = [
+            'zanid' => $zanIDNumber,
+        ];
+
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://anpr.rahisi.co.tz/vitambulisho.php', 
+            CURLOPT_URL => $zanid_endpoint, 
             CURLOPT_RETURNTRANSFER => true, 
             CURLOPT_ENCODING => '', 
             CURLOPT_MAXREDIRS => 10, 
@@ -29,11 +38,15 @@ class ZanIDController extends Controller
             CURLOPT_FOLLOWLOCATION => true, 
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, 
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => "card=040052740", 
-            CURLOPT_HTTPHEADER => array('Content-Type: application/x-www-form-urlencoded', 'Cookie: PHPSESSID=65e48ae3bf30c636f582954a1e0754f7'),
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "content-type: application/json",
+                $authorization
+            ),
         ));
         $response = curl_exec($curl);
         curl_close($curl);
-        return json_decode($response, true);
+        return json_decode($response, true)['data'];
     }
 }
