@@ -17,7 +17,7 @@ class CreateBusinessPartnersTable extends Migration
             $table->id();
             $table->unsignedInteger('business_id');
             $table->unsignedInteger('taxpayer_id');
-            $table->double('shares')->nullable();
+            $table->decimal('shares')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

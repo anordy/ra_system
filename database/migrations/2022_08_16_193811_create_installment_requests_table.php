@@ -24,8 +24,8 @@ class CreateInstallmentRequestsTable extends Migration
             $table->dateTime('installment_from')->nullable();
             $table->dateTime('installment_to')->nullable();
             $table->integer('installment_count')->nullable();
-            $table->text('reasons');
-            $table->text('ground');
+            $table->string('reasons');
+            $table->string('ground');
             $table->string('attachment')->nullable();
             $table->string('marking')->nullable();
             $table->enum('status', InstallmentRequestStatus::getConstants());

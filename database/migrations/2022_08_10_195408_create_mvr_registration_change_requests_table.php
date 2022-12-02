@@ -25,7 +25,7 @@ class CreateMvrRegistrationChangeRequestsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('current_registration_id','mvr_registration_change_requests_cur_reg')->references('id')->on('mvr_motor_vehicle_registration');
+            $table->foreign('current_registration_id','mvr_registration_change_requests_cur_reg')->references('id')->on('mvr_vehicle_registration');
             $table->foreign('requested_registration_type_id','mvr_registration_change_requests_req_reg_type')->references('id')->on('mvr_registration_types');
             $table->foreign('mvr_request_status_id')->references('id')->on('mvr_request_status');
             $table->foreign('mvr_plate_size_id')->references('id')->on('mvr_plate_sizes');

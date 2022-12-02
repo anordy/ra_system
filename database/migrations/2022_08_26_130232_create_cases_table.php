@@ -18,7 +18,7 @@ class CreateCasesTable extends Migration
             $table->date('date_opened');
             $table->string('case_number');
             $table->string('court');
-            $table->text('case_details');
+            $table->string('case_details');
             $table->unsignedBigInteger('tax_investigation_id');
             $table->unsignedBigInteger('case_stage_id');
             $table->unsignedBigInteger('case_outcome_id')->nullable();

@@ -33,7 +33,7 @@ class CreateMvrOwnershipTransferTable extends Migration
 
             $table->foreign('mvr_request_status_id')->references('id')->on('mvr_request_status');
             $table->foreign('mvr_motor_vehicle_id')->references('id')->on('mvr_motor_vehicles');
-            $table->foreign('mvr_ownership_transfer_reason_id')->references('id')->on('mvr_ownership_transfer_reasons');
+            $table->foreign('mvr_ownership_transfer_reason_id')->references('id')->on('mvr_o_transfer_reasons');
             $table->foreign('agent_taxpayer_id')->references('id')->on('taxpayers');
             $table->foreign('owner_taxpayer_id')->references('id')->on('taxpayers');
         });

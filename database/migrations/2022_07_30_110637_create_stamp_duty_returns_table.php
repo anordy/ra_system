@@ -31,8 +31,8 @@ class CreateStampDutyReturnsTable extends Migration
 
             $table->integer('edited_count')->default(0);
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
-            $table->decimal('total_amount_due', 40,2);
-            $table->decimal('total_amount_due_with_penalties', 40,2);
+            $table->decimal('total_amount_due', 38, 2);
+            $table->decimal('total_amount_due_with_penalties', 38, 2);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->decimal('interest', 20, 2)->default(0);
             $table->decimal('withheld_tax', 20, 2)->nullable();

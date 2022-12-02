@@ -19,7 +19,7 @@ class CreateBiometricsTable extends Migration
             $table->unsignedBigInteger('taxpayer_id')->nullable();
             $table->enum('hand', ['left', 'right']);
             $table->enum('finger', ['thumb', 'index', 'middle', 'ring', 'little']);
-            $table->text('template')->nullable();
+            $table->string('template')->nullable();
             $table->longText('image')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->foreign('taxpayer_id')->references('id')->on('taxpayers');

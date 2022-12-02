@@ -20,7 +20,7 @@ class CreateTaxVerificationsTable extends Migration
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('tax_return_id');
             $table->string('tax_return_type');
-            $table->text('scope')->nullable();
+            $table->string('scope')->nullable();
             $table->date('period_from')->nullable();
             $table->date('period_to')->nullable();
             $table->string('assessment_report')->nullable();

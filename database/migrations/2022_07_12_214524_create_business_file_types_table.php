@@ -17,9 +17,9 @@ class CreateBusinessFileTypesTable extends Migration
             $table->id();
             $table->string('short_name');
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->enum('file_type', ['pdf', 'image'])->default('pdf');
-            $table->enum('business_type', ['sole-proprietor', 'partnership', 'ngo', 'company', 'hotel']);
+            $table->string('description')->nullable();
+            $table->string('file_type')->nullable();
+            $table->string('business_type')->nullable();
             $table->boolean('is_required')->default(false);
             $table->softDeletes();
             $table->timestamps();

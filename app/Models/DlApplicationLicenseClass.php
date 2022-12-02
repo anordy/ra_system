@@ -28,7 +28,7 @@ class DlApplicationLicenseClass extends Model implements Auditable
 {
 	use \OwenIt\Auditing\Auditable;
 
-	protected $table = 'dl_application_license_classes';
+	protected $table = 'dl_app_license_classes';
 
 	protected $casts = [
 		'dl_license_application_id' => 'int',

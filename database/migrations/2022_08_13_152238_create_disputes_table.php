@@ -30,11 +30,11 @@ class CreateDisputesTable extends Migration
             $table->float('interest_amount')->nullable();
             $table->unsignedBigInteger('assesment_id')->nullable();
             $table->enum('business_type', ['hotel', 'other'])->default('other');
-            $table->decimal('tax_in_dispute', 40, 2)->default(0);
-            $table->decimal('tax_not_in_dispute', 40, 2)->default(0);
-            $table->decimal('tax_deposit', 40, 2)->default(0);
-            $table->text('ground')->nullable();
-            $table->text('reason')->nullable();
+            $table->decimal('tax_in_dispute',38, 2)->default(0);
+            $table->decimal('tax_not_in_dispute',38, 2)->default(0);
+            $table->decimal('tax_deposit',38, 2)->default(0);
+            $table->string('ground')->nullable();
+            $table->string('reason')->nullable();
             $table->string('dispute_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();

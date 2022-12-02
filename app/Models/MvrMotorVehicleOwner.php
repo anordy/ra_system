@@ -32,7 +32,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class MvrMotorVehicleOwner extends Model implements Auditable
 {
 	use SoftDeletes, \OwenIt\Auditing\Auditable;
-	protected $table = 'mvr_motor_vehicle_owners';
+	protected $table = 'mvr_vehicle_owners';
 
 	protected $casts = [
 		'mvr_motor_vehicle_id' => 'int',

@@ -29,7 +29,7 @@ class CreateWorkflowTasksTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('user_type')->nullable();
             $table->enum('status', $status_choices)->default('running');
-            $table->text('remarks')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

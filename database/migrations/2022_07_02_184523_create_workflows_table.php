@@ -21,9 +21,9 @@ class CreateWorkflowsTable extends Migration
             $table->string('marking_store');
             $table->string('initial_marking');
             $table->string('supports');
-            $table->text('places');
-            $table->text('transitions');
-            $table->text('summary');
+            $table->string('places');
+            $table->string('transitions');
+            $table->string('summary');
             $table->boolean('active')->default(1);
             $table->timestamps();
         });

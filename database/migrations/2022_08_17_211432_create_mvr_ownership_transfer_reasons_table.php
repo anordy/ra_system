@@ -13,7 +13,7 @@ class CreateMvrOwnershipTransferReasonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_ownership_transfer_reasons', function (Blueprint $table) {
+        Schema::create('mvr_o_transfer_reasons', function (Blueprint $table) {
             $table->id();
             $table->string('name',100);
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateMvrOwnershipTransferReasonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_ownership_transfer_reasons');
+        Schema::dropIfExists('mvr_o_transfer_reasons');
     }
 }

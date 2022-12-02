@@ -16,8 +16,8 @@ class CreateBusinessConsultantsTable extends Migration
 	        $table->dateTime('reviewed_at')->nullable();
 	        $table->enum('status', ['pending', 'approved', 'rejected', 'removed'])->default('pending');
 			$table->dateTime('removed_at')->nullable();
-	        $table->text('remarks')->nullable();
-            $table->text('contract')->nullable();
+	        $table->string('remarks')->nullable();
+            $table->string('contract')->nullable();
             $table->softDeletes();
 	        $table->timestamps();
         });

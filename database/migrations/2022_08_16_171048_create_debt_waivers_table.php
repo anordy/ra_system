@@ -20,8 +20,8 @@ class CreateDebtWaiversTable extends Migration
             $table->unsignedBigInteger('debt_id');
             $table->string('debt_type');
             $table->enum('category', ['penalty', 'interest', 'both']);
-            $table->text('ground')->nullable();
-            $table->text('reason')->nullable();
+            $table->string('ground')->nullable();
+            $table->string('reason')->nullable();
             $table->float('penalty_rate')->nullable();
             $table->float('interest_rate')->nullable();
             $table->float('penalty_amount')->nullable();

@@ -33,7 +33,7 @@ class MvrMotorVehicleRegistration extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
-	protected $table = 'mvr_motor_vehicle_registration';
+	protected $table = 'mvr_vehicle_registration';
 	public $timestamps = true;
 
 	protected $casts = [

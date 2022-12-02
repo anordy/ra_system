@@ -17,16 +17,16 @@ class CreateTaxpayerBiosTable extends Migration
             $table->id();
             $table->string('taxpayer_reference_no');
             $table->enum('hand',['left', 'right']);
-            $table->text('little_template')->nullable();
-            $table->text('little_image')->nullable();
-            $table->text('ring_template')->nullable();
-            $table->text('ring_image')->nullable();
-            $table->text('middle_template')->nullable();
-            $table->text('middle_image')->nullable();
-            $table->text('index_template')->nullable();
-            $table->text('index_image')->nullable();            
-            $table->text('thumb_template')->nullable();
-            $table->text('thumb_image')->nullable();
+            $table->string('little_template')->nullable();
+            $table->string('little_image')->nullable();
+            $table->string('ring_template')->nullable();
+            $table->string('ring_image')->nullable();
+            $table->string('middle_template')->nullable();
+            $table->string('middle_image')->nullable();
+            $table->string('index_template')->nullable();
+            $table->string('index_image')->nullable();            
+            $table->string('thumb_template')->nullable();
+            $table->string('thumb_image')->nullable();
             $table->timestamps();
         });
     }

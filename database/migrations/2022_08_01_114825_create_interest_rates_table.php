@@ -15,7 +15,7 @@ class CreateInterestRatesTable extends Migration
     {
         Schema::create('interest_rates', function (Blueprint $table) {
             $table->id();
-            $table->double('rate');
+            $table->decimal('rate');
             $table->integer('year');
             $table->timestamps();
         });

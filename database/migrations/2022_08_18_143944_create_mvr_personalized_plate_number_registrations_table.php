@@ -20,7 +20,7 @@ class CreateMvrPersonalizedPlateNumberRegistrationsTable extends Migration
             $table->unsignedBigInteger('mvr_motor_vehicle_registration_id');
             $table->timestamps();
 
-            $table->foreign('mvr_motor_vehicle_registration_id','mmvrgpnr_vr_motor_vehicle_registration')->references('id')->on('mvr_motor_vehicle_registration');
+            $table->foreign('mvr_motor_vehicle_registration_id','mmvrgpnr_vr_motor_vehicle_registration')->references('id')->on('mvr_vehicle_registration');
 
         });
     }

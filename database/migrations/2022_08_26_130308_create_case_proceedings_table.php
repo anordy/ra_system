@@ -17,7 +17,7 @@ class CreateCaseProceedingsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('case_id');
             $table->date('date');
-            $table->text('comment');
+            $table->string('comment');
             $table->unsignedBigInteger('case_stage_id');
             $table->unsignedBigInteger('case_decision_id')->nullable();
             $table->timestamps();

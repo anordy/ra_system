@@ -16,7 +16,7 @@ class CreateIdTypesTable extends Migration
         Schema::create('id_types', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->text('description')->nullable();
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Notifications\Notifiable;
+use Yajra\Oci8\Eloquent\OracleEloquent as Eloquent;
 
-class Taxpayer extends Model implements Auditable
+class Taxpayer extends Eloquent implements Auditable
 {
     use Notifiable, HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 

@@ -22,7 +22,7 @@ class CreateVatServicesTable extends Migration
             $table->unsignedBigInteger('return_month_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->string('filed_type');
-            $table->decimal('total',40,2);
+            $table->decimal('total',38,2);
             $table->timestamps();
             $table->softDeletes();
 

@@ -17,8 +17,8 @@ class CreateMmTransferReturnItemsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('config_id');
             $table->unsignedBigInteger('return_id');
-            $table->decimal('value', 40,2); 
-            $table->decimal('vat', 40,2);
+            $table->decimal('value', 38, 2); 
+            $table->decimal('vat', 38, 2);
             $table->softDeletes();
             $table->timestamps();
         });

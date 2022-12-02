@@ -26,7 +26,7 @@ class MvrOwnershipTransferReason extends Model
 {
     const TRANSFER_REASON_SOLD='Sale/Disposal of Vehicle';
     const TRANSFER_REASON_OTHER='Other';
-	protected $table = 'mvr_ownership_transfer_reasons';
+	protected $table = 'mvr_o_transfer_reasons';
 
 	protected $fillable = ['name'];
 

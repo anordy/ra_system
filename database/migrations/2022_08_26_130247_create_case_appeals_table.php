@@ -17,12 +17,12 @@ class CreateCaseAppealsTable extends Migration
             $table->id();
             $table->string('appeal_number',20);
             $table->unsignedBigInteger('case_id');
-            $table->text('appeal_details');
+            $table->string('appeal_details');
             $table->date('date_opened');
             $table->unsignedBigInteger('case_outcome_id')->nullable();
             $table->unsignedBigInteger('court_level_id')->nullable();
             $table->date('date_closed')->nullable();
-            $table->text('outcome_details')->nullable();
+            $table->string('outcome_details')->nullable();
             $table->timestamps();
 
             $table->foreign('case_outcome_id')->references('id')->on('case_outcomes');

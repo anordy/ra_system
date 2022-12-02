@@ -26,7 +26,7 @@ class CreateRioRegister extends Migration
             $table->timestamps();
 
             $table->foreign('dl_drivers_license_owner_id')->references('id')->on('dl_drivers_license_owners');
-            $table->foreign('mvr_motor_vehicle_registration_id')->references('id')->on('mvr_motor_vehicle_registration');
+            $table->foreign('mvr_motor_vehicle_registration_id')->references('id')->on('mvr_vehicle_registration');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('block_removed_by')->references('id')->on('users');
         });

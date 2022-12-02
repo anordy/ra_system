@@ -16,7 +16,7 @@ class CreateDlLicenseClassesTable extends Migration
         Schema::create('dl_license_classes', function (Blueprint $table) {
             $table->id();
             $table->string('name',20);
-            $table->string('description',255);
+            $table->string('description',255)->nullable();
             $table->timestamps();
         });
     }

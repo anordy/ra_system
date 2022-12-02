@@ -19,7 +19,7 @@ class CreateTaxAuditsTable extends Migration
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->string('intension')->nullable();
-            $table->text('scope')->nullable();
+            $table->string('scope')->nullable();
             $table->date('period_from')->nullable();
             $table->date('period_to')->nullable();
             $table->date('auditing_date')->nullable();

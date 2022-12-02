@@ -208,7 +208,7 @@ class PetroleumConfigSeeder extends Seeder
             PetroleumConfig::updateOrCreate($config);
         }
 
-        $heading1 = PetroleumConfig::where('code', 'heading1')->first();
+        $heading1 = PetroleumConfig::where('code', 'HEADING1')->first();
         
         $headings = [
             [

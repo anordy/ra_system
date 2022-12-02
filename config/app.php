@@ -168,6 +168,7 @@ return [
         Mews\Captcha\CaptchaServiceProvider::class,
         \Eddytim\Auditlog\AuditLogServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
+        Yajra\Oci8\Oci8ServiceProvider::class,
 
         /*
          * Application Service Providers...

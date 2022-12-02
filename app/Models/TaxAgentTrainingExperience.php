@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TaxAgentTrainingExperience extends Model
 {
     use HasFactory;
-	protected $table = 'tax_agent_training_experiences';
+	protected $table = 'tax_agent_tr_experiences';
 
 	protected $guarded = [];
 }

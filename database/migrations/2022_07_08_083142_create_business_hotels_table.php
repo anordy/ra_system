@@ -28,7 +28,7 @@ class CreateBusinessHotelsTable extends Migration
             $table->unsignedInteger('hotel_capacity');
             $table->string('average_rate');
             $table->enum('rate_currency',['TZS','USD'])->nullable();
-            $table->text('other_services')->nullable();
+            $table->string('other_services')->nullable();
             $table->timestamps();
         });
     }

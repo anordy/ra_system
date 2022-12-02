@@ -13,7 +13,7 @@ class CreateDlApplicationLicenseClassesTable extends Migration
      */
     public function up()
     {
-        Schema::create('dl_application_license_classes', function (Blueprint $table) {
+        Schema::create('dl_app_license_classes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('dl_license_application_id');
             $table->unsignedBigInteger('dl_license_class_id');
@@ -31,6 +31,6 @@ class CreateDlApplicationLicenseClassesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dl_application_license_classes');
+        Schema::dropIfExists('dl_app_license_classes');
     }
 }

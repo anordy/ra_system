@@ -13,7 +13,7 @@ class CreateMvrMotorVehicleRegistrationTable extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_motor_vehicle_registration', function (Blueprint $table) {
+        Schema::create('mvr_vehicle_registration', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('mvr_plate_size_id');
             $table->string('plate_number',30)->nullable();
@@ -32,6 +32,6 @@ class CreateMvrMotorVehicleRegistrationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_motor_vehicle_registration');
+        Schema::dropIfExists('mvr_vehicle_registration');
     }
 }

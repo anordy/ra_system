@@ -13,14 +13,14 @@ class CreateTaxAgentTrainingExperiencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tax_agent_training_experiences', function (Blueprint $table) {
+        Schema::create('tax_agent_tr_experiences', function (Blueprint $table) {
             $table->id();
 	        $table->string('org_name');
 	        $table->date('from');
 	        $table->date('to');
 	        $table->string('position_held');
-            $table->text('attachment')->nullable();
-	        $table->text('description');
+            $table->string('attachment')->nullable();
+	        $table->string('description');
 	        $table->unsignedBigInteger('tax_agent_id');
 	        $table->foreign('tax_agent_id')->references('id')->on('tax_agents');
             $table->timestamps();
@@ -34,6 +34,6 @@ class CreateTaxAgentTrainingExperiencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tax_agent_training_experiences');
+        Schema::dropIfExists('tax_agent_tr_experiences');
     }
 }

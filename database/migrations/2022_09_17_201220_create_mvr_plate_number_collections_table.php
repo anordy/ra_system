@@ -21,7 +21,7 @@ class CreateMvrPlateNumberCollectionsTable extends Migration
             $table->string('collector_phone',20);
             $table->timestamps();
 
-            $table->foreign('mvr_registration_id','mvr_pnc_reg')->references('id')->on('mvr_motor_vehicle_registration');
+            $table->foreign('mvr_registration_id','mvr_pnc_reg')->references('id')->on('mvr_vehicle_registration');
         });
     }
 

@@ -13,12 +13,12 @@ class CreateMvrMotorVehicleOwnerTable extends Migration
      */
     public function up()
     {
-        Schema::create('mvr_motor_vehicle_owners', function (Blueprint $table) {
+        Schema::create('mvr_vehicle_owners', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('mvr_motor_vehicle_id');
             $table->unsignedBigInteger('taxpayer_id');
-            $table->date('date')->nullable()->comment('Initial date registered as owner');
+            $table->date('date')->nullable();
             $table->unsignedBigInteger('mvr_ownership_status_id');
             $table->timestamps();
             $table->softDeletes();
@@ -37,6 +37,6 @@ class CreateMvrMotorVehicleOwnerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mvr_motor_vehicle_owners');
+        Schema::dropIfExists('mvr_vehicle_owners');
     }
 }

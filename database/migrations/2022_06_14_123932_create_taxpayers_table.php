@@ -28,7 +28,7 @@ class CreateTaxpayersTable extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
-            $table->text('physical_address');
+            $table->string('physical_address');
             $table->string('street');
 
             $table->string('email')->unique()->nullable();

@@ -25,8 +25,8 @@ class CreateMnoReturnsTable extends Migration
             $table->unsignedBigInteger('financial_year_id');
             $table->unsignedBigInteger('financial_month_id');
             $table->unsignedBigInteger('tax_type_id');
-            $table->decimal('total_amount_due', 40, 2);
-            $table->decimal('total_amount_due_with_penalties', 40, 2);
+            $table->decimal('total_amount_due',38, 2);
+            $table->decimal('total_amount_due_with_penalties',38, 2);
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->decimal('penalty', 20,2);
             $table->decimal('interest',20,2);
