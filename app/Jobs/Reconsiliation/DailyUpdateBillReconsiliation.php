@@ -10,7 +10,6 @@ use App\Models\ZmReconTran;
 use App\Traits\AfterPaymentEvents;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -46,26 +45,25 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
     }
 
     public function checkReconsiliation($reconsiliation_id){
-
+        Log::info('Job triggered');
         $reconsiliation = ZmRecon::find($reconsiliation_id);
 
         if ($reconsiliation) {
             $billCtrNums = $reconsiliation->reconTransIDs();
 
             $bills = ZmBill::whereIn('control_number', $billCtrNums)->whereIn('status', [ BillStatus::PENDING, BillStatus::FAILED ])->get();
-            
             if ($bills) {
                 try {
-                    DB::beginTransaction();    
+                    DB::beginTransaction();
                     foreach ($bills as $bill) {
                         $reconTrans = ZmReconTran::where('BillCtrNum', $bill->control_number)->first();
-                        
+
                         ZmPayment::query()->insert([
                             'zm_bill_id' => $bill->id,
                             'trx_id' => $reconTrans['pspTrxId'],
                             'sp_code' => config('modulesconfig.sp_code'),
                             'pay_ref_id' => $reconTrans['PayRefId'],
-                            'control_number' => $reconTrans['PayCtrNum'],
+                            'control_number' => $reconTrans['BillCtrNum'],
                             'bill_amount' => $bill['amount'],
                             'paid_amount' => $reconTrans['PaidAmt'],
                             'bill_pay_opt' => 1,
@@ -82,8 +80,8 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
                             'recon_trans_id' => $reconTrans['id'],
                             'created_at' => Carbon::now()->toDateTimeString(),
                         ]);
-                        
-                        $bill->status = BillStatus::COMPLETE;
+
+                        $bill->status = 'paid';
                         $bill->paid_amount = $bill->amount;
                         $bill->save();
 
@@ -101,8 +99,8 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
                         //Check and Update Lease Payment
                         $this->updateLeasePayment($bill);
                     }
+                    DB::commit();
 
-                        DB::commit();
                         Log::info('Successfully => Reconsiliation: Update Bills which didnt receive payment callback');
                     } catch (\Exception $e) {
                         DB::rollBack();
@@ -111,7 +109,7 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
                     }
 
             }
-            
+
         }
 
     }

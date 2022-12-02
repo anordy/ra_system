@@ -85,9 +85,9 @@ class Zanid extends Component
     {
         try {
             $this->kyc->update([
-                'first_name' => $this->convertStringToCamelCase($this->zanid_data['PRSN_FIRST_NAME']),
-                'middle_name' => $this->convertStringToCamelCase($this->zanid_data['PRSN_MIDLE_NAME']), // TODO: Zan id sometimes returns json on middle name. Look into this
-                'last_name' => $this->convertStringToCamelCase($this->zanid_data['PRSN_LAST_NAME']),
+                'first_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_FIRST_NAME']),
+                'middle_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_MIDLE_NAME']),
+                'last_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_LAST_NAME']),
                 'authorities_verified_at' => Carbon::now()->toDateTimeString(),
             ]);
             $this->alert('success', 'Taxpayer details have been approved!');
