@@ -36,7 +36,7 @@ class EnrollFingerprint extends Component
     {
         $check = Biometric::where('hand', $hand)
             ->where('finger', $finger)
-            ->where('reference_no', $this->kyc->reference_no)
+            ->where('reference_no', $this->kyc->id)
             ->where('template', '!=', null)
             ->get();
         if ($check->count() >= 1) {

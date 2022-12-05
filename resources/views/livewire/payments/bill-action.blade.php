@@ -87,7 +87,7 @@
     <div class="row mx-4">
         <div class="col-md-12 d-flex justify-content-end">
             <button type="button" class="btn btn-primary" wire:click='billAction' wire:loading.attr="disabled">
-                <div wire:loading wire:target="billAction">
+                <div wire:loading.delay wire:target="billAction">
                     <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
