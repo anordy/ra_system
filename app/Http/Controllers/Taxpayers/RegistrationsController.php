@@ -54,11 +54,11 @@ class RegistrationsController extends Controller
         }
         $kyc = KYC::findOrFail(decrypt($kycId));
         if (config('app.env') != 'local') {
-            $biometrics = Biometric::where('reference_no', $kyc->reference_no)
+            $biometrics = Biometric::where('reference_no', $kyc->id)
                 ->get();
 
-            if (count($biometrics) < 10) {
-                session()->flash('error', 'Enroll every finger');
+            if (count($biometrics) != 4) {
+                session()->flash('error', 'Enroll four fingers');
                 return redirect()->back();
             }
         }

@@ -46,6 +46,11 @@ class ZanIDController extends Controller
             ),
         ));
         $response = curl_exec($curl);
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if ($statusCode != 200) {
+            curl_close($curl);
+            throw new \Exception($response);
+        }
         curl_close($curl);
         return json_decode($response, true)['data'];
     }

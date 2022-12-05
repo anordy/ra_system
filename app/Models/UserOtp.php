@@ -14,7 +14,7 @@ class UserOtp extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    const EXPIRATION_TIME = 15;
+    const EXPIRATION_TIME = 5;
 
     public function __construct(array $attributes = [])
     {

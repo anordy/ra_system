@@ -42,7 +42,7 @@
                             <td colspan="5"><b>Left Hand</b></td>
                         </tr>
                         <tr>
-                            <th width="20%" align="center">
+                            {{-- <th width="20%" align="center">
                                 Little <br>
                                 <i class="bi bi-fingerprint" style="font-size: 50px"></i><br>
                                 @if (!$this->enrolled('left', 'little'))
@@ -74,7 +74,7 @@
                                 @else
                                     <span class="badge badge-success">Enrolled</span>
                                 @endif
-                            </th>
+                            </th> --}}
                             <th width="20%" align="center">
                                 Index <br>
                                 <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>
@@ -108,7 +108,7 @@
                             <td colspan="5"><b>Right Hand</b></td>
                         </tr>
                         <tr>
-                            <th width="20%" align="center">
+                            {{-- <th width="20%" align="center">
                                 Little <br>
                                 <i class="bi bi-fingerprint" style="font-size: 50px"></i><br>
                                 @if (!$this->enrolled('right', 'little'))
@@ -140,7 +140,7 @@
                                 @else
                                     <span class="badge badge-success">Enrolled</span>
                                 @endif
-                            </th>
+                            </th> --}}
                             <th width="20%" align="center">
                                 Index <br>
                                 <i class="bi bi-fingerprint" style="font-size: 50px"></i> <br>

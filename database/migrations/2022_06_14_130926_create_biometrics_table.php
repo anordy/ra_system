@@ -15,7 +15,7 @@ class CreateBiometricsTable extends Migration
     {
         Schema::create('biometrics', function (Blueprint $table) {
             $table->id();
-            $table->string('reference_no');
+            $table->string('reference_no')->nullable();
             $table->unsignedBigInteger('taxpayer_id')->nullable();
             $table->enum('hand', ['left', 'right']);
             $table->enum('finger', ['thumb', 'index', 'middle', 'ring', 'little']);
