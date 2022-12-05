@@ -361,7 +361,6 @@ class ObjectionApprovalProcessing extends Component
                     DB::commit();
                 } catch (Exception $e) {
                     Log::error($e);
-                    throw $e;
                     $this->alert('error', 'Something went wrong');
                 }
 
