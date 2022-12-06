@@ -107,67 +107,10 @@ class VerifyAction extends Component
             ];
 
             if ($amount > 0) {
-                $this->generateTaxAgentControlNo($taxpayer, $billitems, '');
+                $this->generateTaxAgentRenewControlNo($req, $billitems, '');
             } else {
                 $this->alert('error', 'Invalid amount provided');
             }
-
-
-            // $zmBill = ZmCore::createBill(
-            //     $billableId,
-            //     $billableType,
-            //     $tax_type->id,
-            //     $payer_id,
-            //     $payer_type,
-            //     $payer_name,
-            //     $payer_email,
-            //     $payer_phone,
-            //     $expire_date,
-            //     $description,
-            //     $payment_option,
-            //     $currency,
-            //     $exchange_rate,
-            //     $createdby_id,
-            //     $createdby_type,
-            //     $billitems
-            // );
-
-            // if (config('app.env') != 'local') {
-            //     $response = ZmCore::sendBill($zmBill->id);
-            //     if ($response->status === ZmResponse::SUCCESS) {
-            //         $req->billing_status = BillingStatus::CN_GENERATING;
-            //         $req->save();
-            //         $taxpayer->notify(new DatabaseNotification(
-            //             $subject = 'TAX CONSULTANT VERIFICATION',
-            //             $message = 'Your application has been verified',
-            //             $href = 'taxagent.apply',
-            //             $hrefText = 'view'
-            //         ));
-            //         $this->alert('success', 'Request verified successfully.');
-            //     } else {
-            //         session()->flash('error', 'Control number generation failed, try again later');
-            //         $req->status = BillingStatus::CN_GENERATION_FAILED;
-            //     }
-            //     $req->save();
-
-            // } else {
-            //     // We are local
-            //     $req->billing_status = BillingStatus::CN_GENERATED;
-            //     $req->save();
-
-            //     // Simulate successful control no generation
-            //     $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            //     $zmBill->zan_status = 'pending';
-            //     $zmBill->control_number = rand(2000070001000, 2000070009999);
-            //     $zmBill->save();
-
-            //     $taxpayer->notify(new DatabaseNotification(
-            //         $subject = 'TAX CONSULTANT VERIFICATION',
-            //         $message = 'Your application has been verified',
-            //         $href = 'taxagent.apply',
-            //         $hrefText = 'view'
-            //     ));
-            // }
 
             $this->flash('success', 'saved successfully');
             return redirect()->route('taxagents.renew');
