@@ -179,7 +179,7 @@
                         <div class="col-md-4 mt-4 form-group">
                             <button wire:click="searchResponsibleDetails" wire:loading.attr="disabled"
                                 class="btn btn-primary">
-                                <div wire:loading wire:target="searchResponsiblePerson">
+                                <div wire:loading.delay wire:target="searchResponsiblePerson">
                                     <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>
@@ -299,7 +299,7 @@
             <div class="col-md-12 text-right">
                 <a href="{{ route('withholdingAgents.list') }}" class="btn btn-danger mr-2">Cancel</a>
                 <button wire:click="submit" wire:loading.attr="disabled" class="btn btn-primary">
-                    <div wire:loading wire:target="submit">
+                    <div wire:loading.delay wire:target="submit">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
