@@ -7,6 +7,7 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\WithholdingAgent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -72,7 +73,7 @@ class WithholdingAgentsTable extends DataTableComponent
 
     public function changeStatus($id)
     {
-        $withholding_agent = WithholdingAgent::find($id);
+        $withholding_agent = WithholdingAgent::findOrFail($id);
         $status = $withholding_agent->status == 'active' ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
             'position' => 'center',
@@ -95,7 +96,7 @@ class WithholdingAgentsTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            $withholding_agent = WithholdingAgent::find($data->id);
+            $withholding_agent = WithholdingAgent::findOrFail($data->id);
             if ($withholding_agent->status == 'active') {
                 $withholding_agent->update([
                     'status' => 'inactive'
@@ -107,7 +108,7 @@ class WithholdingAgentsTable extends DataTableComponent
             }
             $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            report($e);
+            Log::error($e);
             $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }

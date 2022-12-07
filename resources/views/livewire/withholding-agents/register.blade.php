@@ -155,17 +155,6 @@
                 <div class="border-0">
                     <div class="row mx-4">
                         <div class="col-md-4 form-group">
-                            <label for="ztnNumber">ZTN Number *</label>
-                            <input type="text" wire:model.lazy="ztnNumber" name="ztnNumber" id="ztnNumber"
-                                class="form-control {{ $errors->has('ztnNumber') ? 'is-invalid' : '' }}">
-                            @error('ztnNumber')
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('ztnNumber') }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4 form-group">
                             <label for="reference_no">Responsible person ZRB Reference No. *</label>
                             <input type="text" wire:model.lazy="reference_no" name="reference_no" id="reference_no"
                                 class="form-control {{ $errors->has('reference_no') ? 'is-invalid' : '' }}">
@@ -226,34 +215,11 @@
         </div>
 
         {{-- Responsible person lookup --}}
-        @if ($search_triggered && !empty($taxpayer) && !empty($business))
+        @if ($search_triggered && !empty($taxpayer))
             <div class="row mx-4">
-                <h6 class="pb-2">Responsible Person Details</h6>
+                {{-- <h6 class="pb-2">Responsible Person Details</h6> --}}
                 <div class="col-12 p-3">
-                    <div class="card-body mb-2" style="border: 1px solid #ede6e6;">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Business Name</span>
-                                <p class="my-1">{{ $business->name }}</p>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">TIN</span>
-                                <p class="my-1">{{ $business->tin }}</p>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Email Address</span>
-                                <p class="my-1">{{ $business->email }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Mobile/Alternative</span>
-                                <p class="my-1">{{ $business->mobile }} / {{ $business->alt_mobile }}</p>
-                            </div>
-                        </div>
-                    </div>
                     <div class="card-body" style="border: 1px solid #ede6e6;">
-
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Full Name</span>
@@ -288,12 +254,12 @@
                     </div>
                 </div>
             </div>
-        @elseif ($search_triggered && (empty($taxpayer) || empty($business)))
-            <span class="pt-2 text-danger text-center"> ZTN Number or ZRB Reference Number provided is invalid
+        @elseif ($search_triggered && (empty($taxpayer)))
+            <span class="pt-2 text-danger text-center">ZRB Reference Number provided is invalid
             </span>
         @endif
 
-        @if (!empty($taxpayer) && !empty($business))
+        @if (!empty($taxpayer))
         <hr>
         <div class="row mt-3 m-4">
             <div class="col-md-12 text-right">
