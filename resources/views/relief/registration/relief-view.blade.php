@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Land Lease')
+@section('title', 'Relief')
 
 @section('content')
     @livewire('relief.relief-view', ['enc_id' => $id])
