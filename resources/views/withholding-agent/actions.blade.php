@@ -19,6 +19,6 @@
             wire:click="changeStatus({{ $row->id }})"><i class="fa fa-lock"></i> </button>
 @endif
 
-<a href="{{ route('withholdingAgents.certificate', encrypt($value)) }}" target="_blank" class="btn btn-success btn-sm">
+<a href="{{ route('withholdingAgents.certificate', encrypt($row->id)) }}" target="_blank" class="btn btn-success btn-sm">
     Certificate of Registration
 </a>

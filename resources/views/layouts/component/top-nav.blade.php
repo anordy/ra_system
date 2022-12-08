@@ -1,3 +1,8 @@
+<div class="loading-container" x-data="{ loading: false }" x-show="loading" @loading.window="loading = $event.detail.loading">
+    <div class="progress-bar">
+      <div class="progress-bar-value"></div>
+    </div>
+</div>
 <nav class="top-navbar navbar navbar-expand-lg navbar-light bg-light py-2">
     <div class="container-fluid p-0 flex-nowrap">
         <div class="justify-content-start d-flex align-items-center">
@@ -12,3 +17,4 @@
         </div>
     </div>
 </nav>
+

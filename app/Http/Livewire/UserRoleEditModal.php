@@ -35,7 +35,7 @@ class UserRoleEditModal extends Component
 
     public function submit()
     {
-        if (!Gate::allows('setting-user-addu')) {
+        if (!Gate::allows('setting-user-add')) {
             abort(403);
         }
 

@@ -58,9 +58,9 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
-            return true;
-        }
+        // if(config('app.env') == 'local'){
+        //     return true;
+        // }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
@@ -87,8 +87,9 @@ class SendMailFired
 	        $taxpayer = Taxpayer::find($event->tokenId);
 			$fullname = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
 			$email = $taxpayer->email;
-	        $status = $taxpayer->taxagent->is_verified;
-	        SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status);
+	        $status = $taxpayer->taxagent->status;
+            $reference_no = $taxpayer->taxagent->reference_no;
+	        SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status, $reference_no);
         } else if ($event->service === 'business-closure-approval'){
             // Token ID is $closure data
             $closure = $event->tokenId;

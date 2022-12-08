@@ -76,8 +76,9 @@ class VerifyAction extends Component
             $comment = $value['value'];
             $data = (object)$value['data'];
             $agent = TaxAgent::findOrFail($data->id);
+            $feeType = 'Registration Fee';
             $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
-                ->where('category', 'Registration Fee')
+                ->where('category', $feeType)
                 ->where('is_citizen', $agent->taxpayer->is_citizen)
                 ->first();
             $amount = $fee->amount;
@@ -100,7 +101,7 @@ class VerifyAction extends Component
 
 
             if ($amount > 0) {
-                $this->generateTaxAgentControlNo($agent, $billitems, $comment);
+                $this->generateTaxAgentRegControlNo($agent, $billitems, $comment, $feeType);
             } else {
                 $this->alert('error', 'Invalid amount provided');
             }

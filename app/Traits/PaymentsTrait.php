@@ -603,7 +603,7 @@ trait PaymentsTrait
         }
     }
 
-    public function generateTaxAgentControlNo($agent, $billitems, $comment)
+    public function generateTaxAgentRegControlNo($agent, $billitems, $comment)
     {
         $exchange_rate = 1;
         $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
@@ -624,7 +624,7 @@ trait PaymentsTrait
         $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
         $payer_email = $taxpayer->email;
         $payer_phone = $taxpayer->mobile;
-        $description = 'Tax Consultant Registration Fee';
+        $description = "Tax Consultant Registration Fee";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $used_currency;
         $createdby_type = get_class(Auth::user());
@@ -680,6 +680,72 @@ trait PaymentsTrait
             $approval->approved_by_id = Auth::id();
             $approval->approved_at = now();
             $approval->save();
+
+            // Simulate successful control no generation
+            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $zmBill->zan_status = 'pending';
+            $zmBill->control_number = rand(2000070001000, 2000070009999);
+            $zmBill->save();
+        }
+    }
+
+    public function generateTaxAgentRenewControlNo($req, $billitems, $comment)
+    {
+        $exchange_rate = 1;
+        $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
+
+        $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
+                    ->where('category', 'Renewal Fee')
+                    ->where('is_citizen', $req->tax_agent->taxpayer->is_citizen)
+                    ->first();
+                    
+        $used_currency = $fee->currency;
+
+        if ($tax_type->currency != 'TZS') {
+            $exchange_rate = ExchangeRate::query()->where('currency', $used_currency)->latest()->first()->mean;
+        }
+
+        $taxpayer = $req->tax_agent->taxpayer;
+        $payer_type = get_class($req->tax_agent->taxpayer);
+        $payer_name = implode(" ", array($req->tax_agent->taxpayer->first_name, $req->tax_agent->taxpayer->last_name));
+        $payer_email = $req->tax_agent->taxpayer->email;
+        $payer_phone = $req->tax_agent->taxpayer->mobile;
+        $description = "Tax Consultant Renewal Fee";
+        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $currency = $used_currency;
+        $createdby_type = get_class(Auth::user());
+        $exchange_rate = $exchange_rate;
+        $createdby_id = Auth::id();
+        $payer_id = $taxpayer->id;
+        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+        $billableId = $req->id;
+        $billableType = get_class($req);
+
+        $zmBill = ZmCore::createBill(
+            $billableId,
+            $billableType,
+            $tax_type->id,
+            $payer_id,
+            $payer_type,
+            $payer_name,
+            $payer_email,
+            $payer_phone,
+            $expire_date,
+            $description,
+            $payment_option,
+            $currency,
+            $exchange_rate,
+            $createdby_id,
+            $createdby_type,
+            $billitems
+        );
+
+        if (config('app.env') != 'local') {
+            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
+        } else {
+            // We are local
+            $req->billing_status = BillingStatus::CN_GENERATING;
+            $req->save();
 
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
