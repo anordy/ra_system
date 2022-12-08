@@ -193,10 +193,11 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $assessment = $this->subject->assessment()->exists();
 
-                $principalAmount = str_replace(',', '', $this->principalAmount);
-                $interestAmount = str_replace(',', '', $this->interestAmount);
-                $penaltyAmount = str_replace(',', '', $this->penaltyAmount);
+                $principalAmount = $this->principalAmount ? str_replace(',', '', $this->principalAmount) : 0;
+                $interestAmount = $this->interestAmount ? str_replace(',', '', $this->interestAmount) : 0;
+                $penaltyAmount = $this->penaltyAmount ? str_replace(',', '', $this->penaltyAmount) : 0;
                 $totalAMount = ($penaltyAmount + $interestAmount + $principalAmount);
+
 
                 if ($this->hasAssessment == "1") {
                     if ($assessment) {
