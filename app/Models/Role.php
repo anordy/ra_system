@@ -22,7 +22,7 @@ class Role extends Model implements Auditable
 
     public function reportTo()
     {
-        return $this->belongsTo(Role::class, 'report_to');
+        return $this->hasOne(Role::class, 'report_to');
     }
 
     public function permissions()

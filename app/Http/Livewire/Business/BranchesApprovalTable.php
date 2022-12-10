@@ -8,7 +8,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\BusinessLocation;
 
-class BranchesTable extends DataTableComponent
+class BranchesApprovalTable extends DataTableComponent
 {
     protected $model = BusinessLocation::class;
     public $status;
@@ -48,8 +48,6 @@ class BranchesTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Z Number", "zin")
-                ->sortable(),
             Column::make("Business Name", "business.name")
                 ->sortable(),
             Column::make("Branch Name", "name")

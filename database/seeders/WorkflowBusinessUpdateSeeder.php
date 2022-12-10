@@ -21,6 +21,7 @@ class WorkflowBusinessUpdateSeeder extends Seeder
             'property'  => ['marking']
         ];
         $initial_marking = 'apply';
+        $last_marking = 'completed';
         $supports =  ['App\Models\BusinessUpdate'];
         $places =  [
             'apply' => [

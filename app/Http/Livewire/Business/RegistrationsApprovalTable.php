@@ -20,7 +20,9 @@ class RegistrationsApprovalTable extends DataTableComponent
             ->where('pinstance_type', Business::class)
             ->where('status', '!=', 'completed')
             ->where('owner', 'staff')
-            ->whereJsonContains('operators', auth()->user()->id);
+            ->whereHas('operators', function($query){
+                $query->where('user_id', auth()->id());
+            });
     }
 
     public function configure(): void
@@ -36,21 +38,16 @@ class RegistrationsApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('Business Name', 'pinstance.business.name')                ->label(fn ($row) => $row->pinstance->name ?? ''),
-
+            Column::make('Business Name', 'pinstance.business.name')                
+                ->label(fn ($row) => $row->pinstance->name ?? ''),
             Column::make('TIN', 'pinstance.tin')
                 ->label(fn ($row) => $row->pinstance->tin ?? ''),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')
                 ->label(fn ($row) => $row->pinstance->reg_no ?? ''),
             Column::make('Mobile', 'pinstance.mobile')
                 ->label(fn ($row) => $row->pinstance->mobile ?? ''),
-            Column::make('Status', 'pinstance.mobile')
-                ->label(function ($row){
-                    return view('business.registrations.includes.approval_status', compact('row'));
-                }),
-            Column::make('Action', 'pinstance_id')
-                ->view('business.registrations.includes.approval')
+            Column::make('Status', 'id')->view('business.registrations.includes.approval_status'),
+            Column::make('Action', 'pinstance_id')->view('business.registrations.includes.approval')
         ];
     }
 }

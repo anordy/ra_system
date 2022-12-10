@@ -33,7 +33,9 @@ class ExtensionApprovalTable extends DataTableComponent
             ->where('pinstance_type', ExtensionRequest::class)
             ->where('status', '!=', 'completed')
             ->where('owner', 'staff')
-            ->whereJsonContains('operators', auth()->user()->id);
+            ->whereHas('operators', function($query){
+                $query->where('user_id', auth()->id());
+            });
     }
 
     public function columns(): array

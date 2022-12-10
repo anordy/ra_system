@@ -59,7 +59,7 @@ class TaxInvestigationInitiateTable extends DataTableComponent
                 ->format(function ($value) {
                     return <<<HTML
                            <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-arrow-right"></i> Initiate Approval</button>
-                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete </button>
                     HTML;
                 })
                 ->html(true),

@@ -60,18 +60,18 @@ class UsersTable extends DataTableComponent
             Column::make('Role', 'role.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Status', 'id')
-                ->format(function ($value, $row) {
-                    if ($value == auth()->user()->id) {
-                        //
+            Column::make('Status', 'status')
+                ->label(function ($row) {
+                    if ($row->id == auth()->user()->id) {
+                        return "";
                     } else if ($row->status == 1 && Gate::allows('setting-user-change-status')) {
                         return <<< HTML
-                        <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock-open"></i> </button>
-                    HTML;
+                            <button class="btn btn-info btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock-open"></i> </button>
+                        HTML;
                     } else if ($row->status != 1 && Gate::allows('setting-user-change-status')) {
                         return  <<< HTML
-                        <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
-                    HTML;
+                            <button class="btn btn-danger btn-sm" wire:click="activate($row->id, $row->status)"><i class="fa fa-lock"></i> </button>
+                        HTML;
                     }
                 })
                 ->html(true),
@@ -101,7 +101,7 @@ class UsersTable extends DataTableComponent
                 })
                 ->html(true),
 
-            Column::make('Role Action', 'id')
+            Column::make('Role Action', 'role.id')
                 ->format(function ($value, $row) {
                     if (Gate::allows('setting-user-change-role')) {
                         return <<< HTML

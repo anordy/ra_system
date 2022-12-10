@@ -22,38 +22,34 @@ class RolesTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-
-        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
-            if ($column->isField('id')) {
-                return [
-                    'style' => 'width: 20%;',
-                ];
-            }
-
-            return [];
-        });
     }
 
     protected $listeners = [
         'confirmed'
     ];
 
+    public function builder(): Builder
+    {
+        $query = Role::query()->with('reportTo');
+        return $query;
+    }
+
     public function columns(): array
     {
         return [
-           
+
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Report', 'reportTo')
-                ->label(fn ($row) => $row->reportTo)
+            Column::make('Report', 'report_to')
+                ->label(fn ($row) => $row->reportTo->name ?? '')
                 ->sortable()
                 ->searchable(),
-            Column::make('Configure Permission', 'id')
-            ->format(function ($value) {
-                if (Gate::allows('setting-role-assign-permission')) {
-                    return  <<< HTML
-                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$value)"><i class="fas fa-cog"></i></button>
+            Column::make('Configure Permission', 'created_at')
+                ->format(function ($value, $row) {
+                    if (Gate::allows('setting-role-assign-permission')) {
+                        return  <<< HTML
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$row->id)"><i class="fas fa-cog"></i> Configure </button>
                         HTML;
                     }
                 })->html(true),
@@ -67,7 +63,6 @@ class RolesTable extends DataTableComponent
                                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                             HTML;
                     }
-
                     if (Gate::allows('setting-role-delete')) {
                         $delete =  <<< HTML
                                 <button class="btn btn-danger btn-sm" onclick="Livewire.emit('showModal', 'role-delete-modal',$value)"><i class="fa fa-trash"></i> </button>
@@ -79,18 +74,6 @@ class RolesTable extends DataTableComponent
                 ->html(true),
         ];
     }
-
-
-    public function builder(): Builder
-    {
-
-
-        $query = Role::query()
-            ->leftJoin('roles as reports', 'reports.report_to', '=', 'roles.id')
-            ->select('roles.*', 'reports.name as reportTo');
-        return $query;
-    }
-
 
     public function delete($id)
     {

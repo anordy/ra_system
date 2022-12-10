@@ -30,27 +30,19 @@ class WaiverApprovalTable extends DataTableComponent
                 ->where('pinstance_type', Dispute::class)
                 ->where('status', '!=', 'completed')
                 ->where('owner', 'staff')
-                ->whereJsonContains('operators', auth()->user()->id);
-
-            // return Dispute::query()
-            //     ->where('disputes.status', BillStatus::COMPLETE)
-            //     ->where('disputes.category', $this->category)
-            //     ->whereNotIn('disputes.app_status', [DisputeStatus::APPROVED])
-            //     ->with('pinstancesActive')
-            //     ->orderBy('disputes.created_at', 'desc');
-
+                ->whereHas('operators', function($query){
+                    $query->where('user_id', auth()->id());
+                });
+                
         } elseif ($this->paymentStatus == 'unpaid') {
-            // return Dispute::query()
-            //     ->where('disputes.category', $this->category)
-            //     ->whereNotIn('disputes.status', [BillStatus::COMPLETE])
-            //     ->whereNotIn('disputes.app_status', [DisputeStatus::APPROVED])
-            //     ->with('pinstancesActive')
-            //     ->orderBy('disputes.created_at', 'desc');
+     
             return WorkflowTask::with('pinstance', 'user')
                 ->where('pinstance_type', Dispute::class)
                 ->where('status', '!=', 'completed')
                 ->where('owner', 'staff')
-                ->whereJsonContains('operators', auth()->user()->id);
+                ->whereHas('operators', function($query){
+                    $query->where('user_id', auth()->id());
+                });
         } else {
             return [];
         }

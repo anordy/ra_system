@@ -22,7 +22,6 @@ class ClaimsApprovalTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-//        $this->additionalSelects = ['currency'];
         $this->setAdditionalSelects('pinstance_type', 'user_type');
     }
 
@@ -32,7 +31,9 @@ class ClaimsApprovalTable extends DataTableComponent
             ->where('pinstance_type', TaxClaim::class)
             ->where('status', '!=', 'completed')
             ->where('owner', 'staff')
-            ->whereJsonContains('operators', auth()->user()->id)
+            ->whereHas('operators', function($query){
+                $query->where('user_id', auth()->id());
+            })
             ->with('pinstance')->orderByDesc('id');
     }
 

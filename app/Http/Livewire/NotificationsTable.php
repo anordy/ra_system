@@ -3,12 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Notification;
-use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -40,17 +38,6 @@ class NotificationsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['id as new_id']);
-
-        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
-            if ($column->isField('id')) {
-                return [
-                    'style' => 'width: 20%;',
-                ];
-            }
-
-            return [];
-        });
     }
 
     protected $listeners = [
@@ -65,24 +52,20 @@ class NotificationsTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(
-                    fn ($value, $row, Column $column) => $row->created_at->diffForHumans()
+                    fn ($value, $row) => $row->created_at->diffForHumans()
                 ),
             Column::make('Subject', 'data')
-                ->sortable()
-                ->searchable()
                 ->format(
-                    fn ($value, $row, Column $column) => $row['data']->subject
+                    fn ($value, $row) => $row['data']->subject
                 ),
-            Column::make('Message', 'data')
-                ->sortable()
-                ->searchable()
+            Column::make('Message', 'type')
                 ->format(
-                    fn ($value, $row, Column $column) => $row['data']->message
+                    fn ($value, $row) => $row['data']->message
                 ),
             Column::make('Action', 'id')
                 ->label(
                     function ($row) {
-                        $id = "'{$row->new_id}'";
+                        $id = "'{$row->id}'";
                         return <<< HTML
                             <button class="btn btn-info btn-sm" title="View" wire:click="read($id)"><i class="fa fa-eye"></i></button>
                             <button class="btn btn-danger btn-sm" title="Delete" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
@@ -97,6 +80,9 @@ class NotificationsTable extends DataTableComponent
     {
         try {
             $notification = Notification::find($id);
+            if($notification == null){
+                return redirect()->back();
+            }
             if ($notification['data']->href != null) {
                 if ($notification['data']->hrefParameters != null) {
                     return redirect()->route($notification['data']->href, encrypt($notification['data']->hrefParameters));

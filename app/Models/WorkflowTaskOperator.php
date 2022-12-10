@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WorkflowTask extends Model
+class WorkflowTaskOperator extends Model
 {
     use HasFactory;
 
@@ -29,11 +29,6 @@ class WorkflowTask extends Model
     public function business()
     {
         return $this->morphTo();
-    }
-
-    public function operators()
-    {
-        return $this->hasMany(WorkflowTaskOperator::class, 'task_id');
     }
 
     public function scopeCanApprove($query)

@@ -188,9 +188,11 @@ class ApprovalProcessing extends Component
 
         if ($this->checkTransition('registration_officer_review')) {
 
-            if ($this->subject->bpra_verification_status === BusinessStatus::PENDING) {
-                $this->alert('warning', 'You must verify business information from BPRA to proceed!');
-                return;
+            if (config('app.env') != 'local') {
+                if ($this->subject->bpra_verification_status === BusinessStatus::PENDING) {
+                    $this->alert('warning', 'You must verify business information from BPRA to proceed!');
+                    return;
+                }
             }
 
             $this->subject->isiic_i   = $this->isiic_i ?? null;
@@ -260,6 +262,7 @@ class ApprovalProcessing extends Component
                     'tax_type_id' => $type['tax_type_id'],
                     'currency'    => $type['currency'],
                     'created_at'  => Carbon::now(),
+                    'status' => 'current-used'
                 ]);
             }
         }
@@ -275,14 +278,13 @@ class ApprovalProcessing extends Component
             if ($lumpsum != null) {
                 $lumpsum->update(['business_location_id' => $location->id]);
             }
-            
+
             if ($location->ztnGeneration()) {
-                
+
                 if (!$location->generateZ()) {
                     $this->alert('error', 'Something went wrong.');
                     return;
                 }
-                
             } else {
                 $this->alert('error', 'Something went wrong.');
                 return;

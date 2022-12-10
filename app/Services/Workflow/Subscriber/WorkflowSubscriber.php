@@ -11,9 +11,11 @@ use App\Enum\TaxVerificationStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Role;
+use App\Models\Taxpayer;
 use App\Models\User;
 use App\Models\Workflow;
 use App\Models\WorkflowTask;
+use App\Models\WorkflowTaskOperator;
 use App\Notifications\DatabaseNotification;
 use App\Services\Workflow\Event\Event;
 use App\Services\Workflow\Event\GuardEvent;
@@ -135,8 +137,15 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     }
                 }
 
-                $task = new WorkflowTask([
+                $comment = null;
+                if (array_key_exists('comment', $context)) {
+                    $comment = $context['comment'];
+                }
+
+                $new_task = new WorkflowTask([
                     'workflow_id' => $workflow->id,
+                    'pinstance_type' =>  get_class($subject),
+                    'pinstance_id' => $subject->id,
                     'name' => $transition->getName(),
                     'from_place' => $transition->getFroms()[0],
                     'to_place' => $key,
@@ -147,12 +156,32 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'user_id' => $user->id ?? null,
                     'user_type' => $user != null ? get_class($user) : null,
                     'status' => $key == 'completed' ? 'completed' : 'running',
-                    'remarks' => $context['comment'] ?? null,
+                    'remarks' => $comment,
                 ]);
 
-                DB::transaction(function () use ($task, $subject) {
-                    $subject->pinstances()->save($task);
-                });
+                $new_task->save();
+                $operators_collection = array();
+
+                $user_type = '';
+                if ($place['owner'] == 'taxpayer') {
+                    $user_type = Taxpayer::class;
+                } elseif ($place['owner'] == 'staff') {
+                    $user_type = User::class;
+                }
+
+                foreach (json_decode($operators) as $operator) {
+                    array_push(
+                        $operators_collection,
+                        new WorkflowTaskOperator([
+                            'task_id' => $new_task->id,
+                            'workflow_id' => $workflow->id,
+                            'user_id' => $operator,
+                            'user_type' => $user_type
+                        ])
+                    );
+                }
+
+                $new_task->operators()->saveMany($operators_collection);
             }
 
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
@@ -219,7 +248,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
             }
-
+            $subject->marking = json_encode($subject->marking);
             $subject->save();
         } catch (Exception $e) {
             report($e);

@@ -29,23 +29,6 @@ class UserChangePasswordModal extends Component
         ];
     }
 
-    public function updatedPassword($password)
-    {
-        $zxcvbn = new Zxcvbn();
-        $weak = $zxcvbn->passwordStrength($password);
-        if ($weak['score'] == 4) {
-            $this->passwordStrength = 100;
-        } elseif ($weak['score'] == 3) {
-            $this->passwordStrength = 70;
-        } elseif ($weak['score'] == 2) {
-            $this->passwordStrength = 50;
-        } elseif ($weak['score'] == 1) {
-            $this->passwordStrength = 30;
-        } else {
-            $this->passwordStrength = 0;
-        }
-    }
-
     public function submit()
     {
         if (!Gate::allows('setting-user-change-password')) {

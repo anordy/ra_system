@@ -19,8 +19,8 @@ class CreateAuditsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('event');
             $table->morphs('auditable');
-            $table->string('old_values')->nullable();
-            $table->string('new_values')->nullable();
+            $table->string('old_values', 4000)->nullable();
+            $table->string('new_values', 4000)->nullable();
             $table->string('url')->nullable();
             $table->ipAddress('ip_address')->nullable();
             $table->string('user_agent', 1023)->nullable();

@@ -9,11 +9,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxpayersTable extends DataTableComponent
 {
-    public function mount()
-    {
-        $this->index = $this->page > 1 ? ($this->page - 1) * $this->perPage : 0;
-    }
-
+    
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -52,7 +48,7 @@ class TaxpayersTable extends DataTableComponent
                 ->format(fn($value, $row) => $row->country->nationality ?? ''),
             Column::make('Location', 'region.name'),
             Column::make('Street', 'street'),
-            // Column::make('Action', 'first_name')->view('taxpayers.actions')
+            Column::make('Action', 'id')->view('taxpayers.actions')
         ];
     }
 

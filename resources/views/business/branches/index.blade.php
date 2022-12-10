@@ -16,7 +16,7 @@
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab2" class="tab-pane fade m-2 show active">
-                    <livewire:business.branches-table status='pending'></livewire:business.branches-table>
+                    <livewire:business.branches-approval-table status='pending'></livewire:business.branches-approval-table>
                 </div>
                 <div id="tab1" class="tab-pane fade m-2">
                     <livewire:business.branches-table status='approved'></livewire:business.branches-table>
