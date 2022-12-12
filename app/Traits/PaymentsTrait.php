@@ -754,4 +754,17 @@ trait PaymentsTrait
             $zmBill->save();
         }
     }
+
+        /**
+     * @param $return
+     * @param $billItems
+     * @return void
+     * @throws \DOMException
+     */
+    public function generateGeneralControlNumber($bill)
+    {
+        if (config('app.env') != 'local') {
+            $sendBill = (new ZanMalipoInternalService)->createBill($bill);
+        }
+    }
 }
