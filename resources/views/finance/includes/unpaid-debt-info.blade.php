@@ -97,6 +97,7 @@
                                         <th>Interest</th>
                                         <th>Installment</th>
                                         <th>Total Debt</th>
+                                        <th>Assessment Step</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -122,12 +123,15 @@
                                                     {{ number_format($debt->outstanding_amount, 2) }}
                                                     {{ $debt->currency }}
                                                 </td>
+                                                <td>
+                                                    @include('finance.includes.assessment-status')
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
                                             <td colspan="7" class="text-center py-3">
-                                                No debts for verification.
+                                                No debts.
                                             </td>
                                         </tr>
                                     @endif
@@ -155,6 +159,7 @@
                                         <th>Interest</th>
                                         <th>Installment</th>
                                         <th>Total Debt</th>
+                                        <th>Assessment Step</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -180,12 +185,15 @@
                                                     {{ number_format($debt->outstanding_amount, 2) }}
                                                     {{ $debt->currency }}
                                                 </td>
+                                                <td>
+                                                    @include('finance.includes.assessment-status')
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
                                             <td colspan="7" class="text-center py-3">
-                                                No debts for verification.
+                                                No debts.
                                             </td>
                                         </tr>
                                     @endif
@@ -214,6 +222,7 @@
                                         <th>Interest</th>
                                         <th>Installment</th>
                                         <th>Total Debt</th>
+                                        <th>Assessment Step</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -239,12 +248,15 @@
                                                     {{ number_format($debt->outstanding_amount, 2) }}
                                                     {{ $debt->currency }}
                                                 </td>
+                                                <td>
+                                                    @include('finance.includes.assessment-status')
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
                                             <td colspan="7" class="text-center py-3">
-                                                No debts for verification.
+                                                No debts.
                                             </td>
                                         </tr>
                                     @endif

@@ -155,7 +155,6 @@ class LandLeaseReportTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make('Actions', 'id')
-            // ->hideIf(!Gate::allows('land-lease-view'))
                 ->view('land-lease.includes.actions'),
         ];
     }

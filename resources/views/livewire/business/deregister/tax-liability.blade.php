@@ -165,7 +165,7 @@
                                         @else
                                             <tr>
                                                 <td colspan="7" class="text-center py-3">
-                                                    No debts for Verification.
+                                                    No debts.
                                                 </td>
                                             </tr>
                                         @endif

@@ -67,7 +67,7 @@ class TaxClearanceController extends Controller
             ->get();
 
         $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
-        ->where('status', LeaseStatus::PENDING)
+        ->whereIn('status', '!=' , [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
         ->get();
 
         $locations = [$taxClearence->business_location_id];
@@ -113,7 +113,7 @@ class TaxClearanceController extends Controller
             ->get();
 
         $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
-        ->where('status', LeaseStatus::PENDING)
+        ->whereIn('status', '!=' , [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
         ->get();
 
         

@@ -34,7 +34,7 @@ class LocationReturnsTable extends DataTableComponent
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Total', 'total_amount')
+            Column::make('Principal', 'principal')
                 ->format(function ($value, $row){
                     return number_format($value, 2);
                 }),
@@ -42,6 +42,10 @@ class LocationReturnsTable extends DataTableComponent
                 return number_format($value, 2);
             }),
             Column::make('Interest', 'interest')->format(function ($value, $row){
+                return number_format($value, 2);
+            }),
+            Column::make('Total', 'total_amount')
+            ->format(function ($value, $row){
                 return number_format($value, 2);
             }),
             Column::make('Outstanding Amount', 'outstanding_amount')
@@ -52,15 +56,13 @@ class LocationReturnsTable extends DataTableComponent
             Column::make('Financial Month', 'financial_month_id')
                 ->format(function ($value, $row){
                     return "{$row->financialMonth->name} {$row->financialMonth->year->code}";
-                }),
+                })->sortable()->searchable(),
             Column::make('Return Category', 'return_category')
                 ->format(function ($value){
                     return ucfirst($value);
-                }),
+                })->sortable()->searchable(),
             Column::make('Payment Status', 'payment_status')
-                ->format(function ($value){
-                    return ucwords(str_replace('-', ' ', $value));
-                }),
+                ->view('finance.includes.status')->sortable()->searchable(),
             Column::make('Filing Due Date', 'filing_due_date')
                 ->format(function ($value){
                     return $value->toFormattedDateString();
@@ -68,7 +70,7 @@ class LocationReturnsTable extends DataTableComponent
             Column::make('Current Filing Due Date', 'curr_filing_due_date')
                 ->format(function ($value){
                     return $value->toFormattedDateString();
-                }),
+                })->sortable()->searchable(),
         ];
     }
 

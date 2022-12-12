@@ -19,7 +19,6 @@ class ReportTable extends Component
     }
     public function render()
     {
-        // $landLeases = DB::select($this->query);
         $landLeases = LandLease::where('created_at','<', '2022/08/01 23:59:59' )->get();
        
         return view('livewire.land-lease.report-table', compact('landLeases'));
