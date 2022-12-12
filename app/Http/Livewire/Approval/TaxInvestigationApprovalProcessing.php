@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\PaymentsTrait;
 use Illuminate\Validation\Rules\NotIn;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Validation\Rules\RequiredIf;
@@ -27,7 +28,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class TaxInvestigationApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
+    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -368,19 +369,10 @@ class TaxInvestigationApprovalProcessing extends Component
                 $createdby_type,
                 $billitems
             );
-
+            DB::commit();
 
             if (config('app.env') != 'local') {
-                $response = ZmCore::sendBill($zmBill->id);
-                if ($response->status === ZmResponse::SUCCESS) {
-                    $assessment->payment_status = ReturnStatus::CN_GENERATING;
-                    $assessment->save();
-                    $this->alert('success', 'A control number for this verification has been generated successfully');
-                } else {
-                    $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-                    $assessment->save();
-                    $this->alert('error', 'Control number generation failed, try again later');
-                }
+                $this->generateGeneralControlNumber($zmBill);
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -393,7 +385,6 @@ class TaxInvestigationApprovalProcessing extends Component
                 $zmBill->save();
                 $this->alert('success', 'A control number for this verification has been generated successfully');
             }
-            DB::commit();
         } catch (Exception $e) {
             Log::error($e);
             DB::rollBack();

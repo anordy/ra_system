@@ -27,11 +27,12 @@ use App\Notifications\DatabaseNotification;
 use Illuminate\Validation\Rules\RequiredIf;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
+use App\Traits\PaymentsTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class TaxAuditApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
+    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -433,18 +434,7 @@ class TaxAuditApprovalProcessing extends Component
 
 
             if (config('app.env') != 'local') {
-                $response = ZmCore::sendBill($zmBill->id);
-                if ($response->status === ZmResponse::SUCCESS) {
-                    $assessment->payment_status = ReturnStatus::CN_GENERATING;
-                    $assessment->save();
-
-                    $this->alert('success', 'A control number has been generated successful.');
-                } else {
-
-                    $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-                    $assessment->save();
-                    $this->alert('error', 'Control number generation failed, try again later');
-                }
+               $this->generateGeneralControlNumber($zmBill);
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
