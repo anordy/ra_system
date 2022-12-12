@@ -24,7 +24,6 @@ class ViewLeasePayment extends Component
     public $taxType;
     public $leasePayment;
 
-    //mount function
     public function mount($enc_id)
     {
         $this->leasePayment = LeasePayment::find(decrypt($enc_id));

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', $business->name. ' Ledger')
+@section('title', $business->name . ' Ledger')
 
 @section('content')
     <div class="card-body mt-0 p-2">
@@ -10,12 +10,16 @@
                     role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearence Information </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="return-infos-tab" data-toggle="tab" href="#return-infos"
-                    role="tab" aria-controls="return-infos" aria-selected="false">Return Information</a>
+                <a class="nav-link" id="return-infos-tab" data-toggle="tab" href="#return-infos" role="tab"
+                    aria-controls="return-infos" aria-selected="false">Return Information</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos"
-                    role="tab" aria-controls="debt-infos" aria-selected="false">Debts Information</a>
+                <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos" role="tab"
+                    aria-controls="debt-infos" aria-selected="false">Unpaid Debts Information</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="paid-debt-infos-tab" data-toggle="tab" href="#paid-debt-infos" role="tab"
+                    aria-controls="paid-debt-infos" aria-selected="false">Paid Debts Information</a>
             </li>
         </ul>
 
@@ -91,7 +95,8 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Mobile</span>
-                        <p class="my-1">{{ $business->mobile }} {{ $business->alt_mobile ? '/ '. $business->alt_mobile : '' }}</p>
+                        <p class="my-1">{{ $business->mobile }}
+                            {{ $business->alt_mobile ? '/ ' . $business->alt_mobile : '' }}</p>
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -155,62 +160,109 @@
                     </div>
                     <div class="card-body">
                         <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
-                            @foreach($business->locations as $location)
+                            @foreach ($business->locations as $location)
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $loop->first ? 'active' : '' }}"
-                                       id="{{ strtolower(str_replace(' ', '-', $location->name)) }}-tab"
-                                       data-toggle="tab" href="#{{ strtolower(str_replace(' ', '-', $location->name)) }}"
-                                       aria-controls="{{ strtolower(str_replace(' ', '-', $location->name)) }}"
-                                       role="tab" aria-selected="true">
+                                        id="{{ strtolower(str_replace(' ', '-', $location->name)) }}-tab"
+                                        data-toggle="tab"
+                                        href="#{{ strtolower(str_replace(' ', '-', $location->name)) }}"
+                                        aria-controls="{{ strtolower(str_replace(' ', '-', $location->name)) }}"
+                                        role="tab" aria-selected="true">
                                         {{ $location->name }}
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
                         <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-                            @foreach($business->locations as $location)
-                                <div class="tab-pane fade p-3 {{ $loop->first ? 'show active' : '' }}" id="{{ strtolower(str_replace(' ', '-', $location->name)) }}" role="tabpanel"
-                                     aria-labelledby="{{ strtolower(str_replace(' ', '-', $location->name)) }}-tab">
+                            @foreach ($business->locations as $location)
+                                <div class="tab-pane fade p-3 {{ $loop->first ? 'show active' : '' }}"
+                                    id="{{ strtolower(str_replace(' ', '-', $location->name)) }}" role="tabpanel"
+                                    aria-labelledby="{{ strtolower(str_replace(' ', '-', $location->name)) }}-tab">
                                     <livewire:business.location-returns-summary :locationId="$location->id" />
-                                    <livewire:business.location-returns-table location_id="{{$location->id}}" />
+                                    <livewire:business.location-returns-table location_id="{{ $location->id }}" />
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
-                    
+
             </div>
             <div class="tab-pane fade show" id="debt-infos" role="tabpanel" aria-labelledby="debt-infos-tab">
-                @foreach($business->locations as $location)
-
-                        <div id="accordion">
-                            <div class="card">
-                                <button class="btn collapsed" data-toggle="collapse" data-target="#collapseLocation-{{ $location->id }}"
-                                    aria-expanded="false" aria-controls="collapseLocation-{{ $location->id }}">
-                                    <div class="card-header" id="headingTwo">
-                                        <h5 class="mb-0">
-                                            {{ $location->name }}
-                                            @if ($location->is_headquarter)
-                                                <span>
-                                                    ( Headquater )
-                                                </span>
-                                            @endif
-                                            <span class="ml-2">
-                                                <i class="bi bi-chevron-double-down"></i>
+                @foreach ($business->locations as $location)
+                    <div id="accordion">
+                        <div class="card">
+                            <button class="btn collapsed" data-toggle="collapse"
+                                data-target="#unpaidCollapseLocation-{{ $location->id }}" aria-expanded="false"
+                                aria-controls="unpaidCollapseLocation-{{ $location->id }}">
+                                <div class="card-header" id="headingTwo">
+                                    <h5 class="mb-0">
+                                        {{ $location->name }}
+                                        @if ($location->is_headquarter)
+                                            <span>
+                                                (Headquater)
                                             </span>
-                                        </h5>
-                                    </div>
-                                </button>
-                
-                                <div id="collapseLocation-{{ $location->id }}" class="collapse" aria-labelledby="headingTwo"
-                                    data-parent="#accordion">
-                                    <div class="card-body">
-                                        @include('finance.includes.tax_clearence_info', ['location_id' => $location->id, 'tax_return_debts' => $businessTaxReturnDebts[$location->id] ?? [], 'land_lease_debts' => $businessLandLeaseDebts[$location->id]  ?? [], 'investigationDebts' => $businessInvestigationDebts[$location->id]  ?? [], 'auditDebts' => $businessAuditDebts[$location->id] ?? [], 'verificateionDebts' => $businessVerificateionDebts[$location->id] ?? [] ])
-                                    </div>
+                                        @endif
+                                        <span class="ml-2">
+                                            <i class="bi bi-chevron-double-down"></i>
+                                        </span>
+                                    </h5>
+                                </div>
+                            </button>
+
+                            <div id="unpaidCollapseLocation-{{ $location->id }}" class="collapse" aria-labelledby="headingTwo"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    @include('finance.includes.unpaid-debt-info', [
+                                        'location_id' => $location->id,
+                                        'tax_return_debts' => $unpaidBusinessTaxReturnDebts[$location->id] ?? [],
+                                        'land_lease_debts' => $unpaidBusinessLandLeaseDebts[$location->id] ?? [],
+                                        'investigationDebts' => $unpaidBusinessInvestigationDebts[$location->id] ?? [],
+                                        'auditDebts' => $unpaidBusinessAuditDebts[$location->id] ?? [],
+                                        'verificateionDebts' => $unpaidBusinessVerificateionDebts[$location->id] ?? [],
+                                    ])
                                 </div>
                             </div>
                         </div>
-                
+                    </div>
+                @endforeach
+            </div>
+            <div class="tab-pane fade show" id="paid-debt-infos" role="tabpanel" aria-labelledby="paid-debt-infos-tab">
+                @foreach ($business->locations as $location)
+                    <div id="accordion">
+                        <div class="card">
+                            <button class="btn collapsed" data-toggle="collapse"
+                                data-target="#paidCollapseLocation-{{ $location->id }}" aria-expanded="false"
+                                aria-controls="paidCollapseLocation-{{ $location->id }}">
+                                <div class="card-header" id="headingTwo">
+                                    <h5 class="mb-0">
+                                        {{ $location->name }}
+                                        @if ($location->is_headquarter)
+                                            <span>
+                                                (Headquater)
+                                            </span>
+                                        @endif
+                                        <span class="ml-2">
+                                            <i class="bi bi-chevron-double-down"></i>
+                                        </span>
+                                    </h5>
+                                </div>
+                            </button>
+
+                            <div id="paidCollapseLocation-{{ $location->id }}" class="collapse" aria-labelledby="headingTwo"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    @include('finance.includes.paid-debt-info', [
+                                        'location_id' => $location->id,
+                                        'tax_return_debts' => $paidBusinessTaxReturnDebts[$location->id] ?? [],
+                                        'land_lease_debts' => $paidBusinessLandLeaseDebts[$location->id] ?? [],
+                                        'investigationDebts' => $paidBusinessInvestigationDebts[$location->id] ?? [],
+                                        'auditDebts' => $paidBusinessAuditDebts[$location->id] ?? [],
+                                        'verificateionDebts' => $paidBusinessVerificateionDebts[$location->id] ?? [],
+                                    ])
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
             </div>
         </div>

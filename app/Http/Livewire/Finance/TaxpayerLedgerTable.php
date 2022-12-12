@@ -32,15 +32,13 @@ class TaxpayerLedgerTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZTN', 'ztn_number'),
-            Column::make('Business Name', 'name')
-                ->sortable()
-                ->searchable(),
-            Column::make('TIN', 'tin'),
-            Column::make('Buss. Reg. No.', 'reg_no'),
-            Column::make('Mobile', 'mobile'),
+            Column::make('ZTN', 'ztn_number')->sortable()->searchable(),
+            Column::make('Business Name', 'name')->sortable()->searchable(),
+            Column::make('TIN', 'tin')->sortable()->searchable(),
+            Column::make('Buss. Reg. No.', 'reg_no')->sortable()->searchable(),
+            Column::make('Mobile', 'mobile')->sortable()->searchable(),
             Column::make('Status', 'status')
-                ->view('business.registrations.includes.status'),
+                ->view('business.registrations.includes.status')->sortable()->searchable(),
             Column::make('Action', 'id')
                 ->view('finance.includes.actions')
         ];

@@ -1,32 +1,32 @@
 <div class="">
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="return-debts-tab" data-toggle="tab" href="#return-debts" role="tab" aria-controls="return-debts"
+            <a class="nav-link active" id="unpaid-return-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-return-debts-{{$location_id}}" role="tab" aria-controls="unpaid-return-debts-{{$location_id}}"
                 aria-selected="true">Return Debts</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="verification-debts-tab" data-toggle="tab" href="#verification-debts" role="tab"
-                aria-controls="verification-debts" aria-selected="false">Verification Debts</a>
+            <a class="nav-link" id="unpaid-verification-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-verification-debts-{{$location_id}}" role="tab"
+                aria-controls="unpaid-verification-debts-{{$location_id}}" aria-selected="false">Verification Debts</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="audit-debts-tab" data-toggle="tab" href="#audit-debts" role="tab"
-                aria-controls="audit-debts" aria-selected="false">Audit Debts</a>
+            <a class="nav-link" id="unpaid-audit-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-audit-debts-{{$location_id}}" role="tab"
+                aria-controls="unpaid-audit-debts-{{$location_id}}" aria-selected="false">Audit Debts</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="investigation-debts-tab" data-toggle="tab" href="#investigation-debts"
-                role="tab" aria-controls="investigation-debts" aria-selected="false">Investigation Debts</a>
+            <a class="nav-link" id="unpaid-investigation-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-investigation-debts-{{$location_id}}"
+                role="tab" aria-controls="unpaid-investigation-debts-{{$location_id}}" aria-selected="false">Investigation Debts</a>
         </li>
         
         <li class="nav-item" role="presentation">
-            <a class="nav-link" id="landlease-debts-tab" data-toggle="tab" href="#landlease-debts"
-                role="tab" aria-controls="landlease-debts" aria-selected="false">
+            <a class="nav-link" id="unpaid-landlease-debts-{{$location_id}}-tab" data-toggle="tab" href="#unpaid-landlease-debts-{{$location_id}}"
+                role="tab" aria-controls="unpaid-landlease-debts-{{$location_id}}" aria-selected="false">
                 Land Lease Debts
             </a>
         </li>
     </ul>
 
     <div class="tab-content bg-white border shadow-sm" id="myTabContent">
-        <div class="tab-pane fade show active" id="return-debts" role="tabpanel" aria-labelledby="return-debts-tab">
+        <div class="tab-pane fade show active" id="unpaid-return-debts-{{$location_id}}" role="tabpanel" aria-labelledby="unpaid-return-debts-{{$location_id}}-tab">
             <div class="card shadow-sm my-2 rounded-0">
                 <div class="card-header font-weight-bold bg-white">
                     Return Debts
@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="verification-debts" role="tabpanel" aria-labelledby="verification-debts-tab">
+        <div class="tab-pane fade" id="unpaid-verification-debts-{{$location_id}}" role="tabpanel" aria-labelledby="unpaid-verification-debts-{{$location_id}}-tab">
             <div class="card shadow-sm my-4 rounded-0">
                 <div class="card-header font-weight-bold bg-white">
                     Verification Debts
@@ -97,6 +97,7 @@
                                         <th>Interest</th>
                                         <th>Installment</th>
                                         <th>Total Debt</th>
+                                        <th>Assessment Step</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -122,6 +123,9 @@
                                                     {{ number_format($debt->outstanding_amount, 2) }}
                                                     {{ $debt->currency }}
                                                 </td>
+                                                <td>
+                                                    @include('finance.includes.assessment-status')
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -139,7 +143,7 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="audit-debts" role="tabpanel" aria-labelledby="audit-debts-tab">
+        <div class="tab-pane fade" id="unpaid-audit-debts-{{$location_id}}" role="tabpanel" aria-labelledby="unpaid-audit-debts-{{$location_id}}-tab">
             <div class="card shadow-sm my-4 rounded-0">
                 <div class="card-header font-weight-bold bg-white">
                     Audit Debts
@@ -155,6 +159,7 @@
                                         <th>Interest</th>
                                         <th>Installment</th>
                                         <th>Total Debt</th>
+                                        <th>Assessment Step</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -180,6 +185,9 @@
                                                     {{ number_format($debt->outstanding_amount, 2) }}
                                                     {{ $debt->currency }}
                                                 </td>
+                                                <td>
+                                                    @include('finance.includes.assessment-status')
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -197,8 +205,8 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="investigation-debts" role="tabpanel"
-            aria-labelledby="investigation-debts-tab">
+        <div class="tab-pane fade" id="unpaid-investigation-debts-{{$location_id}}" role="tabpanel"
+            aria-labelledby="unpaid-investigation-debts-{{$location_id}}-tab">
             <div class="card shadow-sm my-4 rounded-0">
                 <div class="card-header font-weight-bold bg-white">
                     Investigation Debts
@@ -214,6 +222,7 @@
                                         <th>Interest</th>
                                         <th>Installment</th>
                                         <th>Total Debt</th>
+                                        <th>Assessment Step</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -239,6 +248,9 @@
                                                     {{ number_format($debt->outstanding_amount, 2) }}
                                                     {{ $debt->currency }}
                                                 </td>
+                                                <td>
+                                                    @include('finance.includes.assessment-status')
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -256,7 +268,7 @@
             </div>
         </div>
 
-        <div class="tab-pane fade" id="landlease-debts" role="tabpanel" aria-labelledby="landlease-debts-tab">
+        <div class="tab-pane fade" id="unpaid-landlease-debts-{{$location_id}}" role="tabpanel" aria-labelledby="unpaid-landlease-debts-{{$location_id}}-tab">
             <div class="card shadow-sm my-4 rounded-0">
                 <div class="card-header font-weight-bold bg-white">
                     Land Lease Debts
@@ -314,3 +326,4 @@
     </div>
 
 </div>
+
