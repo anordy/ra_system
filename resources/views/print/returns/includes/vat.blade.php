@@ -49,7 +49,7 @@
                     <tr>
                         <td>{{ $item->config->name }}</td>
                         <td class="text-right">{{ number_format($item->value) }}
-                            <strong>{{$item->config->currency}}</strong></td>
+                            <strong>(Electricity Units)</strong></td>
                         <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
                             @if($item->config->rate_type =='percentage')
                                 %
