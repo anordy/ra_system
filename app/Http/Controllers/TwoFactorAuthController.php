@@ -44,13 +44,13 @@ class TwoFactorAuthController extends Controller
             ->first();
 
         if ($otp == null) {
-            return redirect()->back()->withErrors('Not a valid code kindly resend to get new code');
+            return redirect()->back()->withErrors('Token supplied does not exits');
         }
         if ($otp->isUsed()) {
-            return redirect()->back()->withErrors('Your token has already used');
+            return redirect()->back()->withErrors('Token has already used');
         }
         if ($otp->isExpired()) {
-            return redirect()->back()->withErrors('Your token has already expired');
+            return redirect()->back()->withErrors('Token has already expired');
         }
         $otp->used = true;
         $otp->save();

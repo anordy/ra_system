@@ -143,12 +143,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
     Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
 
-   
-});
-
-Route::middleware('firstLogin')->group(function(){
     Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.change');
+
 });
 
 Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
