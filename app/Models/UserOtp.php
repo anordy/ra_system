@@ -37,7 +37,7 @@ class UserOtp extends Model
         $max = $min * 10 - 1;
         $code = mt_rand($min, $max);
 
-        if(config('app.env') == 'local'){
+        if (config('app.env') == 'local') {
             return '123456';
         }
 
@@ -56,27 +56,14 @@ class UserOtp extends Model
 
     public function isExpired()
     {
-        return $this->created_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
+        return $this->updated_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
     }
 
     public function sendCode()
     {
-        if (!$this->user) {
-            throw new \Exception("No user attached to this token.");
-        }
-
-        if (!$this->code) {
-            $this->code = $this->generateCode();
-        }
-
-
-        try {
+        if (config('app.env') == 'production') {
             event(new SendSms('otp', $this->id));
             event(new SendMail('otp', $this->id));
-            return true;
-        } catch (Exception $e) {
-            Log::error($e);
-            return false;
         }
     }
 }
