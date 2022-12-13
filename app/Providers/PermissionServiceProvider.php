@@ -27,7 +27,7 @@ class PermissionServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(Schema::hasTable('permissions') || Schema::hasTable('sys_modules')){
+        if(Schema::hasTable('permissions') && Schema::hasTable('sys_modules')){
             Permission::get()->map(function ($permission) {
                 Gate::define($permission->name, function ($user) use ($permission) {
                     return $user->hasPermissionTo($permission);

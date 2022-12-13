@@ -57,7 +57,7 @@ class LoginController extends Controller
 
         if ($user->status == 0) {
             throw ValidationException::withMessages([
-                $this->username() =>  "Your account is locked, Please contact your admin to un lock your account",
+                $this->username() =>  "Your account is locked, Please contact your admin to unlock your account",
             ]);
         }
 

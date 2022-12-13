@@ -40,6 +40,7 @@ class TwoFactorAuthController extends Controller
         $user  = auth()->user();
 
         $otp = UserOtp::where('user_id', $user->id)
+            ->where('user_type', get_class($user))
             ->where('code', $code)
             ->first();
 
