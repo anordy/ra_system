@@ -148,7 +148,6 @@
                     </div>
                 @endif
 
-                <div class="pt-5"></div>
                 <div class="card-header text-uppercase font-weight-bold bg-white pt-1">
                     Lease Information
                 </div>

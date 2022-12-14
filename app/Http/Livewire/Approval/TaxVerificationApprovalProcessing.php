@@ -4,29 +4,30 @@ namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxVerificationStatus;
 use App\Events\SendMail;
-use Exception;
-use Carbon\Carbon;
+use App\Models\Returns\ReturnStatus;
 use App\Models\Role;
-use App\Models\User;
+use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
-use Livewire\Component;
-use Livewire\WithFileUploads;
+use App\Models\User;
+use App\Models\Verification\TaxVerificationOfficer;
 use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\PaymentsTrait;
+use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Returns\ReturnStatus;
-use App\Models\TaxAssessments\TaxAssessment;
-use Illuminate\Support\Facades\Auth;
-use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
-use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\Verification\TaxVerificationOfficer;
 use Illuminate\Validation\Rules\RequiredIf;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class TaxVerificationApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
+    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -293,11 +294,12 @@ class TaxVerificationApprovalProcessing extends Component
             $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
             $billableId = $assessment->id;
             $billableType = get_class($assessment);
+            $taxType = $this->taxTypes->where('code', 'verification')->first()->id;
 
             $zmBill = ZmCore::createBill(
                 $billableId,
                 $billableType,
-                $this->taxTypes->where('code', 'verification')->first()->id,
+                $taxType,
                 $payer_id,
                 $payer_type,
                 $payer_name,
@@ -312,20 +314,10 @@ class TaxVerificationApprovalProcessing extends Component
                 $createdby_type,
                 $billitems
             );
-
+            DB::commit();
 
             if (config('app.env') != 'local') {
-                $response = ZmCore::sendBill($zmBill->id);
-                if ($response->status === ZmResponse::SUCCESS) {
-                    $assessment->payment_status = ReturnStatus::CN_GENERATING;
-                    $assessment->save();
-                    $this->alert('success', 'A control number has been generated successful.');
-                } else {
-                    $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-                    $assessment->save();
-
-                    $this->alert('error', 'Control number generation failed, Try again later');
-                }
+                $this->generateGeneralControlNumber($zmBill);
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -338,10 +330,9 @@ class TaxVerificationApprovalProcessing extends Component
                 $zmBill->save();
                 $this->alert('success', 'A control number for this verification has been generated successfully');
             }
-            DB::commit();
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
         }
     }
 

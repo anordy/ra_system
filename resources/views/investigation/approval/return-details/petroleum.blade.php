@@ -43,7 +43,7 @@
                                 <td>{{ $item['JET'] }}</td>
                                 <td>{{ $item['PTL'] }}</td>
                                 <td>{{ $item['IFT'] }}</td>
-                                <td>{{ $item['RDF'] }}</td>
+                                {{-- <td>{{ $item['RDF'] }}</td> --}}
                                 <td>{{ $item['RLF'] }}</td>
                                 <td>{{ $item['HEADING1'] }}</td>
                                 <td>{{ $item['EXP'] }}</td>
@@ -59,7 +59,7 @@
                                 $JET += $item['JET'];
                                 $PTL += $item['PTL'];
                                 $IFT += $item['IFT'];
-                                $RDF += $item['RDF'];
+                                // $RDF += $item['RDF'];
                                 $RLF += $item['RLF'];
                                 $HEADING1 += $item['HEADING1'];
                                 $EXP += $item['EXP'];
@@ -79,7 +79,7 @@
                             <td>{{ number_format($JET, 2) }}</td>
                             <td>{{ number_format($PTL, 2) }}</td>
                             <td>{{ number_format($IFT, 2) }}</td>
-                            <td>{{ number_format($RDF, 2) }}</td>
+                            {{-- <td>{{ number_format($RDF, 2) }}</td> --}}
                             <td>{{ number_format($RLF, 2) }}</td>
                             <td>{{ number_format($HEADING1, 2) }}</td>
                             <td>{{ number_format($EXP, 2) }}</td>

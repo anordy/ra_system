@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class Check2FA
@@ -17,11 +18,19 @@ class Check2FA
      */
     public function handle(Request $request, Closure $next)
     {
-      
+
         if (!Session::has('user_2fa')) {
-            return redirect()->route('login');
+            return redirect()->route('twoFactorAuth.index');
         }
-      
+
+        $user = auth()->id();
+
+        $token = Session::get('user_2fa');
+        if ($token != $user) {
+            Auth::logout();
+            return redirect()->route('login')->withErrors('Suspicious Login Attempt');
+        }
+
         return $next($request);
     }
 }

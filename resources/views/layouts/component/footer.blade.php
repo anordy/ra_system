@@ -15,3 +15,18 @@
 <x-livewire-alert::scripts />
 
 @yield('scripts')
+
+<script>
+    window.onload = function() {
+        Livewire.hook('message.sent', () => {
+            window.dispatchEvent(
+                new CustomEvent('loading', { detail: { loading: true }})
+            );
+        })
+        Livewire.hook('message.processed', (message, component) => {
+            window.dispatchEvent(
+                new CustomEvent('loading', { detail: { loading: false }})
+            );
+        })
+    }
+</script>

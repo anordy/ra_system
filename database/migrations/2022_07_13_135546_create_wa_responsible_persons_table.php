@@ -17,7 +17,7 @@ class CreateWaResponsiblePersonsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('withholding_agent_id');
             $table->unsignedBigInteger('responsible_person_id');
-            $table->unsignedBigInteger('business_id');
+            $table->unsignedBigInteger('business_id')->nullable();
             $table->string('title');
             $table->string('position');
             $table->unsignedBigInteger('officer_id');

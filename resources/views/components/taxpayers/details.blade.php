@@ -35,10 +35,11 @@
     </div>
 </div>
 
-@if ($kyc->id_type == 1)
-    <p>Nida Verification</p>
-@elseif ($kyc->id_type == 2)
+
+@if ($kyc->id_type == 2 or $kyc->id_type == 4)
     <livewire:taxpayers.details.zanid :kyc="$kyc" />
-@elseif ($kyc->id_type == 3)
+@endif
+
+@if ($kyc->id_type == 3)
     <livewire:taxpayers.details.passport :kyc="$kyc" />
 @endif

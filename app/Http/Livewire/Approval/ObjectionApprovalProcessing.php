@@ -362,8 +362,7 @@ class ObjectionApprovalProcessing extends Component
                 } catch (Exception $e) {
 //                    todo: rollback statement
                     Log::error($e);
-                    throw $e;
-                    $this->alert('error', 'Something went wrong'); // todo: unreachable statement
+                    $this->alert('error', 'Something went wrong');
                 }
 
             }

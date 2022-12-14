@@ -116,7 +116,6 @@ use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\UpgradeTaxType\QualifiedTaxTypeController;
 use App\Http\Controllers\UpgradeTaxType\UpgradedTaxTypeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\v1\ZanMalipoController;
 use App\Http\Controllers\Verification\TaxVerificationApprovalController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Verification\TaxVerificationFilesController;
@@ -134,19 +133,23 @@ Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/pay', [ZanMalipoController::class, 'pay']); // TODO: remove on production
-Route::get('/consultant-pay', [ZanMalipoController::class, 'consultant']); // TODO: remove on production
 
-//todo: put 2fa in a middleware
-Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
-Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
-Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
+
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
-//todo: put change password in a middleware
-Route::get('password/change/{user}', [ChangePasswordController::class, 'index'])->name('password.change');
-Route::post('password/save-changed', [ChangePasswordController::class, 'updatePassword'])->name('password.save-changed');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth')->group(function () {
+    Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
+    Route::post('/twoFactorAuth', [TwoFactorAuthController::class, 'confirm'])->name('twoFactorAuth.confirm');
+    Route::post('/twoFactorAuth/resend', [TwoFactorAuthController::class, 'resend'])->name('twoFactorAuth.resend');
+    Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
+
+    Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
+    Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.change');
+
+});
+
+Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
@@ -283,7 +286,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dispute/approval/{waiver_id}', [DisputeController::class, 'approval'])->name('dispute.approval');
         Route::get('/dispute/files/{waiver_id}', [DisputeController::class, 'files'])->name('dispute.files');
         Route::get('/dispute/show/{waiver_id}', [DisputeController::class, 'show'])->name('dispute.show');
-
     });
 
     Route::name('taxagents.')->prefix('taxagents')->group(function () {
@@ -428,7 +430,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/debts', [DebtReportController::class, 'index'])->name('debts');
         Route::get('/debts/preview/{parameters}', [DebtReportController::class, 'preview'])->name('debts.preview');
         Route::get('/debts/download-report-pdf/{data}', [DebtReportController::class, 'exportDebtReportPdf'])->name('debts.download.pdf');
-
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -476,8 +477,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/assesments/show/{assessment_id}', [AssessmentDebtController::class, 'show'])->name('assessment.show');
         Route::get('/assessment/waiver/show/{assessment_id}', [AssessmentDebtController::class, 'showWaiver'])->name('assessment.waiver.show');
         Route::get('/assessments/waiver/show/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('assessments.waivers.approval');
-
-
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {

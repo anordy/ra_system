@@ -51,12 +51,6 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
                 })
                 ->sortable()
                 ->searchable(),
-            Column::make('Business Name', 'business_id')
-                ->label(function ($row) {
-                    return "{$row->business->name}";
-                })
-                ->sortable()
-                ->searchable(),
             Column::make('Title', 'title')
                 ->label(function ($row) {
                     return "{$row->title}";
@@ -105,8 +99,8 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
-//        todo: encrypt id && select only columns that's needed && might want to check the returned object
-        $responsible_person = WaResponsiblePerson::find($id);
+//        todo: encrypt id && select only columns that's needed
+        $responsible_person = WaResponsiblePerson::findOrFail($id);
         $status = $responsible_person->status == 'active' ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
             'position' => 'center',
@@ -130,10 +124,10 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
-//        todo: select only columns that's needed && might want to check the returned object - suggestion
+//        todo: select only columns that's needed - suggestion
         try {
             $data = (object) $value['data'];
-            $responsible_person = WaResponsiblePerson::find($data->id);
+            $responsible_person = WaResponsiblePerson::findOrFail($data->id);
             if ($responsible_person->status == 'active') {
                 $responsible_person->update([
                     'status' => 'inactive'

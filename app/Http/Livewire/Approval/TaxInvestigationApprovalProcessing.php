@@ -7,27 +7,28 @@ use App\Models\CaseStage;
 use App\Models\Investigation\TaxInvestigationOfficer;
 use App\Models\LegalCase;
 use App\Models\Returns\ReturnStatus;
-use Exception;
-use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\TaxAssessments\TaxAssessment;
-use App\Models\User;
 use App\Models\TaxType;
-use Livewire\Component;
-use Livewire\WithFileUploads;
+use App\Models\User;
 use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\PaymentsTrait;
+use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Validation\Rules\NotIn;
-use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Validation\Rules\RequiredIf;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class TaxInvestigationApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
+    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -193,10 +194,11 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $assessment = $this->subject->assessment()->exists();
 
-                $principalAmount = str_replace(',', '', $this->principalAmount);
-                $interestAmount = str_replace(',', '', $this->interestAmount);
-                $penaltyAmount = str_replace(',', '', $this->penaltyAmount);
+                $principalAmount = $this->principalAmount ? str_replace(',', '', $this->principalAmount) : 0;
+                $interestAmount = $this->interestAmount ? str_replace(',', '', $this->interestAmount) : 0;
+                $penaltyAmount = $this->penaltyAmount ? str_replace(',', '', $this->penaltyAmount) : 0;
                 $totalAMount = ($penaltyAmount + $interestAmount + $principalAmount);
+
 
                 if ($this->hasAssessment == "1") {
                     if ($assessment) {
@@ -367,19 +369,10 @@ class TaxInvestigationApprovalProcessing extends Component
                 $createdby_type,
                 $billitems
             );
-
+            DB::commit();
 
             if (config('app.env') != 'local') {
-                $response = ZmCore::sendBill($zmBill->id);
-                if ($response->status === ZmResponse::SUCCESS) {
-                    $assessment->payment_status = ReturnStatus::CN_GENERATING;
-                    $assessment->save();
-                    $this->alert('success', 'A control number for this verification has been generated successfully');
-                } else {
-                    $assessment->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-                    $assessment->save();
-                    $this->alert('error', 'Control number generation failed, try again later');
-                }
+                $this->generateGeneralControlNumber($zmBill);
             } else {
                 // We are local
                 $assessment->payment_status = ReturnStatus::CN_GENERATED;
@@ -392,7 +385,6 @@ class TaxInvestigationApprovalProcessing extends Component
                 $zmBill->save();
                 $this->alert('success', 'A control number for this verification has been generated successfully');
             }
-            DB::commit();
         } catch (Exception $e) {
             Log::error($e);
             DB::rollBack();

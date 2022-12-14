@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\WaResponsiblePerson;
+use App\Models\WithholdingAgent;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
@@ -21,13 +21,12 @@ class WithholdingAgentController extends Controller
         return view('withholding-agent.index');
     }
 
-    public function view()
+    public function view($id)
     {
         if (!Gate::allows('withholding-agents-view')) {
             abort(403);
         }
-//        todo: check if this work?
-        return view('withholding-agent.view');
+        return view('withholding-agent.view', compact('id'));
     }
 
     public function registration()
@@ -39,14 +38,12 @@ class WithholdingAgentController extends Controller
     }
 
     public function certificate($id){
-        $id = decrypt($id);
-//        todo: what if object does not exist? suggesting checking the query response
-        $wa_responsible_person = WaResponsiblePerson::with('taxpayer')->find($id);
+        $whagent = WithholdingAgent::findOrFail(decrypt($id));
 
         $code = [
-            'Institution Name' => $wa_responsible_person->withholdingAgent->institution_name,
-            'Institution Place' => $wa_responsible_person->withholdingAgent->institution_place,
-            'Agency No.' => $wa_responsible_person->withholdingAgent->wa_number
+            'Institution Name' => $whagent->institution_name,
+            'Institution Place' => $whagent->institution_place,
+            'Agency No.' => $whagent->wa_number
         ];
 
         $result = Builder::create()
@@ -68,7 +65,7 @@ class WithholdingAgentController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $pdf = PDF::loadView('withholding-agent.certificate', compact('wa_responsible_person', 'dataUri'));
+        $pdf = PDF::loadView('withholding-agent.certificate', compact('whagent', 'dataUri'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 

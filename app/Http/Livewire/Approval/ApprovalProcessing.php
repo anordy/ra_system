@@ -184,12 +184,7 @@ class ApprovalProcessing extends Component
     {
 
         if ($this->checkTransition('registration_officer_review')) {
-
-            if ($this->subject->bpra_verification_status === BusinessStatus::PENDING) {
-                $this->alert('warning', 'You must verify business information from BPRA to proceed!');
-                return;
-            }
-
+            
             $this->subject->isiic_i   = $this->isiic_i ?? null;
             $this->subject->isiic_ii  = $this->isiic_ii ?? null;
             $this->subject->isiic_iii = $this->isiic_iii ?? null;

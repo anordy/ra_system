@@ -4,33 +4,34 @@ namespace App\Listeners;
 
 use App\Events\SendSms;
 use App\Jobs\Audit\SendSmsToTaxPayer;
-use App\Jobs\Business\SendBusinessCorrectionSMS;
-use App\Models\UserOtp;
-use App\Jobs\SendOTPSMS;
-use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Models\WaResponsiblePerson;
-use App\Jobs\Debt\SendDebtBalanceSMS;
-use App\Jobs\SendTaxAgentApprovalSMS;
-use App\Jobs\Taxpayer\SendRegistrationSMS;
-use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
-use App\Jobs\Business\SendBusinessApprovedSMS;
-use App\Jobs\SendWithholdingAgentRegistrationSMS;
 use App\Jobs\Business\Branch\SendBranchApprovalSMS;
-use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalSMS;
-use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedSMS;
 use App\Jobs\Business\Branch\SendBranchCorrectionSMS;
+use App\Jobs\Business\SendBusinessApprovedSMS;
 use App\Jobs\Business\SendBusinessClosureApprovedSMS;
-use App\Jobs\Business\SendBusinessClosureRejectedSMS;
 use App\Jobs\Business\SendBusinessClosureCorrectionSMS;
+use App\Jobs\Business\SendBusinessClosureRejectedSMS;
+use App\Jobs\Business\SendBusinessCorrectionSMS;
 use App\Jobs\Business\SendBusinessDeregisterApprovedSMS;
-use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionSMS;
+use App\Jobs\Business\SendBusinessDeregisterRejectedSMS;
+use App\Jobs\Business\Taxtype\SendTaxTypeSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
-use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
-use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
+use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
+use App\Jobs\Debt\SendDebtBalanceSMS;
+use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalSMS;
+use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedSMS;
+use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
+use App\Jobs\SendOTPSMS;
+use App\Jobs\SendTaxAgentApprovalSMS;
+use App\Jobs\SendWithholdingAgentRegistrationSMS;
+use App\Jobs\Taxpayer\SendKycRejectSMS;
+use App\Jobs\Taxpayer\SendRegistrationSMS;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\UserOtp;
+use App\Models\WaResponsiblePerson;
 
 class SendSmsFired
 {
@@ -133,6 +134,8 @@ class SendSmsFired
             SendDebtBalanceSMS::dispatch($event->tokenId);
         } else if ($event->service === 'audit-notification-to-taxpayer'){
             SendSmsToTaxPayer::dispatch($event->tokenId);
+        } else if ($event->service === 'kyc-reject'){
+            SendKycRejectSMS::dispatch($event->tokenId);
         }
     }
 }

@@ -1,4 +1,4 @@
-@extends('layouts.login')
+@extends('layouts.password')
 
 @section('content')
 <div class="container">
@@ -13,10 +13,9 @@
                         <h6 class="text-info text-center">Welcome to ZRB, Since this is your first login you need to set new password for security purposes</h6>
                     </div>
 
-                    <form method="POST" action="{{ route('password.save-changed') }}">
+                    <form method="POST" action="{{ route('password.change') }}">
                         @csrf
 
-                        <input type="hidden" name="user_id" value="{{ $id }}">
 
                         <div x-data="{password:'', password_confirm: ''}">
                             <div class="form-group row">
@@ -97,6 +96,11 @@
                                         class="btn btn-primary">
                                         {{ __('Submit') }}
                                     </button>
+                                </div>
+
+                                <div class="col-md-6 offset-md-4 mt-4">
+                                <a href="{{ route('session.kill') }}" class="btn-link">Click to Return to Login</a>
+
                                 </div>
                             </div>
                         </div>

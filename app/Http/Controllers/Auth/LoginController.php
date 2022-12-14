@@ -3,20 +3,21 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\UserOtp;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
 
-    protected $maxAttempts = 1;
-    protected $decayMinutes = 10;
+    protected $maxAttempts = 3;
+    protected $decayMinutes = 2;
 
 
     public function __construct()
@@ -46,64 +47,86 @@ class LoginController extends Controller
 
         $this->validateLogin($request);
 
-        $lockedOut = $this->hasTooManyLoginAttempts($request);
-        if ($lockedOut) {
-            $this->fireLockoutEvent($request);
-            return $this->sendLockoutResponse($request);
+        $user =  $request->input($this->username());
+        $user = User::where('email', $user)->first();
+
+        $attempts = $this->hasTooManyLoginAttempts($user);
+        if ($attempts) {
+            return $this->sendLockoutResponse($user);
         }
 
-
-        if (Auth::once($request->only('email', 'password'))) {
-            Auth::logoutOtherDevices(request('password'));
-            $user = auth()->user();
-            if ($user->status == 0) {
-                return redirect()->back()->withErrors([
-                    "Your account is deactivated, Kindly check with your admin"
-                ]);
-            }
-
-            if ($user->is_first_login == true) {
-//                todo: why double encrypt?
-                $id = Crypt::encrypt(Crypt::encrypt($user->id));
-                session()->forget("token_id");
-                session()->forget("user_id");
-                session()->forget("email");
-                session()->forget("password");
-                return redirect()->route('password.change', $id);
-            }
-
-//            todo: login will always be true
-            if ($user->otp == null && $user->is_first_login == false) {
-                $token = UserOtp::create([
-                    'user_id' => $user->id,
-                    'user_type' => get_class($user),
-                    'used' => false
-                ]);
-            } else {
-                $token = $user->otp; // todo: if $user->is_first_login were to be true, this would be null
-                $token->code = $token->generateCode(); // todo: hash OTP
-                $token->updated_at = Carbon::now()->toDateTimeString();
-                $token->save();
-            }
-
-            if ($token->sendCode()) {
-//                todo: do not store/encrypt password - create a middleware
-                session()->put("token_id", encrypt($token->id));
-                session()->put("user_id", encrypt($user->id));
-                session()->put("email", encrypt($request->get('email')));
-                session()->put("password", encrypt($request->get('password'))); // todo: storing/encrypting password is not allowed security
-                return redirect()->route('twoFactorAuth.index');
-            }
-
-
-            $token->delete();
-            return redirect('/login')->withErrors([
-                "Unable to send verification code"
+        if ($user->status == 0) {
+            throw ValidationException::withMessages([
+                $this->username() =>  "Your account is locked, Please contact your admin to unlock your account",
             ]);
         }
 
-        $this->incrementLoginAttempts($request);
+        if (Auth::attempt($request->only('email', 'password'))) {
+            Auth::logoutOtherDevices(request('password'));
+            $this->clearLoginAttempts($request);
+            $user = auth()->user();
 
-        return $this->sendFailedLoginResponse($request);
+            if ($user->is_first_login == false) {
+                $token = $user->otp;
+
+                if ($token == null) {
+                    $token = UserOtp::create([
+                        'user_id' => $user->id,
+                        'user_type' => get_class($user),
+                        'used' => false
+                    ]);
+                } else {
+                    $token->used = false;
+                    $token->code = $token->generateCode();
+                    $token->updated_at = Carbon::now()->toDateTimeString();
+                    $token->save();
+                }
+
+                $token->sendCode();
+
+                return redirect()->route('twoFactorAuth.index');
+            }else{
+                return redirect()->route('password.change');
+            }
+        } else {
+            $this->incrementLoginAttempts($user, $request);
+            return $this->sendFailedLoginResponse($request);
+        }
+    }
+
+    protected function hasTooManyLoginAttempts($user)
+    {
+        if ($user->auth_attempt >= $this->maxAttempts) {
+            return true;
+        }
+    }
+
+    protected function incrementLoginAttempts($user, $request)
+    {
+        $increment = $user->auth_attempt + 1;
+        $user->auth_attempt = +$increment;
+        $user->save();
+        $this->limiter()->hit(
+            $this->throttleKey($request), $this->decayMinutes() * 60
+        );
+    }
+
+    protected function sendLockoutResponse($user)
+    {
+        $user->status = 0;
+        $user->save();
+        $message   = __('Your Account has been locked out because of too many Login attempts. Please contact your admin to unblock your account');
+
+        throw ValidationException::withMessages([
+            $this->username() => [$message],
+        ]);
+    }
+
+    protected function clearLoginAttempts(Request $request)
+    {
+        $user = Auth::user();
+        $user->auth_attempt = 0;
+        $user->save();
+        $this->limiter()->clear($this->throttleKey($request));
     }
 }

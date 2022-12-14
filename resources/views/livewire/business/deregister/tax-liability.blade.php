@@ -13,6 +13,25 @@
             @endif
         </div>
     </div>
+    @if ($can_initiate_audit && !$deregister->audit)
+        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+            Audit process has not been conducted for this deregistration request. Please initiate audit
+        </div>
+    @endif
+
+    @if ($deregister->audit)
+        @if ($deregister->audit->status === 'pending' || $deregister->audit->status === 'draft')
+            <div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+                Please wait for findings from tax audit process, You will be notified once auditing is completed.
+            </div>
+        @elseif ($deregister->audit->status === 'approved')
+            <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                Tax audit process has been completed successful
+            </div>
+        @endif
+    @endif
+
+
     <hr>
 
     <div>
@@ -146,7 +165,7 @@
                                         @else
                                             <tr>
                                                 <td colspan="7" class="text-center py-3">
-                                                    No debts for Verification.
+                                                    No debts.
                                                 </td>
                                             </tr>
                                         @endif

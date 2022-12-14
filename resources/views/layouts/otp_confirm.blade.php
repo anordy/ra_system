@@ -80,7 +80,7 @@
                         </form>
 
                         <div class="mt-3">
-                            <a href="{{ route('login') }}" class="btn-link">Click to Return to Login</a>
+                            <a href="{{ route('session.kill') }}" class="btn-link">Click to Return to Login</a>
                         </div>
                     </div>
                 </div>

@@ -5,16 +5,14 @@ namespace App\Models;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class UserOtp extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    const EXPIRATION_TIME = 15;
+    const EXPIRATION_TIME = 5;
 
     public function __construct(array $attributes = [])
     {
@@ -37,7 +35,7 @@ class UserOtp extends Model
         $max = $min * 10 - 1;
         $code = mt_rand($min, $max);
 
-        if(config('app.env') == 'local'){
+        if (config('app.env') == 'local') {
             return '123456';
         }
 
@@ -56,28 +54,14 @@ class UserOtp extends Model
 
     public function isExpired()
     {
-        return $this->created_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
+        return $this->updated_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
     }
 
     public function sendCode()
     {
-        if (!$this->user) {
-            throw new \Exception("No user attached to this token.");
-        }
-
-        if (!$this->code) {
-//            todo: is this stored in DB?
-            $this->code = $this->generateCode();
-        }
-
-//todo: to remove try catch block
-        try {
+        if (config('app.env') == 'production') {
             event(new SendSms('otp', $this->id));
             event(new SendMail('otp', $this->id));
-            return true;
-        } catch (Exception $e) {
-            Log::error($e);
-            return false;
         }
     }
 }
