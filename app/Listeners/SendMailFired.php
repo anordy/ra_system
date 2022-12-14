@@ -36,6 +36,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateApprovalMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateRejectedMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
+use App\Jobs\Taxpayer\SendKycRejectMail;
 use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
 
 class SendMailFired
@@ -58,9 +59,9 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
-            return true;
-        }
+        // if(config('app.env') == 'local'){
+        //     return true;
+        // }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
@@ -157,6 +158,8 @@ class SendMailFired
             SendAssessmentReportEmailToTaxPayer::dispatch($event->tokenId);
         } else if ($event->service === 'audit-approved-notification'){
             AuditApprovedNotificationEmail::dispatch($event->tokenId);
+        } else if ($event->service === 'kyc-reject'){
+            SendKycRejectMail::dispatch($event->tokenId);
         }
     }
 }

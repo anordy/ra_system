@@ -31,6 +31,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateApprovalSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
+use App\Jobs\Taxpayer\SendKycRejectSMS;
 
 class SendSmsFired
 {
@@ -133,6 +134,8 @@ class SendSmsFired
             SendDebtBalanceSMS::dispatch($event->tokenId);
         } else if ($event->service === 'audit-notification-to-taxpayer'){
             SendSmsToTaxPayer::dispatch($event->tokenId);
+        } else if ($event->service === 'kyc-reject'){
+            SendKycRejectSMS::dispatch($event->tokenId);
         }
     }
 }
