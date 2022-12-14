@@ -88,13 +88,13 @@ class LandLeaseList extends DataTableComponent
 
     public function getApplicantName($id)
     {
-        $taxpayer = Taxpayer::find($id);
+        $taxpayer = Taxpayer::find($id); // todo: encrypt id
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
     public function getBusinessName($id)
     {
-        $businessLocation = BusinessLocation::find(1);
+        $businessLocation = BusinessLocation::find(1); //todo: to be removed
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 }

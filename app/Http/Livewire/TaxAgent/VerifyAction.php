@@ -76,6 +76,7 @@ class VerifyAction extends Component
             $comment = $value['value'];
             $data = (object)$value['data'];
             $agent = TaxAgent::findOrFail($data->id);
+//            todo: check if queried objects exist
             $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
                 ->where('category', 'Registration Fee')
                 ->where('is_citizen', $agent->taxpayer->is_citizen)
@@ -130,6 +131,7 @@ class VerifyAction extends Component
         try {
             $comment = $value['value'];
             $data = (object)$value['data'];
+//            todo: check if object exist
             $agent = TaxAgent::query()->find($data->id);
             $agent->status = TaxAgentStatus::REJECTED;
             $agent->verifier_reject_comment = $comment;
@@ -157,6 +159,7 @@ class VerifyAction extends Component
             $approval->approved_at = now();
             $approval->save();
 
+//            todo: check if object exist
             $taxpayer = Taxpayer::query()->find($agent->taxpayer_id);
             $taxpayer->notify(new DatabaseNotification(
                 $subject = 'TAX-CONSULTANT VERIFICATION',

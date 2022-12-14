@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefProjectList;
 use Illuminate\Database\Eloquent\Builder;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ReliefProjectListTable extends DataTableComponent
 {
@@ -16,6 +16,7 @@ class ReliefProjectListTable extends DataTableComponent
 
     public function mount($id)
     {
+//        todo: encrypt id
         $this->projectSectionId = $id;
     }
 

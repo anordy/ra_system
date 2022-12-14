@@ -71,7 +71,7 @@ class RegistrationsController extends Controller
 
         $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
         $kyc->verified_by = Auth::id();
-        $kyc->save();
+        $kyc->save(); // todo: unless the exception tha would occur below will not affect this record, i suggest to put this inside trx
 
         try {
             DB::beginTransaction();
@@ -94,6 +94,7 @@ class RegistrationsController extends Controller
                 event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
             }
 
+//        todo: this should before sending the email/Sms
             $taxpayer ? $kyc->delete() : session()->flash("error", "Couldn't verify user.");
             DB::commit();
 

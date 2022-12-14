@@ -18,6 +18,7 @@ class ChangePasswordController extends Controller
     public function updatePassword(Request $request)
     {
 
+//        todo: security threat, better put this in middleware
         $request->validate([
             'password' => 'required|confirmed|min:8',
             'password_confirmation' => 'required',

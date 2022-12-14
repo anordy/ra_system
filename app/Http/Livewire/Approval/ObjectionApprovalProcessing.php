@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Validation\Rules\RequiredIf;
 
 class ObjectionApprovalProcessing extends Component
 {
@@ -39,7 +38,7 @@ class ObjectionApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId;
+        $this->modelId = $modelId; // todo: encrypt id
         $this->dispute = Dispute::find($this->modelId);
         $this->principal = $this->dispute->tax_in_dispute;
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
@@ -59,20 +58,19 @@ class ObjectionApprovalProcessing extends Component
         if ($propertyName == "penaltyPercent") {
             if ($this->penaltyPercent > 100) {
                 $this->penaltyPercent = 100;
-            } elseif ($this->penaltyPercent < 0 || !is_numeric($this->penaltyPercent)) {
+            } elseif ($this->penaltyPercent < 0 || !is_numeric($this->penaltyPercent)) { // todo: logical problem
                 $this->penaltyPercent = null;
             }
-            $this->penaltyAmount = ($this->assessment->penalty_amount * $this->penaltyPercent) / 100;
+            $this->penaltyAmount = ($this->assessment->penalty_amount * $this->penaltyPercent) / 100; // todo: penaltyPercent can be null - alert
         }
 
         if ($propertyName == "interestPercent") {
             if ($this->interestPercent > 50) {
                 $this->interestPercent = 50;
-            } elseif ($this->interestPercent < 0 || !is_numeric($this->interestPercent)) {
+            } elseif ($this->interestPercent < 0 || !is_numeric($this->interestPercent)) { // todo: logical problem
                 $this->interestPercent = null;
             }
-            $this->interestAmount = ($this->assessment->interest_amount * $this->interestPercent) / 100;
-            
+            $this->interestAmount = ($this->assessment->interest_amount * $this->interestPercent) / 100; // todo: penaltyPercent can be null
         }
         
         if ($propertyName == "interestPercent" || $propertyName == "penaltyPercent") {
@@ -124,6 +122,7 @@ class ObjectionApprovalProcessing extends Component
             DB::beginTransaction();
             try {
 
+//                todo: do you accept inserting empty?
                 $dispute->update([
                     'dispute_report' => $disputeReport ?? '',
                     'notice_report' => $noticeReport ?? '',
@@ -135,7 +134,7 @@ class ObjectionApprovalProcessing extends Component
                 DB::commit();
             } catch (\Exception $e) {
                 Log::error($e);
-                DB::rollBack();
+                DB::rollBack();// todo: prefer to put rollback statement at the top of the catch block
                 $this->alert('error', 'Something went wrong.');
             }
 
@@ -263,6 +262,7 @@ class ObjectionApprovalProcessing extends Component
             'comments' => 'required|string',
         ]);
 
+//        todo: double try catch?
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
 
@@ -360,9 +360,10 @@ class ObjectionApprovalProcessing extends Component
 
                     DB::commit();
                 } catch (Exception $e) {
+//                    todo: rollback statement
                     Log::error($e);
                     throw $e;
-                    $this->alert('error', 'Something went wrong');
+                    $this->alert('error', 'Something went wrong'); // todo: unreachable statement
                 }
 
             }
@@ -370,6 +371,7 @@ class ObjectionApprovalProcessing extends Component
             $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
+//            todo: no customer/user feedback in cas of error
             return;
         }
         

@@ -51,27 +51,33 @@ class TwoFactorAuthController extends Controller
         $code = join($validated);
 
 
-
+// todo: check expiry separately
         $find = UserOtp::where('user_id', $userId)
             ->where('id', $tokenId)
             ->where('code', $code)
             ->where('updated_at', '>=', now()->subMinutes(13))
             ->first();
 
+
         if (!is_null($find)) {
+//            todo: remove only after successful login
             session()->remove('user_id');
             session()->remove('token_id');
             session()->remove('email');
             session()->remove('password');
 
+//            todo: if user status is not 1, it will return credentials do not match, check user status on login
             if (Auth::guard()->attempt(['email' => $email, 'password' => $password, 'status' => 1])) {
                 $request->session()->regenerate();
                 session()->put('user_2fa', encrypt(config('app.key')));
                 return redirect()->route('home');
             }
+//            todo: this returns user back to otp page, but you have already cleared the session
             return redirect()->back()->withErrors(['error' => 'These credentials do not match our records.']);
         }
 
+//        todo: the message might mislead, it still says wrong code even when the problem is expiry
+//        todo: in case code expires, how does user proceeds?
         return redirect()->back()->withErrors(['error' => 'You entered wrong code']);
     }
 
@@ -85,9 +91,10 @@ class TwoFactorAuthController extends Controller
         }
 
         $token = UserOtp::find($tokenId);
-        $token->code = $token->generateCode();
+        $token->code = $token->generateCode(); //  todo: hash token
         $token->updated_at = Carbon::now()->toDateTimeString();
         $token->save();
+//        todo: sendCode might return false, need to check
         $token->sendCode();
         
         Session::flash('success', 'Token resend successfully. Check your email/sms');

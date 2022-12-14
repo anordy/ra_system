@@ -2,14 +2,14 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
-use id;
-use Exception;
-use Carbon\Carbon;
 use App\Models\WithholdingAgent;
+use Carbon\Carbon;
+use Exception;
+use id;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WithholdingAgentsTable extends DataTableComponent
 {
@@ -72,6 +72,7 @@ class WithholdingAgentsTable extends DataTableComponent
 
     public function changeStatus($id)
     {
+//        todo: encrypt id && select only columns that's needed && might want to check the returned object
         $withholding_agent = WithholdingAgent::find($id);
         $status = $withholding_agent->status == 'active' ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
@@ -93,6 +94,7 @@ class WithholdingAgentsTable extends DataTableComponent
 
     public function confirmed($value)
     {
+//        todo: select only columns that's needed && might want to check the returned object
         try {
             $data = (object) $value['data'];
             $withholding_agent = WithholdingAgent::find($data->id);

@@ -162,28 +162,27 @@ class LandLeaseReportTable extends DataTableComponent
 
     public function getApplicantName($id)
     {
-        $taxpayer = Taxpayer::find($id);
-
+        $taxpayer = Taxpayer::find($id); // todo: encrypt id
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
     public function getBusinessName($id)
     {
-        $businessLocation = BusinessLocation::find($id);
+        $businessLocation = BusinessLocation::find($id); // todo: encrypt id
 
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 
     public function getApplicantNo($id)
     {
-        $taxpayer = Taxpayer::find($id);
+        $taxpayer = Taxpayer::find($id); // todo: encrypt id
 
         return $taxpayer->reference_no;
     }
 
     public function getBusinessZin($id)
     {
-        $businessLocation = BusinessLocation::find($id);
+        $businessLocation = BusinessLocation::find($id); // todo: encrypt id
 
         return $businessLocation->zin;
     }

@@ -15,7 +15,7 @@ class TaxAgentRequestView extends Component
 
 	public function mount($val){
 		$this->value = $val;
-		$this->agents[] = TaxAgent::find($this->value);
+		$this->agents[] = TaxAgent::find($this->value); // todo: encrypt id
 		$this->academics= (object)TaxAgent::find($this->value)->academics;
 		$this->professionals = (object)TaxAgent::find($this->value)->professionals;
 		$this->trainings = (object)TaxAgent::find($this->value)->trainings;

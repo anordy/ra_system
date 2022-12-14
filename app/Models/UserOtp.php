@@ -66,10 +66,11 @@ class UserOtp extends Model
         }
 
         if (!$this->code) {
+//            todo: is this stored in DB?
             $this->code = $this->generateCode();
         }
 
-
+//todo: to remove try catch block
         try {
             event(new SendSms('otp', $this->id));
             event(new SendMail('otp', $this->id));

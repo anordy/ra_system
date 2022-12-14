@@ -2,14 +2,14 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
-use Exception;
-use Carbon\Carbon;
 use App\Models\WaResponsiblePerson;
-use Illuminate\Support\Facades\Gate;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 {
@@ -18,6 +18,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 
     public function mount($id)
     {
+//        todo: encrypt id
         $this->withholding_agent_id = $id;
     }
 
@@ -104,7 +105,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
-        
+//        todo: encrypt id && select only columns that's needed && might want to check the returned object
         $responsible_person = WaResponsiblePerson::find($id);
         $status = $responsible_person->status == 'active' ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
@@ -129,6 +130,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
+//        todo: select only columns that's needed && might want to check the returned object - suggestion
         try {
             $data = (object) $value['data'];
             $responsible_person = WaResponsiblePerson::find($data->id);

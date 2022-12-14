@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use PDF;
 use App\Models\WaResponsiblePerson;
 use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Support\Facades\Gate;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use PDF;
 
 class WithholdingAgentController extends Controller
 {
@@ -26,6 +26,7 @@ class WithholdingAgentController extends Controller
         if (!Gate::allows('withholding-agents-view')) {
             abort(403);
         }
+//        todo: check if this work?
         return view('withholding-agent.view');
     }
 
@@ -39,6 +40,7 @@ class WithholdingAgentController extends Controller
 
     public function certificate($id){
         $id = decrypt($id);
+//        todo: what if object does not exist? suggesting checking the query response
         $wa_responsible_person = WaResponsiblePerson::with('taxpayer')->find($id);
 
         $code = [
