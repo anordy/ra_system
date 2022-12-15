@@ -89,7 +89,7 @@ class ObjectionApprovalProcessing extends Component
 
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
         
         $this->penalty = str_replace(',', '', $this->penalty);
@@ -246,7 +246,7 @@ class ObjectionApprovalProcessing extends Component
         }
 
         try {
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
@@ -256,7 +256,7 @@ class ObjectionApprovalProcessing extends Component
         }
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
 
         $this->validate([
@@ -366,7 +366,7 @@ class ObjectionApprovalProcessing extends Component
 
             }
 
-            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
             return;

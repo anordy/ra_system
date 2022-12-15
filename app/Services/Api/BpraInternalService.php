@@ -51,9 +51,6 @@ class BpraInternalService
             
             curl_close($curl);
             $res = json_decode($response, true);
-            
-            $business->authorities_verified_at = Carbon::now();
-            $business->save();
               
 
             if ($res) {
@@ -129,12 +126,12 @@ class BpraInternalService
             } else {
 
                 $businessData = [
-                    'reg_number' => '',
-                    'business_name' => '',
-                    'reg_date' => '',
-                    'applicant_name' => '',
-                    'mob_phone' => '',
-                    'email' => '',
+                    'reg_number' => null,
+                    'business_name' => null,
+                    'reg_date' => null,
+                    'applicant_name' => null,
+                    'mob_phone' => null,
+                    'email' => null,
                 ];
                 
                 return [
@@ -149,12 +146,12 @@ class BpraInternalService
             Log::error('Error On Access token Authentication from Api Server!');
 
             $businessData = [
-                'reg_number' => '',
-                'business_name' => '',
-                'reg_date' => '',
-                'applicant_name' => '',
-                'mob_phone' => '',
-                'email' => '',
+                'reg_number' => null,
+                'business_name' => null,
+                'reg_date' => null,
+                'applicant_name' => null,
+                'mob_phone' => null,
+                'email' => null,
             ];
 
             return [

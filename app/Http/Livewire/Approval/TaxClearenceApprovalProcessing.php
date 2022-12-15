@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Approval;
 use App\Enum\DisputeStatus;
 use App\Enum\TaxClearanceStatus;
 use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\TaxClearanceRequest;
 use App\Models\TaxType;
 use App\Traits\PaymentsTrait;
@@ -40,52 +41,96 @@ class TaxClearenceApprovalProcessing extends Component
         $this->registerWorkflow($modelName, $modelId);
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
+        $transition = $transition['data']['transition'];
+
         if ($this->checkTransition('crdm_review')) {
-        }
 
-        try {
-            $this->subject->status = TaxClearanceStatus::APPROVED;
-            $this->subject->save();
+            try {
+                $this->subject->status = TaxClearanceStatus::APPROVED;
+                $this->subject->save();
+    
+                $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+    
+                $emailPayload = [
+                    $this->tax_clearence->businessLocation,
+                    $this->subject,
+                ];
+                event(new SendMail('tax-clearance-approved', $emailPayload));
+    
+                $smsPayload = [
+                    $this->tax_clearence->businessLocation->taxpayer->mobile,
+                    'Your approval for tax clearance certificate of your business '.$this->tax_clearence->businessLocation->name.' has been granted, please check your email or log in to ZIDRAS to obtain your online certificate copy.'
+                ];
+                event(new SendSms('tax-clearance-feedback-to-taxpayer', $smsPayload));
+    
+                $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                $this->alert('error', 'Something went wrong.');
+                return;
+            }
 
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
-
-            $payload = [
-                $this->tax_clearence->businessLocation,
-                $this->subject,
-            ];
-
-            event(new SendMail('tax-clearance-approved', $payload));
-
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-            $this->alert('error', 'Something went wrong.');
-            return;
+        } else {
+            $this->flash('warning', 'You do not have authority to approve this request!');
         }
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
-        
+        $transition = $transition['data']['transition'];
         $this->validate([
             'comments' => 'required',
         ]);
 
         try {
 
-            $payload = $this->tax_clearence->business;
-            event(new SendMail('tax-clearance-rejected', $payload));
-            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
+
+            $mailPayload = [
+                $this->tax_clearence->businessLocation->taxpayer->email,
+                'Your approval for tax clearance certificate of your business '.$this->tax_clearence->businessLocation->name.' has been rejected, please pay off all debts to be clear for approval.'
+            ];
+
+            event(new SendMail('tax-clearance-rejected', $mailPayload));
             
+            $smsPayload = [
+                $this->tax_clearence->businessLocation->taxpayer->mobile,
+                'Your approval for tax clearance certificate of your business '.$this->tax_clearence->businessLocation->name.' has been rejected, please pay off all debts to be clear for approval.'
+            ];
+
+            event(new SendSms('tax-clearance-feedback-to-taxpayer', $smsPayload));
+
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong.');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
     }
 
     public function render()

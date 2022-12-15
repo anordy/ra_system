@@ -74,8 +74,9 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         $this->total = round($this->total, 2);
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
+        $transition = $transition['data']['transition'];
         if (!Gate::allows('debt-management-debts-waive')) {
             abort(403);
         }
@@ -185,7 +186,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         }
 
         try {
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
@@ -194,8 +195,9 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         }
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
         if (!Gate::allows('debt-management-debts-waive')) {
             abort(403);
         }
@@ -238,7 +240,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                 event(new SendMail('debt-waiver-rejected', $notification_payload));
             }
 
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
@@ -262,6 +264,28 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         }
         return $hasLimitExceeded;
 
+    }
+
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
     }
 
     public function render()

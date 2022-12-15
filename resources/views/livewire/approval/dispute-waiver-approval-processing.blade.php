@@ -27,24 +27,24 @@
         </div>
         @if ($this->checkTransition('objection_manager_review'))
             <div class="modal-footer p-2 m-0">
-                {{-- <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled
+                {{-- <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled
                     Incorrect
                     return to Applicant</button> --}}
-                <button type="button" class="btn btn-primary" wire:click="approve('objection_manager_review')">Approve &
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'objection_manager_review')">Approve &
                     Forward</button>
             </div>
         @elseif ($this->checkTransition('chief_assurance_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('chief_assurance_reject')">Reject
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'chief_assurance_reject')">Reject
                     & Return</button>
-                <button type="button" class="btn btn-primary" wire:click="approve('chief_assurance_review')">Approve &
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'chief_assurance_review')">Approve &
                     Forward</button>
             </div>
         @elseif ($this->checkTransition('commisioner_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('commisioner_reject')">Reject &
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commisioner_reject')">Reject &
                     Return</button>
-                <button type="button" class="btn btn-primary" wire:click="approve('commisioner_review')">Approve &
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commisioner_review')">Approve &
                     Complete</button>
             </div>
         @endif

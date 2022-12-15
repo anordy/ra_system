@@ -2,28 +2,21 @@
 
 namespace App\Jobs\TaxClearance;
 
-use App\Mail\TaxClearance\TaxClearanceApproved;
-use App\Mail\TaxClearance\TaxClearanceRejected;
-use App\Mail\UserRegistration;
+use App\Http\Controllers\v1\SMSController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
-class SendTaxClearanceRejectedEmail implements ShouldQueue {
+class RequestFeedbackJob implements ShouldQueue
+{
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     public $send_to;
     public $message;
-
     /**
      * Create a new job instance.
-     *
-     * @param $_password
      *
      * @return void
      */
@@ -40,8 +33,9 @@ class SendTaxClearanceRejectedEmail implements ShouldQueue {
      */
     public function handle()
     {
-        if ($this->send_to) {
-            Mail::to($this->send_to)->send(new TaxClearanceRejected($this->message));
-        }
+        //
+        $sms_controller = new SMSController;
+        $source = config('modulesconfig.smsheader');
+        $sms_controller->sendSMS($this->send_to, $source, $this->message);
     }
 }

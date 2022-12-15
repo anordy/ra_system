@@ -24,12 +24,12 @@
         @else
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Status</span>
-                @if ($business->bpra_verification_status === \App\Models\BusinessStatus::REJECTED)
+                @if ($business->bpra_verification_status === \App\Models\BusinessStatus::PBRA_UNVERIFIED)
                     <p class="my-1">
-                        <span class="badge badge-danger py-1 px-2"
-                            style="border-radius: 1rem; background: rgba(220,53,53,0.35); color: #cf1c1c; font-size: 85%">
+                        <span class="badge badge-danger py-1 px-2 text-capitalize"
+                            style="border-radius: 1rem; background: #fde047; color: #a16207; font-size: 85%">
                             <i class="bi bi-record-circle mr-1"></i>
-                            Invalid Data
+                            {{$business->bpra_verification_status}}
                         </span>
                     </p>
                 @elseif($business->bpra_verification_status === \App\Models\BusinessStatus::APPROVED)
@@ -280,13 +280,27 @@
                         </div>
 
                     </div>
-
-                    <p class="text-right text-danger font-light">
-                        <i class="bi bi-lightbulb-fill text-danger"></i> : On confirm Bpra Data, stakeholders,
-                        directors and shares details will be saved
-                    </p>
+                    <div class="py-1">
+                        <div class="mb-1">
+                            <small class="font-light font-size-small">
+                                <mark><i class="bi bi-lightbulb-fill"></i></mark> : <mark>Continue with existing provided data won't update any data<mark>
+                            </small>
+                        </div>
+                        <div>
+                            <small class="text-danger font-light">
+                                <mark><i class="bi bi-lightbulb-fill"></i></mark> : <mark>When Confirm Bpra Data button is clicked, the stakeholders, directors, and shares details will be saved</mark>
+                            </small>
+                        </div>
+                    </div>
                     <div class="modal-footer p-2 m-0">
-                        <button wire:click="confirm()" wire:loading.attr="disabled" class="btn btn-primary">
+                        <button wire:click="continueWithProvidedData()" wire:loading.attr="disabled" class="btn btn-primary">
+                            <div wire:loading wire:target="confirm">
+                                <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>Continue With Provided Data
+                        </button>
+                        <button wire:click="confirm()" wire:loading.attr="disabled" class="btn btn-success">
                             <div wire:loading wire:target="confirm">
                                 <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                                     <span class="sr-only">Loading...</span>

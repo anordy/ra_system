@@ -7,6 +7,7 @@ use App\Models\BusinessShare;
 use App\Models\BusinessShareholder;
 use App\Models\BusinessStatus;
 use App\Services\Api\BpraInternalService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -69,6 +70,7 @@ class BpraVerification extends Component
             if ($this->bpraResponse['businessData']['reg_number']) {
                 $this->business->bpra_no = $this->bpraResponse['businessData']['reg_number'];
             }
+            $this->business->authorities_verified_at = Carbon::now();
             $this->business->bpra_verification_status = BusinessStatus::APPROVED;
             $this->business->save();
 
@@ -99,6 +101,21 @@ class BpraVerification extends Component
              
             DB::commit();
             $this->alert('success', 'Bpra Verification Completed.');
+        } catch (\Throwable $e) {
+            Log::error($e .','. Auth::user());
+            $this->alert('error', 'Something went wrong');
+        }
+    }
+
+
+    public function continueWithProvidedData(){
+        try {
+            DB::beginTransaction();
+            $this->business->bpra_verification_status = BusinessStatus::PBRA_UNVERIFIED;
+            $this->business->save();
+             
+            DB::commit();
+            $this->alert('success', 'Continue with provided data successfully.');
         } catch (\Throwable $e) {
             Log::error($e .','. Auth::user());
             $this->alert('error', 'Something went wrong');

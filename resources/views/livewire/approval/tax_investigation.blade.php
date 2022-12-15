@@ -165,28 +165,28 @@
 
         @if ($this->checkTransition('start'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('start')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'start')">
                     Initiate Approval
                 </button>
             </div>
         @elseif ($this->checkTransition('assign_officers'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('assign_officers')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'assign_officers')">
                     Assign & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('conduct_investigation'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('conduct_investigation')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'conduct_investigation')">
                     Submit & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('investigation_report'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('investigation_report_correct')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'investigation_report_correct')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('investigation_report')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'investigation_report')">
                     Approve & Forward
                 </button>
             </div>
@@ -196,7 +196,7 @@
                     wire:click="reject('investigation_report_review_reject')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('investigation_report_review')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'investigation_report_review')">
                     Approve & Forward
                 </button>
             </div>
@@ -205,10 +205,10 @@
                 <button type="button" class="btn btn-danger" wire:click="reject('rejected')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('forward_to_legal')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'forward_to_legal')">
                     Forward to Legal Process
                 </button>   
-                <button type="button" class="btn btn-primary" wire:click="approve('accepted')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'accepted')">
                     Approve & Complete
                 </button>
             </div>

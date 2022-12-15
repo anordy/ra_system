@@ -47,13 +47,21 @@ class RegistrationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZTN', 'ztn_number'),
-            Column::make('Business Name', 'name')
-                ->sortable()
-                ->searchable(),
-            Column::make('TIN', 'tin'),
-            Column::make('Buss. Reg. No.', 'reg_no'),
-            Column::make('Mobile', 'mobile'),
+            Column::make('ZTN', 'ztn_number')->format(function ($value){
+                return $value ? $value : 'N/A';
+            })->sortable()->searchable(),
+            Column::make('Business Name', 'name')->format(function ($value){
+                return $value ? $value : 'N/A';
+            })->sortable()->searchable(),
+            Column::make('TIN', 'tin')->format(function ($value){
+                return $value ? $value : 'N/A';
+            })->sortable()->searchable(),
+            Column::make('Buss. Reg. No.', 'reg_no')->format(function ($value){
+                return $value ? $value : 'N/A';
+            })->sortable()->searchable(),
+            Column::make('Mobile', 'mobile')->format(function ($value){
+                return $value ? $value : 'N/A';
+            })->sortable()->searchable(),
             Column::make('Status', 'status')
                 ->view('business.registrations.includes.status'),
             Column::make('Action', 'id')

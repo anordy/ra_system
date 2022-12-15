@@ -31,8 +31,9 @@ class BranchesApprovalProcessing extends Component
         $this->taxRegions = TaxRegion::all();
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
+        $transition = $transition['data']['transition'];
 
         if ($this->checkTransition('registration_officer_review')) {
             $this->validate(['selectedTaxRegion' => 'required']);
@@ -73,7 +74,7 @@ class BranchesApprovalProcessing extends Component
         }
 
         try {
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
@@ -81,8 +82,10 @@ class BranchesApprovalProcessing extends Component
         }
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
+
         $this->validate(['comments' => 'required']);
 
         $notification_payload = [
@@ -102,7 +105,7 @@ class BranchesApprovalProcessing extends Component
                 event(new SendSms('branch-correction', $notification_payload));
                 event(new SendMail('branch-correction', $notification_payload));
             }
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
@@ -110,6 +113,27 @@ class BranchesApprovalProcessing extends Component
         }
     }
 
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
+    }
 
     public function render()
     {

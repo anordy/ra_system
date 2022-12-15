@@ -86,8 +86,9 @@ class TaxClaimApprovalProcessing extends Component
         
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
+        $transition = $transition['data']['transition'];
         $taxType = $this->subject->taxType;
 
         $operators = [];
@@ -190,7 +191,7 @@ class TaxClaimApprovalProcessing extends Component
         }
 
         try {
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', $e->getMessage());
@@ -200,8 +201,9 @@ class TaxClaimApprovalProcessing extends Component
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
         $this->validate([
             'comments' => 'required|string',
         ]);
@@ -215,12 +217,34 @@ class TaxClaimApprovalProcessing extends Component
         }
 
         try {
-            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
     }
 
     public function render()

@@ -183,9 +183,9 @@ class ApprovalProcessing extends Component
         unset($this->selectedTaxTypes[$index]);
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
-
+        $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
             
             $this->subject->isiic_i   = $this->isiic_i ?? null;
@@ -292,7 +292,7 @@ class ApprovalProcessing extends Component
         }
 
         try {
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
@@ -302,8 +302,9 @@ class ApprovalProcessing extends Component
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
         $this->validate([
             'comments' => 'required|string',
         ]);
@@ -312,13 +313,35 @@ class ApprovalProcessing extends Component
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
             }
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
     }
 
     public function render()
