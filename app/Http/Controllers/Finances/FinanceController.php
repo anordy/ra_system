@@ -6,14 +6,12 @@ use App\Enum\LeaseStatus;
 use App\Enum\ReturnCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Business;
-use App\Models\BusinessLocation;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\LandLeaseDebt;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class FinanceController extends Controller

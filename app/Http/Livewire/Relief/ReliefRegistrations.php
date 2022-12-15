@@ -11,11 +11,11 @@ use App\Models\Relief\ReliefProject;
 use App\Models\Relief\ReliefProjectList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Gate;
 
 class ReliefRegistrations extends Component
 {
@@ -79,7 +79,7 @@ class ReliefRegistrations extends Component
                 'file' => '',
             ],
         ];
-        $this->vatPercent = 15;
+        $this->vatPercent = 15; // todo: make this globally available, easy to change in case of changes
     }
 
     protected function rules()
@@ -142,7 +142,7 @@ class ReliefRegistrations extends Component
                     $reliefDocument = ReliefAttachment::create([
                         'relief_id' => $relief->id,
                         'file_path' => $documentPath,
-                        'file_name' => $attachment['name'],
+                        'file_name' => $attachment['name'], // todo: do not store original file name (security concerns), sanitize or use a unique ID
                     ]);
                 }
             }
@@ -188,6 +188,7 @@ class ReliefRegistrations extends Component
             if ($this->supplier == "") {
                 $this->optionSupplierLocations = null;
             } else {
+//                todo: select only the columns you need
                 $this->optionSupplierLocations = Business::find($this->supplier)->locations;
                 $this->supplierLocation = $this->optionSupplierLocations->first()->id;
             }

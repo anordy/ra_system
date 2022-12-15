@@ -2,13 +2,16 @@
 
 namespace App\Http\Livewire\Taxpayers\Details;
 
-use Livewire\Component;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Gate;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Http\Controllers\v1\ZanIDController;
 use Exception;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Zanid extends Component
 {
@@ -77,6 +80,7 @@ class Zanid extends Component
             'onConfirmed' => 'reject',
             'showCancelButton' => true,
             'cancelButtonText' => 'Cancel',
+            'input' => 'textarea',
             'timer' => null,
         ]);
     }
@@ -100,15 +104,25 @@ class Zanid extends Component
     }
 
     /**
-     * Delete the KYC if data does not match from zanid, The person will be required to apply for reference number * again
+     * Delete the KYC if data does not match from zanid, 
+     * The person will be required to apply for reference number again
      */
-    public function reject()
+    public function reject($value)
     {
+        $comments = $value['value'];
+        DB::beginTransaction();
         try {
+            $this->kyc->comments = $comments;
+            $this->kyc->save();
+            $kyc = $this->kyc;
             $this->kyc->delete();
+            DB::commit();
+            event(new SendMail('kyc-reject', $kyc));
+            event(new SendSms('kyc-reject', $kyc));
             $this->alert('success', 'KYC has been rejected!');
             return redirect()->route('taxpayers.registrations.index');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong!');
         }

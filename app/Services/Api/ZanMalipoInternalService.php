@@ -2,16 +2,15 @@
 
 namespace App\Services\Api;
 
-use App\Models\TaxAgent;
 use App\Models\BillingStatus;
-use App\Models\TaxAgentStatus;
-use App\Models\Returns\TaxReturn;
-use Illuminate\Support\Facades\Log;
 use App\Models\RenewTaxAgentRequest;
 use App\Models\Returns\ReturnStatus;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Returns\TaxReturn;
+use App\Models\TaxAgent;
+use App\Models\TaxAgentStatus;
 use App\Models\TaxAssessments\TaxAssessment;
-use App\Services\Api\ApiAuthenticationService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ZanMalipoInternalService
 {

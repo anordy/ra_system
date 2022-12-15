@@ -3,29 +3,28 @@
 namespace App\Http\Controllers\TaxClearance;
 
 use App\Enum\LeaseStatus;
-use PDF;
-use Carbon\Carbon;
-use App\Enum\ReturnCategory;
-use App\Models\Returns\TaxReturn;
-use App\Models\TaxAudit\TaxAudit;
-use App\Models\TaxClearanceRequest;
 use App\Http\Controllers\Controller;
-use App\Models\Returns\ReturnStatus;
-use Illuminate\Support\Facades\Gate;
-use App\Models\Returns\BFO\BfoReturn;
-use App\Models\Returns\Vat\VatReturn;
-use App\Models\Returns\Port\PortReturn;
-use App\Models\Returns\MmTransferReturn;
-use App\Models\Returns\EmTransactionReturn;
-use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\TaxAssessments\TaxAssessment;
-use App\Models\Verification\TaxVerification;
-use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\LandLeaseDebt;
+use App\Models\Returns\BFO\BfoReturn;
+use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\ExciseDuty\MnoReturn;
 use App\Models\Returns\HotelReturns\HotelReturn;
+use App\Models\Returns\LumpSum\LumpSumReturn;
+use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\Petroleum\PetroleumReturn;
+use App\Models\Returns\Port\PortReturn;
+use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
+use App\Models\Returns\TaxReturn;
+use App\Models\Returns\Vat\VatReturn;
+use App\Models\TaxAssessments\TaxAssessment;
+use App\Models\TaxAudit\TaxAudit;
+use App\Models\TaxClearanceRequest;
+use App\Models\Verification\TaxVerification;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
+use PDF;
 
 class TaxClearanceController extends Controller
 {

@@ -6,10 +6,8 @@ use App\Models\Business;
 use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Yajra\DataTables\Services\DataTable;
 
 class TaxpayerLedgerTable extends DataTableComponent
 {

@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Events\SendMail;
-use App\Events\SendSms;
 use App\Models\Business;
 use App\Models\BusinessDirector;
 use App\Models\BusinessLocation;
@@ -11,20 +9,17 @@ use App\Models\BusinessShare;
 use App\Models\BusinessShareholder;
 use App\Models\BusinessStatus;
 use App\Models\BusinessType;
-use App\Models\Currency;
 use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\LumpSumPayment;
-use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -62,6 +57,7 @@ class ApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
+//        todo: encrypt modelID
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
@@ -138,6 +134,7 @@ class ApprovalProcessing extends Component
             // Pluck id
             $this->Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
 
+//            todo: if id is the only property needed, i suggest selecting it in a query to optimize performance
             // Get lumpsum ID
             $lumpSumId = TaxType::query()->where('code', TaxType::LUMPSUM_PAYMENT)->first()->id;
 
@@ -208,6 +205,7 @@ class ApprovalProcessing extends Component
                 'selectedTaxTypes.*.currency.required'    => 'Currency is required',
             ]);
 
+//            todo: customize a fall back action
             $business = Business::findOrFail($this->subject->id);
 
             $business->is_business_lto = $this->isBusinessLTO;
@@ -216,6 +214,7 @@ class ApprovalProcessing extends Component
                 $business->business_type = BusinessType::ELECTRICITY;
             }
 
+//            todo: with all the database insertions i suggest wrapping the logics in transaction
             $business->save();
             $business->headquarter->tax_region_id = $this->selectedTaxRegion;
             $business->headquarter->save();

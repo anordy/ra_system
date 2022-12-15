@@ -40,8 +40,8 @@
                         </tr> --}}
                             <tr>
                                 <th>Reg No</th>
-                                <td>{{ $old_values->business_information->reg_no }}</td>
-                                <td>{{ $new_values->business_information->reg_no }}</td>
+                                <td>{{ $old_values->business_information->reg_no ?? 'N/A' }}</td>
+                                <td>{{ $new_values->business_information->reg_no ?? 'N/A' }}</td>
                                 @if ($old_values->business_information->reg_no == $new_values->business_information->reg_no)
                                     <td class="table-primary">Unchanged</td>
                                 @else
@@ -70,8 +70,8 @@
                             </tr>
                             <tr>
                                 <th>Alternative Mobile</th>
-                                <td>{{ $old_values->business_information->alt_mobile }}</td>
-                                <td>{{ $new_values->business_information->alt_mobile }}</td>
+                                <td>{{ $old_values->business_information->alt_mobile ?? 'N/A' }}</td>
+                                <td>{{ $new_values->business_information->alt_mobile ?? 'N/A' }}</td>
                                 @if ($old_values->business_information->alt_mobile == $new_values->business_information->alt_mobile)
                                     <td class="table-primary">Unchanged</td>
                                 @else
@@ -182,8 +182,8 @@
                             </tr>
                             <tr>
                                 <th>Owner's Name</th>
-                                <td>{{ $old_values->business_location->owner_name }}</td>
-                                <td>{{ $new_values->business_location->owner_name }}</td>
+                                <td>{{ $old_values->business_location->owner_name ?? 'N/A' }}</td>
+                                <td>{{ $new_values->business_location->owner_name ?? 'N/A' }}</td>
                                 @if ($old_values->business_location->owner_name == $new_values->business_location->owner_name)
                                     <td class="table-primary">Unchanged</td>
                                 @else
@@ -192,8 +192,8 @@
                             </tr>
                             <tr>
                                 <th>Owners Phone No</th>
-                                <td>{{ $old_values->business_location->owner_phone_no }}</td>
-                                <td>{{ $new_values->business_location->owner_phone_no }}</td>
+                                <td>{{ $old_values->business_location->owner_phone_no ?? 'N/A' }}</td>
+                                <td>{{ $new_values->business_location->owner_phone_no ?? 'N/A' }}</td>
                                 @if ($old_values->business_location->owner_phone_no == $new_values->business_location->owner_phone_no)
                                     <td class="table-primary">Unchanged</td>
                                 @else
@@ -295,7 +295,27 @@
                                     <td class="table-success">Changed</td>
                                 @endif
                             </tr>
-
+                            <tr>
+                                <th>Fax No</th>
+                                <td>{{ $old_values->business_location->fax ?? 'N/A' }}</td>
+                                <td>{{ $new_values->business_location->fax ?? 'N/A' }}</td>
+                                @if ($old_values->business_location->fax ==
+                                    $new_values->business_location->fax)
+                                    <td class="table-primary">Unchanged</td>
+                                @else
+                                    <td class="table-success">Changed</td>
+                                @endif
+                            </tr>
+                            <tr>
+                                <th>PO Box</th>
+                                <td>{{ $old_values->business_location->po_box ?? 'N/A' }}</td>
+                                <td>{{ $new_values->business_location->po_box ?? 'N/A' }}</td>
+                                @if ($old_values->business_location->po_box == $new_values->business_location->po_box)
+                                    <td class="table-primary">Unchanged</td>
+                                @else
+                                    <td class="table-success">Changed</td>
+                                @endif
+                            </tr>
                         </tbody>
                     </table>
                 </div>

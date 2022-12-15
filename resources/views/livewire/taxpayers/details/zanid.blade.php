@@ -114,11 +114,11 @@
             <div class="row">
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Error Code</span>
-                    <p class="my-1">{{ $zanid_data['code'] }}</p>
+                    <p class="my-1">{{ $zanid_data['code'] ?? '' }}</p>
                 </div>
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Message</span>
-                    <p class="my-1">{{ $zanid_data['msg'] }}</p>
+                    <p class="my-1">{{ $zanid_data['msg'] ?? '' }}</p>
                 </div>
             </div>
         </div>

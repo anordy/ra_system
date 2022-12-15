@@ -2,29 +2,28 @@
 
 namespace App\Traits;
 
-use Carbon\Carbon;
-use App\Models\ZmBill;
-use App\Models\TaxType;
 use App\Enum\BillStatus;
 use App\Enum\LeaseStatus;
-use App\Models\Debts\Debt;
 use App\Enum\PaymentStatus;
 use App\Models\BillingStatus;
-use App\Models\ExchangeRate;
-use App\Models\ZmBillChange;
 use App\Models\BusinessTaxType;
-use App\Models\TaxAudit\TaxAudit;
-use App\Services\ZanMalipo\ZmCore;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use App\Models\Returns\ReturnStatus;
-use Illuminate\Support\Facades\Auth;
-use App\Services\ZanMalipo\ZmResponse;
+use App\Models\ExchangeRate;
 use App\Models\Investigation\TaxInvestigation;
+use App\Models\Returns\ReturnStatus;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgentApproval;
 use App\Models\TaxAgentStatus;
+use App\Models\TaxAudit\TaxAudit;
+use App\Models\TaxType;
+use App\Models\ZmBill;
+use App\Models\ZmBillChange;
 use App\Services\Api\ZanMalipoInternalService;
+use App\Services\ZanMalipo\ZmCore;
+use App\Services\ZanMalipo\ZmResponse;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 trait PaymentsTrait
 {

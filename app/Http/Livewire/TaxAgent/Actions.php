@@ -9,16 +9,14 @@ use App\Models\TaxAgent;
 use App\Models\TaxAgentApproval;
 use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
-use App\Models\User;
 use App\Notifications\DatabaseNotification;
-use App\Services\ZanMalipo\ZmCore;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class Actions extends Component
 {
@@ -101,7 +99,7 @@ class Actions extends Component
 
             $agent->generateReferenceNo();
 
-			$taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);
+			$taxpayer = Taxpayer::find($this->taxagent->taxpayer_id);// todo: check if object exists
 			$taxpayer->notify(new DatabaseNotification(
 				$subject = 'TAX-CONSULTANT APPROVAL',
 				$message = 'Your application has been approved',
@@ -131,7 +129,7 @@ class Actions extends Component
 		DB::beginTransaction();
 		try {
 			$data = (object) $value['data'];
-			$agent = TaxAgent::find($data->id);
+			$agent = TaxAgent::find($data->id);// todo: check if object exists
 			$agent->status = TaxAgentStatus::REJECTED;
             $agent->app_reject_comment = $value['value'];
             $agent->approver_id = Auth::id();
@@ -157,7 +155,7 @@ class Actions extends Component
 			DB::commit();
 			event(new SendMail('tax-agent-registration-approval', $agent->taxpayer_id, null));
 			event(new SendSms('tax-agent-registration-approval', $agent->taxpayer_id));
-		
+
 			$this->flash('success', 'Request rejected successfully');
 			return redirect()->route('taxagents.requests');
 		} catch (Exception $e) {

@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\LandLease;
 
-use Livewire\Component;
 use App\Models\LandLease;
 use DB;
+use Livewire\Component;
 
 class ReportTable extends Component
 {
@@ -19,7 +19,7 @@ class ReportTable extends Component
     }
     public function render()
     {
-        $landLeases = LandLease::where('created_at','<', '2022/08/01 23:59:59' )->get();
+        $landLeases = LandLease::where('created_at','<', '2022/08/01 23:59:59' )->get(); // todo: do not hardcode
        
         return view('livewire.land-lease.report-table', compact('landLeases'));
     }

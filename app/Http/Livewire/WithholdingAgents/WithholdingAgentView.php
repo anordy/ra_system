@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
-use Livewire\Component;
 use App\Models\WithholdingAgent;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 
 class WithholdingAgentView extends Component

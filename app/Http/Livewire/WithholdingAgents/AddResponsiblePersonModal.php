@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
-use Exception;
-use Livewire\Component;
 use App\Models\Taxpayer;
 use App\Models\WaResponsiblePerson;
-use Illuminate\Support\Facades\Log;
+use Exception;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class AddResponsiblePersonModal extends Component
 {
@@ -35,7 +35,7 @@ class AddResponsiblePersonModal extends Component
 
     public function mount($id)
     {   
-        $this->withholding_agent_id = $id;
+        $this->withholding_agent_id = $id; // todo: encrypt id
         $waasigned = WaResponsiblePerson::distinct()->pluck('responsible_person_id');
         $this->responsible_persons = Taxpayer::whereNotIn('id', $waasigned)->get();
     }
@@ -65,6 +65,7 @@ class AddResponsiblePersonModal extends Component
     {
         $this->search_triggered = true;
 
+//        todo: select only the columns you need
         $taxpayer = Taxpayer::query()->where(['reference_no' => $this->reference_no])->first();
 
         if (!empty($taxpayer)) {

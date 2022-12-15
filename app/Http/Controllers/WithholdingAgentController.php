@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use PDF;
-use App\Models\WaResponsiblePerson;
 use App\Models\WithholdingAgent;
 use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 use Illuminate\Support\Facades\Gate;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use PDF;
 
 class WithholdingAgentController extends Controller
 {

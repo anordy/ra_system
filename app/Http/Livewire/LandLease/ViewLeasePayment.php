@@ -2,20 +2,11 @@
 
 namespace App\Http\Livewire\LandLease;
 
-use App\Models\LandLease;
 use App\Models\LeasePayment;
 use App\Models\TaxType;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Traits\PaymentsTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use App\Traits\PaymentsTrait;
-use Illuminate\Support\Facades\Gate;
 
 class ViewLeasePayment extends Component
 {
