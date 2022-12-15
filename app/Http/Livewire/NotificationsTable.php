@@ -30,7 +30,9 @@ class NotificationsTable extends DataTableComponent
     {
         return Notification::query()
             ->where('notifiable_type', get_class(auth()->user()))
-            ->where('notifiable_id', auth()->id());
+            ->where('notifiable_id', auth()->id())
+            ->latest()
+            ->select();
     }
 
     public function configure(): void
@@ -99,6 +101,7 @@ class NotificationsTable extends DataTableComponent
             $notification = Notification::find($id);
             if ($notification['data']->href != null) {
                 if ($notification['data']->hrefParameters != null) {
+                    // dd($notification['data']->href, $notification['data']->hrefParameters);
                     return redirect()->route($notification['data']->href, encrypt($notification['data']->hrefParameters));
                 }
                 return redirect()->route($notification['data']->href);
