@@ -13,7 +13,7 @@
                         <h6 class="text-info text-center">Welcome to ZRB, Since this is your first login you need to set new password for security purposes</h6>
                     </div>
 
-                    <form method="POST" action="{{ route('password.change') }}">
+                    <form method="POST" action="{{ route('password.store') }}">
                         @csrf
 
 

@@ -144,7 +144,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/kill', [TwoFactorAuthController::class, 'kill'])->name('session.kill');
 
     Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
-    Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.change');
+    Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
 
 });
 
