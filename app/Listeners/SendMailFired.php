@@ -2,41 +2,42 @@
 
 namespace App\Listeners;
 
-use App\Models\UserOtp;
 use App\Events\SendMail;
 use App\Jobs\Admin\SendAdminRegistrationEmail;
 use App\Jobs\audit\AuditApprovedNotificationEmail;
 use App\Jobs\Audit\ExitPreliminaryEmailToTaxPayer;
 use App\Jobs\Audit\SendEmailToTaxPayer;
-use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Jobs\SendOTPEmail;
-use App\Models\WaResponsiblePerson;
-use App\Jobs\Debt\SendDebtBalanceMail;
-use App\Jobs\SendTaxAgentApprovalEmail;
-use App\Jobs\Taxpayer\SendRegistrationMail;
-use App\Jobs\Business\Taxtype\SendTaxTypeMail;
-use App\Jobs\Business\SendBusinessApprovedMail;
-use App\Jobs\Business\SendBusinessCorrectionMail;
-use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\Business\Branch\SendBranchApprovedMail;
-use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalMail;
-use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedMail;
 use App\Jobs\Business\Branch\SendBranchCorrectionMail;
+use App\Jobs\Business\SendBusinessApprovedMail;
 use App\Jobs\Business\SendBusinessClosureApprovedMail;
-use App\Jobs\Business\SendBusinessClosureRejectedMail;
 use App\Jobs\Business\SendBusinessClosureCorrectionMail;
-use App\Jobs\TaxClearance\SendTaxClearanceApprovedEmail;
-use App\Jobs\TaxClearance\SendTaxClearanceRejectedEmail;
+use App\Jobs\Business\SendBusinessClosureRejectedMail;
+use App\Jobs\Business\SendBusinessCorrectionMail;
 use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
-use App\Jobs\Business\SendBusinessDeregisterRejectedMail;
 use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
+use App\Jobs\Business\SendBusinessDeregisterRejectedMail;
+use App\Jobs\Business\Taxtype\SendTaxTypeMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalMail;
-use App\Jobs\Business\Updates\SendBusinessUpdateRejectedMail;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateRejectedMail;
+use App\Jobs\Debt\SendDebtBalanceMail;
+use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalMail;
+use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedMail;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
+use App\Jobs\SendOTPEmail;
+use App\Jobs\SendTaxAgentApprovalEmail;
+use App\Jobs\SendWithholdingAgentRegistrationEmail;
+use App\Jobs\TaxClearance\SendTaxClearanceApprovedEmail;
+use App\Jobs\TaxClearance\SendTaxClearanceRejectedEmail;
+use App\Jobs\Taxpayer\SendKycRejectMail;
+use App\Jobs\Taxpayer\SendRegistrationMail;
 use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\UserOtp;
+use App\Models\WaResponsiblePerson;
 
 class SendMailFired
 {
@@ -58,9 +59,9 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
-            return true;
-        }
+        // if(config('app.env') == 'local'){
+        //     return true;
+        // }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
@@ -87,8 +88,9 @@ class SendMailFired
 	        $taxpayer = Taxpayer::find($event->tokenId);
 			$fullname = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
 			$email = $taxpayer->email;
-	        $status = $taxpayer->taxagent->is_verified;
-	        SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status);
+	        $status = $taxpayer->taxagent->status;
+            $reference_no = $taxpayer->taxagent->reference_no;
+	        SendTaxAgentApprovalEmail::dispatch($fullname, $email, $status, $reference_no);
         } else if ($event->service === 'business-closure-approval'){
             // Token ID is $closure data
             $closure = $event->tokenId;
@@ -156,6 +158,8 @@ class SendMailFired
             SendAssessmentReportEmailToTaxPayer::dispatch($event->tokenId);
         } else if ($event->service === 'audit-approved-notification'){
             AuditApprovedNotificationEmail::dispatch($event->tokenId);
+        } else if ($event->service === 'kyc-reject'){
+            SendKycRejectMail::dispatch($event->tokenId);
         }
     }
 }

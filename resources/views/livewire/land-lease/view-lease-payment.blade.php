@@ -16,7 +16,7 @@
     </div>
 
     <div class="card">
-        
+
         <div class="card-header text-uppercase font-weight-bold bg-white pt-1">
             Lease Payment Information
         </div>
@@ -91,11 +91,53 @@
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Paid At</span>
                     <p class="my-1">
-                        {{ $leasePayment->paid_at ?? '--'  }}
+                        {{ $leasePayment->paid_at ?? '--' }}
                     </p>
                 </div>
             </div>
         </div>
+
+        @if (count($leasePayment->penalties))
+            <div>
+                <div class="card-header text-uppercase font-weight-bold bg-white pt-1">
+                    Lease Payment Penalties
+                </div>
+                <div class="card-body mt-0 p-2">
+                    <table class="table table-md">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Tax Amount</th>
+                                <th>Penalty Amount</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($leasePayment->penalties as $penalty)
+                                <tr>
+                                    <td>
+                                        {{ Carbon\Carbon::parse($penalty->start_date)->format('F') }} -
+                                        {{ Carbon\Carbon::parse($penalty->start_date)->year }}
+                                    </td>
+                                    <td>
+                                        {{ number_format($penalty->tax_amount, 2) }}
+                                        {{ $penalty->currency }}
+                                    </td>
+                                    <td>
+                                        {{ number_format($penalty->penalty_amount, 2) }}
+                                        {{ $penalty->currency }}
+                                    </td>
+                                    <td>
+                                        {{ number_format($penalty->total_amount, 2) }}
+                                        {{ $penalty->currency }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
 
         <div class="card-header text-uppercase font-weight-bold bg-white pt-1">
             Lease Information

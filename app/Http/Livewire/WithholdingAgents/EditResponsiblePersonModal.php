@@ -2,13 +2,13 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
-use Exception;
-use Livewire\Component;
 use App\Models\Taxpayer;
 use App\Models\WaResponsiblePerson;
-use Illuminate\Support\Facades\Log;
+use Exception;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class EditResponsiblePersonModal extends Component
 {
@@ -31,7 +31,7 @@ class EditResponsiblePersonModal extends Component
 
     public function mount($id)
     {   
-        $this->wa_responsible_person = WaResponsiblePerson::find($id);
+        $this->wa_responsible_person = WaResponsiblePerson::find($id); // todo: encrypt id
         $this->title = $this->wa_responsible_person->title;
         $this->position = $this->wa_responsible_person->position;
         $this->responsible_person_id = $this->wa_responsible_person->responsible_person_id;

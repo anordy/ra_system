@@ -43,19 +43,19 @@
     </div>
     @if ($this->checkTransition('registration_officer_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('application_filled_incorrect')">Filled Incorrect
+            <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled Incorrect
                 return to Applicant</button>
-            <button type="button" class="btn btn-primary" wire:click="approve('registration_officer_review')">Approve & Forward</button>
+            <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'registration_officer_review')">Approve & Forward</button>
         </div>
     @elseif ($this->checkTransition('registration_manager_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('registration_manager_reject')">Reject & Return</button>
-            <button type="button" class="btn btn-primary" wire:click="approve('registration_manager_review')">Approve & Forward</button>
+            <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'registration_manager_reject')">Reject & Return</button>
+            <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'registration_manager_review')">Approve & Forward</button>
         </div>
     @elseif ($this->checkTransition('director_of_trai_review'))
         <div class="modal-footer p-2 m-0">
-            <button type="button" class="btn btn-danger" wire:click="reject('director_of_trai_reject')">Reject & Return</button>
-            <button type="button" class="btn btn-primary" wire:click="approve('director_of_trai_review')" wire:loading.attr="disabled">
+            <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'director_of_trai_reject')">Reject & Return</button>
+            <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'director_of_trai_review')" wire:loading.attr="disabled">
                 <div wire:loading wire:target="approve('director_of_trai_review')">
                     <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                         <span class="sr-only">Loading...</span>

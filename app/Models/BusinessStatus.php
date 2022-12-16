@@ -17,6 +17,7 @@ class BusinessStatus extends Model
     public const TEMP_CLOSED = 'temp_closed';
     public const DEREGISTERED = 'deregistered';
     public const REJECTED = 'rejected';
+    public const PBRA_UNVERIFIED = 'unverified';
 
     protected $guarded = [];
 

@@ -2,14 +2,14 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
-use Exception;
-use Carbon\Carbon;
 use App\Models\WaResponsiblePerson;
-use Illuminate\Support\Facades\Gate;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 {
@@ -18,6 +18,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 
     public function mount($id)
     {
+//        todo: encrypt id
         $this->withholding_agent_id = $id;
     }
 
@@ -47,12 +48,6 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
             Column::make('Responsible Person', 'responsible_person_id')
                 ->label(function ($row) {
                     return "{$row->taxpayer->first_name} {$row->taxpayer->last_name}";
-                })
-                ->sortable()
-                ->searchable(),
-            Column::make('Business Name', 'business_id')
-                ->label(function ($row) {
-                    return "{$row->business->name}";
                 })
                 ->sortable()
                 ->searchable(),
@@ -104,8 +99,8 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
-        
-        $responsible_person = WaResponsiblePerson::find($id);
+//        todo: encrypt id && select only columns that's needed
+        $responsible_person = WaResponsiblePerson::findOrFail($id);
         $status = $responsible_person->status == 'active' ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
             'position' => 'center',
@@ -129,9 +124,10 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
+//        todo: select only columns that's needed - suggestion
         try {
             $data = (object) $value['data'];
-            $responsible_person = WaResponsiblePerson::find($data->id);
+            $responsible_person = WaResponsiblePerson::findOrFail($data->id);
             if ($responsible_person->status == 'active') {
                 $responsible_person->update([
                     'status' => 'inactive'

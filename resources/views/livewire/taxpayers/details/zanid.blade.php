@@ -2,7 +2,7 @@
     <hr>
     <div class="row">
         <div class="col-md-4 mb-3">
-            <span class="font-weight-bold text-uppercase">{{ $kyc->identification->name }} No.</span>
+            <span class="font-weight-bold text-uppercase">{{ 'Zan ID' }} No.</span>
             <p class="my-1">{{ $kyc->id_number }}</p>
         </div>
         @if (empty($kyc->authorities_verified_at))
@@ -12,7 +12,7 @@
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                    </div>Verify Data
+                    </div>Verify Zan ID Data
                 </button>
             </div>
         @endif
@@ -114,11 +114,11 @@
             <div class="row">
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Error Code</span>
-                    <p class="my-1">{{ $zanid_data['code'] }}</p>
+                    <p class="my-1">{{ $zanid_data['code'] ?? '' }}</p>
                 </div>
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Message</span>
-                    <p class="my-1">{{ $zanid_data['msg'] }}</p>
+                    <p class="my-1">{{ $zanid_data['msg'] ?? '' }}</p>
                 </div>
             </div>
         </div>

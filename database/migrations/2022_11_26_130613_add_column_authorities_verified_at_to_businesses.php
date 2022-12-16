@@ -15,7 +15,7 @@ class AddColumnAuthoritiesVerifiedAtToBusinesses extends Migration
     {
         Schema::table('businesses', function (Blueprint $table) {
             //
-            $table->enum('bpra_verification_status', ['pending', 'approved', 'rejected'])->default('pending')->after('created_at')->nullable();
+            $table->enum('bpra_verification_status', ['pending', 'approved', 'unverified'])->default('pending')->after('created_at')->nullable();
             $table->dateTime('authorities_verified_at')->after('created_at')->nullable();
         });
     }

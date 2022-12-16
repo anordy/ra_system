@@ -28,14 +28,14 @@
                                                     @if ($role->hasAccess($permission->name))
                                                         <div class="col-md-4 col-sm-6">
                                                             <label>
-                                                                <input type="checkbox" value="{{ $permission->id }}"  wire:model="selectedPermissions">
+                                                                <input type="checkbox" value="{{ $permission->id }}"  wire:model.defer="selectedPermissions">
                                                                 {{  str_replace("_"," ",$permission->name) }}
                                                             </label>
                                                         </div>
                                                     @else
                                                         <div class="col-md-4 col-sm-6">
                                                             <label>
-                                                                <input type="checkbox" value="{{ $permission->id }}" wire:model="selectedPermissions">
+                                                                <input type="checkbox" value="{{ $permission->id }}" wire:model.defer="selectedPermissions">
                                                                 {{  str_replace("_"," ",$permission->name) }}
                                                             </label>
                                                         </div>
@@ -52,7 +52,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" wire:click='submit'>Save changes</button>
+                <button type="button" class="btn btn-primary" wire:click='submit' wire:loading.attr="disabled">
+                    <div wire:loading.delay wire:target="submit">
+                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>Save changes</button>
             </div>
         </div>
     </div>

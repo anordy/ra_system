@@ -23,7 +23,7 @@
 
         <div class="form-group col-md-3 mt-4">
             <button type="button" class="btn btn-primary" wire:click='triggerAction' wire:loading.attr="disabled">
-                <div wire:loading wire:target="triggerAction">
+                <div wire:loading.delay wire:target="triggerAction">
                     <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>

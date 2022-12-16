@@ -194,71 +194,71 @@
         </div>
         @if ($this->checkTransition('start'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('start')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'start')">
                     Initiate Approval
                 </button>
             </div>
         @elseif ($this->checkTransition('assign_officers'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('assign_officers')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'assign_officers')">
                     Assign & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('conduct_audit'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('conduct_audit')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'conduct_audit')">
                     Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('preliminary_report'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('correct_preliminary_report')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'correct_preliminary_report')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('preliminary_report')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'preliminary_report')">
                     Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('preliminary_report_review'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger"
-                    wire:click="reject('correct_preliminary_report_review')">
+                    wire:click="confirmPopUpModal('reject', 'correct_preliminary_report_review')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('preliminary_report_review')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'preliminary_report_review')">
                     Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('prepare_final_report'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('prepare_final_report')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'prepare_final_report')">
                     Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('final_report'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('correct_final_report')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'correct_final_report')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('final_report')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'final_report')">
                     Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('final_report_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('correct_final_report_review')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'correct_final_report_review')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('final_report_review')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'final_report_review')">
                     Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('accepted'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('rejected')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'rerejectjected')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('accepted')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'accepted')">
                     Approve & Complete
                 </button>
             </div>

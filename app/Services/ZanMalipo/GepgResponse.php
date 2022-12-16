@@ -573,6 +573,9 @@ trait GepgResponse
             case '7331':
                 return ['code' => $code, 'message' => 'Paid Online Waiting Bank Confirmation'];
                 break;
+            case '0':
+                return ['code' => $code, 'message' => 'Gateway Timed Out'];
+                break;
             default:
                 return  ['code' => $code, 'message' => 'Something went wrong! Try Again'];
         }

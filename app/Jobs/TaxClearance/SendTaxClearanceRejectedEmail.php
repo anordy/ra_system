@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Mail;
 class SendTaxClearanceRejectedEmail implements ShouldQueue {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $payload;
+    public $send_to;
+    public $message;
 
     /**
      * Create a new job instance.
@@ -28,7 +29,8 @@ class SendTaxClearanceRejectedEmail implements ShouldQueue {
      */
     public function __construct($payload)
     {
-        $this->payload = $payload;
+        $this->send_to = $payload[0];
+        $this->message = $payload[1];
     }
 
     /**
@@ -38,9 +40,8 @@ class SendTaxClearanceRejectedEmail implements ShouldQueue {
      */
     public function handle()
     {
-        $taxpayer = $this->payload->taxpayer;
-        if ($taxpayer->email) {
-            Mail::to($taxpayer->email)->send(new TaxClearanceRejected($this->payload));
+        if ($this->send_to) {
+            Mail::to($this->send_to)->send(new TaxClearanceRejected($this->message));
         }
     }
 }

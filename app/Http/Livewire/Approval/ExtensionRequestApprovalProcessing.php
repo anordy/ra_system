@@ -38,7 +38,7 @@ class ExtensionRequestApprovalProcessing extends Component
         $this->task = $this->subject->pinstancesActive;
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
         if ($this->checkTransition('debt_manager')) {
             $this->validate([
@@ -70,7 +70,7 @@ class ExtensionRequestApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -81,7 +81,7 @@ class ExtensionRequestApprovalProcessing extends Component
         }
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
         $this->validate([
             'comments' => 'required|string',
@@ -94,7 +94,7 @@ class ExtensionRequestApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             DB::commit();
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

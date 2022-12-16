@@ -183,7 +183,7 @@
                         }
                         break;
                     case 8:
-                        status.value = "Time Out";
+                        status.value = "Time Out"
                         break;
                     case 9:
                         status.value = "Match Result:" + obj.Restmsg;

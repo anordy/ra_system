@@ -20,7 +20,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button wire:click="submit" wire:loading.attr="disabled" class="btn btn-primary">
-                    <div wire:loading wire:target="submit">
+                    <div wire:loading.delay wire:target="submit">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>

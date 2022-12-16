@@ -6,10 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\RenewTaxAgentRequest;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
-use App\Models\TaxAgentAcademicQualification;
-use App\Models\TaxAgentProfessionals;
-use App\Models\TaxAgentTrainingExperience;
-use App\Models\User;
 use Carbon\Carbon;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -17,9 +13,7 @@ use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use PDF;
 
@@ -47,11 +41,12 @@ class TaxAgentController extends Controller
         if (!Gate::allows('active-tax-consultant-view')) {
             abort(403);
         }
-        $id = Crypt::decrypt($id);
-        $agent = TaxAgent::query()->findOrfail($id);
+        $id = Crypt::decrypt($id); // todo: suggestion: unless you want the value, better pass encrypted
+        $agent = TaxAgent::query()->findOrfail($id); // todo: handle exception 404-customize to have action fallback
         return view('taxagents.active-agent-show', compact('agent', 'id'));
     }
 
+//    todo: all finds should check for nullable
     public function certificate($id)
     {
         if (!Gate::allows('active-tax-consultant-view')) {
@@ -134,7 +129,7 @@ class TaxAgentController extends Controller
             abort(403);
         }
         $id = Crypt::decrypt($id);
-        $agent = TaxAgent::query()->findOrfail($id);
+        $agent = TaxAgent::query()->findOrfail($id); // todo: handle exception
         $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen')
             ->where('category', 'Registration Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
