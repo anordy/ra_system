@@ -35,7 +35,7 @@ class LoginController extends Controller
         $request->validate([
             'email' => 'required',
             'password' => 'required',
-            'captcha' => 'required|captcha'
+            // 'captcha' => 'required|captcha'
         ], [
             'captcha.required' => 'Please provide validation captcha.',
             'captcha.captcha' => 'You have provided invalid captcha. Please try again.'
