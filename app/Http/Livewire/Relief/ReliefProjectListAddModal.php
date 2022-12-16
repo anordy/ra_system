@@ -6,11 +6,11 @@ use App\Models\Relief\ReliefMinistry;
 use App\Models\Relief\ReliefProjectList;
 use App\Models\Relief\ReliefSponsor;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Gate;
 
 class ReliefProjectListAddModal extends Component
 {
@@ -29,6 +29,7 @@ class ReliefProjectListAddModal extends Component
 
     public function mount($id)
     {
+//        todo: encrypt id
         $this->project_id = $id;
 
         $this->ministries = ReliefMinistry::all();
@@ -58,6 +59,7 @@ class ReliefProjectListAddModal extends Component
         if ($this->government_notice_path) {
             $government_notice_path = $this->government_notice_path->store('relief');
         }
+
         try {
             ReliefProjectList::create([
                 'project_id' => $this->project_id,
@@ -66,7 +68,7 @@ class ReliefProjectListAddModal extends Component
                 'rate' => $this->rate,
                 'ministry_id' => $this->ministry_id ?? null,
                 'relief_sponsor_id' => $this->relief_sponsor_id ?? null,
-                'government_notice_path' => $government_notice_path ?? null,
+                'government_notice_path' => $government_notice_path ?? null, // todo: to confirm
                 'created_by' => auth()->user()->id,
             ]);
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());

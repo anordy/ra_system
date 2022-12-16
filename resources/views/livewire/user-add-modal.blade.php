@@ -93,7 +93,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" x-bind:disabled="!(password.length >=8 && password.match(/[A-Z]/) && password.match(/[!@$#%^&*(),.?:{}|<>]/) && password.match(/[0-9]/) && password==password_confirm)" wire:click='submit()' wire:loading.attr="disabled"><div wire:loading wire:target="submit()">
+                <button type="button" class="btn btn-primary" x-bind:disabled="!(password.length >=8 && password.match(/[A-Z]/) && password.match(/[!@$#%^&*(),.?:{}|<>]/) && password.match(/[0-9]/) && password==password_confirm)" wire:click='submit' wire:loading.attr="disabled"><div wire:loading.delay wire:target="submit">
                     <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>

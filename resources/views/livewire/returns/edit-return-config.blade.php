@@ -65,7 +65,7 @@
         </div>
         <div class="col-md-4 mb-2">
             <label>Rate USD</label>
-            <input disabled type="text" class="form-control form-control-lg" wire:model="rate_usd">
+            <input type="text" class="form-control form-control-lg" wire:model="rate_usd">
         </div>
 
         <div class="col-md-12 d-flex justify-content-end">

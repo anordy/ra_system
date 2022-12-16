@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Business;
 
-use App\Models\BusinessLocation;
 use App\Http\Controllers\Controller;
+use App\Models\BusinessLocation;
 use Illuminate\Support\Facades\Gate;
 
 class BranchController extends Controller
@@ -19,6 +19,7 @@ class BranchController extends Controller
         if (!Gate::allows('business-branches-view')) {
             abort(403);
         }
+//        todo: select required columns to improve performance - (suggestion)
         $location = BusinessLocation::with('business')->find(decrypt($locationId));
         $business = $location->business;
         return view('business.branches.show', compact('location', 'business'));

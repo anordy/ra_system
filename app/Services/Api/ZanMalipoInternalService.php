@@ -2,14 +2,15 @@
 
 namespace App\Services\Api;
 
-use App\Models\TaxAgent;
 use App\Models\BillingStatus;
-use App\Models\TaxAgentStatus;
-use App\Models\Returns\TaxReturn;
+use App\Models\RenewTaxAgentRequest;
 use App\Models\Returns\ReturnStatus;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Returns\TaxReturn;
+use App\Models\TaxAgent;
+use App\Models\TaxAgentStatus;
 use App\Models\TaxAssessments\TaxAssessment;
-use App\Services\Api\ApiAuthenticationService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ZanMalipoInternalService
 {
@@ -21,6 +22,26 @@ class ZanMalipoInternalService
         $zanmalipo_internal = config('modulesconfig.api_url') . '/zanmalipo-internal/createBill';
 
         $access_token = (new ApiAuthenticationService)->getAccessToken();
+
+        if ($access_token == 0) {
+            $billable = $bill->billable;
+            if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
+                $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
+                if ($bill->billable_type == TaxReturn::class && $billable->return) {
+                    $billable->return->status = ReturnStatus::CN_GENERATION_FAILED;
+                    $billable->return->save();
+                }
+            } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
+                $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
+            } else {
+                $billable->status = ReturnStatus::CN_GENERATION_FAILED;
+            }
+            $billable->save();
+            $bill->zan_trx_sts_code = 0;
+            $bill->zan_status = 'failed';
+            $bill->status = 'failed';
+            $bill->save();
+        } else {
         $authorization = "Authorization: Bearer ". $access_token;
 
         $payload = [
@@ -35,7 +56,7 @@ class ZanMalipoInternalService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_CONNECTTIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => json_encode($payload),
@@ -50,6 +71,7 @@ class ZanMalipoInternalService
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         if ($statusCode != 200) {
+            Log::error(curl_error($curl));
             curl_close($curl);
             throw new \Exception($response);
         }
@@ -72,7 +94,7 @@ class ZanMalipoInternalService
         } else {
             if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
-            } else if ($bill->billable_type == TaxAgent::class) {
+            } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
                 $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
                 $billable->status = TaxAgentStatus::PENDING;
             } else {
@@ -81,6 +103,7 @@ class ZanMalipoInternalService
         }
         $billable->save();
         return $res;
+    }
     }
 
     /**

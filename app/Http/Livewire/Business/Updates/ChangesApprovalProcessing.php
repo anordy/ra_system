@@ -38,8 +38,9 @@ class ChangesApprovalProcessing extends Component
     }
 
 
-    public function approve($transtion)
+    public function approve($transition)
     {
+        $transition = $transition['data']['transition'];
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
@@ -125,7 +126,7 @@ class ChangesApprovalProcessing extends Component
                     }
                 }
             }
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
@@ -133,8 +134,9 @@ class ChangesApprovalProcessing extends Component
         }
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
         $this->validate(['comments' => 'required']);
         $business = Business::findOrFail($this->business_id);
 
@@ -157,7 +159,7 @@ class ChangesApprovalProcessing extends Component
                 event(new SendSms('change-business-information-correction', $notification_payload));
             }
 
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
@@ -165,6 +167,27 @@ class ChangesApprovalProcessing extends Component
         }
     }
 
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
+    }
 
     public function render()
     {

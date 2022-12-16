@@ -3,17 +3,17 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Ward;
-use App\Models\Region;
-use Livewire\Component;
 use App\Models\District;
+use App\Models\Region;
 use App\Models\Taxpayer;
+use App\Models\Ward;
 use App\Models\WithholdingAgent;
-use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 
 class WithholdingAgentEditModal extends Component
@@ -62,7 +62,7 @@ class WithholdingAgentEditModal extends Component
         $this->districts = District::select('id', 'name')->get();
         $this->wards = Ward::select('id', 'name')->get();
         $this->responsible_persons = Taxpayer::select('id', 'first_name', 'middle_name', 'last_name')->get();
-        $this->withholding_agent = WithholdingAgent::find($id);
+        $this->withholding_agent = WithholdingAgent::find($id); // todo: encrypt id
         $this->tin = $this->withholding_agent->tin;
         $this->institution_name = $this->withholding_agent->institution_name;
         $this->institution_place = $this->withholding_agent->institution_place;

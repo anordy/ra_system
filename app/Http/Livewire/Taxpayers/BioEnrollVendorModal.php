@@ -34,6 +34,7 @@ class BioEnrollVendorModal extends Component
 
     public function mount($kyc, $hand, $finger)
     {
+//        todo: encrypt ID
         $this->kyc = KYC::find($kyc);
         $this->finger = $finger;
         $this->hand = $hand;
@@ -44,13 +45,13 @@ class BioEnrollVendorModal extends Component
         $this->validate();
         $check = Biometric::where('hand', $this->hand)
             ->where('finger', $this->finger)
-            ->where('reference_no', $this->kyc->reference_no)->first();
+            ->where('reference_no', $this->kyc->id)->first();
 
         if($check){
             $this->alert('error', 'Bio already enrolled');
         }else{
             Biometric::create([
-                'reference_no' => $this->kyc->reference_no,
+                'reference_no' => $this->kyc->id,
                 'hand' => $this->hand,
                 'finger' => $this->finger,
                 'image' => $this->image,

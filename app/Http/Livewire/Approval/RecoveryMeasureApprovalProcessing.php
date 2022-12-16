@@ -60,6 +60,7 @@ class RecoveryMeasureApprovalProcessing extends Component
 
     public function approve($transition)
     {
+        $transition = $transition['data']['transition'];
         $this->validate(['recovery_measures' => 'required']);
         DB::beginTransaction();
         try {
@@ -134,6 +135,7 @@ class RecoveryMeasureApprovalProcessing extends Component
 
     public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
         DB::beginTransaction();
         try {
 
@@ -150,6 +152,28 @@ class RecoveryMeasureApprovalProcessing extends Component
             DB::rollback();
             $this->alert('error', 'Something went wrong');
         }
+    }
+
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
     }
 
     public function render()

@@ -2,10 +2,9 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
-use Livewire\Component;
 use App\Models\WithholdingAgent;
-use Illuminate\Support\Facades\Route;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 
 class WithholdingAgentView extends Component
@@ -14,10 +13,9 @@ class WithholdingAgentView extends Component
 
     public $withholding_agent;
 
-    public function mount()
+    public function mount($id)
     {
-        $withholding_agent_id = decrypt(Route::current()->parameter('id'));
-        $this->withholding_agent = WithholdingAgent::with(['district', 'region', 'ward'])->find($withholding_agent_id);
+        $this->withholding_agent = WithholdingAgent::with(['district', 'region', 'ward'])->findOrFail(decrypt($id));
     }
 
 

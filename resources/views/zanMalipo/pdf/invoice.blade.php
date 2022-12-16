@@ -110,6 +110,10 @@
                 <td colspan="2" class="td-content">: {{ config('modulesconfig.sp_code') }} </td>
             </tr>
             <tr>
+                <td colspan="2" class="padding-left td-title">Bill Reference</td>
+                <td colspan="2" class="td-content">: {{ $bill->id }} </td>
+            </tr>
+            <tr>
                 <td colspan="2" class="padding-left td-title">Payer Name</td>
                 <td colspan="2" class="td-content">:
                     {{ $bill->payer_name ?? '' }}</td>

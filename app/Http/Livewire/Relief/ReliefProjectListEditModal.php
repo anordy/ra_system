@@ -6,10 +6,10 @@ use App\Models\Relief\ReliefMinistry;
 use App\Models\Relief\ReliefProjectList;
 use App\Models\Relief\ReliefSponsor;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Support\Facades\Gate;
 
 class ReliefProjectListEditModal extends Component
 {
@@ -36,6 +36,7 @@ class ReliefProjectListEditModal extends Component
 
     public function mount($id)
     {
+//        todo: encrypt id
         $this->ministries = ReliefMinistry::all();
         $this->sponsors = ReliefSponsor::all();
         $data = ReliefProjectList::find($id);

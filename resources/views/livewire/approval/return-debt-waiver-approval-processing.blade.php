@@ -33,23 +33,23 @@
         </div>
         @if ($this->checkTransition('debt_manager_review'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('debt_manager_review')">Approve
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'debt_manager_review')">Approve
                     & Forward</button>
             </div>
         @elseif ($this->checkTransition('crdm_review'))
             <div class="modal-footer p-2 m-0">
                 @if ($forwardToCommisioner)
-                    <button button type="button" class="btn btn-primary" wire:click="approve('crdm_review')">Approve
+                    <button button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'crdm_review')">Approve
                         & Forward</button>
                 @else
-                    <button type="button" class="btn btn-danger" wire:click="reject('crdm_reject')">
+                    <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'crdm_reject')">
                         <div wire:loading wire:target="reject('crdm_reject')">
                             <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </div>Reject
                     </button>
-                    <button type="button" class="btn btn-primary" wire:click="approve('crdm_complete')">
+                    <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'crdm_complete')">
                         <div wire:loading wire:target="approve('crdm_complete')">
                             <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                                 <span class="sr-only">Loading...</span>
@@ -60,14 +60,14 @@
             </div>
         @elseif ($this->checkTransition('commissioner_complete'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('commissioner_reject')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_reject')">
                     <div wire:loading wire:target="reject('commissioner_reject')">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>Reject
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('commissioner_complete')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_complete')">
                     <div wire:loading wire:target="approve('commissioner_complete')">
                         <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
                             <span class="sr-only">Loading...</span>

@@ -10,6 +10,11 @@ class IDType extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const NIDA = 'NIDA';
+    public const ZANID = 'ZANID';
+    public const NIDA_ZANID = 'NIDA & ZANID';
+    public const PASSPORT = 'PASSPORT';
+
     protected $table = 'id_types';
 
     protected $fillable = [

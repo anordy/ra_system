@@ -10,15 +10,15 @@ use Illuminate\Queue\SerializesModels;
 class TaxClearanceRejected extends Mailable
 {
     use Queueable, SerializesModels;
-    public $payload;
+    public $message;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($payload)
+    public function __construct($message)
     {
-        $this->payload = $payload;
+        $this->message = $message;
     }
 
     /**

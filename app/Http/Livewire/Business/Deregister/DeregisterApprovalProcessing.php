@@ -34,10 +34,31 @@ class DeregisterApprovalProcessing extends Component
         $this->deregister = $modelName::findOrFail($modelId);
     }
 
+    protected $listeners = [
+        'approve', 'reject'
+    ];
 
-    public function approve($transtion)
+    public function confirmPopUpModal($action, $transition)
     {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
 
+        ]);
+    }
+
+    public function approve($transition)
+    {
+        $transition = $transition['data']['transition'];
         try {
             if ($this->checkTransition('commissioner_review')) {
 
@@ -79,7 +100,7 @@ class DeregisterApprovalProcessing extends Component
                 event(new SendMail('business-deregister-approval', $this->subject));
 
             }
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
@@ -87,8 +108,9 @@ class DeregisterApprovalProcessing extends Component
         }
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
         $this->validate(['comments' => 'required']);
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
@@ -109,7 +131,7 @@ class DeregisterApprovalProcessing extends Component
             if ($this->checkTransition('commissioner_reject')) {
                 
             }
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);

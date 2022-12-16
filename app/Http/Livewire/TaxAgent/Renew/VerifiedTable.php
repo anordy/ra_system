@@ -2,29 +2,12 @@
 
 namespace App\Http\Livewire\TaxAgent\Renew;
 
-use App\Events\SendMail;
-use App\Events\SendSms;
-use App\Models\BillingStatus;
-use App\Models\ExchangeRate;
 use App\Models\RenewTaxAgentRequest;
-use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgentStatus;
-use App\Models\Taxpayer;
-use App\Models\TaxType;
-use App\Models\User;
-use App\Notifications\DatabaseNotification;
-use App\Services\ZanMalipo\ZmCore;
-use App\Services\ZanMalipo\ZmResponse;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\TaxAgent;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class VerifiedTable extends DataTableComponent
 {

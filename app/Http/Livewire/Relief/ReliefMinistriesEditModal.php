@@ -4,10 +4,10 @@ namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefMinistry;
 use Exception;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Illuminate\Support\Facades\Gate;
 
 class ReliefMinistriesEditModal extends Component
 {
@@ -29,6 +29,7 @@ class ReliefMinistriesEditModal extends Component
 
     public function mount($id)
     {
+//        todo: encrypt id
         $data = ReliefMinistry::find($id);
         $this->reliefProjectSection = $data;
         $this->name = $data->name;

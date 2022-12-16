@@ -35,7 +35,7 @@
                     @if ($this->checkTransition('crdm_assign'))
                         <div class="modal-footer p-2 m-0">
                             <a href="{{ url()->previous() }}" class="btn btn-danger mr-2">Cancel</a>
-                            <button type="button" class="btn btn-primary" wire:click="approve('crdm_assign')"
+                            <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'crdm_assign')"
                                 wire:loading.attr="disabled">
                                 <div wire:loading wire:target="approve">
                                     <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
@@ -48,16 +48,16 @@
                     @elseif ($this->checkTransition('commissioner_review'))
                         <div class="modal-footer p-2 m-0">
                             <button type="button" class="btn btn-danger"
-                                wire:click="reject('assignment_filled_incorrect')">Reject
+                                wire:click="confirmPopUpModal('reject', 'assignment_filled_incorrect')">Reject
                                 &
                                 Return</button>
                             <button type="button" class="btn btn-primary"
-                                wire:click="approve('commissioner_review')">Approve</button>
+                                wire:click="confirmPopUpModal('approve', 'commissioner_review')">Approve</button>
                         </div>
                     @elseif ($this->checkTransition('assignment_corrected'))
                         <div class="modal-footer p-2 m-0">
                             <button type="button" class="btn btn-primary"
-                                wire:click="approve('assignment_corrected')">Correct & Forward</button>
+                                wire:click="confirmPopUpModal('approve', 'assignment_corrected')">Correct & Forward</button>
                         </div>
                     @endif
                 </div>

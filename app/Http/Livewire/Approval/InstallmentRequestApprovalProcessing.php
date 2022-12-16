@@ -51,9 +51,9 @@ class InstallmentRequestApprovalProcessing extends Component
         }
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
-
+        $transition = $transition['data']['transition'];
         if ($this->checkTransition('debt_manager')) {
             $this->validate([
                 'installmentPhases' => ['required', 'numeric', 'min:1', 'max:12'],
@@ -106,7 +106,7 @@ class InstallmentRequestApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -118,8 +118,9 @@ class InstallmentRequestApprovalProcessing extends Component
 
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
         $this->validate([
             'comments' => 'required|string',
         ]);
@@ -132,7 +133,7 @@ class InstallmentRequestApprovalProcessing extends Component
                 $this->subject->save();
             }
 
-            $this->doTransition($transtion, ['status' => 'reject', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             DB::commit();
         } catch (Exception $e) {
             Log::error($e);
@@ -141,6 +142,29 @@ class InstallmentRequestApprovalProcessing extends Component
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
     }
 
     public function render()

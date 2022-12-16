@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Events\SendMail;
-use App\Events\SendSms;
 use App\Models\Business;
 use App\Models\BusinessDirector;
 use App\Models\BusinessLocation;
@@ -11,20 +9,17 @@ use App\Models\BusinessShare;
 use App\Models\BusinessShareholder;
 use App\Models\BusinessStatus;
 use App\Models\BusinessType;
-use App\Models\Currency;
 use App\Models\ISIC1;
 use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\LumpSumPayment;
-use App\Models\Taxpayer;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -62,6 +57,7 @@ class ApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
+//        todo: encrypt modelID
         $this->modelName = $modelName;
         $this->modelId   = $modelId;
         $this->registerWorkflow($modelName, $modelId);
@@ -138,6 +134,7 @@ class ApprovalProcessing extends Component
             // Pluck id
             $this->Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
 
+//            todo: if id is the only property needed, i suggest selecting it in a query to optimize performance
             // Get lumpsum ID
             $lumpSumId = TaxType::query()->where('code', TaxType::LUMPSUM_PAYMENT)->first()->id;
 
@@ -183,16 +180,11 @@ class ApprovalProcessing extends Component
         unset($this->selectedTaxTypes[$index]);
     }
 
-    public function approve($transtion)
+    public function approve($transition)
     {
-
+        $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
-
-            if ($this->subject->bpra_verification_status === BusinessStatus::PENDING) {
-                $this->alert('warning', 'You must verify business information from BPRA to proceed!');
-                return;
-            }
-
+            
             $this->subject->isiic_i   = $this->isiic_i ?? null;
             $this->subject->isiic_ii  = $this->isiic_ii ?? null;
             $this->subject->isiic_iii = $this->isiic_iii ?? null;
@@ -213,6 +205,7 @@ class ApprovalProcessing extends Component
                 'selectedTaxTypes.*.currency.required'    => 'Currency is required',
             ]);
 
+//            todo: customize a fall back action
             $business = Business::findOrFail($this->subject->id);
 
             $business->is_business_lto = $this->isBusinessLTO;
@@ -221,6 +214,7 @@ class ApprovalProcessing extends Component
                 $business->business_type = BusinessType::ELECTRICITY;
             }
 
+//            todo: with all the database insertions i suggest wrapping the logics in transaction
             $business->save();
             $business->headquarter->tax_region_id = $this->selectedTaxRegion;
             $business->headquarter->save();
@@ -297,7 +291,7 @@ class ApprovalProcessing extends Component
         }
 
         try {
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
@@ -307,8 +301,9 @@ class ApprovalProcessing extends Component
         $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
     }
 
-    public function reject($transtion)
+    public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
         $this->validate([
             'comments' => 'required|string',
         ]);
@@ -317,13 +312,35 @@ class ApprovalProcessing extends Component
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;
             }
-            $this->doTransition($transtion, ['status' => 'agree', 'comment' => $this->comments]);
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
             $this->alert('error', 'Something went wrong');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition
+            ],
+
+        ]);
     }
 
     public function render()

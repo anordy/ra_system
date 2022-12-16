@@ -49,25 +49,25 @@
 
         @if ($this->checkTransition('start'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('start')">Initiate Approval</button>
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'start')">Initiate Approval</button>
             </div>
         @elseif ($this->checkTransition('debt_manager'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('debt_manager')">Approve &
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'debt_manager')">Approve &
                     Forward</button>
             </div>
         @elseif ($this->checkTransition('crdm'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-primary" wire:click="approve('crdm')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'crdm')">
                     Approve & Continue
                 </button>
             </div>
         @elseif ($this->checkTransition('accepted'))
             <div class="modal-footer p-2 m-0">
-                <button type="button" class="btn btn-danger" wire:click="reject('rejected')">
+                <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'rejected')">
                     Reject & Return Back
                 </button>
-                <button type="button" class="btn btn-primary" wire:click="approve('accepted')">
+                <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'accepted')">
                     Approve & Complete
                 </button>
             </div>

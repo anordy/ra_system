@@ -29,18 +29,18 @@
             @if ($this->checkTransition('audit_manager_review'))
                 <div class="modal-footer p-2 m-0">
                     <button type="button" class="btn btn-danger"
-                        wire:click="reject('application_filled_incorrect')">Filled Incorrect
+                        wire:click="confirmPopUpModal('reject', 'application_filled_incorrect')">Filled Incorrect
                         return to Applicant</button>
-                    <button type="button" class="btn btn-primary" wire:click="approve('audit_manager_review')">Approve
+                    <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'audit_manager_review')">Approve
                         &
                         Forward</button>
                 </div>
             @elseif ($this->checkTransition('commissioner_review'))
                 <div class="modal-footer p-2 m-0">
                     {{-- <button type="button" class="btn btn-danger" wire:click="reject('commissioner_reject_complete')">Reject & Complete</button> --}}
-                    <button type="button" class="btn btn-danger" wire:click="reject('commissioner_reject')">Reject &
+                    <button type="button" class="btn btn-danger" wire:click="confirmPopUpModal('reject', 'commissioner_reject')">Reject &
                         Return</button>
-                    <button type="button" class="btn btn-primary" wire:click="approve('commissioner_review')"
+                    <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'commissioner_review')"
                         wire:loading.attr="disabled">
                         <div wire:loading wire:target="approve('commissioner_review')">
                             <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">

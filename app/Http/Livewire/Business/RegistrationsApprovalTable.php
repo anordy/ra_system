@@ -37,14 +37,13 @@ class RegistrationsApprovalTable extends DataTableComponent
     {
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('Business Name', 'pinstance.business.name')                ->label(fn ($row) => $row->pinstance->name ?? ''),
-
+            Column::make('Business Name', 'pinstance.business.name')->label(fn ($row) => $row->pinstance->name ?? 'N/A')->sortable()->searchable(),
             Column::make('TIN', 'pinstance.tin')
-                ->label(fn ($row) => $row->pinstance->tin ?? ''),
+                ->label(fn ($row) => $row->pinstance->tin ?? '')->sortable()->searchable(),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')
-                ->label(fn ($row) => $row->pinstance->reg_no ?? ''),
+                ->label(fn ($row) => $row->pinstance->reg_no ?? '')->sortable()->searchable(),
             Column::make('Mobile', 'pinstance.mobile')
-                ->label(fn ($row) => $row->pinstance->mobile ?? ''),
+                ->label(fn ($row) => $row->pinstance->mobile ?? '')->sortable()->searchable(),
             Column::make('Status', 'pinstance.mobile')
                 ->label(function ($row){
                     return view('business.registrations.includes.approval_status', compact('row'));

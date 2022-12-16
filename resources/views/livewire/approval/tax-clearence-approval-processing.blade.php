@@ -29,7 +29,7 @@
 
         @if ($this->checkTransition('crdm_review'))
             <div class="modal-footer p-2 m-0">
-                <button wire:click="reject('crdm_reject')" class="btn btn-danger px-3 ml-2" type="button"
+                <button wire:click="confirmPopUpModal('reject', 'crdm_reject')" class="btn btn-danger px-3 ml-2" type="button"
                     wire:loading.attr="disabled">
                     <i class="bi bi-x-square mr-2" wire:loading.remove
                         wire:target="reject('crdm_reject')"></i>
@@ -37,7 +37,7 @@
                         wire:target="reject('crdm_reject')"></i>
                     Reject
                 </button>
-                <button wire:click="approve('crdm_review')" class="btn btn-primary px-3 ml-2" type="button"
+                <button wire:click="confirmPopUpModal('approve', 'crdm_review')" class="btn btn-primary px-3 ml-2" type="button"
                     wire:loading.attr="disabled">
                     <i class="bi bi-arrow-return-right mr-2" wire:loading.remove
                         wire:target="approve('crdm_review')"></i>

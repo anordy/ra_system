@@ -64,10 +64,10 @@
 
 <body>
 
-    <span class="embed institutionName">{{ $wa_responsible_person->withholdingAgent->institution_name  ?? '' }}</span>
-    <span class="embed location">{{ $wa_responsible_person->withholdingAgent->institution_place ?? '' }}</span>
-    <span class="embed witholdingAgentNumber">{{ $wa_responsible_person->withholdingAgent->wa_number ?? '' }}</span>
-    <span class="embed startDate">{{ $wa_responsible_person->created_at->toFormattedDateString() ?? '' }}</span>
+    <span class="embed institutionName">{{ $whagent->institution_name  ?? '' }}</span>
+    <span class="embed location">{{ $whagent->institution_place ?? '' }}</span>
+    <span class="embed witholdingAgentNumber">{{ $whagent->wa_number ?? '' }}</span>
+    <span class="embed startDate">{{ $whagent->latestResponsiblePerson->created_at->toFormattedDateString() ?? '' }}</span>
     <span class="embed dateGiven">{{ date('M d, Y') }}</span>
     <span class="commissioner-signature">
         <img src="{{ public_path()}}/sign/commissioner.png">

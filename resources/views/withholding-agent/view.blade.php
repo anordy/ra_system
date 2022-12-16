@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    @livewire('withholding-agents.withholding-agent-view')
+    @livewire('withholding-agents.withholding-agent-view', ['id' => $id])
 @endsection
