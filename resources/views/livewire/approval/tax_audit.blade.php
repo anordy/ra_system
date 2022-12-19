@@ -72,7 +72,7 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="intension">Intension</label>
-                            <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
+                            <textarea class="form-control" wire:model.defer="intension" id="intension" rows="3"></textarea>
                             @error('intension')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -83,7 +83,7 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="periodTo">Scope</label>
-                            <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
+                            <textarea class="form-control" wire:model.defer="scope" id="scope" rows="3"></textarea>
                             @error('scope')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -111,7 +111,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Preliminary report</label>
                         <input type="file" class="form-control  @error('preliminaryReport') is-invalid @enderror"
-                            wire:model.lazy="preliminaryReport">
+                            wire:model.defer="preliminaryReport">
                         @error('preliminaryReport')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -120,7 +120,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Working</label>
                         <input type="file" class="form-control  @error('workingReport') is-invalid @enderror"
-                            wire:model.lazy="workingReport">
+                            wire:model.defer="workingReport">
                         @error('workingReport')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -133,7 +133,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Final report</label>
                         <input type="file" class="form-control  @error('finalReport') is-invalid @enderror"
-                            wire:model.lazy="finalReport">
+                            wire:model.defer="finalReport">
                         @error('finalReport')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -142,13 +142,13 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Exit Minutes</label>
                         <input type="file" class="form-control  @error('exitMinutes') is-invalid @enderror"
-                            wire:model.lazy="exitMinutes">
+                            wire:model.defer="exitMinutes">
                         @error('exitMinutes')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-6">
-                        <label for="exampleFormControlTextarea1">Has Notice of Asessement</label>
+                        <label for="exampleFormControlTextarea1">Has notice of asessement</label>
                         <select class="form-control @error('hasAssessment') is-invalid @enderror"
                             wire:model="hasAssessment" wire:change="hasNoticeOfAttachmentChange($event.target.value)">
                             <option value='' selected>Select</option>
@@ -166,7 +166,7 @@
                             <label class="control-label">Principal Amount</label>
                             <input x-data x-mask:dynamic="$money($input)" type="text"
                                 class="form-control @error('principalAmount') is-invalid @enderror"
-                                wire:model.lazy="principalAmount">
+                                wire:model.defer="principalAmount">
                             @error('principalAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -175,7 +175,7 @@
                             <label class="control-label">Interest Amount</label>
                             <input x-data x-mask:dynamic="$money($input)" type="text"
                                 class="form-control @error('interestAmount') is-invalid @enderror"
-                                wire:model.lazy="interestAmount">
+                                wire:model.defer="interestAmount">
                             @error('interestAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -184,7 +184,7 @@
                             <label class="control-label">Penalty Amount</label>
                             <input x-data x-mask:dynamic="$money($input)" type="text"
                                 class="form-control @error('penaltyAmount') is-invalid @enderror"
-                                wire:model.lazy="penaltyAmount">
+                                wire:model.defer="penaltyAmount">
                             @error('penaltyAmount')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -196,7 +196,7 @@
                 <div class="col-md-12 ">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Comments</label>
-                        <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments' rows="3"></textarea>
+                        <textarea class="form-control @error('comments') is-invalid @enderror" wire:model.defer='comments' rows="3"></textarea>
                         @error('comments')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -280,7 +280,7 @@
         @elseif ($this->checkTransition('accepted'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-danger"
-                    wire:click="confirmPopUpModal('reject', 'rerejectjected')">
+                    wire:click="confirmPopUpModal('reject', 'rejected')">
                     Reject & Return Back
                 </button>
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'accepted')">
