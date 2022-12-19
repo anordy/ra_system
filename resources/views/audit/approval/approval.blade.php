@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-md-8 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $audit->taxAuditTaxTypeNames() ?? '' }}</p>
+                            <p class="my-1 text-uppercase">{{ $audit->taxAuditTaxTypeNames() ?? '' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
@@ -43,15 +43,15 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Auditing From</span>
-                            <p class="my-1">{{ $audit->period_from ?? '' }}</p>
+                            <p class="my-1">{{ $audit->periodFrom() }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Auditing To</span>
-                            <p class="my-1">{{ $audit->period_to ?? '' }}</p>
+                            <p class="my-1">{{ $audit->periodTo() }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Audit Date</span>
-                            <p class="my-1">{{ $audit->auditing_date ?? '' }}</p>
+                            <p class="my-1">{{ $audit->auditingDate() ?? '' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Scope</span>

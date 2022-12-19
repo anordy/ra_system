@@ -31,7 +31,7 @@ class WorkflowTask extends Model
         return $this->morphTo();
     }
 
-    public function operators()
+    public function actors()
     {
         return $this->hasMany(WorkflowTaskOperator::class, 'task_id');
     }
@@ -46,13 +46,6 @@ class WorkflowTask extends Model
             if (in_array(auth()->user()->role->id, $this->operators)) {
                 return true;
             }
-        }
-    }
-
-    public function getOperators()
-    {
-        if ($this->operator_type == 'staff') {
-        } elseif ($this->operator_type == 'role') {
         }
     }
 }

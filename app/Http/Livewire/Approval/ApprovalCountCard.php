@@ -27,7 +27,7 @@ class ApprovalCountCard extends Component
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
                     ->where('owner', 'staff')
                     ->where('status', 'running')
-                    ->whereHas('operators', function($query) use ($user_id){
+                    ->whereHas('actors', function($query) use ($user_id){
                         $query->where('user_id', $user_id);
                     })
                     ->get();
@@ -47,7 +47,7 @@ class ApprovalCountCard extends Component
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
                     ->where('owner', 'staff')
                     ->where('status', 'running')
-                    ->whereHas('operators', function($query) use ($user_id){
+                    ->whereHas('actors', function($query) use ($user_id){
                         $query->where('user_id', $user_id);
                     })
                     ->get();
@@ -66,7 +66,7 @@ class ApprovalCountCard extends Component
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
                     ->where('owner', 'staff')
                     ->where('status', 'running')
-                    ->whereHas('operators', function($query) use ($user_id){
+                    ->whereHas('actors', function($query) use ($user_id){
                         $query->where('user_id', $user_id);
                     })
                     ->get();
