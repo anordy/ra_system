@@ -24,7 +24,7 @@ class TaxInvestigationApprovalTable extends DataTableComponent
             ->where('pinstance_type', TaxInvestigation::class)
             ->where('status', '!=', 'completed')
             ->where('owner', 'staff')
-            ->whereHas('operators', function($query){
+            ->whereHas('actors', function($query){
                 $query->where('user_id', auth()->id());
             });
     }

@@ -7,6 +7,7 @@ use App\Models\BusinessLocation;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -79,10 +80,23 @@ class TaxAudit extends Model implements Auditable
             if($key!=0){
                 $taxType .= ', '; 
             }
-            $taxType .= $taxAuditTaxType->taxType->code;
+            $taxType .= $taxAuditTaxType->taxType->name;
             
         }
         return $taxType;
     }
+
+    public function periodFrom(){
+        return !isNullOrEmpty($this->period_from) ? Carbon::create($this->period_from)->format('d-m-Y') : null;
+    }
+
+    public function periodTo(){
+        return !isNullOrEmpty($this->period_to) ? Carbon::create($this->period_to)->format('d-m-Y') : null;
+    }
+
+    public function auditingDate(){
+        return !isNullOrEmpty($this->auditing_date) ? Carbon::create($this->auditing_date)->format('d-m-Y') : null;
+    }
+    
     
 }
