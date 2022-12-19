@@ -31,7 +31,7 @@ class EditResponsiblePersonModal extends Component
 
     public function mount($id)
     {   
-        $this->wa_responsible_person = WaResponsiblePerson::find($id); // todo: encrypt id
+        $this->wa_responsible_person = WaResponsiblePerson::findOrFail(decrypt($id)); // todo: encrypt id
         $this->title = $this->wa_responsible_person->title;
         $this->position = $this->wa_responsible_person->position;
         $this->responsible_person_id = $this->wa_responsible_person->responsible_person_id;

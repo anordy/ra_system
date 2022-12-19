@@ -12,6 +12,8 @@ class WaResponsiblePerson extends Model implements Auditable
     protected $guarded = [];
     protected $table = 'wa_responsible_persons';
 
+    public const ACTIVE = 'active';
+    public const INACTIVE = 'inactive';
 
     public function user() {
         return $this->belongsTo(User::class, 'officer_id');

@@ -33,7 +33,7 @@ class WithholdingAgentRegistration extends Component
     public $taxpayer, $ztnNumber;
 
     protected $rules = [
-        'tin' => 'required|integer|min:8',
+        'tin' => 'required|integer|digits_between:10,10',
         'institution_name' => 'required',
         'institution_place' => 'required',
         'email' => 'required|email|unique:withholding_agents,email',

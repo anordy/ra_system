@@ -17,7 +17,7 @@ class CreateWithholdingAgentsTable extends Migration
             $table->id();
             $table->integer('tin');
             $table->string('address');
-            $table->bigInteger('wa_number')->unique();
+            $table->string('wa_number')->unique();
             $table->string('institution_name');
             $table->string('institution_place');
             $table->string('email')->unique();
