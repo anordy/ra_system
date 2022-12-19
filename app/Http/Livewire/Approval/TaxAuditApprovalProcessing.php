@@ -72,8 +72,8 @@ class TaxAuditApprovalProcessing extends Component
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::AUDIT);
 
         $this->modelName = $modelName;
-        $this->modelId   = $modelId;
-        $this->registerWorkflow($modelName, $modelId);
+        $this->modelId   = decrypt($modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
 
         $this->task = $this->subject->pinstancesActive;
         $this->periodFrom = $this->subject->period_from;

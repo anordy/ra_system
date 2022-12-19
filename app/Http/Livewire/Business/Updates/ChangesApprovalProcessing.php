@@ -31,10 +31,10 @@ class ChangesApprovalProcessing extends Component
     public function mount($modelName, $modelId, $businessUpdate)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId;
+        $this->modelId = decrypt($modelId);
         $this->business_update_data = $businessUpdate;
         $this->business_id = $businessUpdate->business_id;
-        $this->registerWorkflow($modelName, $modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
     }
 
 

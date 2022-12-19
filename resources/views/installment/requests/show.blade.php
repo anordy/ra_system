@@ -144,13 +144,13 @@
                     @endif
                 </div>
                 <div id="approval-history" class="tab-pane fade p-4">
-                    <livewire:approval.approval-history-table modelName='App\Models\Installment\InstallmentRequest' modelId="{{ $installment->id }}" />
+                    <livewire:approval.approval-history-table modelName='App\Models\Installment\InstallmentRequest' modelId="{{ encrypt($installment->id) }}" />
                 </div>
             </div>
         </div>
     </div>
 
-    <livewire:approval.installment-request-approval-processing modelName="{{ get_class($installment) }}" modelId="{{ $installment->id }}" />
+    <livewire:approval.installment-request-approval-processing modelName="{{ get_class($installment) }}" modelId="{{ encrypt($installment->id) }}" />
 
 @endsection
 

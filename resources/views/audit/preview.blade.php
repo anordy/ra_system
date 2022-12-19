@@ -181,7 +181,7 @@
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <livewire:approval.approval-history-table modelName='{{ get_class($audit) }}'
-                modelId="{{ $audit->id }}" />
+                modelId="{{ encrypt($audit->id) }}" />
         </div>
     </div>
 

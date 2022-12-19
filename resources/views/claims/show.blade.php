@@ -108,7 +108,7 @@
                         @endif
                         <div class="tab-pane fade" id="approval-history" role="tabpanel"
                              aria-labelledby="old-return-tab">
-                            <livewire:approval.approval-history-table modelName='App\Models\Claims\TaxClaim' modelId="{{ $claim->id }}" />
+                            <livewire:approval.approval-history-table modelName='App\Models\Claims\TaxClaim' modelId="{{ encrypt($claim->id) }}" />
                         </div>
                     </div>
                 </div>
@@ -186,5 +186,5 @@
         </div>
     @endif
 
-    <livewire:approval.tax-claim-approval-processing modelId="{{ $claim->id }}" modelName="{{ get_class($claim) }}"/>
+    <livewire:approval.tax-claim-approval-processing modelId="{{ encrypt($claim->id) }}" modelName="{{ get_class($claim) }}"/>
 @endsection

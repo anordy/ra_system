@@ -38,7 +38,7 @@ class ObjectionApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId; // todo: encrypt id
+        $this->modelId = decrypt($modelId); // todo: encrypt id
         $this->dispute = Dispute::find($this->modelId);
         $this->principal = $this->dispute->tax_in_dispute;
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
@@ -48,7 +48,7 @@ class ObjectionApprovalProcessing extends Component
         $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
         $this->total = ($this->penalty + $this->interest + $this->principal) - ($this->dispute->tax_deposit);
 
-        $this->registerWorkflow($modelName, $modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
 
     }
 

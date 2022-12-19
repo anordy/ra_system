@@ -64,11 +64,11 @@ class TaxInvestigationApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = $modelId;
+        $this->modelId   = decrypt($modelId);
         $this->taxTypes = TaxType::all();
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::INVESTIGATION);
 
-        $this->registerWorkflow($modelName, $modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
 
         $this->task = $this->subject->pinstancesActive;
 

@@ -59,8 +59,8 @@ class ApprovalProcessing extends Component
     {
 //        todo: encrypt modelID
         $this->modelName = $modelName;
-        $this->modelId   = $modelId;
-        $this->registerWorkflow($modelName, $modelId);
+        $this->modelId   = decrypt($modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
         $this->isiiciList = ISIC1::all();
         $this->taxTypes   = TaxType::main()->get();
 
@@ -206,7 +206,12 @@ class ApprovalProcessing extends Component
             ]);
 
 //            todo: customize a fall back action
-            $business = Business::findOrFail($this->subject->id);
+            $business = Business::find($this->subject->id);
+
+            if($business == null){
+                $this->alert('error', 'Business information does not exist');
+                return;
+            }
 
             $business->is_business_lto = $this->isBusinessLTO;
 

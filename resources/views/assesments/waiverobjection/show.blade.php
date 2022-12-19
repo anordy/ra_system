@@ -4,7 +4,7 @@
 
 @section('content')
     {{-- @if ($business->status === \App\Models\BusinessStatus::CORRECTION)
-        <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business->id }}" />
+        <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ encrypt($business->id) }}" />
     @endif --}}
     <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
         <li class="nav-item" role="presentation">

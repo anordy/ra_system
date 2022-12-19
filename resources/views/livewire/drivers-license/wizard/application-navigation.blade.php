@@ -1,5 +1,5 @@
 {{-- @if($business_id && $business_status === \App\Models\BusinessStatus::CORRECTION)
-     <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business_id }}" />
+     <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ encrypt($business_id) }}" />
 @endif --}}
 
 <div class="steps my-3 bg-white">

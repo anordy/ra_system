@@ -1,5 +1,5 @@
 @if ($objection->status === \App\Models\ObjectionStatus::CORRECTION)
-    <livewire:approval.approval-processing modelName='App\Models\objection' modelId="{{ $objection->id }}" />
+    <livewire:approval.approval-processing modelName='App\Models\objection' modelId="{{ encrypt($objection->id) }}" />
 @endif
 <ul class="nav nav-tabs shadow-sm" id="myTab" role="tablist" style="margin-bottom: 0;">
     <li class="nav-item" role="presentation">

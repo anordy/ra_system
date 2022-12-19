@@ -241,13 +241,13 @@
                 </div>
                 <div class="tab-pane fade m-2" id="approval" role="tabpanel" aria-labelledby="approval-tab">
                     <livewire:approval.approval-history-table modelName='App\Models\BusinessLocation'
-                        modelId="{{ $location->id }}" />
+                        modelId="{{ encrypt($location->id) }}" />
                 </div>
             </div>
 
             <div class="mt-4">
                 <livewire:approval.branches-approval-processing modelName='App\Models\BusinessLocation'
-                    modelId="{{ $location->id }}" />
+                    modelId="{{ encrypt($location->id) }}" />
             </div>
 
 

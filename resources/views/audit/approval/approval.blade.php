@@ -173,7 +173,7 @@
 
 
             <livewire:approval.tax-audit-approval-processing modelName='{{ get_class($audit) }}'
-                modelId="{{ $audit->id }}" />
+                modelId="{{ encrypt($audit->id) }}" />
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if ($audit->location_id != 0 && $audit->tax_type_id != 0)
@@ -184,7 +184,7 @@
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <livewire:approval.approval-history-table modelName='{{ get_class($audit) }}'
-                modelId="{{ $audit->id }}" />
+                modelId="{{ encrypt($audit->id) }}" />
         </div>
     </div>
 

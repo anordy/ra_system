@@ -14,10 +14,10 @@
             <div class="tab-content px-2 border border-top-0 pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show">
                     @include('business.registrations.includes.business_info')
-                    <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ $business->id }}" />
+                    <livewire:approval.approval-processing modelName='App\Models\Business' modelId="{{ encrypt($business->id) }}" />
                 </div>
                 <div id="tab2" class="tab-pane fade">
-                    <livewire:approval.approval-history-table modelName='App\Models\Business' modelId="{{ $business->id }}" />
+                    <livewire:approval.approval-history-table modelName='App\Models\Business' modelId="{{ encrypt($business->id) }}" />
                 </div>
 
             </div>
