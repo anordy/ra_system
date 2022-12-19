@@ -19,12 +19,12 @@
                 <div class="tab-pane fade show active" id="disputeInfo" role="tabpanel" aria-labelledby="disputeInfo-tab">
                     @include('assesments.dispute.includes.dispute_info')
                     <livewire:approval.objection-approval-processing modelName='App\Models\Disputes\Dispute'
-                        modelId="{{ $dispute->id }}" />
+                        modelId="{{ encrypt($dispute->id) }}" />
                 </div>
 
                 <div class="tab-pane fade" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
                     <livewire:approval.approval-history-table modelName='App\Models\Disputes\Dispute'
-                        modelId="{{ $dispute->id }}" />
+                        modelId="{{ encrypt($dispute->id) }}" />
                 </div>
             </div>
         </div>

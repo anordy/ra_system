@@ -19,12 +19,12 @@
                 <div class="tab-pane fade show active" id="waiverInfo" role="tabpanel" aria-labelledby="waiverInfo-tab">
                     @include('assesments.waiver.includes.objection_info')
                     <livewire:approval.dispute-waiver-approval-processing modelName='App\Models\Disputes\Dispute'
-                        modelId="{{ $dispute->id }}" />
+                        modelId="{{ encrypt($dispute->id) }}" />
                 </div>
 
                 <div class="tab-pane fade" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
                     <livewire:approval.approval-history-table modelName='App\Models\Disputes\Dispute'
-                        modelId="{{ $dispute->id }}" />
+                        modelId="{{ encrypt($dispute->id) }}" />
                 </div>
             </div>
         </div>

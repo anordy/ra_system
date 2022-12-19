@@ -54,11 +54,11 @@ class TaxVerificationApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId   = $modelId;
+        $this->modelId   = decrypt($modelId);
         $this->taxTypes = TaxType::all();
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::VERIFICATION);
 
-        $this->registerWorkflow($modelName, $modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
 
         $this->task = $this->subject->pinstancesActive;
         $this->assessmentReport = $this->subject->assessment_report;

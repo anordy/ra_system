@@ -22,12 +22,12 @@
                 <div class="tab-pane fade show active" id="waiverInfo" role="tabpanel" aria-labelledby="waiverInfo-tab">
                     @include('debts.assessments.waivers.show')
                     <livewire:approval.assessment-debt-waiver-approval-processing modelName='App\Models\Debts\DebtWaiver'
-                        modelId="{{ $waiver->id }}" />
+                        modelId="{{ encrypt($waiver->id) }}" />
                 </div>
 
                 <div class="tab-pane fade m-2" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
                     <livewire:approval.approval-history-table modelName='App\Models\Debts\DebtWaiver'
-                        modelId="{{ $waiver->id }}" />
+                        modelId="{{ encrypt($waiver->id) }}" />
                 </div>
             </div>
         </div>

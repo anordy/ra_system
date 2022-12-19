@@ -158,7 +158,7 @@
             <div class="card">
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($verification) }}'
-                        modelId="{{ $verification->id }}" />
+                        modelId="{{ encrypt($verification->id) }}" />
 
                 </div>
             </div>

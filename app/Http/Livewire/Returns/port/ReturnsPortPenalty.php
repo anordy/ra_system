@@ -20,7 +20,8 @@ class ReturnsPortPenalty extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->return = $modelName::findOrFail($modelId);
+        $this->modelId = decrypt($modelId);
+        $this->return = $modelName::findOrFail($this->modelId);
         $this->businessLocationId = $this->return->business_location_id;
         $this->taxTypeCurrency = BusinessTaxType::where('business_id', $this->return->business_id)->where('tax_type_id', $this->return->tax_type_id)->value('currency');
 

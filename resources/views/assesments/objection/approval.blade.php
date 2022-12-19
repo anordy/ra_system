@@ -14,10 +14,10 @@
             <div class="tab-content px-2 border border-top-0 pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show">
                     @include('assesments.objection.includes.objection_info')
-                        <livewire:approval.approval-objection-processing modelName='App\Models\Objection' modelId="{{ $objection->id }}" />
+                        <livewire:approval.approval-objection-processing modelName='App\Models\Objection' modelId="{{ encrypt($objection->id) }}" />
                 </div>
                 <div id="tab2" class="tab-pane fade">
-                    <livewire:approval.approval-history-table modelName='App\Models\Objection' modelId="{{ $objection->id }}" />
+                    <livewire:approval.approval-history-table modelName='App\Models\Objection' modelId="{{ encrypt($objection->id) }}" />
                 </div>
 
             </div>

@@ -42,12 +42,6 @@ class WorkflowSubscriber implements EventSubscriberInterface
         $place = $marking[key($marking)];
         $owner = $place['owner'];
 
-        if ($task) {
-            $operator_type = $task->operator_type;
-            $operators = json_decode($task->operators, true);
-        } else {
-            return;
-        }
         $status = $place['status'];
 
         if ($status != 1) {
@@ -58,20 +52,14 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $event->setBlocked(true);
         }
 
-        if ($operator_type == "role") {
-            $role = Role::find($user->role->id ?? null);
-            if ($role == null) {
+        if ($task) {
+            $can_approve = $task->actors()
+                ->where('user_type', get_class($user))
+                ->where('user_id', $user->id)->first();
+
+            if ($can_approve == null) {
                 $event->setBlocked(true);
             }
-            if (!in_array($user->role->id, $operators)) {
-                $event->setBlocked(true);
-            }
-        } elseif ($operator_type == 'user') {
-            if (!in_array($user->id, $operators)) {
-                $event->setBlocked(true);
-            }
-        } else {
-            $event->setBlocked(true);
         }
     }
 

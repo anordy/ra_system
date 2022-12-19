@@ -38,11 +38,11 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId;
+        $this->modelId = decrypt($modelId);
         $this->debt_waiver = DebtWaiver::find($this->modelId);
         $this->debt = $this->debt_waiver->debt;
         $this->taxTypes = TaxType::all();
-        $this->registerWorkflow($modelName, $modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
         $this->forwardToCommisioner = $this->canForwardToCommisioner($this->debt);
     }
 

@@ -91,11 +91,11 @@
 
                 </div>
 
-                @livewire('business.closure.closure-approval-processing', ['modelName' => 'App\Models\BusinessTempClosure', 'modelId' => $temp_closure->id])
+                @livewire('business.closure.closure-approval-processing', ['modelName' => 'App\Models\BusinessTempClosure', 'modelId' => encrypt($temp_closure->id) ])
             </div>
             <div id="tab2" class="tab-pane fade m-4">
                 <livewire:approval.approval-history-table modelName='App\Models\BusinessTempClosure'
-                    modelId="{{ $temp_closure->id }}" />
+                    modelId="{{ encrypt($temp_closure->id) }}" />
             </div>
         </div>
 </div>

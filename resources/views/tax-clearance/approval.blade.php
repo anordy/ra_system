@@ -106,14 +106,14 @@
                     </div>
                     
                     <livewire:approval.tax-clearence-approval-processing modelName='App\Models\TaxClearanceRequest'
-                        modelId="{{ $taxClearence->id }}" />
+                        modelId="{{ encrypt($taxClearence->id) }}" />
                 </div>
                 <div class="tab-pane fade show" id="debt-infos" role="tabpanel" aria-labelledby="debt-infos-tab">
                     @include('tax-clearance.includes.tax_clearence_info')
                 </div>
                 <div class="tab-pane fade" id="approvalHistory" role="tabpanel" aria-labelledby="approvalHistory-tab">
                     <livewire:approval.approval-history-table modelName='App\Models\TaxClearanceRequest'
-                        modelId="{{ $taxClearence->id }}" />
+                        modelId="{{ encrypt($taxClearence->id) }}" />
                 </div>
             </div>
         </div>

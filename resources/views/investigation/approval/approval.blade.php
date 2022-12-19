@@ -143,7 +143,7 @@
 
 
             <livewire:approval.tax-investigation-approval-processing modelName='{{ get_class($investigation) }}'
-                modelId="{{ $investigation->id }}" />
+                modelId="{{ encrypt($investigation->id) }}" />
         </div>
         <div class="tab-pane fade card p-2" id="return-infos" role="tabpanel" aria-labelledby="return-infos-tab">
             @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
@@ -156,7 +156,7 @@
             <div class="card">
                 <div class="card-body">
                     <livewire:approval.approval-history-table modelName='{{ get_class($investigation) }}'
-                        modelId="{{ $investigation->id }}" />
+                        modelId="{{ encrypt($investigation->id) }}" />
 
                 </div>
             </div>

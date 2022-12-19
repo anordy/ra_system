@@ -14,6 +14,7 @@ class TaxAuditApprovalController extends Controller
         if (!Gate::allows('tax-auditing-approval-view')) {
             abort(403);
         }
+        
 
         return view('audit.approval.index');
     }
@@ -22,7 +23,6 @@ class TaxAuditApprovalController extends Controller
     {
 
         $audit = TaxAudit::with('assessment', 'officers')->find(decrypt($id));
-        // return $audit->taxAuditLocationNames();
         return view('audit.approval.approval', compact('audit'));
     }
 

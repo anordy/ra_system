@@ -30,7 +30,7 @@ class DisputeApprovalTable extends DataTableComponent
                 $query->where('category', $this->category);
             })
             ->where('owner', 'staff')
-            ->whereHas('operators', function($query){
+            ->whereHas('actors', function($query){
                 $query->where('user_id', auth()->id);
             });
         return $workflow;

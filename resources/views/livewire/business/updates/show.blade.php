@@ -371,11 +371,11 @@
             @endif
 
 
-            @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => $business_update->id, 'businessUpdate' => $business_update])
+            @livewire('business.updates.changes-approval-processing', ['modelName' => 'App\Models\BusinessUpdate', 'modelId' => encrypt($business_update->id), 'businessUpdate' => $business_update])
         </div>
         <div id="tab2" class="tab-pane fade p-4">
             <livewire:approval.approval-history-table modelName='App\Models\BusinessUpdate'
-                modelId="{{ $business_update->id }}" />
+                modelId="{{ encrypt($business_update->id) }}" />
         </div>
     </div>
 </div>

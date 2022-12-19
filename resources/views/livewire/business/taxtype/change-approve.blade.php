@@ -12,13 +12,13 @@
                     
                         <div class="px-4 pt-2">
                             <livewire:business.tax-type.tax-type-change-approval-processing
-                                modelName='App\Models\BusinessTaxTypeChange' modelId="{{ $taxchange->id }}" />
+                                modelName='App\Models\BusinessTaxTypeChange' modelId="{{ encrypt($taxchange->id) }}" />
                         </div>
                     </div>
                 </div>
                 <div id="tab2" class="tab-pane fade m-2">
                     <livewire:approval.approval-history-table modelName='App\Models\BusinessTaxTypeChange'
-                        modelId="{{ $taxchange->id }}" />
+                        modelId="{{ encrypt($taxchange->id) }}" />
                 </div>
             </div>
 

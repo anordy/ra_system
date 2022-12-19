@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-md-8 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Type</span>
-                            <p class="my-1">{{ $audit->taxAuditTaxTypeNames() ?? '' }}</p>
+                            <p class="my-1 text-uppercase">{{ $audit->taxAuditTaxTypeNames() ?? '' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
@@ -43,15 +43,15 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Auditing From</span>
-                            <p class="my-1">{{ $audit->period_from ?? '' }}</p>
+                            <p class="my-1">{{ $audit->periodFrom() }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Auditing To</span>
-                            <p class="my-1">{{ $audit->period_to ?? '' }}</p>
+                            <p class="my-1">{{ $audit->periodTo() }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Audit Date</span>
-                            <p class="my-1">{{ $audit->auditing_date ?? '' }}</p>
+                            <p class="my-1">{{ $audit->auditingDate() ?? '' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Scope</span>
@@ -173,7 +173,7 @@
 
 
             <livewire:approval.tax-audit-approval-processing modelName='{{ get_class($audit) }}'
-                modelId="{{ $audit->id }}" />
+                modelId="{{ encrypt($audit->id) }}" />
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if ($audit->location_id != 0 && $audit->tax_type_id != 0)
@@ -184,7 +184,7 @@
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <livewire:approval.approval-history-table modelName='{{ get_class($audit) }}'
-                modelId="{{ $audit->id }}" />
+                modelId="{{ encrypt($audit->id) }}" />
         </div>
     </div>
 
