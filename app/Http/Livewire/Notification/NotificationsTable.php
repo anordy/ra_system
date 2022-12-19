@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Notification;
 
 use App\Models\Notification;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -15,22 +15,12 @@ class NotificationsTable extends DataTableComponent
 {
     use LivewireAlert;
 
-    public function mount()
-    {
-        $user = auth()->user();
-        Notification::where('notifiable_type', get_class($user))
-            ->where('notifiable_id', $user->id)
-            ->whereNull('read_at')
-            ->update(['read_at' => Carbon::now()]);
-    }
 
     public function builder(): Builder
     {
-        return Notification::query()
-            ->where('notifiable_type', get_class(auth()->user()))
+        return Notification::where('notifiable_type', get_class(auth()->user()))
             ->where('notifiable_id', auth()->id())
-            ->latest()
-            ->select();
+            ->latest();
     }
 
     public function configure(): void
@@ -67,10 +57,10 @@ class NotificationsTable extends DataTableComponent
             Column::make('Action', 'id')
                 ->label(
                     function ($row) {
-                        $id = "'{$row->id}'";
+                        $id = $row->id;
                         return <<< HTML
-                            <button class="btn btn-info btn-sm" title="View" wire:click="read($id)"><i class="fa fa-eye"></i></button>
-                            <button class="btn btn-danger btn-sm" title="Delete" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
+                            <a class="btn btn-info btn-sm" title="View" href=""><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-danger btn-sm" title="Delete" wire:click="delete($id)"><i class="fa fa-trash"></i> </a>
                         HTML;
                     }
                 )
@@ -80,14 +70,19 @@ class NotificationsTable extends DataTableComponent
 
     public function read($id)
     {
+        dd($id);
         try {
-            $notification = Notification::find($id);
-            if($notification == null){
-                return redirect()->back();
-            }
+            //check if the selected notification exists
+            $notification = Notification::find(1);
+            // if($notification == null){
+            //     return redirect()->back();
+            // }
+            // dd($notification);
+
+            dd($notification);
             if ($notification['data']->href != null) {
                 if ($notification['data']->hrefParameters != null) {
-                    // dd($notification['data']->href, $notification['data']->hrefParameters);
+                    dd($notification['data']->href, $notification['data']->hrefParameters);
                     return redirect()->route($notification['data']->href, encrypt($notification['data']->hrefParameters));
                 }
                 return redirect()->route($notification['data']->href);

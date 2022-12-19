@@ -10,7 +10,7 @@
             Notifications
         </div>
         <div class="card-body">
-            @livewire('notifications-table')
+            @livewire('notification.notifications-table')
         </div>
     </div>
 @endsection

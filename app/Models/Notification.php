@@ -11,7 +11,9 @@ class Notification extends Model
 
     public $timestamps = true;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
+
+    protected $primaryKey = 'id';
 
     protected $dates = [
         'created_at',
