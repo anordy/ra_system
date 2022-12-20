@@ -1,48 +1,49 @@
 <?php
 
-namespace App\Http\Livewire\Settings\InterestRate;
+namespace App\Http\Livewire\Settings\PenaltyRate;
 
-use App\Models\Bank;
 use Livewire\Component;
-use App\Models\InterestRate;
+use App\Models\PenaltyRate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class InterestRateEditModal extends Component
+class PenaltyRateEditModal extends Component
 {
     use LivewireAlert;
 
+    public $penaltyRate;
     public $rate;
     public $year;
-    public $interestRate;
+    public $name;
+    public $code;
+
 
     protected function rules()
     {
         return [
-            'rate' => 'required',
-            'year' => 'required|unique:interest_rates,year,'.$this->interestRate->id,
+            'rate' => 'required|numeric',
         ];
     }
 
     public function mount($id)
     {
-        $data = InterestRate::find($id);
-        $this->interestRate = $data;
-        $this->rate = $data->rate;
-        $this->year = $data->year;
+        $this->penaltyRate = PenaltyRate::findOrFail(decrypt($id));
+        $this->rate = number_format($this->penaltyRate->rate, 2);
+        $this->name = $this->penaltyRate->name;
+        $this->code = $this->penaltyRate->code;
+        $this->year = $this->penaltyRate->year->code;
     }
 
     public function submit()
     {
-        if (!Gate::allows('setting-interest-rate-edit')) {
+        if (!Gate::allows('setting-penalty-rate-edit')) {
             abort(403);
-        }
+       }
         $this->validate();
         try {
-            $this->interestRate->update([
+            $this->penaltyRate->update([
                 'rate' => $this->rate,
-                'year' => $this->year,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $e) {
@@ -52,6 +53,6 @@ class InterestRateEditModal extends Component
     }
     public function render()
     {
-        return view('livewire.settings.interest-rate.edit-modal');
+        return view('livewire.settings.penalty-rate.edit-modal');
     }
 }

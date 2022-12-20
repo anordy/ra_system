@@ -87,7 +87,7 @@ class ReturnController extends Controller
         return view('returns.return-configs.index', compact('id', 'configs', 'code'));
     }
 
-    public function getFinancialYear($id)
+    public static function getFinancialYear($id)
     {
         $year = FinancialYear::query()->where('id', $id)->value('code');
 

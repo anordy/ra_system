@@ -76,8 +76,8 @@ trait CheckReturnConfigurationTrait
 
             $penaltyRates = PenaltyRate::where('financial_year_id', $financialYear->id)->get();
 
-            // If penalty rates exists return true, otherwise false
-            if (count($penaltyRates) > 0) {
+            // If penalty rates exists return true, otherwise false (We check if LF, LPB, LPA, WEG, MNO/BFO exists)
+            if (count($penaltyRates) >= 5) {
                 return true;
             } else {
                 Log::error("{$currentYear} PENALTY RATES DOES NOT EXIST");
