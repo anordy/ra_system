@@ -2,10 +2,12 @@
 
 namespace App\Traits;
 
+use App\Events\SendSms;
+use App\Events\SendMail;
+use App\Models\PenaltyRate;
+use App\Models\InterestRate;
 use App\Models\FinancialYear;
 use App\Models\FinancialMonth;
-use App\Models\InterestRate;
-use App\Models\PenaltyRate;
 use Illuminate\Support\Facades\Log;
 
 trait CheckReturnConfigurationTrait
@@ -35,6 +37,9 @@ trait CheckReturnConfigurationTrait
                 // Return false if the next financial year does not exist
                 if (!$year) {
                     Log::error("{$nextFinancialYear} FINANCIAL YEAR DOES NOT EXIST");
+                    $payload = ['currentYear' => $nextFinancialYear];
+                    event(new SendMail('financial-year', $payload));
+                    event(new SendSms('financial-year', $payload));
                     return false;
                 } else {
                     // If next financial year exists, get the january month
@@ -54,11 +59,17 @@ trait CheckReturnConfigurationTrait
                     return true;
                 } else {
                     Log::error("FINANCIAL MONTH {$filingFinancialMonth} FOR THE YEAR {$currentYear} DOES NOT EXIST");
+                    $payload = ['currentYear' => $currentYear, 'currentMonth' => $filingFinancialMonth];
+                    event(new SendMail('financial-month', $payload));
+                    event(new SendSms('financial-month', $payload));
                     return false;
                 }
             }
         } else {
             Log::error("{$currentYear} FINANCIAL YEAR DOES NOT EXIST");
+            $payload = ['currentYear' => $currentYear];
+            event(new SendMail('financial-year', $payload));
+            event(new SendSms('financial-year', $payload));
             return false;
         }
     }
@@ -81,6 +92,9 @@ trait CheckReturnConfigurationTrait
                 return true;
             } else {
                 Log::error("{$currentYear} PENALTY RATES DOES NOT EXIST");
+                $payload = ['currentYear' => $currentYear];
+                event(new SendMail('penalty-rate', $payload));
+                event(new SendSms('penalty-rate', $payload));
                 return false;
             }
         } else {
@@ -104,10 +118,13 @@ trait CheckReturnConfigurationTrait
                 return true;
             } else {
                 Log::error("{$currentYear} INTEREST RATE DOES NOT EXIST");
+                $payload = ['currentYear' => $currentYear];
+                event(new SendMail('interest-rate', $payload));
+                event(new SendSms('interest-rate', $payload));
                 return false;
             }
         } else {
-            return false;
+                return false;
         }
     }
 }
