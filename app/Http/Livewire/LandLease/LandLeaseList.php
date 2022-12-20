@@ -25,7 +25,7 @@ class LandLeaseList extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered', 'taxpayer_id']);
+        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'taxpayer_id']);
     }
 
     public function columns(): array
@@ -34,7 +34,7 @@ class LandLeaseList extends DataTableComponent
             Column::make("DP Number", "dp_number")
                 ->searchable()
                 ->sortable(),
-            Column::make("Name", "category")
+            Column::make("Name", "status")
                 ->format(
                     function ($value, $row) {
                         if ($row->category == 'business') {
@@ -79,9 +79,8 @@ class LandLeaseList extends DataTableComponent
             Column::make("Ward", "ward.name")
                 ->searchable()
                 ->sortable(),
-            Column::make("Applicant Status", "id")->view("land-lease.includes.applicant-status"),
+            Column::make("Applicant Status", "is_registered")->view("land-lease.includes.applicant-status"),
             Column::make("Actions", "id")
-            // ->hideIf(!Gate::allows('land-lease-view'))
             ->view("land-lease.includes.actions"),
         ];
     }
