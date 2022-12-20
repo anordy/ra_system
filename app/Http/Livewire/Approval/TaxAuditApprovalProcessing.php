@@ -72,15 +72,22 @@ class TaxAuditApprovalProcessing extends Component
         $this->taxType = $this->taxTypes->firstWhere('code', TaxType::AUDIT);
 
         $this->modelName = $modelName;
-        $this->modelId   = $modelId;
-        $this->registerWorkflow($modelName, $modelId);
+        $this->modelId   = decrypt($modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
 
         $this->task = $this->subject->pinstancesActive;
-        $this->periodFrom = $this->subject->period_from;
-        $this->periodTo = $this->subject->period_to;
+        if(!isNullOrEmpty($this->subject->period_from)){
+            $this->periodFrom = Carbon::create($this->subject->period_from)->format('Y-m-d');
+        }
+        if(!isNullOrEmpty($this->subject->period_to)){
+            $this->periodTo = Carbon::create($this->subject->period_to)->format('Y-m-d');
+        }
         $this->intension = $this->subject->intension;
         $this->scope = $this->subject->scope;
-        $this->auditingDate = $this->subject->auditing_date;
+        if(!isNullOrEmpty($this->subject->auditing_date)){
+            $this->auditingDate = Carbon::create($this->subject->auditing_date)->format('Y-m-d');
+        }
+      
         $this->exitMinutes = $this->subject->exit_minutes;
         $this->finalReport = $this->subject->final_report;
         $this->workingReport = $this->subject->working_report;

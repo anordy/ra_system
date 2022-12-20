@@ -5,15 +5,15 @@ use App\Models\EducationLevel;
 use App\Models\Role;
 use App\Models\User;
 
-function getOperators($owner, $operator_type, $operators)
+function getOperators($owner, $operator_type, $actors)
 {
     $data = '';
 
     if ($owner == 'taxpayer') return 'taxpayer';
     if ($operator_type == 'role') {
-        $data = Role::whereIn('id', $operators)->get()->pluck('name')->implode(', ');
+        $data = Role::whereIn('id', $actors)->get()->pluck('name')->implode(', ');
     } elseif ($operator_type == 'user') {
-        $data = User::whereIn('id', $operators)->get()->pluck('fname', 'lname')->implode(', ');
+        $data = User::whereIn('id', $actors)->get()->pluck('fname', 'lname')->implode(', ');
     }
 
 
@@ -76,4 +76,8 @@ function checkIfTaxTypeSaved($return)
     else{
         return false;
     }
+}
+
+function isNullOrEmpty($value){
+    return ($value == null || $value == '');
 }

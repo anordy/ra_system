@@ -138,13 +138,13 @@
                     @endif
                 </div>
                 <div id="approval-history" class="tab-pane fade p-4">
-                    <livewire:approval.approval-history-table modelName='App\Models\Extension\ExtensionRequest' modelId="{{ $extension->id }}" />
+                    <livewire:approval.approval-history-table modelName='App\Models\Extension\ExtensionRequest' modelId="{{ encrypt($extension->id) }}" />
                 </div>
             </div>
         </div>
     </div>
 
-    <livewire:approval.extension-request-approval-processing modelName="{{ get_class($extension) }}" modelId="{{ $extension->id }}" />
+    <livewire:approval.extension-request-approval-processing modelName="{{ get_class($extension) }}" modelId="{{ encrypt($extension->id) }}" />
 
 @endsection
 

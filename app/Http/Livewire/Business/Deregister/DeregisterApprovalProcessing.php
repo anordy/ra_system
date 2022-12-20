@@ -29,9 +29,9 @@ class DeregisterApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId;
-        $this->registerWorkflow($modelName, $modelId);
-        $this->deregister = $modelName::findOrFail($modelId);
+        $this->modelId = decrypt($modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
+        $this->deregister = $modelName::findOrFail($this->modelId);
     }
 
     protected $listeners = [

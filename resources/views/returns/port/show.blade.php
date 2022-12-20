@@ -84,7 +84,7 @@
                             <div class="col-md-12">PAYMENT STRUCTURE</div>
                             <div class="col-md-12">
                                 <livewire:returns.port.returns-port-penalty modelName='App\Models\Returns\Port\PortReturn'
-                                    modelId="{{ $return->id }}" />
+                                    modelId="{{ encrypt($return->id) }}" />
                             </div>
                         </div>
 

@@ -80,7 +80,7 @@
 
             </div>
 
-            @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' => $deregister->id])
+            @livewire('business.deregister.deregister-approval-processing', ['modelName' => 'App\Models\BusinessDeregistration', 'modelId' => encrypt($deregister->id) ])
         </div>
         <div id="tab2" class="tab-pane fade m-2">
             @if ($audit = $deregister->audit)
@@ -241,7 +241,7 @@
         </div>
         <div id="tab3" class="tab-pane fade m-2">
             <livewire:approval.approval-history-table modelName='App\Models\BusinessDeregistration'
-                modelId="{{ $deregister->id }}" />
+                modelId="{{ encrypt($deregister->id) }}" />
         </div>
     </div>
 </div>

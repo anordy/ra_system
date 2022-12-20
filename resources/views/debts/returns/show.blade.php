@@ -74,7 +74,7 @@
                 </div>
                 <div id="tab7" class="tab-pane fade m-4">
                     <livewire:approval.approval-history-table modelName='App\Models\Debts\RecoveryMeasure'
-                        modelId="{{ $tax_return->id }}" />
+                        modelId="{{ encrypt($tax_return->id) }}" />
                 </div>
             </div>
         </div>

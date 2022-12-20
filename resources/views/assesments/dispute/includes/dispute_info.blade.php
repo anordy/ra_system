@@ -147,7 +147,7 @@
                 <h6 class="pt-3 mb-0 font-weight-bold">Assessment History</h6>
                 <hr class="mt-2 mb-3" />
                 <livewire:assesments.assessment-history-table modelName='App\Models\TaxAssessments\TaxAssessmentHistory'
-                        modelId="{{ $assesment->id }}" />
+                        modelId="{{ encrypt($assesment->id) }}" />
             </div>
 
         </div>

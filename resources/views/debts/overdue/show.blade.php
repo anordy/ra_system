@@ -123,7 +123,7 @@
             </div>
             <div id="tab3" class="tab-pane fade m-4">
                 <livewire:approval.approval-history-table modelName='App\Models\Debts\Debt'
-                    modelId="{{ $debt->id }}" />
+                    modelId="{{ encrypt($debt->id) }}" />
             </div>
         </div>
 

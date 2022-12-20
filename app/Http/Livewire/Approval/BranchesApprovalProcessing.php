@@ -26,8 +26,8 @@ class BranchesApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId; // todo: encrypt id
-        $this->registerWorkflow($modelName, $modelId);
+        $this->modelId = decrypt($modelId); // todo: encrypt id
+        $this->registerWorkflow($modelName, $this->modelId);
         $this->taxRegions = TaxRegion::all();
     }
 

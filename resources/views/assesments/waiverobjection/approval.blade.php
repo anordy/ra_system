@@ -14,11 +14,11 @@
             <div class="tab-content px-2 border border-top-0 pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show">
                     @include('assesments.waiverobjection.includes.waiver_objection_info')
-                        <livewire:approval.approval-waiver-objection-processing modelName='App\Models\WaiverObjection' modelId="{{ $waiverObjection->id }}" />
+                        <livewire:approval.approval-waiver-objection-processing modelName='App\Models\WaiverObjection' modelId="{{ encrypt($waiverObjection->id) }}" />
 
                 </div>
                 <div id="tab2" class="tab-pane fade">
-                    <livewire:approval.approval-history-table modelName='App\Models\WaiverObjection' modelId="{{ $waiverObjection->id }}" />
+                    <livewire:approval.approval-history-table modelName='App\Models\WaiverObjection' modelId="{{ encrypt($waiverObjection->id) }}" />
                 </div>
 
             </div>

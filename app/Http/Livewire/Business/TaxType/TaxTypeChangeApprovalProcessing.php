@@ -37,8 +37,8 @@ class TaxTypeChangeApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId;
-        $this->registerWorkflow($modelName, $modelId);
+        $this->modelId = decrypt($modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
         $this->taxchange = BusinessTaxTypeChange::findOrFail($this->modelId);
         $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
         $this->from_tax_type_id = $this->taxchange->from_tax_type_id;

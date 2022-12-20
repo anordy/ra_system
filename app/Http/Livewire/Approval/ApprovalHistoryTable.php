@@ -21,7 +21,7 @@ class ApprovalHistoryTable extends DataTableComponent
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId;
+        $this->modelId = decrypt($modelId);
     }
 
     public function builder(): Builder

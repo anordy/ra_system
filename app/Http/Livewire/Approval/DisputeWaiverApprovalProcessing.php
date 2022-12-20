@@ -40,7 +40,7 @@ class DisputeWaiverApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = $modelId;
+        $this->modelId = decrypt($modelId);
         $this->dispute = Dispute::find($this->modelId);
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
         $this->penalty = $this->assessment->penalty_amount;
@@ -49,7 +49,7 @@ class DisputeWaiverApprovalProcessing extends Component
         $this->taxTypes = TaxType::all();
         $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
         $this->total = $this->assessment->outstanding_amount;
-        $this->registerWorkflow($modelName, $modelId);
+        $this->registerWorkflow($modelName, $this->modelId);
     }
 
     public function updated($propertyName)
