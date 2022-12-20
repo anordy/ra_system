@@ -14,6 +14,7 @@ class TaxAuditApprovalController extends Controller
         if (!Gate::allows('tax-auditing-approval-view')) {
             abort(403);
         }
+        
 
         return view('audit.approval.index');
     }
@@ -21,14 +22,13 @@ class TaxAuditApprovalController extends Controller
     public function edit($id)
     {
 
-        $audit = TaxAudit::with('assessment', 'officers')->find(decrypt($id));
-        // return $audit->taxAuditLocationNames();
+        $audit = TaxAudit::with('assessment', 'officers', 'business')->find(decrypt($id));
         return view('audit.approval.approval', compact('audit'));
     }
 
     public function show($id)
     {
-        $audit = TaxAudit::with('assessment', 'officers')->find(decrypt($id));
+        $audit = TaxAudit::with('assessment', 'officers', 'business')->find(decrypt($id));
         return view('audit.preview', compact('audit'));
     }
 }

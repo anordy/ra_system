@@ -45,7 +45,7 @@ class CreateTaxAssessmentsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
             $table->dateTime('curr_payment_due_date')->nullable();
 
-            $table->enum('payment_status', TaxAssessmentPaymentStatus::getConstants());
+            $table->enum('payment_status', TaxAssessmentPaymentStatus::getConstants())->default(TaxAssessmentPaymentStatus::DRAFT);
             $table->enum('app_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
             $table->enum('assessment_step', TaxAssessmentStep::getConstants())->default('normal')->nullable();
             $table->dateTime('paid_at')->nullable();
