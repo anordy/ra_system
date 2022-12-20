@@ -25,7 +25,7 @@ class CreateBusinessesTable extends Migration
 
             $table->string('name');
             $table->string('tin');
-            $table->string('reg_no');
+            $table->string('reg_no')->nullable();
             $table->string('owner_designation');
             $table->string('mobile');
             $table->string('alt_mobile')->nullable();

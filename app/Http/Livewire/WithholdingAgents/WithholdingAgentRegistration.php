@@ -78,7 +78,6 @@ class WithholdingAgentRegistration extends Component
         DB::beginTransaction();
         try {
             $withholding_agent = [
-                'wa_number' => mt_rand(1000000000,9999999999),//todo: not recommended to use random generator if you want uniqueness
                 'tin' => $this->tin,
                 'institution_name' => $this->institution_name,
                 'institution_place' => $this->institution_place,
@@ -92,8 +91,9 @@ class WithholdingAgentRegistration extends Component
                 'district_id' => $this->district_id,
                 'ward_id' => $this->ward_id,
             ];
-
+            
             $withholding_agent = WithholdingAgent::create($withholding_agent);
+            $withholding_agent->zwnGeneration();
             $withholding_agent_resp_person_data = [
                 'responsible_person_id' => $this->responsible_person_id,
                 'title' => $this->title,

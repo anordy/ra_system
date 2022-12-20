@@ -126,6 +126,7 @@ use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\WorkflowController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\v1\ZanMalipoController;
 
 //use App\Http\Controllers\Returns\HotelLevyReturnController;
 
@@ -133,7 +134,7 @@ Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
 
-
+Route::get('/pay', [ZanMalipoController::class, 'pay']); // TODO: remove on production
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
 
