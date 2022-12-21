@@ -19,7 +19,7 @@ class CreateZmReconTransTable extends Migration
             $table->string('SpBillId', 50)->nullable();
             $table->string('BillCtrNum')->nullable();
             $table->string('pspTrxId', 127)->nullable();
-            $table->decimal('PaidAmt', 38, 40)->nullable();
+            $table->decimal('PaidAmt', 38, 2)->nullable();
             $table->string('CCy', 3)->nullable();
             $table->string('PayRefId', 100)->nullable();
             $table->string('TrxDtTm',50)->nullable();
