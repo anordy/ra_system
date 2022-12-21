@@ -73,7 +73,7 @@ class UploadDeRegistrationInspectionReport extends Component
             Log::error($e);
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);
             DB::rollBack();
-            $this->alert('error', 'Something went wrong: '.$e->getMessage());
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?: '.$e->getMessage());
         }
     }
 

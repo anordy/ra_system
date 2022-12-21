@@ -44,7 +44,7 @@ class BranchesApprovalProcessing extends Component
 
         if ($this->checkTransition('director_of_trai_review')) {
             if (!$this->subject->generateZ()) {
-                $this->alert('error', 'Something went wrong.');
+                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
                 return;
             }
             
@@ -78,7 +78,7 @@ class BranchesApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 
@@ -109,7 +109,7 @@ class BranchesApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 

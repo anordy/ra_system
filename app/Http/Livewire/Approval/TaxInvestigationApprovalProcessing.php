@@ -72,8 +72,13 @@ class TaxInvestigationApprovalProcessing extends Component
 
         $this->task = $this->subject->pinstancesActive;
 
-        $this->periodFrom = $this->subject->period_from;
-        $this->periodTo = $this->subject->period_to;
+        if(!isNullOrEmpty($this->subject->period_from)){
+            $this->periodFrom = Carbon::create($this->subject->period_from)->format('Y-m-d');
+        }
+        if(!isNullOrEmpty($this->subject->period_to)){
+            $this->periodTo = Carbon::create($this->subject->period_to)->format('Y-m-d');
+        }
+
         $this->intension = $this->subject->intension;
         $this->scope = $this->subject->scope;
         $this->workingsReport = $this->subject->working_report;
@@ -274,7 +279,7 @@ class TaxInvestigationApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
 
             return;
         }
