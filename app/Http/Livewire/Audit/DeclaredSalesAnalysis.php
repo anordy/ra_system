@@ -329,8 +329,9 @@ class DeclaredSalesAnalysis extends Component
 
     protected function mmTransfer()
     {
-        $salesConfigs = MmTransferConfig::where('code', '!=', 'TotalEMT')->get()->pluck('id');
-        $headers = MmTransferConfig::where('code', '!=', 'TotalEMT')->get()->pluck('name');
+        $configs = MmTransferConfig::where('code', '!=', 'TotalEMT')->get();
+        $salesConfigs = $configs->pluck('id');
+        $headers = $configs->pluck('name');
 
         $yearReturnGroup = MmTransferReturnItem::select('mm_transfer_configs.code', 'mm_transfer_return_items.value', 'mm_transfer_return_items.vat', 'seven_days_financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('mm_transfer_configs', 'mm_transfer_configs.id', 'mm_transfer_return_items.config_id')
@@ -454,6 +455,6 @@ class DeclaredSalesAnalysis extends Component
 
     public function render()
     {
-        return view('livewire.investigation.assesment-details');
+        return view('livewire.audit.assesment-details');
     }
 }

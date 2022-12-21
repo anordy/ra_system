@@ -59,7 +59,7 @@ class TaxAudit extends Model implements Auditable
 
     public function businessLocations()
     {
-        return $this->hasManyThrough(BusinessLocation::class, TaxAuditLocation::class, 'tax_audit_id', 'id');
+        return $this->hasManyThrough(BusinessLocation::class, TaxAuditLocation::class, 'tax_audit_id', 'id', 'id', 'business_location_id');
     }
 
     public function taxAuditLocationNames(){
@@ -72,7 +72,7 @@ class TaxAudit extends Model implements Auditable
 
     public function taxTypes()
     {
-        return $this->hasManyThrough(TaxType::class, TaxAuditTaxType::class, 'tax_audit_id', 'id');
+        return $this->hasManyThrough(TaxType::class, TaxAuditTaxType::class, 'tax_audit_id', 'id', 'id', 'business_tax_type_id');
     }
 
 
