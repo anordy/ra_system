@@ -118,7 +118,7 @@ class Actions extends Component
 			DB::rollBack();
 			Log::error($e);
 			report($e);
-			$this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+			$this->alert('warning', 'Something went wrong, Could you please contact our administrator for assistance?!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
 			redirect()->back()->getTargetUrl();
 		}
 	}
@@ -162,7 +162,7 @@ class Actions extends Component
 			DB::rollBack();
 			Log::error($e);
 			report($e);
-			$this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+			$this->alert('warning', 'Something went wrong, Could you please contact our administrator for assistance?!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
 			redirect()->back()->getTargetUrl();
 		}
 	}

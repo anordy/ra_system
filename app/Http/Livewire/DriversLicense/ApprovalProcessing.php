@@ -68,7 +68,7 @@ class ApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 
@@ -86,7 +86,7 @@ class ApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 
