@@ -3,19 +3,20 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 
-use App\Events\SendMail;
-use App\Events\SendSms;
-use App\Models\District;
-use App\Models\Region;
-use App\Models\Taxpayer;
-use App\Models\Ward;
-use App\Models\WithholdingAgent;
 use Exception;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Models\Ward;
+use App\Models\Region;
+use App\Events\SendSms;
 use Livewire\Component;
+use App\Events\SendMail;
+use App\Models\Business;
+use App\Models\District;
+use App\Models\Taxpayer;
+use App\Models\WithholdingAgent;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 
 class WithholdingAgentRegistration extends Component
@@ -31,9 +32,11 @@ class WithholdingAgentRegistration extends Component
     public $reference_no;
     public $search_triggered = false;
     public $taxpayer, $ztnNumber;
+    public $search_business = false;
+    public $business;
 
     protected $rules = [
-        'tin' => 'required|integer|min:8',
+        'tin' => 'required|integer|digits_between:10,10',
         'institution_name' => 'required',
         'institution_place' => 'required',
         'email' => 'required|email|unique:withholding_agents,email',
@@ -78,7 +81,6 @@ class WithholdingAgentRegistration extends Component
         DB::beginTransaction();
         try {
             $withholding_agent = [
-                'wa_number' => mt_rand(1000000000,9999999999),//todo: not recommended to use random generator if you want uniqueness
                 'tin' => $this->tin,
                 'institution_name' => $this->institution_name,
                 'institution_place' => $this->institution_place,
@@ -92,13 +94,15 @@ class WithholdingAgentRegistration extends Component
                 'district_id' => $this->district_id,
                 'ward_id' => $this->ward_id,
             ];
-
+            
             $withholding_agent = WithholdingAgent::create($withholding_agent);
+            $withholding_agent->zwnGeneration();
             $withholding_agent_resp_person_data = [
                 'responsible_person_id' => $this->responsible_person_id,
                 'title' => $this->title,
                 'position' => $this->position,
                 'officer_id' => auth()->user()->id,
+                'business_id' => $this->business->id ?? null
             ];
 
             $withholding_agent_resp_person = $withholding_agent->responsiblePersons()->create($withholding_agent_resp_person_data);
@@ -112,15 +116,26 @@ class WithholdingAgentRegistration extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 
     public function searchResponsibleDetails()
     {
-        $this->validate(['reference_no' => 'required']);
+        $this->validate(['ztnNumber' => 'nullable', 'reference_no' => 'required']);
 
         $taxpayer = Taxpayer::where(['reference_no' => $this->reference_no])->first();
+
+        if ($this->ztnNumber) {
+            $business = Business::where('ztn_number', $this->ztnNumber)->first();
+
+            if (!$business) {
+                $this->alert('warning', "Business with ZTN No {$this->ztnNumber} not found");
+                return;
+            }
+
+            $this->business = $business;
+        }
 
         if (!empty($taxpayer)) {
             $this->taxpayer = $taxpayer;

@@ -6,12 +6,7 @@
                     aria-expanded="false" aria-controls="collapseLocation-{{ $location->id }}">
                     <div class="card-header" id="headingTwo">
                         <h5 class="mb-0">
-                            {{ $location->businessLocation->name }}
-                            @if ($location->businessLocation->is_headquarter)
-                                <span>
-                                    ( Headquater )
-                                </span>
-                            @endif
+                            {{ $location->name }}
                             <span class="ml-2">
                                 <i class="bi bi-chevron-double-down"></i>
                             </span>
@@ -30,7 +25,7 @@
                                         <div class="card-header h6" style="color: #97363a" id="headingTwo">
                                             <div class="d-flex flex-column">
                                                 <div>
-                                                    {{ $taxType->taxType->name }}
+                                                    {{ $taxType->name }}
                                                 </div>
                                             </div>
                                             <div class="d-flex flex-column-reverse">
@@ -44,7 +39,7 @@
                                     <div id="collapseTaxType-{{ $location->id }}-{{ $taxType->id }}" class="collapse" aria-labelledby="headingTwo"
                                         data-parent="#accordionInstance">
                                         <div class="card-body">
-                                            @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation, 'tax_type_id' => $taxType->business_tax_type_id, 'location_id' => $location->business_location_id])
+                                            @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation, 'tax_type_id' => $taxType->id, 'location_id' => $location->id])
                                         </div>
                                     </div>
                                 </div>

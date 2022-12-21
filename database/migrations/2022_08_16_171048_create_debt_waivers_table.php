@@ -30,7 +30,7 @@ class CreateDebtWaiversTable extends Migration
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();
             $table->timestamp('verified_at')->nullable();
-            $table->enum('status', WaiverStatus::getConstants());
+            $table->enum('status', WaiverStatus::getConstants())->default('pending');
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->timestamps();

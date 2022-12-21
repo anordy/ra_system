@@ -2,12 +2,13 @@
 
 namespace App\Http\Livewire\Settings\InterestRate;
 
-use App\Models\InterestRate;
 use Exception;
+use App\Models\InterestRate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class InterestRatesTable extends DataTableComponent
 {
@@ -63,6 +64,9 @@ class InterestRatesTable extends DataTableComponent
 
     public function delete($id)
     {
+        if (!Gate::allows('setting-interest-rate-delete')) {
+            abort(403);
+        }
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,

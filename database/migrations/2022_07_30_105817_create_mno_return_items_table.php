@@ -17,7 +17,7 @@ class CreateMNOReturnItemsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('mno_return_id');
             $table->unsignedBigInteger('mno_config_id');
-            $table->decimal('input_value',38, 2);
+            $table->decimal('value',38, 2);
             $table->decimal('vat',38, 2);
             $table->softDeletes();
             $table->timestamps();

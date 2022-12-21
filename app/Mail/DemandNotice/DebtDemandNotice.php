@@ -45,9 +45,10 @@ class DebtDemandNotice extends Mailable
                 'debt_id' => $this->payload['debt']->id,
                 'debt_type' => get_class($debt),
                 'sent_by' => 'job',
-                'sent_on' => Carbon::today(),
+                'sent_on' => Carbon::now(),
                 'category' => 'debt',
                 'paid_within_days' => $this->payload['paid_within_days'],
+                'next_notify_days' => $this->payload['next_notify_days'],
                 'next_notify_date' => Carbon::today()->addDays($this->payload['next_notify_days'])
             ]);
     

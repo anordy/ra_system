@@ -37,7 +37,7 @@
         "symfony/security-core": "^5.4",
         "torann/geoip": "^3.0",
         "yajra/laravel-datatables": "^1.5",
-        "yajra/laravel-oci8": "8.6.2"
+        "yajra/laravel-oci8": "^8.6.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",

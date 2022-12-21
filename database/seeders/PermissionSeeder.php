@@ -195,6 +195,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-interest-rate-edit', 'sys_module_id' => 18],
             ['name' => 'setting-interest-rate-delete', 'sys_module_id' => 18],
 
+            ['name' => 'setting-penalty-rate-view', 'sys_module_id' => 18],
+            ['name' => 'setting-penalty-rate-add', 'sys_module_id' => 18],
+            ['name' => 'setting-penalty-rate-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-penalty-rate-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-education-level-view', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-add', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-edit', 'sys_module_id' => 18],

@@ -10,14 +10,14 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
+                        <input type="text" class="form-control" wire:model.defer="name" id="name">
                         @error('name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
                         <label class="">Reports To</label>
-                        <select class="form-control" wire:model.lazy="report_to">
+                        <select class="form-control" wire:model.defer="report_to">
                             <option value="null" selected>Choose option</option>
                             @foreach ($roles as $row)
                                 <option value="{{ $row->id }}">{{ $row->name }}</option>

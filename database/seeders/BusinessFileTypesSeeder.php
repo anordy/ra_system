@@ -6,6 +6,7 @@ use App\Models\BusinessCategory;
 use App\Models\BusinessFileType;
 use App\Models\FileType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class BusinessFileTypesSeeder extends Seeder
 {
@@ -31,6 +32,15 @@ class BusinessFileTypesSeeder extends Seeder
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::SOLE,
             'is_required' => true
+        ]);
+
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'recognition_letter',
+            'name' => 'Recognition Letter',
+            'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::SOLE,
+            'is_required' => false
         ]);
 
         // Partnership Deed Agreement
@@ -65,7 +75,7 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::PARTNERSHIP,
-            'is_required' => true
+            'is_required' => false
         ]);
 
         // Company
@@ -100,7 +110,7 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
+            'is_required' => false
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -159,7 +169,7 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
+            'is_required' => false
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -168,6 +178,15 @@ class BusinessFileTypesSeeder extends Seeder
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
             'is_required' => true
+        ]);
+
+        // General/All
+        BusinessFileType::updateOrCreate([
+            'short_name' => 'lease_agreement',
+            'name' => 'Lease Agreement',
+            'file_type' => FileType::PDF,
+            'business_type' => BusinessCategory::OTHER,
+            'is_required' => false
         ]);
     }
 }
