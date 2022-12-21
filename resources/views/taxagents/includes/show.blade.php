@@ -376,4 +376,7 @@
         </div>
     </div>
 
+    <div class="d-flex justify-content-end pt-3">
+        <a href="{{ route('taxagents.consultant-renew-requests', encrypt($agent->id)) }}" class="btn btn-info">View Renew Requests</a>
+    </div>
 </div>
