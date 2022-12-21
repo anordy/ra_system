@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Debt;
 
+use PDF;
 use App\Models\Debts\DebtWaiver;
 use App\Models\Returns\TaxReturn;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Debts\DebtWaiverAttachment;
+use App\Models\Debts\DemandNotice;
+use Carbon\Carbon;
 
 class ReturnDebtController extends Controller
 {
@@ -46,11 +49,40 @@ class ReturnDebtController extends Controller
         return view('debts.recovery-measure.assign-recovery-measure', compact('debtId'));
     }
 
-    // public function sendDemandNotice($debtId)
-    // {
-    //     $debtId = decrypt($debtId);
-    //     return view('debts.demand-notice.send-demand-notice', compact('debtId'));
-    // }
+    public function showReturnDemandNotice($demandNoticeId)
+    {
+        $demandNoticeId = decrypt($demandNoticeId);
+        $demandNotice = DemandNotice::findOrFail($demandNoticeId);
+        $now = Carbon::parse($demandNotice->sent_on)->format('d/m/Y');
+
+        $tax_return = $demandNotice->debt;
+        $paid_within_days = $demandNotice->paid_within_days;
+        $next_notify_days = $demandNotice->next_notify_days;
+
+        $pdf = PDF::loadView('debts.demand-notice.return-demand-notice', compact('tax_return', 'now', 'paid_within_days'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return $pdf->stream();
+    }
+
+    public function showAssessmentDemandNotice($demandNoticeId)
+    {
+        $demandNoticeId = decrypt($demandNoticeId);
+        $demandNotice = DemandNotice::findOrFail($demandNoticeId);
+        $now = Carbon::parse($demandNotice->sent_on)->format('d/m/Y');
+
+        $debt = $demandNotice->debt;
+        $paid_within_days = $demandNotice->paid_within_days;
+        $next_notify_days = $demandNotice->next_notify_days;
+
+        $pdf = PDF::loadView('debts.demand-notice.assessment-demand-notice', compact('debt', 'now', 'paid_within_days'));
+        $pdf->setPaper('a4', 'portrait');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return $pdf->stream();
+
+    }
 
     public function show($debtId)
     {

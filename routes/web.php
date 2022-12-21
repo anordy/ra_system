@@ -468,7 +468,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/returns/recovery-measure/{debtId}', [ReturnDebtController::class, 'recovery'])->name('debt.recovery');
         Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('return.show');
         Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('return.showOverdue');
-        Route::get('/demand-notice/send/{debtId}', [ReturnDebtController::class, 'sendDemandNotice'])->name('return.sendDemandNotice');
+        Route::get('/demand-notice/view/{demandNoticeId}', [ReturnDebtController::class, 'showReturnDemandNotice'])->name('demandNotice');
 
         Route::get('/waivers', [ReturnDebtController::class, 'waivers'])->name('waivers.index');
         Route::get('/returns/waiver/show/{waiverId}', [ReturnDebtController::class, 'approval'])->name('returns.waivers.approval');

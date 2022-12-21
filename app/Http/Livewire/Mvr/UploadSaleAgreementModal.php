@@ -75,7 +75,7 @@ class UploadSaleAgreementModal extends Component
             Log::error($e);
             if (Storage::disk('local-admin')->exists($this->agreement_path)) Storage::disk('local-admin')->delete($this->agreement_path);
             DB::rollBack();
-            $this->alert('error', 'Something went wrong: '.$e->getMessage());
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?: '.$e->getMessage());
         }
     }
 

@@ -102,7 +102,7 @@ class RegistrationsController extends Controller
         } catch (\Exception $e){
             DB::rollBack();
             Log::error($e);
-            session()->flash('error', 'Something went wrong, please try again later.');
+            session()->flash('error', 'Something went wrong, Could you please contact our administrator for assistance?');
             return redirect()->route('taxpayers.registrations.index');
         }
 
