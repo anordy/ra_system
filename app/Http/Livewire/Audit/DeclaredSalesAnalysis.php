@@ -47,65 +47,47 @@ class DeclaredSalesAnalysis extends Component
     public $headersMmTransfer;
     public $headersPetroleum;
     public $withoutPurchases = false;
-    public $returnTypeTable;
 
     public function mount($audit, $tax_type_id, $location_id)
     {
-        $this->taxType = TaxType::find($tax_type_id);
-        $this->branch = BusinessLocation::find($location_id);
+        $this->taxType = $audit->taxTypes->firstWhere('id', $tax_type_id);
+        $this->branch = $audit->businessLocations->firstWhere('id', $location_id);
         $this->start_date = $this->validateDate($audit->period_from) ? $audit->period_from : Carbon::now();
         $this->end_date = $this->validateDate($audit->period_to) ? $audit->period_to : Carbon::now();
 
         switch ($this->taxType->code) {
             case TaxType::HOTEL:
                 $this->hotel();
-
                 break;
             case TaxType::PETROLEUM:
-                $this->returnTypeTable = TaxType::PETROLEUM;
                 $this->petroleum();
-
                 break;
             case TaxType::VAT:
                 $this->vat();
-
                 break;
             case TaxType::EXCISE_DUTY_MNO:
-                $this->returnTypeTable = TaxType::EXCISE_DUTY_MNO;
                 $this->mno();
-
                 break;
             case TaxType::EXCISE_DUTY_BFO:
-                $this->returnTypeTable = TaxType::EXCISE_DUTY_BFO;
                 $this->bfo();
-
                 break;
             case TaxType::ELECTRONIC_MONEY_TRANSACTION:
-                $this->returnTypeTable = TaxType::ELECTRONIC_MONEY_TRANSACTION;
                 $this->emTransaction();
                 break;
             case TaxType::LUMPSUM_PAYMENT:
-                $this->returnTypeTable = TaxType::LUMPSUM_PAYMENT;
                 $this->lumpSum();
-
                 break;
             case TaxType::MOBILE_MONEY_TRANSFER:
-                $this->returnTypeTable = TaxType::MOBILE_MONEY_TRANSFER;
                 $this->mmTransfer();
-
                 break;
             case TaxType::STAMP_DUTY:
                 $this->stampDuty();
-
                 break;
-
             case TaxType::AIRPORT_SERVICE_SAFETY_FEE:
-                $this->returnTypeTable = TaxType::AIRPORT_SERVICE_SAFETY_FEE;
                 $this->airport();
                 break;
 
             case TaxType::SEA_SERVICE_TRANSPORT_CHARGE:
-                $this->returnTypeTable = TaxType::SEA_SERVICE_TRANSPORT_CHARGE;
                 $this->sea();
                 break;
         }
@@ -178,8 +160,9 @@ class DeclaredSalesAnalysis extends Component
 
     protected function petroleum()
     {
-        $salesConfigs = PetroleumConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
-        $headers = PetroleumConfig::where('code', '!=', 'TOTAL')->get()->pluck('name');
+        $config = PetroleumConfig::where('code', '!=', 'TOTAL')->get();
+        $salesConfigs = $config->pluck('name');
+        $headers = $config->pluck('name');
 
         $yearReturnGroup = PetroleumReturnItem::select('petroleum_configs.code', 'petroleum_return_items.value', 'petroleum_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('petroleum_configs', 'petroleum_configs.id', 'petroleum_return_items.config_id')
@@ -283,8 +266,9 @@ class DeclaredSalesAnalysis extends Component
 
     public function mno()
     {
-        $salesConfigs = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
-        $headers = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('name');
+        $configs = MnoConfig::where('code', '!=', 'TOTAL')->get()->pluck('id');
+        $salesConfigs = $configs->pluck('id');
+        $headers = $configs->pluck('name');
 
         $yearReturnGroup = MnoReturnItem::select('mno_configs.code', 'mno_return_items.value', 'mno_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('mno_configs', 'mno_configs.id', 'mno_return_items.mno_config_id')
@@ -303,8 +287,9 @@ class DeclaredSalesAnalysis extends Component
 
     protected function bfo()
     {
-        $salesConfigs = BfoConfig::where('code', '!=', 'TotalFBO')->get()->pluck('id');
-        $headers = BfoConfig::where('code', '!=', 'TotalFBO')->get()->pluck('name');
+        $configs = BfoConfig::where('code', '!=', 'TotalFBO')->get()->pluck('id');
+        $salesConfigs = $configs->pluck('id');
+        $headers = $configs->pluck('name');
 
         $yearReturnGroup = BfoReturnItems::select('bfo_configs.code', 'bfo_return_items.value', 'bfo_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('bfo_configs', 'bfo_configs.id', 'bfo_return_items.config_id')
@@ -323,8 +308,9 @@ class DeclaredSalesAnalysis extends Component
 
     protected function emTransaction()
     {
-        $salesConfigs = EmTransactionConfig::where('code', '!=', 'TotalEMT')->get()->pluck('id');
-        $headers = EmTransactionConfig::where('code', '!=', 'TotalEMT')->get()->pluck('name');
+        $configs = EmTransactionConfig::where('code', '!=', 'TotalEMT')->get();
+        $salesConfigs = $configs->pluck('id');
+        $headers = $configs->pluck('name');
 
         $yearReturnGroup = EmTransactionReturnItem::select('em_transaction_configs.code', 'em_transaction_return_items.value', 'em_transaction_return_items.vat', 'seven_days_financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('em_transaction_configs', 'em_transaction_configs.id', 'em_transaction_return_items.config_id')

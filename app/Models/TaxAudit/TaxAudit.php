@@ -57,33 +57,28 @@ class TaxAudit extends Model implements Auditable
         return $this->hasMany(TaxAuditLocation::class);
     }
 
+    public function businessLocations()
+    {
+        return $this->hasManyThrough(BusinessLocation::class, TaxAuditLocation::class, 'tax_audit_id', 'id');
+    }
+
     public function taxAuditLocationNames(){
-        $locations = null;
-        foreach ($this->taxAuditLocations as $key => $taxAuditLocation) {
-            if($key!=0){
-                $locations .= ', '; 
-            }
-            $locations .= $taxAuditLocation->businessLocation->name . ' ( '. $taxAuditLocation->businessLocation->zin .' )' ;
-            
-        }
-        return $locations;
+        return $this->businessLocations->map(fn($location) => $location->name . '('. $location->zin .')')->implode(',', 'name');
     }
 
     public function taxAuditTaxTypes(){
         return $this->hasMany(TaxAuditTaxType::class);
     }
 
+    public function taxTypes()
+    {
+        return $this->hasManyThrough(TaxType::class, TaxAuditTaxType::class, 'tax_audit_id', 'id');
+    }
 
-    public function taxAuditTaxTypeNames(){
-        $taxType = null;
-        foreach ($this->taxAuditTaxTypes as $key => $taxAuditTaxType) {
-            if($key!=0){
-                $taxType .= ', '; 
-            }
-            $taxType .= $taxAuditTaxType->taxType->name;
-            
-        }
-        return $taxType;
+
+    public function taxAuditTaxTypeNames()
+    {
+        return $this->taxTypes->map(fn($type) => $type->name)->implode(',', 'name');
     }
 
     public function periodFrom(){

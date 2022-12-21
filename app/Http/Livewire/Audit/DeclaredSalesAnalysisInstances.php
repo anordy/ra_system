@@ -19,8 +19,8 @@ class DeclaredSalesAnalysisInstances extends Component
     {
 
         $this->audit = $audit;
-        $this->locations = TaxAuditLocation::where('tax_audit_id', $audit->id)->get();
-        $this->taxTypes = TaxAuditTaxType::where('tax_audit_id', $audit->id)->get();
+        $this->locations = $audit->businessLocations;
+        $this->taxTypes = $audit->taxTypes;
     }
 
     public function render()
