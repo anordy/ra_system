@@ -89,8 +89,10 @@ class UserAddModal extends Component
                 'password' => Hash::make($this->password),
             ]);
 
-            $adminRole = Role::where('name', 'Administrator')->first();
-            $admins = User::where('role_id', $adminRole->id)->get();
+
+            $admins = User::whereHas('role', function ($query) {
+                $query->where('name', 'Administrator');
+            })->get();
 
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(

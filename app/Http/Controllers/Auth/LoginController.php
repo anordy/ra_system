@@ -50,6 +50,10 @@ class LoginController extends Controller
         $user =  $request->input($this->username());
         $user = User::where('email', $user)->first();
 
+        if($user == null){
+            return $this->sendFailedLoginResponse($request);
+        }
+
         $attempts = $this->hasTooManyLoginAttempts($user);
         if ($attempts) {
             return $this->sendLockoutResponse($user);
