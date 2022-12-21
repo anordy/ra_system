@@ -12,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
 
-class NotificationsTable extends DataTableComponent
+class NotificationsTableBackup extends DataTableComponent
 {
     use LivewireAlert;
 
