@@ -1,3 +1,4 @@
+<div>
 <nav class="nav nav-tabs mt-0 border-top-0">
     <a href="#tab1" class="nav-item nav-link font-weight-bold active">Withholding Agent Details</a>
     <a href="#tab2" class="nav-item nav-link font-weight-bold">Responsible Persons</a>
@@ -73,11 +74,11 @@
             </div>
             <div class="col-md-6 text-right">
                 <button class="btn btn-info"
-                    onclick="Livewire.emit('showModal', 'withholding-agents.add-responsible-person-modal',{{ $withholding_agent->id }})">Add Responsible Person
+                    onclick="Livewire.emit('showModal', 'withholding-agents.add-responsible-person-modal','{{ encrypt($withholding_agent->id) }}')">Add Responsible Person
                 </button>
             </div>
         </div>
-        <livewire:withholding-agents.withholding-agent-responsible-persons-table :id="$withholding_agent->id">
+        <livewire:withholding-agents.withholding-agent-responsible-persons-table :id="encrypt($withholding_agent->id)">
     </div>
 </div>
 
@@ -90,3 +91,4 @@
         });
     </script>
 @endsection
+</div>

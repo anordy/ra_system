@@ -169,7 +169,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     );
                 }
 
-                $new_task->operators()->saveMany($operators_collection);
+                $new_task->actors()->saveMany($operators_collection);
             }
 
             if ($placeName == 'TAX_RETURN_VERIFICATION') {

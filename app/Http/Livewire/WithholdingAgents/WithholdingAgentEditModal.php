@@ -62,7 +62,7 @@ class WithholdingAgentEditModal extends Component
         $this->districts = District::select('id', 'name')->get();
         $this->wards = Ward::select('id', 'name')->get();
         $this->responsible_persons = Taxpayer::select('id', 'first_name', 'middle_name', 'last_name')->get();
-        $this->withholding_agent = WithholdingAgent::find($id); // todo: encrypt id
+        $this->withholding_agent = WithholdingAgent::findOrFail(decrypt($id)); // todo: encrypt id
         $this->tin = $this->withholding_agent->tin;
         $this->institution_name = $this->withholding_agent->institution_name;
         $this->institution_place = $this->withholding_agent->institution_place;
