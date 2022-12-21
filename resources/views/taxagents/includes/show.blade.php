@@ -1,6 +1,5 @@
 <div>
     <div class="card">
-        <div class="card-header">Registration Details</div>
         <div class="card-body">
             <ul style="border-bottom: unset !important;" class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -318,10 +317,6 @@
                 <div class="tab-pane p-2" id="attachment" role="tabpanel" aria-labelledby="attachment-tab">
                     <div class="">
 
-                        <div class="disp-Info text-center">
-                            Attachments
-                        </div>
-
                         <div class="row pt-2 mt-2">
                             <div class="col-md-3">
                                 <a class="file-item" target="_blank"
@@ -381,42 +376,4 @@
         </div>
     </div>
 
-    <div class="card mt-3">
-        <div class="card-header">Tax Consultant Approval History</div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>No:</th>
-                    <th>Initial Status</th>
-                    <th>Destination Status</th>
-                    <th>Comment</th>
-                    <th>Approved By</th>
-                    <th>Approved At</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($agent->approval as $index=>$approval)
-                    <tr>
-                        <td>{{$index + 1}}</td>
-                        <td>{{$approval->initial_status}}</td>
-                        <td>{{$approval->destination_status}}</td>
-                        <td>{{$approval->comment}}</td>
-                        <td>
-                            @if($approval->approved_by_id != null)
-                                {{getUser($approval->approved_by_id) }} <strong>({{getRole($approval->approved_by_id)}}
-                                    )</strong>
-                            @else
-                                {{$agent->taxpayer->first_name.' '.$agent->taxpayer->last_name}}
-                                <strong>(Taxpayer)</strong>
-                            @endif
-                        </td>
-                        <td>{{$approval->approved_at}}</td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-
-        </div>
-    </div>
 </div>
