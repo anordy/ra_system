@@ -5,7 +5,7 @@
     <title>Certificate of Registration - {{ $location->business->name }}</title>
     <style>
         body {
-            background-image: url("{{ public_path()}}/images/certificate/business_reg.jpg");
+            background-image: url("{{ public_path() }}/images/certificate/business_reg.jpg");
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -37,6 +37,14 @@
         .reg-no {
             font-size: 1.5em;
             top: 53%;
+        }
+        .reg-no-alt {
+            font-size: 1.5em;
+            top: 52.5%;
+        }
+        .vrn-no {
+            font-size: .8em;
+            top: 55.5%;
         }
         .tax-types {
             font-size: 1.1em;
@@ -91,13 +99,18 @@
         <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
         <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
         <span class="embed taxpayer-name">{{ $location->business->tin ?? '' }}</span>
-        <span class="embed reg-no">{{ $certificateNumber ?? '' }}</span>
+        @if($location->vrn)
+            <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
+            <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
+        @else
+            <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
+        @endif
         <span class="embed tax-types">{{ $tax->name }}</span>
         <span class="embed location">
-            {{ $location->district->name }}, {{ $location->region->name }}
+            {{ $location->street }}, {{ $location->region->name }}
         </span>
         <span class="embed commencing-date">
-            {{ $location->date_of_commencing->toFormattedDateString() }}
+            {{ $location->date_of_commencing->format('d/m/y') }}
         </span>
         <span class="commissioner-signature">
             <img src="{{ public_path()}}/sign/commissioner.png">

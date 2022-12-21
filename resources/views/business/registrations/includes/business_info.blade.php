@@ -17,11 +17,13 @@
         <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
             aria-selected="false">Responsible Person</a>
     </li>
-    <li class="nav-item" role="presentation">
-
-        <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank"
-            aria-selected="false">Bank Accounts</a>
-    </li>
+    @if(count($business->banks))
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="bank-tab" data-toggle="tab" href="#bank" role="tab" aria-controls="bank" aria-selected="false">
+                Bank Accounts
+            </a>
+        </li>
+    @endif
     @if ($business->hotel)
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="hotel-tab" data-toggle="tab" href="#hotel" role="tab" aria-controls="hotel"
@@ -242,17 +244,29 @@
                     <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
                     <p class="my-1">{{ $location->date_of_commencing->toFormattedDateString() }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Pre Estimated Turnover</span>
-                    <p class="my-1">{{ number_format($location->pre_estimated_turnover ?? 0, 2) }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Post Estimated Turnover</span>
-                    <p class="my-1">{{ number_format($location->post_estimated_turnover ?? 0, 2) }}</p>
-                </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Estimated Turnover (Last 12 Months)</span>
+                        <p class="my-1">
+                            @if($location->pre_estimated_turnover)
+                                {{ fmCurrency($location->pre_estimated_turnover) }} TZS
+                            @else
+                                N/A
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Estimated Turnover (Next 12 Months)</span>
+                        <p class="my-1">
+                            @if($location->post_estimated_turnover)
+                                {{ fmCurrency($location->post_estimated_turnover) }} TZS
+                            @else
+                                N/A
+                            @endif
+                        </p>
+                    </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Electric Metre No.</span>
-                    <p class="my-1">{{ $location->meter_no }}</p>
+                    <p class="my-1">{{ $location->meter_no ?? 'N/A' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Region.</span>

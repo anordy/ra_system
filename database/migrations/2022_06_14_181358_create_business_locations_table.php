@@ -32,9 +32,9 @@ class CreateBusinessLocationsTable extends Migration
             $table->string('house_no')->nullable();
             $table->string('owner_name')->nullable();
             $table->string('owner_phone_no')->nullable();
-            $table->float('pre_estimated_turnover', 20, 2);
+            $table->float('pre_estimated_turnover', 20, 2)->nullable();
             $table->float('post_estimated_turnover', 20, 2);
-            $table->string('meter_no');
+            $table->string('meter_no')->nullable();
             $table->string('marking')->nullable();
             $table->dateTime('approved_on')->nullable();
             $table->dateTime('verified_at')->nullable();

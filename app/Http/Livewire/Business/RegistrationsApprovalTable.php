@@ -50,7 +50,7 @@ class RegistrationsApprovalTable extends DataTableComponent
                 ->label(function ($row){
                     return view('business.registrations.includes.approval_status', compact('row'));
                 }),
-            Column::make('Action', 'pinstance_id')
+            Column::make('Action', 'id')
                 ->view('business.registrations.includes.approval')
         ];
     }
