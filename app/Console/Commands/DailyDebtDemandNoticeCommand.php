@@ -54,7 +54,7 @@ class DailyDebtDemandNoticeCommand extends Command
         Log::channel('dailyJobs')->info("Daily Demand notice for tax returns");
 
         // TODO: Improve this query
-        $debts = TaxReturn::with('demandNotices')->where('return_category', ReturnCategory::OVERDUE)
+        $debts = TaxReturn::with('demandNotices')->where('return_category', ReturnCategory::DEBT)
             ->get();
 
         foreach ($debts as $debt) {
@@ -79,7 +79,6 @@ class DailyDebtDemandNoticeCommand extends Command
                 $paid_within_days = 7;
                 $next_notify_days = 0;
                 $this->sendRemainingDemandNotice($debt, $paid_within_days, $next_notify_days);
-
             }
 
 
@@ -91,7 +90,7 @@ class DailyDebtDemandNoticeCommand extends Command
         Log::channel('dailyJobs')->info("Daily Demand notice for tax returns");
 
         // TODO: Improve this query
-        $debts = TaxAssessment::with('demandNotices')->where('assessment_step', ReturnCategory::OVERDUE)
+        $debts = TaxAssessment::with('demandNotices')->where('assessment_step', ReturnCategory::DEBT)
             ->get();
 
         foreach ($debts as $debt) {

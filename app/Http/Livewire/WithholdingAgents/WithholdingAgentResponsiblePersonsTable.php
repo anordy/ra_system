@@ -2,14 +2,15 @@
 
 namespace App\Http\Livewire\WithholdingAgents;
 
-use App\Models\WaResponsiblePerson;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
+use App\Models\WaResponsiblePerson;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 {
@@ -19,7 +20,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
     public function mount($id)
     {
 //        todo: encrypt id
-        $this->withholding_agent_id = $id;
+        $this->withholding_agent_id = decrypt($id);
     }
 
 
@@ -100,8 +101,8 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
             abort(403);
         }
 //        todo: encrypt id && select only columns that's needed
-        $responsible_person = WaResponsiblePerson::findOrFail($id);
-        $status = $responsible_person->status == 'active' ? 'Deactivate' : 'Activate';
+        $responsible_person = WaResponsiblePerson::select('status')->findOrFail(decrypt($id));
+        $status = $responsible_person->status == WaResponsiblePerson::ACTIVE ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
             'position' => 'center',
             'toast' => false,
@@ -127,19 +128,16 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 //        todo: select only columns that's needed - suggestion
         try {
             $data = (object) $value['data'];
-            $responsible_person = WaResponsiblePerson::findOrFail($data->id);
+            $responsible_person = WaResponsiblePerson::select('id','status')->findOrFail(decrypt($data->id));
             if ($responsible_person->status == 'active') {
-                $responsible_person->update([
-                    'status' => 'inactive'
-                ]);
+                $responsible_person->status = WaResponsiblePerson::INACTIVE;
             } else if ($responsible_person->status == 'inactive') {
-                $responsible_person->update([
-                    'status' => 'active'
-                ]);
+                $responsible_person->status = WaResponsiblePerson::ACTIVE;
             }
+            $responsible_person->save();
             $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            report($e);
+            Log::error($e);
             $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }

@@ -31,7 +31,7 @@ class EditResponsiblePersonModal extends Component
 
     public function mount($id)
     {   
-        $this->wa_responsible_person = WaResponsiblePerson::find($id); // todo: encrypt id
+        $this->wa_responsible_person = WaResponsiblePerson::findOrFail(decrypt($id)); // todo: encrypt id
         $this->title = $this->wa_responsible_person->title;
         $this->position = $this->wa_responsible_person->position;
         $this->responsible_person_id = $this->wa_responsible_person->responsible_person_id;
@@ -52,7 +52,7 @@ class EditResponsiblePersonModal extends Component
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 

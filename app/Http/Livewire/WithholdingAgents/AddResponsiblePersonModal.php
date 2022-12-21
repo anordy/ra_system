@@ -35,7 +35,7 @@ class AddResponsiblePersonModal extends Component
 
     public function mount($id)
     {   
-        $this->withholding_agent_id = $id; // todo: encrypt id
+        $this->withholding_agent_id = decrypt($id); // todo: encrypt id
         $waasigned = WaResponsiblePerson::distinct()->pluck('responsible_person_id');
         $this->responsible_persons = Taxpayer::whereNotIn('id', $waasigned)->get();
     }
@@ -57,7 +57,7 @@ class AddResponsiblePersonModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 

@@ -19,8 +19,8 @@ class DeclaredSalesAnalysisInstances extends Component
     {
 
         $this->investigation = $investigation;
-        $this->locations = TaxInvestigationLocation::where('tax_investigation_id', $investigation->id)->get();
-        $this->taxTypes = TaxInvestigationTaxType::where('tax_investigation_id', $investigation->id)->get();
+        $this->locations = $investigation->businessLocations;
+        $this->taxTypes = $investigation->taxTypes;
     }
     public function render()
     {

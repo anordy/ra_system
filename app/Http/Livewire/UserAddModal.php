@@ -89,15 +89,16 @@ class UserAddModal extends Component
                 'password' => Hash::make($this->password),
             ]);
 
-            $adminRole = Role::where('name', 'Administrator')->first();
-            $admins = User::where('role_id', $adminRole->id)->get();
+
+            $admins = User::whereHas('role', function ($query) {
+                $query->where('name', 'Administrator');
+            })->get();
 
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
-                    $subject = 'New '.Role::find($this->role)->name. ' created',
+                    $subject = 'NEW USER CREATED',
                     $message = 'New '.Role::find($this->role)->name.' ' .$user->fullname() . ' created by ' .auth()->user()->fname.' '.auth()->user()->lname,
                     $href = 'settings.users.index',
-                    $hrefText = 'View'
                 ));
             }
 
@@ -112,7 +113,7 @@ class UserAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 

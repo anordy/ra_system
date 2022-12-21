@@ -74,7 +74,7 @@ class WithholdingAgentsTable extends DataTableComponent
     public function changeStatus($id)
     {
 //        todo: encrypt id && select only columns that's needed
-        $withholding_agent = WithholdingAgent::findOrFail($id);
+        $withholding_agent = WithholdingAgent::select('id', 'status')->findOrFail(decrypt($id));
         $status = $withholding_agent->status == 'active' ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
             'position' => 'center',
@@ -98,7 +98,7 @@ class WithholdingAgentsTable extends DataTableComponent
 //        todo: select only columns that's needed
         try {
             $data = (object) $value['data'];
-            $withholding_agent = WithholdingAgent::findOrFail($data->id);
+            $withholding_agent = WithholdingAgent::select('id','status')->findOrFail(decrypt($data->id));
             if ($withholding_agent->status == 'active') {
                 $withholding_agent->update([
                     'status' => 'inactive'

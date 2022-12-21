@@ -3,10 +3,11 @@
 namespace App\Http\Livewire\Settings\InterestRate;
 
 use App\Models\Bank;
+use Livewire\Component;
 use App\Models\InterestRate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
 
 class InterestRateEditModal extends Component
 {
@@ -34,6 +35,9 @@ class InterestRateEditModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-interest-rate-edit')) {
+            abort(403);
+        }
         $this->validate();
         try {
             $this->interestRate->update([
@@ -43,7 +47,7 @@ class InterestRateEditModal extends Component
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
     public function render()

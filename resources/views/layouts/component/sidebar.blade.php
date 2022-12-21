@@ -716,6 +716,11 @@
                             <a href="{{ route('settings.interest-rates.index') }}">Interest Rate</a>
                         </li>
                     @endcan
+                    @can('setting-penalty-rate-view')
+                        <li class="{{ request()->is('settings/penalty-rates*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.penalty-rates.index') }}">Penalty Rate</a>
+                        </li>
+                    @endcan
                     @can('setting-education-level-view')
                         <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
                             <a href="{{ route('settings.education-level.index') }}">Education Level</a>
