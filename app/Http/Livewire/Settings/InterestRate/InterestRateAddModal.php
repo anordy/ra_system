@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Settings\InterestRate;
+namespace App\Http\Livewire\Settings\PenaltyRate;
 
+use Exception;
+use Livewire\Component;
 use App\Models\InterestRate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
-use Exception;
 
-class InterestRateAddModal extends Component
+class PenaltyRateAddModal extends Component
 {
     use LivewireAlert;
 
@@ -27,6 +28,9 @@ class InterestRateAddModal extends Component
 
     public function submit()
     {
+        if (!Gate::allows('setting-interest-rate-add')) {
+            abort(403);
+        }
         $this->validate();
         try {
             InterestRate::create([
