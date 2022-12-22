@@ -4,7 +4,10 @@ namespace App\Http\Livewire\Taxpayers\Details;
 
 use Exception;
 use Carbon\Carbon;
+use App\Events\SendSms;
 use Livewire\Component;
+use App\Events\SendMail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -81,6 +84,7 @@ class Passport extends Component
             'showCancelButton' => true,
             'cancelButtonText' => 'Cancel',
             'timer' => null,
+            'input' => 'textarea',
         ]);
     }
 
@@ -104,13 +108,22 @@ class Passport extends Component
     /**
      * Delete the KYC if data does not match from immigration, The person will be required to apply for reference number * again
      */
-    public function reject()
+    public function reject($value)
     {
+        $comments = $value['value'];
+        DB::beginTransaction();
         try {
+            $this->kyc->comments = $comments;
+            $this->kyc->save();
+            $kyc = $this->kyc;
             $this->kyc->delete();
-            $this->alert('success', 'KYC has been rejected successful!');
+            DB::commit();
+            event(new SendMail('kyc-reject', $kyc));
+            event(new SendSms('kyc-reject', $kyc));
+            $this->alert('success', 'KYC has been rejected!');
             return redirect()->route('taxpayers.registrations.index');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?!');
         }

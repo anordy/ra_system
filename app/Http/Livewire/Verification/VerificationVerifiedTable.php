@@ -54,7 +54,6 @@ class VerificationVerifiedTable extends DataTableComponent
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),
-            Column::make('Payment Status', 'location.name'),
             Column::make('Tax Type', 'taxType.name'),
             Column::make('Filled By', 'created_by_id')
                 ->format(function ($value, $row) {

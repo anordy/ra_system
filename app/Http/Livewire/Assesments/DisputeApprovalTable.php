@@ -22,16 +22,15 @@ class DisputeApprovalTable extends DataTableComponent
     }
     public function builder(): Builder
     {
-
-        $workflow = WorkflowTask::with('pinstance', 'user')
+        $workflow = WorkflowTask::with('pinstance')
             ->where('pinstance_type', Dispute::class)
             ->where('status', '!=', 'completed')
             ->whereHasMorph('pinstance', Dispute::class, function ($query) {
                 $query->where('category', $this->category);
             })
             ->where('owner', 'staff')
-            ->whereHas('actors', function($query){
-                $query->where('user_id', auth()->id);
+            ->whereHas('actors', function ($query) {
+                $query->where('user_id', auth()->id());
             });
         return $workflow;
 
@@ -50,8 +49,8 @@ class DisputeApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('user_type', 'user_id')->hideIf(true),
+            // Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+            // Column::make('user_type', 'user_id')->hideIf(true),
             Column::make('TIN', 'pinstance.business.tin')
                 ->label(fn($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
@@ -63,11 +62,11 @@ class DisputeApprovalTable extends DataTableComponent
             Column::make('Category', 'pinstance.category')
                 ->label(fn($row) => $row->pinstance->category ?? ''),
             Column::make('Tax In Dispute', 'pinstance.tax_in_dispute')
-                ->label(fn($row) => number_format($row->pinstance->tax_in_dispute,2) ?? ''),
+                ->label(fn($row) => number_format($row->pinstance->tax_in_dispute, 2) ?? ''),
             Column::make('Tax Not in Dispute', 'pinstance.tax_not_in_dispute')
-                ->label(fn($row) => number_format($row->pinstance->tax_not_in_dispute,2) ?? ''),
+                ->label(fn($row) => number_format($row->pinstance->tax_not_in_dispute, 2) ?? ''),
             Column::make('Tax Deposit', 'pinstance.tax_deposit')
-                ->label(fn($row) => number_format($row->pinstance->tax_deposit,2) ?? ''),
+                ->label(fn($row) => number_format($row->pinstance->tax_deposit, 2) ?? ''),
             Column::make('Filled On', 'created_at')
                 ->format(fn($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Action', 'pinstance_id')

@@ -22,13 +22,13 @@
                     @livewire('assesments.dispute-approval-table', ['category' => 'objection', 'payment' => 'complete'])
                 </div>
                 <div id="pending-approval" class="tab-pane fade">
-                    @livewire('assesments.dispute-unpaid-approval-table', ['category' => 'objection', 'payment' => 'unpaid'])
+                    {{-- @livewire('assesments.dispute-unpaid-approval-table', ['category' => 'objection', 'payment' => 'unpaid']) --}}
                 </div>
                 <div id="approved-approval" class="tab-pane fade">
-                    @livewire('assesments.waiver.waiver-table', ['category' => 'objection', 'status' => 'approved'])
+                    {{-- @livewire('assesments.waiver.waiver-table', ['category' => 'objection', 'status' => 'approved']) --}}
                 </div>
                 <div id="rejected-approval" class="tab-pane fade">
-                    @livewire('assesments.waiver.waiver-table', ['category' => 'objection', 'status' => 'rejected'])
+                    {{-- @livewire('assesments.waiver.waiver-table', ['category' => 'objection', 'status' => 'rejected']) --}}
                 </div>
 
 

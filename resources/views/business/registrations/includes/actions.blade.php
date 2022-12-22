@@ -8,7 +8,7 @@
     @endphp
 
     @if ($instace->operator_type == 'staff')
-        @if (in_array(auth()->id, $operators))
+        @if (in_array(auth()->id(), $operators))
             <a href="{{ route('business.registrations.approval', encrypt($row->id)) }}" class="btn btn-outline-primary btn-sm">
                 <i class="bi bi-eye-fill mr-1"></i> View & Approve
             </a>

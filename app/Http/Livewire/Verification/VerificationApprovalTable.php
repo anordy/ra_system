@@ -55,7 +55,7 @@ class VerificationApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+            // Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             Column::make('user_type', 'user_id')->hideIf(true),
             Column::make('Z_Number', 'pinstance.location.zin')
                 ->label(fn ($row) => $row->pinstance->location->zin ?? '')
