@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div class="form-group col-lg-12">
                     <label class="">Region </label>
-                    <select class="form-control" wire:model.lazy="region_id">
+                    <select class="form-control" wire:model.defer="region_id">
                         <option value="" disabled selected>Choose option</option>
                         @foreach ($regions as $row)
                             <option value="{{ $row->id }}">{{ $row->name }}</option>
@@ -22,7 +22,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
+                        <input type="text" class="form-control" wire:model.defer="name" id="name">
                         @error('name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

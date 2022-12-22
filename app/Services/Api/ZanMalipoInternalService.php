@@ -33,6 +33,7 @@ class ZanMalipoInternalService
                 }
             } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
                 $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
+                $billable->status = TaxAgentStatus::VERIFIED;
             } else {
                 $billable->status = ReturnStatus::CN_GENERATION_FAILED;
             }
@@ -82,12 +83,9 @@ class ZanMalipoInternalService
         if ($res['data']['status_code'] === 7101) {
             if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATING;
-            } else if ($bill->billable_type == TaxAgent::class) {
+            } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
                 $billable->status = TaxAgentStatus::VERIFIED;
                 $billable->billing_status = BillingStatus::CN_GENERATED;
-                $billable->verifier_id = Auth::id();
-                $billable->verifier_true_comment = ''; // Not necessary to have comments on approval
-                $billable->verified_at = now();
             } else  {
                 $billable->statusCode = ReturnStatus::CN_GENERATING;
             }
@@ -96,7 +94,7 @@ class ZanMalipoInternalService
                 $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;
             } else if ($bill->billable_type == TaxAgent::class || $bill->billable_type == RenewTaxAgentRequest::class) {
                 $billable->billing_status = BillingStatus::CN_GENERATION_FAILED;
-                $billable->status = TaxAgentStatus::PENDING;
+                $billable->status = TaxAgentStatus::VERIFIED;
             } else {
                 $billable->statusCode = ReturnStatus::CN_GENERATION_FAILED;
             }

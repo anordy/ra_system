@@ -160,6 +160,17 @@ class TaxAgentController extends Controller
         return view('taxagents.renew.show', compact('renew', 'fee'));
     }
 
+    public function viewConsultantRenewRequests($id)
+    {
+        $requests = RenewTaxAgentRequest::where('tax_agent_id', decrypt($id))->orderByDesc('id')->get();
+        $agent = TaxAgent::query()->findOrfail(decrypt($id));
+        if (!empty($agent))
+        {
+            $consultant = $agent->taxpayer->first_name.' '.$agent->taxpayer->middle_name.' '.$agent->taxpayer->last_name;
+        }
+        return view('taxagents.consultant-renew-requests.index', compact('requests', 'consultant', 'id'));
+    }
+
     public function fee()
     {
         if (!Gate::allows('tax-consultant-fee-configuration-view')) {

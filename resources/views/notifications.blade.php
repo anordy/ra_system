@@ -5,12 +5,13 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-header text-uppercase font-weight-bold bg-white">
+    {{-- <div class="card"> --}}
+        {{-- <div class="card-header text-uppercase font-weight-bold bg-white">
             Notifications
-        </div>
-        <div class="card-body">
-            @livewire('notifications-table')
-        </div>
-    </div>
+        </div> --}}
+        {{-- <div class="card-body"> --}}
+            {{-- @livewire('notification.notifications-table') --}}
+            @livewire('notification.notifications-table')
+        {{-- </div> --}}
+    {{-- </div> --}}
 @endsection

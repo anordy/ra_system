@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Traits\AuditTrait;
 use Exception;
 use id;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -14,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersTable extends DataTableComponent
 {
-    use LivewireAlert, AuditTrait;
+    use LivewireAlert, AuditTrait,ThrottlesLogins;
 
     protected $model = User::class;
     public function configure(): void
@@ -168,6 +169,7 @@ class UsersTable extends DataTableComponent
                 $this->triggerAudit(User::class, Audit::DEACTIVATED, 'deactivate_user', $user->id, ['status' => 1], ['status' => 0]);
             } else {
                 $user->status = 1;
+                $user->auth_attempt = 0;
                 $user->save();
                 $this->triggerAudit(User::class, Audit::ACTIVATED, 'activate_user', $user->id, ['status' => 0], ['status' => 1]);
             }

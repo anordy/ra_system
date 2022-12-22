@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Notification;
 
 use App\Models\Notification;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Date;
 use Livewire\Component;
 
 class NotificationHeader extends Component

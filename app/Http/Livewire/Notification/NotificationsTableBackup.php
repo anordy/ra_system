@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Notification;
 
 use App\Models\Notification;
 use Carbon\Carbon;
@@ -10,28 +10,27 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
 
-class NotificationsTable extends DataTableComponent
+class NotificationsTableBackup extends DataTableComponent
 {
     use LivewireAlert;
 
     public function mount()
     {
-        $user = auth()->user();
-        Notification::where('notifiable_type', get_class($user))
-            ->where('notifiable_id', $user->id)
+        Notification::where('notifiable_type', get_class(auth()->user()))
+            ->where('notifiable_id', auth()->id())
             ->whereNull('read_at')
             ->update(['read_at' => Carbon::now()]);
     }
 
     public function builder(): Builder
     {
-        return Notification::query()
-            ->where('notifiable_type', get_class(auth()->user()))
+        return Notification::where('notifiable_type', get_class(auth()->user()))
             ->where('notifiable_id', auth()->id())
-            ->latest()
-            ->select();
+            ->latest();
     }
+
 
     public function configure(): void
     {
@@ -56,6 +55,7 @@ class NotificationsTable extends DataTableComponent
                 ->format(
                     fn ($value, $row) => $row->created_at->diffForHumans()
                 ),
+            
             Column::make('Subject', 'data')
                 ->format(
                     fn ($value, $row) => $row['data']->subject
@@ -65,15 +65,12 @@ class NotificationsTable extends DataTableComponent
                     fn ($value, $row) => $row['data']->message
                 ),
             Column::make('Action', 'id')
-                ->label(
-                    function ($row) {
-                        $id = "'{$row->id}'";
-                        return <<< HTML
-                            <button class="btn btn-info btn-sm" title="View" wire:click="read($id)"><i class="fa fa-eye"></i></button>
-                            <button class="btn btn-danger btn-sm" title="Delete" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
-                        HTML;
-                    }
-                )
+                ->format(function ($value) {
+                    return <<< HTML
+                    <button class="btn btn-info btn-sm" title="View" wire:click="read('$value')"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-danger btn-sm" title="Delete" wire:click="delete('$value')"><i class="fa fa-trash"></i> </button>
+                HTML;
+                })
                 ->html(true),
         ];
     }
@@ -82,12 +79,8 @@ class NotificationsTable extends DataTableComponent
     {
         try {
             $notification = Notification::find($id);
-            if($notification == null){
-                return redirect()->back();
-            }
             if ($notification['data']->href != null) {
                 if ($notification['data']->hrefParameters != null) {
-                    // dd($notification['data']->href, $notification['data']->hrefParameters);
                     return redirect()->route($notification['data']->href, encrypt($notification['data']->hrefParameters));
                 }
                 return redirect()->route($notification['data']->href);
@@ -95,7 +88,7 @@ class NotificationsTable extends DataTableComponent
             return redirect()->back();
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 
