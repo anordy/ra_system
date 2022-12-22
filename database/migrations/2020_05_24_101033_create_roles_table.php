@@ -17,6 +17,7 @@ class CreateRolesTable extends Migration
             $table->id('id');
             $table->string('name');
             $table->unsignedBigInteger('report_to')->nullable();
+            $table->integer('is_approved')->nullable(0);
             $table->timestamps();
         });
     }

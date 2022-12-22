@@ -21,6 +21,7 @@ class CreatesTableTaPaymentConfigurationsTable extends Migration
 			$table->decimal('amount', 20,2);
 			$table->enum('currency',['TZS','USD']);
 			$table->bigInteger('created_by');
+            $table->integer('is_approved')->nullable(0);
 	        $table->timestamps();
         });
     }

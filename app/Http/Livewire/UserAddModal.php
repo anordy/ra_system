@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\RolesApprovalLevel;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Events\SendMail;
 use App\Jobs\User\SendRegistrationEmail;
@@ -20,7 +23,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 class UserAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $roles = [];
     public $fname;
@@ -66,6 +69,15 @@ class UserAddModal extends Component
             $this->password = Str::random(8);
         }
 
+//        $role_level = DB::table('roles_approval_levels as ra')->leftJoin('approval_levels as al', 'al.id', '=', 'ra.approval_level_id')
+//            ->select('ra.id')->where('ra.role_id', Auth::user()->role_id)->first();
+//
+//        if (empty($role_level))
+//        {
+//            $this->alert('error', 'Your level of approval is not supported to register user');
+//            return;
+//        }
+
         try {
             DB::beginTransaction();
 
@@ -79,7 +91,7 @@ class UserAddModal extends Component
                 'status' => 1,
                 'password' => Hash::make($this->password),
             ]);
-
+            $this->triggerDualControl(get_class($user), $user->id, 'adding user');
 
             $admins = User::whereHas('role', function ($query) {
                 $query->where('name', 'Administrator');
@@ -92,7 +104,7 @@ class UserAddModal extends Component
                     $href = 'settings.users.index',
                 ));
             }
-            
+
             DB::commit();
 
             if (config('app.env') != 'local') {

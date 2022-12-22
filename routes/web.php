@@ -12,6 +12,8 @@
  */
 
 use App\Http\Controllers\Setting\ApprovalLevelController;
+use App\Http\Controllers\Setting\DualControlActivityController;
+use App\Http\Controllers\TransactionFeeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -194,6 +196,8 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::resource('/transaction-fees', TransactionFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
+        Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
+        Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');

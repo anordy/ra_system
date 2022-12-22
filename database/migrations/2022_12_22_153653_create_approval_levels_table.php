@@ -17,6 +17,7 @@ class CreateApprovalLevelsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('level');
+            $table->string('details');
             $table->timestamps();
         });
     }
