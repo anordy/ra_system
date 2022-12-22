@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Jobs\TaxClearance;
+namespace App\Jobs\TaxClaim;
 
-use App\Mail\TaxClearance\TaxClearanceApproved;
-use App\Mail\TaxClearance\TaxClearanceRejected;
-use App\Mail\UserRegistration;
+use App\Mail\TaxClaim\TaxClaimFeedbackMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,23 +12,20 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class SendTaxClearanceRejectedEmail implements ShouldQueue {
+class SendTaxClaimRequestFeedbackMAIL implements ShouldQueue
+{
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $send_to;
-    public $message;
-
+    public $payload;
     /**
      * Create a new job instance.
-     *
-     * @param $_password
      *
      * @return void
      */
     public function __construct($payload)
     {
-        $this->send_to = $payload[0];
-        $this->message = $payload[1];
+        //
+        $this->payload = $payload;
     }
 
     /**
@@ -40,10 +35,11 @@ class SendTaxClearanceRejectedEmail implements ShouldQueue {
      */
     public function handle()
     {
-        if ($this->send_to) {
-            Mail::to($this->send_to)->send(new TaxClearanceRejected($this->message));
+        //
+        if ($this->payload['email']) {
+            Mail::to($this->payload['email'])->send(new TaxClaimFeedbackMail($this->payload));
         } else {
-            Log::error("Tax Clearance Reject Feedback: { $this->send_to } Invalid Email");
+            Log::error("Tax Claim Feedback: { $this->payload['email'] } Invalid Email");
         }
     }
 }
