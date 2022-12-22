@@ -42,6 +42,8 @@ class SendTaxClearanceRejectedEmail implements ShouldQueue {
     {
         if ($this->send_to) {
             Mail::to($this->send_to)->send(new TaxClearanceRejected($this->message));
+        } else {
+            Log::error("Tax Clearance Reject Feedback: { $this->send_to } Invalid Email");
         }
     }
 }

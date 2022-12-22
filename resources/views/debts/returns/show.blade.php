@@ -18,9 +18,7 @@
                 @if ($tax_return->waiver)
                     <a href="#tab4" class="nav-item nav-link font-weight-bold">Waiver Details</a>
                 @endif
-                @if (count($tax_return->demandNotices) > 0)
-                    <a href="#tab5" class="nav-item nav-link font-weight-bold">Demand Notices</a>
-                @endif
+                <a href="#tab5" class="nav-item nav-link font-weight-bold">Demand Notices</a>
                 @if ($tax_return->recoveryMeasure)
                 <a href="#tab6" class="nav-item nav-link font-weight-bold">Assigned Recovery Measures</a>
                 @endif
@@ -31,7 +29,7 @@
 
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show m-4">
-                    @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned')
+                    @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned' && $tax_return->return_category == 'overdue')
                         <div class="card-tools">
                                 <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"  class="btn btn-info btn-sm text-white" style="color: white !important;"><i
                                     class="fa fa-plus text-white"></i>
@@ -51,7 +49,7 @@
                     @include('debts.returns.waiver-details', ['tax_return' => $tax_return])
                 </div>
                 <div id="tab5" class="tab-pane fade m-4">
-                    <livewire:debt.demand-notice.demand-notice-table debtId="{{ $tax_return->id }}" />
+                    <livewire:debt.demand-notice.demand-notice-table debtId="{{ encrypt($tax_return->id) }}" />
                 </div>
                 <div id="tab6" class="tab-pane fade m-4">
                     <h6 class="text-uppercase mt-2 ml-2">Recommended Recovery Measures</h6>

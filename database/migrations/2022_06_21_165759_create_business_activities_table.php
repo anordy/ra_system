@@ -16,6 +16,7 @@ class CreateBusinessActivitiesTable extends Migration
         Schema::create('business_activities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('business_type');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -42,6 +42,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
 use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
+use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackMAIL;
 
 class SendMailFired
 {
@@ -172,6 +173,8 @@ class SendMailFired
             SendInterestRateEmail::dispatch($event->tokenId);
         } else if ($event->service === 'penalty-rate'){
             SendPenaltyRateEmail::dispatch($event->tokenId);
+        } else if ($event->service === 'tax-claim-feedback'){
+            SendTaxClaimRequestFeedbackMAIL::dispatch($event->tokenId);
         }
     }
 }

@@ -10,7 +10,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
+                        <input type="text" class="form-control" wire:model.defer="name" id="name">
                         @error('name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

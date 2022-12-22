@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\BusinessActivity;
+use App\Models\BusinessType;
 use Illuminate\Database\Seeder;
 
 class BusinessActivitiesSeeder extends Seeder
@@ -14,13 +15,14 @@ class BusinessActivitiesSeeder extends Seeder
      */
     public function run()
     {
-        BusinessActivity::updateOrCreate(['name' => 'Wholesale']);
-        BusinessActivity::updateOrCreate(['name' => 'Retailer']);
-        BusinessActivity::updateOrCreate(['name' => 'Accomodation', 'activity_category' => 'hotel']);
-        BusinessActivity::updateOrCreate(['name' => 'Restaurant', 'activity_category' => 'hotel']);
-        BusinessActivity::updateOrCreate(['name' => 'Bar', 'activity_category' => 'hotel']);
-        BusinessActivity::updateOrCreate(['name' => 'Accomodation, Restaurant', 'activity_category' => 'hotel']);
-        BusinessActivity::updateOrCreate(['name' => 'Restaurant, Bar', 'activity_category' => 'hotel']);
-        BusinessActivity::updateOrCreate(['name' => 'Accomodation, Restaurant & Bar', 'activity_category' => 'hotel']);
+        BusinessActivity::updateOrCreate(['name' => 'Wholesale', 'business_type' => BusinessType::OTHER]);
+        BusinessActivity::updateOrCreate(['name' => 'Retailer', 'business_type' => BusinessType::OTHER]);
+        BusinessActivity::updateOrCreate(['name' => 'Short Term Accommodation', 'business_type' => BusinessType::HOTEL]);
+        BusinessActivity::updateOrCreate(['name' => 'Long Term Accommodation', 'business_type' => BusinessType::HOTEL]);
+        BusinessActivity::updateOrCreate(['name' => 'Restaurant', 'business_type' => BusinessType::HOTEL]);
+        BusinessActivity::updateOrCreate(['name' => 'Bar', 'business_type' => BusinessType::HOTEL]);
+        BusinessActivity::updateOrCreate(['name' => 'Accommodation & Restaurant', 'business_type' => BusinessType::HOTEL]);
+        BusinessActivity::updateOrCreate(['name' => 'Restaurant & Bar', 'business_type' => BusinessType::HOTEL]);
+        BusinessActivity::updateOrCreate(['name' => 'Accommodation, Restaurant & Bar', 'business_type' => BusinessType::HOTEL]);
     }
 }

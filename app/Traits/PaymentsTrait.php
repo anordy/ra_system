@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Log;
 
 trait PaymentsTrait
 {
+    use ExchangeRateTrait;
 
     /**
      * @param ZmBill $bill
@@ -70,12 +71,7 @@ trait PaymentsTrait
     {
         $taxpayer = $return->taxpayer;
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->first();
-        $exchange_rate = 1;
-
-        if ($tax_type->currency != 'TZS') {
-            $bot_rate = ExchangeRate::where('currency', $tax_type->currency)->where('business_id', $return->business_id)->first();
-            $exchange_rate = $bot_rate->mean;
-        }
+        $exchange_rate = $this->getExchangeRate($tax_type->currency);
 
         $payer_type = get_class($taxpayer);
         $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
@@ -167,7 +163,7 @@ trait PaymentsTrait
     {
         $taxpayer      = $leasePayment->taxpayer;
         $tax_type      = TaxType::where('code', 'land-lease')->first();
-        $exchange_rate  = ExchangeRate::where('currency', 'USD')->first()->mean;
+        $exchange_rate  = $this->getExchangeRate('USD');
 
         $payer_type     = get_class($taxpayer);
         $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
@@ -357,7 +353,7 @@ trait PaymentsTrait
         $currency = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
-        $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
+        $exchange_rate = $this->getExchangeRate($debt->currency);
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
         $billableId = $debt->id;
@@ -454,7 +450,7 @@ trait PaymentsTrait
         $currency = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
-        $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
+        $exchange_rate = $this->getExchangeRate($debt->currency);
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
         $billableId = $debt->id;
@@ -560,7 +556,7 @@ trait PaymentsTrait
         $currency = $assessment->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
-        $exchange_rate = $assessment->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $assessment->currency)->first()->mean;
+        $exchange_rate = $this->getExchangeRate($assessment->currency);
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
         $billableId = $assessment->id;
@@ -602,21 +598,10 @@ trait PaymentsTrait
         }
     }
 
-    public function generateTaxAgentRegControlNo($agent, $billitems, $comment)
+    public function generateTaxAgentRegControlNo($agent, $billitems, $used_currency)
     {
-        $exchange_rate = 1;
+        $rate = $this->getExchangeRate($used_currency);
         $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
-
-        $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
-                    ->where('category', 'Registration Fee')
-                    ->where('is_citizen', $agent->taxpayer->is_citizen)
-                    ->first();
-                    
-        $used_currency = $fee->currency;
-
-        if ($tax_type->currency != 'TZS') {
-            $exchange_rate = ExchangeRate::query()->where('currency', $used_currency)->latest()->first()->mean;
-        }
 
         $taxpayer = $agent->taxpayer;
         $payer_type = get_class($taxpayer);
@@ -627,7 +612,7 @@ trait PaymentsTrait
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $used_currency;
         $createdby_type = get_class(Auth::user());
-        $exchange_rate = $exchange_rate;
+        $exchange_rate = $rate;
         $createdby_id = Auth::id();
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
@@ -658,28 +643,7 @@ trait PaymentsTrait
         } else {
             // We are local
             $agent->status = TaxAgentStatus::VERIFIED;
-            $agent->billing_status = BillingStatus::CN_GENERATED;
-            $agent->verifier_id = Auth::id();
-            $agent->verifier_true_comment = $comment;
-            $agent->verified_at = now();
             $agent->save();
-
-            if ($agent->status == TaxAgentStatus::CORRECTION) {
-                $final = TaxAgentStatus::VERIFIED;
-                $initial = TaxAgentStatus::CORRECTION;
-            } else {
-                $final = TaxAgentStatus::VERIFIED;
-                $initial = TaxAgentStatus::PENDING;
-            }
-            $approval = new TaxAgentApproval();
-            $approval->tax_agent_id = $agent->id;
-            $approval->initial_status = $initial;
-            $approval->destination_status = $final;
-            $approval->comment = $comment;
-            $approval->approved_by_id = Auth::id();
-            $approval->approved_at = now();
-            $approval->save();
-
             // Simulate successful control no generation
             $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
             $zmBill->zan_status = 'pending';
@@ -688,32 +652,21 @@ trait PaymentsTrait
         }
     }
 
-    public function generateTaxAgentRenewControlNo($req, $billitems, $comment)
+    public function generateTaxAgentRenewControlNo($req, $billitems, $used_currency)
     {
-        $exchange_rate = 1;
+        $rate = $this->getExchangeRate($used_currency);
         $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
 
-        $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
-                    ->where('category', 'Renewal Fee')
-                    ->where('is_citizen', $req->tax_agent->taxpayer->is_citizen)
-                    ->first();
-                    
-        $used_currency = $fee->currency;
-
-        if ($tax_type->currency != 'TZS') {
-            $exchange_rate = ExchangeRate::query()->where('currency', $used_currency)->latest()->first()->mean;
-        }
-
         $taxpayer = $req->tax_agent->taxpayer;
-        $payer_type = get_class($req->tax_agent->taxpayer);
-        $payer_name = implode(" ", array($req->tax_agent->taxpayer->first_name, $req->tax_agent->taxpayer->last_name));
-        $payer_email = $req->tax_agent->taxpayer->email;
-        $payer_phone = $req->tax_agent->taxpayer->mobile;
+        $payer_type = get_class($taxpayer);
+        $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
+        $payer_email = $taxpayer->email;
+        $payer_phone = $taxpayer->mobile;
         $description = "Tax Consultant Renewal Fee";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency = $used_currency;
         $createdby_type = get_class(Auth::user());
-        $exchange_rate = $exchange_rate;
+        $exchange_rate = $rate;
         $createdby_id = Auth::id();
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
@@ -743,7 +696,7 @@ trait PaymentsTrait
             $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
         } else {
             // We are local
-            $req->billing_status = BillingStatus::CN_GENERATING;
+            $req->status = TaxAgentStatus::VERIFIED;
             $req->save();
 
             // Simulate successful control no generation

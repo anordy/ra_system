@@ -14,10 +14,6 @@
                        aria-controls="home" aria-selected="true">Pending Renew Request</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="academic-tab" data-toggle="tab" href="#academic" role="tab"
-                       aria-controls="profile" aria-selected="false">Verified Renew Requests</a>
-                </li>
-                <li class="nav-item" role="presentation">
                     <a class="nav-link" id="approved-tab" data-toggle="tab" href="#approved" role="tab"
                        aria-controls="profile" aria-selected="false">Approved Renew Requests</a>
                 </li>
@@ -29,11 +25,6 @@
 
                     <livewire:tax-agent.renew.pending-table />
                 </div>
-                <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
-
-                    <livewire:tax-agent.renew.verified-table />
-                </div>
-
                 <div class="tab-pane p-2" id="approved" role="tabpanel" aria-labelledby="approved-tab">
 
                     <livewire:tax-agent.renew.approved-table />

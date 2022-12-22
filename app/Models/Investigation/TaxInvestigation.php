@@ -51,37 +51,35 @@ class TaxInvestigation extends Model implements Auditable
     {
         return $this->hasMany(TaxInvestigationOfficer::class, 'investigation_id', 'id');
     }
-    
-    public function taxInvestigationLocations(){
+
+    public function taxInvestigationLocations()
+    {
         return $this->hasMany(TaxInvestigationLocation::class);
     }
 
-    public function taxInvestigationLocationNames(){
-        $locations = null;
-        foreach ($this->taxInvestigationLocations as $key => $taxInvestigationLocation) {
-            if($key!=0){
-                $locations .= ', '; 
-            }
-            $locations .= $taxInvestigationLocation->businessLocation->name . ' ( '. $taxInvestigationLocation->businessLocation->zin .' )' ;
-            
-        }
-        return $locations;
+    public function businessLocations()
+    {
+        return $this->hasManyThrough(BusinessLocation::class, TaxInvestigationLocation::class, 'tax_investigation_id', 'id', 'id', 'business_location_id');
     }
 
-    public function taxInvestigationTaxTypes(){
+    public function taxInvestigationLocationNames()
+    {
+        return $this->businessLocations->map(fn ($location) => $location->name . '(' . $location->zin . ')')->implode(',', 'name');
+    }
+
+    public function taxInvestigationTaxTypes()
+    {
         return $this->hasMany(TaxInvestigationTaxType::class);
     }
 
 
-    public function taxInvestigationTaxTypeNames(){
-        $taxType = null;
-        foreach ($this->taxInvestigationTaxTypes as $key => $taxInvestigationTaxType) {
-            if($key!=0){
-                $taxType .= ', '; 
-            }
-            $taxType .= $taxInvestigationTaxType->taxType->code;
-            
-        }
-        return $taxType;
+    public function taxTypes()
+    {
+        return $this->hasManyThrough(TaxType::class, TaxInvestigationTaxType::class, 'tax_investigation_id', 'id', 'id', 'business_tax_type_id');
+    }
+
+    public function taxInvestigationTaxTypeNames()
+    {
+        return $this->taxTypes->map(fn ($type) => $type->name)->implode(',', 'name');
     }
 }

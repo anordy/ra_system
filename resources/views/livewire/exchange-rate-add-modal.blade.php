@@ -10,7 +10,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Currency</label>
-                        <input type="text" class="form-control" wire:model.lazy="currency" id="currency">
+                        <input type="text" class="form-control" wire:model.defer="currency" id="currency">
                         @error('currency')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -18,7 +18,7 @@
 
                     <div class="form-group col-lg-12">
                         <label class="control-label">Spot Buying</label>
-                        <input type="number" step="0.02" class="form-control" wire:model.lazy="spot_buying" id="spot_buying">
+                        <input type="number" step="0.02" class="form-control" wire:model.defer="spot_buying" id="spot_buying">
                         @error('spot_buying')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -26,7 +26,7 @@
 
                     <div class="form-group col-lg-12">
                         <label class="control-label">Spot Selling</label>
-                        <input type="number" step="0.02" class="form-control" wire:model.lazy="spot_selling" id="spot_selling">
+                        <input type="number" step="0.02" class="form-control" wire:model.defer="spot_selling" id="spot_selling">
                         @error('spot_selling')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -34,7 +34,7 @@
 
                     <div class="form-group col-lg-12">
                         <label class="control-label">Mean</label>
-                        <input type="number" step="0.02" class="form-control" wire:model.lazy="mean" id="mean">
+                        <input type="number" step="0.02" class="form-control" wire:model.defer="mean" id="mean">
                         @error('mean')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -42,7 +42,7 @@
 
                     <div class="form-group col-lg-12">
                         <label class="control-label">Exchange Date</label>
-                        <input type="date" class="form-control" wire:model.lazy="exchange_date" id="exchange_date">
+                        <input type="date" class="form-control" wire:model.defer="exchange_date" id="exchange_date">
                         @error('exchange_date')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

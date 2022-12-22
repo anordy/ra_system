@@ -14,6 +14,10 @@
         <p class="my-1">{{ $tax_return->business->reg_no }}</p>
     </div>
     <div class="col-md-4 mb-3">
+        <span class="font-weight-bold text-uppercase">Branch</span>
+        <p class="my-1">{{ $tax_return->location->name }}</p>
+    </div>
+    <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">ZIN</span>
         <p class="my-1">{{ $tax_return->location->zin }}</p>
     </div>
