@@ -9,7 +9,7 @@
                 <div class="card-block">
                     <h6 class="m-b-20">Staff</h6>
                     <h2 class="text-right"><i
-                            class="bi bi-person-badge f-left"></i><span>{{ \App\Models\User::count() }}</span></h2>
+                            class="bi bi-person-badge f-left"></i><span>{{ $counts['users'] }}</span></h2>
                     <p class="mb-0"><a href="{{ route('settings.users.index') }}">click here to view more</a></p>
                 </div>
             </div>
@@ -20,7 +20,7 @@
                 <div class="card-block">
                     <h6 class="m-b-20">Taxpayers</h6>
                     <h2 class="text-right"><i
-                            class="bi bi-person-check-fill f-left"></i><span>{{ \App\Models\Taxpayer::count() }}</span></h2>
+                            class="bi bi-person-check-fill f-left"></i><span>{{ $counts['taxpayers'] }}</span></h2>
                     <p class="mb-0"><a href="{{ route('taxpayers.taxpayer.index') }}">click here to view more</a></p>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                 <div class="card-block">
                     <h6 class="m-b-20">Businesses</h6>
                     <h2 class="text-right"><i
-                            class="bi bi-building f-left"></i><span>{{ \App\Models\Business::approved()->count() }}</span>
+                            class="bi bi-building f-left"></i><span>{{ $counts['businesses'] }}</span>
                     </h2>
                     <p class="mb-0"><a href="{{ route('business.registrations.index') }}">click here to view more</a></p>
                 </div>
@@ -43,7 +43,7 @@
                 <div class="card-block">
                     <h6 class="m-b-20">Tax Agents</h6>
                     <h2 class="text-right"><i
-                            class="bi bi-credit-card f-left"></i><span>{{ \App\Models\TaxAgent::approved()->count() }}</span>
+                            class="bi bi-credit-card f-left"></i><span>{{ $counts['taxAgents'] }}</span>
                     </h2>
                     <p class="mb-0"><a href="{{ route('taxagents.active') }}">click here to view more</a></p>
                 </div>
