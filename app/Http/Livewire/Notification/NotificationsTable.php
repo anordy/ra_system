@@ -3,13 +3,11 @@
 namespace App\Http\Livewire\Notification;
 
 use App\Models\Notification;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use PhpParser\Node\Expr\Cast\Object_;
 
 class NotificationsTable extends Component
 {

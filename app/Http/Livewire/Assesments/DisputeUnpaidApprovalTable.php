@@ -44,8 +44,8 @@ class DisputeUnpaidApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")
-                ->sortable(),
+            // Column::make("Id", "id")
+            //     ->sortable(),
             Column::make("TIN", "business.tin")
                 ->sortable()
                 ->searchable(),

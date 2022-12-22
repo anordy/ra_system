@@ -22,10 +22,10 @@ class CreateDebtWaiversTable extends Migration
             $table->enum('category', ['penalty', 'interest', 'both']);
             $table->string('ground')->nullable();
             $table->string('reason')->nullable();
-            $table->float('penalty_rate')->nullable();
-            $table->float('interest_rate')->nullable();
-            $table->float('penalty_amount')->nullable();
-            $table->float('interest_amount')->nullable();
+            $table->decimal('penalty_rate', 20,2)->nullable();
+            $table->decimal('interest_rate', 20,2)->nullable();
+            $table->decimal('penalty_amount', 20,2)->nullable();
+            $table->decimal('interest_amount', 20,2)->nullable();
             $table->string('waiver_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();

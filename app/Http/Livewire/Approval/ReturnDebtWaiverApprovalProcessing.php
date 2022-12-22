@@ -109,27 +109,32 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
                     $this->subject->status = WaiverStatus::APPROVED;
                     $this->subject->save();
-    
-                    $now = Carbon::now();
-                    if ($this->debt->bill) {
-                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
-                        GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
-                    } else {
-                        GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
-                    }
 
                     $notification_payload = [
                         'debt' => $this->debt,
                     ];
 
+                    DB::commit();
+
                     event(new SendSms('debt-waiver-approval', $notification_payload));
                     event(new SendMail('debt-waiver-approval', $notification_payload));
     
-                    DB::commit();
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Log::error($e);
+                    $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                    return;
+                }
+
+                try {
+                    if ($this->debt->bill) {
+                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
+                        GenerateControlNo::dispatch($this->debt);
+                    } else {
+                        GenerateControlNo::dispatch($this->debt);
+                    }
                 } catch (Exception $e) {
                     Log::error($e);
-                    DB::rollBack();
-                    $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
                 }
     
             }
@@ -158,29 +163,34 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                     'application_status' => 'waiver',
                 ]);
 
-                $now = Carbon::now();
                 $this->subject->status = WaiverStatus::APPROVED;
                 $this->subject->save();
-
-                if ($this->debt->bill) {
-                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
-                    GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
-                } else {
-                    GenerateControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
-                }
 
                 $notification_payload = [
                     'debt' => $this->debt,
                 ];
 
+                DB::commit();
+
                 event(new SendSms('debt-waiver-approval', $notification_payload));
                 event(new SendMail('debt-waiver-approval', $notification_payload));
 
-                DB::commit();
             } catch (Exception $e) {
-                Log::error($e);
                 DB::rollBack();
+                Log::error($e);
                 $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                return;
+            }
+
+            try {
+                if ($this->debt->bill) {
+                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
+                    GenerateControlNo::dispatch($this->debt);
+                } else {
+                    GenerateControlNo::dispatch($this->debt);
+                }
+            } catch(Exception $e) {
+                Log::error($e);
             }
 
         }
@@ -201,6 +211,9 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         if (!Gate::allows('debt-management-debts-waive')) {
             abort(403);
         }
+        $this->validate([
+            'comments' => 'required',
+        ]);
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = WaiverStatus::CORRECTION;
@@ -209,9 +222,6 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('crdm_reject')) {
-                $this->validate([
-                    'comments' => 'required',
-                ]);
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
@@ -225,9 +235,6 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('commisioner_reject')) {
-                $this->validate([
-                    'comments' => 'required',
-                ]);
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();

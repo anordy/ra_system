@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
+use App\Models\BusinessStatus;
+use App\Models\TaxAgent;
+use App\Models\TaxAgentStatus;
+use App\Models\Taxpayer;
+use App\Models\User;
 use App\Traits\CheckReturnConfigurationTrait;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -21,11 +28,18 @@ class DashboardController extends Controller
         foreach ($all_issues as $issue) {
             if ($issue['status'] == false) {
                 $temp_issues[] = $issue;
-            } 
+            }
         }
 
         $issues = array_merge($temp_issues, $this->doesExchangeRateExists());
 
-        return view('dashboard', compact('issues'));
+        $counts = TaxAgent::where('status', TaxAgentStatus::APPROVED)
+            ->selectRaw("'taxAgents' AS type, COUNT(*) AS count")
+            ->unionAll(Business::where('status', BusinessStatus::APPROVED)->selectRaw("'businesses' AS type, COUNT(*) AS count"))
+            ->unionAll(User::selectRaw("'users' AS type, COUNT(*) AS count"))
+            ->unionAll(Taxpayer::selectRaw("'taxpayers' AS type, COUNT(*) AS count"))
+            ->pluck('count', 'type');
+
+        return view('dashboard', compact('issues', 'counts'));
     }
 }
