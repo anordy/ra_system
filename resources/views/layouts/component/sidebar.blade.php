@@ -885,6 +885,12 @@
                             <a href="{{ route('settings.return-config.index') }}">Return Configurations</a>
                         </li>
                     @endcan
+
+                    @can('setting-transaction-fees-view')
+                        <li class="{{ request()->is('settings/return-config/*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.transaction-fees.index') }}">Transaction Fees</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

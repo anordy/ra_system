@@ -188,8 +188,9 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
             Route::get('/create/{id}/{code}', [ReturnController::class, 'create'])->name('create');
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
         });
-
+        
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
+        Route::resource('/transaction-fees', TransactionFeeController::class);
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
