@@ -86,8 +86,6 @@ class LeasePaymentReportTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-
-        // $this->setAdditionalSelects(['lease_payments.name', 'lease_payments.phone', 'is_registered', 'taxpayer_id', 'lease_payments.created_at', 'lease_payments.business_location_id']);
     }
 
     public function columns(): array
