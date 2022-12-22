@@ -16,13 +16,15 @@ class DashboardController extends Controller
             ['status' => $this->doesPenaltyRateExists(), 'description' => 'Current penalty rates has not been configured', 'route' => 'settings.penalty-rates.index'],
         ];
 
-        $issues = [];
+        $temp_issues = [];
 
         foreach ($all_issues as $issue) {
             if ($issue['status'] == false) {
-                $issues[] = $issue;
+                $temp_issues[] = $issue;
             } 
         }
+
+        $issues = array_merge($temp_issues, $this->doesExchangeRateExists());
 
         return view('dashboard', compact('issues'));
     }
