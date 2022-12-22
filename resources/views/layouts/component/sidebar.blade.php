@@ -9,9 +9,9 @@
         </li>
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
             <a href="{{ route('notifications') }}">Notifications
-                @if (App\Models\Notification::whereNull('read_at')->where('notifiable_type',get_class(auth()->user()))->where('notifiable_id',auth()->id())->count() > 0)
+                @if (App\Models\Notification::whereNull('read_at')->where('seen',0)->where('notifiable_type',get_class(auth()->user()))->where('notifiable_id',auth()->id())->count() > 0)
                     <span class="badge badge-light">
-                        <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                        <strong>{{ App\Models\Notification::whereNull('read_at')->where('seen',0)->where('notifiable_type',get_class(auth()->user()))->where('notifiable_id',auth()->id())->count() }}</strong></span>
                 @endif
             </a>
         </li>
