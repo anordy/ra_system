@@ -213,6 +213,9 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         if (!Gate::allows('debt-management-debts-waive')) {
             abort(403);
         }
+        $this->validate([
+            'comments' => 'required',
+        ]);
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = WaiverStatus::CORRECTION;
@@ -221,9 +224,6 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('crdm_reject')) {
-                $this->validate([
-                    'comments' => 'required',
-                ]);
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
@@ -237,9 +237,6 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('commisioner_reject')) {
-                $this->validate([
-                    'comments' => 'required',
-                ]);
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
