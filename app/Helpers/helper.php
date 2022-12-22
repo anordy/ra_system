@@ -86,7 +86,6 @@ function isNullOrEmpty($value){
 function approvalLevel($role_id, $level)
 {
     $approval = ApprovalLevel::query()->where('name', $level)->first();
-
     if (!empty($approval)) {
         if (!empty($approval->role_level)) {
             $role_levels = $approval->role_level;
