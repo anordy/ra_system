@@ -9,9 +9,9 @@
         </li>
         <li class="{{ request()->is('notifications*') ? 'active' : '' }}">
             <a href="{{ route('notifications') }}">Notifications
-                @if (App\Models\Notification::whereNull('read_at')->where('notifiable_type',get_class(auth()->user()))->where('notifiable_id',auth()->id())->count() > 0)
+                @if (App\Models\Notification::whereNull('read_at')->where('seen',0)->where('notifiable_type',get_class(auth()->user()))->where('notifiable_id',auth()->id())->count() > 0)
                     <span class="badge badge-light">
-                        <strong>{{ auth()->user()->unreadNotifications->count() }}</strong></span>
+                        <strong>{{ App\Models\Notification::whereNull('read_at')->where('seen',0)->where('notifiable_type',get_class(auth()->user()))->where('notifiable_id',auth()->id())->count() }}</strong></span>
                 @endif
             </a>
         </li>
@@ -624,9 +624,9 @@
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
                     @can('manage-payments-view')
-                        <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
-                            <a href="{{ route('payments.pending') }}">Pending Payments</a>
-                        </li>
+                    <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.pending') }}">Pending Payments</a>
+                    </li>
                     @endcan
                     @can('manage-payments-view')
                         <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
@@ -634,19 +634,19 @@
                         </li>
                     @endcan
                     @can('manage-payments-view')
-                        <li class="{{ request()->is('payments/cancelled*') ? 'active' : '' }}">
-                            <a href="{{ route('payments.cancelled') }}">Cancelled Payments</a>
-                        </li>
+                    <li class="{{ request()->is('payments/cancelled*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.cancelled') }}">Cancelled Payments</a>
+                    </li>
                     @endcan
                     @can('manage-payments-view')
-                        <li class="{{ request()->is('payments/failed*') ? 'active' : '' }}">
-                            <a href="{{ route('payments.failed') }}">Failed Payments</a>
-                        </li>
+                    <li class="{{ request()->is('payments/failed*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.failed') }}">Failed Payments</a>
+                    </li>
                     @endcan
                     @can('manage-payments-view')
-                        <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
-                            <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
-                        </li>
+                    <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
+                        <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
+                    </li>
                     @endcan
                 </ul>
             </li>
@@ -844,7 +844,7 @@
                             Classes</a>
                     </li>
 
-
+                    
                     <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlLicenseDuration') }}">Driver's License
                             Duration</a>
@@ -883,6 +883,12 @@
                     @can('setting-return-configuration-view')
                         <li class="{{ request()->is('settings/return-config/*') ? 'active' : '' }}">
                             <a href="{{ route('settings.return-config.index') }}">Return Configurations</a>
+                        </li>
+                    @endcan
+
+                    @can('setting-transaction-fees-view')
+                        <li class="{{ request()->is('settings/return-config/*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.transaction-fees.index') }}">Transaction Fees</a>
                         </li>
                     @endcan
 

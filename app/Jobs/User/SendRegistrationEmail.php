@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\Admin;
+namespace App\Jobs\User;
 
-use App\Mail\Admin\AdminRegistrationMail;
+use App\Mail\User\UserRegistration;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,10 +12,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class SendAdminRegistrationEmail implements ShouldQueue {
+class SendRegistrationEmail implements ShouldQueue {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $payload;
     public $password;
     public $full_name;
     public $email;
@@ -24,17 +23,16 @@ class SendAdminRegistrationEmail implements ShouldQueue {
      * Create a new job instance.
      *
      * @param $_full_name
-     * @param $_username
      * @param $_email
      * @param $_password
      *
      * @return void
      */
-    public function __construct($payload)
+    public function __construct($_full_name,$_email, $_password)
     {
-        $this->full_name = $payload['full_name'];
-        $this->password = $payload['password'];
-        $this->email = $payload['email'];
+        $this->full_name = $_full_name;
+        $this->password = $_password;
+        $this->email = $_email;
     }
 
     /**
@@ -44,8 +42,6 @@ class SendAdminRegistrationEmail implements ShouldQueue {
      */
     public function handle()
     {
-        if ($this->email) {
-            Mail::to($this->email)->send(new AdminRegistrationMail($this->full_name, $this->email, $this->password));
-        }
+        Mail::to($this->email)->send(new UserRegistration($this->full_name,$this->email,$this->password));
     }
 }

@@ -191,6 +191,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         });
 
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
+        Route::resource('/transaction-fees', TransactionFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
     });

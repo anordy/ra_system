@@ -1,11 +1,11 @@
 <div>
     <div>
-        <div class="text-left"><button class="btn btn-sm btn-outline-danger mb-2" wire:click="deleteSelected">Delete
+        <div class="text-left"><button class="btn btn-sm btn-outline-danger mb-2" @if($notifications->isEmpty()) disabled @endif wire:click="deleteSelected">Delete
                 Selected</button></div>
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th><input type="checkbox"></th>
+                    <th><input type="checkbox" @if($notifications->isEmpty()) disabled @endif></th>
                     <th>Time</th>
                     <th>Subject</th>
                     <th>Message</th>
@@ -13,15 +13,20 @@
                 </tr>
             </thead>
             <tbody>
-                @if(count($notifications) > 0)
+                @if($notifications->isNotEmpty())
                 @foreach ($notifications as $row)
                 <tr>
-                    <th><input type="checkbox" wire:model="selectedItems.{{ $row->id }}"></th>
-                    <td> @if($row->read_at)<strong>{{ $row->created_at->diffForHumans() ?? '' }}</strong>@else {{ $row->created_at->diffForHumans() ?? '' }} @endif </td>
-                    <td> @if($row->read_at)<strong>{{ $row->data->subject ?? '' }}</strong>@else {{ $row->data->subject ?? '' }} @endif </td>
-                    <td> @if($row->read_at)<strong>{{ $row->data->message ?? '' }}</strong>@else {{ $row->data->message ?? '' }} @endif </td>
+                    <td><input type="checkbox" wire:model="selectedItems.{{ $row->id }}"></td>
+                    <td>{!! $row->seen <= 1 ? '<strong>' : '' !!}{{ $row->created_at->diffForHumans() ?? '' }}{!!
+                            $row->seen <= 1 ? '</strong>' : '' !!}</td>
+                    <td>{!! $row->seen <= 1 ? '<strong>' : '' !!}{{ $row->data->subject ?? '' }}{!! $row->seen <= 1 ?
+                            '</strong>' : '' !!}</td>
+                    <td>{!! $row->seen <= 1 ? '<strong>' : '' !!}{{ $row->data->message ?? '' }}{!! $row->seen <= 1 ?
+                            '</strong>' : '' !!}</td>
                     <td>
-                        <button class="btn btn-sm btn-outline-success" wire:click="read({{$row}})">@if($row->read_at)<strong>view</strong> @else view @endif</button>
+                        <button class="btn btn-sm btn-outline-success" wire:click="read({{$row}})">
+                            {!! $row->seen <= 1 ? '<strong>view</strong>' : 'view' !!}
+                        </button>
                     </td>
                 </tr>
                 @endforeach
