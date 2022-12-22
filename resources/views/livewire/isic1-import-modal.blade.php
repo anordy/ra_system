@@ -10,7 +10,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Upload Excel File</label>
-                        <input type="file" class="form-control" wire:model.lazy="file" id="file">
+                        <input type="file" class="form-control" wire:model.defer="file" id="file">
                         @error('file')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

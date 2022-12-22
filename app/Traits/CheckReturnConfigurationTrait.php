@@ -2,14 +2,25 @@
 
 namespace App\Traits;
 
+use Carbon\Carbon;
 use App\Events\SendSms;
 use App\Events\SendMail;
+use App\Models\Currency;
 use App\Models\PenaltyRate;
+use App\Models\ExchangeRate;
 use App\Models\InterestRate;
 use App\Models\FinancialYear;
 use App\Models\FinancialMonth;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Check main return configurations availability
+ * 1. Financial Year
+ * 2. Financial Months
+ * 3. Interest Rate
+ * 4. Penalty Rates
+ * 5. Exchange Rate
+ */
 trait CheckReturnConfigurationTrait
 {
 
@@ -80,24 +91,19 @@ trait CheckReturnConfigurationTrait
      */
     public function doesPenaltyRateExists()
     {
-        // Check if current financial month exists first
-        if ($this->doesCurrentFinancialMonthExists()) {
-            $currentYear = date('Y');
-            $financialYear = FinancialYear::where('code', $currentYear)->first();
+        $currentYear = date('Y');
+        $financialYear = FinancialYear::where('code', $currentYear)->first();
 
-            $penaltyRates = PenaltyRate::where('financial_year_id', $financialYear->id)->get();
+        $penaltyRates = PenaltyRate::where('financial_year_id', $financialYear->id)->get();
 
-            // If penalty rates exists return true, otherwise false (We check if LF, LPB, LPA, WEG, MNO/BFO exists)
-            if (count($penaltyRates) >= 5) {
-                return true;
-            } else {
-                Log::error("{$currentYear} PENALTY RATES DOES NOT EXIST");
-                $payload = ['currentYear' => $currentYear];
-                event(new SendMail('penalty-rate', $payload));
-                event(new SendSms('penalty-rate', $payload));
-                return false;
-            }
+        // If penalty rates exists return true, otherwise false (We check if LF, LPB, LPA, WEG, MNO/BFO exists)
+        if (count($penaltyRates) >= 5) {
+            return true;
         } else {
+            Log::error("{$currentYear} PENALTY RATES DOES NOT EXIST");
+            $payload = ['currentYear' => $currentYear];
+            event(new SendMail('penalty-rate', $payload));
+            event(new SendSms('penalty-rate', $payload));
             return false;
         }
     }
@@ -124,7 +130,39 @@ trait CheckReturnConfigurationTrait
                 return false;
             }
         } else {
-                return false;
+            return false;
         }
+    }
+
+    /**
+     * Check if exchange rate exists
+     */
+    public function doesExchangeRateExists()
+    {
+        $currencies = Currency::all();
+        $currencies_statuses = [];
+
+        foreach ($currencies as $currency) {
+            // Ignore TZS currency as rate will be always 1
+            if ($currency->iso != 'TZS') {
+
+                $currencyRate = ExchangeRate::query()
+                    ->where('exchange_date', '<=', Carbon::now()->toDateTimeString())
+                    ->where('currency', $currency->iso)->first();
+
+                // If no exchange rate add to currencies_statuses
+                if (!$currencyRate) {
+                    $payload = ['currency' => $currency->iso, 'date' => Carbon::now()->toDateString()];
+                    event(new SendMail('exchange-rate', $payload));
+                    event(new SendSms('exchange-rate', $payload));
+                    $currencies_statuses[] = [
+                        'status' => false,
+                        'description' => "Todays {$currency->iso} exchange rate has not been configured",
+                        'route' => 'settings.exchange-rate.index'
+                    ];
+                }
+            }
+        }
+        return $currencies_statuses;
     }
 }

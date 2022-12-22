@@ -46,8 +46,8 @@ class PendingTable extends DataTableComponent
     public function builder(): Builder
     {
         return RenewTaxAgentRequest::query()
-            ->where('renew_tax_agent_requests.status', TaxAgentStatus::PENDING)
-            ->with('tax_agent');
+            ->whereIn('renew_tax_agent_requests.status', [TaxAgentStatus::PENDING, TaxAgentStatus::VERIFIED])
+            ->with('tax_agent')->orderByDesc('id');
     }
 
     public function columns(): array

@@ -14,35 +14,39 @@
             </div>
         </div>
         <div class="card-body">
-            @if(empty($fee))
-                <div class=" alert alert-danger d-flex justify-content-between" >
-                    <div class="d-flex justify-content-start  align-items-center">
-                        <div>
-                            <i style="font-size: 30px;" class="bi bi-x-circle mr-1"></i>
+            <div class="card p-0 m-0">
+                <div class="card-body mt-0 p-2">
+                    <nav class="nav nav-tabs mt-0 border-top-0">
+                        <a href="#tab1" class="nav-item nav-link font-weight-bold active">Tax Consultant Information</a>
+                        <a href="#tab2" class="nav-item nav-link font-weight-bold">Approval History</a>
+                    </nav>
+                    <div class="tab-content px-2 border border-top-0 pt-3 pb-2">
+                        <div id="tab1" class="tab-pane fade active show">
+                            @include('taxagents.includes.show')
+                            <livewire:tax-agent.approval.registration.approval-processing
+                                    modelName='App\Models\TaxAgent' modelId="{{ encrypt($agent->id) }}"/>
                         </div>
-                        <div>
-                            Please kindly add registration fee before approving any request
+                        <div id="tab2" class="tab-pane fade">
+                            <livewire:tax-agent.approval.registration.approval-history-table
+                                    modelName='App\Models\TaxAgent' modelId="{{ encrypt($agent->id) }}"/>
                         </div>
-                    </div>
 
-                    <div >
-                        <a class="btn btn-primary" href="{{ route('taxagents.fee') }}">
-                            <i class="bi bi-plus-square-fill mr-2"></i>
-                            Add Fee
-                        </a>
                     </div>
                 </div>
-            @else
-                @if($agent->status == \App\Models\TaxAgentStatus::PENDING or $agent->status == \App\Models\TaxAgentStatus::CORRECTION)
-                <div class="d-flex justify-content-end p-2">
-                    <livewire:tax-agent.verify-action :taxagent=$agent></livewire:tax-agent.verify-action>
-                </div>
-                @endif
-            @endif
-                @include('taxagents.includes.show')
+            </div>
 
         </div>
 
     </div>
 
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $(".nav-tabs a").click(function () {
+                $(this).tab('show');
+            });
+        });
+    </script>
 @endsection

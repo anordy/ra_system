@@ -25,6 +25,7 @@ class CreateRenewTaxAgentRequestsTable extends Migration
             $table->string('app_reject_comment')->nullable();
             $table->unsignedBigInteger('approved_by_id')->nullable();
             $table->unsignedBigInteger('rejected_by_id')->nullable();
+            $table->string('marking')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->dateTime('rejected_at')->nullable();
             $table->timestamps();

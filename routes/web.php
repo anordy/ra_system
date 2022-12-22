@@ -190,8 +190,9 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
             Route::get('/create/{id}/{code}', [ReturnController::class, 'create'])->name('create');
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
         });
-
+        
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
+        Route::resource('/transaction-fees', TransactionFeeController::class);
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -297,6 +298,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
         Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
         Route::get('/renew/show/{id}', [TaxAgentController::class, 'renewalShow'])->name('renew-show');
+        Route::get('/consultant-renew-requests/{id}', [TaxAgentController::class, 'viewConsultantRenewRequests'])->name('consultant-renew-requests');
         Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
         Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
@@ -470,7 +472,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/returns/recovery-measure/{debtId}', [ReturnDebtController::class, 'recovery'])->name('debt.recovery');
         Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('return.show');
         Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('return.showOverdue');
-        Route::get('/demand-notice/send/{debtId}', [ReturnDebtController::class, 'sendDemandNotice'])->name('return.sendDemandNotice');
+        Route::get('/demand-notice/view/{demandNoticeId}', [ReturnDebtController::class, 'showReturnDemandNotice'])->name('demandNotice');
 
         Route::get('/waivers', [ReturnDebtController::class, 'waivers'])->name('waivers.index');
         Route::get('/returns/waiver/show/{waiverId}', [ReturnDebtController::class, 'approval'])->name('returns.waivers.approval');

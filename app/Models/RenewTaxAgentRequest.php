@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class RenewTaxAgentRequest extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+class RenewTaxAgentRequest extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, WorkflowTrait , \OwenIt\Auditing\Auditable;
 	protected $table = 'renew_tax_agent_requests';
 	protected $guarded  = [];
 

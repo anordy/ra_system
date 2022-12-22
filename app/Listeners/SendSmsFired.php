@@ -37,6 +37,8 @@ use App\Jobs\Business\Updates\SendBusinessUpdateRejectedSMS;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
+use App\Jobs\Configuration\SendExchangeRateSMS;
+use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackSMS;
 
 class SendSmsFired
 {
@@ -151,6 +153,10 @@ class SendSmsFired
             SendInterestRateSMS::dispatch($event->tokenId);
         } else if ($event->service === 'penalty-rate'){
             SendPenaltyRateSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'exchange-rate'){
+            SendExchangeRateSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'tax-claim-feedback'){
+            SendTaxClaimRequestFeedbackSMS::dispatch($event->tokenId);
         }
     }
 }

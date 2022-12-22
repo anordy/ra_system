@@ -119,7 +119,7 @@
 
             </div>
             <div id="tab2" class="tab-pane fade m-4">
-                <livewire:debt.demand-notice.demand-notice-table debtId="{{ $debt->id }}" />
+                <livewire:debt.demand-notice.demand-notice-table debtId="{{ encrypt($debt->id) }}" />
             </div>
             <div id="tab3" class="tab-pane fade m-4">
                 <livewire:approval.approval-history-table modelName='App\Models\Debts\Debt'

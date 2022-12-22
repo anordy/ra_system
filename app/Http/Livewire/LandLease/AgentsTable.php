@@ -15,7 +15,7 @@ class AgentsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return LandLeaseAgent::query();
+        return LandLeaseAgent::query()->with('taxpayer');
     }
 
     public function configure(): void
@@ -34,18 +34,16 @@ class AgentsTable extends DataTableComponent
             Column::make("Agent Number", "agent_number")
                 ->sortable(),
             Column::make("Name", "taxpayer_id")
-                ->format(fn($taxpayer_id) => Taxpayer::query()->find($taxpayer_id)->fullname())
+                ->format(fn($value, $row) => $row->taxpayer->fullname())
                 ->sortable(),
-            Column::make("ZRB Ref No.", "taxpayer_id")
-                ->format(function ($value) {
-                    $taxpayer = Taxpayer::find($value);
-                    return $taxpayer->reference_no;
+            Column::make("ZRB Ref No.", "taxpayer.reference_no")
+                ->format(function ($value, $row) {
+                    return $row->taxpayer->reference_no;
                 })
                 ->sortable(),
-            Column::make("Phone Numbers", "taxpayer_id")
-                ->format(function ($taxpayer_id) {
-                    $taxpayer = Taxpayer::query()->find($taxpayer_id);
-                    return $taxpayer->mobile . ' / ' . $taxpayer->alt_mobile;
+            Column::make("Phone Numbers", "taxpayer.mobile")
+                ->format(function ($value, $row) {
+                    return $row->taxpayer->mobile ?? 'N/A' . ' / ' . $row->taxpayer->alt_mobile ?? 'N/A';
                 })
                 ->sortable(),
             Column::make("email", "taxpayer.email")
