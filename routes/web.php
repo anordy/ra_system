@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\Setting\ApprovalLevelController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -190,6 +191,8 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         });
 
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
+
+        Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');

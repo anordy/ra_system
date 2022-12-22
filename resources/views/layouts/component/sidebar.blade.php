@@ -624,9 +624,9 @@
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
                     @can('manage-payments-view')
-                    <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.pending') }}">Pending Payments</a>
-                    </li>
+                        <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.pending') }}">Pending Payments</a>
+                        </li>
                     @endcan
                     @can('manage-payments-view')
                         <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
@@ -634,19 +634,19 @@
                         </li>
                     @endcan
                     @can('manage-payments-view')
-                    <li class="{{ request()->is('payments/cancelled*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.cancelled') }}">Cancelled Payments</a>
-                    </li>
+                        <li class="{{ request()->is('payments/cancelled*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.cancelled') }}">Cancelled Payments</a>
+                        </li>
                     @endcan
                     @can('manage-payments-view')
-                    <li class="{{ request()->is('payments/failed*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.failed') }}">Failed Payments</a>
-                    </li>
+                        <li class="{{ request()->is('payments/failed*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.failed') }}">Failed Payments</a>
+                        </li>
                     @endcan
                     @can('manage-payments-view')
-                    <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
-                    </li>
+                        <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
+                        </li>
                     @endcan
                 </ul>
             </li>
@@ -844,7 +844,7 @@
                             Classes</a>
                     </li>
 
-                    
+
                     <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlLicenseDuration') }}">Driver's License
                             Duration</a>
@@ -885,6 +885,13 @@
                             <a href="{{ route('settings.return-config.index') }}">Return Configurations</a>
                         </li>
                     @endcan
+
+                    {{--                    @can()--}}
+                    <li class="{{ request()->is('settings/approval-levels/*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.approval-levels.index') }}">Approval Levels</a>
+                    </li>
+
+                    {{--                        @endcan--}}
                 </ul>
             </li>
         @endcan
