@@ -73,7 +73,7 @@
                                     @foreach ($return->items as $item)
                                     <tr class="{{ $item->config->col_type == 'total' ? 'table-active font-weight-bolder' : ''}}">
                                         <td>{{ $item->config->name ?? 'name' }}</td>
-                                        <td>{{ $item->config->col_type =='total' ? '' : number_format($item->input_value) }}</td>
+                                        <td>{{ $item->config->col_type =='total' ? '' : number_format($item->value) }}</td>
                                         <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' :
                                             $item->config->rate_usd ?? '' }}</td>
                                         <td>{{ number_format($item->vat) }}</td>

@@ -10,6 +10,7 @@ use App\Models\Installment\InstallmentRequest;
 use App\Models\TaxType;
 use App\Models\ZmBill;
 use App\Services\ZanMalipo\ZmCore;
+use App\Traits\ExchangeRateTrait;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
@@ -22,7 +23,7 @@ use Livewire\WithFileUploads;
 
 class InstallmentPayment extends Component
 {
-    use LivewireAlert, PaymentsTrait;
+    use LivewireAlert, PaymentsTrait, ExchangeRateTrait;
 
     public $installment;
     public $bill;
@@ -91,10 +92,7 @@ class InstallmentPayment extends Component
                 'tax_type_id' => $taxType->id
             ];
 
-            $exchange_rate = 1;
-            if ($currency != 'TZS'){
-                $exchange_rate = ExchangeRate::where('currency', $item->currency)->firstOrFail()->mean;
-            }
+            $exchange_rate = $this->getExchangeRate($item->currency);
 
             $bill = ZmCore::createBill(
                 $billableId,
@@ -122,7 +120,7 @@ class InstallmentPayment extends Component
         } catch (\Exception $e){
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please try again later.');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
             throw $e;
         }
     }

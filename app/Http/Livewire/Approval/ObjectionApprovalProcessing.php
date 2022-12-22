@@ -135,7 +135,7 @@ class ObjectionApprovalProcessing extends Component
             } catch (\Exception $e) {
                 Log::error($e);
                 DB::rollBack();// todo: prefer to put rollback statement at the top of the catch block
-                $this->alert('error', 'Something went wrong.');
+                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
             }
 
         }
@@ -239,7 +239,7 @@ class ObjectionApprovalProcessing extends Component
                 DB::commit();
             } catch (Exception $e) {
                 Log::error($e);
-                $this->alert('error', 'Something went wrong');
+                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
             }
 
         }
@@ -250,7 +250,7 @@ class ObjectionApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong.');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
             return;
         }
     }
@@ -362,7 +362,7 @@ class ObjectionApprovalProcessing extends Component
                 } catch (Exception $e) {
 //                    todo: rollback statement
                     Log::error($e);
-                    $this->alert('error', 'Something went wrong');
+                    $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
                 }
 
             }

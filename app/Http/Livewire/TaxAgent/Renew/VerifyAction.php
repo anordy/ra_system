@@ -9,6 +9,7 @@ use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use App\Notifications\DatabaseNotification;
+use App\Traits\ExchangeRateTrait;
 use App\Traits\PaymentsTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ use Livewire\Component;
 
 class VerifyAction extends Component
 {
-    use LivewireAlert, PaymentsTrait;
+    use LivewireAlert, PaymentsTrait, ExchangeRateTrait;
 
     public $renew;
 
@@ -83,13 +84,6 @@ class VerifyAction extends Component
                 ->first();
             $amount = $fee->amount;
             $used_currency = $fee->currency;
-            if ($used_currency != 'TZS') {
-                $rate = ExchangeRate::query()->where('currency', $used_currency)
-                    ->first();
-                $rate = $rate->mean;
-            } else {
-                $rate = 1;
-            }
 
             $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
             $billitems = [
@@ -118,7 +112,7 @@ class VerifyAction extends Component
         } catch (Exception $e) {
             Log::error($e);
             report($e);
-            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('warning', 'Something went wrong, Could you please contact our administrator for assistance?!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
@@ -154,7 +148,7 @@ class VerifyAction extends Component
             DB::rollBack();
             Log::error($e);
             report($e);
-            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('warning', 'Something went wrong, Could you please contact our administrator for assistance?!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div class="form-group col-lg-12">
                     <label class="">ISIC Level 3 </label>
-                    <select class="form-control" wire:model.lazy="isic3_id">
+                    <select class="form-control" wire:model.defer="isic3_id">
                         <option value="" disabled selected>Choose option</option>
                         @foreach ($isic3s as $row)
                             <option value="{{ $row->id }}">{{ $row->description }}</option>
@@ -22,7 +22,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Code</label>
-                        <input type="text" class="form-control" wire:model.lazy="code" id="code">
+                        <input type="text" class="form-control" wire:model.defer="code" id="code">
                         @error('code')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -30,7 +30,7 @@
 
                     <div class="form-group col-lg-12">
                         <label class="control-label">Description</label>
-                        <input type="text" class="form-control" wire:model.lazy="description" id="description">
+                        <input type="text" class="form-control" wire:model.defer="description" id="description">
                         @error('description')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

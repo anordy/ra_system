@@ -12,6 +12,8 @@ class Notification extends Model
 
     public $timestamps = true;
 
+    protected $guarded =['id'];
+
     protected $primaryKey = 'id';
 
     public $incrementing = false;

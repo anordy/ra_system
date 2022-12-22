@@ -40,6 +40,8 @@ class SendTaxClearanceApprovedEmail implements ShouldQueue {
         $taxpayer = $this->payload[1]->business->taxpayer;
         if ($taxpayer->email) {
             Mail::to($taxpayer->email)->send(new TaxClearanceApproved($this->payload));
+        } else {
+            Log::error("Tax Clearance Approval Feedback: { $taxpayer->email } Invalid Email!");
         }
     }
 }

@@ -46,7 +46,7 @@ class BpraInternalService
             if ($statusCode != 200) {
                 curl_close($curl);
                 throw new \Exception($response);
-                return $this->alert('error', 'Something went wrong');
+                return $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
             }
             
             curl_close($curl);

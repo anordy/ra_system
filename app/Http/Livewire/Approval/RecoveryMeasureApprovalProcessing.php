@@ -129,7 +129,7 @@ class RecoveryMeasureApprovalProcessing extends Component
         } catch (Exception $e) {
             Log::error($e);
             DB::rollback();
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 
@@ -150,7 +150,7 @@ class RecoveryMeasureApprovalProcessing extends Component
         } catch (Exception $e) {
             Log::error($e);
             DB::rollback();
-            $this->alert('error', 'Something went wrong');
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
 

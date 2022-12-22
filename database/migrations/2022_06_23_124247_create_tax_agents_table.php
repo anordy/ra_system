@@ -41,6 +41,7 @@ class CreateTaxAgentsTable extends Migration
             $table->string('app_true_comment')->nullable();
             $table->string('verifier_reject_comment')->nullable();
             $table->string('app_reject_comment')->nullable();
+            $table->string('marking')->nullable();
             $table->dateTime('verified_at')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->dateTime('first_rejected_at')->nullable();
