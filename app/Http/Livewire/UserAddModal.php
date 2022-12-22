@@ -95,7 +95,8 @@ class UserAddModal extends Component
             
             DB::commit();
 
-            //send SMS of credentials to the added user 
+            if (config('app.env') != 'local') {
+                //send SMS of credentials to the added user 
             if ($user->phone) {
                 dispatch(new SendRegistrationSMS($this->email, $this->password, $this->fname, $this->phone));
             }
@@ -103,6 +104,7 @@ class UserAddModal extends Component
             //send Email of credentials to the added user 
             if ($user->email) {
                 dispatch(new SendRegistrationEmail($this->fname, $this->email, $this->password));
+            }
             }
             
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
