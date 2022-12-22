@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Log;
 
 trait PaymentsTrait
 {
+    use ExchangeRateTrait;
 
     /**
      * @param ZmBill $bill
@@ -70,12 +71,7 @@ trait PaymentsTrait
     {
         $taxpayer = $return->taxpayer;
         $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->first();
-        $exchange_rate = 1;
-
-        if ($tax_type->currency != 'TZS') {
-            $bot_rate = ExchangeRate::where('currency', $tax_type->currency)->where('business_id', $return->business_id)->first();
-            $exchange_rate = $bot_rate->mean;
-        }
+        $exchange_rate = $this->getExchangeRate($tax_type->currency);
 
         $payer_type = get_class($taxpayer);
         $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
@@ -167,7 +163,7 @@ trait PaymentsTrait
     {
         $taxpayer      = $leasePayment->taxpayer;
         $tax_type      = TaxType::where('code', 'land-lease')->first();
-        $exchange_rate  = ExchangeRate::where('currency', 'USD')->first()->mean;
+        $exchange_rate  = $this->getExchangeRate('USD');
 
         $payer_type     = get_class($taxpayer);
         $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
@@ -357,7 +353,7 @@ trait PaymentsTrait
         $currency = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
-        $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
+        $exchange_rate = $this->getExchangeRate($debt->currency);
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
         $billableId = $debt->id;
@@ -454,7 +450,7 @@ trait PaymentsTrait
         $currency = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
-        $exchange_rate = $debt->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $debt->currency)->first()->mean;
+        $exchange_rate = $this->getExchangeRate($debt->currency);
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
         $billableId = $debt->id;
@@ -560,7 +556,7 @@ trait PaymentsTrait
         $currency = $assessment->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
-        $exchange_rate = $assessment->currency == 'TZS' ? 1 : ExchangeRate::where('currency', $assessment->currency)->first()->mean;
+        $exchange_rate = $this->getExchangeRate($assessment->currency);
         $payer_id = $taxpayer->id;
         $expire_date = Carbon::now()->addMonth()->toDateTimeString();
         $billableId = $assessment->id;
@@ -604,11 +600,8 @@ trait PaymentsTrait
 
     public function generateTaxAgentRegControlNo($agent, $billitems, $used_currency)
     {
-        $rate = 1;
+        $rate = $this->getExchangeRate($used_currency);
         $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
-        if ($tax_type->currency != 'TZS') {
-            $rate = ExchangeRate::query()->where('currency', $used_currency)->latest()->first()->mean;
-        }
 
         $taxpayer = $agent->taxpayer;
         $payer_type = get_class($taxpayer);
@@ -661,12 +654,8 @@ trait PaymentsTrait
 
     public function generateTaxAgentRenewControlNo($req, $billitems, $used_currency)
     {
-        $rate = 1;
+        $rate = $this->getExchangeRate($used_currency);
         $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
-
-        if ($tax_type->currency != 'TZS') {
-            $rate = ExchangeRate::query()->where('currency', $used_currency)->latest()->first()->mean;
-        }
 
         $taxpayer = $req->tax_agent->taxpayer;
         $payer_type = get_class($taxpayer);
