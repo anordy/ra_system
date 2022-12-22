@@ -15,7 +15,6 @@ use Livewire\WithFileUploads;
 use App\Models\Debts\DebtWaiver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Jobs\Debt\GenerateControlNo;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -111,27 +110,32 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
 
                     $this->subject->status = WaiverStatus::APPROVED;
                     $this->subject->save();
-    
-                    $now = Carbon::now();
-                    if ($this->debt->bill) {
-                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
-                        GenerateAssessmentDebtControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
-                    } else {
-                        GenerateAssessmentDebtControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
-                    }
 
                     $notification_payload = [
                         'debt' => $this->debt,
                     ];
+
+                    DB::commit();
     
                     event(new SendSms('debt-waiver-approval', $notification_payload));
                     event(new SendMail('debt-waiver-approval', $notification_payload));
     
-                    DB::commit();
                 } catch (Exception $e) {
                     Log::error($e);
                     DB::rollBack();
                     $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                    return;
+                }
+
+                try {
+                    if ($this->debt->bill) {
+                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
+                        GenerateAssessmentDebtControlNo::dispatch($this->debt);
+                    } else {
+                        GenerateAssessmentDebtControlNo::dispatch($this->debt);
+                    }
+                } catch (Exception $e) {
+                    Log::error($e);
                 }
     
             }
@@ -160,16 +164,10 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                     'application_status' => 'waiver',
                 ]);
 
-                $now = Carbon::now();
                 $this->subject->status = WaiverStatus::APPROVED;
                 $this->subject->save();
 
-                if ($this->debt->bill) {
-                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->delay($now->addSeconds(10));
-                    GenerateAssessmentDebtControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
-                } else {
-                    GenerateAssessmentDebtControlNo::dispatch($this->debt)->delay($now->addSeconds(10));
-                }
+                DB::commit();
 
                 $notification_payload = [
                     'debt' => $this->debt,
@@ -178,11 +176,23 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 event(new SendSms('debt-waiver-approval', $notification_payload));
                 event(new SendMail('debt-waiver-approval', $notification_payload));
 
-                DB::commit();
             } catch (Exception $e) {
                 Log::error($e);
                 DB::rollBack();
                 $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                return;
+            }
+
+            try {
+                if ($this->debt->bill) {
+                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
+                    GenerateAssessmentDebtControlNo::dispatch($this->debt);
+                } else {
+                    GenerateAssessmentDebtControlNo::dispatch($this->debt);
+                }
+
+            } catch (Exception $e) {
+                Log::error($e);
             }
 
         }
