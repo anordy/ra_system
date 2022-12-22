@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Enum\PaymentStatus;
+use App\Models\TaxType;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -13,9 +14,29 @@ class PendingPaymentsTable extends DataTableComponent
 {
     use LivewireAlert;
 
+    protected $listeners = ['filterData' => 'filterData', '$refresh'];
+
+    public $data = [];
+
+    public function filterData($data)
+    {
+        $this->data = $data;
+        $this->emit('$refresh');
+    }
+
     public function builder(): Builder
     {
-        return ZmBill::whereIn('status', [PaymentStatus::PENDING])->orderBy('created_at', 'DESC');
+        $data   = $this->data;
+        $filter = (new ZmBill())->newQuery();
+
+        if (isset($data['tax_type_id']) && $data['tax_type_id'] != 'All') {
+            $filter->Where('tax_type_id', $data['tax_type_id']);
+        }
+        if (isset($data['currency']) && $data['currency'] != 'All') {
+            $filter->Where('currency', $data['currency']);
+        }
+
+        return $filter->whereIn('status', [PaymentStatus::PENDING])->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
@@ -24,7 +45,7 @@ class PendingPaymentsTable extends DataTableComponent
         $this->setAdditionalSelects('tax_type_id');
         $this->setTableWrapperAttributes([
             'default' => true,
-            'class' => 'table-bordered table-sm',
+            'class'   => 'table-bordered table-sm',
         ]);
 
         $this->setPerPageAccepted([15, 25, 50, 100]);
@@ -52,12 +73,18 @@ class PendingPaymentsTable extends DataTableComponent
                 ->label(fn ($row) => $row->taxType->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
-            Column::make('Payer Name', 'payer_name'),
-            Column::make('Payer Email', 'payer_email'),
-            Column::make('Description', 'description'),
+            Column::make('Payer Name', 'payer_name')
+            ->sortable()
+            ->searchable(),
+            Column::make('Payer Email', 'payer_email')
+            ->sortable()
+            ->searchable(),
+            Column::make('Description', 'description')
+            ->sortable()
+            ->searchable(),
             Column::make('Status', 'status'),
             Column::make('Actions', 'id')
-                ->view('payments.includes.actions')
+                ->view('payments.includes.actions'),
         ];
     }
 }
