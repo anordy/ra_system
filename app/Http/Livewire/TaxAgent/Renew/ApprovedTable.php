@@ -47,7 +47,7 @@ class ApprovedTable extends DataTableComponent
     {
         return RenewTaxAgentRequest::query()
             ->where('renew_tax_agent_requests.status', TaxAgentStatus::APPROVED)
-            ->with('tax_agent');
+            ->with('tax_agent')->orderByDesc('id');
     }
 
     public function columns(): array

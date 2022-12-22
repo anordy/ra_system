@@ -295,6 +295,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/show/{id}', [TaxAgentController::class, 'showActiveAgent'])->name('active-show');
         Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
         Route::get('/renew/show/{id}', [TaxAgentController::class, 'renewalShow'])->name('renew-show');
+        Route::get('/consultant-renew-requests/{id}', [TaxAgentController::class, 'viewConsultantRenewRequests'])->name('consultant-renew-requests');
         Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
         Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');

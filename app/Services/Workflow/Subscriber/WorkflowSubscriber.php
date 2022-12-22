@@ -11,6 +11,7 @@ use App\Enum\TaxVerificationStatus;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Role;
+use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use App\Models\User;
 use App\Models\Workflow;
@@ -218,7 +219,32 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->app_status = DisputeStatus::REJECTED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
-            } elseif ($placeName == 'BUSINESS_REGISTRATION') {
+
+            }
+            elseif ($placeName == 'TAX_CONSULTANT_VERIFICATION') {
+                if (key($places) == 'completed') {
+                    $subject->status = TaxAgentStatus::APPROVED;
+                    $subject->approved_at = Carbon::now()->toDateTimeString();
+                }
+                if (key($places) == 'rejected') {
+                    $subject->status = TaxAgentStatus::REJECTED;
+                    $subject->approved_at = Carbon::now()->toDateTimeString();
+                }
+
+            }
+
+            elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
+                if (key($places) == 'completed') {
+                    $subject->status = TaxAgentStatus::APPROVED;
+                    $subject->approved_at = Carbon::now()->toDateTimeString();
+                }
+                if (key($places) == 'rejected') {
+                    $subject->status = TaxAgentStatus::REJECTED;
+                    $subject->approved_at = Carbon::now()->toDateTimeString();
+                }
+
+            }
+            elseif ($placeName == 'BUSINESS_REGISTRATION') {
                 if (key($places) == 'correct_application') {
                     event(new SendSms('business-registration-correction', $subject->id, ['message' => $context['comment']]));
                     event(new SendMail('business-registration-correction', $subject->id, ['message' => $context['comment']]));
@@ -293,6 +319,8 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'INSTALLMENT_REQUESTS') {
             } elseif ($placeName == 'PAYMENTS_EXTENSION_REQUEST') {
             } elseif ($placeName == 'DEBT_RECOVERY_MEASURE') {
+            } elseif ($placeName == 'TAX_CONSULTANT_VERIFICATION') {
+            } elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
             } else {
                 if (key($placesCurrent) == 'completed') {
                     $event->getSubject()->taxpayer->notify(new DatabaseNotification(

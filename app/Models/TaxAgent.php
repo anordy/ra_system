@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class TaxAgent extends Model implements Auditable
 {
-    use Notifiable, HasFactory, \OwenIt\Auditing\Auditable;
+    use Notifiable, HasFactory, WorkflowTrait , \OwenIt\Auditing\Auditable;
 
 	protected $table = 'tax_agents';
 

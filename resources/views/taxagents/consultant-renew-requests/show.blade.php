@@ -237,6 +237,47 @@
                             </p>
                         </div>
 
+                        @if(!empty($renew->approved_by_id))
+                            <div class="col-md-3 mb-2">
+                                <span class="font-weight-bold text-uppercase">Approved By</span>
+                                <p class="my-1">{{$renew->approved_by->fname}} {{$renew->approved_by->lname}}</p>
+                            </div>
+                        @endif
+
+                        @if(!empty($renew->approved_at))
+                            <div class="col-md-3 mb-2">
+                                <span class="font-weight-bold text-uppercase">Approved At</span>
+                                <p class="my-1">{{$renew->approved_at}} </p>
+                            </div>
+                        @endif
+
+                        @if(!empty($renew->app_true_comment))
+                            <div class="col-md-3 mb-2">
+                                <span class="font-weight-bold text-uppercase">Approval Comment</span>
+                                <p class="my-1">{{$renew->app_true_comment}} </p>
+                            </div>
+                        @endif
+
+                        @if(!empty($renew->rejected_by_id))
+                            <div class="col-md-3 mb-2">
+                                <span class="font-weight-bold text-uppercase">Rejected By</span>
+                                <p class="my-1">{{$renew->rejected_by->fname}} {{$renew->approved_by->lname}}</p>
+                            </div>
+                        @endif
+
+                        @if(!empty($renew->rejected_at))
+                            <div class="col-md-3 mb-2">
+                                <span class="font-weight-bold text-uppercase">Rejected At</span>
+                                <p class="my-1">{{$renew->rejected_at}} </p>
+                            </div>
+                        @endif
+
+                        @if(!empty($renew->app_reject_comment))
+                            <div class="col-md-3 mb-2">
+                                <span class="font-weight-bold text-uppercase">Comment Reject</span>
+                                <p class="my-1">{{ $renew->app_reject_comment }}</p>
+                            </div>
+                        @endif
 
 
                     </div>

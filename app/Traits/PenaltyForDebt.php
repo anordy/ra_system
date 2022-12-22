@@ -13,6 +13,8 @@ use Carbon\Carbon;
 
 class PenaltyForDebt
 {
+    use ExchangeRateTrait;
+
     public static function getTotalPenalties($debtId, $date, $taxAmount, $period)
     {
         $penaltableAmount = 0;
@@ -100,7 +102,7 @@ class PenaltyForDebt
             'start_date' => $start_date,
             'end_date' => $end_date,
             'currency' => $tax_return->currency,
-            'currency_rate_in_tz' => $tax_return->currency == 'TZS' ? 1 : ExchangeRate::query()->where('currency', $tax_return->currency)->firstOrFail()->mean
+            'currency_rate_in_tz' => ExchangeRateTrait::getExchangeRate($tax_return->currency)
         ]);
 
         $tax_return->penalty = $tax_return->penalty + $tax_return->penalties->sum('late_payment');
@@ -152,7 +154,7 @@ class PenaltyForDebt
             'start_date' => $start_date,
             'end_date' => $end_date,
             'currency' => $tax_return->currency,
-            'currency_rate_in_tz' => $tax_return->currency == 'TZS' ? 1 : ExchangeRate::query()->where('currency', $tax_return->currency)->firstOrFail()->mean
+            'currency_rate_in_tz' => ExchangeRateTrait::getExchangeRate($tax_return->currency)
         ]);
 
         $tax_return->penalty_amount = $tax_return->penalty_amount + $tax_return->penalties->sum('late_payment');

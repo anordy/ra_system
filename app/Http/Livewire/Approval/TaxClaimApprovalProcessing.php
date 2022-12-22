@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Approval;
 
 use App\Enum\TaxClaimStatus;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Claims\TaxClaim;
 use App\Models\Claims\TaxClaimAssessment;
 use App\Models\Claims\TaxClaimOfficer;
@@ -181,13 +183,29 @@ class TaxClaimApprovalProcessing extends Component
 
             $claim = TaxClaim::query()->find($this->subject->id);
             $taxpayer = $claim->taxpayer;
+            
             $taxpayer->notify(new DatabaseNotification(
-                $subject = 'TAX ClAIM APPROVAL',
+                $subject = 'TAX CLAIM APPROVAL',
                 $message = 'Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been successfully approved',
                 $href = 'claims.show',
                 $hrefText = 'View',
                 $hrefParameters = $this->subject->id,
             ));
+
+            $emailPayload = [
+                'email' => $taxpayer->email,
+                'taxpayerName' => $taxpayer->first_name,
+                'message' => 'Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been successfully approved'
+            ];
+
+            event(new SendMail('tax-claim-feedback', $emailPayload));
+
+            $smsPayload = [
+                'phone' => $taxpayer->phone,
+                'message' => 'Hello '.$taxpayer->first_name.', Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been successfully approved'
+            ];
+
+            event(new SendSms('tax-claim-feedback', $smsPayload));
         }
 
         try {
@@ -222,6 +240,25 @@ class TaxClaimApprovalProcessing extends Component
             Log::error($e);
             return;
         }
+
+        $claim = TaxClaim::query()->find($this->subject->id);
+        $taxpayer = $claim->taxpayer;
+
+        $emailPayload = [
+            'email' => $taxpayer->email,
+            'taxpayerName' => $taxpayer->first_name,
+            'message' => 'Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been rejected.'
+        ];
+
+        event(new SendMail('tax-claim-feedback', $emailPayload));
+
+        $smsPayload = [
+            'phone' => $taxpayer->phone,
+            'message' => 'Hello '.$taxpayer->first_name.', Your tax claim for the return month of '.$claim->financialMonth->name.' '.$claim->financialMonth->year->code.' has been rejected.'
+        ];
+
+        event(new SendSms('tax-claim-feedback', $smsPayload));
+
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
