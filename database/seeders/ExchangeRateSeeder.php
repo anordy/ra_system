@@ -25,21 +25,12 @@ class ExchangeRateSeeder extends Seeder
                 'exchange_date' => Carbon::now(),
             ],
             [
-                'currency' => 'GBP',
-                'mean' => '2792.9884',
-                'spot_buying' => '2778.632',
-                'spot_selling' => '2807.3448',
-                'exchange_date' => Carbon::now(),
-            ],
-
-            [
                 'currency' => 'TZS',
                 'mean' => '1',
                 'spot_buying' => '0.5',
                 'spot_selling' => '0.5',
                 'exchange_date' => Carbon::now(),
             ],
-
         ];
 
         foreach ($exchange_rates as $exchange_rate) {

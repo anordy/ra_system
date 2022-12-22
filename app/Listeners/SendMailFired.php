@@ -42,6 +42,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
 use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
 use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
+use App\Jobs\Configuration\SendExchangeRateEmail;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackMAIL;
 
 class SendMailFired
@@ -64,9 +65,9 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
-            return true;
-        }
+        // if(config('app.env') == 'local'){
+        //     return true;
+        // }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
@@ -173,6 +174,8 @@ class SendMailFired
             SendInterestRateEmail::dispatch($event->tokenId);
         } else if ($event->service === 'penalty-rate'){
             SendPenaltyRateEmail::dispatch($event->tokenId);
+        } else if ($event->service === 'exchange-rate'){
+            SendExchangeRateEmail::dispatch($event->tokenId);
         } else if ($event->service === 'tax-claim-feedback'){
             SendTaxClaimRequestFeedbackMAIL::dispatch($event->tokenId);
         }
