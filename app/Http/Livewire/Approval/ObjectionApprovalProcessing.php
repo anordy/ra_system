@@ -49,30 +49,36 @@ class ObjectionApprovalProcessing extends Component
         $this->total = ($this->penalty + $this->interest + $this->principal) - ($this->dispute->tax_deposit);
 
         $this->registerWorkflow($modelName, $this->modelId);
-
     }
 
     public function updated($propertyName)
     {
         $this->propertyName = $propertyName;
         if ($propertyName == "penaltyPercent") {
+            if (!is_numeric($this->interestPercent)) {
+                $this->penaltyPercent = null;
+            }
+
             if ($this->penaltyPercent > 100) {
                 $this->penaltyPercent = 100;
-            } elseif ($this->penaltyPercent < 0 || !is_numeric($this->penaltyPercent)) { // todo: logical problem
+            } elseif ($this->penaltyPercent < 0) { // todo: logical problem
                 $this->penaltyPercent = null;
             }
             $this->penaltyAmount = ($this->assessment->penalty_amount * $this->penaltyPercent) / 100; // todo: penaltyPercent can be null - alert
         }
 
         if ($propertyName == "interestPercent") {
+            if (!is_numeric($this->interestPercent)) {
+                $this->interestPercent = null;
+            }
             if ($this->interestPercent > 50) {
                 $this->interestPercent = 50;
-            } elseif ($this->interestPercent < 0 || !is_numeric($this->interestPercent)) { // todo: logical problem
+            } elseif ($this->interestPercent < 0) { // todo: logical problem
                 $this->interestPercent = null;
             }
             $this->interestAmount = ($this->assessment->interest_amount * $this->interestPercent) / 100; // todo: penaltyPercent can be null
         }
-        
+
         if ($propertyName == "interestPercent" || $propertyName == "penaltyPercent") {
             $this->penalty = $this->assessment->penalty_amount - $this->penaltyAmount;
             $this->interest = $this->assessment->interest_amount - $this->interestAmount;
@@ -80,16 +86,13 @@ class ObjectionApprovalProcessing extends Component
         }
 
         if ($propertyName == "penalty" || $propertyName == "interest") {
-            // $this->penaltyAmountDue = $this->penalty;
-            // $this->interestAmountDue = $this->interest;
-            $this->total = ( str_replace(',', '', $this->penalty) + str_replace(',', '', $this->interest) + str_replace(',', '', $this->principal)) - ($this->dispute->tax_deposit);
+            $this->total = (str_replace(',', '', $this->penalty) + str_replace(',', '', $this->interest) + str_replace(',', '', $this->principal)) - ($this->dispute->tax_deposit);
         }
-
     }
 
     public function approve($transition)
     {
-        
+
         $this->penalty = str_replace(',', '', $this->penalty);
         $this->interest = str_replace(',', '', $this->interest);
         $this->principal = str_replace(',', '', $this->principal);
@@ -122,7 +125,7 @@ class ObjectionApprovalProcessing extends Component
             DB::beginTransaction();
             try {
 
-//                todo: do you accept inserting empty?
+                //                todo: do you accept inserting empty?
                 $dispute->update([
                     'dispute_report' => $disputeReport ?? '',
                     'notice_report' => $noticeReport ?? '',
@@ -134,14 +137,12 @@ class ObjectionApprovalProcessing extends Component
                 DB::commit();
             } catch (\Exception $e) {
                 Log::error($e);
-                DB::rollBack();// todo: prefer to put rollback statement at the top of the catch block
+                DB::rollBack(); // todo: prefer to put rollback statement at the top of the catch block
                 $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
             }
-
         }
 
         if ($this->checkTransition('chief_assurance_review')) {
-
         }
 
         if ($this->checkTransition('commisioner_review')) {
@@ -153,7 +154,7 @@ class ObjectionApprovalProcessing extends Component
                     'penaltyPercent' => ['required', 'numeric'],
                 ]);
             }
-            
+
             DB::beginTransaction();
 
             try {
@@ -241,7 +242,6 @@ class ObjectionApprovalProcessing extends Component
                 Log::error($e);
                 $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
             }
-
         }
 
         try {
@@ -262,22 +262,20 @@ class ObjectionApprovalProcessing extends Component
             'comments' => 'required|string',
         ]);
 
-//        todo: double try catch?
+        //        todo: double try catch?
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
-
             }
 
             if ($this->checkTransition('chief_assurance_reject')) {
-
             }
 
             if ($this->checkTransition('commisioner_reject')) {
-                
+
                 DB::beginTransaction();
 
                 try {
-                    
+
                     $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal_amount_due, $this->assessment->penalty_amount, $this->assessment->interest_amount, $this->dispute->tax_deposit);
                     $total_deposit = $this->principal_amount_due + $this->assessment->interest_amount + $this->assessment->penalty_amount;
 
@@ -293,7 +291,7 @@ class ObjectionApprovalProcessing extends Component
                             'tax_type_id' => $this->taxTypes->id,
                         ],
                     ];
-                    
+
                     $taxpayer = $this->subject->business->taxpayer;
 
                     $payer_type = get_class($taxpayer);
@@ -329,7 +327,7 @@ class ObjectionApprovalProcessing extends Component
                         $createdby_type,
                         $billitems
                     );
-                    
+
                     if (config('app.env') != 'local') {
                         $response = ZmCore::sendBill($zmBill->id);
                         if ($response->status === ZmResponse::SUCCESS) {
@@ -360,20 +358,19 @@ class ObjectionApprovalProcessing extends Component
 
                     DB::commit();
                 } catch (Exception $e) {
-//                    todo: rollback statement
+                    //                    todo: rollback statement
                     Log::error($e);
                     $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
                 }
-
             }
 
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-//            todo: no customer/user feedback in cas of error
+            //            todo: no customer/user feedback in cas of error
             return;
         }
-        
+
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
 
@@ -381,5 +378,4 @@ class ObjectionApprovalProcessing extends Component
     {
         return view('livewire.approval.objection-approval-processing');
     }
-
 }

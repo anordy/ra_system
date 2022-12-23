@@ -54,7 +54,7 @@ class BranchesApprovalProgressTable extends DataTableComponent
             Column::make('Current State', 'to_place')
                 ->format(fn ($value) => strtoupper($value))
                 ->sortable()->searchable(),
-
+            Column::make('Action', 'pinstance_id')->view('business.branches.includes.approval_actions'),
         ];
     }
 }

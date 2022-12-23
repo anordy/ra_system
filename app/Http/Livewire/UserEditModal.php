@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +15,7 @@ use Livewire\Component;
 class UserEditModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $roles = [];
     public $fname;
@@ -30,7 +32,7 @@ class UserEditModal extends Component
         return [
             'fname' => 'required|min:2|alpha',
             'lname' => 'required|min:2|alpha',
-            'email' => 'required|unique:users,email,'.$this->user->id.',id',
+            'email' => 'required|unique:users,email,' . $this->user->id . ',id',
             'gender' => 'required|in:M,F',
             // 'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
@@ -49,15 +51,18 @@ class UserEditModal extends Component
         }
 
         $this->validate();
+        $payload = [
+            'fname' => $this->fname,
+            'lname' => $this->lname,
+            'gender' => $this->gender,
+            'email' => $this->email,
+            'phone' => $this->phone,
+        ];
         try {
-            $this->user->update([
-                'fname' => $this->fname,
-                'lname' => $this->lname,
-                // 'role_id' => $this->role,
-                'gender' => $this->gender,
-                'email' => $this->email,
-                'phone' => $this->phone,
-            ]);
+            $this->user->update($payload);
+
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user', json_encode($payload));
+
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);

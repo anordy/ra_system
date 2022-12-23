@@ -69,8 +69,9 @@ class RegistrationsController extends Controller
             return redirect()->back();
         }
 
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
 
             $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
             $kyc->verified_by = Auth::id();

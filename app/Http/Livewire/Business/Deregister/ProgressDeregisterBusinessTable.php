@@ -10,17 +10,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class PendingDeregisterBusinessTable extends DataTableComponent
+class ProgressDeregisterBusinessTable extends DataTableComponent
 {
+
     public function builder(): Builder
     {
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', BusinessDeregistration::class)
             ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function ($query) {
-                $query->where('user_id', auth()->id());
-            });
+            ->where('owner', 'staff');
     }
 
     public function configure(): void
@@ -32,13 +30,13 @@ class PendingDeregisterBusinessTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
     }
-    
+
     public function columns(): array
     {
         return [
             Column::make('Name', 'pinstance.business.ztn_number')
                 ->label(fn ($row) => $row->pinstance->business->ztn_number ?? '')
-                ->sortable(), 
+                ->sortable(),
             Column::make('Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? '')
                 ->sortable(),
@@ -67,8 +65,6 @@ class PendingDeregisterBusinessTable extends DataTableComponent
                 ->sortable()->searchable(),
             Column::make('Action', 'pinstance_id')
                 ->view('business.deregister.approval-action'),
-
         ];
     }
-
 }

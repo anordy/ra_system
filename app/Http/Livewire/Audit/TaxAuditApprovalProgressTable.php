@@ -3,8 +3,6 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Models\TaxAudit\TaxAudit;
-use App\Models\TaxAudit\TaxAuditLocation;
-use App\Models\TaxAudit\TaxAuditTaxType;
 use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +10,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class TaxAuditApprovalTable extends DataTableComponent
+class TaxAuditApprovalProgressTable extends DataTableComponent
 {
     use LivewireAlert;
 
@@ -23,10 +21,7 @@ class TaxAuditApprovalTable extends DataTableComponent
         return WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
             ->where('pinstance_type', TaxAudit::class)
             ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function($query){
-                $query->where('user_id', auth()->id());
-            });
+            ->where('owner', 'staff');
     }
 
     public function configure(): void
@@ -47,6 +42,7 @@ class TaxAuditApprovalTable extends DataTableComponent
                 ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
+
             Column::make('Period From', 'pinstance.period_from')
                 ->label(fn ($row) => $row->pinstance->period_from ?? ''),
             Column::make('Period To', 'pinstance.period_to')
@@ -58,6 +54,12 @@ class TaxAuditApprovalTable extends DataTableComponent
                 }),
             Column::make('Filled On', 'created_at')
                 ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
+            Column::make('From State', 'from_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
             Column::make('Action', 'pinstance_id')
                 ->view('audit.approval.action')
                 ->html(true),

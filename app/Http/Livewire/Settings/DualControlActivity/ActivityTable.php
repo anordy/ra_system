@@ -32,11 +32,8 @@ class ActivityTable extends DataTableComponent
                 ->sortable()->format(function ($value){
                     return $this->getModule($value);
                 }),
-            Column::make("Action Type", "action_type")
+            Column::make("Action Type", "action_detail")
                 ->sortable(),
-//            Column::make("Details/Value", "id")
-//                ->sortable(),
-
             Column::make("Created at", "created_at")
                 ->sortable(),
             Column::make('Status', 'status')
