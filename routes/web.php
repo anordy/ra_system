@@ -534,6 +534,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/recons/transaction/{transactionId}', [PaymentsController::class, 'viewReconTransaction'])->name('recons.transaction');
         Route::get('/recon-enquire', [PaymentsController::class, 'reconEnquire'])->name('recon.enquire');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
+        Route::get('/pending/download/{records}/{data}',[PaymentsController::class,'downloadPendingPaymentsPdf'])->name('pending.download.pdf');
     });
 
     Route::prefix('mvr')->as('mvr.')->group(function () {

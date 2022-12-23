@@ -5,11 +5,13 @@ namespace App\Http\Livewire\Payments;
 use App\Enum\PaymentStatus;
 use App\Models\TaxType;
 use App\Models\ZmBill;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use PDF;
 
 class PaymentFilter extends Component
 {
+    use LivewireAlert;
+
     public $tableName;
     public $data;
     public $currency;
@@ -19,8 +21,6 @@ class PaymentFilter extends Component
     public $range_end;
 
     protected $rules =[
-        'currency' => 'required',
-        'tax_type_id' => 'required',
         'range_start' => 'required',
         'range_end' => 'required'
     ];
@@ -42,8 +42,6 @@ class PaymentFilter extends Component
             'range_start' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
             'range_end'   => date('Y-m-d 23:59:59', strtotime($this->range_end)),
         ];
-
-
         $this->emitTo('App\Http\Livewire\Payments\PendingPaymentsTable', 'filterData', $filters);
         $this->data = $filters;
     }
@@ -65,19 +63,15 @@ class PaymentFilter extends Component
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
         }
 
-        $records  = $filter->whereIn('status', [PaymentStatus::PENDING])->orderBy('created_at', 'DESC')->get();
+        
+        $records  = $filter->where('status',PaymentStatus::PENDING)->orderBy('created_at', 'DESC')->get();
 
-        $fileName = 'pending_payments' . '_' . $data['currency'] . '.pdf';
-        $title = 'pending_payments' . '_' . $data['currency'] . '.pdf';
+        if($records->count() < 1){
+            $this->alert('error','No Data Found for selected options');
+            return;
+        }
 
-        $parameters    = $data;
-
-        // $pdf = PDF::loadView('exports.payments.pdf.try');
-        $pdf = PDF::loadView('exports.payments.pdf.payments', compact('records', 'title', 'parameters'));
-        $pdf->setPaper('a4', 'landscape');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
-        // view('exports.payments.pdf.try');
-        return $pdf->stream($fileName);
+        return redirect()->route('payments.pending.download.pdf',[encrypt($records),encrypt($data)]);
     }
 
     public function excel()

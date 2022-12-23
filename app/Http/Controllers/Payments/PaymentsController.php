@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Payments;
 
+use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\ZmBill;
 use App\Models\ZmPayment;
@@ -9,6 +10,7 @@ use App\Models\ZmRecon;
 use App\Models\ZmReconTran;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
+use PDF;
 
 class PaymentsController extends Controller
 {
@@ -76,5 +78,19 @@ class PaymentsController extends Controller
     public function viewReconTransaction($transactionId) {
         $transaction = ZmReconTran::findOrFail(decrypt($transactionId));
         return view('payments.show-recon-transaction', compact('transaction'));
+    }
+
+    public function downloadPendingPaymentsPdf($records,$data){
+        $records = decrypt($records);
+        $data = decrypt($data);
+
+        $fileName = 'pending_payments' . '_' . $data['currency'] . '.pdf';
+        $title = 'pending_payments' . '_' . $data['currency'] . '.pdf';
+
+        $parameters    = $data;
+        $pdf = PDF::loadView('exports.payments.pdf.payments', compact('records', 'title', 'parameters'));
+        $pdf->setPaper('a4', 'landscape');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        return $pdf->download($fileName);
     }
 }

@@ -238,6 +238,9 @@ trait PaymentsTrait
         }
 
         $TransactionFee = TransactionFee::whereNull('maximum_amount')->select('minimum_amount', 'fee')->first();
+        if($TransactionFee == null){
+            return 0;
+        }
         $minFee = $TransactionFee->minimum_amount;
 
         //if the amount exceed the maximum fee range we take the constant fee
