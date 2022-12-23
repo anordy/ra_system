@@ -40,7 +40,7 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
                 ->label(fn ($row) => $row->pinstance->category->name ?? 'N/A')
                 ->sortable()->searchable(),
             Column::make('Business Type', 'pinstance.business_type')
-                ->label(fn ($row) => $row->pinstance->business_type ?? 'N/A')
+                ->label(fn ($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
                 ->sortable()->searchable(),
             Column::make('Business Name', 'pinstance.name')
                 ->label(fn ($row) => $row->pinstance->name ?? 'N/A')

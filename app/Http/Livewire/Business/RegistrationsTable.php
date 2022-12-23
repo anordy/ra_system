@@ -46,13 +46,12 @@ class RegistrationsTable extends DataTableComponent
 
     public function columns(): array
     {
-        dd($this->builder()->get());
         return [
             Column::make('ZTN', 'ztn_number')
-                ->format(fn ($value) => $value ? $value : 'N/A')
+                ->format(fn ($value) => $value ?? 'N/A')
                 ->sortable()->searchable(),
             Column::make('Business Category', 'category.name')
-                ->format(fn ($row) => $row->category->name ?? 'N/A')
+                ->format(fn ($value) => strtoupper($value ?? 'N/A'))
                 ->sortable()->searchable(),
             Column::make('Business Type', 'business_type')
                 ->format(fn ($value) => strtoupper($value ?? 'N/A'))

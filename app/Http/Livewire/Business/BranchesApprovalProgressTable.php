@@ -2,14 +2,13 @@
 
 namespace App\Http\Livewire\Business;
 
-use App\Models\BranchStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\BusinessLocation;
 use App\Models\WorkflowTask;
 
-class BranchesApprovalTable extends DataTableComponent
+class BranchesApprovalProgressTable extends DataTableComponent
 {
 
     public function builder(): Builder
@@ -17,10 +16,7 @@ class BranchesApprovalTable extends DataTableComponent
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', BusinessLocation::class)
             ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function ($query) {
-                $query->where('user_id', auth()->id());
-            });
+            ->where('owner', 'staff');
     }
 
     public function configure(): void
@@ -52,7 +48,13 @@ class BranchesApprovalTable extends DataTableComponent
             Column::make("Street", "pinstance.street")
                 ->label(fn ($row) => $row->pinstance->street ?? '')
                 ->searchable(),
-            Column::make('Action', 'pinstance_id')->view('business.branches.includes.approval_actions'),
+            Column::make('From State', 'from_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+
         ];
     }
 }
