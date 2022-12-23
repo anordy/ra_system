@@ -14,7 +14,7 @@
             @include('settings.dual-control-activities.details.user')
 
             <div class="d-flex justify-content-end">
-                @if(approvalLevel(Auth::user()->role_id, 'Checker'))
+                @if(approvalLevel(Auth::user()->level_id, 'Checker'))
                     <livewire:settings.dual-control-activity.approve dual_control_id="{{encrypt($result->id)}}"/>
                 @endif
             </div>

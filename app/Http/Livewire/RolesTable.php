@@ -49,9 +49,7 @@ class RolesTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if (Gate::allows('setting-role-assign-permission')) {
                         return  <<< HTML
-                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$row->id)"><i class="fas fa-cog"></i>Permission </button>
-                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-approval-level-add-modal',$row->id)"><i class="fas fa-cog mr-2"></i>Approval Level</button>
-
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$row->id)"><i class="fas fa-cog"></i>Configure Permission </button>
                         HTML;
                     }
                 })->html(true),

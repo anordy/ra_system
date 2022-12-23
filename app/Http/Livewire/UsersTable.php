@@ -61,6 +61,17 @@ class UsersTable extends DataTableComponent
             Column::make('Role', 'role.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Approval Level', 'level.name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Configuration', 'created_at')
+                ->format(function ($value, $row) {
+                    if (Gate::allows('setting-role-assign-permission')) {
+                        return  <<< HTML
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-approval-level-add-modal',$row->id)"><i class="fas fa-cog mr-2"></i>Add Level</button>
+                        HTML;
+                    }
+                })->html(true),
             Column::make('Status', 'status')
                 ->label(function ($row) {
                     if ($row->id == auth()->user()->id) {
@@ -76,6 +87,25 @@ class UsersTable extends DataTableComponent
                     }
                 })
                 ->html(true),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
+
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
                     $edit = '';

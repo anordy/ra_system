@@ -9,4 +9,11 @@ class DualControl extends Model
 {
     use HasFactory;
     protected $guarded = '';
+
+    public const ADD = 'add';
+    public const EDIT = 'edit';
+    public const DELETE = 'delete';
+    public const DEACTIVATE = 'deactivate';
+    public const ACTIVATE = 'activate';
+
 }

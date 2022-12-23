@@ -2,7 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\RolesApprovalLevel;
+use App\Models\DualControl;
+use App\Models\UserApprovalLevel;
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use App\Models\Role;
@@ -91,7 +92,7 @@ class UserAddModal extends Component
                 'status' => 1,
                 'password' => Hash::make($this->password),
             ]);
-            $this->triggerDualControl(get_class($user), $user->id, 'adding user');
+            $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding user');
 
             $admins = User::whereHas('role', function ($query) {
                 $query->where('name', 'Administrator');
