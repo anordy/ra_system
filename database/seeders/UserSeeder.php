@@ -147,6 +147,19 @@ class UserSeeder extends Seeder
         ]);
 
         User::updateOrCreate([
+            'fname' => "Petro",
+            'lname' => "Joseph",
+            'email' => "Petro.Joseph@ubx.co.tz",
+            'phone' => '0657824541',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 1,
+            'status' => true,
+            'is_first_login' => false,
+        ]);
+
+        User::updateOrCreate([
             'fname' => "Compliance",
             'lname' => "Officer1",
             'email' => "compliance.officer1@zrb.co.tz",

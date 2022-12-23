@@ -18,11 +18,12 @@
                 </div>
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Maximum Amount</label>
+                        <label class="control-label">Maximum Amount </label>
                         <input type="text" class="form-control" wire:model.lazy="max_amount" id="max_amount">
                         @error('max_amount')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
+                    <small>*leave empty if there is no limit on maximum amount</small>
                     </div>
                 </div>
                 <div class="row pr-3 pl-3">
@@ -32,7 +33,7 @@
                         @error('fee')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
-                    </div>
+                    </div><br>
                 </div>
             </div>
             <div class="modal-footer">
