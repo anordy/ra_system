@@ -23,8 +23,30 @@
                     <option value="All">All</option>
                     <option value="TZS">TZS</option>
                     <option value="USD">USD</option>
-
                 </select>
+            </div>
+
+            <div class="col-md-6 form-group">
+                <label class="d-flex justify-content-between'">
+                    <span>Start Date</span>
+                </label>
+                <input type="date" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model="range_start">
+                @error('range_start')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div class="col-md-6 form-group">
+                <label class="d-flex justify-content-between'">
+                    <span>End Date</span>
+                </label>
+                <input type="date" min="{{ date('Y-m-d', strtotime($range_start))}}" max="{{ now()->format('Y-m-d') }}" class="form-control" wire:model="range_end">
+                @error('range_end')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
 
 
@@ -33,7 +55,7 @@
                     <button type="submit" class=" btn btn-success ml-2 px-2" wire:click='pdf()'
                         wire:loading.attr="disabled">
                         <div wire:loading.remove wire:target='pdf'>
-                             <i class="fas fa-file-pdf"></i>
+                            <i class="fas fa-file-pdf"></i>
                             Export summary
                         </div>
                         <div wire:loading wire:target='pdf'>

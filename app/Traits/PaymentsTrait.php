@@ -237,38 +237,17 @@ trait PaymentsTrait
             $amount = $amount * $exchangeRate;
         }
 
-        $eGafee = TransactionFee::whereBetween('minimum_amount', [$amount, 'maximum_amount'])->pluck('fee')->get();
-        dd($eGafee);
+        $TransactionFee = TransactionFee::whereNull('maximum_amount')->select('minimum_amount', 'fee')->first();
+        $minFee = $TransactionFee->minimum_amount;
 
-        switch ($amount) {
-            case $amount >= 0.00 && $amount <= 100000.00:
-                $fee = $amount * 0.025;
-
-                break;
-            case $amount >= 100001.00 && $amount <= 500000.00:
-                $fee = $amount * 0.02;
-
-                break;
-            case $amount >= 500001.00 && $amount <= 1000000.00:
-                $fee = $amount * 0.013;
-
-                break;
-            case $amount >= 1000001.00 && $amount <= 5000000.00:
-                $fee = $amount * 0.003;
-
-                break;
-            case $amount >= 5000001.00 && $amount <= 10000000.00:
-                $fee = $amount * 0.0015;
-
-                break;
-            case $amount >= 10000001.00:
-                $fee = 20000;
-
-                break;
-            default:
-                throw new \Exception('Amount out of range.');
+        //if the amount exceed the maximum fee range we take the constant fee
+        if ($minFee <= $amount) {
+            $fee = $TransactionFee->fee;
+        } else {
+            $fee = TransactionFee::where('minimum_amount', '<=', $amount)->where('maximum_amount', '>=', $amount)->pluck('fee')->first();
+            $fee = $fee * $amount;
         }
-
+        
         if ($currency != 'TZS') {
             $fee = round($fee / $exchangeRate, 2);
         }

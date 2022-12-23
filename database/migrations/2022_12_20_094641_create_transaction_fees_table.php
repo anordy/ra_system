@@ -15,11 +15,11 @@ class CreateTransactionFeesTable extends Migration
     {
         Schema::create('transaction_fees', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->float('minimum_amount');
-            $table->float('maximum_amount');
-            $table->float('fee');
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')->references('id')->on('users');
+            $table->decimal('minimum_amount',20,2);
+            $table->decimal('maximum_amount',20,2)->nullable();
+            $table->decimal('fee',10,4);
             $table->timestamps();
         });
     }
