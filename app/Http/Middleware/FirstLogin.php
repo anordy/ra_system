@@ -19,7 +19,7 @@ class FirstLogin
     {
         $user = Auth::user();
       
-        if ($user->is_first_login) {
+        if ($user->is_first_login || $user->is_password_expired) {
             return redirect()->route('password.change');
         }
       

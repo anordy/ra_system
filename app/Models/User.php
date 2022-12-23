@@ -51,5 +51,20 @@ class User extends Authenticatable
         return false;
     }
 
+    public function passwordHistories()
+    {
+        return $this->morphMany(PasswordHistory::class, 'user');
+    }
 
+    public function passwordExistInHistory($password){
+        if (!$this->passwordHistories->isEmpty()) {
+            foreach ($this->passwordHistories as $passwordHistory) {
+                if (password_verify($password, $passwordHistory->password_entry)) {
+                    return $this->passwordHistories;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
