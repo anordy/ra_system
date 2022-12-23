@@ -9,7 +9,7 @@ use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use App\Models\User;
 use App\Traits\CheckReturnConfigurationTrait;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class DashboardController extends Controller
 {
@@ -17,21 +17,12 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $all_issues = [
-            ['status' => $this->doesCurrentFinancialMonthExists(), 'description' => 'Current financial month has not been configured', 'route' => 'settings.financial-months'],
-            ['status' => $this->doesInterestRateExists(), 'description' => 'Current financial year interest rate has not been configured', 'route' => 'settings.interest-rates.index'],
-            ['status' => $this->doesPenaltyRateExists(), 'description' => 'Current penalty rates has not been configured', 'route' => 'settings.penalty-rates.index'],
-        ];
+        $issues = [];
 
-        $temp_issues = [];
-
-        foreach ($all_issues as $issue) {
-            if ($issue['status'] == false) {
-                $temp_issues[] = $issue;
-            }
+        if (Gate::allows('system-check-return-configs')) {
+            $temp_issues = $this->getMissingConfigurations();
+            $issues = array_merge($temp_issues, $this->doesExchangeRateExists());
         }
-
-        $issues = array_merge($temp_issues, $this->doesExchangeRateExists());
 
         $counts = TaxAgent::where('status', TaxAgentStatus::APPROVED)
             ->selectRaw("'taxAgents' AS type, COUNT(*) AS count")
