@@ -37,7 +37,7 @@ class Zanid extends Component
     {
          $this->is_verified_triggered = true;
          $zanid_controller = new ZanIDController;
-         $this->zanid_data = $zanid_controller->getZanIDData($this->kyc->id_number);
+         $this->zanid_data = $zanid_controller->getZanIDData($this->kyc->zanid_no);
     }
 
     public function compareProperties($kyc_property, $zanid_property)
@@ -92,7 +92,7 @@ class Zanid extends Component
                 'first_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_FIRST_NAME']),
                 'middle_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_MIDLE_NAME']),
                 'last_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_LAST_NAME']),
-                'authorities_verified_at' => Carbon::now()->toDateTimeString(),
+                'zanid_verified_at' => Carbon::now()->toDateTimeString(),
             ]);
             $this->alert('success', 'Taxpayer details have been approved!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);

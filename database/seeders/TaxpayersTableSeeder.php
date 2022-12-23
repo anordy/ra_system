@@ -30,11 +30,10 @@ class TaxpayersTableSeeder extends Seeder
             'is_citizen' => true,
             'is_first_login' => false,
             'id_type' => '1',
-            'id_number' => '12312123123123123',
+            'passport_no' => '12312123123123123',
             'permit_number' => '389439743943989',
             'country_id' => 1,
             'biometric_verified_at' => Carbon::now()->toDateTimeString(),
-            'authorities_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make('password'),
         ]);
 
@@ -51,11 +50,10 @@ class TaxpayersTableSeeder extends Seeder
             'is_citizen' => true,
             'is_first_login' => false,
             'id_type' => '1',
-            'id_number' => '12312123123123123',
+            'passport_no' => '12312123123123123',
             'permit_number' => '32798329898989',
             'country_id' => 1,
             'biometric_verified_at' => Carbon::now()->toDateTimeString(),
-            'authorities_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make('password'),
         ]);
 
@@ -74,11 +72,10 @@ class TaxpayersTableSeeder extends Seeder
             'is_citizen' => true,
             'is_first_login' => false,
             'id_type' => '1',
-            'id_number' => '12312123123123123',
+            'passport_no' => '12312123123123123',
             'permit_number' => '329327798328989',
             'country_id' => 1,
             'biometric_verified_at' => Carbon::now()->toDateTimeString(),
-            'authorities_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make('password'),
         ]);
     }

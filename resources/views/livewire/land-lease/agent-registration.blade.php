@@ -55,11 +55,24 @@
                                 <span class="font-weight-bold text-uppercase">Nationality</span>
                                 <p class="my-1">{{ $taxpayer->country->nationality??' ' }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">{{ $taxpayer->identification->name }}
-                                    No.</span>
-                                <p class="my-1">{{ $taxpayer->id_number??' ' }}</p>
-                            </div>
+                            @if ($taxpayer->zanid_no)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">ZANID No.</span>
+                                    <p class="my-1">{{ $taxpayer->zanid_no }}</p>
+                                </div>
+                            @endif
+                            @if ($taxpayer->nida_no)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">NIDA No.</span>
+                                    <p class="my-1">{{ $taxpayer->nida_no }}</p>
+                                </div>
+                            @endif
+                            @if ($taxpayer->passport_no)
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Passport No.</span>
+                                    <p class="my-1">{{ $taxpayer->passport_no }}</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

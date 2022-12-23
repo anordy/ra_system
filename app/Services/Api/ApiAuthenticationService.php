@@ -20,7 +20,6 @@ class ApiAuthenticationService
         curl_setopt_array($curl, array(
             CURLOPT_URL => $loginApiUrl,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER         => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_CONNECTTIMEOUT => 30,

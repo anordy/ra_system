@@ -1,11 +1,20 @@
 <div>
     <hr>
     <div class="row">
-        <div class="col-md-4 mb-3">
-            <span class="font-weight-bold text-uppercase">{{ 'Zan ID' }} No.</span>
-            <p class="my-1">{{ $kyc->id_number }}</p>
-        </div>
-        @if (empty($kyc->authorities_verified_at))
+        @if ($kyc->zanid_no)
+            <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">ZANID No.</span>
+                <p class="my-1">{{ $kyc->zanid_no }}</p>
+            </div>
+        @endif
+        @if ($kyc->nida_no)
+            <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">NIDA No.</span>
+                <p class="my-1">{{ $kyc->nida_no }}</p>
+            </div>
+        @endif
+
+        @if (empty($kyc->zanid_verified_at))
             <div class="col-md-4 mb-3">
                 <button wire:click="validateZanID" wire:loading.attr="disabled" class="btn btn-info btn-sm">
                     <div wire:loading wire:target="validateZanID">
@@ -59,11 +68,12 @@
         <div class="row mx-4">
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">ZAN ID NO</span>
-                <p class="my-1">{{ $kyc->id_number }}</p>
+                <p class="my-1">{{ $kyc->zanid_no }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Full Name</span>
-                <p class="my-1">{{ "{$zanid_data['data']['PRSN_FIRST_NAME']}  {$zanid_data['data']['PRSN_LAST_NAME']}" }}</p>
+                <p class="my-1">
+                    {{ "{$zanid_data['data']['PRSN_FIRST_NAME']}  {$zanid_data['data']['PRSN_LAST_NAME']}" }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Gender</span>
@@ -71,7 +81,8 @@
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Date of Birth</span>
-                <p class="my-1">{{ \Carbon\Carbon::parse($zanid_data['data']['PRSN_BIRTH_DATE'])->format('d/m/Y') }}</p>
+                <p class="my-1">{{ \Carbon\Carbon::parse($zanid_data['data']['PRSN_BIRTH_DATE'])->format('d/m/Y') }}
+                </p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">District</span>
