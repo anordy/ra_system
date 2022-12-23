@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ExchangeRateSeeder::class);
         $this->call(InterestRateSeeder::class);
         $this->call(PenaltyRatesSeeder::class);
+        $this->call(SystemSettingsSeeder::class);
         $this->call(StampDutyConfigSeeder::class);
         $this->call(BusinessSeeder::class);
         $this->call(TaxRegionsSeeder::class);

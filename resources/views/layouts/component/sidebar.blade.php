@@ -721,6 +721,16 @@
                             <a href="{{ route('settings.penalty-rates.index') }}">Penalty Rate</a>
                         </li>
                     @endcan
+                    @can('setting-system-category-view')
+                        <li class="{{ request()->is('settings/setting-system-categories*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.setting-system-categories.view') }}">System Setting Categories</a>
+                        </li>
+                    @endcan
+                    @can('system-setting-view')
+                        <li class="{{ request()->is('settings/system-settings*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.system-settings.view') }}">System Settings</a>
+                        </li>
+                    @endcan
                     @can('setting-education-level-view')
                         <li class="{{ request()->is('settings/education-level*') ? 'active' : '' }}">
                             <a href="{{ route('settings.education-level.index') }}">Education Level</a>

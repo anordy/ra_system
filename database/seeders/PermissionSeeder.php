@@ -266,6 +266,16 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-fee-view', 'sys_module_id' => 18],
+
+            ['name' => 'setting-system-category-view', 'sys_module_id' => 18],
+            ['name' => 'setting-system-category-add', 'sys_module_id' => 18],
+            ['name' => 'setting-system-category-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-system-category-delete', 'sys_module_id' => 18],
+
+            ['name' => 'system-setting-view', 'sys_module_id' => 18],
+            ['name' => 'system-setting-add', 'sys_module_id' => 18],
+            ['name' => 'system-setting-edit', 'sys_module_id' => 18],
+            ['name' => 'system-setting-delete', 'sys_module_id' => 18],
             
 
             # System
