@@ -104,7 +104,8 @@ trait CheckReturnConfigurationTrait
             event(new SendSms('financial-year', $payload));
         }
 
-        return $issues;
+        $all_issues = array_merge($issues, $this->getExchangeRateConfiguration());
+        return $all_issues;
     }
 
 
@@ -149,7 +150,7 @@ trait CheckReturnConfigurationTrait
     /**
      * Check if exchange rate exists
      */
-    public function doesExchangeRateExists()
+    public function getExchangeRateConfiguration()
     {
         $currencies = Currency::all();
         $currencies_statuses = [];
@@ -159,7 +160,7 @@ trait CheckReturnConfigurationTrait
             if ($currency->iso != 'TZS') {
 
                 $currencyRate = ExchangeRate::query()
-                    ->where('exchange_date', '<=', Carbon::now()->toDateTimeString())
+                    ->where('exchange_date', '=', Carbon::now()->toDateString())
                     ->where('currency', $currency->iso)->first();
 
                 // If no exchange rate add to currencies_statuses
@@ -168,7 +169,6 @@ trait CheckReturnConfigurationTrait
                     event(new SendMail('exchange-rate', $payload));
                     event(new SendSms('exchange-rate', $payload));
                     $currencies_statuses[] = [
-                        'status' => false,
                         'description' => "Todays {$currency->iso} exchange rate has not been configured",
                         'route' => 'settings.exchange-rate.index'
                     ];

@@ -19,9 +19,8 @@ class DashboardController extends Controller
     {
         $issues = [];
 
-        if (Gate::allows('system-check-return-configs')) {
-            $temp_issues = $this->getMissingConfigurations();
-            $issues = array_merge($temp_issues, $this->doesExchangeRateExists());
+        if (!Gate::allows('system-check-return-configs')) {
+            $issues = $this->getMissingConfigurations();
         }
 
         $counts = TaxAgent::where('status', TaxAgentStatus::APPROVED)
