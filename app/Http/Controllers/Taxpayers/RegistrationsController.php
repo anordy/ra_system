@@ -69,14 +69,14 @@ class RegistrationsController extends Controller
             return redirect()->back();
         }
 
-        $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
-        $kyc->verified_by = Auth::id();
-        $kyc->save(); // todo: unless the exception tha would occur below will not affect this record, i suggest to put this inside trx
-
         try {
             DB::beginTransaction();
 
-            $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at', 'verified_by'])->toArray();
+            $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
+            $kyc->verified_by = Auth::id();
+            $kyc->save(); // todo: unless the exception tha would occur below will not affect this record, i suggest to put this inside trx
+
+            $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at', 'verified_by', 'comments'])->toArray();
             $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
             $password = substr(str_shuffle($permitted_chars), 0, 8);
             $data['password'] = Hash::make($password);
@@ -88,23 +88,28 @@ class RegistrationsController extends Controller
             $taxpayer = Taxpayer::create($data);
             $taxpayer->generateReferenceNo();
 
+
+            // todo: this should before sending the email/Sms
+            if ($taxpayer) {
+                $kyc->delete();
+            } else {
+                session()->flash("error", "Couldn't verify user.");
+                throw new \Exception("Couldn't verify user");
+            }
+            DB::commit();
+
             // Send email and password for OTP
             event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
             if ($taxpayer->email) {
                 event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
             }
 
-//        todo: this should before sending the email/Sms
-            $taxpayer ? $kyc->delete() : session()->flash("error", "Couldn't verify user.");
-            DB::commit();
-
             return redirect()->route('taxpayers.taxpayer.index');
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             session()->flash('error', 'Something went wrong, Could you please contact our administrator for assistance?');
             return redirect()->route('taxpayers.registrations.index');
         }
-
     }
 }
