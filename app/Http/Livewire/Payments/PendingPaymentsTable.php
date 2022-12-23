@@ -35,6 +35,9 @@ class PendingPaymentsTable extends DataTableComponent
         if (isset($data['currency']) && $data['currency'] != 'All') {
             $filter->Where('currency', $data['currency']);
         }
+        if (isset($data['range_start']) && isset($data['range_end'])) {
+            $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
+        }
 
         return $filter->whereIn('status', [PaymentStatus::PENDING])->orderBy('created_at', 'DESC');
     }

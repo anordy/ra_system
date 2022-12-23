@@ -25,7 +25,7 @@ class TransactionFeesEditModal extends Component
     {
         return [
             'min_amount' => 'required|numeric',
-            'max_amount' => 'required|numeric',
+            'max_amount' => 'sometimes|nullable|numeric',
             'fee'        => 'required|numeric',
         ];
     }
@@ -34,7 +34,7 @@ class TransactionFeesEditModal extends Component
     {
         $data = TransactionFee::find($id);
         $this->min_amount = $data->minimum_amount;
-        $this->max_amount = $data->maximum_amount;
+        $this->max_amount = $data->maximum_amount ?? null;
         $this->fee = $data->fee;
         $this->data = $data;
     }
@@ -55,7 +55,7 @@ class TransactionFeesEditModal extends Component
             ]);
             $this->flash('success', 'Fee updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
+            Log::error($e->getMessage());
             $this->alert('error', 'Something went wrong');
         }
     }
