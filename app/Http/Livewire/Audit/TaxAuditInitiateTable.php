@@ -81,7 +81,6 @@ class TaxAuditInitiateTable extends DataTableComponent
                 ->label(fn ($row) => Carbon::create($row->created_at ?? null)->toDayDateTimeString()),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
-                    dd($row);
                     return <<<HTML
                            <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> Initiate Approval</button>
                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete</button>
