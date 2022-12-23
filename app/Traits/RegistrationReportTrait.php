@@ -11,8 +11,7 @@ trait RegistrationReportTrait
     {
         $businessLocations = BusinessLocation::distinct('business_locations.id')
             ->join('businesses', 'businesses.id', 'business_locations.business_id')
-            ->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id')
-            ->select('business_locations.*');
+            ->join('business_tax_type', 'business_tax_type.business_id', 'businesses.id');
         //get criteria                                
         switch ($parameters['criteria']) {
             case 'All-Business':

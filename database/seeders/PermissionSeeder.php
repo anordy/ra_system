@@ -144,6 +144,8 @@ class PermissionSeeder extends Seeder
             # Manage Payments
             ['name' => 'manage-payments-view', 'sys_module_id' => 17],
             ['name' => 'manage-payments-edit', 'sys_module_id' => 17],
+            ['name' => 'manage-payments-cancel-bill', 'sys_module_id' => 17],
+            ['name' => 'manage-payments-update-bill', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],
@@ -204,6 +206,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-education-level-add', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-edit', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-transaction-fees-view', 'sys_module_id' => 18],
+            ['name' => 'setting-transaction-fees-add', 'sys_module_id' => 18],
+            ['name' => 'setting-transaction-fees-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-transaction-fees-delete', 'sys_module_id' => 18],
 
             ['name' => 'setting-business-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-business-category-add', 'sys_module_id' => 18],

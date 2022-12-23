@@ -22,10 +22,16 @@ class TaxVerification extends Model implements Auditable
         return with(new static)->getTable();
     }
 
-    public function taxType()
+    // public function taxType()
+    // {
+    //     return $this->belongsTo(TaxType::class,'tax_type_id');
+    // }
+
+      public function taxtype()
     {
-        return $this->belongsTo(TaxType::class);
+        return $this->belongsTo(TaxType::class,'tax_type_id');
     }
+
 
     public function taxReturn()
     {

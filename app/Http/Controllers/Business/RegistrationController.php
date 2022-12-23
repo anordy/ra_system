@@ -32,5 +32,14 @@ class RegistrationController extends Controller
         }
         $business = Business::findOrFail(decrypt($businessId));
         return view('business.registrations.approval', compact('business'));
+    } 
+
+    public function approval_progress($businessId)
+    {
+        if (!Gate::allows('business-registration-view')) {
+            abort(403);
+        }
+        $business = Business::findOrFail(decrypt($businessId));
+        return view('business.registrations.approval_progress', compact('business'));
     }
 }

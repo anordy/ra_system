@@ -20,7 +20,7 @@ class CreateTaxAgentProfessionalsTable extends Migration
 	        $table->string('passed_sections');
 	        $table->date('date_passed');
             $table->string('attachment')->nullable();
-	        $table->string('remarks');
+	        $table->string('remarks')->nullable();
 	        $table->unsignedBigInteger('tax_agent_id');
 			$table->foreign('tax_agent_id')->references('id')->on('tax_agents');
             $table->timestamps();

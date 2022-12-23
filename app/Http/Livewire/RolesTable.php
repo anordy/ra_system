@@ -45,11 +45,13 @@ class RolesTable extends DataTableComponent
                 ->label(fn ($row) => $row->reportTo->name ?? '')
                 ->sortable()
                 ->searchable(),
-            Column::make('Configure Permission', 'created_at')
+            Column::make('Configuration', 'created_at')
                 ->format(function ($value, $row) {
                     if (Gate::allows('setting-role-assign-permission')) {
                         return  <<< HTML
-                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$row->id)"><i class="fas fa-cog"></i> Configure </button>
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$row->id)"><i class="fas fa-cog"></i>Permission </button>
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-approval-level-add-modal',$row->id)"><i class="fas fa-cog mr-2"></i>Approval Level</button>
+
                         HTML;
                     }
                 })->html(true),

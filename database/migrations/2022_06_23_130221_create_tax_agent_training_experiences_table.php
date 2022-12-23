@@ -20,7 +20,7 @@ class CreateTaxAgentTrainingExperiencesTable extends Migration
 	        $table->date('to');
 	        $table->string('position_held');
             $table->string('attachment')->nullable();
-	        $table->string('description');
+	        $table->string('description')->nullable();
 	        $table->unsignedBigInteger('tax_agent_id');
 	        $table->foreign('tax_agent_id')->references('id')->on('tax_agents');
             $table->timestamps();
