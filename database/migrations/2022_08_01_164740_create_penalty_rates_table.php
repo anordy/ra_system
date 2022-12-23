@@ -19,6 +19,7 @@ class CreatePenaltyRatesTable extends Migration
             $table->string('name');
             $table->decimal('rate', 20, 4);
             $table->unsignedBigInteger('financial_year_id');
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
         });
     }

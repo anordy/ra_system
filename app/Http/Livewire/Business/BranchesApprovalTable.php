@@ -7,61 +7,52 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\BusinessLocation;
+use App\Models\WorkflowTask;
 
 class BranchesApprovalTable extends DataTableComponent
 {
-    protected $model = BusinessLocation::class;
-    public $status;
-
-    public function mount($status)
-    {
-        $this->status = $status;
-    }
 
     public function builder(): Builder
     {
-        if ($this->status == BranchStatus::PENDING) {
-            return BusinessLocation::where('business_locations.status', BranchStatus::PENDING)
-                ->orderBy('business_locations.created_at', 'DESC')
-                ->with('business');
-        } else if ($this->status == BranchStatus::APPROVED) {
-            return BusinessLocation::whereIn('business_locations.status', [BranchStatus::APPROVED, BranchStatus::DE_REGISTERED, BranchStatus::TEMP_CLOSED])
-                ->orderBy('business_locations.created_at', 'DESC')
-                ->with('business');
-        } else if ($this->status == BranchStatus::REJECTED) {
-            return BusinessLocation::where('business_locations.status', BranchStatus::REJECTED)
-                ->orderBy('business_locations.created_at', 'DESC')
-                ->with('business');
-        }
+        return WorkflowTask::with('pinstance', 'user')
+            ->where('pinstance_type', BusinessLocation::class)
+            ->where('status', '!=', 'completed')
+            ->where('owner', 'staff')
+            ->whereHas('actors', function ($query) {
+                $query->where('user_id', auth()->id());
+            });
     }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects('pinstance_type', 'user_type');
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['is_headquarter']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Business Name", "business.name")
-                ->sortable(),
-            Column::make("Branch Name", "name")
-                ->format(function ($value, $row) {
-                   return $row->is_headquarter === 1 ? "Head Quarters" :"{$row->name}";
-                })->html(true),
-            Column::make("Region", "region.name")
+            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+            Column::make("Business Name", "pinstance.business_id")
+                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
+            Column::make("Business Type", "pinstance.business.business_type")
+                ->label(fn ($row) => strtoupper($row->pinstance->business->business_type ?? '')),
+            Column::make("Branch Name", "pinstance.is_headquarter")
+                ->label(fn ($row) =>  $row->is_headquarter === 1 ? "Head Quarters" : ($row->pinstance->name ?? '')),
+            Column::make("Region", "pinstance.region.name")
+                ->label(fn ($row) => $row->pinstance->region->name ?? '')
                 ->searchable(),
-            Column::make("District", "district.name")
+            Column::make("District", "pinstance.district.name")
+                ->label(fn ($row) => $row->pinstance->district->name ?? '')
                 ->searchable(),
-            Column::make("Street", "street")
+            Column::make("Street", "pinstance.street")
+                ->label(fn ($row) => $row->pinstance->street ?? '')
                 ->searchable(),
-            Column::make('Status', 'status')->view('business.branches.includes.status'),
-            Column::make('Action', 'id')->view('business.branches.includes.actions'),
+            Column::make('Action', 'pinstance_id')->view('business.branches.includes.approval_actions'),
         ];
     }
 }

@@ -36,19 +36,34 @@ class RegistrationsProgressApprovalTable extends DataTableComponent
     {
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('Business Name', 'pinstance.business.name')->label(fn ($row) => $row->pinstance->name ?? 'N/A')->sortable()->searchable(),
+            Column::make('Business Category', 'pinstance.category.name')
+                ->label(fn ($row) => $row->pinstance->category->name ?? 'N/A')
+                ->sortable()->searchable(),
+            Column::make('Business Type', 'pinstance.business_type')
+                ->label(fn ($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
+                ->sortable()->searchable(),
+            Column::make('Business Name', 'pinstance.name')
+                ->label(fn ($row) => $row->pinstance->name ?? 'N/A')
+                ->sortable()->searchable(),
             Column::make('TIN', 'pinstance.tin')
                 ->label(fn ($row) => $row->pinstance->tin ?? '')->sortable()->searchable(),
             Column::make('Buss. Reg. No.', 'pinstance.reg_no')
-                ->label(fn ($row) => $row->pinstance->reg_no ?? 'N/A')->sortable()->searchable(),
+                ->label(fn ($row) => $row->pinstance->reg_no ?? 'N/A')
+                ->sortable()->searchable(),
             Column::make('Mobile', 'pinstance_type')
                 ->label(fn ($row) => $row->pinstance->mobile ?? '')->sortable()->searchable(),
+            Column::make('From State', 'from_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
             Column::make('Status', 'pinstance.mobile')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return view('business.registrations.includes.approval_status', compact('row'));
                 }),
             Column::make('Action', 'id')
-                ->view('business.registrations.includes.approval')
+                ->view('business.registrations.includes.approval_progress')
         ];
     }
 }

@@ -7,6 +7,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\TransactionFee;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 
@@ -51,9 +52,9 @@ class TransactionFeesTable extends DataTableComponent
             Column::make('Fee', 'fee')
                 ->sortable()
                 ->searchable(),
-            // Column::make('Created By', 'created_by')
-            //     ->sortable()
-            //     ->searchable(),
+            Column::make('Created By', 'created_by')
+            ->format(fn ($id) =>User::query()->find($id)->fullname())
+            ->sortable(),
             Column::make('Created At', 'created_at')
                 ->sortable()
                 ->searchable(),

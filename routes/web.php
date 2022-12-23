@@ -11,6 +11,9 @@
 |
  */
 
+use App\Http\Controllers\Setting\ApprovalLevelController;
+use App\Http\Controllers\Setting\DualControlActivityController;
+use App\Http\Controllers\TransactionFeeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -190,9 +193,13 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
             Route::get('/create/{id}/{code}', [ReturnController::class, 'create'])->name('create');
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
         });
-        
+
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
         Route::resource('/transaction-fees', TransactionFeeController::class);
+
+        Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
+        Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
+        Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -240,6 +247,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
 
     Route::prefix('business')->as('business.')->group(function () {
         Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
+        Route::get('/registrationsApprovalProgress/{id}', [RegistrationController::class, 'approval_progress'])->name('registrations.approval_progress');
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
         Route::get('/closure/{id}', [BusinessController::class, 'viewClosure'])->name('viewClosure');

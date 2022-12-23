@@ -11,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RegistrationsTable extends DataTableComponent
 {
-    
+
     use LivewireAlert;
 
     public $rejected = false;
@@ -20,19 +20,19 @@ class RegistrationsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        if ($this->rejected){
-            return Business::where('businesses.status', BusinessStatus::REJECTED)->orderBy('businesses.created_at', 'desc');
+        if ($this->rejected) {
+            return Business::with('category')->where('businesses.status', BusinessStatus::REJECTED)->orderBy('businesses.created_at', 'desc');
         }
 
-        if ($this->approved){
-            return Business::where('businesses.status', BusinessStatus::APPROVED)->orderBy('businesses.created_at', 'desc');
+        if ($this->approved) {
+            return Business::with('category')->where('businesses.status', BusinessStatus::APPROVED)->orderBy('businesses.created_at', 'desc');
         }
 
-        if ($this->pending){
-            return Business::where('businesses.status', BusinessStatus::PENDING)->orderBy('businesses.created_at', 'desc');
+        if ($this->pending) {
+            return Business::with('category')->where('businesses.status', BusinessStatus::PENDING)->orderBy('businesses.created_at', 'desc');
         }
 
-        return Business::where('businesses.status', '!=', BusinessStatus::DRAFT)->orderBy('businesses.created_at', 'desc');
+        return Business::with('category')->where('businesses.status', '!=', BusinessStatus::DRAFT)->orderBy('businesses.created_at', 'desc');
     }
 
     public function configure(): void
@@ -47,19 +47,25 @@ class RegistrationsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZTN', 'ztn_number')->format(function ($value){
+            Column::make('ZTN', 'ztn_number')
+                ->format(fn ($value) => $value ?? 'N/A')
+                ->sortable()->searchable(),
+            Column::make('Business Category', 'category.name')
+                ->format(fn ($value) => strtoupper($value ?? 'N/A'))
+                ->sortable()->searchable(),
+            Column::make('Business Type', 'business_type')
+                ->format(fn ($value) => strtoupper($value ?? 'N/A'))
+                ->sortable()->searchable(),
+            Column::make('Business Name', 'name')->format(function ($value) {
                 return $value ? $value : 'N/A';
             })->sortable()->searchable(),
-            Column::make('Business Name', 'name')->format(function ($value){
+            Column::make('TIN', 'tin')->format(function ($value) {
                 return $value ? $value : 'N/A';
             })->sortable()->searchable(),
-            Column::make('TIN', 'tin')->format(function ($value){
+            Column::make('Buss. Reg. No.', 'reg_no')->format(function ($value) {
                 return $value ? $value : 'N/A';
             })->sortable()->searchable(),
-            Column::make('Buss. Reg. No.', 'reg_no')->format(function ($value){
-                return $value ? $value : 'N/A';
-            })->sortable()->searchable(),
-            Column::make('Mobile', 'mobile')->format(function ($value){
+            Column::make('Mobile', 'mobile')->format(function ($value) {
                 return $value ? $value : 'N/A';
             })->sortable()->searchable(),
             Column::make('Status', 'status')
@@ -68,5 +74,4 @@ class RegistrationsTable extends DataTableComponent
                 ->view('business.registrations.includes.actions')
         ];
     }
-
 }

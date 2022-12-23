@@ -891,6 +891,20 @@
                             <a href="{{ route('settings.transaction-fees.index') }}">Transaction Fees</a>
                         </li>
                     @endcan
+
+                    {{--                    @can()--}}
+                    <li class="{{ request()->is('settings/approval-levels/*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.approval-levels.index') }}">Approval Levels</a>
+                    </li>
+
+                    {{--                        @endcan--}}
+
+                        {{--                    @can()--}}
+                        <li class="{{ request()->is('settings/dual-control-activities/*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.dual-control-activities.index') }}">Dual Control Activities</a>
+                        </li>
+
+                        {{--                        @endcan--}}
                 </ul>
             </li>
         @endcan
