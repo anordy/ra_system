@@ -11,8 +11,8 @@ class ApprovalLevel extends Model
     protected $table = 'approval_levels';
     protected $guarded = [];
     
-    public function role_level()
+    public function user_level()
     {
-        return $this->hasMany(RolesApprovalLevel::class, 'approval_level_id', 'id');
+        return $this->hasOne(UserApprovalLevel::class, 'approval_level_id', 'id');
     }
 }

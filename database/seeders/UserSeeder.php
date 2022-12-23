@@ -27,6 +27,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -40,6 +41,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -53,6 +55,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -66,6 +69,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -79,6 +83,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -92,6 +97,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -105,6 +111,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -118,6 +125,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -131,6 +139,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -144,6 +153,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -157,6 +167,7 @@ class UserSeeder extends Seeder
             'role_id' => 5,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -170,6 +181,7 @@ class UserSeeder extends Seeder
             'role_id' => 5,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -183,6 +195,7 @@ class UserSeeder extends Seeder
             'role_id' => 3,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
         User::updateOrCreate([
@@ -196,6 +209,7 @@ class UserSeeder extends Seeder
             'role_id' => 3,
             'status' => true,
             'is_first_login' => false,
+            'is_approved' => 1,
         ]);
 
     }

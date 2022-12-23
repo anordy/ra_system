@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRolesApprovalLevelsTable extends Migration
+class CreateUserApprovalLevelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateRolesApprovalLevelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles_approval_levels', function (Blueprint $table) {
+        Schema::create('user_approval_levels', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('approval_level_id');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
@@ -29,6 +30,6 @@ class CreateRolesApprovalLevelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles_approval_levels');
+        Schema::dropIfExists('user_approval_levels');
     }
 }

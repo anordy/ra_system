@@ -19,8 +19,12 @@ class DualControlActivityController extends Controller
     public function show($id)
     {
         $result = DualControl::findOrFail(decrypt($id));
+        if ($result->action == DualControl::EDIT)
+        {
+            $edited_values = json_decode($result->edited_values);
+        }
         $data = $this->getAllDetails($result->controllable_type, encrypt($result->controllable_type_id));
-        return view('settings.dual-control-activities.show', compact('result', 'data'));
+        return view('settings.dual-control-activities.show', compact('result', 'data', 'edited_values'));
     }
 
 

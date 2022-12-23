@@ -14,12 +14,14 @@ use Illuminate\Support\Facades\Log;
 
 trait DualControlActivityTrait
 {
-    public function triggerDualControl($model, $modelId, $action_type)
+    public function triggerDualControl($model, $modelId, $action, $action_detail, $edited_values=null)
     {
         $payload = [
             'controllable_type' => $model,
             'controllable_type_id' => $modelId,
-            'action_type' => $action_type,
+            'action' =>$action,
+            'action_detail' => $action_detail,
+            'edited_values' => $edited_values,
             'create_by_id' => Auth::id(),
             'status' => 'pending'
         ];
