@@ -25,10 +25,12 @@
                     <span class="font-weight-bold text-uppercase">Mobile</span>
                     <p class="my-1">{{ $taxPayer->mobile }}</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Alternative Mobile</span>
-                    <p class="my-1">{{ $taxPayer->alt_mobile }}</p>
-                </div>
+                @if ($taxPayer->alt_mobile)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Alternative Mobile</span>
+                        <p class="my-1">{{ $taxPayer->alt_mobile }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Nationality</span>
                     <p class="my-1">{{ $taxPayer->country->nationality }}</p>
@@ -36,17 +38,31 @@
             </div>
             <hr />
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">{{ $taxPayer->identification->name }} No.</span>
-                    <p class="my-1">{{ $taxPayer->id_number }}</p>
-                </div>
-                @if($taxPayer->work_permit)
+                @if ($taxPayer->nida_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">NIDA No.</span>
+                        <p class="my-1">{{ $taxPayer->nida_no }}</p>
+                    </div>
+                @endif
+                @if ($taxPayer->zanid_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">ZANID No.</span>
+                        <p class="my-1">{{ $taxPayer->zanid_no }}</p>
+                    </div>
+                @endif
+                @if ($taxPayer->passport_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Passport No.</span>
+                        <p class="my-1">{{ $taxPayer->passport_no }}</p>
+                    </div>
+                @endif
+                @if ($taxPayer->work_permit)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Residence Permit</span>
                         <p class="my-1">{{ $taxPayer->work_permit }}</p>
                     </div>
                 @endif
-                @if($taxPayer->residence_permit)
+                @if ($taxPayer->residence_permit)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Work Permit</span>
                         <p class="my-1">{{ $taxPayer->residence_permit }}</p>

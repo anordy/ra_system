@@ -53,7 +53,7 @@
                         </li>
                     @endcan
                     @can('de-registration-view')
-                        <li class="{{ request()->is('business/deregistrations*') ? 'active' : '' }}">
+                        <li class="{{ request()->is('business/deregistration*') ? 'active' : '' }}">
                             <a href="{{ route('business.deregistrations') }}">De-registrations</a>
                         </li>
                     @endcan

@@ -38,6 +38,15 @@ class TaxAuditInitiateTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+
+        $this->setThAttributes(function (Column $column) {
+            if ($column->getTitle() == 'Tax Types') {
+                return [
+                    'style' => 'width: 20%;',
+                ];
+            }
+            return [];
+        });
     }
 
     protected $listeners = [
@@ -50,24 +59,28 @@ class TaxAuditInitiateTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            // Column::make('ZRB No', 'location.zin'),
+            Column::make('ZTN No', 'business.ztn_number'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
-            // Column::make('Business Location', 'id')
-            // ->label(fn ($row) => $row->location_id != 0 ? $row->location->name : ''),
-            // Column::make('TaxType', 'id')
-            // ->label(fn ($row) => $row->tax_type_id != 0 ? $row->taxType->name : ''),
-            Column::make('Period From', 'period_from'),
-            Column::make('Period To', 'period_to'),
+            Column::make('Business Location')
+                ->label(fn ($row) => $row->taxAuditLocationNames()),
+            Column::make('Tax Types')
+                ->label(fn ($row) => $row->taxAuditTaxTypeNames()),
+            Column::make('Period From', 'period_from')
+                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
+            Column::make('Period To', 'period_to')
+                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
             Column::make('Created By', 'created_by_id')
                 ->label(fn ($row) => $row->createdBy->full_name ?? ''),
             Column::make('Created On', 'created_at')
-                ->label(fn ($row) => Carbon::create($row->created_at ?? null)->toDayDateTimeString()),
+                ->label(fn ($row) => Carbon::create($row->created_at ?? null)->format('d-m-Y')),
             Column::make('Action', 'id')
                 ->format(function ($value) {
+                    $url = route('tax_auditing.approvals.show', encrypt($value));
                     return <<<HTML
-                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-arrow-right"></i> Initiate Approval</button>
-                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> Initiate Approval</button>
+                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete</button>
+                           <a href="{$url}" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right" title="View"> View More </a>
                     HTML;
                 })
                 ->html(true),

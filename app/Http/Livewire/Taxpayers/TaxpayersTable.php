@@ -9,10 +9,11 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxpayersTable extends DataTableComponent
 {
-    
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects(['first_name', 'middle_name', 'last_name']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -30,26 +31,23 @@ class TaxpayersTable extends DataTableComponent
         return [
             Column::make('Reference No.', 'reference_no')
                 ->searchable()
-                ->sortable(),            
-            Column::make('Name', 'first_name')
+                ->sortable(),
+            Column::make('Name')
+                ->label(fn ($row) => $row->fullname())
                 ->sortable()
-                ->searchable(function (Builder $query, $searchTerm){
+                ->searchable(function (Builder $query, $searchTerm) {
                     return $query
                         ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
                         ->orWhere('middle_name', 'like', '%' . $searchTerm . '%')
                         ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
-                })
-                ->format(function($value, $row){
-                    return "{$row->first_name} {$row->middle_name} {$row->last_name}";
                 }),
             Column::make('Mobile No', 'mobile'),
             Column::make('Email Address', 'email'),
             Column::make('Nationality', 'country_id')
-                ->format(fn($value, $row) => $row->country->nationality ?? ''),
+                ->format(fn ($value, $row) => $row->country->nationality ?? ''),
             Column::make('Location', 'region.name'),
             Column::make('Street', 'street'),
             Column::make('Action', 'id')->view('taxpayers.actions')
         ];
     }
-
 }

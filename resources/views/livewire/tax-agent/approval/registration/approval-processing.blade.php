@@ -14,7 +14,7 @@
                 <div class="col-md-12 mb-2">
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Comments</label>
-                        <textarea class="form-control @error('comments') is-invalid @enderror" wire:model='comments'
+                        <textarea class="form-control @error('comments') is-invalid @enderror" wire:model.defer='comments'
                                   rows="3"></textarea>
 
                         @error('comments')

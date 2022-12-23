@@ -29,6 +29,11 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function level()
+    {
+        return $this->belongsTo(ApprovalLevel::class);
+    }
+
     public function otp(){
         return $this->morphOne(UserOtp::class, 'user');
     }

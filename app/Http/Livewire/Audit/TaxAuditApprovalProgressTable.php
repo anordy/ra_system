@@ -3,8 +3,6 @@
 namespace App\Http\Livewire\Audit;
 
 use App\Models\TaxAudit\TaxAudit;
-use App\Models\TaxAudit\TaxAuditLocation;
-use App\Models\TaxAudit\TaxAuditTaxType;
 use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +10,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class TaxAuditApprovalTable extends DataTableComponent
+class TaxAuditApprovalProgressTable extends DataTableComponent
 {
     use LivewireAlert;
 
@@ -23,10 +21,7 @@ class TaxAuditApprovalTable extends DataTableComponent
         return WorkflowTask::with('pinstance', 'pinstance.location', 'pinstance.business', 'user')
             ->where('pinstance_type', TaxAudit::class)
             ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function($query){
-                $query->where('user_id', auth()->id());
-            });
+            ->where('owner', 'staff');
     }
 
     public function configure(): void
@@ -38,7 +33,7 @@ class TaxAuditApprovalTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-         $this->setThAttributes(function (Column $column) {
+        $this->setThAttributes(function (Column $column) {
             if ($column->getTitle() == 'Tax Types') {
                 return [
                     'style' => 'width: 20%;',
@@ -52,7 +47,7 @@ class TaxAuditApprovalTable extends DataTableComponent
     {
         return [
             Column::make('user_type', 'user_id')->hideIf(true),
-      Column::make('TIN', 'pinstance.business.tin')
+            Column::make('TIN', 'pinstance.business.tin')
                 ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
@@ -71,8 +66,14 @@ class TaxAuditApprovalTable extends DataTableComponent
                 }),
             Column::make('Filled On', 'created_at')
                 ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
+            Column::make('From State', 'from_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
             Column::make('Action', 'pinstance_id')
-                ->view('audit.approval.action')
+                ->view('audit.approval.approval-progress')
                 ->html(true),
 
         ];

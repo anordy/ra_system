@@ -63,14 +63,18 @@ class RegistrationsController extends Controller
             }
         }
 
-
-        if (!$kyc->authorities_verified_at) {
-            session()->flash('error', 'User not verified by authorities');
+        if ($kyc->is_citizen == '1' && isNullOrEmpty($kyc->zanid_verified_at)) {
+            session()->flash('error', 'User ZANID not verified by authorities');
+            return redirect()->back();
+        } else if($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
+            session()->flash('error', 'User Passport Number not verified by authorities');
             return redirect()->back();
         }
 
+
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
 
             $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
             $kyc->verified_by = Auth::id();
