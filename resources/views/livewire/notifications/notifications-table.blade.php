@@ -16,7 +16,7 @@
                 @if($notifications->isNotEmpty())
                 @foreach ($notifications as $row)
                 <tr>
-                    <td><input type="checkbox" wire:model="selectedItems.{{ $row->id }}"></td>
+                    <td><input type="checkbox" wire:model.defer="selectedItems.{{ $row->id }}"></td>
                     <td>{!! $row->seen <= 1 ? '<strong>' : '' !!}{{ $row->created_at->diffForHumans() ?? '' }}{!!
                             $row->seen <= 1 ? '</strong>' : '' !!}</td>
                     <td>{!! $row->seen <= 1 ? '<strong>' : '' !!}{{ $row->data->subject ?? '' }}{!! $row->seen <= 1 ?
