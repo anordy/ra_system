@@ -2,26 +2,28 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\RolesApprovalLevel;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
-use ZxcvbnPhp\Zxcvbn;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Events\SendMail;
+use App\Jobs\User\SendRegistrationEmail;
+use App\Jobs\User\SendRegistrationSMS;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
-use App\Notifications\NewUserNotification;
-use Illuminate\Notifications\Notification;
 use App\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\DB;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class UserAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $roles = [];
     public $fname;
@@ -43,7 +45,6 @@ class UserAddModal extends Component
             'email' => 'required|email|unique:users,email',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
-            'password' => ['required', 'confirmed', 'min:8', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
         ];
     }
@@ -53,23 +54,6 @@ class UserAddModal extends Component
         'lname' => 'last name',
     ];
 
-    public function updatedPassword($password)
-    {
-        $zxcvbn = new Zxcvbn();
-        $weak = $zxcvbn->passwordStrength($password);
-        if ($weak['score'] == 4) {
-            $this->passwordStrength = 100;
-        } elseif ($weak['score'] == 3) {
-            $this->passwordStrength = 70;
-        } elseif ($weak['score'] == 2) {
-            $this->passwordStrength = 50;
-        } elseif ($weak['score'] == 1) {
-            $this->passwordStrength = 30;
-        } else {
-            $this->passwordStrength = 0;
-        }
-    }
-
     public function submit()
     {
         if (!Gate::allows('setting-user-add')) {
@@ -77,7 +61,26 @@ class UserAddModal extends Component
         }
 
         $this->validate();
+
+        //check if the application environment is local or production
+        if (config('app.env') == 'local') {
+            $this->password = 'password';
+        } else {
+            $this->password = Str::random(8);
+        }
+
+//        $role_level = DB::table('roles_approval_levels as ra')->leftJoin('approval_levels as al', 'al.id', '=', 'ra.approval_level_id')
+//            ->select('ra.id')->where('ra.role_id', Auth::user()->role_id)->first();
+//
+//        if (empty($role_level))
+//        {
+//            $this->alert('error', 'Your level of approval is not supported to register user');
+//            return;
+//        }
+
         try {
+            DB::beginTransaction();
+
             $user = User::create([
                 'fname' => $this->fname,
                 'lname' => $this->lname,
@@ -88,7 +91,7 @@ class UserAddModal extends Component
                 'status' => 1,
                 'password' => Hash::make($this->password),
             ]);
-
+            $this->triggerDualControl(get_class($user), $user->id, 'adding user');
 
             $admins = User::whereHas('role', function ($query) {
                 $query->where('name', 'Administrator');
@@ -97,21 +100,28 @@ class UserAddModal extends Component
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
                     $subject = 'NEW USER CREATED',
-                    $message = 'New '.Role::find($this->role)->name.' ' .$user->fullname() . ' created by ' .auth()->user()->fname.' '.auth()->user()->lname,
+                    $message = 'New ' . Role::find($this->role)->name . ' ' . $user->fullname() . ' created by ' . auth()->user()->fname . ' ' . auth()->user()->lname,
                     $href = 'settings.users.index',
                 ));
             }
 
-            $payload = [
-                'email' => $this->email,
-                'full_name' => "{$this->fname} {$this->lname}",
-                'password' => $this->password
-            ];
+            DB::commit();
 
-            event(new SendMail('admin-registration', $payload));
+            if (config('app.env') != 'local') {
+                //send SMS of credentials to the added user 
+            if ($user->phone) {
+                dispatch(new SendRegistrationSMS($this->email, $this->password, $this->fname, $this->phone));
+            }
 
+            //send Email of credentials to the added user 
+            if ($user->email) {
+                dispatch(new SendRegistrationEmail($this->fname, $this->email, $this->password));
+            }
+            }
+            
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }

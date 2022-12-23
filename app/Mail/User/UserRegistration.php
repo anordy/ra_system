@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Mail\Admin;
+namespace App\Mail\User;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class AdminRegistrationMail extends Mailable
+class UserRegistration extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +19,7 @@ class AdminRegistrationMail extends Mailable
      *
      * @return void
      */
-    public function __construct($_full_name, $_email, $_password)
+    public function __construct($_full_name,$_email, $_password)
     {
         $this->full_name = $_full_name;
         $this->email = $_email;
@@ -33,8 +33,8 @@ class AdminRegistrationMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.admin.admin-registration',[
-            'url' => 'https://uat.ubx.co.tz:8888/zrb_admin/public/login'
+        return $this->markdown('emails.user.user-registration',[
+            'url' => 'https://192.231.237.29:8888/zrb_admin/public/login'
         ])->subject("ZRB Staff Registration");
     }
 }

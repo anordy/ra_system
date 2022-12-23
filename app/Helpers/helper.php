@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ApprovalLevel;
 use App\Models\BusinessTaxTypeChange;
 use App\Models\EducationLevel;
 use App\Models\Role;
@@ -80,4 +81,25 @@ function checkIfTaxTypeSaved($return)
 
 function isNullOrEmpty($value){
     return ($value == null || $value == '');
+}
+
+function approvalLevel($role_id, $level)
+{
+    $approval = ApprovalLevel::query()->where('name', $level)->first();
+    if (!empty($approval)) {
+        if (!empty($approval->role_level)) {
+            $role_levels = $approval->role_level;
+            $id = [];
+            foreach ($role_levels as $row) {
+                $id[] = $row->role_id;
+            }
+            if (in_array($role_id, $id)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+    return false;
 }

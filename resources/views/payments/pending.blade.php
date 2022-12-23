@@ -19,6 +19,7 @@
             Pending Payments
         </div>
         <div class="card-body">
+            @livewire('payments.payment-filter', ['tablename' => 'pending-payments-table']) <br>
             <livewire:payments.pending-payments-table />
         </div>
     </div>

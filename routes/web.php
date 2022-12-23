@@ -11,6 +11,9 @@
 |
  */
 
+use App\Http\Controllers\Setting\ApprovalLevelController;
+use App\Http\Controllers\Setting\DualControlActivityController;
+use App\Http\Controllers\TransactionFeeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -127,6 +130,7 @@ use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\v1\ZanMalipoController;
 
 //use App\Http\Controllers\Returns\HotelLevyReturnController;
 
@@ -135,6 +139,7 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
+Route::get('pay', [ZanMalipoController::class, 'pay']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
@@ -190,6 +195,11 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         });
 
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
+        Route::resource('/transaction-fees', TransactionFeeController::class);
+
+        Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
+        Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
+        Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
