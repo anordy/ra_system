@@ -43,6 +43,10 @@ class AssignApprovalLevelAddModal extends Component
 //            abort(403);
 //        }
         $this->validate();
+        if ($this->user->is_approved != 1) {
+            $this->alert('error', 'The selected user is not approved');
+            return;
+        }
         if ($this->user->role->name != 'Administrator') {
             $this->alert('error', 'This level of approval is only allowed for Administrator role only');
             return;
