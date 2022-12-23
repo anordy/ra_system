@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Role;
 use Exception;
 use Illuminate\Support\Facades\Gate;
@@ -34,10 +35,12 @@ class RoleEditModal extends Component
 
         $this->validate();
         try {
-            $this->role->update([
+            $payload = [
                 'name' => $this->name,
                 'report_to' => $this->report_to == 'null' ? null : $this->report_to
-            ]);
+            ];
+            $this->role->update();
+            $this->triggerDualControl(get_class($this->role), $this->role->id, DualControl::EDIT, 'editing role', json_encode($payload));
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);

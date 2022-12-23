@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Role;
 use Exception;
 use Illuminate\Support\Facades\Gate;
@@ -41,10 +42,12 @@ class RoleAddModal extends Component
 
         $this->validate();
         try{
-            Role::create([
+            $role = Role::create([
                 'name' => $this->name,
                 'report_to' => $this->report_to,
             ]);
+            $this->triggerDualControl(get_class($role), $role->id, DualControl::ADD, 'adding role');
+
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             Log::error($e);

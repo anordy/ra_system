@@ -95,11 +95,6 @@ class ApprovalProcessing extends Component
             $this->renew->renew_expire_date = Carbon::now()->addYear($fee->duration)->toDateTimeString();
             $this->renew->save();
 
-//            $taxpayer = Taxpayer::find($this->agent->taxpayer_id);// todo: check if object exists
-//            if (empty($taxpayer)) {
-//                $this->alert('error', 'This taxpayer does not exist');
-//                return;
-//            }
             $this->renew->tax_agent->taxpayer->notify(new DatabaseNotification(
                 $subject = 'TAX-CONSULTANT APPROVAL',
                 $message = 'Your application has been approved',
