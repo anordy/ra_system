@@ -21,7 +21,7 @@ class TransactionFeesAddModal extends Component
     {
         return [
             'min_amount' => 'required|numeric',
-            'max_amount' => 'required|numeric',
+            'max_amount' => 'sometimes|nullable|numeric',
             'fee'        => 'required|numeric',
         ];
     }
@@ -31,12 +31,6 @@ class TransactionFeesAddModal extends Component
         if (!Gate::allows('setting-transaction-fees-add')) {
             abort(403);
         }
-
-        $validate = $this->validate([
-            'min_amount' => 'required|numeric',
-            'max_amount' => 'required|numeric',
-            'fee'        => 'required|numeric',
-        ]);
 
         DB::beginTransaction();
 
@@ -51,8 +45,7 @@ class TransactionFeesAddModal extends Component
             $this->flash('success', 'Fee added successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Throwable $exception) {
             DB::rollBack();
-            dd($exception);
-            Log::error($exception);
+            Log::error($exception->getMessage());
             $this->alert('error', 'Something went wrong');
         }
     }
