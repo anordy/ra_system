@@ -38,6 +38,22 @@ class TaxAuditInitiateTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+
+        $this->setTdAttributes(function (Column $column) {
+            if ($column->isField('location_id')) {
+                return [
+                    'style' => 'width: 10%;',
+                ];
+            }
+            
+            if ($column->isField('tax_id')) {
+                return [
+                    'style' => 'width: 10%;',
+                ];
+            }
+
+            return [];
+        });
     }
 
     protected $listeners = [
@@ -50,13 +66,13 @@ class TaxAuditInitiateTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            // Column::make('ZRB No', 'location.zin'),
+            Column::make('ZTN No', 'business.ztn_number'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
-            // Column::make('Business Location', 'id')
-            // ->label(fn ($row) => $row->location_id != 0 ? $row->location->name : ''),
-            // Column::make('TaxType', 'id')
-            // ->label(fn ($row) => $row->tax_type_id != 0 ? $row->taxType->name : ''),
+            Column::make('Business Location')
+                ->label(fn ($row) => $row->taxAuditLocationNames()),
+            Column::make('TaxType')
+                ->label(fn ($row) => $row->taxAuditTaxTypeNames()),
             Column::make('Period From', 'period_from'),
             Column::make('Period To', 'period_to'),
             Column::make('Created By', 'created_by_id')
@@ -64,10 +80,11 @@ class TaxAuditInitiateTable extends DataTableComponent
             Column::make('Created On', 'created_at')
                 ->label(fn ($row) => Carbon::create($row->created_at ?? null)->toDayDateTimeString()),
             Column::make('Action', 'id')
-                ->format(function ($value) {
+                ->format(function ($value, $row) {
+                    dd($row);
                     return <<<HTML
-                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-arrow-right"></i> Initiate Approval</button>
-                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> Initiate Approval</button>
+                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete</button>
                     HTML;
                 })
                 ->html(true),
