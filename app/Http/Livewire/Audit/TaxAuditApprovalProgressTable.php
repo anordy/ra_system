@@ -32,6 +32,15 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+
+        $this->setThAttributes(function (Column $column) {
+            if ($column->getTitle() == 'Tax Types') {
+                return [
+                    'style' => 'width: 20%;',
+                ];
+            }
+            return [];
+        });
     }
 
     public function columns(): array
@@ -42,7 +51,10 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
                 ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
-
+                Column::make('Business Location')
+                ->label(fn ($row) => $row->pinstance->taxAuditLocationNames()),
+            Column::make('Tax Types')
+                ->label(fn ($row) => $row->pinstance->taxAuditTaxTypeNames()),
             Column::make('Period From', 'pinstance.period_from')
                 ->label(fn ($row) => $row->pinstance->period_from ?? ''),
             Column::make('Period To', 'pinstance.period_to')
@@ -53,7 +65,7 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
                     return $user->full_name ?? '';
                 }),
             Column::make('Filled On', 'created_at')
-                ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
+                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
             Column::make('From State', 'from_place')
                 ->format(fn ($value) => strtoupper($value))
                 ->sortable()->searchable(),
@@ -61,7 +73,7 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
                 ->format(fn ($value) => strtoupper($value))
                 ->sortable()->searchable(),
             Column::make('Action', 'pinstance_id')
-                ->view('audit.approval.action')
+                ->view('audit.approval.approval-progress')
                 ->html(true),
 
         ];
