@@ -183,7 +183,7 @@ class DeclaredSalesAnalysis extends Component
         $salesConfigs = PortConfig::where('code', '!=', 'TLATZS')->get()->pluck('id');
         $headers = PortConfig::whereIn('code', array('NFAT', 'NLAT', 'NFSF', 'NLSF', 'IT'))
             ->get()->pluck('name');
-        $yearReturnGroup = PortReturnItem::select('port_configs.code', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+        $yearReturnGroup = PortReturnItem::select('port_configs.code','port_configs.currency', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('port_configs', 'port_configs.id', 'port_return_items.config_id')
             ->leftJoin('port_returns', 'port_returns.id', 'port_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'port_returns.financial_month_id')
@@ -191,7 +191,7 @@ class DeclaredSalesAnalysis extends Component
             ->whereIn('config_id', $salesConfigs)
             ->get()->groupBy(['year', 'month']);
 
-        $yearData = $this->formatDataArray($yearReturnGroup);
+        $yearData = $this->formatDataArrayPort($yearReturnGroup);
 
         $this->withoutPurchases = true;
         $this->returns = $yearData;
@@ -201,10 +201,10 @@ class DeclaredSalesAnalysis extends Component
     protected function sea()
     {
         $salesConfigs = PortConfig::where('code', '!=', 'TLATZS')->get()->pluck('id');
-        $headers = PortConfig::whereIn('code', array('NFSP', 'NFSP', 'ITTM', 'NLZNZ', 'ITZNZ', 'NSUS', 'NSTZ'))
+        $headers = PortConfig::whereIn('code', array('NFSP', 'NLTM', 'ITTM', 'NLZNZ', 'ITZNZ', 'NSUS', 'NSTZ'))
             ->get()->pluck('name');
 
-        $yearReturnGroup = PortReturnItem::select('port_configs.code', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+        $yearReturnGroup = PortReturnItem::select('port_configs.code','port_configs.currency', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('port_configs', 'port_configs.id', 'port_return_items.config_id')
             ->leftJoin('port_returns', 'port_returns.id', 'port_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'port_returns.financial_month_id')
@@ -212,7 +212,7 @@ class DeclaredSalesAnalysis extends Component
             ->whereIn('config_id', $salesConfigs)
             ->get()->groupBy(['year', 'month']);
 
-        $yearData = $this->formatDataArray($yearReturnGroup);
+        $yearData = $this->formatDataArrayPort($yearReturnGroup);
 
         $this->withoutPurchases = true;
         $this->returns = $yearData;
@@ -371,6 +371,39 @@ class DeclaredSalesAnalysis extends Component
             $yearData[$keyYear] = $monthData;
         }
 
+        return $yearData;
+    }
+
+       protected function formatDataArrayPort($yearReturnGroup)
+    {
+        $yearData = [];
+
+        foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
+            $monthData = [];
+            foreach ($monthreturnGroup as $keyMonth => $returnItems) {
+                $itemValue = [
+                    'month' => $keyMonth,
+                ];
+                $totalVatTzs = 0;
+                $totalVatUsd = 0;
+                $totalValue = 0;
+                foreach ($returnItems as $keyItem => $item) {
+                    $itemValue[$item['code']] = $item['value'];
+                    if ($item['currency'] == 'TZS') {
+                        $totalVatTzs += $item['vat'];
+                    } else {
+                        $totalVatUsd += $item['vat'];
+                    }
+                    $totalValue += $item['value'];
+                    // $totalVat += $item['vat'];
+                }
+                $itemValue['totalValue'] = $totalValue;
+                $itemValue['totalVatTzs'] = $totalVatTzs;
+                $itemValue['totalVatUsd'] = $totalVatUsd;
+                $monthData[] = $itemValue;
+            }
+            $yearData[$keyYear] = $monthData;
+        }
         return $yearData;
     }
 
