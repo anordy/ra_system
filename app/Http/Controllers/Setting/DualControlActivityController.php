@@ -18,14 +18,15 @@ class DualControlActivityController extends Controller
 
     public function show($id)
     {
-        $edited_values = '';
         $result = DualControl::findOrFail(decrypt($id));
+        $old_values = json_decode($result->old_values);
+        $new_values = '';
         if ($result->action == DualControl::EDIT)
         {
-            $edited_values = json_decode($result->edited_values);
+            $new_values = json_decode($result->new_values);
         }
-        $data = $this->getAllDetails($result->controllable_type, encrypt($result->controllable_type_id));
-        return view('settings.dual-control-activities.show', compact('result', 'data', 'edited_values'));
+//        $data = $this->getAllDetails($result->controllable_type, encrypt($result->controllable_type_id));
+        return view('settings.dual-control-activities.show', compact('result','old_values', 'new_values'));
     }
 
 
