@@ -11,17 +11,29 @@
             @livewire('approval.approval-count-card', ['modelName' => 'TaxVerification'])
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#all-businesses" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
+                <a href="#approval-progress" class="nav-item nav-link font-weight-bold">Approval Progress</a>
                 <a href="#pending-approval" class="nav-item nav-link font-weight-bold">Unpaid Returns</a>
             </nav>
 
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
-                <div id="all-businesses" class="tab-pane fade active show p-2"> <br><br>
-                    @livewire('returns.verification-filter', ['tablename' => $paidAproval]) <br>
-                    @livewire('verification.verification-approval-table')
+                <div id="all-businesses" class="tab-pane fade active show p-2">
+                    <div class="card p-2">
+                        @livewire('returns.verification-filter', ['tablename' => $paidAproval])
+                    </div>
+                    <div class="card p-2">
+                        @livewire('verification.verification-approval-table')
+                    </div>
                 </div>
-                <div id="pending-approval" class="tab-pane fade  p-2"> <br><br>
-                    @livewire('returns.verification-filter', ['tablename' => $unPaidAproval]) <br>
-                    @livewire('verification.verification-unpaid-approval-table')
+                <div id="approval-progress" class="tab-pane fade p-2">
+                    @livewire('verification.verification-approval-progress-table')
+                </div>
+                <div id="pending-approval" class="tab-pane fade p-2">
+                    <div class="card p-2">
+                        @livewire('returns.verification-filter', ['tablename' => $unPaidAproval])
+                    </div>
+                    <div class="card p-2">
+                        @livewire('verification.verification-unpaid-approval-table')
+                    </div>
                 </div>
             </div>
         </div>
