@@ -18,7 +18,14 @@ class CreateKYCSTable extends Migration
             $table->string('reference_no')->nullable();
 
             $table->unsignedBigInteger('id_type');
-            $table->string('id_number');
+            $table->string('nida_no')->nullable();
+            $table->string('zanid_no')->nullable();
+            $table->string('passport_no')->nullable();
+            $table->string('permit_number')->nullable();
+
+            $table->string('nida_verified_at')->nullable();
+            $table->string('zanid_verified_at')->nullable();
+            $table->string('passport_verified_at')->nullable();
 
             $table->string('first_name');
             $table->string('middle_name')->nullable();
@@ -31,7 +38,6 @@ class CreateKYCSTable extends Migration
 
             $table->unsignedBigInteger('region_id')->nullable();
 
-            $table->string('permit_number')->nullable();
             $table->bigInteger('verified_by')->nullable();
 
             $table->boolean('is_citizen');
@@ -39,10 +45,6 @@ class CreateKYCSTable extends Migration
 
             $table->foreign('id_type')->references('id')->on('id_types');
             $table->foreign('country_id')->references('id')->on('countries');
-
-            // Flags
-            // Information verified from NIDA/Immigration
-            $table->dateTime('authorities_verified_at')->nullable();
 
             // Biometric Enrolled
             $table->dateTime('biometric_verified_at')->nullable();

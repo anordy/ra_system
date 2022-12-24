@@ -15,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerificationUnpaidApprovalTable extends DataTableComponent
 {
-    use LivewireAlert,ReturnFilterTrait;
+    use LivewireAlert, ReturnFilterTrait;
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 
     public $data = [];
@@ -34,7 +34,7 @@ class VerificationUnpaidApprovalTable extends DataTableComponent
         $filter      = (new TaxVerification)->newQuery();
         $filter      = $this->dataFilter($filter, $this->data, $returnTable);
 
-        return $filter->with('business', 'location', 'taxType', 'taxReturn')
+        return $filter->with('business', 'location', 'taxtype', 'taxReturn')
             ->whereHas('taxReturn', function (Builder $builder) {
                 $builder->where('application_status', ReturnApplicationStatus::SUBMITTED)
                     ->whereNotIn('status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
@@ -46,7 +46,7 @@ class VerificationUnpaidApprovalTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['created_by_type', 'tax_return_type']);
+        $this->setAdditionalSelects(['created_by_type', 'tax_return_type', 'tax_type_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
@@ -60,9 +60,10 @@ class VerificationUnpaidApprovalTable extends DataTableComponent
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),
-            Column::make('Tax Type', 'taxType.name'), 
-            Column::make('Control Number', 'tax_return_id')
-                ->label(function($row){
+            Column::make('Tax Type')
+                ->label(fn ($row) => $row->taxtype->name ?? ''),
+            Column::make('Control Number')
+                ->label(function ($row) {
                     return $row->taxReturn->tax_return->bill->control_number ?? '';
                 }),
             Column::make('Filled By', 'created_by_id')
@@ -75,6 +76,9 @@ class VerificationUnpaidApprovalTable extends DataTableComponent
                 ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Payment Status', 'tax_return_id')
                 ->view('verification.payment_status'),
+            Column::make('Action', 'id')
+                ->view('verification.approval.unpaid-action')
+                ->html(true),
         ];
     }
 }

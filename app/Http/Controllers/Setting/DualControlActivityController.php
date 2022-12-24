@@ -18,6 +18,7 @@ class DualControlActivityController extends Controller
 
     public function show($id)
     {
+        $edited_values = '';
         $result = DualControl::findOrFail(decrypt($id));
         if ($result->action == DualControl::EDIT)
         {

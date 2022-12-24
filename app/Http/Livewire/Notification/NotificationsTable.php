@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class NotificationsTable extends Component
 {
     use LivewireAlert;
+    use WithPagination;
 
-    public $notifications;
     public $selectAll = false;
     public $selectedItems = [];
+    protected $paginationTheme = 'bootstrap';
 
     public function mount()
     {
@@ -23,12 +25,7 @@ class NotificationsTable extends Component
             ->where('notifiable_id', auth()->id())
             ->whereNull('read_at')
             ->increment('seen');
-            
-        $this->notifications = Notification::where('notifiable_type', get_class(auth()->user()))
-            ->where('notifiable_id', auth()->id())
-            ->whereNull('read_at')
-            ->latest()
-            ->get();
+   
     }
 
     public function toggleSelectAll()
@@ -62,6 +59,14 @@ class NotificationsTable extends Component
 
     public function render()
     {
-        return view('livewire.notifications.notifications-table');
+                 
+        $notifications = Notification::where('notifiable_type', get_class(auth()->user()))
+            ->where('notifiable_id', auth()->id())
+            ->whereNull('read_at')
+            ->latest()
+            ->paginate(10);
+        return view('livewire.notifications.notifications-table', [
+            'notifications' => $notifications
+        ]);
     }
 }

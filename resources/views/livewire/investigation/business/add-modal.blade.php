@@ -72,7 +72,7 @@
                     </div>
                     <div class="form-group col-lg-6">
                         <label class="control-label">Investigation From</label>
-                        <input type="date" class="form-control" wire:model.lazy="period_from" id="period_from">
+                        <input type="date" class="form-control" wire:model.defer="period_from" id="period_from">
                         @error('period_from')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -80,7 +80,7 @@
 
                     <div class="form-group col-lg-6">
                         <label class="control-label">Investigation To</label>
-                        <input type="date" class="form-control" wire:model.lazy="period_to" id="period_to">
+                        <input type="date" class="form-control" wire:model.defer="period_to" id="period_to">
                         @error('period_to')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -88,14 +88,14 @@
                     <div class="col-lg-12"></div>
                     <div class="col-lg-6 form-group">
                         <label for="intension">Intension</label>
-                        <textarea class="form-control" wire:model.lazy="intension" id="intension" rows="3"></textarea>
+                        <textarea class="form-control" wire:model.defer="intension" id="intension" rows="3"></textarea>
                         @error('intension')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="col-lg-6 form-group">
                         <label for="periodTo">Scope</label>
-                        <textarea class="form-control" wire:model.lazy="scope" id="scope" rows="3"></textarea>
+                        <textarea class="form-control" wire:model.defer="scope" id="scope" rows="3"></textarea>
                         @error('scope')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

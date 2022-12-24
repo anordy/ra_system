@@ -9,21 +9,23 @@ use App\Models\User;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Audit;
+use App\Models\SystemSetting;
+use App\Models\SystemSettingCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 trait DualControlActivityTrait
 {
-    public function triggerDualControl($model, $modelId, $action, $action_detail, $edited_values=null)
+    public function triggerDualControl($model, $modelId, $action, $action_detail, $edited_values = null)
     {
         $payload = [
             'controllable_type' => $model,
             'controllable_type_id' => $modelId,
-            'action' =>$action,
+            'action' => $action,
             'action_detail' => $action_detail,
             'edited_values' => $edited_values,
             'create_by_id' => Auth::id(),
-            'status' => 'pending'
+            'status' => 'pending',
         ];
         DualControl::updateOrCreate($payload);
     }
@@ -39,8 +41,14 @@ trait DualControlActivityTrait
                 return 'Role';
                 break;
 
-            case TaPaymentConfiguration::class;
+            case TaPaymentConfiguration::class:
                 return 'Tax Consultant Fee';
+                break;
+            case SystemSetting::class:
+                return 'Systen Setting Configuration';
+                break;
+            case SystemSettingCategory::class:
+                return 'Systen Setting Category Configuration';
                 break;
 
             default:
@@ -62,10 +70,17 @@ trait DualControlActivityTrait
                 return 'Role';
                 break;
 
-            case TaPaymentConfiguration::class;
+            case TaPaymentConfiguration::class:
                 return 'Tax Consultant Fee';
                 break;
-
+            case SystemSetting::class:
+                $systemSetting = $model::findOrFail($modelId);
+                return $systemSetting;
+                break;
+            case SystemSettingCategory::class:
+                $systemSettingCategory = $model::findOrFail($modelId);
+                return $systemSettingCategory;
+                break;
             default:
                 abort(404);
         }
@@ -76,27 +91,33 @@ trait DualControlActivityTrait
         switch ($model) {
             case User::class:
                 $user = User::findOrFail($modelId);
-                $user->update(['is_approved'=> $status]);
+                $user->update(['is_approved' => $status]);
                 return $user;
                 break;
 
             case Role::class:
                 $role = Role::findOrFail($modelId);
-                $role->update(['is_approved'=> $status]);
+                $role->update(['is_approved' => $status]);
                 return $role;
                 break;
 
-            case TaPaymentConfiguration::class;
+            case TaPaymentConfiguration::class:
                 return 'Tax Consultant Fee';
+                break;
+
+            case SystemSetting::class:
+                $systemSetting = $model::findOrFail($modelId);
+                $systemSetting->update(['is_approved' => $status]);
+                return $systemSetting;
+                break;
+            case SystemSettingCategory::class:
+                $systemSettingCategory = $model::findOrFail($modelId);
+                $systemSettingCategory->update(['is_approved' => $status]);
+                return $systemSettingCategory;
                 break;
 
             default:
                 abort(404);
         }
     }
-
-
-
-
-
 }

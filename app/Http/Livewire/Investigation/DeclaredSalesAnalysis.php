@@ -286,7 +286,7 @@ class DeclaredSalesAnalysis extends Component
 
     protected function bfo()
     {
-        $configs = BfoConfig::where('code', '!=', 'TotalFBO')->get()->pluck('id');
+        $configs = BfoConfig::where('code', '!=', 'TotalFBO')->get();
         $salesConfigs = $configs->pluck('id');
         $headers = $configs->pluck('name');
 

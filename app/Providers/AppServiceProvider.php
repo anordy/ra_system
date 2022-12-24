@@ -30,9 +30,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Livewire::component('modals', Modals::class);
         Paginator::useBootstrap();
-
+        Livewire::component('modals', Modals::class);
         Livewire::component('drivers-license.wizard.application-initial-step', ApplicationInitialStep::class);
         Livewire::component('drivers-license.wizard.application-details-step', ApplicationDetailsStep::class);
         Livewire::component('drivers-license.wizard.license-details-step', LicenseDetailsStep::class);
