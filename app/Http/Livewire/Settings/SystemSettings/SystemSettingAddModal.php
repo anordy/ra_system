@@ -2,10 +2,13 @@
 
 namespace App\Http\Livewire\Settings\SystemSettings;
 
+use App\Models\DualControl;
 use App\Models\SystemSetting;
 use App\Models\SystemSettingCategory;
+use App\Traits\DualControlActivityTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +17,7 @@ use Livewire\Component;
 
 class SystemSettingAddModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
     public $name;
     public $system_setting_category;
     public $value;
@@ -53,7 +56,7 @@ class SystemSettingAddModal extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            SystemSetting::create([
+            $systemSetting = SystemSetting::create([
                 'system_setting_category_id' => $this->system_setting_category,
                 'name' => $this->name,
                 'code' => $this->code,
@@ -62,7 +65,7 @@ class SystemSettingAddModal extends Component
                 'description' => $this->description,
                 'created_at' => Carbon::now()
             ]);
-            
+            $this->triggerDualControl(get_class($systemSetting), $systemSetting->id, DualControl::ADD, 'adding system setting entry');
             DB::commit();
             $this->alert('success', 'Record added successfully');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());

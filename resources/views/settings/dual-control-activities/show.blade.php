@@ -11,7 +11,13 @@
         </div>
 
         <div class="card-body">
-            @include('settings.dual-control-activities.details.user')
+            @if ($result->controllable_type === \App\Models\DualControl::USER)
+                @include('settings.dual-control-activities.details.user')
+            @elseif ($result->controllable_type === \App\Models\DualControl::SYSTEMSETTINGCONFIG)
+                @include('settings.dual-control-activities.details.system-settings')
+            @elseif ($result->controllable_type === \App\Models\DualControl::SYSTEMSETTINGCATEGORY)
+                @include('settings.dual-control-activities.details.system-settings-category')
+            @endif
 
             <div class="d-flex justify-content-end">
                 @if(approvalLevel(Auth::user()->level_id, 'Checker'))
