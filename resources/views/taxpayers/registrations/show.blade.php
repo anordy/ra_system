@@ -22,10 +22,12 @@
                     <span class="font-weight-bold text-uppercase">Mobile</span>
                     <p class="my-1">{{ $kyc->mobile }}</p>
                 </div>
+                @if ($kyc->alt_mobile)
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Alternative Mobile</span>
                     <p class="my-1">{{ $kyc->alt_mobile }}</p>
                 </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Nationality</span>
                     <p class="my-1">{{ $kyc->country->nationality }}</p>
@@ -34,17 +36,31 @@
             </div>
             <hr />
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">{{ $kyc->identification->name }} No.</span>
-                    <p class="my-1">{{ $kyc->id_number }}</p>
-                </div>
-                @if($kyc->work_permit)
+                @if ($kyc->nida_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">NIDA No.</span>
+                        <p class="my-1">{{ $kyc->nida_no }}</p>
+                    </div>
+                @endif
+                @if ($kyc->zanid_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">ZANID No.</span>
+                        <p class="my-1">{{ $kyc->zanid_no }}</p>
+                    </div>
+                @endif
+                @if ($kyc->passport_no)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Passport No.</span>
+                        <p class="my-1">{{ $kyc->passport_no }}</p>
+                    </div>
+                @endif
+                @if ($kyc->work_permit)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Residence Permit</span>
                         <p class="my-1">{{ $kyc->work_permit }}</p>
                     </div>
                 @endif
-                @if($kyc->residence_permit)
+                @if ($kyc->residence_permit)
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Work Permit</span>
                         <p class="my-1">{{ $kyc->residence_permit }}</p>

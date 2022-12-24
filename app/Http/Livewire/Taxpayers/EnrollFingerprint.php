@@ -24,11 +24,11 @@ class EnrollFingerprint extends Component
 
     public function mount()
     {
-        if (!$this->kyc->authorities_verified_at) {
+        if ($this->kyc->zanid_verified_at || $this->kyc->passport_verified_at) {
+            $this->userVerified = true;
+        } else {
             $this->userVerified = false;
             $this->verifyingUser = true;
-        } else {
-            $this->userVerified = true;
         }
     }
 

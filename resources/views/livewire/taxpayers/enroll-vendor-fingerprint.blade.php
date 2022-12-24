@@ -3,7 +3,7 @@
         <button class="tab-item {{ $selectedStep === 'details' ? 'active' : '' }}" wire:click="changeStep('details')">
             Taxpayer Details
         </button>
-        @if (!empty($kyc->authorities_verified_at))
+        @if ( (empty($kyc->nida_verified_at) && !empty($kyc->zanid_verified_at) ) || !empty($kyc->zanid_verified_at) || !empty($kyc->passport_verified_at))
             <button class="tab-item {{ $selectedStep === 'biometric' ? 'active' : '' }}"
                 wire:click="changeStep('biometric')">
                 Biometric Enrollment

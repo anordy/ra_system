@@ -36,7 +36,7 @@ class Passport extends Component
     {
         $immigration_controller = new ImmigrationController;
         try {
-            $this->passport = $immigration_controller->getPassportData($this->kyc->id_number, $this->kyc->permit_number);
+            $this->passport = $immigration_controller->getPassportData($this->kyc->passport_no, $this->kyc->permit_number);
         } catch (Exception $e) {
             Log::error($e);
             return $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
@@ -95,7 +95,7 @@ class Passport extends Component
                 'first_name' =>  $this->convertStringToCamelCase($this->passport['FirstName']),
                 'middle_name' => $this->convertStringToCamelCase($this->passport['MiddleName']),
                 'last_name' => $this->convertStringToCamelCase($this->passport['SurName']),
-                'authorities_verified_at' => Carbon::now()->toDateTimeString(),
+                'passport_verified_at' => Carbon::now()->toDateTimeString(),
             ]);
             $this->alert('success', 'Taxpayers details has been approved successful!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
