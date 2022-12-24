@@ -16,4 +16,10 @@ class DualControl extends Model
     public const DEACTIVATE = 'deactivate';
     public const ACTIVATE = 'activate';
 
+
+    //Models
+    public const USER = User::class;
+    public const SYSTEMSETTINGCATEGORY = SystemSettingCategory::class;
+    public const SYSTEMSETTINGCONFIG = SystemSetting::class;
+
 }
