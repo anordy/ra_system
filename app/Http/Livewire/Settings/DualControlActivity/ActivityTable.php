@@ -33,7 +33,9 @@ class ActivityTable extends DataTableComponent
                     return $this->getModule($value);
                 }),
             Column::make("Action Type", "action_detail")
-                ->sortable(),
+                ->sortable()->format(function ($value){
+                    return ucwords($value);
+                }),
             Column::make("Created at", "created_at")
                 ->sortable(),
             Column::make('Status', 'status')

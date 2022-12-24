@@ -24,7 +24,7 @@
 
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Action Type</span>
-                            <p class="my-1">{{ $result->action_detail }}</p>
+                            <p class="my-1">{{ ucwords($result->action_detail) }}</p>
                         </div>
 
                         <div class="col-md-3 mb-3">
@@ -33,13 +33,15 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Status</span>
-                            <p class="my-1">{{ $result->status }}</p>
+                            <p class="my-1">{{ ucwords($result->status) }}</p>
                         </div>
                     </div>
                 </div>
             </div>
             @if ($result->controllable_type === \App\Models\DualControl::USER)
                 @include('settings.dual-control-activities.details.user')
+            @elseif ($result->controllable_type === \App\Models\DualControl::ROLE)
+                @include('settings.dual-control-activities.details.roles')
             @elseif ($result->controllable_type === \App\Models\DualControl::SYSTEM_SETTING_CONFIG)
                 @include('settings.dual-control-activities.details.system-settings')
             @elseif ($result->controllable_type === \App\Models\DualControl::SYSTEM_SETTING_CATEGORY)
