@@ -13,14 +13,11 @@ Application Details
 | Alt Mobile | {{ $kyc->alt_mobile ?? 'N/A' }} |
 | ID Type | {{ $kyc->identification->name ?? 'N/A' }} |
 @if ($kyc->identification->name === \App\Models\IDType::NIDA)
-| NIDA | {{ $kyc->id_number ?? 'N/A' }} |
+| NIDA | {{ $kyc->nida_no ?? 'N/A' }} |
 @elseif($kyc->identification->name === \App\Models\IDType::ZANID)
-| ZANID | {{ $kyc->id_number ?? 'N/A' }} |
-@elseif($kyc->identification->name === \App\Models\IDType::ZANID)
-| NIDA | {{ $kyc->extra_id_number ?? 'N/A' }} |
-| ZANID | {{ $kyc->id_number ?? 'N/A' }} |
+| ZANID | {{ $kyc->zanid_no ?? 'N/A' }} |
 @elseif($kyc->identification->name === \App\Models\IDType::PASSPORT)
-| PASSPORT NO | {{ $kyc->id_number ?? 'N/A' }} |
+| PASSPORT NO | {{ $kyc->passport_no ?? 'N/A' }} |
 | PERMIT NO | {{ $kyc->permit_number ?? 'N/A' }} |
 @endif
 | Physical Address | {{ $kyc->physical_address }} |

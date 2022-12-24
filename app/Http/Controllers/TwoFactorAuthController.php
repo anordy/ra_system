@@ -14,6 +14,10 @@ class TwoFactorAuthController extends Controller
 
     public function index()
     {
+        if (Auth::user()->is_password_expired) {
+            return redirect()->route('password.change');
+        }
+        
         return view('layouts.otp_confirm');
     }
 

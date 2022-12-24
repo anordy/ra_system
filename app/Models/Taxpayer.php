@@ -119,4 +119,9 @@ class Taxpayer extends Eloquent implements Auditable
     public function leasePayments() {
         return $this->hasMany(LeasePayment::class);
     }
+
+    public function passwordHistories()
+    {
+        return $this->morphMany(PasswordHistory::class, 'user');
+    }
 }

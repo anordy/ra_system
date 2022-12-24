@@ -130,6 +130,8 @@ use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+
+
 use App\Http\Controllers\v1\ZanMalipoController;
 
 //use App\Http\Controllers\Returns\HotelLevyReturnController;
@@ -179,6 +181,8 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::resource('/interest-rates', InterestRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::resource('/penalty-rates', PenaltyRateController::class);
+        Route::get('/setting-system-categories/view', [SystemSettingsController::class, 'setting_categories'])->name('setting-system-categories.view');
+        Route::get('/system-settings/view', [SystemSettingsController::class, 'system_settings'])->name('system-settings.view');
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
         Route::get('financial-months', [FinancialMonthsController::class, 'index'])->name('financial-months');
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {

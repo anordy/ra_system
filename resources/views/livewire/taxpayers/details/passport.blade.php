@@ -2,14 +2,14 @@
     <hr>
     <div class="row">
         <div class="col-md-4 mb-3">
-            <span class="font-weight-bold text-uppercase">{{ $kyc->identification->name }} No.</span>
-            <p class="my-1">{{ $kyc->id_number }}</p>
+            <span class="font-weight-bold text-uppercase">Passport No.</span>
+            <p class="my-1">{{ $kyc->passport_no }}</p>
         </div>
         <div class="col-md-4 mb-3">
             <span class="font-weight-bold text-uppercase">Permit Number</span>
             <p class="my-1">{{ $kyc->permit_number }}</p>
         </div>
-        @if (empty($kyc->authorities_verified_at))
+        @if (empty($kyc->passport_verified_at))
             <div class="col-md-4 mb-3">
                 <button wire:click="validatePassport" wire:loading.attr="disabled" class="btn btn-info btn-sm">
                     <div wire:loading wire:target="validatePassport">

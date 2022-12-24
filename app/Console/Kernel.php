@@ -31,6 +31,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('daily:debt-notice')->everyMinute()->runInBackground();
         $schedule->command('daily:tax-effective-date')->everyMinute()->runInBackground();
         $schedule->command('daily:debt-zero-balance')->everyMinute()->runInBackground();
+        $schedule->command('daily:check-taxpayer-password-expire')->everyMinute()->runInBackground();
+        $schedule->command('daily:check-user-password-expire')->everyMinute()->runInBackground();
 
     }
 
