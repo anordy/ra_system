@@ -243,6 +243,9 @@
         </thead>
 
         <tbody>
+        @php
+            $return->penalties = $return->penalties->merge($return->tax_return->penalties);
+        @endphp
         @if(count($return->penalties))
             @foreach ($return->penalties as $penalty)
                 <tr>
@@ -289,6 +292,9 @@
         </thead>
 
         <tbody>
+         @php
+            $return_->penalties = $return_->penalties->merge($return_->tax_return->penalties);
+        @endphp
         @if(count($return_->penalties))
             @foreach ($return_->penalties as $penalty)
                 <tr>

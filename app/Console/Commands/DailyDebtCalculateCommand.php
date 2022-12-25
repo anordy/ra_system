@@ -70,7 +70,7 @@ class DailyDebtCalculateCommand extends Command
          * CONDITION 2: The return is not be paid at all
          * date1 - date2: if date1 is greater than date2 the result will be positive
          */
-        $tax_returns = TaxReturn::selectRaw('tax_returns.*, CURRENT_DATE - filing_due_date as days_passed')
+        $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - filing_due_date) as days_passed')
             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
             ->whereRaw("CURRENT_DATE - filing_due_date > 60") // Since filing due date is of last month
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
@@ -88,6 +88,7 @@ class DailyDebtCalculateCommand extends Command
                         'return_category' => ReturnCategory::DEBT,
                         'application_step' => ApplicationStep::DEBT
                     ]);
+                    $tax_return->return->update(['return_category' => ReturnCategory::DEBT]);
                 } else {
                     /**
                      * Mark return process as overdue if days_passed is greater than 30 days (Meaning 30 days as debt and another 30 days makes it an overdue)
@@ -98,6 +99,7 @@ class DailyDebtCalculateCommand extends Command
                         'return_category' => ReturnCategory::OVERDUE,
                         'application_step' => ApplicationStep::OVERDUE
                     ]);
+                    $tax_return->return->update(['return_category' => ReturnCategory::OVERDUE]);
                 }
             }
 

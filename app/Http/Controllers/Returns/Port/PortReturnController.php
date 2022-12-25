@@ -42,6 +42,7 @@ class PortReturnController extends Controller
 
         $returnId = decrypt($return_id);
         $return   = PortReturn::findOrFail($returnId);
+        $return->penalties = $return->penalties->merge($return->tax_return->penalties);
 
         return view('returns.port.show', compact('return'));
     }

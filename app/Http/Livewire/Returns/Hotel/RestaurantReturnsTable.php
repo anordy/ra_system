@@ -25,7 +25,7 @@ class RestaurantReturnsTable extends DataTableComponent
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['financial_month_id']);
+        $this->setAdditionalSelects(['financial_month_id', 'business_location_id']);
     }
 
     public function filterData($data)
@@ -53,7 +53,10 @@ class RestaurantReturnsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
             ->sortable()
-            ->searchable(),
+            ->searchable()
+            ->format(function ($value, $row) {
+                return "{$row->businessLocation->name}";
+            }),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),

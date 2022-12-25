@@ -65,11 +65,17 @@ class DailyDebtPenaltyInterest extends Command
          * CONDITION 3: The current payment_due_date has reached
          * MONTHS_BETWEEN(date1, date2) - If date1 is greater than date2, then the result is positive & vice      versa is true
          */
-        $tax_returns = TaxReturn::selectRaw('tax_returns.*, MONTHS_BETWEEN(CURRENT_DATE, filing_due_date) as periods, MONTHS_BETWEEN(curr_payment_due_date, CURRENT_DATE) as penatableMonths')
+        $tax_returns = TaxReturn::selectRaw('
+            tax_returns.*, 
+            ROUND(MONTHS_BETWEEN(CURRENT_DATE, filing_due_date)) as periods, 
+            ROUND(MONTHS_BETWEEN(curr_payment_due_date, CURRENT_DATE)) as penatableMonths
+        ')
             ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
-            ->whereRaw("curr_payment_due_date - CURRENT_DATE > 0")
-            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
+            // ->whereRaw("CURRENT_DATE - curr_payment_due_date > 0") // This determines if the payment due date has reached
+            ->whereNotIn('payment_status', [ReturnStatus::COMPLETE]) // Get all non paid returns
             ->get();
+
+        // dd($tax_returns);
 
         if ($tax_returns) {
 
@@ -77,12 +83,13 @@ class DailyDebtPenaltyInterest extends Command
             try {
 
                 foreach ($tax_returns as $tax_return) {
+
                     // Generate penalty
                     PenaltyForDebt::generateReturnsPenalty($tax_return);
 
-                    // Cancel previous bill if exists
-                    if ($tax_return->bill) {
-                        CancelBill::dispatch($tax_return->bill, 'Debt Penalty Increment');
+                    // Cancel previous latest bill if exists
+                    if ($tax_return->latestBill()) {
+                        CancelBill::dispatch($tax_return->latestBill(), 'Debt Penalty Increment');
                     }
 
                     GenerateControlNo::dispatch($tax_return);
@@ -119,9 +126,9 @@ class DailyDebtPenaltyInterest extends Command
                     // Generate penalty
                     PenaltyForDebt::generateAssessmentsPenalty($tax_assessment);
 
-                    // Cancel previous bill if exists
-                    if ($tax_assessment->bill) {
-                        CancelBill::dispatch($tax_assessment->bill, 'Debt Penalty Increment');
+                    // Cancel previous latest bill if exists
+                    if ($tax_assessment->latestBill()) {
+                        CancelBill::dispatch($tax_assessment->latestBill(), 'Debt Penalty Increment');
                     }
 
                     GenerateAssessmentDebtControlNo::dispatch($tax_assessment);
