@@ -51,6 +51,7 @@ class TransactionFeesEditModal extends Component
                 'minimum_amount' => $this->min_amount,
                 'maximum_amount' => $this->max_amount,
                 'fee' => $this->fee,
+                'is_approved' => 0,
                 'created_by' => Auth::id()
             ]);
             $this->flash('success', 'Fee updated successfully', [], redirect()->back()->getTargetUrl());

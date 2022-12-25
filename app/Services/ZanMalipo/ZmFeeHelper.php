@@ -3,6 +3,7 @@
 namespace App\Services\ZanMalipo;
 
 use App\Models\TaxType;
+use App\Models\TransactionFee;
 
 class ZmFeeHelper
 {
@@ -13,8 +14,9 @@ class ZmFeeHelper
      * @return array
      * @throws \Exception
      */
-    public static function addTransactionFee(array $billItems, $currency, $exchangeRate): array {
-        if (!is_numeric($exchangeRate) || $exchangeRate <= 0){
+    public static function addTransactionFee(array $billItems, $currency, $exchangeRate): array
+    {
+        if (!is_numeric($exchangeRate) || $exchangeRate <= 0) {
             throw new \Exception("Exchange rate can not be zero or null.");
         }
 
@@ -31,37 +33,27 @@ class ZmFeeHelper
             }
         }
 
-        if (!is_numeric($bill_amount) || $bill_amount <= 0){
+        if (!is_numeric($bill_amount) || $bill_amount <= 0) {
             throw new \Exception("Bill amount can not be zero, null or not a number.");
         }
 
         $equivalent_amount = $bill_amount * $exchangeRate;
 
-        $fee = 0;
-        switch ($equivalent_amount) {
-            case $equivalent_amount >= 0.00 && $equivalent_amount <= 100000.00:
-                $fee = $equivalent_amount * 0.025;
-                break;
-            case $equivalent_amount >= 100001.00 && $equivalent_amount <= 500000.00:
-                $fee = $equivalent_amount * 0.02;
-                break;
-            case $equivalent_amount >= 500001.00 && $equivalent_amount <= 1000000.00:
-                $fee = $equivalent_amount * 0.013;
-                break;
-            case $equivalent_amount >= 1000001.00 && $equivalent_amount <= 5000000.00:
-                $fee = $equivalent_amount * 0.003;
-                break;
-            case $equivalent_amount >= 5000001.00 && $equivalent_amount <= 10000000.00:
-                $fee = $equivalent_amount * 0.0015;
-                break;
-            case $equivalent_amount >= 10000001.00:
-                $fee = 20000;
-                break;
-            default:
-                throw new \Exception('Bill amount out of range.');
+        $transactionFee = TransactionFee::whereNull('maximum_amount')->select('minimum_amount', 'fee')->first();
+        if ($transactionFee == null) {
+            return 0;
+        }
+        $minFee = $transactionFee->minimum_amount;
+
+//if the amount exceed the maximum fee range we take the constant fee
+        if ($minFee <= $equivalent_amount) {
+            $fee = $transactionFee->fee;
+        } else {
+            $fee = TransactionFee::where('minimum_amount', '<=', $equivalent_amount)->where('maximum_amount', '>=', $equivalent_amount)->pluck('fee')->first();
+            $fee = $fee * $equivalent_amount;
         }
 
-        if ($currency != 'TZS'){
+        if ($currency != 'TZS') {
             $fee = round($fee / $exchangeRate, 2);
         }
 
