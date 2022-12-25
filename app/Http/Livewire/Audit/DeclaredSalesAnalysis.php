@@ -375,7 +375,39 @@ class DeclaredSalesAnalysis extends Component
     }
  
     
-    
+         protected function formatDataArrayPort($yearReturnGroup)
+    {
+        $yearData = [];
+
+        foreach ($yearReturnGroup as $keyYear => $monthreturnGroup) {
+            $monthData = [];
+            foreach ($monthreturnGroup as $keyMonth => $returnItems) {
+                $itemValue = [
+                    'month' => $keyMonth,
+                ];
+                $totalVatTzs = 0;
+                $totalVatUsd = 0;
+                $totalValue = 0;
+                foreach ($returnItems as $keyItem => $item) {
+                    $itemValue[$item['code']] = $item['value'];
+                    if ($item['currency'] == 'TZS') {
+                        $totalVatTzs += $item['vat'];
+                    } else {
+                        $totalVatUsd += $item['vat'];
+                    }
+                    $totalValue += $item['value'];
+                    // $totalVat += $item['vat'];
+                }
+                $itemValue['totalValue'] = $totalValue;
+                $itemValue['totalVatTzs'] = $totalVatTzs;
+                $itemValue['totalVatUsd'] = $totalVatUsd;
+                $monthData[] = $itemValue;
+            }
+            $yearData[$keyYear] = $monthData;
+        }
+        return $yearData;
+    }
+
 
     protected function formatQuaters($yearReturnGroup)
     {
