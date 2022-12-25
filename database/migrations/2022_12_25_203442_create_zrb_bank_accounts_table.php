@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSystemSettingsTable extends Migration
+class CreateZrbBankAccountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateSystemSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('system_settings', function (Blueprint $table) {
+        Schema::create('zrb_bank_accounts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('system_setting_category_id');
-            $table->string('name');
-            $table->string('code');
-            $table->string('description', 4000);
-            $table->string('unit');
-            $table->string('value');
+            $table->unsignedBigInteger('bank_id');
+            $table->string('account_name');
+            $table->string('account_number');
+            $table->string('branch_name');
+            $table->string('currency_id');
             $table->string('is_approved')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ class CreateSystemSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('system_settings');
+        Schema::dropIfExists('zrb_bank_accounts');
     }
 }

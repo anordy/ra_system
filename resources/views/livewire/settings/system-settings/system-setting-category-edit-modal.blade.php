@@ -10,28 +10,15 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
+                        <input type="text" class="form-control" wire:model.defer="name" id="name">
                         @error('name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                    {{-- <div class="form-group col-lg-12">
-                        <label class="control-label">Value</label>
-                        <input type="text" class="form-control" wire:model.lazy="value" id="value">
-                        @error('value')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label class="control-label">Unit</label>
-                        <input type="text" class="form-control" wire:model.lazy="unit" id="unit">
-                        @error('unit')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
                     </div> --}}
                     <div class="form-group col-lg-12">
                         <label class="control-label">Description</label>
-                        <textarea type="text" rows="3" class="form-control" wire:model.lazy="description" id="description"></textarea>
+                        <textarea type="text" rows="3" class="form-control" wire:model.defer="description" id="description"></textarea>
                         @error('description')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
