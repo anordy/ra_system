@@ -7,6 +7,7 @@ use App\Models\DualControl;
 use App\Models\Role;
 use App\Traits\DualControlActivityTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class DualControlActivityController extends Controller
 {
@@ -14,11 +15,17 @@ class DualControlActivityController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('setting-dual-control-activities-view')) {
+            abort(403);
+        }
         return view('settings.dual-control-activities.index');
     }
 
     public function show($id)
     {
+        if (!Gate::allows('setting-dual-control-activities-view')) {
+            abort(403);
+        }
         $result = DualControl::findOrFail(decrypt($id));
         $data = $this->getAllDetails($result->controllable_type, encrypt($result->controllable_type_id));
         $old_values = json_decode($result->old_values);

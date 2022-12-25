@@ -284,8 +284,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'system-setting-edit', 'sys_module_id' => 18],
             ['name' => 'system-setting-delete', 'sys_module_id' => 18],
 
-            ['name' => 'setting-approval-level', 'sys_module_id' => 18],
-            ['name' => 'setting-dual-control-activities', 'sys_module_id' => 18],
+            ['name' => 'setting-approval-level-view', 'sys_module_id' => 18],
+            ['name' => 'setting-approval-level-add', 'sys_module_id' => 18],
+            ['name' => 'setting-dual-control-activities-view', 'sys_module_id' => 18],
+
             
 
             # System

@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Settings\DualControlActivity;
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -22,6 +23,9 @@ class Approve extends Component
 
     public function approve()
     {
+        if (!Gate::allows('setting-dual-control-activities-view')) {
+            abort(403);
+        }
         $req = DualControl::findOrFail($this->dual_control_id);
         if (!empty($req)) {
             DB::beginTransaction();
@@ -43,6 +47,9 @@ class Approve extends Component
 
     public function reject()
     {
+        if (!Gate::allows('setting-dual-control-activities-view')) {
+            abort(403);
+        }
         $req = DualControl::findOrFail($this->dual_control_id);
         if (!empty($req)) {
             DB::beginTransaction();
