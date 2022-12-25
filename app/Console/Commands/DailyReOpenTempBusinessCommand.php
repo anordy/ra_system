@@ -57,7 +57,7 @@ class DailyReOpenTempBusinessCommand extends Command
     {
 
         $closed_businesses = BusinessTempClosure::where('status', 'approved')
-            ->whereRaw("opening_date - CURRENT_DATE > 0")
+            ->whereRaw("CURRENT_DATE - opening_date > 0")
             ->get();
 
         DB::beginTransaction();
