@@ -47,6 +47,8 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
     {
         return [
             Column::make('user_type', 'user_id')->hideIf(true),
+            Column::make('ZTN No')
+                ->label(fn ($row) => $row->pinstance->business->ztn_number ?? ''),
             Column::make('TIN', 'pinstance.business.tin')
                 ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
