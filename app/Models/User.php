@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Services\Verification\PayloadInterface;
 use App\Traits\HasPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements PayloadInterface
 {
     use HasApiTokens, HasFactory, Notifiable, HasPermissions;
     protected $guarded = [];
@@ -51,5 +52,13 @@ class User extends Authenticatable
         return false;
     }
 
+    public static function getPayloadColumns(): array
+    {
+        return ['id', 'email', 'phone', 'password', 'status'];
+    }
 
+    public static function getTableName(): string
+    {
+        return 'users';
+    }
 }

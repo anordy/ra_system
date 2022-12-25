@@ -80,6 +80,10 @@ class CreateTaxReturnsTable extends Migration
             $table->dateTime('curr_payment_due_date')->nullable();
             $table->dateTime('curr_filing_due_date');
 
+            $table->boolean('failed_verification')->default(0); // TODO: Maybe remove
+            $table->boolean('is_suspected')->default(0); // TODO: Maybe remove
+            $table->text('ci_payload', 4000)->nullable();
+
             $table->timestamps();
         });
     }

@@ -100,11 +100,18 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
         'dailyJobs' => [
             'driver' => 'daily',
             'path' => storage_path('logs/jobs/daily-job/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
-    ],
 
+        'verification' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/verification/verification.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ]
+    ],
 ];

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Traits\CheckReturnConfigurationTrait;
+use App\Traits\VerificationTrait;
 
 class DashboardController extends Controller
 {
-    use CheckReturnConfigurationTrait;
+    use CheckReturnConfigurationTrait, VerificationTrait;
 
     public function index()
     {
@@ -26,4 +28,11 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('issues'));
     }
+
+    public function sample(){
+        foreach (User::all() as $user) {
+           $this->sign($user->id);
+        }
+    }
+
 }

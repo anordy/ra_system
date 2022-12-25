@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserOtp;
+use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -13,8 +14,7 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers;
-
+    use AuthenticatesUsers, VerificationTrait;
 
     protected $maxAttempts = 3;
     protected $decayMinutes = 2;
@@ -23,6 +23,16 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => ['logout']]);
+    }
+
+    public function getPayloadColumns(): array
+    {
+        return ['id', 'email', 'phone', 'password', 'status'];
+    }
+
+    public function getPayloadTable(): string
+    {
+        return 'users';
     }
 
     public function showLoginForm()
@@ -44,7 +54,6 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-
         $this->validateLogin($request);
 
         $user =  $request->input($this->username());
@@ -62,6 +71,12 @@ class LoginController extends Controller
         if ($user->status == 0) {
             throw ValidationException::withMessages([
                 $this->username() =>  "Your account is locked, Please contact your admin to unlock your account",
+            ]);
+        }
+
+        if (!$this->verify($user->id)){
+            throw ValidationException::withMessages([
+                $this->username() =>  "Your account could not be verified, please contact system administrator.",
             ]);
         }
 

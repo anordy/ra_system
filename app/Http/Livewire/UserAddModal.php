@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Traits\VerificationTrait;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use ZxcvbnPhp\Zxcvbn;
 use Livewire\Component;
 use App\Events\SendMail;
@@ -21,7 +23,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 class UserAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, VerificationTrait;
 
     public $roles = [];
     public $fname;
@@ -33,7 +35,6 @@ class UserAddModal extends Component
     public $password;
     public $password_confirmation;
     public $passwordStrength = 0;
-
 
     protected function rules()
     {
@@ -78,6 +79,7 @@ class UserAddModal extends Component
 
         $this->validate();
         try {
+            DB::beginTransaction();
             $user = User::create([
                 'fname' => $this->fname,
                 'lname' => $this->lname,
@@ -89,6 +91,12 @@ class UserAddModal extends Component
                 'password' => Hash::make($this->password),
             ]);
 
+            // Get ci_payload
+            if (!$this->sign($user)){
+                throw new Exception('Failed to verify user data.');
+            }
+
+            DB::commit();
 
             $admins = User::whereHas('role', function ($query) {
                 $query->where('name', 'Administrator');
@@ -112,6 +120,7 @@ class UserAddModal extends Component
 
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }

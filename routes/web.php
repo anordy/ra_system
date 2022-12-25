@@ -128,7 +128,7 @@ use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 
-//use App\Http\Controllers\Returns\HotelLevyReturnController;
+Route::get('/test', [DashboardController::class, 'sample']);
 
 Auth::routes();
 

@@ -10,15 +10,15 @@
                 <div class="row pr-3 pl-3">
                     <div class="row">
                         <div class="form-group col-lg-6">
-                            <label class="control-label">First Name</label>
-                            <input type="text" class="form-control" wire:model.defer="fname" id="fnname">
+                            <label class="control-label" for="f_name">First Name</label>
+                            <input type="text" class="form-control" wire:model.defer="fname" id="f_name" autocomplete="given-name">
                             @error('fname')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group col-lg-6">
-                            <label class="control-label">Last Name</label>
-                            <input type="text" class="form-control" wire:model.defer="lname" id="lame">
+                            <label class="control-label" for="l_name">Last Name</label>
+                            <input type="text" class="form-control" wire:model.defer="lname" id="l_name" autocomplete="family-name">
                             @error('lname')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
