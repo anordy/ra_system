@@ -898,26 +898,24 @@
                             <a href="{{ route('settings.transaction-fees.index') }}">Transaction Fees</a>
                         </li>
                     @endcan
-                        
+
                     @can('tax-consultant-fee-configuration-view')
                         <li class="{{ request()->is('settings/tax-consultant-fee*') ? 'active' : '' }}">
                             <a href="{{ route('settings.tax-consultant-fee') }}">Tax Consultant Fees</a>
                         </li>
                     @endcan
 
-                    {{--                    @can()--}}
-                    <li class="{{ request()->is('settings/approval-levels/*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.approval-levels.index') }}">Approval Levels</a>
-                    </li>
+                    @can('setting-approval-level')
+                        <li class="{{ request()->is('settings/approval-levels/*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.approval-levels.index') }}">Approval Levels</a>
+                        </li>
+                    @endcan
 
-                    {{--                        @endcan--}}
-
-                    {{--                    @can()--}}
-                    <li class="{{ request()->is('settings/dual-control-activities/*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.dual-control-activities.index') }}">Dual Control Activities</a>
-                    </li>
-
-                    {{--                        @endcan--}}
+                    @can('setting-dual-control-activities')
+                        <li class="{{ request()->is('settings/dual-control-activities/*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.dual-control-activities.index') }}">Dual Control Activities</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan
