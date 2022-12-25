@@ -37,17 +37,29 @@ class TaxAuditApprovalTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+
+         $this->setThAttributes(function (Column $column) {
+            if ($column->getTitle() == 'Tax Types') {
+                return [
+                    'style' => 'width: 20%;',
+                ];
+            }
+            return [];
+        });
     }
 
     public function columns(): array
     {
         return [
             Column::make('user_type', 'user_id')->hideIf(true),
-            Column::make('TIN', 'pinstance.business.tin')
+      Column::make('TIN', 'pinstance.business.tin')
                 ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
-         
+                Column::make('Business Location')
+                ->label(fn ($row) => $row->pinstance->taxAuditLocationNames()),
+            Column::make('Tax Types')
+                ->label(fn ($row) => $row->pinstance->taxAuditTaxTypeNames()),
             Column::make('Period From', 'pinstance.period_from')
                 ->label(fn ($row) => $row->pinstance->period_from ?? ''),
             Column::make('Period To', 'pinstance.period_to')
@@ -58,7 +70,7 @@ class TaxAuditApprovalTable extends DataTableComponent
                     return $user->full_name ?? '';
                 }),
             Column::make('Filled On', 'created_at')
-                ->format(fn ($value) => Carbon::create($value)->toDayDateTimeString()),
+                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
             Column::make('Action', 'pinstance_id')
                 ->view('audit.approval.action')
                 ->html(true),

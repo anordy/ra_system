@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Traits\CheckReturnConfigurationTrait;
 use App\Traits\VerificationTrait;
+use App\Models\Business;
+use App\Models\BusinessStatus;
+use App\Models\TaxAgent;
+use App\Models\TaxAgentStatus;
+use App\Models\Taxpayer;
+use Illuminate\Support\Facades\Gate;
 
 class DashboardController extends Controller
 {
@@ -12,27 +18,20 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $all_issues = [
-            ['status' => $this->doesCurrentFinancialMonthExists(), 'description' => 'Current financial month has not been configured', 'route' => 'settings.financial-months'],
-            ['status' => $this->doesInterestRateExists(), 'description' => 'Current financial year interest rate has not been configured', 'route' => 'settings.interest-rates.index'],
-            ['status' => $this->doesPenaltyRateExists(), 'description' => 'Current penalty rates has not been configured', 'route' => 'settings.penalty-rates.index'],
-        ];
-
         $issues = [];
 
-        foreach ($all_issues as $issue) {
-            if ($issue['status'] == false) {
-                $issues[] = $issue;
-            } 
+        if (!Gate::allows('system-check-return-configs')) {
+            $issues = $this->getMissingConfigurations();
         }
 
-        return view('dashboard', compact('issues'));
-    }
+        $counts = TaxAgent::where('status', TaxAgentStatus::APPROVED)
+            ->selectRaw("'taxAgents' AS type, COUNT(*) AS count")
+            ->unionAll(Business::where('status', BusinessStatus::APPROVED)->selectRaw("'businesses' AS type, COUNT(*) AS count"))
+            ->unionAll(User::selectRaw("'users' AS type, COUNT(*) AS count"))
+            ->unionAll(Taxpayer::selectRaw("'taxpayers' AS type, COUNT(*) AS count"))
+            ->pluck('count', 'type');
 
-    public function sample(){
-        foreach (User::all() as $user) {
-           $this->sign($user->id);
-        }
+        return view('dashboard', compact('issues', 'counts'));
     }
 
 }

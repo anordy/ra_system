@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ExchangeRateSeeder::class);
         $this->call(InterestRateSeeder::class);
         $this->call(PenaltyRatesSeeder::class);
+        $this->call(SystemSettingsSeeder::class);
         $this->call(StampDutyConfigSeeder::class);
         $this->call(BusinessSeeder::class);
         $this->call(TaxRegionsSeeder::class);
@@ -93,6 +94,8 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowDrivingLicenseApplicationSeeder::class);
         $this->call(WorkflowTaxConsultantSeeder::class);
         $this->call(WorkflowRenewTaxConsultantSeeder::class);
+        $this->call(ApprovalLevelsSeeder::class);
+        $this->call(TransactionFeesTableSeeder::class);
 
     }
 }

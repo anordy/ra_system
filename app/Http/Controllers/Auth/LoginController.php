@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -78,6 +79,11 @@ class LoginController extends Controller
             throw ValidationException::withMessages([
                 $this->username() =>  "Your account could not be verified, please contact system administrator.",
             ]);
+        }
+        
+        if ($user->is_approved == 0) {
+            Session::flash('error', 'Your account has not been approved, Kindly contact admin');
+            return redirect()->back();
         }
 
         if (Auth::attempt($request->only('email', 'password'))) {

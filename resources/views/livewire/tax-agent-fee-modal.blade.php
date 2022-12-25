@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="form-group col-lg-6">
                             <label class="control-label">Taxpayer Nationality</label>
-                            <select wire:model.lazy="nationality" name="nationality" id="nationality" class="form-control">
+                            <select wire:model="nationality" name="nationality" id="nationality" class="form-control">
                                 <option  value="">select nationality</option>
                                 <option value="1">Local</option>
                                 <option value="0">Foreigner</option>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="form-group col-lg-6">
                             <label class="control-label">Category</label>
-                            <select wire:model.lazy="category" name="category" id="category" class="form-control">
+                            <select wire:model.defer="category" name="category" id="category" class="form-control">
                                 <option  value="">select category</option>
                                 <option value="Registration Fee">Registration Fee</option>
                                 <option value="Renewal Fee">Renewal Fee</option>
@@ -36,7 +36,7 @@
 
                         <div class="form-group col-lg-6">
                             <label class="control-label">Duration(Years)</label>
-                            <select wire:model="duration" class="form-control">
+                            <select wire:model.defer="duration" class="form-control">
                                 <option value="">select duration</option>
                                 <option value="2">2 years</option>
                                 <option value="3">3 years</option>
@@ -48,7 +48,7 @@
 
                         <div class="form-group col-lg-6">
                             <label class="control-label">Amount</label>
-                            <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control" wire:model.lazy="amount" id="amount">
+                            <input x-data x-mask:dynamic="$money($input)" type="text" class="form-control" wire:model.defer="amount" id="amount">
                             @error('amount')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -56,7 +56,7 @@
 
                         <div class="form-group col-lg-6">
                             <label class="control-label">Currency</label>
-                            <input readonly type="text" class="form-control" wire:model.lazy="currency" id="currency">
+                            <input readonly type="text" class="form-control" wire:model.defer="currency" id="currency">
                             @error('currency')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror

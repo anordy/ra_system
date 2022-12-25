@@ -4,7 +4,10 @@ namespace App\Http\Livewire\Taxpayers\Details;
 
 use Exception;
 use Carbon\Carbon;
+use App\Events\SendSms;
 use Livewire\Component;
+use App\Events\SendMail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -33,7 +36,7 @@ class Passport extends Component
     {
         $immigration_controller = new ImmigrationController;
         try {
-            $this->passport = $immigration_controller->getPassportData($this->kyc->id_number, $this->kyc->permit_number);
+            $this->passport = $immigration_controller->getPassportData($this->kyc->passport_no, $this->kyc->permit_number);
         } catch (Exception $e) {
             Log::error($e);
             return $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
@@ -81,6 +84,7 @@ class Passport extends Component
             'showCancelButton' => true,
             'cancelButtonText' => 'Cancel',
             'timer' => null,
+            'input' => 'textarea',
         ]);
     }
 
@@ -91,7 +95,7 @@ class Passport extends Component
                 'first_name' =>  $this->convertStringToCamelCase($this->passport['FirstName']),
                 'middle_name' => $this->convertStringToCamelCase($this->passport['MiddleName']),
                 'last_name' => $this->convertStringToCamelCase($this->passport['SurName']),
-                'authorities_verified_at' => Carbon::now()->toDateTimeString(),
+                'passport_verified_at' => Carbon::now()->toDateTimeString(),
             ]);
             $this->alert('success', 'Taxpayers details has been approved successful!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
@@ -104,13 +108,22 @@ class Passport extends Component
     /**
      * Delete the KYC if data does not match from immigration, The person will be required to apply for reference number * again
      */
-    public function reject()
+    public function reject($value)
     {
+        $comments = $value['value'];
+        DB::beginTransaction();
         try {
+            $this->kyc->comments = $comments;
+            $this->kyc->save();
+            $kyc = $this->kyc;
             $this->kyc->delete();
-            $this->alert('success', 'KYC has been rejected successful!');
+            DB::commit();
+            event(new SendMail('kyc-reject', $kyc));
+            event(new SendSms('kyc-reject', $kyc));
+            $this->alert('success', 'KYC has been rejected!');
             return redirect()->route('taxpayers.registrations.index');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?!');
         }

@@ -59,8 +59,8 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="alt_mobile">Institution Alternative Contact Number</label>
-                        <input type="text" maxlength="10" wire:model.lazy="alt_mobile" name="alt_mobile" id="alt_mobile"
-                            class="form-control {{ $errors->has('alt_mobile') ? 'is-invalid' : '' }}">
+                        <input type="text" maxlength="10" wire:model.lazy="alt_mobile" name="alt_mobile"
+                            id="alt_mobile" class="form-control {{ $errors->has('alt_mobile') ? 'is-invalid' : '' }}">
                         @error('alt_mobile')
                             <div class="invalid-feedback">
                                 {{ $errors->first('alt_mobile') }}
@@ -152,165 +152,178 @@
     </div>
     <div class="card-body">
         <div>
-                <div class="border-0">
-                    <div class="row mx-4">
-                        <div class="col-md-4 form-group">
-                            <label for="ztnNumber">ZTN Number</label>
-                            <input type="text" wire:model.lazy="ztnNumber" name="ztnNumber" id="ztnNumber"
-                                class="form-control {{ $errors->has('ztnNumber') ? 'is-invalid' : '' }}">
-                            @error('ztnNumber')
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('ztnNumber') }}
-                                </div>
-                            @enderror
-                        </div>
-                        <div class="col-md-4 form-group">
-                            <label for="reference_no">Responsible person ZRB Reference No. *</label>
-                            <input type="text" wire:model.lazy="reference_no" name="reference_no" id="reference_no"
-                                class="form-control {{ $errors->has('reference_no') ? 'is-invalid' : '' }}">
-                            @error('reference_no')
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('reference_no') }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4 mt-4 form-group">
-                            <button wire:click="searchResponsibleDetails" wire:loading.attr="disabled"
-                                class="btn btn-primary">
-                                <div wire:loading.delay wire:target="searchResponsiblePerson">
-                                    <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </div>Search
-                            </button>
-                        </div>
-                    </div>
-
-            {{-- Responsible Person Designation Fill up --}}
-            @if ($search_triggered && !empty($taxpayer))
+            <div class="border-0">
                 <div class="row mx-4">
                     <div class="col-md-4 form-group">
-                        <label for="title">Title of Responsible Person</label>
-                        <select wire:model.lazy="title"
-                            class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}">
-                            <option></option>
-                            <option value="Mr">Mr</option>
-                            <option value="Mrs">Mrs</option>
-                            <option value="Sir">Sir</option>
-                            <option value="Madam">Madam</option>
-                            <option value="Dr">Dr</option>
-                            <option value="Prof">Prof</option>
-                            <option value="Hon">Hon</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        @error('title')
+                        <label for="ztnNumber">ZTN Number</label>
+                        <input type="text" wire:model.lazy="ztnNumber" name="ztnNumber" id="ztnNumber"
+                            class="form-control {{ $errors->has('ztnNumber') ? 'is-invalid' : '' }}">
+                        @error('ztnNumber')
                             <div class="invalid-feedback">
-                                {{ $errors->first('title') }}
+                                {{ $errors->first('ztnNumber') }}
                             </div>
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="position">Position of Responsible Person</label>
-                        <input type="text" wire:model.lazy="position" name="position" id="position"
-                            class="form-control {{ $errors->has('position') ? 'is-invalid' : '' }}">
-                        @error('position')
+                        <label for="reference_no">Responsible person ZRB Reference No. *</label>
+                        <input type="text" wire:model.lazy="reference_no" name="reference_no" id="reference_no"
+                            class="form-control {{ $errors->has('reference_no') ? 'is-invalid' : '' }}">
+                        @error('reference_no')
                             <div class="invalid-feedback">
-                                {{ $errors->first('position') }}
+                                {{ $errors->first('reference_no') }}
                             </div>
                         @enderror
+                    </div>
+
+                    <div class="col-md-4 mt-4 form-group">
+                        <button wire:click="searchResponsibleDetails" wire:loading.attr="disabled"
+                            class="btn btn-primary">
+                            <div wire:loading.delay wire:target="searchResponsiblePerson">
+                                <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>Search
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Responsible Person Designation Fill up --}}
+                @if ($search_triggered && !empty($taxpayer))
+                    <div class="row mx-4">
+                        <div class="col-md-4 form-group">
+                            <label for="title">Title of Responsible Person</label>
+                            <select wire:model.lazy="title"
+                                class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}">
+                                <option></option>
+                                <option value="Mr">Mr</option>
+                                <option value="Mrs">Mrs</option>
+                                <option value="Sir">Sir</option>
+                                <option value="Madam">Madam</option>
+                                <option value="Dr">Dr</option>
+                                <option value="Prof">Prof</option>
+                                <option value="Hon">Hon</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            @error('title')
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('title') }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="position">Position of Responsible Person</label>
+                            <input type="text" wire:model.lazy="position" name="position" id="position"
+                                class="form-control {{ $errors->has('position') ? 'is-invalid' : '' }}">
+                            @error('position')
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('position') }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Responsible person lookup --}}
+            @if ($search_triggered && !empty($taxpayer))
+                <div class="row mx-4">
+                    {{-- <h6 class="pb-2">Responsible Person Details</h6> --}}
+                    <div class="col-12 p-3">
+                        @if (!empty($business))
+                            <div class="card-body mb-2" style="border: 1px solid #ede6e6;">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Business Name</span>
+                                        <p class="my-1">{{ $business->name }}</p>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">TIN</span>
+                                        <p class="my-1">{{ $business->tin }}</p>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Email Address</span>
+                                        <p class="my-1">{{ $business->email }}</p>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Mobile/Alternative</span>
+                                        <p class="my-1">{{ $business->mobile }} / {{ $business->alt_mobile }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="card-body" style="border: 1px solid #ede6e6;">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Full Name</span>
+                                    <p class="my-1">
+                                        {{ "{$taxpayer->first_name} {$taxpayer->middle_name} {$taxpayer->last_name}" }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">TIN</span>
+                                    <p class="my-1">{{ "{$taxpayer->tin}" }}</p>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Email Address</span>
+                                    <p class="my-1">{{ $taxpayer->email }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Mobile/Alternative</span>
+                                    <p class="my-1">{{ $taxpayer->mobile }} / {{ $taxpayer->alt_mobile }}</p>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <span class="font-weight-bold text-uppercase">Nationality</span>
+                                    <p class="my-1">{{ $taxpayer->country->nationality }}</p>
+                                </div>
+                                @if ($taxpayer->zanid_no)
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">ZANID No.</span>
+                                        <p class="my-1">{{ $taxpayer->zanid_no }}</p>
+                                    </div>
+                                @endif
+                                @if ($taxpayer->nida_no)
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">NIDA No.</span>
+                                        <p class="my-1">{{ $taxpayer->nida_no }}</p>
+                                    </div>
+                                @endif
+                                @if ($taxpayer->passport_no)
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Passport No.</span>
+                                        <p class="my-1">{{ $taxpayer->passport_no }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @elseif ($search_triggered && empty($taxpayer))
+                <span class="pt-2 text-danger text-center">ZRB Reference Number provided is invalid
+                </span>
+            @endif
+
+            @if (!empty($taxpayer))
+                <hr>
+                <div class="row mt-3 m-4">
+                    <div class="col-md-12 text-right">
+                        <a href="{{ route('withholdingAgents.list') }}" class="btn btn-danger mr-2">Cancel</a>
+                        <button wire:click="submit" wire:loading.attr="disabled" class="btn btn-primary">
+                            <div wire:loading.delay wire:target="submit">
+                                <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>Submit
+                        </button>
                     </div>
                 </div>
             @endif
+
         </div>
-
-        {{-- Responsible person lookup --}}
-        @if ($search_triggered && !empty($taxpayer))
-            <div class="row mx-4">
-                {{-- <h6 class="pb-2">Responsible Person Details</h6> --}}
-                <div class="col-12 p-3">
-                    @if (!empty($business))
-                    <div class="card-body mb-2" style="border: 1px solid #ede6e6;">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Business Name</span>
-                                <p class="my-1">{{ $business->name }}</p>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">TIN</span>
-                                <p class="my-1">{{ $business->tin }}</p>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Email Address</span>
-                                <p class="my-1">{{ $business->email }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Mobile/Alternative</span>
-                                <p class="my-1">{{ $business->mobile }} / {{ $business->alt_mobile }}</p>
-                            </div>
-                        </div>
-                    </div>   
-                    @endif
-                   
-                    <div class="card-body" style="border: 1px solid #ede6e6;">
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Full Name</span>
-                                <p class="my-1">
-                                    {{ "{$taxpayer->first_name} {$taxpayer->middle_name} {$taxpayer->last_name}" }}
-                                </p>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">TIN</span>
-                                <p class="my-1">{{ "{$taxpayer->tin}" }}</p>
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Email Address</span>
-                                <p class="my-1">{{ $taxpayer->email }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Mobile/Alternative</span>
-                                <p class="my-1">{{ $taxpayer->mobile }} / {{ $taxpayer->alt_mobile }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Nationality</span>
-                                <p class="my-1">{{ $taxpayer->country->nationality }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">{{ $taxpayer->identification->name }}
-                                    No.</span>
-                                <p class="my-1">{{ $taxpayer->id_number }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @elseif ($search_triggered && (empty($taxpayer)))
-            <span class="pt-2 text-danger text-center">ZRB Reference Number provided is invalid
-            </span>
-        @endif
-
-        @if (!empty($taxpayer))
-        <hr>
-        <div class="row mt-3 m-4">
-            <div class="col-md-12 text-right">
-                <a href="{{ route('withholdingAgents.list') }}" class="btn btn-danger mr-2">Cancel</a>
-                <button wire:click="submit" wire:loading.attr="disabled" class="btn btn-primary">
-                    <div wire:loading.delay wire:target="submit">
-                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>Submit
-                </button>
-            </div>
-        </div> 
-        @endif
-
     </div>
-</div>
 </div>
 </div>

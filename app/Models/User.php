@@ -30,6 +30,11 @@ class User extends Authenticatable implements PayloadInterface
         return $this->belongsTo(Role::class);
     }
 
+    public function level()
+    {
+        return $this->belongsTo(ApprovalLevel::class);
+    }
+
     public function otp(){
         return $this->morphOne(UserOtp::class, 'user');
     }
@@ -60,5 +65,22 @@ class User extends Authenticatable implements PayloadInterface
     public static function getTableName(): string
     {
         return 'users';
+    }
+    
+    public function passwordHistories()
+    {
+        return $this->morphMany(PasswordHistory::class, 'user');
+    }
+
+    public function passwordExistInHistory($password){
+        if (!$this->passwordHistories->isEmpty()) {
+            foreach ($this->passwordHistories as $passwordHistory) {
+                if (password_verify($password, $passwordHistory->password_entry)) {
+                    return $this->passwordHistories;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

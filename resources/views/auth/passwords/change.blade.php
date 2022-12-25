@@ -9,8 +9,16 @@
 
                 <div class="card-body">
                     <div class="py-3">
-
-                        <h6 class="text-info text-center">Welcome to ZRB, Since this is your first login you need to set new password for security purposes</h6>
+                        @if ($expired_message)
+                            <h6 class="text-info text-center">
+                                {{ $expired_message }}
+                            </h6>
+                        @else
+                            <h6 class="text-info text-center">
+                                Welcome to ZRB, Since this is your first login you need to set
+                                new password for security purposes
+                            </h6>
+                        @endif
                     </div>
 
                     <form method="POST" action="{{ route('password.store') }}">

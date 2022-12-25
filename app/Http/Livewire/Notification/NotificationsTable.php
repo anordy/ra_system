@@ -3,26 +3,29 @@
 namespace App\Http\Livewire\Notification;
 
 use App\Models\Notification;
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class NotificationsTable extends Component
 {
     use LivewireAlert;
+    use WithPagination;
 
-    public $notifications;
     public $selectAll = false;
     public $selectedItems = [];
+    protected $paginationTheme = 'bootstrap';
 
     public function mount()
     {
-        $this->notifications =  Notification::where('notifiable_type', get_class(auth()->user()))
+        Notification::where('notifiable_type', get_class(auth()->user()))
             ->where('notifiable_id', auth()->id())
-            ->latest()
-            ->get();
+            ->whereNull('read_at')
+            ->increment('seen');
+   
     }
 
     public function toggleSelectAll()
@@ -34,15 +37,36 @@ class NotificationsTable extends Component
     {
         $selectedIds = array_keys($this->selectedItems, true);
         Notification::destroy($selectedIds);
+        return redirect()->route('notifications')->with('success', 'Notifications Deleted successfully');
     }
 
-    public function read($notification){
-        $data = $notification['data'];
-        return !empty($data['hrefParameters']) ? redirect()->route($data['href'], encrypt($data['hrefParameters'])) : redirect()->route($data['href']);
+    public function read($notification)
+    {
+        $notification = Notification::find($notification['id']);
+        $data = $notification->data;
+        try {
+            DB::beginTransaction();
+            $notification->read_at = now();
+            $notification->save();
+            DB::commit();
+            return redirect()->route($data->href, !empty($data->hrefParameters) ? encrypt($data->hrefParameters) : null);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+        }
     }
 
     public function render()
     {
-        return view('livewire.notifications.notifications-table');
+                 
+        $notifications = Notification::where('notifiable_type', get_class(auth()->user()))
+            ->where('notifiable_id', auth()->id())
+            ->whereNull('read_at')
+            ->latest()
+            ->paginate(10);
+        return view('livewire.notifications.notifications-table', [
+            'notifications' => $notifications
+        ]);
     }
 }

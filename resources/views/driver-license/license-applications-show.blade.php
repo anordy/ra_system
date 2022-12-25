@@ -221,12 +221,24 @@
                                     <span class="font-weight-bold text-uppercase">Nationality</span>
                                     <p class="my-1">{{ $application->taxpayer->country->nationality }}</p>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <span
-                                        class="font-weight-bold text-uppercase">{{ $application->taxpayer->identification->name }}
-                                        No.</span>
-                                    <p class="my-1">{{ $application->taxpayer->id_number }}</p>
-                                </div>
+                                @if ($application->taxpayer->zanid_no)
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">ZANID No.</span>
+                                        <p class="my-1">{{ $application->taxpayer->zanid_no }}</p>
+                                    </div>
+                                @endif
+                                @if ($application->taxpayer->nida_no)
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">NIDA No.</span>
+                                        <p class="my-1">{{ $application->taxpayer->nida_no }}</p>
+                                    </div>
+                                @endif
+                                @if ($application->taxpayer->passport_no)
+                                    <div class="col-md-4 mb-3">
+                                        <span class="font-weight-bold text-uppercase">Passport No.</span>
+                                        <p class="my-1">{{ $application->taxpayer->passport_no }}</p>
+                                    </div>
+                                @endif
                                 <div class="col-md-4 mb-3">
                                     <span class="font-weight-bold text-uppercase">Date of birth</span>
                                     <p class="my-1">

@@ -10,6 +10,7 @@ use App\Models\Installment\InstallmentRequest;
 use App\Models\TaxType;
 use App\Models\ZmBill;
 use App\Services\ZanMalipo\ZmCore;
+use App\Traits\ExchangeRateTrait;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
@@ -20,9 +21,11 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+use function GuzzleHttp\Promise\inspect;
+
 class InstallmentPayment extends Component
 {
-    use LivewireAlert, PaymentsTrait;
+    use LivewireAlert, PaymentsTrait, ExchangeRateTrait;
 
     public $installment;
     public $bill;
@@ -54,6 +57,8 @@ class InstallmentPayment extends Component
         if ($this->activeItem){
             $this->alert('error', 'Control no. already exists!');
         }
+        
+        $installmentRequest = $this->installment->request;
 
         try {
             DB::beginTransaction();
@@ -64,17 +69,19 @@ class InstallmentPayment extends Component
                 'due_date' => $this->installment->getNextPaymentDate()->toDateTimeString()
             ]);
 
+            $payer = $installmentRequest->createdBy;
+            
             // Generate control no
-            $payer_type     = get_class(Auth::user());
-            $payer_name     = Auth::user()->fullName;
-            $payer_email    = Auth::user()->email;
-            $payer_phone    = Auth::user()->mobile;
+            $payer_type     = $installmentRequest->created_by_type;
+            $payer_name     = $payer->fullName;
+            $payer_email    = $payer->email;
+            $payer_phone    = $payer->mobile;
             $description    = "Installment payment for {$this->installment->business->name} Debt";
             $payment_option = ZmCore::PAYMENT_OPTION_FULL;
             $currency       = $this->installment->currency;
             $createdby_type = get_class(Auth::user());
             $createdby_id   = Auth::id();
-            $payer_id       = Auth::id();
+            $payer_id       = $payer->id;
             $expire_date    = Carbon::now()->addMonth()->toDateTimeString();
             $billableId     = $item->id;
             $billableType   = get_class($item);
@@ -91,10 +98,7 @@ class InstallmentPayment extends Component
                 'tax_type_id' => $taxType->id
             ];
 
-            $exchange_rate = 1;
-            if ($currency != 'TZS'){
-                $exchange_rate = ExchangeRate::where('currency', $item->currency)->firstOrFail()->mean;
-            }
+            $exchange_rate = $this->getExchangeRate($item->currency);
 
             $bill = ZmCore::createBill(
                 $billableId,

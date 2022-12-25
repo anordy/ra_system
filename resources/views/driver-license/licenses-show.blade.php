@@ -107,10 +107,24 @@
                             <span class="font-weight-bold text-uppercase">Nationality</span>
                             <p class="my-1">{{ $license->drivers_license_owner->taxpayer->country->nationality }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">{{ $license->drivers_license_owner->taxpayer->identification->name }} No.</span>
-                            <p class="my-1">{{ $license->drivers_license_owner->taxpayer->id_number }}</p>
-                        </div>
+                        @if ($license->drivers_license_owner->taxpayer->zanid_no)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">ZANID No.</span>
+                                <p class="my-1">{{ $license->drivers_license_owner->taxpayer->zanid_no }}</p>
+                            </div>
+                        @endif
+                        @if ($license->drivers_license_owner->taxpayer->nida_no)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">NIDA No.</span>
+                                <p class="my-1">{{ $license->drivers_license_owner->taxpayer->nida_no }}</p>
+                            </div>
+                        @endif
+                        @if ($license->drivers_license_owner->taxpayer->passport_no)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Passport No.</span>
+                                <p class="my-1">{{ $license->drivers_license_owner->taxpayer->passport_no }}</p>
+                            </div>
+                        @endif
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Date of birth</span>
                             <p class="my-1">{{ $license->drivers_license_owner->dob  }}</p>

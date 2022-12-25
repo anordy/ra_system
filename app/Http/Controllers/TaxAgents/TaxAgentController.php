@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TaxAgents;
 
 use App\Http\Controllers\Controller;
+use App\Models\DualControl;
 use App\Models\RenewTaxAgentRequest;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
@@ -133,6 +134,7 @@ class TaxAgentController extends Controller
         $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen')
             ->where('category', 'Registration Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
+            ->where('is_approved', DualControl::APPROVE)
             ->first();
         return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
     }
@@ -156,6 +158,7 @@ class TaxAgentController extends Controller
         $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen')
             ->where('category', 'Renewal Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
+            ->where('is_approved', DualControl::APPROVE)
             ->first();
         return view('taxagents.renew.show', compact('renew', 'fee'));
     }

@@ -39,7 +39,7 @@ class WorkflowTask extends Model
     public function scopeCanApprove($query)
     {
         if ($this->operator_type == 'staff') {
-            if (in_array(auth()->id, $this->operators)) {
+            if (in_array(auth()->id(), $this->operators)) {
                 return true;
             }
         } elseif ($this->operator_type == 'role') {

@@ -72,6 +72,7 @@ class TaxTypeChangeApprovalProcessing extends Component
 
                 $this->subject->status = BusinessStatus::APPROVED;
                 $this->subject->effective_date = $this->effective_date;
+                $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
                 $notification_payload = [
                     'tax_type' => $current_tax_type,

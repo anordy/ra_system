@@ -144,6 +144,8 @@ class PermissionSeeder extends Seeder
             # Manage Payments
             ['name' => 'manage-payments-view', 'sys_module_id' => 17],
             ['name' => 'manage-payments-edit', 'sys_module_id' => 17],
+            ['name' => 'manage-payments-cancel-bill', 'sys_module_id' => 17],
+            ['name' => 'manage-payments-update-bill', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],
@@ -204,6 +206,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-education-level-add', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-edit', 'sys_module_id' => 18],
             ['name' => 'setting-education-level-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-transaction-fees-view', 'sys_module_id' => 18],
+            ['name' => 'setting-transaction-fees-add', 'sys_module_id' => 18],
+            ['name' => 'setting-transaction-fees-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-transaction-fees-delete', 'sys_module_id' => 18],
 
             ['name' => 'setting-business-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-business-category-add', 'sys_module_id' => 18],
@@ -266,6 +273,21 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-mvr-ownership-transfer-reason-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-category-view', 'sys_module_id' => 18],
             ['name' => 'setting-mvr-transfer-fee-view', 'sys_module_id' => 18],
+
+            ['name' => 'setting-system-category-view', 'sys_module_id' => 18],
+            ['name' => 'setting-system-category-add', 'sys_module_id' => 18],
+            ['name' => 'setting-system-category-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-system-category-delete', 'sys_module_id' => 18],
+
+            ['name' => 'system-setting-view', 'sys_module_id' => 18],
+            ['name' => 'system-setting-add', 'sys_module_id' => 18],
+            ['name' => 'system-setting-edit', 'sys_module_id' => 18],
+            ['name' => 'system-setting-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-approval-level-view', 'sys_module_id' => 18],
+            ['name' => 'setting-approval-level-add', 'sys_module_id' => 18],
+            ['name' => 'setting-dual-control-activities-view', 'sys_module_id' => 18],
+
             
 
             # System
@@ -273,6 +295,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'system-workflow-view', 'sys_module_id' => 19],
             ['name' => 'system-workflow-configure', 'sys_module_id' => 19],
             ['name' => 'system-all-pdfs-view', 'sys_module_id' => 19],
+            ['name' => 'system-get-return-configurations-reminders', 'sys_module_id' => 19],
 
 
             # Managerial Report

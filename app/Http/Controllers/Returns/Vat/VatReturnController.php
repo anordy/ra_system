@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Returns\Vat;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessStatus;
 use App\Models\Returns\Vat\VatReturn;
 use App\Traits\PaymentsTrait;
 use Illuminate\Support\Facades\Gate;
@@ -31,13 +30,9 @@ class VatReturnController extends Controller
             abort(403);
         }
         $return         = VatReturn::query()->findOrFail(decrypt($id));
-        $egovernmentFee = $this->getTransactionFee(
-            $return->total_amount_due_with_penalties,
-            $return->currency,
-            2300
-        );
+        $return->penalties = $return->penalties->merge($return->tax_return->penalties);
 
-        return view('returns.vat_returns.show', compact('return', 'id', 'egovernmentFee'));
+        return view('returns.vat_returns.show', compact('return', 'id'));
     }
 
     public function config()

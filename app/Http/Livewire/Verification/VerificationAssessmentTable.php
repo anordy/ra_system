@@ -37,9 +37,6 @@ class VerificationAssessmentTable extends DataTableComponent
 
         return $filter->with('business', 'location', 'taxType', 'taxReturn')
             ->has('assessment')
-            ->whereHas('taxReturn', function (Builder $builder) {
-                $builder->where('status', ReturnStatus::COMPLETE);
-            })
             ->where('tax_verifications.status', TaxVerificationStatus::APPROVED)
             ->orderByDesc('tax_verifications.id');
     }
@@ -61,8 +58,7 @@ class VerificationAssessmentTable extends DataTableComponent
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),
-            Column::make('Payment Status', 'location.name'),
-            Column::make('Tax Type', 'taxType.name'),
+            Column::make('Tax Type', 'taxtype.name'),
             Column::make('Filled By', 'created_by_id')
                 ->format(function ($value, $row) {
                     $user = $row->createdBy()->first();

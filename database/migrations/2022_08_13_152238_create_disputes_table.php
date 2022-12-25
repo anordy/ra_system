@@ -33,8 +33,8 @@ class CreateDisputesTable extends Migration
             $table->decimal('tax_in_dispute',38, 2)->default(0);
             $table->decimal('tax_not_in_dispute',38, 2)->default(0);
             $table->decimal('tax_deposit',38, 2)->default(0);
-            $table->string('ground')->nullable();
-            $table->string('reason')->nullable();
+            $table->string('ground', 4000)->nullable();
+            $table->string('reason', 4000)->nullable();
             $table->string('dispute_report')->nullable();
             $table->string('notice_report')->nullable();
             $table->string('setting_report')->nullable();

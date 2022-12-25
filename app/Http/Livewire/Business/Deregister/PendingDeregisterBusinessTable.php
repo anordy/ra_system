@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Business\Deregister;
 
 use App\Models\BusinessDeregistration;
 use App\Models\BusinessStatus;
+use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -11,48 +12,61 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class PendingDeregisterBusinessTable extends DataTableComponent
 {
-
+    public function builder(): Builder
+    {
+        return WorkflowTask::with('pinstance', 'user')
+            ->where('pinstance_type', BusinessDeregistration::class)
+            ->where('status', '!=', 'completed')
+            ->where('owner', 'staff')
+            ->whereHas('actors', function ($query) {
+                $query->where('user_id', auth()->id());
+            });
+    }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['business_deregistrations.status']);
+        $this->setAdditionalSelects('pinstance_type', 'user_type');
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
     }
-
-    public function builder(): Builder
-    {
-        return BusinessDeregistration::where('business_deregistrations.status', BusinessStatus::PENDING)->orderBy('business_deregistrations.created_at', 'DESC');
-    }
-
+    
     public function columns(): array
     {
         return [
-            Column::make('Name', 'business.name')
+            Column::make('Name', 'pinstance.business.ztn_number')
+                ->label(fn ($row) => $row->pinstance->business->ztn_number ?? '')
+                ->sortable(), 
+            Column::make('Name', 'pinstance.business.name')
+                ->label(fn ($row) => $row->pinstance->business->name ?? '')
+                ->sortable(),
+            Column::make('Deregistration Type', 'pinstance.deregistration_type')
                 ->sortable()
-                ->searchable(),
-            Column::make('Deregistration Type', 'deregistration_type')
-                ->sortable()
-                ->searchable()
-                ->format(function ($value, $row) {
-                    if ($value == 'all') {
+                ->label(function ($row) {
+                    if ($row->pinstance->deregistration_type == 'all') {
                         return 'All Locations';
                     } else {
                         return 'Single Location';
                     }
                 }),
-            Column::make('Location', 'location.name')
-                ->sortable()
-                ->searchable(),
-            Column::make('Date of De-registration', 'deregistration_date')
-                ->format(function($value, $row) { return Carbon::create($row->deregistration_date)->toFormattedDateString(); })
-                ->sortable()
-                ->searchable(),
-            Column::make('Action', 'id')
-                ->view('business.deregister.action'),
+            Column::make('Location', 'pinstance.location.name')
+                ->label(fn ($row) => $row->pinstance->business->name ?? '')
+                ->sortable(),
+            Column::make('Date of De-registration', 'pinstance.deregistration_date')
+                ->label(function ($row) {
+                    return Carbon::create($row->pinstance->deregistration_date)->toFormattedDateString();
+                })
+                ->sortable(),
+            Column::make('From State', 'from_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Action', 'pinstance_id')
+                ->view('business.deregister.approval-action'),
 
         ];
     }

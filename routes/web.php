@@ -11,6 +11,9 @@
 |
  */
 
+use App\Http\Controllers\Setting\ApprovalLevelController;
+use App\Http\Controllers\Setting\DualControlActivityController;
+use App\Http\Controllers\TransactionFeeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -127,6 +130,8 @@ use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Setting\SystemSettingsController;
+use App\Http\Controllers\v1\ZanMalipoController;
 
 Route::get('/test', [DashboardController::class, 'sample']);
 
@@ -135,6 +140,7 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
+Route::get('pay', [ZanMalipoController::class, 'pay']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
@@ -174,6 +180,8 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::resource('/interest-rates', InterestRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::resource('/penalty-rates', PenaltyRateController::class);
+        Route::get('/setting-system-categories/view', [SystemSettingsController::class, 'setting_categories'])->name('setting-system-categories.view');
+        Route::get('/system-settings/view', [SystemSettingsController::class, 'system_settings'])->name('system-settings.view');
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
         Route::get('financial-months', [FinancialMonthsController::class, 'index'])->name('financial-months');
         Route::name('mvr-generic.')->prefix('mvr-generic')->group(function () {
@@ -189,7 +197,14 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
         });
 
+        Route::get('/tax-consultant-fee', [TaxAgentController::class, 'fee'])->name('tax-consultant-fee');
+
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
+        Route::resource('/transaction-fees', TransactionFeeController::class);
+
+        Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
+        Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
+        Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -237,6 +252,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
 
     Route::prefix('business')->as('business.')->group(function () {
         Route::get('/registrationsApproval/{id}', [RegistrationController::class, 'approval'])->name('registrations.approval'); // KYC
+        Route::get('/registrationsApprovalProgress/{id}', [RegistrationController::class, 'approval_progress'])->name('registrations.approval_progress');
         Route::resource('registrations', RegistrationController::class);
         Route::get('/closure', [BusinessController::class, 'closure'])->name('closure');
         Route::get('/closure/{id}', [BusinessController::class, 'viewClosure'])->name('viewClosure');
@@ -296,7 +312,6 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
         Route::get('/renew/show/{id}', [TaxAgentController::class, 'renewalShow'])->name('renew-show');
         Route::get('/consultant-renew-requests/{id}', [TaxAgentController::class, 'viewConsultantRenewRequests'])->name('consultant-renew-requests');
-        Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
         Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });
@@ -459,6 +474,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
             Route::get('/', [InstallmentRequestController::class, 'index'])->name('index');
             Route::get('create/{debtId}', [InstallmentRequestController::class, 'create'])->name('create');
             Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
+            Route::get('edit/{debtId}', [InstallmentRequestController::class, 'edit'])->name('edit');
             Route::get('file/{file}', [InstallmentRequestController::class, 'file'])->name('file');
         });
     });
@@ -523,6 +539,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/recons/transaction/{transactionId}', [PaymentsController::class, 'viewReconTransaction'])->name('recons.transaction');
         Route::get('/recon-enquire', [PaymentsController::class, 'reconEnquire'])->name('recon.enquire');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
+        Route::get('/pending/download/{records}/{data}',[PaymentsController::class,'downloadPendingPaymentsPdf'])->name('pending.download.pdf');
     });
 
     Route::prefix('mvr')->as('mvr.')->group(function () {

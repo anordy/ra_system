@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Audit;
 
-use App\Models\BusinessLocation;
 use App\Models\Returns\BFO\BfoConfig;
 use App\Models\Returns\BFO\BfoReturnItems;
 use App\Models\Returns\EmTransactionConfig;
@@ -184,7 +183,7 @@ class DeclaredSalesAnalysis extends Component
         $salesConfigs = PortConfig::where('code', '!=', 'TLATZS')->get()->pluck('id');
         $headers = PortConfig::whereIn('code', array('NFAT', 'NLAT', 'NFSF', 'NLSF', 'IT'))
             ->get()->pluck('name');
-        $yearReturnGroup = PortReturnItem::select('port_configs.code', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+        $yearReturnGroup = PortReturnItem::select('port_configs.code', 'port_configs.currency', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('port_configs', 'port_configs.id', 'port_return_items.config_id')
             ->leftJoin('port_returns', 'port_returns.id', 'port_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'port_returns.financial_month_id')
@@ -192,7 +191,7 @@ class DeclaredSalesAnalysis extends Component
             ->whereIn('config_id', $salesConfigs)
             ->get()->groupBy(['year', 'month']);
 
-        $yearData = $this->formatDataArray($yearReturnGroup);
+        $yearData = $this->formatDataArrayPort($yearReturnGroup);
 
         $this->withoutPurchases = true;
         $this->returns = $yearData;
@@ -202,10 +201,10 @@ class DeclaredSalesAnalysis extends Component
     protected function sea()
     {
         $salesConfigs = PortConfig::where('code', '!=', 'TLATZS')->get()->pluck('id');
-        $headers = PortConfig::whereIn('code', array('NFSP', 'NFSP', 'ITTM', 'NLZNZ', 'ITZNZ', 'NSUS', 'NSTZ'))
+        $headers = PortConfig::whereIn('code', array('NFSP', 'NLTM', 'ITTM', 'NLZNZ', 'ITZNZ', 'NSUS', 'NSTZ'))
             ->get()->pluck('name');
 
-        $yearReturnGroup = PortReturnItem::select('port_configs.code', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+        $yearReturnGroup = PortReturnItem::select('port_configs.code','port_configs.currency', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('port_configs', 'port_configs.id', 'port_return_items.config_id')
             ->leftJoin('port_returns', 'port_returns.id', 'port_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'port_returns.financial_month_id')
@@ -213,7 +212,7 @@ class DeclaredSalesAnalysis extends Component
             ->whereIn('config_id', $salesConfigs)
             ->get()->groupBy(['year', 'month']);
 
-        $yearData = $this->formatDataArray($yearReturnGroup);
+        $yearData = $this->formatDataArrayPort($yearReturnGroup);
 
         $this->withoutPurchases = true;
         $this->returns = $yearData;
@@ -287,7 +286,7 @@ class DeclaredSalesAnalysis extends Component
 
     protected function bfo()
     {
-        $configs = BfoConfig::where('code', '!=', 'TotalFBO')->get()->pluck('id');
+        $configs = BfoConfig::where('code', '!=', 'TotalFBO')->get();
         $salesConfigs = $configs->pluck('id');
         $headers = $configs->pluck('name');
 
@@ -374,6 +373,9 @@ class DeclaredSalesAnalysis extends Component
 
         return $yearData;
     }
+ 
+    
+    
 
     protected function formatQuaters($yearReturnGroup)
     {
