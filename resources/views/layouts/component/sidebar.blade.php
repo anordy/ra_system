@@ -911,11 +911,11 @@
                         </li>
                     @endcan
 
-                    @can('setting-dual-control-activities')
+{{--                    @can('setting-dual-control-activities')--}}
                         <li class="{{ request()->is('settings/dual-control-activities/*') ? 'active' : '' }}">
                             <a href="{{ route('settings.dual-control-activities.index') }}">Dual Control Activities</a>
                         </li>
-                    @endcan
+{{--                    @endcan--}}
                 </ul>
             </li>
         @endcan

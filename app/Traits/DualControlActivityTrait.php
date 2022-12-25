@@ -35,8 +35,7 @@ trait DualControlActivityTrait
             'status' => 'pending',
         ];
         DualControl::updateOrCreate($payload);
-        if ($action != DualControl::ADD)
-        {
+        if ($action != DualControl::ADD) {
             $data = $model::findOrFail($modelId);
             $data->update(['is_approved' => DualControl::NOT_APPROVED]);
         }
@@ -78,15 +77,16 @@ trait DualControlActivityTrait
     public function updateControllable($data, $status)
     {
         $update = $data->controllable_type::findOrFail($data->controllable_type_id);
-        if ($data->action != DualControl::ADD)
-        {
+        if ($data->action == DualControl::EDIT) {
             $payload = json_decode($data->old_values);
             $payload = (array)$payload;
-            $payload = array_merge($payload, ['is_approved' => DualControl::APPROVE]);
-            $update->update((array)$payload);
-        }
-        else
-        {
+            if ($status == DualControl::REJECT) {
+                $payload = array_merge($payload, ['is_approved' => DualControl::APPROVE]);
+                $update->update($payload);
+            } else {
+                $update->update(['is_approved' => $status]);
+            }
+        } else {
             $update->update(['is_approved' => $status]);
         }
 
