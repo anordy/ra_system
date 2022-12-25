@@ -68,10 +68,11 @@ class DailyDebtCalculateCommand extends Command
          * Get all tax returns which are normal
          * CONDITION 1: For a return to be debt the filing due date must exceed 30 days to now
          * CONDITION 2: The return is not be paid at all
+         * date1 - date2: if date1 is greater than date2 the result will be positive
          */
-        $tax_returns = TaxReturn::selectRaw('tax_returns.*, TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) as days_passed')
+        $tax_returns = TaxReturn::selectRaw('tax_returns.*, ROUND(CURRENT_DATE - filing_due_date) as days_passed')
             ->whereIn('return_category', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-            ->whereRaw("TIMESTAMPDIFF(DAY, tax_returns.filing_due_date, CURDATE()) > 60") // Since filing due date is of last month
+            ->whereRaw("CURRENT_DATE - filing_due_date > 60") // Since filing due date is of last month
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
@@ -87,6 +88,7 @@ class DailyDebtCalculateCommand extends Command
                         'return_category' => ReturnCategory::DEBT,
                         'application_step' => ApplicationStep::DEBT
                     ]);
+                    $tax_return->return->update(['return_category' => ReturnCategory::DEBT]);
                 } else {
                     /**
                      * Mark return process as overdue if days_passed is greater than 30 days (Meaning 30 days as debt and another 30 days makes it an overdue)
@@ -97,6 +99,7 @@ class DailyDebtCalculateCommand extends Command
                         'return_category' => ReturnCategory::OVERDUE,
                         'application_step' => ApplicationStep::OVERDUE
                     ]);
+                    $tax_return->return->update(['return_category' => ReturnCategory::OVERDUE]);
                 }
             }
 
@@ -117,9 +120,9 @@ class DailyDebtCalculateCommand extends Command
         Log::channel('dailyJobs')->info("Daily Debt marking for assessment process started");
         DB::beginTransaction();
 
-        $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, TIMESTAMPDIFF(DAY, tax_assessments.payment_due_date, CURDATE()) as days_passed')
+        $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, CURRENT_DATE - payment_due_date as days_passed')
             ->whereIn('assessment_step', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
-            ->whereRaw("TIMESTAMPDIFF(DAY, tax_assessments.payment_due_date, CURDATE()) > 30")
+            ->whereRaw("CURRENT_DATE - payment_due_date > 30")
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 

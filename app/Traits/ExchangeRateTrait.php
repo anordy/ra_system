@@ -8,7 +8,7 @@ use App\Models\ExchangeRate;
 trait ExchangeRateTrait
 {
 
-    public function getExchangeRate($currency)
+    public static function getExchangeRate($currency)
     {
         if ($currency == 'TZS') {
             return 1;

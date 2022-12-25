@@ -131,9 +131,7 @@ class DailyDebtDemandNoticeCommand extends Command
             'next_notify_days' => $next_notify_days
         ];
 
-        $now = Carbon::now();
-
-        SendDebtDemandNoticeEmail::dispatch($payload)->delay($now->addSeconds(30));
+        SendDebtDemandNoticeEmail::dispatch($payload);
     }
 
     public function sendRemainingDemandNotice($debt, $paid_within_days, $next_notify_days)
@@ -149,7 +147,7 @@ class DailyDebtDemandNoticeCommand extends Command
         $nextSendDate = Carbon::create($debt->demandNotices->last()->next_notify_date);
 
         if ($now->gt($nextSendDate)) {
-            SendDebtDemandNoticeEmail::dispatch($payload)->delay($now->addSeconds(30));
+            SendDebtDemandNoticeEmail::dispatch($payload);
         }
     }
 }

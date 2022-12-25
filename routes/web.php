@@ -474,6 +474,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
             Route::get('/', [InstallmentRequestController::class, 'index'])->name('index');
             Route::get('create/{debtId}', [InstallmentRequestController::class, 'create'])->name('create');
             Route::get('show/{debtId}', [InstallmentRequestController::class, 'show'])->name('show');
+            Route::get('edit/{debtId}', [InstallmentRequestController::class, 'edit'])->name('edit');
             Route::get('file/{file}', [InstallmentRequestController::class, 'file'])->name('file');
         });
     });
