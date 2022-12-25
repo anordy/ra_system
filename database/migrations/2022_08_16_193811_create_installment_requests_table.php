@@ -28,6 +28,8 @@ class CreateInstallmentRequestsTable extends Migration
             $table->string('ground');
             $table->string('attachment')->nullable();
             $table->string('marking')->nullable();
+            $table->unsignedBigInteger('created_by_id');
+            $table->string('created_by_type');
             $table->enum('status', InstallmentRequestStatus::getConstants());
             $table->softDeletes();
             $table->timestamps();
