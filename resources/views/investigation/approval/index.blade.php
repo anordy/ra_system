@@ -22,13 +22,21 @@
                         aria-selected="true">Pending Approval</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" id="progress-tab" data-toggle="tab" href="#progress" role="tab" aria-controls="profile"
+                        aria-selected="false">Approval Progress</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
                         aria-selected="false">Initiate Approval</a>
                 </li>
             </ul>
+            </ul> 
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active card p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
                     @livewire('investigation.tax-investigation-approval-table')
+                </div>
+                <div class="tab-pane fade card p-2" id="progress" role="tabpanel" aria-labelledby="progress-tab">
+                    @livewire('investigation.tax-investigation-approval-progress-table')
                 </div>
                 <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     @livewire('investigation.tax-investigation-initiate-table')
