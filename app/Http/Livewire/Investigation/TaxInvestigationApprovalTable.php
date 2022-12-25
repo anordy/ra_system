@@ -24,7 +24,7 @@ class TaxInvestigationApprovalTable extends DataTableComponent
             ->where('pinstance_type', TaxInvestigation::class)
             ->where('status', '!=', 'completed')
             ->where('owner', 'staff')
-            ->whereHas('actors', function($query){
+            ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });
     }
@@ -52,9 +52,11 @@ class TaxInvestigationApprovalTable extends DataTableComponent
     {
         return [
             Column::make('user_type', 'user_id')->hideIf(true),
-            Column::make('TIN', 'pinstance.business.tin')
+            Column::make('ZTN No')
+                ->label(fn ($row) => $row->pinstance->business->ztn_number ?? ''),
+            Column::make('TIN')
                 ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
-            Column::make('Business Name', 'pinstance.business.name')
+            Column::make('Business Name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
             Column::make('Business Location')
                 ->label(fn ($row) => $row->pinstance->taxInvestigationLocationNames()),
