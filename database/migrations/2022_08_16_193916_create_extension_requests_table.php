@@ -26,6 +26,8 @@ class CreateExtensionRequestsTable extends Migration
             $table->dateTime('extend_from')->nullable();
             $table->dateTime('extend_to')->nullable();
             $table->string('marking')->nullable();
+            $table->unsignedBigInteger('created_by_id');
+            $table->string('created_by_type');
             $table->enum('status', ExtensionRequestStatus::getConstants());
             $table->softDeletes();
             $table->timestamps();
