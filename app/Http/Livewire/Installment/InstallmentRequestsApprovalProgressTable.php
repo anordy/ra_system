@@ -9,7 +9,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class InstallmentRequestsApprovalTable extends DataTableComponent
+class InstallmentRequestsApprovalProgressTable extends DataTableComponent
 {
     use LivewireAlert;
 
@@ -45,24 +45,30 @@ class InstallmentRequestsApprovalTable extends DataTableComponent
             Column::make('Type', 'pinstance.taxType.name')
                 ->label(fn ($row) => $row->pinstance->taxType->name ?? ''),
             Column::make('Total Amount', 'pinstance.extensible.total_amount')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return "{$row->pinstance->installable->total_amount} {$row->pinstance->installable->currency}";
                 }),
             Column::make('Outstanding Amount', 'installable.outstanding_amount')
-                ->label(function ($row){
+                ->label(function ($row) {
                     return "{$row->pinstance->installable->outstanding_amount} {$row->pinstance->installable->currency}";
                 }),
             Column::make('Requested At', 'created_at')
                 ->label(fn ($row) => $row->pinstance->created_at->toFormattedDateString() ?? ''),
+            Column::make('From State', 'from_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
             Column::make('Status', 'status')
-                ->label(function($row){
+                ->label(function ($row) {
                     $row = $row->pinstance;
                     return view('installment.requests.includes.status', compact('row'));
                 }),
             Column::make('Action', 'id')
-                ->label(function($row){
+                ->label(function ($row) {
                     $row = $row->pinstance;
-                    return view('installment.requests.includes.actions', compact('row'));
+                    return view('installment.requests.includes.approval-progress-action', compact('row'));
                 }),
         ];
     }
