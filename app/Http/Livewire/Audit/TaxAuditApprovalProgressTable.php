@@ -51,7 +51,7 @@ class TaxAuditApprovalProgressTable extends DataTableComponent
                 ->label(fn ($row) => $row->pinstance->business->tin ?? ''),
             Column::make('Business Name', 'pinstance.business.name')
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
-                Column::make('Business Location')
+            Column::make('Business Location')
                 ->label(fn ($row) => $row->pinstance->taxAuditLocationNames()),
             Column::make('Tax Types')
                 ->label(fn ($row) => $row->pinstance->taxAuditTaxTypeNames()),
