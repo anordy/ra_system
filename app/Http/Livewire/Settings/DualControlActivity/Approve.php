@@ -27,7 +27,7 @@ class Approve extends Component
             DB::beginTransaction();
             try {
                 $req->update(['status' => 'approved']);
-                $this->updateControllable($req->controllable_type, $req->controllable_type_id, 1);
+                $this->updateControllable($req, DualControl::APPROVE);
                 DB::commit();
                 $this->alert('success', 'Approved Successfully');
                 return redirect()->route('settings.dual-control-activities.index');
@@ -48,7 +48,7 @@ class Approve extends Component
             DB::beginTransaction();
             try {
                 $req->update(['status' => 'rejected']);
-                $this->updateControllable($req->controllable_type, $req->controllable_type_id, 2);
+                $this->updateControllable($req, DualControl::REJECT);
                 DB::commit();
                 $this->alert('success', 'Rejected Successfully');
                 return redirect()->route('settings.dual-control-activities.index');
@@ -56,6 +56,7 @@ class Approve extends Component
                 DB::rollBack();
                 Log::error($exception->getMessage());
                 $this->alert('error', 'Something went wrong. Please contact an admin');
+                return redirect()->route('settings.dual-control-activities.index');
             }
         }
     }

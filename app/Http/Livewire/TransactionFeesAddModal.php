@@ -28,6 +28,8 @@ class TransactionFeesAddModal extends Component
 
     public function submit()
     {
+        $this->validate();
+
         if (!Gate::allows('setting-transaction-fees-add')) {
             abort(403);
         }
@@ -42,11 +44,13 @@ class TransactionFeesAddModal extends Component
             $transaction_fee->created_by = Auth::id();
             $transaction_fee->save();
             DB::commit();
-            $this->flash('success', 'Fee added successfully', [], redirect()->back()->getTargetUrl());
+            $this->alert('success', 'Fee added successfully');
+            return redirect()->route('settings.transaction-fees.index');
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception->getMessage());
             $this->alert('error', 'Something went wrong');
+            return redirect()->route('settings.transaction-fees.index');
         }
     }
 

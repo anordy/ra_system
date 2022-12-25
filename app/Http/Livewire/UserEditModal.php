@@ -25,6 +25,7 @@ class UserEditModal extends Component
     public $email;
     // public $role = '';
     public $user;
+    public $old_values;
 
 
     protected function rules()
@@ -58,10 +59,11 @@ class UserEditModal extends Component
             'email' => $this->email,
             'phone' => $this->phone,
         ];
+
         try {
             $this->user->update($payload);
 
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user', json_encode($payload));
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user', json_encode($this->old_values), json_encode($payload));
 
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -81,7 +83,13 @@ class UserEditModal extends Component
         $this->phone = $user->phone;
         $this->email = $user->email;
         $this->gender = $user->gender ?? '';
-        // $this->role = $user->role_id;
+        $this->old_values = [
+            'fname' => $this->fname,
+            'lname' => $this->lname,
+            'gender' => $this->gender,
+            'email' => $this->email,
+            'phone' => $this->phone,
+        ];
     }
 
     public function render()
