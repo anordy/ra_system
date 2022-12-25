@@ -318,8 +318,8 @@
     </table>
 @endif
 
-@if($return && $return->tax_return->latestBill())
-    @php($bill = $return->tax_return->latestBill())
+@if($return && $return->tax_return->latestBill)
+    @php($bill = $return->tax_return->latestBill)
     <table style="border-collapse:collapse; width:100%">
         <thead>
         <tr>
@@ -349,8 +349,8 @@
         </tbody>
     </table>
 @endif
-@if($return_ && $return_->tax_return->latestBill())
-    @php($bill_ = $return_->tax_return->latestBill())
+@if($return_ && $return_->tax_return->latestBill)
+    @php($bill_ = $return_->tax_return->latestBill)
     <table style="border-collapse:collapse; width:100%">
         <thead>
         <tr>

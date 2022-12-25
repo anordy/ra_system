@@ -168,7 +168,7 @@
         </tr>
         </thead>
     </table>
-    @php($bill = $return->tax_return->latestBill())
+    @php($bill = $return->tax_return->latestBill)
     @if($bill)
         <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
             <tbody>

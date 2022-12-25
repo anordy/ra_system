@@ -71,11 +71,9 @@ class DailyDebtPenaltyInterest extends Command
             ROUND(MONTHS_BETWEEN(curr_payment_due_date, CURRENT_DATE)) as penatableMonths
         ')
             ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
-            // ->whereRaw("CURRENT_DATE - curr_payment_due_date > 0") // This determines if the payment due date has reached
+            ->whereRaw("CURRENT_DATE - curr_payment_due_date > 0") // This determines if the payment due date has reached
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE]) // Get all non paid returns
             ->get();
-
-        // dd($tax_returns);
 
         if ($tax_returns) {
 
@@ -88,8 +86,8 @@ class DailyDebtPenaltyInterest extends Command
                     PenaltyForDebt::generateReturnsPenalty($tax_return);
 
                     // Cancel previous latest bill if exists
-                    if ($tax_return->latestBill()) {
-                        CancelBill::dispatch($tax_return->latestBill(), 'Debt Penalty Increment');
+                    if ($tax_return->latestBill) {
+                        CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
                     }
 
                     GenerateControlNo::dispatch($tax_return);
@@ -112,8 +110,13 @@ class DailyDebtPenaltyInterest extends Command
          * CONDITION 2: Payment status is not complete
          * CONDITION 3: The current next payment_due_date has reached
          */
-        $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, MONTHS_BETWEEN(CURRENT_DATE, curr_payment_due_date) as periods, MONTHS_BETWEEN(curr_payment_due_date, CURRENT_DATE) as penatableMonths')
+        $tax_assessments = TaxAssessment::selectRaw('
+            tax_assessments.*, 
+            ROUND(MONTHS_BETWEEN(CURRENT_DATE, curr_payment_due_date)) as periods, 
+            ROUND(MONTHS_BETWEEN(curr_payment_due_date, CURRENT_DATE)) as penatableMonths
+        ')
             ->whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
+            ->whereRaw("CURRENT_DATE - curr_payment_due_date > 0") // This determines if the payment due date has reached
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
@@ -127,8 +130,8 @@ class DailyDebtPenaltyInterest extends Command
                     PenaltyForDebt::generateAssessmentsPenalty($tax_assessment);
 
                     // Cancel previous latest bill if exists
-                    if ($tax_assessment->latestBill()) {
-                        CancelBill::dispatch($tax_assessment->latestBill(), 'Debt Penalty Increment');
+                    if ($tax_assessment->latestBill) {
+                        CancelBill::dispatch($tax_assessment->latestBill, 'Debt Penalty Increment');
                     }
 
                     GenerateAssessmentDebtControlNo::dispatch($tax_assessment);

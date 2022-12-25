@@ -33,7 +33,7 @@
             </ul>
             <div style="border: 1px solid #eaeaea;" class="tab-content" id="myTabContent">
                 <div class="tab-pane p-2 show active" id="bill" role="tabpanel" aria-labelledby="bill-tab">
-                    <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>
+                    <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
                 </div>
                 <div class="tab-pane p-2 show" id="bussiness" role="tabpanel" aria-labelledby="bussiness-tab">
                     <div class="row m-2 pt-3">
