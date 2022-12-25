@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaPaymentConfigurationHistory;
+use App\Traits\DualControlActivityTrait;
 use App\Traits\ValidationTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,22 +18,17 @@ use Illuminate\Support\Facades\Gate;
 
 class TaxAgentFeeModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
-    public $category, $duration, $amount, $currency, $nationality;
+    public $category, $duration, $amount, $currency, $nationality, $old_values, $new_values;
 
     public function updated($property)
     {
-        if ($this->nationality == '1')
-        {
+        if ($this->nationality == '1') {
             $this->currency = 'TZS';
-        }
-        elseif($this->nationality == '0')
-        {
+        } elseif ($this->nationality == '0') {
             $this->currency = 'USD';
-        }
-        else
-        {
+        } else {
             $this->currency = '';
         }
     }
@@ -51,7 +48,7 @@ class TaxAgentFeeModal extends Component
         ],
             [
                 'nationality.required' => 'This field is required',
-                'amount.regex'=>'The amount must be an integer',
+                'amount.regex' => 'The amount must be an integer',
             ]
         );
 
@@ -63,47 +60,45 @@ class TaxAgentFeeModal extends Component
                 ->where('category', '=', $this->category)
                 ->where('is_citizen', $this->nationality)
                 ->first();
-            if ($fee == null) {
-                TaxAgentFee::saveFee(
-                    $this->category,
-                    $this->duration,
-                    $this->nationality,
-                    $this->amount,
-                    $this->currency,
-                    Auth::id()
-                );
-            } else {
 
-                $hist = new TaPaymentConfigurationHistory();
-                $hist->tapc_id = $fee->id;
-                $hist->category = $fee->category;
-                $hist->duration = $fee->duration;
-                $hist->is_citizen = $fee->is_citizen;
-                $hist->amount = $fee->amount;
-                $hist->currency = $fee->currency;
-                $hist->created_by = $fee->created_by;
-                $hist->save();
+            $this->new_values = [
+                'category' => $this->category,
+                'duration' => $this->duration,
+                'is_citizen' => $this->nationality,
+                'amount' => $this->amount,
+                'currency' => $this->currency,
+                'created_by' => Auth::id(),
+            ];
+            if ($fee == null) {
+                $agent_fee = TaPaymentConfiguration::query()->create($this->new_values);
+                $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::ADD, 'adding tax consultant fee');
+
+            } else {
+                $this->old_values = [
+                    'tapc_id' => $fee->id,
+                    'category' => $fee->category,
+                    'duration' => $fee->duration,
+                    'is_citizen' => $fee->is_citizen,
+                    'amount' => $fee->amount,
+                    'currency' => $fee->currency,
+                    'created_by' => $fee->created_by,
+                ];
+
+                TaPaymentConfigurationHistory::query()->create($this->old_values);
 
                 $fee->delete();
 
-                TaxAgentFee::saveFee(
-                    $this->category,
-                    $this->duration,
-                    $this->nationality,
-                    $this->amount,
-                    $this->currency,
-                    Auth::id()
-                );
-
+                $agent_fee = TaPaymentConfiguration::query()->create($this->new_values);
+                $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::EDIT, 'editing tax consultant fee', json_encode($this->old_values), json_encode($this->new_values));
             }
 
             DB::commit();
-            $this->flash('success', 'Saved successfully', [], redirect()->back()->getTargetUrl());
-
+            $this->alert('success', 'Saved successfully');
+            return redirect()->route('settings.tax-consultant-fee');
         } catch (\Throwable $exception) {
             Log::error($exception);
-
-            $this->flash('warning', 'Internal server error', [], redirect()->back()->getTargetUrl());
+            $this->alert('warning', 'Something went wrong, Please contact an admin');
+            return redirect()->route('settings.tax-consultant-fee');
 
         }
     }

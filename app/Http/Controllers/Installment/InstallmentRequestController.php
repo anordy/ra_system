@@ -17,6 +17,17 @@ class InstallmentRequestController extends Controller
         return view('installment.requests.index');
     }
 
+
+    public function edit($installmentId){
+        if (!Gate::allows('payment-installment-request-view')) {
+            abort(403);
+        }
+        $installment = InstallmentRequest::findOrFail(decrypt($installmentId));
+        $installable = $installment->installable;
+
+        return view('installment.requests.edit', compact('installment', 'installable'));
+    }
+
     public function show($installmentId){
         if (!Gate::allows('payment-installment-request-view')) {
             abort(403);

@@ -41,7 +41,7 @@ class TransactionFeesEditModal extends Component
 
     public function submit()
     {
-        if (!Gate::allows('setting-education-level-edit')) {
+        if (!Gate::allows('setting-transaction-fees-edit')) {
             abort(403);
         }
 

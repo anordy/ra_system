@@ -35,18 +35,32 @@ class FeeConfigurationTable extends DataTableComponent
             Column::make("Category", "category")
                 ->sortable()->searchable(),
             Column::make("duration", "duration")
-                ->format(
-                    fn($value, $row, Column $column) => $row->duration . ' years '
-                ),
+                ->format(fn($value) => $value . ' years '),
             Column::make('Amount', 'amount')
-                ->format(
-                    fn($value, $row, Column $column) => number_format($row->amount, '2', '.', ',') . '<strong> Tsh</strong>'
-                )
+                ->format(fn($value) => number_format($value, '2', '.', ','))
                 ->html()->searchable(),
             Column::make("Currency", "currency")
                 ->sortable()->searchable(),
             Column::make("Nationality", "is_citizen")
                 ->view('taxagents.includes.no_of_days'),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
         ];
     }
 }

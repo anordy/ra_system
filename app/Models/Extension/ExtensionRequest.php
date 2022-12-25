@@ -42,4 +42,8 @@ class ExtensionRequest extends Model implements Auditable
     public function taxType(){
         return $this->belongsTo(TaxType::class);
     }
+
+    public function createdBy(){
+        return $this->morphTo();
+    }
 }

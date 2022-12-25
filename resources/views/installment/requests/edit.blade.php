@@ -150,6 +150,7 @@
         </div>
     </div>
 
+    <livewire:approval.installment-request-approval-processing modelName="{{ get_class($installment) }}" modelId="{{ encrypt($installment->id) }}" />
 
 @endsection
 
