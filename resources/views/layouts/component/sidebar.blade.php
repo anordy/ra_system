@@ -108,11 +108,7 @@
                             <a href="{{ route('taxagents.renew') }}">Renewal Requests</a>
                         </li>
                     @endcan
-                    @can('tax-consultant-fee-configuration-view')
-                        <li class="{{ request()->is('taxagents/fee*') ? 'active' : '' }}">
-                            <a href="{{ route('taxagents.fee') }}">Fee Configuration</a>
-                        </li>
-                    @endcan
+
                 </ul>
             </li>
         @endcan
@@ -624,9 +620,9 @@
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
                     @can('manage-payments-view')
-                    <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.pending') }}">Pending Payments</a>
-                    </li>
+                        <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.pending') }}">Pending Payments</a>
+                        </li>
                     @endcan
                     @can('manage-payments-view')
                         <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
@@ -634,19 +630,19 @@
                         </li>
                     @endcan
                     @can('manage-payments-view')
-                    <li class="{{ request()->is('payments/cancelled*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.cancelled') }}">Cancelled Payments</a>
-                    </li>
+                        <li class="{{ request()->is('payments/cancelled*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.cancelled') }}">Cancelled Payments</a>
+                        </li>
                     @endcan
                     @can('manage-payments-view')
-                    <li class="{{ request()->is('payments/failed*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.failed') }}">Failed Payments</a>
-                    </li>
+                        <li class="{{ request()->is('payments/failed*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.failed') }}">Failed Payments</a>
+                        </li>
                     @endcan
                     @can('manage-payments-view')
-                    <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
-                    </li>
+                        <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
+                        </li>
                     @endcan
                 </ul>
             </li>
@@ -723,7 +719,8 @@
                     @endcan
                     @can('setting-system-category-view')
                         <li class="{{ request()->is('settings/setting-system-categories*') ? 'active' : '' }}">
-                            <a href="{{ route('settings.setting-system-categories.view') }}">System Setting Categories</a>
+                            <a href="{{ route('settings.setting-system-categories.view') }}">System Setting
+                                Categories</a>
                         </li>
                     @endcan
                     @can('system-setting-view')
@@ -854,7 +851,7 @@
                             Classes</a>
                     </li>
 
-                    
+
                     <li class="{{ request()->is('settings/mvr-generic/DlLicenseDuration') ? 'active' : '' }}">
                         <a href="{{ route('settings.mvr-generic.index', 'DlLicenseDuration') }}">Driver's License
                             Duration</a>
@@ -901,6 +898,12 @@
                             <a href="{{ route('settings.transaction-fees.index') }}">Transaction Fees</a>
                         </li>
                     @endcan
+                        
+                    @can('tax-consultant-fee-configuration-view')
+                        <li class="{{ request()->is('settings/tax-consultant-fee*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.tax-consultant-fee') }}">Tax Consultant Fees</a>
+                        </li>
+                    @endcan
 
                     {{--                    @can()--}}
                     <li class="{{ request()->is('settings/approval-levels/*') ? 'active' : '' }}">
@@ -909,12 +912,12 @@
 
                     {{--                        @endcan--}}
 
-                        {{--                    @can()--}}
-                        <li class="{{ request()->is('settings/dual-control-activities/*') ? 'active' : '' }}">
-                            <a href="{{ route('settings.dual-control-activities.index') }}">Dual Control Activities</a>
-                        </li>
+                    {{--                    @can()--}}
+                    <li class="{{ request()->is('settings/dual-control-activities/*') ? 'active' : '' }}">
+                        <a href="{{ route('settings.dual-control-activities.index') }}">Dual Control Activities</a>
+                    </li>
 
-                        {{--                        @endcan--}}
+                    {{--                        @endcan--}}
                 </ul>
             </li>
         @endcan

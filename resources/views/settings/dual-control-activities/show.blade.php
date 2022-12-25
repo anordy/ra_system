@@ -46,6 +46,12 @@
                 @include('settings.dual-control-activities.details.system-settings')
             @elseif ($result->controllable_type === \App\Models\DualControl::SYSTEM_SETTING_CATEGORY)
                 @include('settings.dual-control-activities.details.system-settings-category')
+            @elseif ($result->controllable_type === \App\Models\DualControl::INTEREST_RATE)
+                @include('settings.dual-control-activities.details.system-settings-category')
+            @elseif ($result->controllable_type === \App\Models\DualControl::PENALTY_RATE)
+                @include('settings.dual-control-activities.details.penalty-rate')
+            @elseif ($result->controllable_type === \App\Models\DualControl::CONSULTANT_FEE)
+                @include('settings.dual-control-activities.details.consultant-fee')
             @endif
 
             <div class="d-flex justify-content-end">

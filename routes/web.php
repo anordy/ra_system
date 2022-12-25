@@ -197,6 +197,8 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
         });
 
+        Route::get('/tax-consultant-fee', [TaxAgentController::class, 'fee'])->name('tax-consultant-fee');
+
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
         Route::resource('/transaction-fees', TransactionFeeController::class);
 
@@ -310,7 +312,6 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/renew', [TaxAgentController::class, 'renewal'])->name('renew');
         Route::get('/renew/show/{id}', [TaxAgentController::class, 'renewalShow'])->name('renew-show');
         Route::get('/consultant-renew-requests/{id}', [TaxAgentController::class, 'viewConsultantRenewRequests'])->name('consultant-renew-requests');
-        Route::get('/fee', [TaxAgentController::class, 'fee'])->name('fee');
         Route::get('/certificate/{id}', [TaxAgentController::class, 'certificate'])->name('certificate');
         Route::get('/requests-for-verification/{id}', [TaxAgentController::class, 'showVerificationAgentRequest'])->name('verification-show');
     });

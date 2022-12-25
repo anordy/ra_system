@@ -102,7 +102,7 @@
                                 <div class="col-md-6">
                                     <span class="font-weight-bold text-uppercase">Action</span>
                                     <p class="my-1">
-                                        <a class="btn btn-primary" href="{{ route('taxagents.fee') }}">
+                                        <a class="btn btn-primary" href="{{ route('settings.tax-consultant-fee') }}">
                                             <i class="bi bi-plus-square-fill mr-2"></i>
                                             Add Fee
                                         </a>
