@@ -58,7 +58,7 @@
                             </div>
                         </div>
 
-                        <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>
+                        <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
                     </div>
                     <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
                         <div class="row mt-3">

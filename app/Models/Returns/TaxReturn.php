@@ -74,7 +74,7 @@ class TaxReturn extends Model
 
     public function latestBill()
     {
-        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 
 
