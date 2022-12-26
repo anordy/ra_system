@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Settings\SystemSettings;
 
 use App\Models\DualControl;
 use App\Models\SystemSetting;
-use App\Models\SystemSetting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;

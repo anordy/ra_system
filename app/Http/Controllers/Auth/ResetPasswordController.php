@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
             ]);
         }
 
-        $passwordExpirationDuration = SystemSetting::where('code', SystemSetting::PASSWORD_EXPIRATION_DURATION)->value('value');
+        $passwordExpirationDuration = SystemSetting::where('code', SystemSetting::PASSWORD_EXPIRATION_DURATION)->where('is_approved', 1)->value('value');
 
         $this->setUserPassword($user, $password);
         $user->setRememberToken(Str::random(60));
