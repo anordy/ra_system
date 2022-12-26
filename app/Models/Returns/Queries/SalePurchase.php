@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class SalePurchase extends Model
 {
     use HasFactory;
-    protected $table = 'sales-purchases';
+    protected $table = 'sales_purchases';
     protected $guarded = [];
 
     public function business()

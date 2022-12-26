@@ -117,7 +117,7 @@ class LicenseDetailsStep extends StepComponent
         }catch (\Exception $e){
             report($e);
             DB::rollBack();
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

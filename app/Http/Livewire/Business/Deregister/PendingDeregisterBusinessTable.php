@@ -36,7 +36,7 @@ class PendingDeregisterBusinessTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Name', 'pinstance.business.ztn_number')
+            Column::make('ZTN No', 'pinstance.business.ztn_number')
                 ->label(fn ($row) => $row->pinstance->business->ztn_number ?? '')
                 ->sortable(), 
             Column::make('Name', 'pinstance.business.name')

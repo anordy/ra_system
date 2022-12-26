@@ -23,23 +23,28 @@ class ZrbBankAccountEditModal extends Component
     public $bank_id;
     public $account_number;
     public $branch_name;
+    public $swift_code;
+    public $currency;
     public $currency_id;
+    public $currency_iso;
     public $banks;
     public $currencies;
 
     protected $rules = [
         'account_name' => 'required',
         'branch_name' => 'required',
-        'account_number' => 'required',
-        'currency_id' => 'required',
+        'swift_code' => 'required',
+        'account_number' => 'required|numeric|digits_between:9,20',
+        'currency' => 'required',
     ];
 
     protected $messages = [
         'bank_id' => 'Bank is required',
         'account_name.required' => 'Account name is required.',
         'branch_name.required' => 'Branch name is required.',
+        'swift_code.required' => 'Swift code is required.',
         'account_number.required' => 'Account number is required.',
-        'currency_id.required' => 'currency is required.',
+        'currency.required' => 'currency is required.',
     ];
 
     public function mount($id){
@@ -47,9 +52,8 @@ class ZrbBankAccountEditModal extends Component
         $this->bank_id = $this->zrbBankAccount->bank_id;
         $this->account_name = $this->zrbBankAccount->account_name;
         $this->branch_name = $this->zrbBankAccount->branch_name;
+        $this->swift_code = $this->zrbBankAccount->swift_code;
         $this->account_number = $this->zrbBankAccount->account_number;
-        $this->currency_id = $this->zrbBankAccount->currency_id;
-        $this->currency_id = $this->zrbBankAccount->currency_id;
 
         $this->currencies = Currency::select('id', 'iso')->get();
         $this->banks = Bank::select('id', 'name')->get();
@@ -62,14 +66,17 @@ class ZrbBankAccountEditModal extends Component
             abort(403);
         }
         $this->validate();
+        $currency = json_decode($this->currency);
         DB::beginTransaction();
         try {
             $this->zrbBankAccount->update([
                 'bank_id' => $this->bank_id,
                 'account_name' => $this->account_name,
                 'branch_name' => $this->branch_name,
+                'swift_code' => $this->swift_code,
                 'account_number' => $this->account_number,
-                'currency_id' => $this->currency_id,
+                'currency_id' => $currency->id,
+                'currency_iso' => $currency->iso,
             ]);
             $this->triggerDualControl(get_class($this->zrbBankAccount), $this->zrbBankAccount->id, DualControl::EDIT, 'edit zrb bank account');
             DB::commit();

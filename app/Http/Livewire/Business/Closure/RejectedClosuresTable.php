@@ -15,7 +15,6 @@ class RejectedClosuresTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended']);
 
         $this->setTableWrapperAttributes([
             'default' => true,

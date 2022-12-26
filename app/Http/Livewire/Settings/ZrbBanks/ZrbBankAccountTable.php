@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -18,7 +19,6 @@ class ZrbBankAccountTable extends DataTableComponent
     {
         return ZrbBankAccount::query()
             ->with('bank')
-            ->with('currency')
             ->orderBy('created_at', 'Desc');
     }
 
@@ -54,17 +54,14 @@ class ZrbBankAccountTable extends DataTableComponent
                 ->searchable(),
             Column::make('Bank name', 'bank_id')
                 ->format(function ($value, $row) {
-                    return $row->bank->name;
+                    return $row->bank->name ?? 'N/A';  
                 })
                 ->sortable()
                 ->searchable(),
             Column::make('Branch Name', 'branch_name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Currency', 'currency_id')
-                ->format(function ($value, $row) {
-                    return $row->currency->iso;
-                })
+            Column::make('Currency', 'currency_iso')
                 ->sortable()
                 ->searchable(),
             Column::make('Approval Status', 'is_approved')
@@ -78,6 +75,10 @@ class ZrbBankAccountTable extends DataTableComponent
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
                         HTML;
                     } elseif ($value == 2) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    } else {
                         return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
                         HTML;
@@ -112,7 +113,7 @@ class ZrbBankAccountTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            // TODO: ADD DUAL CONTROL
+            TODO: //ADD DUAL CONTROL
             $zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($data->id));
             $zrbBankAccount->delete();
             $this->alert('success', 'Record deleted successfully');

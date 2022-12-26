@@ -39,7 +39,7 @@ class AccountDetails extends Component
             $this->redirect(route('account'));
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

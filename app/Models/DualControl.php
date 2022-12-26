@@ -32,6 +32,7 @@ class DualControl extends Model
     public const SYSTEM_SETTING_CONFIG = SystemSetting::class;
     public const INTEREST_RATE = InterestRate::class;
     public const PENALTY_RATE = PenaltyRate::class;
+    public const TRANSFER_FEE = TransactionFee::class;
 
     public function moduleForBlade($model)
     {

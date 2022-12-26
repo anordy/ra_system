@@ -237,15 +237,15 @@ trait PaymentsTrait
             $amount = $amount * $exchangeRate;
         }
 
-        $TransactionFee = TransactionFee::whereNull('maximum_amount')->select('minimum_amount', 'fee')->first();
-        if($TransactionFee == null){
+        $transactionFee = TransactionFee::whereNull('maximum_amount')->select('minimum_amount', 'fee')->first();
+        if($transactionFee == null){
             return 0;
         }
-        $minFee = $TransactionFee->minimum_amount;
+        $minFee = $transactionFee->minimum_amount;
 
         //if the amount exceed the maximum fee range we take the constant fee
         if ($minFee <= $amount) {
-            $fee = $TransactionFee->fee;
+            $fee = $transactionFee->fee;
         } else {
             $fee = TransactionFee::where('minimum_amount', '<=', $amount)->where('maximum_amount', '>=', $amount)->pluck('fee')->first();
             $fee = $fee * $amount;

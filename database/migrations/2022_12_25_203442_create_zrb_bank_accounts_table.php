@@ -19,7 +19,9 @@ class CreateZrbBankAccountsTable extends Migration
             $table->string('account_name');
             $table->string('account_number');
             $table->string('branch_name');
+            $table->string('swift_code');
             $table->string('currency_id');
+            $table->string('currency_iso');
             $table->string('is_approved')->default(0);
             $table->softDeletes();
             $table->timestamps();

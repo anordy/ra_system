@@ -98,7 +98,7 @@ class Create extends Component
         {
             DB::rollBack();
             Log::error($exception);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
             redirect()->back()->getTargetUrl();
         }
     }

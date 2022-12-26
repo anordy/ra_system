@@ -20,6 +20,7 @@ class CreateTransactionFeesTable extends Migration
             $table->decimal('minimum_amount',20,2);
             $table->decimal('maximum_amount',20,2)->nullable();
             $table->decimal('fee',10,4);
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
         });
     }

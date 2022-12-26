@@ -42,14 +42,21 @@
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
+                        <label class="control-label">Swift Code</label>
+                        <input type="text" onkeyup="var start = this.selectionStart;var end = this.selectionEnd;this.value = this.value.toUpperCase();this.setSelectionRange(start, end);" class="form-control" wire:model.defer="swift_code" id="swift_code">
+                        @error('swift_code')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-12">
                         <label class="control-label">Currency</label>
-                        <select type="text" class="form-control" wire:model.defer="currency_id" id="currency_id">
+                        <select type="text" class="form-control" wire:model.defer="currency" id="currency">
                                 <option selected>---Select Currency---</option>
                                 @foreach ($currencies as $currency)
-                                <option value="{{ $currency->id }}">{{ $currency->iso }}</option>
+                                <option value="{{ $currency }}">{{ $currency->iso }}</option>
                             @endforeach
                         </select>
-                        @error('currency_id')
+                        @error('currency')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
