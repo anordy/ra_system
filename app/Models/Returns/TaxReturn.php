@@ -112,7 +112,15 @@ class TaxReturn extends Model implements PayloadInterface
 
     public static function getPayloadColumns(): array
     {
-        return ['id', 'business_id', 'location_id'];
+        return ['id',
+            'business_id',
+            'location_id',
+            'total_amount',
+            'principal',
+            'interest',
+            'penalty',
+            'currency'
+        ];
     }
 
     public static function getTableName(): string

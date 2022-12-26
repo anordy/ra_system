@@ -24,6 +24,15 @@ class User extends Authenticatable implements PayloadInterface
         'email_verified_at' => 'datetime',
     ];
 
+    public static function getPayloadColumns(): array
+    {
+        return ['id', 'email', 'phone', 'password', 'status'];
+    }
+
+    public static function getTableName(): string
+    {
+        return 'users';
+    }
 
     public function role()
     {
@@ -55,16 +64,6 @@ class User extends Authenticatable implements PayloadInterface
         }
 
         return false;
-    }
-
-    public static function getPayloadColumns(): array
-    {
-        return ['id', 'email', 'phone', 'password', 'status'];
-    }
-
-    public static function getTableName(): string
-    {
-        return 'users';
     }
     
     public function passwordHistories()

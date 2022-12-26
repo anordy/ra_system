@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Verification\PayloadInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,11 +13,21 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Notifications\Notifiable;
 use Yajra\Oci8\Eloquent\OracleEloquent as Eloquent;
 
-class Taxpayer extends Eloquent implements Auditable
+class Taxpayer extends Eloquent implements Auditable, PayloadInterface
 {
     use Notifiable, HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
+
+    public static function getPayloadColumns(): array
+    {
+        return ['id', 'email', 'phone', 'password', 'status'];
+    }
+
+    public static function getTableName(): string
+    {
+        return 'users';
+    }
 
     public function generateReferenceNo(){
         if ($this->reference_no){

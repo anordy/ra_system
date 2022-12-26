@@ -133,8 +133,6 @@ use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Setting\SystemSettingsController;
 use App\Http\Controllers\v1\ZanMalipoController;
 
-Route::get('/test', [DashboardController::class, 'sample']);
-
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);

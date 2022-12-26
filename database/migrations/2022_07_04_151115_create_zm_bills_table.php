@@ -41,8 +41,7 @@ class CreateZmBillsTable extends Migration
             $table->string('createdby_type')->nullable();
             $table->enum('origin', ['user', 'job'])->default("user");
 
-            $table->boolean('failed_verification')->default(0); // TODO: Maybe remove
-            $table->boolean('is_suspected')->default(0); // TODO: Maybe remove
+            $table->boolean('failed_verification')->default(0);
             $table->text('ci_payload', 4000)->nullable();
 
             $table->timestamps();

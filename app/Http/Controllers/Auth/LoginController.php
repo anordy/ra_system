@@ -26,16 +26,6 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => ['logout']]);
     }
 
-    public function getPayloadColumns(): array
-    {
-        return ['id', 'email', 'phone', 'password', 'status'];
-    }
-
-    public function getPayloadTable(): string
-    {
-        return 'users';
-    }
-
     public function showLoginForm()
     {
         return view('auth.login');
@@ -75,7 +65,7 @@ class LoginController extends Controller
             ]);
         }
 
-        if (!$this->verify($user->id)){
+        if (!$this->verify($user)){
             throw ValidationException::withMessages([
                 $this->username() =>  "Your account could not be verified, please contact system administrator.",
             ]);

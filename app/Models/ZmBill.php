@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Services\Verification\PayloadInterface;
 use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class ZmBill extends Model implements Auditable
+class ZmBill extends Model implements Auditable, PayloadInterface
 {
     use HasFactory, \OwenIt\Auditing\Auditable;
 
@@ -17,6 +18,23 @@ class ZmBill extends Model implements Auditable
     protected $casts = [
         'expire_date' => 'datetime'
     ];
+
+    public static function getPayloadColumns(): array
+    {
+        return [
+            'id',
+            'tax_type_id',
+            'amount',
+            'currency',
+            'exchange_rate',
+            'payer_id'
+        ];
+    }
+
+    public static function getTableName(): string
+    {
+        return 'zm_bills';
+    }
 
     public function bill_items(){
         return $this->hasMany(ZmBillItem::class, 'zm_bill_id');

@@ -2,10 +2,16 @@
 
 namespace App\Traits;
 
+use App\Jobs\RepostBillSignature;
+use App\Jobs\RepostReturnSignature;
+use App\Models\Returns\TaxReturn;
+use App\Models\ZmBill;
 use App\Services\Verification\AuthenticationService;
 use App\Services\Verification\PayloadInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use PHPUnit\Exception;
 
 trait VerificationTrait{
 
@@ -15,31 +21,40 @@ trait VerificationTrait{
 
         $stringData = "";
 
-        foreach ($object::getPayloadColumns()as $column){
+        foreach ($object::getPayloadColumns() as $column){
             $stringData .= $object->{$column};
         }
 
-        return $this->verifySignature($stringData, $object->ci_payload);
-    }
+        try {
+            $token = AuthenticationService::getAuthToken();
 
-    private function verifySignature($data, $ci_payload): bool
-    {
-        // TODO: Maybe try n' catch
+            $url = config('modulesconfig.verification.server_url') . '/PrepaidCardServices/v1/Crypto/verify';
 
-        // Get token
-        $token = AuthenticationService::getAuthToken();
+            $result = Http::withToken($token)
+                ->withOptions(['verify' => false])
+                ->post($url, [
+                    'payload' => base64_encode($stringData),
+                    'signature' => $object->ci_payload
+                ]);
 
-        // URL
-        $url = config('modulesconfig.verification.server_url') . '/PrepaidCardServices/v1/Crypto/verify';
+            $result = json_decode($result, true)['verification'] == 'true';
 
-        $result = Http::withToken($token)
-            ->withOptions(['verify' => false])
-            ->post($url, [
-                'payload' => base64_encode($data),
-                'signature' => $ci_payload
-            ]);
+            if (!$result){
+                $object->update(['failed_verification' => true]);
 
-        return json_decode($result, true)['verification'] == 'true';
+                //  Save to failed verifications
+                DB::table('verification_logs')->create([
+                    'table' => $object->getTable(),
+                    'row_id' => $object->id
+                ]);
+
+                return false;
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public function sign(PayloadInterface $object): bool
@@ -52,22 +67,29 @@ trait VerificationTrait{
             $stringData .= $object->{$column};
         }
 
-        return $object->update([
-                'ci_payload' => $this->getSignature($stringData)
-            ]) == 1;
-    }
+        try {
+            // Get token
+            $token = AuthenticationService::getAuthToken();
 
-    private function getSignature($data){
-        // Get token
-        $token = AuthenticationService::getAuthToken();
+            // URL
+            $url = config('modulesconfig.verification.server_url') . '/PrepaidCardServices/v1/Crypto/sign';
 
-        // URL
-        $url = config('modulesconfig.verification.server_url') . '/PrepaidCardServices/v1/Crypto/sign';
+            $result = Http::withToken($token)
+                ->withOptions(['verify' => false])
+                ->post($url, ['payload' => base64_encode($stringData)]);
 
-        $result = Http::withToken($token)
-            ->withOptions(['verify' => false])
-            ->post($url, ['payload' => base64_encode($data)]);
+            return $object->update(['ci_payload' => json_decode($result, true)['signature']]) == 1;
+        } catch (\Exception $exception){
+            Log::error($exception);
+            Log::channel('verification')->error($exception);
 
-        return json_decode($result, true)['signature'];
+            if ($object instanceof TaxReturn){
+                dispatch(new RepostReturnSignature($object));
+            } else if ($object instanceof ZmBill){
+                dispatch(new RepostBillSignature($object));
+            }
+
+            return 0;
+        }
     }
 }
