@@ -2,9 +2,7 @@
 
 namespace App\Http\Livewire\Settings\TaxRegion;
 
-use App\Models\InterestRate;
 use App\Models\TaxRegion;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

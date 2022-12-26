@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Settings\SystemSettings;
 
+use App\Models\DualControl;
 use App\Models\SystemSettingCategory;
+use App\Traits\DualControlActivityTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +15,7 @@ use Livewire\Component;
 
 class SystemSettingCategoryAddModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
     public $name;
     public $description;
 
@@ -36,12 +38,12 @@ class SystemSettingCategoryAddModal extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            SystemSettingCategory::create([
+            $systemSettingCategory = SystemSettingCategory::create([
                 'name' => $this->name,
                 'description' => $this->description,
                 'created_at' => Carbon::now()
             ]);
-            
+            $this->triggerDualControl(get_class($systemSettingCategory), $systemSettingCategory->id, DualControl::ADD, 'adding system setting category');
             DB::commit();
             $this->alert('success', 'Record added successfully');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());

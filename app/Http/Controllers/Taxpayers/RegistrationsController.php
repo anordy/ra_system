@@ -9,6 +9,7 @@ use App\Models\Biometric;
 use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
+use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Log;
 
 class RegistrationsController extends Controller
 {
-    use KYCTrait;
+    use KYCTrait, VerificationTrait;
 
     public function index()
     {
@@ -92,6 +93,8 @@ class RegistrationsController extends Controller
             $taxpayer = Taxpayer::create($data);
             $taxpayer->generateReferenceNo();
 
+            // sign taxpayer
+            $this->sign($taxpayer);
 
             // todo: this should before sending the email/Sms
             if ($taxpayer) {

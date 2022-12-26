@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire\Installment;
 
-use App\Enum\InstallmentRequestStatus;
-use App\Models\Business;
 use App\Models\Installment\InstallmentRequest;
 use App\Models\WorkflowTask;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,10 +29,7 @@ class InstallmentRequestsApprovalTable extends DataTableComponent
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', InstallmentRequest::class)
             ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function($query){
-                $query->where('user_id', auth()->id());
-            });
+            ->where('owner', 'staff');
     }
 
     public function columns(): array

@@ -5,22 +5,13 @@ namespace App\Http\Controllers\MVR;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\v1\SMSController;
-use App\Models\MvrDeRegistrationRequest;
-use App\Models\MvrFee;
-use App\Models\MvrFeeType;
-use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleOwner;
-use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrOwnershipStatus;
 use App\Models\MvrOwnershipTransfer;
-use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationChangeRequest;
-use App\Models\MvrRegistrationStatus;
-use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
 use App\Models\MvrTransferFee;
-use App\Services\TRA\ServiceRequest;
+use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\MotorVehicleSearchTrait;
@@ -80,11 +71,12 @@ class OwnershipTransferController extends Controller
         $amount = $fee->amount;
         $gfs_code = $fee->gfs_code;
         try {
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,
                 get_class($request),
-                6, //todo: remove
+                $taxType->id,
                 $request->agent->id ?? $request->new_owner->id,
                 get_class($request->agent ?? $request->new_owner),
                 !empty($request->agent)?$request->agent->taxpayer->fullname() : $request->new_owner->fullname(),
@@ -102,7 +94,7 @@ class OwnershipTransferController extends Controller
                         'billable_id' => $request->id,
                         'billable_type' => get_class($request),
                         'fee_id' => $fee->id,
-                        'tax_type_id' => 6, //todo: remove
+                        'tax_type_id' => $taxType->id,
                         'fee_type' => get_class($fee),
                         'amount' => $amount,
                         'currency' => 'TZS',

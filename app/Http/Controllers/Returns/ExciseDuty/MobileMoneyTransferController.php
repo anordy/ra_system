@@ -30,6 +30,7 @@ class MobileMoneyTransferController extends Controller
     public function show($return_id)
     {
         $return = MmTransferReturn::query()->findOrFail(decrypt($return_id));
+        $return->penalties = $return->penalties->merge($return->tax_return->penalties);
 
         return view('returns.excise-duty.mobile-money-transfer.show', compact('return', 'return_id'));
     }

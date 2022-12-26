@@ -9,38 +9,57 @@ use App\Models\User;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Audit;
+use App\Models\SystemSetting;
+use App\Models\SystemSettingCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 trait DualControlActivityTrait
 {
-    public function triggerDualControl($model, $modelId, $action, $action_detail, $edited_values=null)
+    public function triggerDualControl(
+        $model,
+        $modelId,
+        $action,
+        $action_detail,
+        $old_values = null,
+        $edited_values = null)
     {
         $payload = [
             'controllable_type' => $model,
             'controllable_type_id' => $modelId,
-            'action' =>$action,
+            'action' => $action,
             'action_detail' => $action_detail,
-            'edited_values' => $edited_values,
+            'old_values' => $old_values,
+            'new_values' => $edited_values,
             'create_by_id' => Auth::id(),
-            'status' => 'pending'
+            'status' => 'pending',
         ];
         DualControl::updateOrCreate($payload);
+        if ($action != DualControl::ADD) {
+            $data = $model::findOrFail($modelId);
+            $data->update(['is_approved' => DualControl::NOT_APPROVED]);
+        }
     }
 
     public function getModule($model)
     {
         switch ($model) {
-            case User::class:
+            case DualControl::USER:
                 return 'User';
                 break;
 
-            case Role::class:
+            case DualControl::ROLE:
                 return 'Role';
                 break;
 
-            case TaPaymentConfiguration::class;
+            case DualControl::CONSULTANT_FEE:
                 return 'Tax Consultant Fee';
+                break;
+            case DualControl::SYSTEM_SETTING_CONFIG:
+                return 'System Setting Configuration';
+                break;
+            case DualControl::SYSTEM_SETTING_CATEGORY:
+                return 'System Setting Category Configuration';
                 break;
 
             default:
@@ -51,52 +70,26 @@ trait DualControlActivityTrait
     public function getAllDetails($model, $modelId)
     {
         $modelId = decrypt($modelId);
-        switch ($model) {
-            case User::class:
-                $user = User::findOrFail($modelId);
-                return $user;
-                break;
-
-            case Role::class:
-                $role = Role::findOrFail($modelId);
-                return 'Role';
-                break;
-
-            case TaPaymentConfiguration::class;
-                return 'Tax Consultant Fee';
-                break;
-
-            default:
-                abort(404);
-        }
+        $data = $model::findOrFail($modelId);
+        return $data;
     }
 
-    public function updateControllable($model, $modelId, $status)
+    public function updateControllable($data, $status)
     {
-        switch ($model) {
-            case User::class:
-                $user = User::findOrFail($modelId);
-                $user->update(['is_approved'=> $status]);
-                return $user;
-                break;
-
-            case Role::class:
-                $role = Role::findOrFail($modelId);
-                $role->update(['is_approved'=> $status]);
-                return $role;
-                break;
-
-            case TaPaymentConfiguration::class;
-                return 'Tax Consultant Fee';
-                break;
-
-            default:
-                abort(404);
+        $update = $data->controllable_type::findOrFail($data->controllable_type_id);
+        if ($data->action == DualControl::EDIT) {
+            $payload = json_decode($data->old_values);
+            $payload = (array)$payload;
+            if ($status == DualControl::REJECT) {
+                $payload = array_merge($payload, ['is_approved' => DualControl::APPROVE]);
+                $update->update($payload);
+            } else {
+                $update->update(['is_approved' => $status]);
+            }
+        } else {
+            $update->update(['is_approved' => $status]);
         }
+
     }
-
-
-
-
 
 }

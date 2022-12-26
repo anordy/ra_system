@@ -53,6 +53,9 @@ class CreateTaxpayersTable extends Migration
             $table->rememberToken();
             $table->softDeletes();
 
+            $table->string('ci_payload', 4000)->nullable();
+            $table->boolean('failed_verification')->default(0);
+
             $table->foreign('id_type')->references('id')->on('id_types');
             $table->foreign('country_id')->references('id')->on('countries');
             $table->timestamps();

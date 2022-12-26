@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use App\Models\Debts\DebtPenalty;
-use App\Models\ExchangeRate;
 use App\Models\FinancialYear;
 use App\Models\InterestRate;
 use App\Models\PenaltyRate;
@@ -70,20 +69,32 @@ class PenaltyForDebt
 
         $curr_payment_due_date = Carbon::create($tax_return->curr_payment_due_date);
 
-        $year = FinancialYear::where('code', $curr_payment_due_date->year)->firstOrFail();
+        $year = FinancialYear::where('code', $curr_payment_due_date->year)->first();
 
-        $interestRate = InterestRate::where('year', $year->code)->firstOrFail()->rate;
+        if (!$year) {
+            throw new \Exception("JOB FAILED TO RUN, NO FINANCIAL YEAR {$curr_payment_due_date->year} DATA");
+        }
+
+        $interestRate = InterestRate::where('year', $year->code)->first();
+
+        if (!$interestRate) {
+            throw new \Exception("JOB FAILED TO RUN, NO INTEREST RATE FOR THE YEAR {$curr_payment_due_date->year}");
+        }
 
         $latePaymentBeforeRate = PenaltyRate::where('financial_year_id', $year->id)
             ->where('code', 'LPA')
-            ->firstOrFail()->rate;
+            ->first();
+
+        if (!$latePaymentBeforeRate) {
+            throw new \Exception("JOB FAILED TO RUN, NO LATE PAYMENT RATE FOR THE YEAR {$curr_payment_due_date->year}");
+        }
         
         $period = $tax_return->periods + $tax_return->penatableMonths;
 
         $penaltableAmount = $outstanding_amount;
-        $latePaymentAmount = $latePaymentBeforeRate * $penaltableAmount;
+        $latePaymentAmount = $latePaymentBeforeRate->rate * $penaltableAmount;
         $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-        $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $period);
+        $interestAmount = self::calculateInterest($penaltableAmount, $interestRate->rate, $period);
         $penaltableAmount = $penaltableAmount + $interestAmount;
 
         $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay();
@@ -96,7 +107,7 @@ class PenaltyForDebt
             'tax_amount' => $outstanding_amount,
             'late_filing' => 0,
             'late_payment' => $latePaymentAmount ?? 0,
-            'rate_percentage' => $interestRate,
+            'rate_percentage' => $interestRate->rate,
             'rate_amount' => $interestAmount,
             'penalty_amount' => $penaltableAmount,
             'start_date' => $start_date,
@@ -122,33 +133,45 @@ class PenaltyForDebt
 
         $curr_payment_due_date = Carbon::create($tax_return->curr_payment_due_date);
 
-        $year = FinancialYear::where('code', $curr_payment_due_date->year)->firstOrFail();
+        $year = FinancialYear::where('code', $curr_payment_due_date->year)->first();
 
-        $interestRate = InterestRate::where('year', $year->code)->firstOrFail()->rate;
+        if (!$year) {
+            throw new \Exception("JOB FAILED TO RUN, NO FINANCIAL YEAR {$curr_payment_due_date->year} DATA");
+        }
+
+        $interestRate = InterestRate::where('year', $year->code)->first();
+
+        if (!$interestRate) {
+            throw new \Exception("JOB FAILED TO RUN, NO INTEREST RATE FOR THE YEAR {$curr_payment_due_date->year}");
+        }
 
         $latePaymentBeforeRate = PenaltyRate::where('financial_year_id', $year->id)
             ->where('code', 'LPA')
-            ->firstOrFail()->rate;
+            ->first();
+
+        if (!$latePaymentBeforeRate) {
+            throw new \Exception("JOB FAILED TO RUN, NO LATE PAYMENT RATE FOR THE YEAR {$curr_payment_due_date->year}");
+        }
         
         $period = $tax_return->periods + $tax_return->penatableMonths;
 
         $penaltableAmount = $outstanding_amount;
-        $latePaymentAmount = $latePaymentBeforeRate * $penaltableAmount;
+        $latePaymentAmount = $latePaymentBeforeRate->rate * $penaltableAmount;
         $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-        $interestAmount = self::calculateInterest($penaltableAmount, $interestRate, $period);
+        $interestAmount = self::calculateInterest($penaltableAmount, $interestRate->rate, $period);
         $penaltableAmount = $penaltableAmount + $interestAmount;
 
         $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay();
         $end_date = Carbon::create($tax_return->curr_payment_due_date)->addDays(30);
 
-        DebtPenalty::create([
+        $debt = DebtPenalty::create([
             'debt_id' => $tax_return->id,
             'debt_type' => TaxAssessment::class,
             'financial_month_name' => $start_date->day . '-' . $start_date->monthName . '-' . $start_date->year . '  to ' . $end_date->day . '-' . $end_date->monthName . '-' . $end_date->year,
             'tax_amount' => $outstanding_amount,
             'late_filing' => 0,
             'late_payment' => $latePaymentAmount ?? 0,
-            'rate_percentage' => $interestRate,
+            'rate_percentage' => $interestRate->rate,
             'rate_amount' => $interestAmount,
             'penalty_amount' => $penaltableAmount,
             'start_date' => $start_date,

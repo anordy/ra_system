@@ -40,4 +40,8 @@ class InstallmentRequest extends Model
     public function taxType(){
         return $this->belongsTo(TaxType::class);
     }
+
+    public function createdBy(){
+        return $this->morphTo();
+    }
 }

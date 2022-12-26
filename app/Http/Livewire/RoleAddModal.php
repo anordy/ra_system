@@ -2,8 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Role;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -12,7 +15,7 @@ use Livewire\Component;
 class RoleAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $name;
     public $report_to = null;
@@ -40,15 +43,18 @@ class RoleAddModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try{
-            Role::create([
+            $role = Role::create([
                 'name' => $this->name,
                 'report_to' => $this->report_to,
             ]);
+            $this->triggerDualControl(get_class($role), $role->id, DualControl::ADD, 'adding role');
+            DB::commit();
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
+            DB::rollBack();
             Log::error($e);
-
             $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }

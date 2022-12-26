@@ -8,7 +8,9 @@ use App\Events\SendWithholdingAgentRegistrationEmail;
 use App\Listeners\SendMailFired;
 use App\Listeners\SendNewBusinessRegisteredNotification;
 use App\Listeners\SendSmsFired;
+use App\Models\ZmBill;
 use App\Notifications\NewUserNotification;
+use App\Observers\ZmBillObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -46,6 +48,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        ZmBill::observe(ZmBillObserver::class);
     }
 }

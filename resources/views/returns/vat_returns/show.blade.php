@@ -413,7 +413,7 @@
                             </div>
                         </div>
                         <div class="tab-pane p-2" id="payment-summary" role="tabpanel" aria-labelledby="payment-summary-tab">
-                            <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>
+                            <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
                         </div>
                     </div>
                 </div>

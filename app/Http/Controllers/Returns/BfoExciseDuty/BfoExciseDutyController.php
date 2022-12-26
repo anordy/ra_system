@@ -32,6 +32,7 @@ class BfoExciseDutyController extends Controller
     public function show($return_id)
     {
         $return = BfoReturn::query()->findOrFail(decrypt($return_id));
+        $return->penalties = $return->penalties->merge($return->tax_return->penalties);
 
         return view('returns.excise-duty.bfo.show', compact('return', 'return_id'));
     }

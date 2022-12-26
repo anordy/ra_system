@@ -25,7 +25,7 @@ class CreateBusinessTaxTypeChangesTable extends Migration
             $table->enum('category', ['requested', 'qualified']);
             $table->enum('status', ['pending', 'approved', 'rejected', 'effective'])->default('pending');
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
             $table->dateTime('effective_date')->nullable();
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('taxpayer_id')->references('id')->on('taxpayers');

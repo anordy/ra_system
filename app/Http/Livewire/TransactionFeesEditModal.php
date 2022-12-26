@@ -41,7 +41,7 @@ class TransactionFeesEditModal extends Component
 
     public function submit()
     {
-        if (!Gate::allows('setting-education-level-edit')) {
+        if (!Gate::allows('setting-transaction-fees-edit')) {
             abort(403);
         }
 
@@ -51,6 +51,7 @@ class TransactionFeesEditModal extends Component
                 'minimum_amount' => $this->min_amount,
                 'maximum_amount' => $this->max_amount,
                 'fee' => $this->fee,
+                'is_approved' => 0,
                 'created_by' => Auth::id()
             ]);
             $this->flash('success', 'Fee updated successfully', [], redirect()->back()->getTargetUrl());

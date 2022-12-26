@@ -135,6 +135,9 @@
         </thead>
 
         <tbody>
+            @php
+                $return->penalties = $return->penalties->merge($return->tax_return->penalties);
+            @endphp
         @if(count($return->penalties))
             @foreach ($return->penalties as $penalty)
                 <tr>
@@ -165,7 +168,7 @@
         </tr>
         </thead>
     </table>
-    @php($bill = $return->tax_return->latestBill())
+    @php($bill = $return->tax_return->latestBill)
     @if($bill)
         <table class="tbl-bordered tbl-p-6" style="width: 100%; margin-top: 10px;">
             <tbody>

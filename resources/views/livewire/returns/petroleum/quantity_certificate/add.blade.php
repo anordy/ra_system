@@ -6,7 +6,7 @@
             <div class="form-group col-lg-6">
                 <label class="control-label">Name of Importer/Market (ZIN No.)</label>
                 <input type="text" class="form-control @error('location') is-invalid @enderror"
-                    wire:model.lazy="location">
+                    wire:model.defer="location">
                 @error('location')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -14,7 +14,7 @@
             <div class="form-group col-lg-6">
                 <label class="control-label">Ascertained Date</label>
                 <input type="date" class="form-control @error('ascertained') is-invalid @enderror"
-                    wire:model.lazy="ascertained">
+                    wire:model.defer="ascertained">
                 @error('ascertained')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -22,7 +22,7 @@
             <div class="form-group col-lg-6">
                 <label class="control-label">Name of Ship</label>
                 <input type="text" class="form-control @error('ship') is-invalid @enderror"
-                    wire:model.lazy="ship">
+                    wire:model.defer="ship">
                 @error('ship')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -30,7 +30,7 @@
             <div class="form-group col-lg-6">
                 <label class="control-label">Port of Disembarkation</label>
                 <input type="text" class="form-control @error('port') is-invalid @enderror"
-                    wire:model.lazy="port">
+                    wire:model.defer="port">
                 @error('port')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -38,7 +38,7 @@
             <div class="form-group col-lg-6">
                 <label class="control-label">Voyage No:</label>
                 <input type="text" class="form-control @error('voyage_no') is-invalid @enderror"
-                    wire:model.lazy="voyage_no">
+                    wire:model.defer="voyage_no">
                 @error('voyage_no')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -52,7 +52,7 @@
                 <div class="row">
                     <div class="form-group col-lg-6">
                         <label class="control-label">Intended Cargo Discharge</label>
-                        <select class="form-control" wire:model="products.{{ $key }}.config_id">
+                        <select class="form-control" wire:model.defer="products.{{ $key }}.config_id">
                             <option value="" selected> --Select--</option>
                             @foreach ($configs as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -66,7 +66,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Liters Observed</label>
                         <input type="number" class="form-control"
-                            wire:model="products.{{ $key }}.liters_observed">
+                            wire:model.defer="products.{{ $key }}.liters_observed">
                         @error("products.{$key}.liters_observed")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -75,7 +75,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Liters At 20 <sup>o</sup> C</label>
                         <input type="number" class="form-control"
-                            wire:model="products.{{ $key }}.liters_at_20">
+                            wire:model.defer="products.{{ $key }}.liters_at_20">
                         @error("products.{$key}.liters_at_20")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -83,7 +83,7 @@
                     <div class="form-group col-lg-6">
                         <label class="control-label">Metric Tons in Air</label>
                         <input type="number" class="form-control"
-                            wire:model="products.{{ $key }}.metric_tons">
+                            wire:model.defer="products.{{ $key }}.metric_tons">
                         @error("products.{$key}.metric_tons")
                             <span class="text-danger">{{ $message }}</span>
                         @enderror

@@ -24,7 +24,7 @@ class CreateZmPaymentsTable extends Migration
             $table->decimal('paid_amount', 20, 2);
             $table->string('bill_pay_opt');
             $table->string('currency');
-            $table->string('trx_time')->nullable();
+            $table->dateTime('trx_time')->nullable();
             $table->string('usd_pay_channel')->nullable();
             $table->string('payer_phone_number')->nullable();
             $table->string('payer_name')->nullable();

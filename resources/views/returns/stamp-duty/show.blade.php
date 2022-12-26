@@ -59,7 +59,7 @@
                             <p class="my-1"><span class="badge badge-info">{{ $return->return_category }}</span></p>
                         </div>
                     </div>
-                    <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false"/>
+                    <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>
                 </div>
                 <div id="payment-structure" class="tab-pane fade p-4">
                     <table class="table table-bordered mb-0 normal-text">

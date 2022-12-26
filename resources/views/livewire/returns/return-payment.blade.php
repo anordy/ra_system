@@ -1,4 +1,4 @@
-@if(!empty($return->bill))
+@if(!empty($return->latestBill))
     <div class="row py-4 alert alert-secondary bg-alt rounded-0 shadow-sm border-success">
         <div class="col-md-4">
             <span class="font-weight-bold text-uppercase">
@@ -8,23 +8,28 @@
                     Total Tax Payable
                 @endif
             </span>
-            <p class="my-1">{{ number_format($return->bill->amount, 2) }} {{ $return->bill->currency }}</p>
+            <p class="my-1">{{ number_format($return->latestBill->amount, 2) }} {{ $return->latestBill->currency }}</p>
         </div>
         @if ($return->payment_status === \App\Models\Returns\ReturnStatus::CN_GENERATED ||
             $return->payment_status === \App\Models\Returns\ReturnStatus::PAID_PARTIALLY)
 
-            @if($return->bill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS)
+            @if($return->latestBill->zan_trx_sts_code == \App\Services\ZanMalipo\ZmResponse::SUCCESS)
                 <div class="col-md-4" wire:poll.visible.10000ms="refresh" wire:poll.5000ms>
                     <span class="font-weight-bold text-uppercase">Control No.</span>
-                    <p class="my-1">{{ $return->bill->control_number }}</p>
+                    <p class="my-1">{{ $return->latestBill->control_number }}</p>
                 </div>
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase"> </span>
                     <p class="my-1">
-                        <a target="_blank" href="{{ route('bill.invoice', encrypt($return->bill->id)) }}" class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                        <a target="_blank" href="{{ route('bill.invoice', encrypt($return->latestBill->id)) }}" class="btn btn-primary btn-sm py-1 w-75 font-weight-bold">
                             <i class="bi bi-download mr-3"></i><u>Download Bill</u>
                         </a>
                     </p>
+                    <button class="btn btn-secondary btn-sm py-1 w-75 font-weight-bold"
+                        onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{$return->latestBill->currency}}', '{{$return->latestBill->id}}')">
+                        <i class="bi bi-file-earmark-text"></i>
+                        Get Transfer Form
+                    </button>
                 </div>
             @else
                 <div class="col-md-4">

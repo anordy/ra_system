@@ -41,7 +41,7 @@ class CreateLumpSumReturnsTable extends Migration
             $table->dateTime('payment_due_date')->nullable();
             $table->dateTime('submitted_at')->nullable();
             $table->dateTime('paid_at')->nullable();
-            $table->enum('status', ReturnStatus::getConstants());
+            $table->enum('status', ReturnStatus::getConstants())->nullable();
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);
             $table->timestamps();

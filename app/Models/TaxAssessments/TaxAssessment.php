@@ -76,6 +76,11 @@ class TaxAssessment extends Model implements Auditable
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
+    public function latestBill()
+    {
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
+    }
+
     public function getBillAttribute(){
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }

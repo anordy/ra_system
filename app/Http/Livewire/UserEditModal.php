@@ -5,8 +5,10 @@ namespace App\Http\Livewire;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
+use App\Traits\VerificationTrait;
 use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -15,7 +17,7 @@ use Livewire\Component;
 class UserEditModal extends Component
 {
 
-    use LivewireAlert, DualControlActivityTrait;
+    use LivewireAlert, VerificationTrait, DualControlActivityTrait;
 
     public $roles = [];
     public $fname;
@@ -25,6 +27,7 @@ class UserEditModal extends Component
     public $email;
     // public $role = '';
     public $user;
+    public $old_values;
 
 
     protected function rules()
@@ -51,22 +54,34 @@ class UserEditModal extends Component
         }
 
         $this->validate();
-        $payload = [
-            'fname' => $this->fname,
-            'lname' => $this->lname,
-            'gender' => $this->gender,
-            'email' => $this->email,
-            'phone' => $this->phone,
-        ];
+
+
         try {
-            $this->user->update($payload);
+            DB::beginTransaction();
 
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user', json_encode($payload));
+            if (!$this->verify($this->user)){
+                throw new Exception('Could not verify user information.');
+            }
 
+            $this->user->update([
+                'fname' => $this->fname,
+                'lname' => $this->lname,
+                'gender' => $this->gender,
+                'email' => $this->email,
+                'phone' => $this->phone,
+            ]);
+
+            if (!$this->sign($this->user)){
+                throw new Exception('Could not update user information.');
+            }
+
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user', json_encode($this->old_values), json_encode($payload));
+
+            DB::commit();
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-
             $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }
     }
@@ -81,7 +96,13 @@ class UserEditModal extends Component
         $this->phone = $user->phone;
         $this->email = $user->email;
         $this->gender = $user->gender ?? '';
-        // $this->role = $user->role_id;
+        $this->old_values = [
+            'fname' => $this->fname,
+            'lname' => $this->lname,
+            'gender' => $this->gender,
+            'email' => $this->email,
+            'phone' => $this->phone,
+        ];
     }
 
     public function render()
