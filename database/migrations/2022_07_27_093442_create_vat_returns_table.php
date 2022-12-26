@@ -42,10 +42,10 @@ class CreateVatReturnsTable extends Migration
             $table->string('method_used')->nullable();
             $table->unsignedBigInteger('filed_by_id');
             $table->string('filed_by_type');
-            $table->dateTime('filing_due_date')->nullable();
-            $table->dateTime('payment_due_date')->nullable();
-            $table->dateTime('submitted_at')->nullable();
-            $table->dateTime('paid_at')->nullable();
+            $table->timestamp('filing_due_date')->nullable();
+            $table->timestamp('payment_due_date')->nullable();
+            $table->timestamp('submitted_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->enum('claim_status',TaxClaimStatus::getConstants())->default(TaxClaimStatus::NO_CLAIM);
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
