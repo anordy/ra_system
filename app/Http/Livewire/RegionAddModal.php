@@ -47,7 +47,7 @@ class RegionAddModal extends Component
         }catch(Exception $e){
             Log::error($e .', '. Auth::user());
             DB::rollBack();
-            $this->alert('error', 'Something went wrong, please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

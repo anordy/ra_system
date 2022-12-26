@@ -577,7 +577,7 @@ trait GepgResponse
                 return ['code' => $code, 'message' => 'Gateway Timed Out'];
                 break;
             default:
-                return  ['code' => $code, 'message' => 'Something went wrong, please contact our support desk for help! Try Again'];
+                return  ['code' => $code, 'message' => 'Something went wrong, please contact the administrator for help! Try Again'];
         }
     }
 }

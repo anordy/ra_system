@@ -58,7 +58,7 @@ class WardAddModal extends Component
         } catch (Exception $e) {
             Log::error($e);
 
-            $this->alert('error', 'Something went wrong, please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

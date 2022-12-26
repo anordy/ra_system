@@ -136,7 +136,7 @@ class AddReturnConfig extends Component
         {
             DB::rollBack();
             Log::error($exception);
-            $this->flash('warning', 'Something went wrong, please contact our support desk for help', [], redirect()->back()->getTargetUrl());
+            $this->flash('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
         }
 
     }

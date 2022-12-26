@@ -98,7 +98,7 @@ class Zanid extends Component
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact our support desk for help!');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help!');
         }
 
     }
@@ -124,7 +124,7 @@ class Zanid extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact our support desk for help!');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help!');
         }
     }
 

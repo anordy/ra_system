@@ -80,7 +80,7 @@ class PlateNumberCollectionModel extends Component
             return redirect()->to(route('mvr.plate-numbers'));
         } catch (Exception $e) {
             report($e);
-            $this->alert('error', 'Something went wrong, please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
             DB::rollBack();
         }
     }

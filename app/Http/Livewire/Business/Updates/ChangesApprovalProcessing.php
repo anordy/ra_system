@@ -130,7 +130,7 @@ class ChangesApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -163,7 +163,7 @@ class ChangesApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

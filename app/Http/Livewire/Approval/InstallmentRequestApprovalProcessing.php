@@ -138,7 +138,7 @@ class InstallmentRequestApprovalProcessing extends Component
         } catch (Exception $e) {
             Log::error($e);
             DB::rollBack();
-            $this->alert('error', 'Something went wrong, please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());

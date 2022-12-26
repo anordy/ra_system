@@ -78,7 +78,7 @@ class BillAction extends Component
                 $this->alert('success', 'Bill cancellation request has been sent');
             } catch (Exception $e) {
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact our support desk for help');
+                $this->alert('error', 'Something went wrong, please contact the administrator for help');
             }
         } else if ($this->action == 'update') {
             try {
@@ -89,7 +89,7 @@ class BillAction extends Component
                 $this->alert('success', 'Bill update request has been sent');
             } catch (Exception $e) {
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact our support desk for help');
+                $this->alert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
     }
