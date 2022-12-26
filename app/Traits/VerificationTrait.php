@@ -28,7 +28,7 @@ trait VerificationTrait{
         try {
             $token = AuthenticationService::getAuthToken();
 
-            $url = config('modulesconfig.verification.server_url') . '/PrepaidCardServices/v1/Crypto/verify';
+            $url = config('modulesconfig.verification.server_verify_url');
 
             $result = Http::withToken($token)
                 ->withOptions(['verify' => false])
@@ -73,7 +73,7 @@ trait VerificationTrait{
             $token = AuthenticationService::getAuthToken();
 
             // URL
-            $url = config('modulesconfig.verification.server_url') . '/PrepaidCardServices/v1/Crypto/sign';
+            $url = config('modulesconfig.verification.server_sign_url');
 
             $result = Http::withToken($token)
                 ->withOptions(['verify' => false])

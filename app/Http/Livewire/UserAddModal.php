@@ -2,30 +2,22 @@
 
 namespace App\Http\Livewire;
 
-use App\Traits\VerificationTrait;
-use Exception;
-use App\Models\Role;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use ZxcvbnPhp\Zxcvbn;
-use App\Models\DualControl;
-use App\Models\UserApprovalLevel;
-use App\Traits\DualControlActivityTrait;
-use Exception;
-use App\Models\Role;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
-use App\Events\SendMail;
 use App\Jobs\User\SendRegistrationEmail;
 use App\Jobs\User\SendRegistrationSMS;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Models\DualControl;
+use App\Models\Role;
+use App\Models\User;
+use App\Notifications\DatabaseNotification;
+use App\Traits\DualControlActivityTrait;
+use App\Traits\VerificationTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use App\Notifications\DatabaseNotification;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class UserAddModal extends Component
 {
