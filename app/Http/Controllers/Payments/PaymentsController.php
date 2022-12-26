@@ -93,4 +93,8 @@ class PaymentsController extends Controller
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download($fileName);
     }
+
+    public function bankRecon(){
+        return view('payments.bank-recon');
+    }
 }
