@@ -133,8 +133,6 @@ use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Setting\SystemSettingsController;
 use App\Http\Controllers\Setting\ZrbBankAccountController;
 
-//use App\Http\Controllers\Returns\HotelLevyReturnController;
-
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);

@@ -113,6 +113,27 @@
             </li>
         @endcan
 
+        @can('withholding-agent')
+            <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
+                <a href="#withholdingAgentsMenu" data-toggle="collapse"
+                    aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}"
+                    class="dropdown-toggle">Withholding Agents</a>
+                <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
+                    id="withholdingAgentsMenu">
+                    @can('withholding-agents-registration')
+                        <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
+                            <a href="{{ route('withholdingAgents.register') }}">Registration</a>
+                        </li>
+                    @endcan
+                    @can('withholding-agents-view')
+                        <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
+                            <a href="{{ route('withholdingAgents.list') }}">Withholding Agents List</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
         @can('tax-return')
             <li class="{{ request()->is('e-filling*') ? 'active' : '' }}">
                 <a href="#returnsSubmenu" data-toggle="collapse"
@@ -187,27 +208,6 @@
             </li>
         @endcan
 
-        @can('withholding-agent')
-            <li class="{{ request()->is('withholdingAgents*') ? 'active' : '' }}">
-                <a href="#withholdingAgentsMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is('withholdingAgents*') ? 'true' : 'false' }}"
-                    class="dropdown-toggle">Withholding Agents</a>
-                <ul class="collapse list-unstyled {{ request()->is('withholdingAgents*') ? 'show' : '' }}"
-                    id="withholdingAgentsMenu">
-                    @can('withholding-agents-registration')
-                        <li class="{{ request()->is('withholdingAgents/register*') ? 'active' : '' }}">
-                            <a href="{{ route('withholdingAgents.register') }}">Registration</a>
-                        </li>
-                    @endcan
-                    @can('withholding-agents-view')
-                        <li class="{{ request()->is('withholdingAgents/list*') ? 'active' : '' }}">
-                            <a href="{{ route('withholdingAgents.list') }}">Withholding Agents List</a>
-                        </li>
-                    @endcan
-                </ul>
-            </li>
-        @endcan
-
         @can('petroleum-management')
             <li class="{{ request()->is('petroleum*') ? 'active' : '' }}">
                 <a href="#petroleum" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Petroleum
@@ -226,6 +226,7 @@
                 </ul>
             </li>
         @endcan
+
         @can('return-verification')
             <li class="{{ request()->is('tax_verifications*') ? 'active' : '' }}">
                 <a href="#tax_verifications" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -245,6 +246,80 @@
                 </ul>
             </li>
         @endcan
+        @can('tax-auditing')
+            <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
+                <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    Tax Auditing
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
+                    @can('tax-auditing-approved-view')
+                        <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
+                            <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
+                        </li>
+                    @endcan
+                    @can('tax-auditing-approved-view')
+                        <li class="{{ request()->is('tax_auditing/assessments*') ? 'active' : '' }}">
+                            <a href="{{ route('tax_auditing.assessments.index') }}">Assessments</a>
+                        </li>
+                    @endcan
+                    @can('tax-auditing-approved-view')
+                        <li class="{{ request()->is('tax_auditing/verified*') ? 'active' : '' }}">
+                            <a href="{{ route('tax_auditing.verified.index') }}">Approved Audits</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+        @can('tax-investigation')
+            <li class="{{ request()->is('tax_investigation*') ? 'active' : '' }}">
+                <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    Tax Investigations
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('tax_investigation*') ? 'show' : '' }}"
+                    id="tax_investigation">
+                    @can('tax-investigation-approval-view')
+                        <li class="{{ request()->is('tax_investigation/approvals*') ? 'active' : '' }}">
+                            <a href="{{ route('tax_investigation.approvals.index') }}">Approvals</a>
+                        </li>
+                    @endcan
+                    @can('tax-investigation-assessment-view')
+                        <li class="{{ request()->is('tax_investigation/assessments*') ? 'active' : '' }}">
+                            <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
+                        </li>
+                    @endcan
+                    @can('tax-investigation-approved-view')
+                        <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
+                            <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
+        @can('debt-management')
+            <li class="{{ request()->is('debts*') ? 'active' : '' }}">
+                <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
+                    Management</a>
+                <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
+                    @can('debt-management-debts-view')
+                        <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.returns.index') }}">Return Debts</a>
+                        </li>
+                    @endcan
+                    @can('debt-management-assessment-debt-view')
+                        <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
+                        </li>
+                    @endcan
+                    @can('debt-management-waiver-debt-view')
+                        <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
+                            <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
         @can('tax-claim')
             <li class="{{ request()->is('tax-claims*') || request()->is('tax-credits*') ? 'active' : '' }}">
                 <a href="#tax-claim" data-toggle="collapse"
@@ -302,56 +377,6 @@
             </li>
         @endcan
 
-        @can('tax-auditing')
-            <li class="{{ request()->is('tax_auditing*') ? 'active' : '' }}">
-                <a href="#tax_auditing" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    Tax Auditing
-                </a>
-                <ul class="collapse list-unstyled {{ request()->is('tax_auditing*') ? 'show' : '' }}" id="tax_auditing">
-                    @can('tax-auditing-approved-view')
-                        <li class="{{ request()->is('tax_auditing/approvals*') ? 'active' : '' }}">
-                            <a href="{{ route('tax_auditing.approvals.index') }}">Approvals</a>
-                        </li>
-                    @endcan
-                    @can('tax-auditing-approved-view')
-                        <li class="{{ request()->is('tax_auditing/assessments*') ? 'active' : '' }}">
-                            <a href="{{ route('tax_auditing.assessments.index') }}">Assessments</a>
-                        </li>
-                    @endcan
-                    @can('tax-auditing-approved-view')
-                        <li class="{{ request()->is('tax_auditing/verified*') ? 'active' : '' }}">
-                            <a href="{{ route('tax_auditing.verified.index') }}">Approved Audits</a>
-                        </li>
-                    @endcan
-                </ul>
-            </li>
-        @endcan
-        @can('tax-investigation')
-            <li class="{{ request()->is('tax_investigation*') ? 'active' : '' }}">
-                <a href="#tax_investigation" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    Tax Investigations
-                </a>
-                <ul class="collapse list-unstyled {{ request()->is('tax_investigation*') ? 'show' : '' }}"
-                    id="tax_investigation">
-                    @can('tax-investigation-approval-view')
-                        <li class="{{ request()->is('tax_investigation/approvals*') ? 'active' : '' }}">
-                            <a href="{{ route('tax_investigation.approvals.index') }}">Approvals</a>
-                        </li>
-                    @endcan
-                    @can('tax-investigation-assessment-view')
-                        <li class="{{ request()->is('tax_investigation/assessments*') ? 'active' : '' }}">
-                            <a href="{{ route('tax_investigation.assessments.index') }}">Assessments</a>
-                        </li>
-                    @endcan
-                    @can('tax-investigation-approved-view')
-                        <li class="{{ request()->is('tax_investigation/verified*') ? 'active' : '' }}">
-                            <a href="{{ route('tax_investigation.verified.index') }}">Approved Investigations</a>
-                        </li>
-                    @endcan
-                </ul>
-            </li>
-        @endcan
-
         @can('dispute-management')
             <li class="{{ request()->is('assesments*') ? 'active' : '' }}">
                 <a href="#assesmentsSubmenu" data-toggle="collapse"
@@ -373,6 +398,24 @@
                     @can('dispute-waiver-objection-view')
                         <li class="{{ request()->is('assesments/waiverobjection/*') ? 'active' : '' }}">
                             <a href="{{ route('assesments.waiverobjection.index') }}">Waiver & Objection</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
+
+
+        @can('tax-clearance-management')
+            <li class="{{ request()->is('tax-clearance*') ? 'active' : '' }}">
+                <a href="#taxClearance" data-toggle="collapse"
+                    aria-expanded="{{ request()->is('/tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                    Tax Clearance Management
+                </a>
+                <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
+                    id="taxClearance">
+                    @can('tax-clearance-view')
+                        <li class="{{ request()->is('tax-clearance/tax-clearance*') ? 'active' : '' }}">
+                            <a href="{{ route('tax-clearance.index') }}">Requests</a>
                         </li>
                     @endcan
                 </ul>
@@ -417,46 +460,20 @@
                 </ul>
             </li>
         @endcan
-        @can('tax-clearance-management')
-            <li class="{{ request()->is('tax-clearance*') ? 'active' : '' }}">
-                <a href="#taxClearance" data-toggle="collapse"
-                    aria-expanded="{{ request()->is('/tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                    Tax Clearance Management
-                </a>
-                <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
-                    id="taxClearance">
-                    @can('tax-clearance-view')
-                        <li class="{{ request()->is('tax-clearance/tax-clearance*') ? 'active' : '' }}">
-                            <a href="{{ route('tax-clearance.index') }}">Requests</a>
-                        </li>
-                    @endcan
-                </ul>
-            </li>
-        @endcan
 
-        @can('debt-management')
-            <li class="{{ request()->is('debts*') ? 'active' : '' }}">
-                <a href="#debtManagement" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Debt
-                    Management</a>
-                <ul class="collapse list-unstyled {{ request()->is('debts*') ? 'show' : '' }}" id="debtManagement">
-                    @can('debt-management-debts-view')
-                        <li class="{{ request()->is('debts/returns*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.returns.index') }}">Return Debts</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-assessment-debt-view')
-                        <li class="{{ request()->is('debts/assessments*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.assessments.index') }}">Assessment Debts</a>
-                        </li>
-                    @endcan
-                    @can('debt-management-waiver-debt-view')
-                        <li class="{{ request()->is('debts/waiver*') ? 'active' : '' }}">
-                            <a href="{{ route('debts.waivers.index') }}">Waiver Requests</a>
-                        </li>
-                    @endcan
-                </ul>
-            </li>
-        @endcan
+        <li class="{{ request()->is('cases*') ? 'active' : '' }}">
+            <a href="#lcmSubmenu" data-toggle="collapse"
+                aria-expanded="{{ request()->is('cases*') ? 'true' : 'false' }}" class="dropdown-toggle">Legal Cases
+                Management</a>
+            <ul class="collapse list-unstyled {{ request()->is('cases*') ? 'show' : '' }}" id="lcmSubmenu">
+                <li class="{{ request()->is('cases') ? 'active' : '' }}">
+                    <a href="{{ route('cases.index') }}">Cases</a>
+                </li>
+                <li class="{{ request()->is('cases/appeals') ? 'active' : '' }}">
+                    <a href="{{ route('cases.appeals') }}">Appeals</a>
+                </li>
+            </ul>
+        </li>
 
         <li class="{{ request()->is('mvr*') ? 'active' : '' }}">
             <a href="#mvrSubmenu" data-toggle="collapse"
@@ -508,20 +525,6 @@
                 </li>
                 <li class="{{ request()->is('rio*') ? 'active' : '' }}">
                     <a href="{{ route('rio.register') }}">Road Inspection Offences</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="{{ request()->is('cases*') ? 'active' : '' }}">
-            <a href="#lcmSubmenu" data-toggle="collapse"
-                aria-expanded="{{ request()->is('cases*') ? 'true' : 'false' }}" class="dropdown-toggle">Legal Cases
-                Management</a>
-            <ul class="collapse list-unstyled {{ request()->is('cases*') ? 'show' : '' }}" id="lcmSubmenu">
-                <li class="{{ request()->is('cases') ? 'active' : '' }}">
-                    <a href="{{ route('cases.index') }}">Cases</a>
-                </li>
-                <li class="{{ request()->is('cases/appeals') ? 'active' : '' }}">
-                    <a href="{{ route('cases.appeals') }}">Appeals</a>
                 </li>
             </ul>
         </li>

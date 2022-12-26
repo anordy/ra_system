@@ -5,15 +5,13 @@ namespace App\Http\Controllers\MVR;
 use App\Http\Controllers\Controller;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
-use App\Models\MvrMotorVehicle;
 use App\Models\MvrMotorVehicleRegistration;
 use App\Models\MvrPersonalizedPlateNumberRegistration;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationChangeRequest;
-use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
-use App\Services\TRA\ServiceRequest;
+use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\MotorVehicleSearchTrait;
@@ -79,11 +77,11 @@ class RegistrationChangeController extends Controller
 
         try {
             DB::beginTransaction();
-
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
             $bill = ZmCore::createBill(
                 $change_req->id,
                 get_class($change_req),
-                1, //todo: this should be nullable
+                $taxType->id,
                 $change_req->agent->id,
                 get_class($change_req->agent),
                 $change_req->agent->taxpayer->fullname(),
@@ -102,7 +100,7 @@ class RegistrationChangeController extends Controller
                         'billable_type' => get_class($change_req),
                         'fee_id' => $fee->id,
                         'fee_type' => get_class($fee),
-                        'tax_type_id' => 1, //todo: this should be nullable
+                        'tax_type_id' => $taxType->id,
                         'amount' => $amount,
                         'currency' => 'TZS',
                         'exchange_rate' => $exchange_rate,

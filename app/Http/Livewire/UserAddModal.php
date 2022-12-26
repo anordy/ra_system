@@ -2,29 +2,27 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\DualControl;
-use App\Models\UserApprovalLevel;
-use App\Traits\DualControlActivityTrait;
-use Exception;
-use App\Models\Role;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
-use App\Events\SendMail;
 use App\Jobs\User\SendRegistrationEmail;
 use App\Jobs\User\SendRegistrationSMS;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Models\DualControl;
+use App\Models\Role;
+use App\Models\User;
+use App\Notifications\DatabaseNotification;
+use App\Traits\DualControlActivityTrait;
+use App\Traits\VerificationTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use App\Notifications\DatabaseNotification;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class UserAddModal extends Component
 {
 
-    use LivewireAlert, DualControlActivityTrait;
+    use LivewireAlert, VerificationTrait, DualControlActivityTrait;
 
     public $roles = [];
     public $fname;
@@ -36,7 +34,6 @@ class UserAddModal extends Component
     public $password;
     public $password_confirmation;
     public $passwordStrength = 0;
-
 
     protected function rules()
     {
@@ -92,6 +89,13 @@ class UserAddModal extends Component
                 'status' => 1,
                 'password' => Hash::make($this->password),
             ]);
+
+            // Get ci_payload
+            if (!$this->sign($user)){
+                throw new Exception('Failed to verify user data.');
+            }
+
+            DB::commit();
             $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding user');
 
             $admins = User::whereHas('role', function ($query) {

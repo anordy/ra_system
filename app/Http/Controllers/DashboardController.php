@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Traits\CheckReturnConfigurationTrait;
+use App\Traits\VerificationTrait;
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use App\Models\TaxAgent;
 use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
-use App\Models\User;
-use App\Traits\CheckReturnConfigurationTrait;
 use Illuminate\Support\Facades\Gate;
 
 class DashboardController extends Controller
 {
-    use CheckReturnConfigurationTrait;
+    use CheckReturnConfigurationTrait, VerificationTrait;
 
     public function index()
     {
@@ -32,4 +33,5 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('issues', 'counts'));
     }
+
 }

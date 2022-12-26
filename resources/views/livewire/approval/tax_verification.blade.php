@@ -127,7 +127,7 @@
         @elseif ($this->checkTransition('conduct_verification'))
             <div class="modal-footer p-2 m-0">
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'conduct_verification')">
-                    Approve & Complete
+                    Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('verification_review_report'))
@@ -136,7 +136,7 @@
                     Reject & Return Back
                 </button>
                 <button type="button" class="btn btn-primary" wire:click="confirmPopUpModal('approve', 'verification_review_report')">
-                    Approve & Complete
+                    Approve & Forward
                 </button>
             </div>
         @elseif ($this->checkTransition('correct_reviewed_report'))
