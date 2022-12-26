@@ -102,7 +102,7 @@ class ApproveAction extends Component
             DB::rollBack();
             Log::error($e);
             report($e);
-            $this->alert('warning', 'Something went wrong, Could you please contact our administrator for assistance?!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
@@ -135,7 +135,7 @@ class ApproveAction extends Component
             DB::rollBack();
             Log::error($e);
             report($e);
-            $this->alert('warning', 'Something went wrong, Could you please contact our administrator for assistance?!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

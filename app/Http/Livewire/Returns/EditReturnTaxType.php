@@ -53,7 +53,7 @@ class EditReturnTaxType extends Component
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-            $this->flash('warning', 'Something went wrong, Could you please contact our administrator for assistance?', [], redirect()->back()->getTargetUrl());
+            $this->flash('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
         }
     }
 

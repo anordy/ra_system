@@ -109,7 +109,7 @@ class DisputeWaiverApprovalProcessing extends Component
             } catch (\Exception $e) {
                 Log::error($e);
                 DB::rollBack();
-                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
+                $this->alert('error', 'Something went wrong, please contact the administrator for help.');
             }
 
         }
@@ -165,7 +165,7 @@ class DisputeWaiverApprovalProcessing extends Component
             } catch (Exception $e) {
                 Log::error($e);
                 throw $e;
-                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                $this->alert('error', 'Something went wrong, please contact the administrator for help');
             }
 
         }
@@ -176,7 +176,7 @@ class DisputeWaiverApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
             return;
         }
     }
@@ -208,7 +208,7 @@ class DisputeWaiverApprovalProcessing extends Component
                 } catch (Exception $e) {
                     Log::error($e);
                     throw $e;
-                    $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                    $this->alert('error', 'Something went wrong, please contact the administrator for help');
                 }
 
             }

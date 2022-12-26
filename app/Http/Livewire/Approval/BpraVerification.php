@@ -45,14 +45,14 @@ class BpraVerification extends Component
                 $this->shareholders = $this->bpraResponse['shareHolders'];
                 $this->shares = $this->bpraResponse['listShareHolderShares'];
             } else {
-                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                $this->alert('error', 'Something went wrong, please contact the administrator for help');
             }
             
         } catch (Exception $e) {
             $this->requestSuccess = false;
             Log::error($e);
             DB::rollBack();
-            return $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            return $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -103,7 +103,7 @@ class BpraVerification extends Component
             $this->alert('success', 'Bpra Verification Completed.');
         } catch (\Throwable $e) {
             Log::error($e .','. Auth::user());
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -118,7 +118,7 @@ class BpraVerification extends Component
             $this->alert('success', 'Continue with provided data successfully.');
         } catch (\Throwable $e) {
             Log::error($e .','. Auth::user());
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

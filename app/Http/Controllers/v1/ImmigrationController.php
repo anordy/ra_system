@@ -59,7 +59,7 @@ class ImmigrationController extends Controller
         if(curl_errno($curl)){
             $err = curl_error($curl);
             Log::error($err);
-            return $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            return $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
         curl_close($curl);
         return json_decode($response, true)['data'][0];
