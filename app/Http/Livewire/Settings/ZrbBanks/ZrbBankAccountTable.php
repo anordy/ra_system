@@ -54,7 +54,7 @@ class ZrbBankAccountTable extends DataTableComponent
                 ->searchable(),
             Column::make('Bank name', 'bank_id')
                 ->format(function ($value, $row) {
-                    return $row->bank->name;
+                    return $row->bank->name ?? 'N/A';  
                 })
                 ->sortable()
                 ->searchable(),
@@ -78,7 +78,10 @@ class ZrbBankAccountTable extends DataTableComponent
                         return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
                         HTML;
-                    }
+                    } else{
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-secondary p-2">N/A</span>
+                        HTML;
                 })
                 ->html(),
             Column::make('Action', 'id')->view('settings.zrb-bank-accounts.includes.actions'),
