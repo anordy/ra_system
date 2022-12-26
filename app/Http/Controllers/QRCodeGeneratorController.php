@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ZmBill;
+use App\Models\ZrbBankAccount;
 use Endroid\QrCode\Color\Color;
 use Illuminate\Http\Request;
 use Endroid\QrCode\Builder\Builder;
@@ -51,13 +52,14 @@ class QRCodeGeneratorController extends Controller
         return $pdf->download('ZanMalipo_invoice_' . time() . '.pdf');
     }
 
-    public function transfer($id)
+    public function transfer($billId, $bankAccountId)
     {
-        $bill = ZmBill::find($id);
-        $name = $bill->user->first_name . ' ' . $bill->user->last_name;
+        $bill = ZmBill::find(decrypt($billId));
+        $bankAccount = ZrbBankAccount::find(decrypt($bankAccountId));
+        $name = $bill->payer_name;
         $code = '{"opType":"'.$bill->payment_option.'","shortCode":"001001","billReference":"' . $bill->control_number . '","amount":"' .
             $bill->amount . '","billCcy":'.$bill->currency.',"billExprDt":"' . $bill->expire . '","billPayOpt":"1",
-            "billRsv01":"ZANZIBAR PORTS CORPORATION|' . $name . '"}';
+            "billRsv01":"ZANZIBAR REVENUE BOARD|' . $name . '"}';
 
         $result = Builder::create()
             ->writer(new PngWriter())
@@ -77,8 +79,7 @@ class QRCodeGeneratorController extends Controller
         header('Content-Type: ' . $result->getMimeType());
 
         $dataUri = $result->getDataUri();
-        $pdf = PDF::loadView('zanMalipo.pdf.transfer', compact('dataUri', 'bill'));
-
+        $pdf = PDF::loadView('zanMalipo.pdf.transfer', compact('dataUri', 'bill', 'bankAccount'));
         return $pdf->stream('ZanMalipo_transfer_' . time() . '.pdf');
     }
 

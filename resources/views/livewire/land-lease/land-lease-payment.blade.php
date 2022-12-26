@@ -16,13 +16,18 @@
                         <span class="font-weight-bold text-uppercase"> </span>
                         <p class="my-1">
                             <a target="_blank" href="{{ route('bill.invoice', encrypt($bill->id)) }}"
-                                class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                                class="btn btn-primary btn-sm py-1 w-75 font-weight-bold">
                                 <i class="bi bi-download mr-3"></i><u>Download Bill</u>
                             </a>
                         </p>
+                        <button class="btn btn-secondary btn-sm py-1 w-75 font-weight-bold"
+                            onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{ $bill->currency }}', '{{ $bill->id }}')">
+                            <i class="bi bi-file-earmark-text"></i>
+                            Get Transfer Form
+                        </button>
                     </div>
                 @elseif($leasePayment->status === \App\Enum\LeaseStatus::IN_ADVANCE_PAYMENT ||
-                $leasePayment->status === \App\Enum\LeaseStatus::ON_TIME_PAYMENT ||
+                    $leasePayment->status === \App\Enum\LeaseStatus::ON_TIME_PAYMENT ||
                     $leasePayment->status === \App\Enum\LeaseStatus::LATE_PAYMENT)
                     <div class="col-md-4">
                         <span class="font-weight-bold text-uppercase">Payment Status</span>
@@ -86,7 +91,7 @@
                     </div>
                 @endif
                 <div class="col-md-12 mt-3">
-                    <span class="font-weight-bold text-uppercase">Gepg Status:</span> 
+                    <span class="font-weight-bold text-uppercase">Gepg Status:</span>
                     <span>
                         {{ $this->getGepgStatus($bill->zan_trx_sts_code) }}
                     </span>

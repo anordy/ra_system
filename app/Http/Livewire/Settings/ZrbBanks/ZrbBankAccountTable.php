@@ -18,7 +18,6 @@ class ZrbBankAccountTable extends DataTableComponent
     {
         return ZrbBankAccount::query()
             ->with('bank')
-            ->with('currency')
             ->orderBy('created_at', 'Desc');
     }
 
@@ -61,10 +60,7 @@ class ZrbBankAccountTable extends DataTableComponent
             Column::make('Branch Name', 'branch_name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Currency', 'currency_id')
-                ->format(function ($value, $row) {
-                    return $row->currency->iso;
-                })
+            Column::make('Currency', 'currency_iso')
                 ->sortable()
                 ->searchable(),
             Column::make('Approval Status', 'is_approved')

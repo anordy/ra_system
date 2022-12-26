@@ -21,10 +21,15 @@
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase"> </span>
                     <p class="my-1">
-                        <a target="_blank" href="{{ route('bill.invoice', encrypt($return->latestBill->id)) }}" class="btn btn-primary btn-sm pl-3 pr-4 font-weight-bold">
+                        <a target="_blank" href="{{ route('bill.invoice', encrypt($return->latestBill->id)) }}" class="btn btn-primary btn-sm py-1 w-75 font-weight-bold">
                             <i class="bi bi-download mr-3"></i><u>Download Bill</u>
                         </a>
                     </p>
+                    <button class="btn btn-secondary btn-sm py-1 w-75 font-weight-bold"
+                        onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{$return->latestBill->currency}}', '{{$return->latestBill->id}}')">
+                        <i class="bi bi-file-earmark-text"></i>
+                        Get Transfer Form
+                    </button>
                 </div>
             @else
                 <div class="col-md-4">

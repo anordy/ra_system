@@ -22,6 +22,5 @@ class BanksTableSeeder extends Seeder
         Bank::updateOrCreate(['name' => 'Azania Bank']);
         Bank::updateOrCreate(['name' => 'DTB']);
         Bank::updateOrCreate(['name' => 'Equity Bank']);
-        Bank::updateOrCreate(['name' => 'BOT']);
     }
 }
