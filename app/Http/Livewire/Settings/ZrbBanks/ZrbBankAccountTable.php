@@ -82,6 +82,7 @@ class ZrbBankAccountTable extends DataTableComponent
                         return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-secondary p-2">N/A</span>
                         HTML;
+                    }
                 })
                 ->html(),
             Column::make('Action', 'id')->view('settings.zrb-bank-accounts.includes.actions'),
