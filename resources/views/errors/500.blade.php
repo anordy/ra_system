@@ -15,7 +15,7 @@
             Opps! Internal Server Error
         </h4>
         <p>
-            Sorry, Something went wrong, Could you please contact our administrator for assistance?, Please report a problem to admin.
+            Sorry, Something went wrong, Please contact our support desk for help, Please report a problem to admin.
         </p>
         <div class="btns">
             <a href="{{route('home')}}">Home</a>

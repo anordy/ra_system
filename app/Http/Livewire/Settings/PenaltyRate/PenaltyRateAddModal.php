@@ -57,7 +57,7 @@ class PenaltyRateAddModal extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, Please contact our support desk for help');
         }
     }
 

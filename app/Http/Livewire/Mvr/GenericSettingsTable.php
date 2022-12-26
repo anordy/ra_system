@@ -102,7 +102,7 @@ class GenericSettingsTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something went wrong, Could you please contact our administrator for assistance?!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('warning', 'Something went wrong, Please contact our support desk for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

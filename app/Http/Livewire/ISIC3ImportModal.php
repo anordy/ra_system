@@ -43,12 +43,12 @@ class ISIC3ImportModal extends Component
                 $errorRowNo  = $e->failures()[0]->row();
                 $this->alert('error', $errorName.' on row '.$errorRowNo.' on your excel');
             }else{
-                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                $this->alert('error', 'Something went wrong, Please contact our support desk for help');
             }
             
         }catch(Exception $e){
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, Please contact our support desk for help');
         }
         
     }

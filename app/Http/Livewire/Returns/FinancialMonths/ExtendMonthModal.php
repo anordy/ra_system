@@ -68,7 +68,7 @@ class ExtendMonthModal extends Component
             DB::rollBack();
             Log::error($exception);
 
-            $this->flash('warning', 'Something went wrong, Could you please contact our administrator for assistance?', [], redirect()->back()->getTargetUrl());
+            $this->flash('warning', 'Something went wrong, Please contact our support desk for help', [], redirect()->back()->getTargetUrl());
 
         }
     }

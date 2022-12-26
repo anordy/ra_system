@@ -279,11 +279,11 @@ class ApprovalProcessing extends Component
             if ($location->ztnGeneration()) {
 
                 if (!$location->generateZ()) {
-                    $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
+                    $this->alert('error', 'Something went wrong, Please contact our support desk for help.');
                     return;
                 }
             } else {
-                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
+                $this->alert('error', 'Something went wrong, Please contact our support desk for help.');
                 return;
             }
 
@@ -299,7 +299,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, Please contact our support desk for help');
             return;
         }
 
@@ -320,7 +320,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, Please contact our support desk for help');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
