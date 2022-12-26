@@ -17,8 +17,8 @@ class CreateRenewTaxAgentRequestsTable extends Migration
             $table->id();
 			$table->bigInteger('tax_agent_id');
             $table->boolean('is_paid')->default(false);
-            $table->dateTime('renew_first_date')->nullable();
-            $table->dateTime('renew_expire_date')->nullable();
+            $table->timestamp('renew_first_date')->nullable();
+            $table->timestamp('renew_expire_date')->nullable();
 			$table->enum('status', ['pending', 'verified', 'rejected','approved'])->default('pending');
             $table->enum('billing_status', ['control-number-generating','control-number-generated', 'control-number-generating-failed', 'paid-partially', 'complete'])->nullable();
             $table->string('app_true_comment')->nullable();
@@ -26,8 +26,8 @@ class CreateRenewTaxAgentRequestsTable extends Migration
             $table->unsignedBigInteger('approved_by_id')->nullable();
             $table->unsignedBigInteger('rejected_by_id')->nullable();
             $table->string('marking')->nullable();
-            $table->dateTime('approved_at')->nullable();
-            $table->dateTime('rejected_at')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->timestamp('rejected_at')->nullable();
             $table->timestamps();
         });
     }
