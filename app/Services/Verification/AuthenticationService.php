@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 class AuthenticationService {
     public static function getAuthToken(){
-        $url = config('modulesconfig.verification.server_url') . '/oauth/token';
+        $url = config('modulesconfig.verification.server_auth_url');
 
         $payload = [
             'grant_type' => 'password',

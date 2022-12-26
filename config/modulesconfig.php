@@ -29,7 +29,9 @@ return [
 
     // DIP(Data Integrity Protection) Service
     'verification' => [
-        'server_url' => env('VERIFICATION_SERVER_URL'),
+        'server_auth_url' => env('VERIFICATION_SERVER_AUTH_URL'),
+        'server_sign_url' => env('VERIFICATION_SERVER_SIGN_URL'),
+        'server_verify_url' => env('VERIFICATION_SERVER_VERIFY_URL'),
         'server_username' => env('VERIFICATION_SERVER_USERNAME'),
         'server_password' => env('VERIFICATION_SERVER_PASSWORD'),
         'server_token' => env('VERIFICATION_SERVER_TOKEN')
