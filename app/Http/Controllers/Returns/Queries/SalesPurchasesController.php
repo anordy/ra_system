@@ -26,8 +26,7 @@ class SalesPurchasesController extends Controller
         $this->saveReturns($hotel_returns, $diff);
         $vat_returns = array_replace_recursive($this->getVatPurchases()->toArray(), $this->getAllVatSales()->toArray());
         $this->saveReturns($vat_returns, $diff);
-
-        $returns = SalePurchase::all();
+        $returns = SalePurchase::get();
 
         return view('returns.queries.sales-purchases.index', compact('returns'));
     }
@@ -45,7 +44,7 @@ class SalesPurchasesController extends Controller
         try {
             foreach ($returns as $return) {
                 if ($return['total_sales'] - $return['total_purchases'] <= $diff) {
-                    $sales_purchases = SalePurchase::query()->updateOrCreate(
+                    SalePurchase::query()->updateOrCreate(
                         ['business_location_id' => $return['business_location_id'], 'tax_type_id' => $return['tax_type_id']],
                         [
                             'business_location_id' => $return['business_location_id'],
@@ -62,7 +61,7 @@ class SalesPurchasesController extends Controller
                 }
 
                 if ($return['total_purchases'] - $return['total_sales']  > $return['total_sales'] / 3) {
-                    $sales_purchases = SalePurchase::query()->updateOrCreate(
+                    SalePurchase::query()->updateOrCreate(
                         ['business_location_id' => $return['business_location_id'], 'tax_type_id' => $return['tax_type_id']],
                         [
                             'business_location_id' => $return['business_location_id'],
@@ -77,8 +76,10 @@ class SalesPurchasesController extends Controller
                             'category' => 'one third of sales'
                         ]);
                 }
+
             }
             DB::commit();
+
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);

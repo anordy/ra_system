@@ -114,59 +114,60 @@ class NonFilersController extends Controller
     public function show($id)
     {
         $id = decrypt($id);
-        $non_filer = NonFiler::query()->where('id',$id)->first();
+        $non_filer = NonFiler::where('id',$id)->first();
         return view('returns.queries.non-filers.show', compact('non_filer'));
     }
 
     public function getTaxType($code)
     {
-        $query = TaxType::query()->where('code', $code)->first();
+        $query = TaxType::where('code', $code)->first();
         return $query;
     }
 
     public function return($modelName, $taxTypeId)
     {
-        $businessTaxType = BusinessTaxType::query()->where('tax_type_id', $taxTypeId)->get();
+        $businessTaxType = BusinessTaxType::where('tax_type_id', $taxTypeId)->get();
         $business_id = [];
         foreach ($businessTaxType as $item) {
             $business_id[] = $item->business_id;
         }
-        $business_location = BusinessLocation::query()->whereIn('business_id', $business_id)->get();
+        $business_location = BusinessLocation::whereIn('business_id', $business_id)->get();
 
         $business_lo = [];
         foreach ($business_location as $value) {
             $business_lo[] = $value->id;
             $date_of_commencing[] = $value->date_of_commencing;
         }
-        $locationsBiz = VatReturn::query()->whereIn('business_location_id', $business_lo)
+        $locationsBiz = VatReturn::select('business_location_id')->whereIn('business_location_id', $business_lo)
             ->groupBy('business_location_id')->get();
+
         $rows = count($locationsBiz);
         $returnTableName = (new $modelName())->getTable();
         $returns = $modelName::selectRaw('financial_month_id as month, created_at, financial_year_id, id, business_location_id, filed_by_id')
             ->whereIn('business_location_id', $business_lo)
             ->orderByDesc('id')
-            ->groupBy(['business_location_id','financial_month_id'])
+            ->groupBy(['business_location_id','financial_month_id', 'created_at', 'financial_year_id', 'id', 'filed_by_id'])
             ->limit($rows)
             ->get();
-
         if (count($returns) > 0) {
             foreach ($returns as $return) {
-                $month = FinancialMonth::query()->where('id', $return->month)->first();
-                $non_filers = BusinessLocation::query()
-                    ->select('business_locations.business_id', 'business_locations.id as location_id', DB::raw('TIMESTAMPDIFF(MONTH,"' . $month->due_date . '", CURDATE()) as months'))
+                $month = FinancialMonth::where('id', $return->month)->first();
+                $non_filers = BusinessLocation::select('business_locations.business_id', 'business_locations.id as location_id', DB::raw('MONTHS_BETWEEN(CURRENT_DATE, "' . $month->due_date . '") as months'))
                     ->whereIn('business_locations.business_id', $business_id)
-                    ->havingRaw('TIMESTAMPDIFF(MONTH,"' . $month->due_date . '", CURDATE()) >= ?', [3])
+//                    ->havingRaw('TIMESTAMPDIFF(MONTH,"' . $month->due_date . '", CURDATE()) >= ?', [3])
+                    ->havingRaw('MONTHS_BETWEEN(CURRENT_DATE, '.$month->due_date.') >= 3')
                     ->get()->toArray();
             }
             return $non_filers;
         } else {
             foreach ($business_location as $item) {
                 $month = $item->date_of_commencing;
-                $non_filers = BusinessLocation::query()
-                    ->select('business_locations.business_id', 'business_locations.id as location_id', DB::raw('TIMESTAMPDIFF(MONTH,"' . $month . '", CURDATE()) as months'))
+                $non_filers = BusinessLocation::select('business_locations.business_id', 'business_locations.id as location_id', DB::raw('MONTHS_BETWEEN(CURRENT_DATE, "' . $month . '") as months'))
                     ->whereIn('business_locations.business_id', $business_id)
-                    ->havingRaw('TIMESTAMPDIFF(MONTH,"' . $month . '", CURDATE()) >= ?', [3])
+                    ->havingRaw('MONTHS_BETWEEN(CURRENT_DATE, '.$month.') >= 3')
                     ->get()->toArray();
+
+                dd($non_filers);
                 return $non_filers;
             }
         }
@@ -179,7 +180,7 @@ class NonFilersController extends Controller
             foreach ($result as $item) {
                 $business_id = $item['business_id'];
                 $location_id = $item['location_id'];
-                $non = NonFiler::query()->updateOrCreate(
+                $non = NonFiler::updateOrCreate(
                     ['business_location_id' => $location_id, 'tax_type_id' => $tax_type_id],
                     [
                         'business_location_id' => $location_id,
