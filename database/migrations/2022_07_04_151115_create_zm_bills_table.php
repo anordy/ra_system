@@ -25,7 +25,7 @@ class CreateZmBillsTable extends Migration
             $table->decimal('exchange_rate',20,2);
             $table->decimal('equivalent_amount',20,2)->default(0);
             $table->string('control_number')->nullable();
-            $table->dateTime('expire_date');
+            $table->timestamp('expire_date');
             $table->unsignedBigInteger('payer_id');
             $table->string('payer_type');
             $table->string('payer_name');

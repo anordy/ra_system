@@ -240,7 +240,7 @@
         </table>
     </div>
     <div class="bottom align-center">
-        <p> Zanzibar Port Corporation &copy; {{ date('Y') }} All Rights Reserved (ZRB)</p>
+        <p>ZANZIBAR REVENUE BOARD &copy; {{ date('Y') }} All Rights Reserved (ZRB)</p>
     </div>
 </body>
 
