@@ -36,14 +36,14 @@
                     </div>
                     <div class="form-group col-lg-12">
                         <label class="control-label">Branch Name</label>
-                        <input type="text" onkeyup="var start = this.selectionStart;var end = this.selectionEnd;this.value = this.value.toUpperCase();this.setSelectionRange(start, end);" class="form-control" wire:model.defer="branch_name" id="branch_name">
+                        <input type="text" class="form-control" wire:model.defer="branch_name" id="branch_name">
                         @error('branch_name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
                         <label class="control-label">Swift Code</label>
-                        <input type="text" class="form-control" wire:model.defer="swift_code" id="swift_code">
+                        <input type="text" onkeyup="var start = this.selectionStart;var end = this.selectionEnd;this.value = this.value.toUpperCase();this.setSelectionRange(start, end);" class="form-control" wire:model.defer="swift_code" id="swift_code">
                         @error('swift_code')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
