@@ -93,7 +93,7 @@ class LandLeaseList extends DataTableComponent
 
     public function getBusinessName($id)
     {
-        $businessLocation = BusinessLocation::find(1); //todo: to be removed
+        $businessLocation = BusinessLocation::find($id); //todo: to be removed
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 }
