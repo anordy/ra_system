@@ -5,19 +5,14 @@ namespace App\Http\Controllers\MVR;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\v1\SMSController;
 use App\Models\MvrDeRegistrationRequest;
 use App\Models\MvrFee;
 use App\Models\MvrFeeType;
-use App\Models\MvrMotorVehicle;
-use App\Models\MvrMotorVehicleRegistration;
-use App\Models\MvrOwnershipTransfer;
 use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationChangeRequest;
 use App\Models\MvrRegistrationStatus;
-use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
-use App\Services\TRA\ServiceRequest;
+use App\Models\TaxType;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\MotorVehicleSearchTrait;
@@ -87,11 +82,12 @@ class DeRegistrationController extends Controller
         $amount = $fee->amount;
 
         try {
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,
                 get_class($request),
-                1, //todo: remove
+                $taxType->id,
                 $request->agent->id,
                 get_class($request->agent),
                 $request->agent->taxpayer->fullname(),
@@ -110,7 +106,7 @@ class DeRegistrationController extends Controller
                         'billable_type' => get_class($request),
                         'fee_id' => $fee->id,
                         'fee_type' => get_class($fee),
-                        'tax_type_id' => 1, //todo: remove
+                        'tax_type_id' => $taxType->id,
                         'amount' => $amount,
                         'currency' => 'TZS',
                         'exchange_rate' => $exchange_rate,
@@ -120,7 +116,7 @@ class DeRegistrationController extends Controller
                 ]
             );
             $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_PENDING_PAYMENT])->id]);
-            
+
             if (config('app.env') != 'local') {
                 $response = ZmCore::sendBill($bill);
                 if ($response->status != ZmResponse::SUCCESS) {
@@ -136,7 +132,7 @@ class DeRegistrationController extends Controller
                 $bill->save();
                 session()->flash("success", 'Request Approved, Control Number request sent');
             }
-            
+
             DB::commit();
         } catch (\Exception $e) {
             session()->flash("error", 'Approval failed,  could not update data!');

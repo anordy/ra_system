@@ -50,7 +50,7 @@ class LoginController extends Controller
         $user =  $request->input($this->username());
         $user = User::where('email', $user)->first();
 
-        if($user == null){
+        if ($user == null) {
             return $this->sendFailedLoginResponse($request);
         }
 
@@ -59,25 +59,30 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($user);
         }
 
-        if ($user->status == 0) {
-            throw ValidationException::withMessages([
-                $this->username() =>  "Your account is locked, Please contact your admin to unlock your account",
-            ]);
-        }
-
-        if (!$this->verify($user)){
-            throw ValidationException::withMessages([
-                $this->username() =>  "Your account could not be verified, please contact system administrator.",
-            ]);
-        }
-        
-        if ($user->is_approved == 0) {
-            Session::flash('error', 'Your account has not been approved, Kindly contact admin');
-            return redirect()->back();
-        }
-
         if (Auth::attempt($request->only('email', 'password'))) {
             Auth::logoutOtherDevices(request('password'));
+
+            if ($user->status == 0) {
+                Auth::logout();
+                throw ValidationException::withMessages([
+                    $this->username() =>  "Your account is locked, Please contact your admin to unlock your account",
+                ]);
+            }
+
+            // if (!$this->verify($user)) {
+            //     Auth::logout();
+            //     throw ValidationException::withMessages([
+            //         $this->username() =>  "Your account could not be verified, please contact system administrator.",
+            //     ]);
+            // }
+
+            if ($user->is_approved == 0) {
+                Auth::logout();
+                throw ValidationException::withMessages([
+                    $this->username() =>  "Your account has not been approved, please contact system administrator.",
+                ]);
+            }
+
             $this->clearLoginAttempts($request);
             $user = auth()->user();
 
@@ -100,7 +105,7 @@ class LoginController extends Controller
                 $token->sendCode();
 
                 return redirect()->route('twoFactorAuth.index');
-            }else{
+            } else {
                 return redirect()->route('password.change');
             }
         } else {
@@ -122,7 +127,8 @@ class LoginController extends Controller
         $user->auth_attempt = +$increment;
         $user->save();
         $this->limiter()->hit(
-            $this->throttleKey($request), $this->decayMinutes() * 60
+            $this->throttleKey($request),
+            $this->decayMinutes() * 60
         );
     }
 

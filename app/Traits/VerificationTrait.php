@@ -53,6 +53,7 @@ trait VerificationTrait{
 
             return true;
         } catch (\Exception $e) {
+            Log::channel('verification')->error($e);
             return false;
         }
     }
