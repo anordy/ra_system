@@ -123,7 +123,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 } catch (Exception $e) {
                     Log::error($e);
                     DB::rollBack();
-                    $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                    $this->alert('error', 'Something went wrong, please contact the administrator for help');
                     return;
                 }
 
@@ -179,7 +179,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             } catch (Exception $e) {
                 Log::error($e);
                 DB::rollBack();
-                $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+                $this->alert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
 
@@ -203,7 +203,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?.');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
 
@@ -252,7 +252,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }

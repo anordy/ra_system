@@ -45,7 +45,7 @@ class ZmFeeHelper
         }
         $minFee = $transactionFee->minimum_amount;
 
-//if the amount exceed the maximum fee range we take the constant fee
+        //if the amount exceed the maximum fee range we take the constant fee
         if ($minFee <= $equivalent_amount) {
             $fee = $transactionFee->fee;
         } else {
