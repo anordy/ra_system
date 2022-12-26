@@ -20,7 +20,7 @@
                         @if (is_array($penalties) && count($penalties))
                             @foreach ($penalties as $penalty)
                                 <tr>
-                                    <td>{{ $penalty['return_quater'] }}</td>
+                                    <td>{{ $penalty['return_quater'] ?? $penalty['financial_month_name'] }}</td>
                                     <td>{{ number_format($penalty['tax_amount'], 2) }}</td>
                                     <td>{{ number_format($penalty['late_payment'], 2) }}</td>
                                     <td>{{ number_format($penalty['rate_amount'], 2) }}</td>
