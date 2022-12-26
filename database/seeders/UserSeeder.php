@@ -227,9 +227,5 @@ class UserSeeder extends Seeder
             'is_approved' => 1,
         ]);
 
-        foreach (User::all() as $user) {
-            $this->sign($user);
-        }
-
     }
 }
