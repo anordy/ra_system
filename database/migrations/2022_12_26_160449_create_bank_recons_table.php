@@ -22,11 +22,14 @@ class CreateBankReconsTable extends Migration
             $table->string('payer_name');
             $table->string('payment_ref');
             $table->string('transaction_origin');
+
+
             // transaction type, Discard Balance
             // control no, CS => T, TB => STarts with T,
             // Payer Name, CS => After CN(T),
             // Payment Ref, CS => After Payer Name, TB => Starts with RT
             // Transaction Origin, CS => After FROM, TB => POS
+
             $table->decimal('debit_amount', 38, 2);
             $table->decimal('credit_amount', 38, 2);
             $table->decimal('current_balance', 38, 2);
