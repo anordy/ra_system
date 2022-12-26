@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BusinessFileTypesSeeder::class);
         $this->call(CountriesTableSeeder::class);
         $this->call(CurrenciesTableSeeder::class);
+        $this->call(ZRBBankAccountSeeder::class);
         $this->call(RegionSeeder::class);
         $this->call(DistrictSeeder::class);
         $this->call(WardSeeder::class);

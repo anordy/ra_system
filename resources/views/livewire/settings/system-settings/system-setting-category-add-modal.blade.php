@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Add Penalty Rate</h5>
+                <h5 class="modal-title text-uppercase">Add System Setting Category</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
@@ -10,14 +10,14 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Name</label>
-                        <input type="text" class="form-control" wire:model.lazy="name" id="name">
+                        <input type="text" class="form-control" wire:model.defer="name" id="name">
                         @error('name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
                         <label class="control-label">Description</label>
-                        <textarea type="text" rows="4" class="form-control" wire:model.lazy="description" id="description"></textarea>
+                        <textarea type="text" rows="4" class="form-control" wire:model.defer="description" id="description"></textarea>
                         @error('description')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror

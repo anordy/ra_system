@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Edit System Setting Category {{$systemSettingCategory->name}}</h5>
+                <h5 class="modal-title text-uppercase">Edit System Setting Category {{$systemSetting->name}}</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
@@ -12,7 +12,7 @@
                         <label class="control-label">Category</label>
                         <select type="text" class="form-control" wire:model.defer="system_setting_category" id="system_setting_category">
                             @foreach ($categories as $category)
-                                <option @if ($category->id == $systemSettingCategory->system_setting_category_id) selected @endif value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option {{($category->id == $systemSetting->system_setting_category_id) ? 'selected' : ''}} value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
                         @error('system_setting_category')

@@ -29,6 +29,10 @@ class CreateUsersTable extends Migration
             $table->boolean('is_approved')->default(0);
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->unsignedBigInteger('level_id')->nullable();
+
+            $table->string('ci_payload', 4000)->nullable();
+            $table->boolean('failed_verification')->default(0);
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

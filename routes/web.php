@@ -131,16 +131,13 @@ use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Setting\SystemSettingsController;
-use App\Http\Controllers\v1\ZanMalipoController;
-
-//use App\Http\Controllers\Returns\HotelLevyReturnController;
+use App\Http\Controllers\Setting\ZrbBankAccountController;
 
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
-Route::get('pay', [ZanMalipoController::class, 'pay']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
@@ -180,6 +177,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::resource('/interest-rates', InterestRateController::class);
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::resource('/penalty-rates', PenaltyRateController::class);
+        Route::resource('/zrb-bank-accounts', ZrbBankAccountController::class);
         Route::get('/setting-system-categories/view', [SystemSettingsController::class, 'setting_categories'])->name('setting-system-categories.view');
         Route::get('/system-settings/view', [SystemSettingsController::class, 'system_settings'])->name('system-settings.view');
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');

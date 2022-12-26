@@ -59,7 +59,7 @@
                             </div>
                         </div>
 
-                        <x-bill-structure :bill="$return->tax_return->latestBill()" :withCard="false" />
+                        <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false" />
 
                     </div>
 

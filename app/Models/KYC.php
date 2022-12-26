@@ -26,4 +26,8 @@ class KYC extends Model implements Auditable
     public function identification(){
         return $this->belongsTo(IDType::class, 'id_type');
     }
+
+    public function fullname(){
+        return $this->first_name.' '. $this->middle_name .' '. $this->last_name;
+    }
 }

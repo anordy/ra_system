@@ -15,7 +15,7 @@ class CreateSystemSettingsTable extends Migration
     {
         Schema::create('system_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('system_setting_category_id');
+            $table->unsignedBigInteger('system_setting_category_id');
             $table->string('name');
             $table->string('code');
             $table->string('description', 4000);

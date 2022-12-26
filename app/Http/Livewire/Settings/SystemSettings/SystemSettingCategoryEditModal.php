@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Settings\SystemSettings;
 
+use App\Models\DualControl;
 use App\Models\SystemSettingCategory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -39,6 +41,7 @@ class SystemSettingCategoryEditModal extends Component
             abort(403);
        }
         $this->validate();
+        DB::beginTtansaction();
         try {
             $this->systemSettingCategory->update([
                 'name' => $this->name,
@@ -46,8 +49,11 @@ class SystemSettingCategoryEditModal extends Component
                 'value' => $this->value,
                 'description' => $this->description,
             ]);
+            $this->triggerDualControl(get_class($this->systemSettingCategory), $this->systemSettingCategory->id, DualControl::EDIT, 'edit system setting category');
+            DB::commit();
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }

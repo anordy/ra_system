@@ -17,7 +17,9 @@ class SystemSettingTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return SystemSetting::query()->select('value')->orderBy('created_at', 'Desc');
+        return SystemSetting::query()
+            ->select('value')
+            ->orderBy('created_at', 'Desc');
     }
 
     public function configure(): void
@@ -47,15 +49,32 @@ class SystemSettingTable extends DataTableComponent
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Unit', 'unit')->format(
-                function($value, $row){
-                    return $row->value .' '. $row->unit;
+            Column::make('Unit', 'unit')
+                ->format(function ($value, $row) {
+                    return $row->value . ' ' . $row->unit;
                 })
                 ->sortable()
                 ->searchable(),
             Column::make('Description', 'description')
                 ->sortable()
                 ->searchable(),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    } elseif ($value == 2) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+                })
+                ->html(),
             Column::make('Action', 'id')->view('settings.system-settings.setting-entries.includes.actions'),
         ];
     }
@@ -75,9 +94,8 @@ class SystemSettingTable extends DataTableComponent
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $id
+                'id' => $id,
             ],
-
         ]);
     }
 
@@ -85,10 +103,18 @@ class SystemSettingTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
+            TODO: //ADD DUAL CONTROL
             $systemsettingCategory = SystemSetting::findOrFail(decrypt($data->id));
             $systemsettingCategory->delete();
             $this->alert('success', 'Record deleted successfully');
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $this->flash(
+                'success',
+                'Record deleted successfully',
+                [],
+                redirect()
+                    ->back()
+                    ->getTargetUrl(),
+            );
         } catch (Exception $e) {
             report($e);
             $this->alert('warning', 'Something whent wrong!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);

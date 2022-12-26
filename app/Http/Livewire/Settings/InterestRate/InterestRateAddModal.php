@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Settings\PenaltyRate;
+namespace App\Http\Livewire\Settings\InterestRate;
 
 use Exception;
 use Livewire\Component;
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
-class PenaltyRateAddModal extends Component
+class InterestRateAddModal extends Component
 {
     use LivewireAlert;
 

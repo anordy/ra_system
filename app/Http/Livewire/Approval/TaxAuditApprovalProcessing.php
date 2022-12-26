@@ -126,7 +126,7 @@ class TaxAuditApprovalProcessing extends Component
                 [
                     'periodFrom' => 'required|date',
                     'periodTo' => 'required|after:periodFrom',
-                    'auditingDate' => 'required|after:periodTo',
+                    'auditingDate' => 'required|after:today',
                     'intension' => 'required',
                     'scope' => 'required',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],

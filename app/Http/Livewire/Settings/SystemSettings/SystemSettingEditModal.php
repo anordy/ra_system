@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Settings\SystemSettings;
 
+use App\Models\DualControl;
 use App\Models\SystemSetting;
 use App\Models\SystemSettingCategory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -14,7 +16,7 @@ class SystemSettingEditModal extends Component
 
     use LivewireAlert;
 
-    public $systemSettingCategory;
+    public $systemSetting;
     public $name;
     public $unit;
     public $value;
@@ -33,12 +35,12 @@ class SystemSettingEditModal extends Component
     public function mount($id)
     {
         $this->categories = SystemSettingCategory::select('id', 'name')->get();
-        $this->systemSettingCategory = SystemSetting::findOrFail(decrypt($id));
-        $this->name = $this->systemSettingCategory->name;
-        $this->unit = $this->systemSettingCategory->unit;
-        $this->value = $this->systemSettingCategory->value;
-        $this->description = $this->systemSettingCategory->description;
-        $this->system_setting_category = $this->systemSettingCategory->system_setting_category_id;
+        $this->systemSetting = SystemSetting::findOrFail(decrypt($id));
+        $this->name = $this->systemSetting->name;
+        $this->unit = $this->systemSetting->unit;
+        $this->value = $this->systemSetting->value;
+        $this->description = $this->systemSetting->description;
+        $this->system_setting_category = $this->systemSetting->system_setting_category_id;
     }
 
 
@@ -48,17 +50,21 @@ class SystemSettingEditModal extends Component
             abort(403);
        }
         $this->validate();
+        DB::beginTransaction();
         try {
-            $this->systemSettingCategory->update([
+            $this->systemSetting->update([
                 'system_setting_category_id' => $this->system_setting_category,
                 'name' => $this->name,
                 'unit' => $this->unit,
                 'value' => $this->value,
                 'description' => $this->description,
             ]);
+            $this->triggerDualControl(get_class($this->systemSetting), $this->systemSetting->id, DualControl::EDIT, 'edit system setting entry');
+            DB::commit();
             $this->alert('success', 'Record added successfully');
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, Could you please contact our administrator for assistance?');
         }

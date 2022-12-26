@@ -2,12 +2,11 @@
 
 namespace App\Http\Livewire\Settings\TaxRegion;
 
-use App\Models\InterestRate;
 use App\Models\TaxRegion;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Exception;
 
 class TaxRegionAddModal extends Component
 {

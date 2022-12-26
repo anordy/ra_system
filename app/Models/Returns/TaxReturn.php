@@ -13,12 +13,13 @@ use App\Models\Debts\DebtPenalty;
 use App\Models\Debts\DemandNotice;
 use App\Models\Debts\RecoveryMeasure;
 use App\Models\Installment\Installment;
+use App\Services\Verification\PayloadInterface;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Extension\ExtensionRequest;
 use App\Models\Installment\InstallmentRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TaxReturn extends Model
+class TaxReturn extends Model implements PayloadInterface
 {
     use HasFactory;
 
@@ -74,7 +75,7 @@ class TaxReturn extends Model
 
     public function latestBill()
     {
-        return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
+        return $this->morphOne(ZmBill::class, 'billable')->latest();
     }
 
 
@@ -107,5 +108,23 @@ class TaxReturn extends Model
 
     public function penalties(){
         return $this->morphMany(DebtPenalty::class, 'debt');
+    }
+
+    public static function getPayloadColumns(): array
+    {
+        return ['id',
+            'business_id',
+            'location_id',
+            'total_amount',
+            'principal',
+            'interest',
+            'penalty',
+            'currency'
+        ];
+    }
+
+    public static function getTableName(): string
+    {
+        return 'tax_returns';
     }
 }
