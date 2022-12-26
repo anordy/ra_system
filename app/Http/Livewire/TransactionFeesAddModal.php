@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\TransactionFee;
+use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +14,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class TransactionFeesAddModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
     public $min_amount;
     public $max_amount;
     public $fee;
@@ -43,6 +45,9 @@ class TransactionFeesAddModal extends Component
             $transaction_fee->fee = $this->fee;
             $transaction_fee->created_by = Auth::id();
             $transaction_fee->save();
+
+            $this->triggerDualControl(get_class($transaction_fee), $transaction_fee->id, DualControl::ADD, 'adding transaction fee');
+
             DB::commit();
             $this->alert('success', 'Fee added successfully');
             return redirect()->route('settings.transaction-fees.index');

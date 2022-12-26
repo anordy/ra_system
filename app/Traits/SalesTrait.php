@@ -66,7 +66,17 @@ trait SalesTrait
             ->whereIn(''.$returnItems.'.config_id', $configs)
             ->where('business_tax_type.status', '=','current-used')
             ->where('business_tax_type.tax_type_id','=', $this->getTaxType(TaxType::STAMP_DUTY))
-            ->orderByDesc(''.$returnTableName.'.id')->groupBy([''.$returnTableName.'.id'])->get();
+            ->orderByDesc(''.$returnTableName.'.id')->groupBy([
+                ''.$returnTableName.'.id',
+                ''.$returnTableName.'.business_id',
+                ''.$returnTableName.'.tax_type_id',
+                ''.$returnItems.'.value',
+                ''.$returnTableName.'.financial_month_id',
+                ''.$returnTableName.'.financial_year_id',
+                ''.$returnTableName.'.currency',
+                ''.$returnTableName.'.business_location_id'
+            ])
+            ->get();
         return $return;
     }
 }

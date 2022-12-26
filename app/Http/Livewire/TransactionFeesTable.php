@@ -85,7 +85,7 @@ class TransactionFeesTable extends DataTableComponent
                     $approve = '';
                     $reject = '';
 
-                    if (Gate::allows('setting-transaction-fees-edit') && $row->is_approved != 2 && approvalLevel(Auth::user()->role_id, 'maker')) {
+                    if (Gate::allows('setting-transaction-fees-edit') && $row->is_approved != 2 && approvalLevel(Auth::user()->level_id, 'maker')) {
                         $edit = <<< HTML
                             <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                         HTML;
@@ -96,16 +96,7 @@ class TransactionFeesTable extends DataTableComponent
                             <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                         HTML;
                     }
-                    if ($row->is_approved == 0 && approvalLevel(Auth::user()->role_id, 'checker')) {
-                        $approve = <<< HTML
-                                <button class="btn btn-success btn-sm" wire:click="approve($value)"><i class="bi bi-check-lg mr-1"></i>Approve </button>
-                            HTML;
-                        $reject = <<< HTML
-                                <button class="btn btn-danger btn-sm" wire:click="reject($value)"><i class="bi bi-x-lg mr-1"></i>Reject </button>
-                            HTML;
-                    }
-
-                    return $edit . $delete . $approve . $reject;
+                    return $edit . $delete ;
 
                 })
                 ->html(true),

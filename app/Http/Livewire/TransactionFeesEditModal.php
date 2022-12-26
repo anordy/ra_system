@@ -3,8 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Bank;
+use App\Models\DualControl;
 use App\Models\EducationLevel;
 use App\Models\TransactionFee;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -14,19 +16,21 @@ use Livewire\Component;
 
 class TransactionFeesEditModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $data;
     public $min_amount;
     public $max_amount;
     public $fee;
+    public $old_values;
+    public $new_values;
 
     protected function rules()
     {
         return [
             'min_amount' => 'required|numeric',
             'max_amount' => 'sometimes|nullable|numeric',
-            'fee'        => 'required|numeric',
+            'fee' => 'required|numeric',
         ];
     }
 
@@ -37,6 +41,11 @@ class TransactionFeesEditModal extends Component
         $this->max_amount = $data->maximum_amount ?? null;
         $this->fee = $data->fee;
         $this->data = $data;
+        $this->old_values = [
+            'minimum_amount' => $this->min_amount,
+            'maximum_amount' => $this->max_amount,
+            'fee' => $this->fee,
+        ];
     }
 
     public function submit()
@@ -46,6 +55,11 @@ class TransactionFeesEditModal extends Component
         }
 
         $this->validate();
+        $this->new_values = [
+            'minimum_amount' => $this->min_amount,
+            'maximum_amount' => $this->max_amount,
+            'fee' => $this->fee,
+        ];
         try {
             $this->data->update([
                 'minimum_amount' => $this->min_amount,
@@ -54,12 +68,16 @@ class TransactionFeesEditModal extends Component
                 'is_approved' => 0,
                 'created_by' => Auth::id()
             ]);
+
+            $this->triggerDualControl(get_class($this->data), $this->data->id, DualControl::EDIT, 'editing transaction fee', $this->old_values, $this->new_values);
+
             $this->flash('success', 'Fee updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e->getMessage());
             $this->alert('error', 'Something went wrong');
         }
     }
+
     public function render()
     {
         return view('livewire.transaction-fees-edit-modal');

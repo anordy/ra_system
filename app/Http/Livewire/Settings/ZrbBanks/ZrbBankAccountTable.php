@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -108,7 +109,7 @@ class ZrbBankAccountTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            // TODO: ADD DUAL CONTROL
+            TODO: //ADD DUAL CONTROL
             $zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($data->id));
             $zrbBankAccount->delete();
             $this->alert('success', 'Record deleted successfully');
