@@ -82,7 +82,7 @@ class TaxClaimApprovalProcessing extends Component
                 return $this->subject->amount / (int)$this->installmentCount;
             } catch (Exception $exception) {
                 Log::error($exception .', '. Auth::user());
-                return $this->alert('error', 'Something went wrong, Please contact our support desk for help');
+                return $this->alert('error', 'Something went wrong, please contact our support desk for help');
             }
        }
         
@@ -147,7 +147,7 @@ class TaxClaimApprovalProcessing extends Component
             } catch (Exception $e) {
                 Log::error($e);
                 DB::rollBack();
-                $this->alert('error', 'Something went wrong, Please contact our support desk for help');
+                $this->alert('error', 'Something went wrong, please contact our support desk for help');
             }
         }
 

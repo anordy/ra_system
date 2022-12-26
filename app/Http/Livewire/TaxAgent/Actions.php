@@ -118,7 +118,7 @@ class Actions extends Component
 			DB::rollBack();
 			Log::error($e);
 			report($e);
-			$this->alert('warning', 'Something went wrong, Please contact our support desk for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+			$this->alert('warning', 'Something went wrong, please contact our support desk for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
 			redirect()->back()->getTargetUrl();
 		}
 	}
@@ -162,7 +162,7 @@ class Actions extends Component
 			DB::rollBack();
 			Log::error($e);
 			report($e);
-			$this->alert('warning', 'Something went wrong, Please contact our support desk for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+			$this->alert('warning', 'Something went wrong, please contact our support desk for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
 			redirect()->back()->getTargetUrl();
 		}
 	}

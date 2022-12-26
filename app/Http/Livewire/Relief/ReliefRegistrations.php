@@ -153,7 +153,7 @@ class ReliefRegistrations extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            $this->alert('error', 'Something went wrong, Please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact our support desk for help');
         }
     }
 

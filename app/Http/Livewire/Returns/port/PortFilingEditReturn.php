@@ -125,7 +125,7 @@ class PortFilingEditReturn extends Component
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-            $this->alert('error', 'Something went wrong, Please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact our support desk for help');
         }
 
     }

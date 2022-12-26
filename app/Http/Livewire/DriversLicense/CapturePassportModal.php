@@ -63,7 +63,7 @@ class CapturePassportModal extends Component
             Log::error($e);
             if (Storage::exists($this->photo_path)) Storage::delete($this->photo_path);
             DB::rollBack();
-            $this->alert('error', 'Something went wrong, Please contact our support desk for help: '.$e->getMessage());
+            $this->alert('error', 'Something went wrong, please contact our support desk for help: '.$e->getMessage());
         }
     }
 

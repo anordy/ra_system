@@ -39,7 +39,7 @@ class Passport extends Component
             $this->passport = $immigration_controller->getPassportData($this->kyc->passport_no, $this->kyc->permit_number);
         } catch (Exception $e) {
             Log::error($e);
-            return $this->alert('error', 'Something went wrong, Please contact our support desk for help');
+            return $this->alert('error', 'Something went wrong, please contact our support desk for help');
         }
     }
 
@@ -101,7 +101,7 @@ class Passport extends Component
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Please contact our support desk for help!');
+            $this->alert('error', 'Something went wrong, please contact our support desk for help!');
         }
     }
 
@@ -125,7 +125,7 @@ class Passport extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Please contact our support desk for help!');
+            $this->alert('error', 'Something went wrong, please contact our support desk for help!');
         }
     }
 

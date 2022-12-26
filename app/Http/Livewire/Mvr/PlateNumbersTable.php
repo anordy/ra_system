@@ -170,7 +170,7 @@ class PlateNumbersTable extends DataTableComponent
             $this->flash('success', 'Plate Number Status updated', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something went wrong, Please contact our support desk for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('warning', 'Something went wrong, please contact our support desk for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

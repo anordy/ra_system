@@ -340,7 +340,7 @@ class TaxAuditApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, Please contact our support desk for help');
+            $this->alert('error', 'Something went wrong, please contact our support desk for help');
         }
 
         if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
