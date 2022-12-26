@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Business;
 
-use App\Models\BranchStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -36,7 +35,6 @@ class BranchesApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             Column::make("Business Name", "pinstance.business_id")
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
             Column::make("Business Type", "pinstance.business.business_type")

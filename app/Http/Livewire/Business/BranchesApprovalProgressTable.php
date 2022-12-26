@@ -32,7 +32,6 @@ class BranchesApprovalProgressTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
             Column::make("Business Name", "pinstance.business_id")
                 ->label(fn ($row) => $row->pinstance->business->name ?? ''),
             Column::make("Business Type", "pinstance.business.business_type")

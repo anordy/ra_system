@@ -13,7 +13,6 @@ use App\Jobs\Audit\SendEmailToTaxPayer;
 use App\Jobs\SendTaxAgentApprovalEmail;
 use App\Jobs\Taxpayer\SendKycRejectMail;
 use App\Jobs\Taxpayer\SendRegistrationMail;
-use App\Jobs\Admin\SendAdminRegistrationEmail;
 use App\Jobs\Business\Taxtype\SendTaxTypeMail;
 use App\Jobs\Business\SendBusinessApprovedMail;
 use App\Jobs\Configuration\SendPenaltyRateEmail;
@@ -71,8 +70,6 @@ class SendMailFired
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
-        } else if ($event->service == 'admin-registration') {
-            SendAdminRegistrationEmail::dispatch($event->tokenId);
         } else if ($event->service == 'withholding_agent_registration') {
             /** TokenId is withholding agent history is */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);

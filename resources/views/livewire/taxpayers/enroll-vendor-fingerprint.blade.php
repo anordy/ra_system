@@ -3,7 +3,9 @@
         <button class="tab-item {{ $selectedStep === 'details' ? 'active' : '' }}" wire:click="changeStep('details')">
             Taxpayer Details
         </button>
-        @if ( (empty($kyc->nida_verified_at) && !empty($kyc->zanid_verified_at) ) || !empty($kyc->zanid_verified_at) || !empty($kyc->passport_verified_at))
+        @if ((empty($kyc->nida_verified_at) && !empty($kyc->zanid_verified_at)) ||
+            !empty($kyc->zanid_verified_at) ||
+            !empty($kyc->passport_verified_at))
             <button class="tab-item {{ $selectedStep === 'biometric' ? 'active' : '' }}"
                 wire:click="changeStep('biometric')">
                 Biometric Enrollment
@@ -168,8 +170,15 @@
                     </tbody>
                 </table>
 
-                <a href="{{ route('taxpayers.verify-user', encrypt($kyc->id)) }}" class="btn btn-primary rounded-0"><i
-                        class="bi bi-check2-all mr-1"></i> Complete Verification</a>
+                <button wire:click="confirmPopUpModal('verifyUser')"
+                    wire:loading.attr="disabled" class="btn btn-primary">
+                    <div wire:loading wire:target="verifyUser">
+                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    Complete Verification
+                </button>
             </div>
         @endif
     @endif

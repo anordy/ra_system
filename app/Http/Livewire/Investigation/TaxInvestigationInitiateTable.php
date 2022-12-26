@@ -35,6 +35,16 @@ class TaxInvestigationInitiateTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+
+
+        $this->setThAttributes(function (Column $column) {
+            if ($column->getTitle() == 'Tax Types') {
+                return [
+                    'style' => 'width: 20%;',
+                ];
+            }
+            return [];
+        });
     }
 
     protected $listeners = [
@@ -47,19 +57,28 @@ class TaxInvestigationInitiateTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('ZTN No', 'business.ztn_number'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
-            Column::make('Period From', 'period_from'),
-            Column::make('Period To', 'period_to'),
+            Column::make('Business Location')
+                ->label(fn ($row) => $row->taxInvestigationLocationNames()),
+            Column::make('Tax Types')
+                ->label(fn ($row) => $row->taxInvestigationTaxTypeNames()),
+            Column::make('Period From', 'period_from')
+                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
+            Column::make('Period To', 'period_to')
+                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
             Column::make('Created By', 'created_by_id')
                 ->label(fn ($row) => $row->createdBy->full_name ?? ''),
             Column::make('Created On', 'created_at')
-                ->format(fn ($value) => Carbon::create($value ?? null)->toDayDateTimeString()),
+                ->label(fn ($row) => Carbon::create($row->created_at ?? null)->format('d-m-Y')),
             Column::make('Action', 'id')
                 ->format(function ($value) {
+                    $url = route('tax_investigation.approvals.show', encrypt($value));
                     return <<<HTML
                            <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-arrow-right"></i> Initiate Approval</button>
                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete </button>
+                           <a href="{$url}" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right" title="View"> View More </a>
                     HTML;
                 })
                 ->html(true),

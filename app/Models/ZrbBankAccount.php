@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Currency extends Model implements Auditable
+class ZrbBankAccount extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['iso', 'name', 'symbol'];
+    protected $guarded = [];
 
-    public function zrbBankAccounts(){
-        return $this->hasMany(ZrbBankAccount::class);
+    public function bank(){
+        return $this->belongsTo(Bank::class, 'bank_id');
+    }
+
+    public function currency(){
+        return $this->belongsTo(Currency::class, 'currency_id');
     }
 }

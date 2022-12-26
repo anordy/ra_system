@@ -2,57 +2,55 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Add System Setting</h5>
+                <h5 class="modal-title text-uppercase">Add Zrb Bank Account</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Category</label>
-                        <select type="text" class="form-control" wire:model.defer="system_setting_category" id="system_setting_category">
-                            @foreach ($categories as $category)
-                                <option selected>---Select category---</option>
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <label class="control-label">Bank</label>
+                        <select type="text" class="form-control" wire:model.defer="bank_id" id="bank_id">
+                                <option selected>---Select Bank---</option>
+                                @foreach ($banks as $bank)
+                                <option value="{{ $bank->id }}">{{ $bank->name }}</option>
                             @endforeach
                         </select>
-                        @error('system_setting_category')
+                        @error('bank_id')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Name</label>
-                        <input type="text" class="form-control" wire:model.defer="name" id="name">
-                        @error('name')
+                        <label class="control-label">Account Name</label>
+                        <input type="text" class="form-control" wire:model.defer="account_name" id="account_name">
+                        @error('account_name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Code</label>
-                        <input type="text" class="form-control" wire:model.defer="code" id="code">
-                        @error('code')
+                        <label class="control-label">Account Number</label>
+                        <input type="number" class="form-control" wire:model.defer="account_number" id="account_number">
+                        @error('account_number')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Value</label>
-                        <input type="number" class="form-control" wire:model.defer="value" id="value">
-                        @error('value')
+                        <label class="control-label">Branch Name</label>
+                        <input type="text" class="form-control" wire:model.defer="branch_name" id="branch_name">
+                        @error('branch_name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Unit</label>
-                        <input type="text" class="form-control" wire:model.defer="unit" id="unit">
-                        @error('unit')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label class="control-label">Description</label>
-                        <textarea type="text" rows="4" class="form-control" wire:model.defer="description" id="description"></textarea>
-                        @error('description')
-                        <span class="text-danger">{{ $message }}</span>
+                        <label class="control-label">Currency</label>
+                        <select type="text" class="form-control" wire:model.defer="currency_id" id="currency_id">
+                                <option selected>---Select Currency---</option>
+                                @foreach ($currencies as $currency)
+                                <option value="{{ $currency->id }}">{{ $currency->iso }}</option>
+                            @endforeach
+                        </select>
+                        @error('currency_id')
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>

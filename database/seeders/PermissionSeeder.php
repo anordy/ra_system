@@ -288,6 +288,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-approval-level-add', 'sys_module_id' => 18],
             ['name' => 'setting-dual-control-activities-view', 'sys_module_id' => 18],
 
+            ['name' => 'zrb-bank-account-view', 'sys_module_id' => 18],
+            ['name' => 'zrb-bank-account-add', 'sys_module_id' => 18],
+            ['name' => 'zrb-bank-account-edit', 'sys_module_id' => 18],
+            ['name' => 'zrb-bank-account-delete', 'sys_module_id' => 18],
+
             
 
             # System

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Jobs\Business\Taxtype\SendTaxTypeMail;
-use App\Mail\Business\Taxtype\ChangeTaxType;
 use Exception;
 use Carbon\Carbon;
 use App\Models\BusinessTaxType;

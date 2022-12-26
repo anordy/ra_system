@@ -12,13 +12,11 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class SystemSettingCategoryTable extends DataTableComponent
 {
-
     use LivewireAlert;
 
     public function builder(): Builder
     {
-        return  SystemSettingCategory::query()
-            ->orderBy('created_at', 'Desc');
+        return SystemSettingCategory::query()->orderBy('created_at', 'Desc');
     }
 
     public function configure(): void
@@ -40,9 +38,7 @@ class SystemSettingCategoryTable extends DataTableComponent
         });
     }
 
-    protected $listeners = [
-        'confirmed'
-    ];
+    protected $listeners = ['confirmed'];
 
     public function columns(): array
     {
@@ -53,12 +49,26 @@ class SystemSettingCategoryTable extends DataTableComponent
             Column::make('Description', 'description')
                 ->sortable()
                 ->searchable(),
-            Column::make('Action', 'id')
-                ->view('settings.system-settings.category.includes.actions'),
+            Column::make('Action', 'id')->view('settings.system-settings.category.includes.actions'),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    } elseif ($value == 2) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+                })
+                ->html(),
         ];
     }
-
-    
 
     public function delete($id)
     {
@@ -75,9 +85,8 @@ class SystemSettingCategoryTable extends DataTableComponent
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $id
+                'id' => $id,
             ],
-
         ]);
     }
 
@@ -85,18 +94,25 @@ class SystemSettingCategoryTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
+            TODO: //ADD DUAL CONTROL
             $systemsettingCategory = SystemSettingCategory::findOrFail(decrypt($data->id));
             if (!$systemsettingCategory->system_settings->exists()) {
                 $systemsettingCategory->delete();
                 $this->alert('success', 'Record deleted successfully');
-                $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+                $this->flash(
+                    'success',
+                    'Record deleted successfully',
+                    [],
+                    redirect()
+                        ->back()
+                        ->getTargetUrl(),
+                );
             } else {
-                $this->alert('warning', 'There are system Setting data related to this model!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);    
+                $this->alert('warning', 'There are system Setting data related to this model!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
             }
         } catch (Exception $e) {
             report($e);
             $this->alert('warning', 'Something whent wrong!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
-    
 }

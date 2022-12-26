@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Settings\SystemSettings;
+namespace App\Http\Livewire\Settings\ZrbBanks;
 
-use App\Models\SystemSetting;
+use App\Models\ZrbBankAccount;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -11,14 +11,15 @@ use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class SystemSettingTable extends DataTableComponent
+class ZrbBankAccountTable extends DataTableComponent
 {
     use LivewireAlert;
 
     public function builder(): Builder
     {
-        return SystemSetting::query()
-            ->select('value')
+        return ZrbBankAccount::query()
+            ->with('bank')
+            ->with('currency')
             ->orderBy('created_at', 'Desc');
     }
 
@@ -46,16 +47,25 @@ class SystemSettingTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Name', 'name')
+            Column::make('Account Name', 'account_name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Unit', 'unit')
+            Column::make('Account Number', 'account_number')
+                ->sortable()
+                ->searchable(),
+            Column::make('Bank name', 'bank_id')
                 ->format(function ($value, $row) {
-                    return $row->value . ' ' . $row->unit;
+                    return $row->bank->name;
                 })
                 ->sortable()
                 ->searchable(),
-            Column::make('Description', 'description')
+            Column::make('Branch Name', 'branch_name')
+                ->sortable()
+                ->searchable(),
+            Column::make('Currency', 'currency_id')
+                ->format(function ($value, $row) {
+                    return $row->currency->iso;
+                })
                 ->sortable()
                 ->searchable(),
             Column::make('Approval Status', 'is_approved')
@@ -75,13 +85,13 @@ class SystemSettingTable extends DataTableComponent
                     }
                 })
                 ->html(),
-            Column::make('Action', 'id')->view('settings.system-settings.setting-entries.includes.actions'),
+            Column::make('Action', 'id')->view('settings.zrb-bank-accounts.includes.actions'),
         ];
     }
 
     public function delete($id)
     {
-        if (!Gate::allows('system-setting-delete')) {
+        if (!Gate::allows('zrb-bank-account-delete')) {
             abort(403);
         }
         $this->alert('warning', 'Are you sure you want to delete ?', [
@@ -104,8 +114,8 @@ class SystemSettingTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             TODO: //ADD DUAL CONTROL
-            $systemsettingCategory = SystemSetting::findOrFail(decrypt($data->id));
-            $systemsettingCategory->delete();
+            $zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($data->id));
+            $zrbBankAccount->delete();
             $this->alert('success', 'Record deleted successfully');
             $this->flash(
                 'success',

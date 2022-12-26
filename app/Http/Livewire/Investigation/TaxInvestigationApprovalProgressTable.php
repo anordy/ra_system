@@ -11,7 +11,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class TaxInvestigationApprovalTable extends DataTableComponent
+class TaxInvestigationApprovalProgressTable extends DataTableComponent
 {
 
     use LivewireAlert;
@@ -23,10 +23,7 @@ class TaxInvestigationApprovalTable extends DataTableComponent
         return WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', TaxInvestigation::class)
             ->where('status', '!=', 'completed')
-            ->where('owner', 'staff')
-            ->whereHas('actors', function ($query) {
-                $query->where('user_id', auth()->id());
-            });
+            ->where('owner', 'staff');
     }
 
     public function configure(): void
@@ -73,8 +70,14 @@ class TaxInvestigationApprovalTable extends DataTableComponent
                 }),
             Column::make('Filled On', 'created_at')
                 ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
+            Column::make('From State', 'from_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn ($value) => strtoupper($value))
+                ->sortable()->searchable(),
             Column::make('Action', 'pinstance_id')
-                ->view('investigation.approval.action')
+                ->view('investigation.approval.approval-progress-action')
                 ->html(true),
         ];
     }
