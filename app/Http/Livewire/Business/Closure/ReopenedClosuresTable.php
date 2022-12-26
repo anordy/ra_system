@@ -14,8 +14,6 @@ class ReopenedClosuresTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended']);
-
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -30,7 +28,7 @@ class ReopenedClosuresTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Name', 'business.name')
+        Column::make('Name', 'business.name')
             ->sortable()
             ->searchable(),
         Column::make('Closure Type', 'closure_type')
@@ -55,10 +53,15 @@ class ReopenedClosuresTable extends DataTableComponent
             ->sortable()
             ->searchable(),
         Column::make('Re-opened On', 'reopening_date')
-            ->format(function($value, $row) { return Carbon::create($row->reopening_date)->toFormattedDateString(); })
+            ->format(function($value, $row) { 
+                if ($row->reopening_date) {
+                    return Carbon::create($row->reopening_date)->toFormattedDateString(); 
+                }
+                return 'N/A';
+            })
             ->sortable()
             ->searchable(),
-        Column::make('Re-opened Status', 'id')
+        Column::make('Re-opened Status', 'status')
             ->view('business.closure.includes.reopening'),
         Column::make('Action', 'id')
             ->view('business.closure.action'),
