@@ -11,7 +11,7 @@
             Bank Reconciliations
         </div>
         <div class="card-body">
-{{--            <livewire:payments.recon-enquiries-table />--}}
+            <livewire:payments.bank-recon-table />
         </div>
     </div>
 @endsection
