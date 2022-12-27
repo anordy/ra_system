@@ -27,7 +27,7 @@ class User extends Authenticatable implements PayloadInterface
 
     public static function getPayloadColumns(): array
     {
-        return ['id', 'email', 'phone', 'password', 'status'];
+        return ['id', 'email', 'phone', 'status'];
     }
 
     public static function getTableName(): string

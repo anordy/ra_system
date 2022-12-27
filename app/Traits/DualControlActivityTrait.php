@@ -17,13 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 trait DualControlActivityTrait
 {
-    public function triggerDualControl(
-        $model,
-        $modelId,
-        $action,
-        $action_detail,
-        $old_values = null,
-        $edited_values = null)
+    public function triggerDualControl($model, $modelId, $action, $action_detail, $old_values = null, $edited_values = null)
     {
         $payload = [
             'controllable_type' => $model,
@@ -86,6 +80,10 @@ trait DualControlActivityTrait
                 return 'Interest Rate';
                 break;
 
+            case DualControl::ZRBBANKACCOUNT:
+                return 'Zrb Bank Account';
+                break;
+
             default:
                 abort(404);
         }
@@ -105,7 +103,7 @@ trait DualControlActivityTrait
             $update->update(['is_approved' => $status]);
         } elseif ($data->action == DualControl::EDIT) {
             $payload = json_decode($data->new_values);
-            $payload = (array)$payload;
+            $payload = (array) $payload;
             if ($status == DualControl::APPROVE) {
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
@@ -118,12 +116,9 @@ trait DualControlActivityTrait
             }
         } elseif ($data->action == DualControl::DEACTIVATE || $data->action == DualControl::ACTIVATE) {
             if ($status == DualControl::APPROVE) {
-                $payload = (array)json_decode($data->new_values);
+                $payload = (array) json_decode($data->new_values);
                 $update->update($payload);
             }
         }
-
-
     }
-
 }
