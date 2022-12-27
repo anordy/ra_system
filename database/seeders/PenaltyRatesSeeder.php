@@ -17,12 +17,12 @@ class PenaltyRatesSeeder extends Seeder
     {
         foreach (FinancialYear::all('id') as $financialYear) {
             
-            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LATE_FILLING, 'name' => PenaltyRate::LATE_FILLING_NAME, 'rate' => 0.1];
-            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LATE_PAYMENT_BEFORE, 'name' => PenaltyRate::LATE_PAYMENT_BEFORE_NAME, 'rate' => 0.2];
-            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LATE_PAYMENT_AFTER, 'name' => PenaltyRate::LATE_PAYMENT_AFTER_NAME, 'rate' => 0.1];
-            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::WHICH_EVER_GREATER, 'name' => PenaltyRate::WHICH_EVER_GREATER_NAME, 'rate' => 100000];
-            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::PENALTY_FOR_MM_TRANSACTION, 'name' => PenaltyRate::PENALTY_FOR_MM_TRANSACTION_NAME, 'rate' => 1000000];
-            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LEASE_PENALTY, 'name' => PenaltyRate::LEASE_PENALTY_NAME, 'rate' => 0.1];
+            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LATE_FILLING, 'name' => PenaltyRate::LATE_FILLING_NAME, 'rate' => 0.1, 'is_approved' => 1];
+            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LATE_PAYMENT_BEFORE, 'name' => PenaltyRate::LATE_PAYMENT_BEFORE_NAME, 'rate' => 0.2, 'is_approved' => 1];
+            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LATE_PAYMENT_AFTER, 'name' => PenaltyRate::LATE_PAYMENT_AFTER_NAME, 'rate' => 0.1, 'is_approved' => 1];
+            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::WHICH_EVER_GREATER, 'name' => PenaltyRate::WHICH_EVER_GREATER_NAME, 'rate' => 100000, 'is_approved' => 1];
+            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::PENALTY_FOR_MM_TRANSACTION, 'name' => PenaltyRate::PENALTY_FOR_MM_TRANSACTION_NAME, 'rate' => 1000000, 'is_approved' => 1];
+            $rates [] = ['financial_year_id'=> $financialYear['id'], 'code'=> PenaltyRate::LEASE_PENALTY, 'name' => PenaltyRate::LEASE_PENALTY_NAME, 'rate' => 0.1, 'is_approved' => 1];
             
         }
         

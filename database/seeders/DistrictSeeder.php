@@ -36,6 +36,7 @@ class DistrictSeeder extends Seeder
                     District::updateOrCreate([
                         'name'=> $name,
                         'region_id' => $region->id,
+                        'is_approved' => 1,
                     ]);
                 }
             }
