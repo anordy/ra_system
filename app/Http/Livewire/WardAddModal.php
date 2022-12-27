@@ -33,13 +33,13 @@ class WardAddModal extends Component
 
     public function mount()
     {
-        $this->regions = Region::all();
+        $this->regions = Region::where('is_approved',1)->get();
     }
 
     public function updated($propertyName)
     {
         if ($propertyName === 'region_id') {
-            $this->districts = District::where('region_id', $this->region_id)->select('id', 'name')->get();
+            $this->districts = District::where('region_id', $this->region_id)->where('is_approved',1)->select('id', 'name')->get();
         }
 
     }

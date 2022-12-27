@@ -33,7 +33,7 @@ class DistrictAddModal extends Component
 
     public function mount()
     {
-        $this->regions = Region::all();
+        $this->regions = Region::where('is_approved',1)->get();
     }
 
 
