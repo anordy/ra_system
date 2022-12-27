@@ -14,12 +14,12 @@
             <div class="row m-2 pt-3">
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Year</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->year : $old_values->year }}</p>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->year : $old_values->year }}</p>
                 </div>
 
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Rate</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->rate : $old_values->rate }}</p>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->rate : $old_values->rate }}</p>
                 </div>
 
             </div>

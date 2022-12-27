@@ -2,8 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\ExchangeRate;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -12,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ExchangeRateTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     protected $model = ExchangeRate::class;
     public function configure(): void
@@ -69,7 +72,6 @@ class ExchangeRateTable extends DataTableComponent
                         if (Gate::allows('setting-exchange-rate-delete')) {
                             $delete = <<< HTML
                                 <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-        
                             HTML;
                         }
 
@@ -103,20 +105,18 @@ class ExchangeRateTable extends DataTableComponent
 
     public function confirmed($value)
     {
+        DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            ExchangeRate::find($data->id)->delete();
-            $this->flash(
-                'success',
-                'Record deleted successfully',
-                [],
-                redirect()
-                    ->back()
-                    ->getTargetUrl(),
-            );
+            $country = ExchangeRate::find($data->id);
+            $this->triggerDualControl(get_class($country), $country->id, DualControl::DELETE, 'deleting exchange rate');
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
+            DB::rollBack();
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Region;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -11,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RegionTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     protected $model = Region::class;
     public function configure(): void
@@ -96,13 +99,18 @@ class RegionTable extends DataTableComponent
 
     public function confirmed($value)
     {
+        DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            Region::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $region = Region::find($data->id);
+            $this->triggerDualControl(get_class($region), $region->id, DualControl::DELETE, 'deleting region');
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
+            DB::rollBack();
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

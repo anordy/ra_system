@@ -37,6 +37,11 @@ class DualControl extends Model
     public const FINANCIAL_YEAR = FinancialYear::class;
     public const FINANCIAL_MONTH = FinancialMonth::class;
     public const SEVEN_FINANCIAL_MONTH = SevenDaysFinancialMonth::class;
+    public const COUNTRY = Country::class;
+    public const REGION = Region::class;
+    public const DISTRICT = District::class;
+    public const WARD = Ward::class;
+    public const EXCHANGE_RATE = ExchangeRate::class;
 
     //Messages
     public const SUCCESS_MESSAGE = 'Updated data successfully submitted, Please wait for checker to approve';

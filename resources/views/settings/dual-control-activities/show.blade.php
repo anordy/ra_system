@@ -60,7 +60,18 @@
                 @include('settings.dual-control-activities.details.financial-month')
             @elseif ($result->controllable_type === \App\Models\DualControl::ZRBBANKACCOUNT)
                 @include('settings.dual-control-activities.details.zrb-bank-account')
+            @elseif ($result->controllable_type === \App\Models\DualControl::COUNTRY)
+                @include('settings.dual-control-activities.details.country')
+            @elseif ($result->controllable_type === \App\Models\DualControl::REGION)
+                @include('settings.dual-control-activities.details.region')
+            @elseif ($result->controllable_type === \App\Models\DualControl::DISTRICT)
+                @include('settings.dual-control-activities.details.district')
+            @elseif ($result->controllable_type === \App\Models\DualControl::WARD)
+                @include('settings.dual-control-activities.details.ward')
+            @elseif ($result->controllable_type === \App\Models\DualControl::EXCHANGE_RATE)
+                @include('settings.dual-control-activities.details.exchange-rate')
             @endif
+
 
             <div class="d-flex justify-content-end">
                 @if (approvalLevel(Auth::user()->level_id, 'Checker'))

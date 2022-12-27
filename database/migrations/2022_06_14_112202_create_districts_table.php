@@ -18,7 +18,9 @@ class CreateDistrictsTable extends Migration
             $table->unsignedBigInteger('region_id');
             $table->string('name');
             $table->foreign('region_id')->references('id')->on('regions');
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

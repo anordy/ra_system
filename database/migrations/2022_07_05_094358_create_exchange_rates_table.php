@@ -18,8 +18,10 @@ class CreateExchangeRatesTable extends Migration
             $table->decimal('spot_buying', 20, 2);
             $table->decimal('mean', 20, 2);
             $table->decimal('spot_selling', 20, 2);
-            $table->date('exchange_date'); // This ensures the date does not have time for proper comparison when getting exchange rate
+            $table->date('exchange_date');
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

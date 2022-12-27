@@ -3,8 +3,11 @@
 namespace App\Http\Livewire;
 
 use App\Models\District;
+use App\Models\DualControl;
 use App\Models\Region;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -13,7 +16,7 @@ use Livewire\Component;
 class DistrictAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $name;
     public $region_id;
@@ -41,16 +44,19 @@ class DistrictAddModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try {
-            District::create([
+            $district = District::create([
                 'name' => $this->name,
                 'region_id' => $this->region_id,
             ]);
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            $this->triggerDualControl(get_class($district), $district->id, DualControl::ADD, 'adding district');
+            DB::commit();
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            DB::rollBack();
+            $this->alert('error', DualControl::ERROR_MESSAGE);
         }
     }
 
