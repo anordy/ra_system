@@ -63,6 +63,22 @@ trait DualControlActivityTrait
             case DualControl::TRANSFER_FEE:
                 return 'Transfer Fee';
                 break;
+            case DualControl::FINANCIAL_YEAR:
+                return 'Financial Year';
+                break;
+
+            case DualControl::FINANCIAL_MONTH:
+                return 'Financial Month';
+                break;
+            case DualControl::SEVEN_FINANCIAL_MONTH:
+                return 'Seven Days Financial Month';
+                break;
+            case DualControl::PENALTY_RATE:
+                return 'Penalty Rate';
+                break;
+            case DualControl::INTEREST_RATE:
+                return 'Interest Rate';
+                break;
 
             case DualControl::ZRBBANKACCOUNT:
                 return 'Zrb Bank Account';

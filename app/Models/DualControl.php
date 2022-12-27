@@ -34,6 +34,9 @@ class DualControl extends Model
     public const PENALTY_RATE = PenaltyRate::class;
     public const TRANSFER_FEE = TransactionFee::class;
     public const ZRBBANKACCOUNT = ZrbBankAccount::class;
+    public const FINANCIAL_YEAR = FinancialYear::class;
+    public const FINANCIAL_MONTH = FinancialMonth::class;
+    public const SEVEN_FINANCIAL_MONTH = SevenDaysFinancialMonth::class;
 
     //Messages
     public const SUCCESS_MESSAGE = 'Updated data successfully submitted, Please wait for checker to approve';

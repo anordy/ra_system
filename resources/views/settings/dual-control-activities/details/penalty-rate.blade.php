@@ -18,8 +18,18 @@
                 </div>
 
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Report To</span>
-                    <p class="my-1">{{ $report_to_old }}</p>
+                    <span class="font-weight-bold text-uppercase">Code</span>
+                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->code : $old_values->code }}</p>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Rate</span>
+                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->rate : $old_values->rate }}</p>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Year</span>
+                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->year->code : $old_values->year }}</p>
                 </div>
 
             </div>
