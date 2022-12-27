@@ -24,15 +24,14 @@ class QualifiedTaxTypeController extends Controller
         if (!Gate::allows('qualified-tax-types-view')) {
             abort(403);
         }
-        $salesConfigs = HotelReturnConfig::query()->whereIn('code', ['HS', 'RS', 'TOS', 'OS'])->get()->pluck('id');
-        $hotel_tax_type_id = TaxType::query()->where('code', TaxType::HOTEL)->value('id');
+        $salesConfigs = HotelReturnConfig::whereIn('code', ['HS', 'RS', 'TOS', 'OS'])->get()->pluck('id');
+        $hotel_tax_type_id = TaxType::where('code', TaxType::HOTEL)->value('id');
         $hotel_returns = $this->getSales(HotelReturn::class, $salesConfigs, HotelReturnItem::class, $hotel_tax_type_id);
-
-        $stampConfigs = StampDutyConfig::query()->where('heading_type', ['supplies'])->get()->pluck('id');
-        $stamp_tax_type_id = TaxType::query()->where('code', TaxType::STAMP_DUTY)->value('id');
+        $stampConfigs = StampDutyConfig::where('heading_type', ['supplies'])->get()->pluck('id');
+        $stamp_tax_type_id = TaxType::where('code', TaxType::STAMP_DUTY)->value('id');
         $stamp_duty_return = $this->getSales(StampDutyReturn::class, $stampConfigs, StampDutyReturnItem::class, $stamp_tax_type_id);
 
-        $lump_tax_type_id = TaxType::query()->where('code', TaxType::LUMPSUM_PAYMENT)->value('id');
+        $lump_tax_type_id = TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->value('id');
         $lump_sum_return = LumpSumReturn::query()
             ->selectRaw('SUM(lump_sum_returns.total_amount_due) as total_sales, lump_sum_returns.id, 
             business_location_id, lump_sum_returns.business_id,lump_sum_returns.tax_type_id')
@@ -40,7 +39,13 @@ class QualifiedTaxTypeController extends Controller
             ->where('lump_sum_returns.status', ReturnStatus::COMPLETE)
             ->where('business_tax_type.status', '=', 'current-used')
             ->where('business_tax_type.tax_type_id', '=', $lump_tax_type_id)
-            ->groupBy(['lump_sum_returns.business_id'])
+            ->groupBy([
+                'lump_sum_returns.total_amount_due',
+                'lump_sum_returns.id',
+                'lump_sum_returns.business_location_id',
+                'lump_sum_returns.business_id',
+                'lump_sum_returns.tax_type_id',
+            ])
             ->orderByDesc('lump_sum_returns.id')->get();
 
         return view('upgrade-tax-type.qualified.index', compact('hotel_returns', 'hotel_tax_type_id',
@@ -60,8 +65,12 @@ class QualifiedTaxTypeController extends Controller
             ->whereIn('' . $returnItems . '.config_id', $configs)
             ->where('business_tax_type.status', '=', 'current-used')
             ->where('business_tax_type.tax_type_id', '=', $tax_type_id)
-            ->groupBy(['' . $returnTableName . '.business_id'])
-            ->orderByDesc('' . $returnTableName . '.id')->get();
+            ->groupBy([
+                '' . $returnTableName . '.id',
+                '' . $returnTableName . '.business_id',
+                '' . $returnTableName . '.tax_type_id',
+                '' . $returnItems . '.value',
+            ])->orderByDesc('' . $returnTableName . '.id')->get();
         return $return;
     }
 
@@ -73,18 +82,18 @@ class QualifiedTaxTypeController extends Controller
         $return_id = decrypt($id);
         $sales = decrypt($sales);
         $tax_type_id = decrypt($tax_type_id);
-        $tax_type = TaxType::query()->findOrFail($tax_type_id);
+        $tax_type = TaxType::findOrFail($tax_type_id);
         $tax_type_code = $tax_type->code;
 
         switch ($tax_type_code) {
             case TaxType::HOTEL:
-                $return = HotelReturn::query()->findOrFail($return_id);
+                $return = HotelReturn::findOrFail($return_id);
                 break;
             case TaxType::STAMP_DUTY:
-                $return = StampDutyReturn::query()->findOrFail($return_id);
+                $return = StampDutyReturn::findOrFail($return_id);
                 break;
             case TaxType::LUMPSUM_PAYMENT:
-                $return = LumpSumReturn::query()->findOrFail($return_id);
+                $return = LumpSumReturn::findOrFail($return_id);
                 break;
             default:
                 abort(404);
@@ -101,7 +110,7 @@ class QualifiedTaxTypeController extends Controller
 
     public function getCurrency($business_id, $tax_type_id)
     {
-        $result = BusinessTaxType::query()->where('business_id', $business_id)
+        $result = BusinessTaxType::where('business_id', $business_id)
             ->where('tax_type_id', $tax_type_id)->first();
         $currency = $result->currency;
         return $currency;
