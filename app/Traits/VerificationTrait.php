@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Jobs\RepostBillSignature;
 use App\Jobs\RepostReturnSignature;
 use App\Models\Returns\TaxReturn;
+use App\Models\VerificationsLog;
 use App\Models\ZmBill;
 use App\Services\Verification\AuthenticationService;
 use App\Services\Verification\PayloadInterface;
@@ -17,13 +18,15 @@ trait VerificationTrait{
 
     public function verify(PayloadInterface $object): bool
     {
-        Log::channel('verification')->info('Attempting to verify an instance.', ['instance' => $object]);
 
         $stringData = "";
 
         foreach ($object::getPayloadColumns() as $column){
             $stringData .= $object->{$column};
         }
+
+        Log::channel('verification')->info('Attempting to verify an instance.', ['instance' => $stringData]);
+
 
         try {
             $token = AuthenticationService::getAuthToken();
@@ -43,8 +46,8 @@ trait VerificationTrait{
                 $object->update(['failed_verification' => true]);
 
                 //  Save to failed verifications
-                DB::table('verification_logs')->create([
-                    'table' => $object->getTable(),
+               VerificationsLog::create([
+                    'table' => $object->getTableName(),
                     'row_id' => $object->id
                 ]);
 
@@ -60,13 +63,12 @@ trait VerificationTrait{
 
     public function sign(PayloadInterface $object): bool
     {
-        Log::channel('verification')->info('Attempting to sign an instance.', ['instance' => $object]);
-
         $stringData = "";
 
         foreach ($object::getPayloadColumns() as $column){
             $stringData .= $object->{$column};
         }
+        Log::channel('verification')->info('Attempting to verify an instance.', ['instance' => $stringData]);
 
         try {
             // Get token
