@@ -5,14 +5,14 @@ namespace App\Traits;
 use App\Models\BusinessLocation;
 use App\Models\SevenDaysFinancialMonth;
 use App\Models\FinancialYear;
-use App\Models\InterestRate;
 use App\Models\PenaltyRate;
 use Carbon\Carbon;
-use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Support\Facades\Log;
 
 trait SevenDaysPenaltyTrait
 {
+
+    use ExchangeRateTrait;
 
     public static function getTotalPenaltiesSevenDays($financialMonth, $taxAmount, $taxTypeCurency){
         $lateFilingFee = 0;
@@ -99,8 +99,8 @@ trait SevenDaysPenaltyTrait
 
         $rate = 1;
         if($taxTypeCurency !== 'TZS') {
-            $rate = 2300;
-            $percentageFee = self::checkCurrency($percentageFee, $rate);
+            $rate = self::getExchangeRate($taxTypeCurency);
+            $percentageFee = ($percentageFee * $rate);
         }
 
         if($percentageFee >= $weGRate){
@@ -113,15 +113,6 @@ trait SevenDaysPenaltyTrait
         }
 
         return $weGRate;
-    }
-
-    private function checkCurrency($percentageFee, $rate) {
-        // Api from BOT
-        // USD or any from BOT
-
-        $percentageFee = ($percentageFee * $rate);
-
-        return $percentageFee;
     }
 
     public static function getFilingMonthSevenDays($locationId, $ReturnClass){

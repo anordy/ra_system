@@ -2,8 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Ward;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -11,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WardTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     protected $model = Ward::class;
     public function configure(): void
@@ -95,13 +98,18 @@ class WardTable extends DataTableComponent
 
     public function confirmed($value)
     {
+        DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            Ward::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $ward = Ward::find($data->id);
+            $this->triggerDualControl(get_class($ward), $ward->id, DualControl::DELETE, 'deleting ward');
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
+            DB::rollBack();
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

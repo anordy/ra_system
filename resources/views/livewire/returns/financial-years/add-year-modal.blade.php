@@ -10,20 +10,14 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-md-12 col-lg-6">
                         <label class="control-label">Year</label>
-                        <select wire:model.lazy="year" name="year"  class="form-control">
-                            <option  value="">select years</option>
-                            <option value="{{date('Y')}}">{{date('Y')}}</option>
-                            @for ($x=1; $x <= 3; $x++)
-                                <option value="{{date('Y') - $x}}">{{date('Y') - $x}}</option>
-                            @endfor
-                        </select>
+                        <input wire:model.lazy="year" type="text" name="year"  class="form-control" />
                         @error('year')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group col-md-12 col-lg-6">
                         <label class="control-label">Name</label>
-                        <input type="text" value="{{$name}}" name="code" wire:model.lazy="name" class="form-control" readonly>
+                        <input type="text" value="{{$name}}" name="code" wire:model.lazy="name" class="form-control" readonly />
                         @error('name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror

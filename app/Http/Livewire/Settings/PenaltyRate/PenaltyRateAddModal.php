@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Settings\PenaltyRate;
 
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Livewire\Component;
 use App\Models\PenaltyRate;
@@ -13,7 +15,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class PenaltyRateAddModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $financial_year_id;
     public $rate;
@@ -28,7 +30,7 @@ class PenaltyRateAddModal extends Component
 
     protected $rules = [
         'configs.*.rate' => 'required|numeric',
-        'financial_year_id' => 'required'
+//        'financial_year_id' => 'required'
     ];
 
     protected $messages = [
@@ -44,14 +46,15 @@ class PenaltyRateAddModal extends Component
         DB::beginTransaction();
         try {
             foreach ($this->configs as $config) {
-                PenaltyRate::create([
-                    'financial_year_id' => $this->financial_year_id,
+               $penalty_rate = PenaltyRate::create([
+                    'financial_year_id' => 72,
                     'code' => $config['code'],
                     'name' => $config['name'],
                     'rate' => $config['rate'],
                 ]);
+                $this->triggerDualControl(get_class($penalty_rate), $penalty_rate->id, DualControl::ADD, 'adding penalty rate');
             }
-            
+
             DB::commit();
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

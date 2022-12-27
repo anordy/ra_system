@@ -3,7 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Country;
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -12,7 +15,7 @@ use Livewire\Component;
 class CountryAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $code;
     public $name;
@@ -36,17 +39,20 @@ class CountryAddModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try{
-            Country::create([
+            $country = Country::create([
                 'code' => $this->code,
                 'name' => $this->name,
                 'nationality' => $this->nationality,
             ]);
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            $this->triggerDualControl(get_class($country), $country->id, DualControl::ADD, 'adding country');
+            DB::commit();
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
+            DB::beginTransaction();
             Log::error($e);
-
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE);
         }
     }
 

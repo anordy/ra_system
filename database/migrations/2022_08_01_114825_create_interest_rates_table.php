@@ -18,7 +18,9 @@ class CreateInterestRatesTable extends Migration
             $table->decimal('rate');
             $table->integer('year');
             $table->boolean('is_approved')->default(0);
+            $table->boolean('is_updated')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

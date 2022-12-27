@@ -28,6 +28,8 @@ class TaxTypeTable extends DataTableComponent
             return BusinessTaxTypeChange::where('business_tax_type_changes.status', BranchStatus::APPROVED)->orderBy('business_tax_type_changes.created_at', 'DESC');
         } else if ($this->status == BranchStatus::REJECTED) {
             return BusinessTaxTypeChange::where('business_tax_type_changes.status', BranchStatus::REJECTED)->orderBy('business_tax_type_changes.created_at', 'DESC');
+        } else if ($this->status != BranchStatus::APPROVED) {
+            return BusinessTaxTypeChange::where('business_tax_type_changes.status', '!=', BranchStatus::APPROVED)->orderBy('business_tax_type_changes.created_at', 'DESC');
         }
     }
 

@@ -27,6 +27,7 @@ class DualControlActivityController extends Controller
             abort(403);
         }
         $result = DualControl::findOrFail(decrypt($id));
+
         $data = $this->getAllDetails($result->controllable_type, encrypt($result->controllable_type_id));
         $old_values = json_decode($result->old_values);
         $new_values = '';
@@ -49,8 +50,12 @@ class DualControlActivityController extends Controller
 
     public function getRoleName($id)
     {
-        $role = Role::query()->findOrFail($id);
-        return $role->name;
+        if (!empty($id))
+        {
+            $role = Role::query()->findOrFail($id);
+            return $role->name;
+        }
+
     }
 
 

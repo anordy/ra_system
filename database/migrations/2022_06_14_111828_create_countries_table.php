@@ -18,7 +18,9 @@ class CreateCountriesTable extends Migration
             $table->string('code')->nullable();
             $table->string('name')->unique();
             $table->string('nationality');
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

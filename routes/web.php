@@ -48,7 +48,6 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\QRCodeGeneratorController;
-use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\Finances\FinanceController;
@@ -211,12 +210,6 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
 
     Route::name('returns.')->prefix('returns')->group(function () {
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
-
-        Route::name('returns.')->prefix('returns')->group(function () {
-            Route::name('returns.')->prefix('returns')->group(function () {
-                Route::get('/', [ReturnsController::class, 'index'])->name('index');
-            });
-        });
     });
     Route::name('verification.')->prefix('verification')->group(function () {
         Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');

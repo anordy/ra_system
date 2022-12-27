@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Settings\InterestRate;
 
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Livewire\Component;
 use App\Models\InterestRate;
@@ -11,7 +13,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class InterestRateAddModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $year;
     public $rate;
@@ -33,10 +35,12 @@ class InterestRateAddModal extends Component
         }
         $this->validate();
         try {
-            InterestRate::create([
+            $interest_rate  = InterestRate::create([
                 'year' => $this->year,
                 'rate' => $this->rate,
             ]);
+            $this->triggerDualControl(get_class($interest_rate), $interest_rate->id, DualControl::ADD, 'adding interest rate');
+
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);

@@ -29,6 +29,7 @@ class ZrbBankAccountEditModal extends Component
     public $currency_iso;
     public $banks;
     public $currencies;
+    public $old_values;
 
     protected $rules = [
         'account_name' => 'required',
@@ -55,6 +56,16 @@ class ZrbBankAccountEditModal extends Component
         $this->swift_code = $this->zrbBankAccount->swift_code;
         $this->account_number = $this->zrbBankAccount->account_number;
 
+        $this->old_values = [
+            'bank_id' => $this->bank_id,
+            'account_name' => $this->account_name,
+            'branch_name' => $this->branch_name,
+            'swift_code' => $this->swift_code,
+            'account_number' => $this->account_number,
+            'currency_id' => $this->zrbBankAccount->id,
+            'currency_iso' => $this->zrbBankAccount->iso,
+        ];
+
         $this->currencies = Currency::select('id', 'iso')->get();
         $this->banks = Bank::select('id', 'name')->get();
     }
@@ -69,7 +80,16 @@ class ZrbBankAccountEditModal extends Component
         $currency = json_decode($this->currency);
         DB::beginTransaction();
         try {
-            $this->zrbBankAccount->update([
+            // $this->zrbBankAccount->update([
+            //     'bank_id' => $this->bank_id,
+            //     'account_name' => $this->account_name,
+            //     'branch_name' => $this->branch_name,
+            //     'swift_code' => $this->swift_code,
+            //     'account_number' => $this->account_number,
+            //     'currency_id' => $currency->id,
+            //     'currency_iso' => $currency->iso,
+            // ]);
+            $payload = [
                 'bank_id' => $this->bank_id,
                 'account_name' => $this->account_name,
                 'branch_name' => $this->branch_name,
@@ -77,11 +97,11 @@ class ZrbBankAccountEditModal extends Component
                 'account_number' => $this->account_number,
                 'currency_id' => $currency->id,
                 'currency_iso' => $currency->iso,
-            ]);
-            $this->triggerDualControl(get_class($this->zrbBankAccount), $this->zrbBankAccount->id, DualControl::EDIT, 'edit zrb bank account');
+            ];
+            $this->triggerDualControl(get_class($this->zrbBankAccount), $this->zrbBankAccount->id, DualControl::EDIT, 'editing zrb bank account', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', 'Record edited successfully');
-            $this->flash('success', 'Record edited successfully', [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>10000]);
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
