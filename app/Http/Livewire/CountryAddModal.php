@@ -48,11 +48,13 @@ class CountryAddModal extends Component
             ]);
             $this->triggerDualControl(get_class($country), $country->id, DualControl::ADD, 'adding country');
             DB::commit();
-            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.country.index');
         }catch(Exception $e){
-            DB::beginTransaction();
+            DB::rollBack();
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE);
+            $this->alert('success', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.country.index');
         }
     }
 

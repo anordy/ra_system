@@ -71,11 +71,13 @@ class WardEditModal extends Component
             ];
             $this->triggerDualControl(get_class($this->ward), $this->ward->id, DualControl::EDIT, 'editing ward', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('error', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.ward.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.ward.index');
         }
     }
 

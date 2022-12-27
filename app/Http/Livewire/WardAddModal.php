@@ -60,11 +60,13 @@ class WardAddModal extends Component
             ]);
             DB::commit();
             $this->triggerDualControl(get_class($ward), $ward->id, DualControl::ADD, 'adding ward');
-            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.ward.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.ward.index');
         }
     }
 

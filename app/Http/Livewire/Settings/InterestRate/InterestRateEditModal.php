@@ -57,10 +57,12 @@ class InterestRateEditModal extends Component
             $this->triggerDualControl(get_class($this->interestRate), $this->interestRate->id, DualControl::EDIT, 'editing interest rate', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
-            return;
+            return redirect()->route('settings.interest-rates.index');
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.interest-rates.index');
         }
     }
 

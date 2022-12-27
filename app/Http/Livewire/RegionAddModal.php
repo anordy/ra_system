@@ -46,11 +46,13 @@ class RegionAddModal extends Component
             ]);
             $this->triggerDualControl(get_class($region), $region->id, DualControl::ADD, 'adding region');
             DB::commit();
-            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.region.index');
         }catch(Exception $e){
-            Log::error($e .', '. Auth::user());
             DB::rollBack();
-            $this->alert('error', DualControl::ERROR_MESSAGE);
+            Log::error($e .', '. Auth::user());
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.region.index');
         }
     }
 

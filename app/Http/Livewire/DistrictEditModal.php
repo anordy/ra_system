@@ -48,12 +48,12 @@ class DistrictEditModal extends Component
             ];
             $this->triggerDualControl(get_class($this->district), $this->district->id, DualControl::EDIT, 'editing district', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.district.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.district.index');
         }
     }
