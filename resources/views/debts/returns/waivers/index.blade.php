@@ -12,12 +12,16 @@
         <div class="card-body mt-0 p-2">
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#pending-approval" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
+                <a href="#progress-businesses" class="nav-item nav-link font-weight-bold">Approval Progress</a>
                 <a href="#all-businesses" class="nav-item nav-link font-weight-bold">All Waivers</a>
             </nav>
 
             <div class="tab-content px-2 pt-3 pb-2 border border-top-0">
                 <div id="pending-approval" class="tab-pane fade active show m-2">
                     <livewire:debt.waiver.debt-waiver-approval-table />
+                </div>
+                <div id="progress-businesses" class="tab-pane fade m-2">
+                    <livewire:debt.waiver.debt-waiver-aproval-progress-table />
                 </div>
                 <div id="all-businesses" class="tab-pane fade m-2">
                     <livewire:debt.waiver.debt-waiver-table />
