@@ -37,14 +37,14 @@ class WardEditModal extends Component
     {
         $this->regions = Region::select('id', 'name')->get();
         $this->ward = Ward::find($id);
-        $this->old_values = [
-            'name' => $this->name,
-            'district_id' => $this->district_id,
-        ];
         $this->name = $this->ward->name;
         $this->district_id = $this->ward->district_id;
         $this->region_id = $this->ward->district->region->id;
         $this->districts = District::where('region_id', $this->region_id)->select('id', 'name')->get();
+        $this->old_values = [
+            'name' => $this->name,
+            'district_id' => $this->district_id,
+        ];
     }
 
     public function updated($propertyName)

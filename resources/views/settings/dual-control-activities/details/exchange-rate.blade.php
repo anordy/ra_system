@@ -13,13 +13,23 @@
         <div class="card-body">
             <div class="row m-2 pt-3">
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}</p>
+                    <span class="font-weight-bold text-uppercase">Mean</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->mean : $old_values->mean }}</p>
                 </div>
 
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Report To</span>
-                    <p class="my-1">{{ $report_to_old ?? '-'}}</p>
+                    <span class="font-weight-bold text-uppercase">Spot Buying</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->spot_buying : $old_values->spot_buying }}</p>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Spot Selling</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->spot_selling : $old_values->spot_selling }}</p>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Exchange Date</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->exchange_date : $old_values->exchange_date }}</p>
                 </div>
 
             </div>
@@ -32,22 +42,23 @@
             <div class="card-body">
                 <div class="row m-2 pt-3">
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Name</span>
-                        @if(!compareEditedValues($old_values->name,$new_values->name ))
-                            <p class="my-1 text-danger">{{ $new_values->name }}</p>
-                        @else
-                            <p class="my-1">{{ $new_values->name }}</p>
-                        @endif
+                        <span class="font-weight-bold text-uppercase">Mean</span>
+                        <p class="my-1">{{ $new_values->mean }}</p>
                     </div>
 
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Report To</span>
-                        @if(!compareEditedValues($report_to_old,$report_to_new ))
-                            <p class="my-1 text-danger">{{ $report_to_new }}</p>
-                        @else
-                            <p class="my-1">{{ $report_to_new }}</p>
-                        @endif
+                        <span class="font-weight-bold text-uppercase">Spot Buying</span>
+                        <p class="my-1">{{ $new_values->spot_buying }}</p>
+                    </div>
 
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Spot Selling</span>
+                        <p class="my-1">{{ $new_values->spot_selling }}</p>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Exchange Date</span>
+                        <p class="my-1">{{ $new_values->exchange_date }}</p>
                     </div>
                 </div>
             </div>

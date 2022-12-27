@@ -22,6 +22,7 @@ class DistrictEditModal extends Component
     public $region_id;
     public $regions;
     public $district;
+    public $old_values;
 
 
     protected function rules()
@@ -47,11 +48,13 @@ class DistrictEditModal extends Component
             ];
             $this->triggerDualControl(get_class($this->district), $this->district->id, DualControl::EDIT, 'editing district', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE);
+            return redirect()->route('settings.district.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
             $this->alert('error', DualControl::ERROR_MESSAGE);
+            return redirect()->route('settings.district.index');
         }
     }
 
@@ -63,6 +66,10 @@ class DistrictEditModal extends Component
         $this->district = District::find($id);
         $this->name = $this->district->name;
         $this->region_id = $this->district->region_id;
+        $this->old_values = [
+            'name' => $this->name,
+            'region_id' => $this->region_id,
+        ];
     }
 
     public function render()

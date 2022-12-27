@@ -56,7 +56,7 @@ class DistrictTable extends DataTableComponent
 
                     if (Gate::allows('setting-district-edit')) {
                         $edit = <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'district-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                         HTML;
                     }
 
