@@ -21,7 +21,6 @@ class CreateExchangeRatesTable extends Migration
             $table->date('exchange_date');
             $table->boolean('is_approved')->default(0);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
