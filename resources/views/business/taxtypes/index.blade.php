@@ -11,9 +11,10 @@
         </div>
         <div class="card-body mt-0 p-2">
             <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#tab1" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
-                <a href="#tab2" class="nav-item nav-link font-weight-bold">Confirmed Changes</a>
-                <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Changes</a>
+                <a href="#tab1" class="nav-item nav-link font-weight-bold active">Pending Approvals</a>
+                <a href="#tab2" class="nav-item nav-link font-weight-bold">On Progress Approvals</a>
+                <a href="#tab3" class="nav-item nav-link font-weight-bold">Confirmed Changes</a>
+                <a href="#tab4" class="nav-item nav-link font-weight-bold">Rejected Changes</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show card p-2">
@@ -23,6 +24,9 @@
                     <livewire:business.tax-type.tax-type-table status='approved'></livewire:business.tax-type.tax-type-table>
                 </div>
                 <div id="tab3" class="tab-pane fade card p-2">
+                    <livewire:business.tax-type.tax-type-table status='approved'></livewire:business.tax-type.tax-type-table>
+                </div>
+                <div id="tab4" class="tab-pane fade card p-2">
                     <livewire:business.tax-type.tax-type-table status='rejected'></livewire:business.tax-type.tax-type-table>
                 </div>
             </div>

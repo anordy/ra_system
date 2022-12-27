@@ -4,20 +4,22 @@
         <div class="card-header">
             @if($result->action == \App\Models\DualControl::ADD)
                 Added Values
-            @else
+            @elseif($result->action == \App\Models\DualControl::EDIT)
                 Old Values
+            @else
+                Values
             @endif
         </div>
         <div class="card-body">
             <div class="row m-2 pt-3">
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->name : $old_values->name }}</p>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}</p>
                 </div>
 
                 <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Report To</span>
-                    <p class="my-1">{{ $report_to_old }}</p>
+                    <p class="my-1">{{ $report_to_old ?? '-'}}</p>
                 </div>
 
             </div>
@@ -31,12 +33,21 @@
                 <div class="row m-2 pt-3">
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Name</span>
-                        <p class="my-1">{{ $new_values->name }}</p>
+                        @if(!compareEditedValues($old_values->name,$new_values->name ))
+                            <p class="my-1 text-danger">{{ $new_values->name }}</p>
+                        @else
+                            <p class="my-1">{{ $new_values->name }}</p>
+                        @endif
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Report To</span>
-                        <p class="my-1">{{ $report_to_new }}</p>
+                        @if(!compareEditedValues($report_to_old,$report_to_new ))
+                            <p class="my-1 text-danger">{{ $report_to_new }}</p>
+                        @else
+                            <p class="my-1">{{ $report_to_new }}</p>
+                        @endif
+
                     </div>
                 </div>
             </div>
