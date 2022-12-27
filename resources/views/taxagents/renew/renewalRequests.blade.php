@@ -14,6 +14,10 @@
                        aria-controls="home" aria-selected="true">Pending Renew Request</a>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="progress-tab" data-toggle="tab" href="#progress" role="tab"
+                       aria-controls="progress" aria-selected="true">Progress Renew Request</a>
+                </li>
+                <li class="nav-item" role="presentation">
                     <a class="nav-link" id="approved-tab" data-toggle="tab" href="#approved" role="tab"
                        aria-controls="profile" aria-selected="false">Approved Renew Requests</a>
                 </li>
@@ -21,9 +25,11 @@
 
             <div class="tab-content card" id="myTabContent">
 
-                <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
-
+                <div class="tab-pane p-2 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <livewire:tax-agent.renew.pending-table />
+                </div>
+                <div class="tab-pane p-2" id="progress" role="tabpanel" aria-labelledby="progress-tab">
+                    <livewire:tax-agent.renew.progress-table />
                 </div>
                 <div class="tab-pane p-2" id="approved" role="tabpanel" aria-labelledby="approved-tab">
 

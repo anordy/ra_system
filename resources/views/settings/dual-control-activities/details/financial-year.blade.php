@@ -13,14 +13,15 @@
         <div class="card-body">
             <div class="row m-2 pt-3">
                 <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Year</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->code : $old_values->code }}</p>
+                </div>
+
+                <div class="col-md-3 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
                     <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}</p>
                 </div>
 
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Report To</span>
-                    <p class="my-1">{{ $report_to_old ?? '-'}}</p>
-                </div>
 
             </div>
         </div>
@@ -32,13 +33,13 @@
             <div class="card-body">
                 <div class="row m-2 pt-3">
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Name</span>
-                        <p class="my-1">{{ $new_values->name }}</p>
+                        <span class="font-weight-bold text-uppercase">Year</span>
+                        <p class="my-1">{{ $new_values->code }}</p>
                     </div>
 
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Report To</span>
-                        <p class="my-1">{{ $report_to_new }}</p>
+                        <span class="font-weight-bold text-uppercase">Name</span>
+                        <p class="my-1">{{ $new_values->name }}</p>
                     </div>
                 </div>
             </div>

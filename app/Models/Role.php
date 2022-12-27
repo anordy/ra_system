@@ -8,7 +8,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Role extends Model implements Auditable
 {
-    use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable, SoftDeletes;
 
     protected $fillable = [
         'name', 'report_to'

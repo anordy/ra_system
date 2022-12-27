@@ -62,14 +62,15 @@ class UserEditModal extends Component
             if (!$this->verify($this->user)){
                 throw new Exception('Could not verify user information.');
             }
-
-            $this->user->update([
+            $payload = [
                 'fname' => $this->fname,
                 'lname' => $this->lname,
                 'gender' => $this->gender,
                 'email' => $this->email,
                 'phone' => $this->phone,
-            ]);
+            ];
+
+//            $this->user->update($payload);
 
             if (!$this->sign($this->user)){
                 throw new Exception('Could not update user information.');

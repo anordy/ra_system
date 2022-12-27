@@ -17,13 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 trait DualControlActivityTrait
 {
-    public function triggerDualControl(
-        $model,
-        $modelId,
-        $action,
-        $action_detail,
-        $old_values = null,
-        $edited_values = null)
+    public function triggerDualControl($model, $modelId, $action, $action_detail, $old_values = null, $edited_values = null)
     {
         $payload = [
             'controllable_type' => $model,
@@ -37,12 +31,12 @@ trait DualControlActivityTrait
         ];
         DualControl::updateOrCreate($payload);
         $data = $model::findOrFail($modelId);
-//        if ($action == DualControl::EDIT) {
-//            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
-//        }
-//        if ($action == DualControl::DELETE) {
-//            $data->update(['is_deleted' => DualControl::NOT_APPROVED]);
-//        }
+        if ($action == DualControl::EDIT) {
+            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
+        }
+        if ($action == DualControl::DELETE) {
+            $data->update(['is_deleted' => DualControl::NOT_APPROVED]);
+        }
     }
 
     public function getModule($model)
@@ -69,6 +63,26 @@ trait DualControlActivityTrait
             case DualControl::TRANSFER_FEE:
                 return 'Transfer Fee';
                 break;
+            case DualControl::FINANCIAL_YEAR:
+                return 'Financial Year';
+                break;
+
+            case DualControl::FINANCIAL_MONTH:
+                return 'Financial Month';
+                break;
+            case DualControl::SEVEN_FINANCIAL_MONTH:
+                return 'Seven Days Financial Month';
+                break;
+            case DualControl::PENALTY_RATE:
+                return 'Penalty Rate';
+                break;
+            case DualControl::INTEREST_RATE:
+                return 'Interest Rate';
+                break;
+
+            case DualControl::ZRBBANKACCOUNT:
+                return 'Zrb Bank Account';
+                break;
 
             default:
                 abort(404);
@@ -88,18 +102,23 @@ trait DualControlActivityTrait
         if ($data->action == DualControl::ADD) {
             $update->update(['is_approved' => $status]);
         } elseif ($data->action == DualControl::EDIT) {
-            $payload = json_decode($data->old_values);
-            $payload = (array)$payload;
-            if ($status == DualControl::REJECT) {
+            $payload = json_decode($data->new_values);
+            $payload = (array) $payload;
+            if ($status == DualControl::APPROVE) {
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
             } else {
                 $update->update(['is_updated' => $status]);
             }
         } elseif ($data->action == DualControl::DELETE) {
-            $update->update(['is_deleted' => $status]);
+            if ($status == DualControl::APPROVE) {
+                $update->delete();
+            }
+        } elseif ($data->action == DualControl::DEACTIVATE || $data->action == DualControl::ACTIVATE) {
+            if ($status == DualControl::APPROVE) {
+                $payload = (array) json_decode($data->new_values);
+                $update->update($payload);
+            }
         }
-
     }
-
 }

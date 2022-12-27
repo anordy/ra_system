@@ -33,6 +33,14 @@ class DualControl extends Model
     public const INTEREST_RATE = InterestRate::class;
     public const PENALTY_RATE = PenaltyRate::class;
     public const TRANSFER_FEE = TransactionFee::class;
+    public const ZRBBANKACCOUNT = ZrbBankAccount::class;
+    public const FINANCIAL_YEAR = FinancialYear::class;
+    public const FINANCIAL_MONTH = FinancialMonth::class;
+    public const SEVEN_FINANCIAL_MONTH = SevenDaysFinancialMonth::class;
+
+    //Messages
+    public const SUCCESS_MESSAGE = 'Updated data successfully submitted, Please wait for checker to approve';
+    public const ERROR_MESSAGE = 'Something went wrong, Please contact the administrator for help';
 
     public function moduleForBlade($model)
     {
