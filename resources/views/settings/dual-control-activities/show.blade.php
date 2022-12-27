@@ -19,7 +19,8 @@
                     <div class="row m-2 pt-3">
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Affected Module</span>
-                            <p class="my-1">{{ (new \App\Models\DualControl())->moduleForBlade($result->controllable_type) }}</p>
+                            <p class="my-1">
+                                {{ (new \App\Models\DualControl())->moduleForBlade($result->controllable_type) }}</p>
                         </div>
 
                         <div class="col-md-3 mb-3">
@@ -54,13 +55,16 @@
                 @include('settings.dual-control-activities.details.consultant-fee')
             @elseif ($result->controllable_type === \App\Models\DualControl::FINANCIAL_YEAR)
                 @include('settings.dual-control-activities.details.financial-year')
-            @elseif ($result->controllable_type === \App\Models\DualControl::FINANCIAL_MONTH || $result->controllable_type === \App\Models\DualControl::SEVEN_FINANCIAL_MONTH)
+            @elseif ($result->controllable_type === \App\Models\DualControl::FINANCIAL_MONTH ||
+                $result->controllable_type === \App\Models\DualControl::SEVEN_FINANCIAL_MONTH)
                 @include('settings.dual-control-activities.details.financial-month')
+            @elseif ($result->controllable_type === \App\Models\DualControl::ZRBBANKACCOUNT)
+                @include('settings.dual-control-activities.details.zrb-bank-account')
             @endif
 
             <div class="d-flex justify-content-end">
-                @if(approvalLevel(Auth::user()->level_id, 'Checker'))
-                    <livewire:settings.dual-control-activity.approve dual_control_id="{{encrypt($result->id)}}"/>
+                @if (approvalLevel(Auth::user()->level_id, 'Checker'))
+                    <livewire:settings.dual-control-activity.approve dual_control_id="{{ encrypt($result->id) }}" />
                 @endif
             </div>
         </div>

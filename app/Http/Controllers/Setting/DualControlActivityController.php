@@ -54,7 +54,6 @@ class DualControlActivityController extends Controller
             $role = Role::query()->findOrFail($id);
             return $role->name;
         }
-
     }
 
 

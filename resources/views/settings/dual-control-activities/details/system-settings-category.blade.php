@@ -10,7 +10,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <span class="font-weight-bold text-uppercase">Description</span>
-                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->descrtion : $old_values->description }}</p>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->description : $old_values->description }}</p>
                 </div>
 
             </div>
