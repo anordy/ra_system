@@ -17,30 +17,40 @@ class RegionSeeder extends Seeder
         $regions = [
             [
                 'name' => 'Kaskazini Unguja',
-                'location' => 'unguja'
+                'location' => 'unguja',
+                'is_approved' => 1
             ],
             [
                 'name' => 'Kaskazini Pemba',
-                'location' => 'pemba'
-            ],
+                'location' => 'pemba',
+                'is_approved' => 1
+,
+                ],
             [
                 'name' => 'Kusini Unguja',
-                'location' => 'unguja'
+                'location' => 'unguja',
+                'is_approved' => 1
+
             ],
             [
                 'name' => 'Kusini Pemba',
-                'location' => 'pemba'
-            ],
+                'location' => 'pemba',
+                'is_approved' => 1
+,
+                ],
             [
                 'name' => 'Mjini Magharibi',
-                'location' => 'unguja'
+                'location' => 'unguja',
+                'is_approved' => 1
+
             ],
         ];
 
         foreach($regions as $region){
             Region::updateOrCreate([
                 'name' => $region['name'],
-                'location' => $region['location']
+                'location' => $region['location'],
+                'is_approved' => $region['is_approved']
             ]);
         }
     }

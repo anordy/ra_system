@@ -49,6 +49,24 @@ class DistrictTable extends DataTableComponent
             Column::make('Region', 'region.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
             Column::make('Action', 'id')
                 ->format(function ($value){
                     $edit = '';
