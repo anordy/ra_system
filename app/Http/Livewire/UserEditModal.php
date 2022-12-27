@@ -37,7 +37,6 @@ class UserEditModal extends Component
             'lname' => 'required|min:2|alpha',
             'email' => 'required|unique:users,email,' . $this->user->id . ',id',
             'gender' => 'required|in:M,F',
-            // 'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
         ];
     }
@@ -54,12 +53,9 @@ class UserEditModal extends Component
         }
 
         $this->validate();
-
-
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-
-            if (!$this->verify($this->user)){
+            if (!$this->verify($this->user)) {
                 throw new Exception('Could not verify user information.');
             }
             $payload = [
@@ -69,21 +65,16 @@ class UserEditModal extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
             ];
-
-//            $this->user->update($payload);
-
-            if (!$this->sign($this->user)){
+            if (!$this->sign($this->user)) {
                 throw new Exception('Could not update user information.');
             }
-
             $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user', json_encode($this->old_values), json_encode($payload));
-
             DB::commit();
-            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE);
         }
     }
 

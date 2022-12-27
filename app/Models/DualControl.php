@@ -42,6 +42,7 @@ class DualControl extends Model
     public const DISTRICT = District::class;
     public const WARD = Ward::class;
     public const EXCHANGE_RATE = ExchangeRate::class;
+    public const TAX_TYPE = TaxType::class;
 
     //Messages
     public const SUCCESS_MESSAGE = 'Updated data successfully submitted, Please wait for checker to approve';
