@@ -3,14 +3,15 @@
 namespace App\Http\Livewire\Business\Closure;
 
 use App\Models\BusinessStatus;
-use Carbon\Carbon;
 use App\Models\BusinessTempClosure;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Rappasoft\LaravelLivewireTables\Views\Column;
+use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class PendingClosuresTable extends DataTableComponent
+class ClosureApprovalProgressTable extends DataTableComponent
 {
     use LivewireAlert;
 
@@ -30,7 +31,7 @@ class PendingClosuresTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessTempClosure::query()->where('business_temp_closures.status', BusinessStatus::PENDING)->orderBy('business_temp_closures.created_at', 'DESC');
+        return BusinessTempClosure::query()->where('business_temp_closures.status', '!=', BusinessStatus::APPROVED)->orderBy('business_temp_closures.created_at', 'DESC');
     }
 
     public function columns(): array
@@ -80,5 +81,4 @@ class PendingClosuresTable extends DataTableComponent
                 ->view('business.closure.action'),
         ];
     }
-
 }

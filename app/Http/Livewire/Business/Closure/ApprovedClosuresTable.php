@@ -3,8 +3,6 @@
 namespace App\Http\Livewire\Business\Closure;
 
 use App\Models\BranchStatus;
-use App\Models\BusinessStatus;
-use Exception;
 use Carbon\Carbon;
 use App\Models\BusinessTempClosure;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,7 +22,6 @@ class ApprovedClosuresTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['is_extended']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -33,7 +30,7 @@ class ApprovedClosuresTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessTempClosure::query()->whereIn('business_temp_closures.status', [BranchStatus::APPROVED, BranchStatus::DE_REGISTERED, BranchStatus::TEMP_CLOSED, 'cancelled'])->orderBy('business_temp_closures.opening_date', 'DESC');
+        return BusinessTempClosure::query()->whereIn('business_temp_closures.status', [BranchStatus::APPROVED])->orderBy('business_temp_closures.opening_date', 'DESC');
     }
 
     public function columns(): array
