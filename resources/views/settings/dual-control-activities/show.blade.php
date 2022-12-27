@@ -71,7 +71,9 @@
 
             <div class="d-flex justify-content-end">
                 @if(approvalLevel(Auth::user()->level_id, 'Checker'))
+                    @if($result->status == 'pending')
                     <livewire:settings.dual-control-activity.approve dual_control_id="{{encrypt($result->id)}}"/>
+                    @endif
                 @endif
             </div>
         </div>
