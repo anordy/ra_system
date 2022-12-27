@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Role;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RolesTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     protected $model = Role::class;
     public function configure(): void
@@ -65,7 +67,7 @@ class RolesTable extends DataTableComponent
                     }
                     if (Gate::allows('setting-role-delete')) {
                         $delete =  <<< HTML
-                                <button class="btn btn-danger btn-sm" onclick="Livewire.emit('showModal', 'role-delete-modal',$value)"><i class="fa fa-trash"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                             HTML;
                     }
 
@@ -101,11 +103,13 @@ class RolesTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            Role::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $role = Role::find($data->id);
+            $this->triggerDualControl(get_class($role), $role->id, DualControl::DELETE, 'deleting role');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

@@ -37,12 +37,12 @@ trait DualControlActivityTrait
         ];
         DualControl::updateOrCreate($payload);
         $data = $model::findOrFail($modelId);
-//        if ($action == DualControl::EDIT) {
-//            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
-//        }
-//        if ($action == DualControl::DELETE) {
-//            $data->update(['is_deleted' => DualControl::NOT_APPROVED]);
-//        }
+        if ($action == DualControl::EDIT) {
+            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
+        }
+        if ($action == DualControl::DELETE) {
+            $data->update(['is_deleted' => DualControl::NOT_APPROVED]);
+        }
     }
 
     public function getModule($model)
@@ -88,17 +88,25 @@ trait DualControlActivityTrait
         if ($data->action == DualControl::ADD) {
             $update->update(['is_approved' => $status]);
         } elseif ($data->action == DualControl::EDIT) {
-            $payload = json_decode($data->old_values);
+            $payload = json_decode($data->new_values);
             $payload = (array)$payload;
-            if ($status == DualControl::REJECT) {
+            if ($status == DualControl::APPROVE) {
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
             } else {
                 $update->update(['is_updated' => $status]);
             }
         } elseif ($data->action == DualControl::DELETE) {
-            $update->update(['is_deleted' => $status]);
+            if ($status == DualControl::APPROVE) {
+                $update->delete();
+            }
+        } elseif ($data->action == DualControl::DEACTIVATE || $data->action == DualControl::ACTIVATE) {
+            if ($status == DualControl::APPROVE) {
+                $payload = (array)json_decode($data->new_values);
+                $update->update($payload);
+            }
         }
+
 
     }
 

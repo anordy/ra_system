@@ -6,11 +6,11 @@
             <div class="row m-2 pt-3">
                 <div class="col-md-6 mb-3">
                     <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->name : $old_values->name }}</p>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}</p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <span class="font-weight-bold text-uppercase">Description</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->descrtion : $old_values->description }}</p>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->descrtion : $old_values->description }}</p>
                 </div>
 
             </div>

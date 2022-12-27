@@ -4,8 +4,10 @@
         <div class="card-header">
             @if($result->action == \App\Models\DualControl::ADD)
                 Added Values
-            @else
+            @elseif($result->action == \App\Models\DualControl::EDIT)
                 Old Values
+            @else
+                Values
             @endif
         </div>
         <div class="card-body">

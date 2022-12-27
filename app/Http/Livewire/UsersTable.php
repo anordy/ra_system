@@ -3,11 +3,15 @@
 namespace App\Http\Livewire;
 
 use App\Models\Audit;
+use App\Models\DualControl;
+use App\Models\Role;
 use App\Models\User;
 use App\Traits\AuditTrait;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use id;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -15,7 +19,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersTable extends DataTableComponent
 {
-    use LivewireAlert, AuditTrait,ThrottlesLogins;
+    use LivewireAlert, AuditTrait,ThrottlesLogins, DualControlActivityTrait;
 
     protected $model = User::class;
     public function configure(): void
@@ -190,22 +194,25 @@ class UsersTable extends DataTableComponent
 
     public function toggleStatus($value)
     {
+        DB::beginTransaction();
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
             if ($user->status == 1) {
-                $user->status = 0;
-                $user->save();
                 $this->triggerAudit(User::class, Audit::DEACTIVATED, 'deactivate_user', $user->id, ['status' => 1], ['status' => 0]);
+                $this->triggerDualControl(get_class($user), $user->id, DualControl::DEACTIVATE, 'deactivating user', json_encode(['status' => 1]), json_encode(['status' =>0]));
             } else {
-                $user->status = 1;
-                $user->auth_attempt = 0;
-                $user->save();
                 $this->triggerAudit(User::class, Audit::ACTIVATED, 'activate_user', $user->id, ['status' => 0], ['status' => 1]);
+                $this->triggerDualControl(get_class($user), $user->id, DualControl::ACTIVATE, 'activating user', json_encode(['status' => 0]), json_encode(['status' => 1, 'auth_attempt' => 0]));
+
             }
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
+            DB::rollBack();
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
@@ -213,11 +220,13 @@ class UsersTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            User::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $user = User::find($data->id);
+            $this->triggerDualControl(get_class($user), $user->id, DualControl::DELETE, 'deleting user');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }
