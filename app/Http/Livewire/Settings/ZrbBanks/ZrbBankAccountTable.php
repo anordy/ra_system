@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Settings\ZrbBanks;
 
+use App\Models\DualControl;
 use App\Models\ZrbBankAccount;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -13,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ZrbBankAccountTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -113,18 +115,10 @@ class ZrbBankAccountTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TODO: //ADD DUAL CONTROL
             $zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($data->id));
-            $zrbBankAccount->delete();
-            $this->alert('success', 'Record deleted successfully');
-            $this->flash(
-                'success',
-                'Record deleted successfully',
-                [],
-                redirect()
-                    ->back()
-                    ->getTargetUrl(),
-            );
+            $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::DELETE, 'deleting zrb bank account');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
             $this->alert('warning', 'Something whent wrong!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
