@@ -97,3 +97,10 @@ function approvalLevel($level_id, $level_name)
     }
     return false;
 }
+
+function compareEditedValues($old_values, $new_values)
+{
+    $old_values = strtolower($old_values);
+    $new_values = strtolower($new_values);
+    return $old_values === $new_values ? true : false;
+}

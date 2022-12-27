@@ -47,11 +47,12 @@ class RoleEditModal extends Component
             $this->triggerDualControl(get_class($this->role), $this->role->id, DualControl::EDIT, 'editing role', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
-            return;
+            return redirect()->route('settings.roles.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
             $this->alert('error', DualControl::ERROR_MESSAGE);
+            return redirect()->route('settings.roles.index');
         }
     }
 
