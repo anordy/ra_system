@@ -25,7 +25,7 @@ class InterestRateEditModal extends Component
     {
         return [
             'rate' => 'required',
-            'year' => 'required|unique:interest_rates,year,'.$this->interestRate->id,
+            'year' => 'required|unique:interest_rates,year,' . $this->interestRate->id,
         ];
     }
 
@@ -48,21 +48,22 @@ class InterestRateEditModal extends Component
             abort(403);
         }
         $this->validate();
+        $payload = [
+            'rate' => $this->rate,
+            'year' => $this->year,
+        ];
+        DB::beginTransaction();
         try {
-            $payload = [
-                'rate' => $this->rate,
-                'year' => $this->year,
-            ];
-//            $this->interestRate->update($payload);
             $this->triggerDualControl(get_class($this->interestRate), $this->interestRate->id, DualControl::EDIT, 'editing interest rate', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;
         } catch (\Exception $e) {
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE,  ['timer'=>2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
         }
     }
+
     public function render()
     {
         return view('livewire.settings.interest-rate.edit-modal');

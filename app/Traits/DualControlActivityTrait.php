@@ -34,9 +34,7 @@ trait DualControlActivityTrait
         if ($action == DualControl::EDIT) {
             $data->update(['is_updated' => DualControl::NOT_APPROVED]);
         }
-        if ($action == DualControl::DELETE) {
-            $data->update(['is_deleted' => DualControl::NOT_APPROVED]);
-        }
+
     }
 
     public function getModule($model)
@@ -82,6 +80,23 @@ trait DualControlActivityTrait
 
             case DualControl::ZRBBANKACCOUNT:
                 return 'Zrb Bank Account';
+                break;
+            case DualControl::EXCHANGE_RATE:
+                return 'Exchange Rate';
+                break;
+
+            case DualControl::COUNTRY:
+                return 'Country';
+                break;
+
+            case DualControl::DISTRICT:
+                return 'District';
+                break;
+            case DualControl::REGION:
+                return 'Region';
+                break;
+            case DualControl::WARD:
+                return 'Ward';
                 break;
 
             default:

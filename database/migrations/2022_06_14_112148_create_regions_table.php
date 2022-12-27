@@ -18,7 +18,9 @@ class CreateRegionsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->enum('location', [Region::PEMBA, Region::UNGUJA]);
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

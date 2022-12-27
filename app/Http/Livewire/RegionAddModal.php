@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Region;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +16,7 @@ use Livewire\Component;
 class RegionAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $name, $location;
 
@@ -35,19 +37,20 @@ class RegionAddModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try{
             DB::beginTransaction();
-            Region::create([
+            $region = Region::create([
                 'name' => $this->name,
                 'location' => $this->location
             ]);
-
+            $this->triggerDualControl(get_class($region), $region->id, DualControl::ADD, 'adding region');
             DB::commit();
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             Log::error($e .', '. Auth::user());
             DB::rollBack();
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE);
         }
     }
 

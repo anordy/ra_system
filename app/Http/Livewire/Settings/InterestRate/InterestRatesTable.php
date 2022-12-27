@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Settings\InterestRate;
 
+use App\Models\DualControl;
+use App\Models\Role;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use App\Models\InterestRate;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class InterestRatesTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -87,11 +90,13 @@ class InterestRatesTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            InterestRate::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $rate = InterestRate::find($data->id);
+            $this->triggerDualControl(get_class($rate), $rate->id, DualControl::DELETE, 'deleting interest rate');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

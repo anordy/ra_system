@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\Models\Country;
 
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -13,11 +15,12 @@ use Livewire\Component;
 class CountryEditModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
     public $code;
     public $name;
     public $nationality;
     public $country;
+    public $old_values;
 
 
     protected function rules()
@@ -37,11 +40,12 @@ class CountryEditModal extends Component
 
         $this->validate();
         try {
-            $this->country->update([
+            $payload  = [
                 'code' => $this->code,
                 'name' => $this->name,
                 'nationality' => $this->nationality,
-            ]);
+            ];
+            $this->triggerDualControl(get_class($this->country), $this->country->id, DualControl::EDIT, 'editing country', json_encode($this->old_values), json_encode($payload));
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
@@ -51,11 +55,15 @@ class CountryEditModal extends Component
 
     public function mount($id)
     {
-        $data = Country::find($id);
-        $this->country = $data;
-        $this->code = $data->code;
-        $this->name = $data->name;
-        $this->nationality = $data->nationality;
+        $this->country = Country::find($id);
+        $this->code = $this->country->code;
+        $this->name = $this->country->name;
+        $this->nationality = $this->country->nationality;
+        $this->old_values = [
+            'code' => $this->code,
+            'name' => $this->name,
+            'nationality' => $this->nationality,
+        ];
     }
 
     public function render()

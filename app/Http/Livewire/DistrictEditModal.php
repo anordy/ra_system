@@ -3,9 +3,12 @@
 namespace App\Http\Livewire;
 
 use App\Models\District;
+use App\Models\DualControl;
 use App\Models\Region;
 
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -14,7 +17,7 @@ use Livewire\Component;
 class DistrictEditModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
     public $name;
     public $region_id;
     public $regions;
@@ -36,15 +39,19 @@ class DistrictEditModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try {
-            $this->district->update([
+            $payload = [
                 'name' => $this->name,
                 'region_id' => $this->region_id,
-            ]);
-            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
+            ];
+            $this->triggerDualControl(get_class($this->district), $this->district->id, DualControl::EDIT, 'editing district', json_encode($this->old_values), json_encode($payload));
+            DB::commit();
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE);
         }
     }
 
@@ -53,10 +60,9 @@ class DistrictEditModal extends Component
 
         $this->regions = Region::all();
 
-        $data = District::find($id);
-        $this->district = $data;
-        $this->name = $data->name;
-        $this->region_id = $data->region_id;
+        $this->district = District::find($id);
+        $this->name = $this->district->name;
+        $this->region_id = $this->district->region_id;
     }
 
     public function render()
