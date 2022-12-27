@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Returns;
 
 use App\Models\Currency;
-use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
 use App\Traits\ReturnConfigurationTrait;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +25,6 @@ class EditReturnConfig extends Component
     public $currency;
     public $rate;
     public $rate_usd;
-    public $old_values;
 
     public function mount()
     {
@@ -43,18 +41,6 @@ class EditReturnConfig extends Component
         $this->currency = $this->configs->currency;
         $this->rate = $this->configs->rate;
         $this->rate_usd = $this->configs->rate_usd;
-        $this->old_values = [
-            'id'=>$this->config_id,
-            'name'=>$this->name,
-            'row_type'=>$this->row_type,
-            'value_calculated'=>$this->value_calculated,
-            'col_type'=>$this->col_type,
-            'rate_applicable'=>$this->rate_applicable,
-            'rate_type'=>$this->rate_type,
-            'currency'=>$this->currency,
-            'rate'=>$this->rate,
-            'rate_usd'=>$this->rate_usd,
-        ];
     }
 
     public function update()
@@ -77,16 +63,16 @@ class EditReturnConfig extends Component
                 'rate'=>$this->rate,
                 'rate_usd'=>$this->rate_usd,
             ];
-            $this->triggerDualControl(get_class($this->configs), $this->configs->id, DualControl::EDIT, 'editing return configuration', json_encode($this->old_values), json_encode($payload));
+            $this->configs->update($payload);
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer'=>8000]);
+            $this->flash('success', 'Record updated successfully');
             redirect()->route('settings.return-config.show', encrypt($this->taxtype_id));
         }
         catch (\Throwable $exception)
         {
             DB::rollBack();
             Log::error($exception);
-            $this->alert('warning', DualControl::ERROR_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->flash('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
         }
     }
 
