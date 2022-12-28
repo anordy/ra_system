@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
 use Throwable;
@@ -42,6 +43,11 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof TokenMismatchException) {
            return redirect()->route('login');
+        }
+
+        if ($exception instanceof ModelNotFoundException){
+            $model = explode('\\', $exception->getModel());
+            abort(404, end($model));
         }
 
         return parent::render($request, $exception);
