@@ -45,11 +45,31 @@ class Approve extends Component
 
     }
 
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null
+
+        ]);
+    }
+
     public function reject()
     {
         if (!Gate::allows('setting-dual-control-activities-view')) {
             abort(403);
         }
+
         $req = DualControl::findOrFail($this->dual_control_id);
         if (!empty($req)) {
             DB::beginTransaction();

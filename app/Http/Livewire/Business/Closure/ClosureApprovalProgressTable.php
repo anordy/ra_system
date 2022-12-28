@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Business\Closure;
 
 use App\Models\BusinessStatus;
 use App\Models\BusinessTempClosure;
+use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -31,51 +32,48 @@ class ClosureApprovalProgressTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BusinessTempClosure::query()->where('business_temp_closures.status', '!=', BusinessStatus::APPROVED)->orderBy('business_temp_closures.created_at', 'DESC');
+        return WorkflowTask::with('pinstance', 'user')
+            ->where('pinstance_type', BusinessTempClosure::class)
+            ->where('status', '!=', 'completed')
+            ->where('owner', 'staff');
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Name', 'business.name')
+            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+            Column::make('Business Category', 'pinstance.category.name')
+                ->label(fn($row) => $row->pinstance->category->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
-            Column::make('Closure Type', 'closure_type')
-                ->sortable()
-                ->searchable()
-                ->format(function ($value, $row) {
-                    if ($value == 'all') {
-                        return 'All Locations';
-                    } else {
-                        return 'Single Location';
-                    }
-                }),
-            Column::make('Location', 'location.name')
+            Column::make('Business Type', 'pinstance.business_type')
+                ->label(fn($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
                 ->sortable()
                 ->searchable(),
-            Column::make('Closing Date', 'closing_date')
-                ->format(function($value, $row) { return Carbon::create($row->closing_date)->toFormattedDateString(); })
+            Column::make('Business Name', 'pinstance.name')
+                ->label(fn($row) => $row->pinstance->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
-            Column::make('Opening Date', 'opening_date')
-                ->format(function($value, $row) { return Carbon::create($row->opening_date)->toFormattedDateString(); })
+            Column::make('TIN', 'pinstance.tin')
+                ->label(fn($row) => $row->pinstance->tin ?? '')
                 ->sortable()
                 ->searchable(),
-            Column::make('Is Extended', 'is_extended')
-                ->format(function($value, $row) { 
-                    if ($row->is_extended == false) {
-                        return <<< HTML
-                        <span class="badge badge-info py-1 px-2">No</span>
-                    HTML;
-                    } else {
-                        return <<< HTML
-                        <span class="badge badge-success py-1 px-2">Yes</span>
-                    HTML;
-                    }
-                 })
+            Column::make('Buss. Reg. No.', 'pinstance.reg_no')
+                ->label(fn($row) => $row->pinstance->reg_no ?? 'N/A')
                 ->sortable()
-                ->searchable()
-                ->html(true), 
+                ->searchable(),
+            Column::make('Mobile', 'pinstance_type')
+                ->label(fn($row) => $row->pinstance->mobile ?? '')
+                ->sortable()
+                ->searchable(),
+            Column::make('From State', 'from_place')
+                ->format(fn($value) => strtoupper($value))
+                ->sortable()
+                ->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn($value) => strtoupper($value))
+                ->sortable()
+                ->searchable(),
             Column::make('Status', 'status')->view('business.closure.includes.status'),
             Column::make('Action', 'id')
                 ->view('business.closure.action'),
