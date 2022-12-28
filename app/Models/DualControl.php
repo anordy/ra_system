@@ -47,6 +47,7 @@ class DualControl extends Model
     //Messages
     public const SUCCESS_MESSAGE = 'Updated data successfully submitted, Please wait for checker to approve';
     public const ERROR_MESSAGE = 'Something went wrong, Please contact the administrator for help';
+    public const RELATION_MESSAGE = 'Operation failed, This data is already used on another occassion';
 
     public function moduleForBlade($model)
     {

@@ -34,7 +34,27 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <span class="font-weight-bold text-uppercase">Status</span>
-                            <p class="my-1">{{ ucwords($result->status) }}</p>
+                            <p class="my-1">
+                                @if ($result->status === 'approved')
+                                    <span class="badge badge-success py-1 px-2"
+                                        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
+                                        <i class="bi bi-check-circle-fill mr-1"></i>
+                                        {{ ucwords($result->status) }}
+                                    </span>
+                                @elseif($result->status === 'pending')
+                                    <span class="badge badge-warning py-1 px-2"
+                                        style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                        <i class="bi bi-clock-history mr-1"></i>
+                                        {{ ucwords($result->status) }}
+                                    </span>
+                                @elseif($result->status === 'reject')
+                                    <span class="badge badge-danger py-1 px-2"
+                                        style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
+                                        <i class="bi bi-clock-history mr-1"></i>
+                                        {{ ucwords($result->status) }}
+                                    </span>
+                                @endif
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -77,10 +97,8 @@
 
             <div class="d-flex justify-content-end">
                 @if (approvalLevel(Auth::user()->level_id, 'Checker'))
-                    <livewire:settings.dual-control-activity.approve dual_control_id="{{ encrypt($result->id) }}" />
-                @if(approvalLevel(Auth::user()->level_id, 'Checker'))
-                    @if($result->status == 'pending')
-                    <livewire:settings.dual-control-activity.approve dual_control_id="{{encrypt($result->id)}}"/>
+                    @if ($result->status == 'pending')
+                        <livewire:settings.dual-control-activity.approve dual_control_id="{{ encrypt($result->id) }}" />
                     @endif
                 @endif
             </div>

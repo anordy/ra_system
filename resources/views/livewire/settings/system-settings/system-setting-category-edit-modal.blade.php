@@ -15,7 +15,6 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                    </div> --}}
                     <div class="form-group col-lg-12">
                         <label class="control-label">Description</label>
                         <textarea type="text" rows="3" class="form-control" wire:model.defer="description" id="description"></textarea>

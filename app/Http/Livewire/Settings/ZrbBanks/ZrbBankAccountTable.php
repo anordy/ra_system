@@ -56,7 +56,7 @@ class ZrbBankAccountTable extends DataTableComponent
                 ->searchable(),
             Column::make('Bank name', 'bank_id')
                 ->format(function ($value, $row) {
-                    return $row->bank->name ?? 'N/A';  
+                    return $row->bank->name ?? 'N/A';
                 })
                 ->sortable()
                 ->searchable(),
@@ -87,7 +87,23 @@ class ZrbBankAccountTable extends DataTableComponent
                     }
                 })
                 ->html(),
-            Column::make('Action', 'id')->view('settings.zrb-bank-accounts.includes.actions'),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
+            Column::make('Action', 'id')
+            ->format(function ($value, $row) {
+                return view('settings.zrb-bank-accounts.includes.actions', ['row' => $row]);
+            }),
         ];
     }
 
@@ -117,8 +133,15 @@ class ZrbBankAccountTable extends DataTableComponent
             $data = (object) $value['data'];
             $zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($data->id));
             $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::DELETE, 'deleting zrb bank account');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
-            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->flash(
+                'success',
+                DualControl::SUCCESS_MESSAGE,
+                [],
+                redirect()
+                    ->back()
+                    ->getTargetUrl(),
+            );
         } catch (Exception $e) {
             report($e);
             $this->alert('warning', 'Something whent wrong!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);

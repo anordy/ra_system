@@ -19,8 +19,8 @@ class CreateDualControlsTable extends Migration
             $table->unsignedBigInteger('controllable_type_id');
             $table->string('action');
             $table->string('action_detail');
-            $table->string('old_values')->nullable();
-            $table->string('new_values')->nullable();
+            $table->string('old_values', 4000)->nullable();
+            $table->string('new_values', 4000)->nullable();
             $table->unsignedBigInteger('create_by_id');
             $table->enum('status', ['pending', 'approved', 'rejected']);
             $table->timestamps();

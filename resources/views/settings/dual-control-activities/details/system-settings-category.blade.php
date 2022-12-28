@@ -1,38 +1,59 @@
-<div>
-
-    <div class="card">
-        <div class="card-header">Old Values</div>
-        <div class="card-body">
-            <div class="row m-2 pt-3">
-                <div class="col-md-6 mb-3">
-                    <span class="font-weight-bold text-uppercase">Name</span>
-                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}</p>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <span class="font-weight-bold text-uppercase">Description</span>
-                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->description : $old_values->description }}</p>
-                </div>
-
-            </div>
-        </div>
+<div class="card">
+    <div class="card-header font-weight-bold text-uppercase">System Setting Category Details</div>
+    <div class="card-body">
+        <table class="table table-striped table-sm">
+            <thead>
+                <th style="width: 18%">Property</th>
+                @if ($new_values)
+                    <th style="width: 37%">Old Data</th>
+                    <th style="width: 35%">New Data</th>
+                    <th style="width: 10%">Status</th>
+                @else
+                    <th style="width: 82%">Data</th>
+                @endif
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ $new_values->name }}
+                        </td>
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name,
+                            $new_values->name))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->description : $old_values->description }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ $new_values->description }}
+                        </td>
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->description : $old_values->description,
+                            $new_values->description))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    @if($new_values)
-        <div class="card">
-            <div class="card-header">New Values</div>
-            <div class="card-body">
-                <div class="row m-2 pt-3">
-                    <div class="col-md-6 mb-3">
-                        <span class="font-weight-bold text-uppercase">Name</span>
-                        <p class="my-1">{{ $new_values->name }}</p>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <span class="font-weight-bold text-uppercase">Description</span>
-                        <p class="my-1">{{ $new_values->description }}</p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    @endif
 </div>
