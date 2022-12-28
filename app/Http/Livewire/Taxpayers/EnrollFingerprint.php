@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Taxpayers;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Biometric;
+use App\Models\IDType;
 use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
@@ -35,7 +36,7 @@ class EnrollFingerprint extends Component
 
     public function mount()
     {
-        if ($this->kyc->zanid_verified_at || $this->kyc->passport_verified_at) {
+        if ($this->kyc->zanid_verified_at || $this->kyc->passport_verified_at || empty($this->kyc->nida_verified_at)) {
             $this->userVerified = true;
         } else {
             $this->userVerified = false;
@@ -92,14 +93,20 @@ class EnrollFingerprint extends Component
             }
         }
 
-        if ($kyc->is_citizen == '1' && isNullOrEmpty($kyc->zanid_verified_at)) {
-            $this->alert('error', 'User ZANID not verified by authorities');
-            return;
-        } else if($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
-            $this->alert('error', 'User Passport Number not verified by authorities');
-            return;
-        }
-
+        // If id is zanid or nida & zanid check if zan id has been verified
+        if ($this->kyc->identification->name == IDType::ZANID || $this->kyc->identification->name == IDType::NIDA_ZANID) {
+            if ($kyc->is_citizen == '1' && isNullOrEmpty($kyc->zanid_verified_at)) {
+                $this->alert('error', 'User ZANID not verified by authorities');
+                return;
+            }
+        } else if ($this->kyc->identification->name == IDType::PASSPORT) {
+            if($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
+                $this->alert('error', 'User Passport Number not verified by authorities');
+                return;
+            }
+        } else if ($this->kyc->identification->name == IDType::NIDA) {
+            // TODO: Check nida when nida api has been integrated
+        } 
 
         DB::beginTransaction();
 

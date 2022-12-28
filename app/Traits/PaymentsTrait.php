@@ -74,7 +74,7 @@ trait PaymentsTrait
     public function generateControlNo($return, $billItems)
     {
         $taxpayer = $return->taxpayer;
-        $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->first();
+        $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->first();
         $exchange_rate = $this->getExchangeRate($tax_type->currency);
 
         $payer_type     = get_class($taxpayer);
@@ -94,7 +94,7 @@ trait PaymentsTrait
         $bill = ZmCore::createBill(
             $billableId,
             $billableType,
-            $tax_type->id,
+            $tax_type->tax_type_id,
             $payer_id,
             $payer_type,
             $payer_name,
