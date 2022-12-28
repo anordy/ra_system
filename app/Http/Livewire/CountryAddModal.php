@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Country;
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -45,6 +46,7 @@ class CountryAddModal extends Component
                 'code' => $this->code,
                 'name' => $this->name,
                 'nationality' => $this->nationality,
+                'created_at' =>Carbon::now()
             ]);
             $this->triggerDualControl(get_class($country), $country->id, DualControl::ADD, 'adding country');
             DB::commit();

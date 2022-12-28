@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-Districts
+    Districts
 @endsection
 
 @section('content')
@@ -10,11 +10,12 @@ Districts
             <h5 class="text-uppercase">Districts Management</h5>
             <div class="card-tools">
                 @can('setting-district-add')
-                    <button class="btn btn-info btn-sm"
-                        onclick="Livewire.emit('showModal', 'district-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
-                        Add District
-                    </button>
+                    @if (approvalLevel(Auth::user()->level_id, 'Maker'))
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'district-add-modal')"><i
+                                class="fa fa-plus-circle"></i>
+                            Add District
+                        </button>
+                    @endif
                 @endcan
             </div>
         </div>

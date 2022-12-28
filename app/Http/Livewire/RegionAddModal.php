@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\DualControl;
 use App\Models\Region;
 use App\Traits\DualControlActivityTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -39,10 +40,10 @@ class RegionAddModal extends Component
         $this->validate();
         DB::beginTransaction();
         try{
-            DB::beginTransaction();
             $region = Region::create([
                 'name' => $this->name,
-                'location' => $this->location
+                'location' => $this->location,
+                'created_at' =>Carbon::now()
             ]);
             $this->triggerDualControl(get_class($region), $region->id, DualControl::ADD, 'adding region');
             DB::commit();
