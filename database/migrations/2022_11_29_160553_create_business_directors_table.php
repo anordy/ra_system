@@ -20,7 +20,7 @@ class CreateBusinessDirectorsTable extends Migration
             $table->string('middle_name');
             $table->string('last_name');
             $table->string('gender');
-            $table->dateTime('birth_date');
+            $table->timestamp('birth_date');
             $table->string('national_id');
             $table->string('nationality');
             $table->string('country');

@@ -48,8 +48,8 @@ class CreateTaxpayersTable extends Migration
             $table->unsignedBigInteger('country_id');
 
             $table->string('password')->nullable();
-            $table->dateTime('biometric_verified_at');
-            $table->dateTime('email_verified_at')->nullable();
+            $table->timestamp('biometric_verified_at');
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->softDeletes();
 

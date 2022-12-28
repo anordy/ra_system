@@ -22,8 +22,8 @@ class CreateInstallmentsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->unsignedBigInteger('installment_request_id');
-            $table->dateTime('installment_from')->nullable();
-            $table->dateTime('installment_to')->nullable();
+            $table->timestamp('installment_from')->nullable();
+            $table->timestamp('installment_to')->nullable();
             $table->integer('installment_count')->nullable();
             $table->decimal('amount', 20, 2);
             $table->enum('currency', ['TZS', 'USD', 'EUR']);

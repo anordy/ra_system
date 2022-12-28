@@ -45,9 +45,9 @@ class CreateBusinessesTable extends Migration
             $table->boolean('is_business_lto')->default(false);
 
             // Not sure
-            $table->dateTime('reg_date')->nullable();
+            $table->timestamp('reg_date')->nullable();
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
 
             $table->unsignedBigInteger('isiic_i')->nullable();
             $table->unsignedBigInteger('isiic_ii')->nullable();

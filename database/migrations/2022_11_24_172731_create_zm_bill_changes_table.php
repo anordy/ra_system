@@ -18,11 +18,11 @@ class CreateZmBillChangesTable extends Migration
             $table->unsignedBigInteger('zm_bill_id');
             $table->string('control_number')->nullable();
             $table->string('cancel_reason')->nullable();
-            $table->dateTime('expire_date')->nullable();
+            $table->timestamp('expire_date')->nullable();
             $table->string('ack_status')->nullable();
-            $table->dateTime('ack_date')->nullable();
+            $table->timestamp('ack_date')->nullable();
             $table->string('clb_status')->nullable();
-            $table->dateTime('clb_date')->nullable();
+            $table->timestamp('clb_date')->nullable();
             $table->unsignedBigInteger('staff_id')->nullable();
             $table->enum('category', ['cancel', 'update', 'regenerate']);
             $table->timestamps();
