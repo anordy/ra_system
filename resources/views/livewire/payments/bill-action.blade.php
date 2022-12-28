@@ -23,7 +23,7 @@
             @if ($bill_change && $bill_change->category == 'update')
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Expire Date</span>
-                    <p class="my-1">{{ \Carbon\Carbon::parse($bill_change->expire_date)->format('d M Y H:m:i') }}</p>
+                    <p class="my-1">{{ \Carbon\Carbon::parse($bill_change->expire_date)->format('d M Y H:i:s') }}</p>
                 </div>
             @endif
             @if ($bill_change && $bill_change->category == 'cancel')
