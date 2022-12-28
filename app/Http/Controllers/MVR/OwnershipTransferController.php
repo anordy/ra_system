@@ -124,9 +124,9 @@ class OwnershipTransferController extends Controller
             }
             DB::commit();
         } catch (\Exception $e) {
+            DB::rollBack();
             report($e);
             session()->flash('error', 'Approval failed, could not update data');
-            DB::rollBack();
         }
         return redirect()->route('mvr.transfer-ownership.show', encrypt($id));
     }

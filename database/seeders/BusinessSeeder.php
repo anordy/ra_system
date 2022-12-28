@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BusinessSeeder extends Seeder
 {
@@ -122,6 +123,7 @@ class BusinessSeeder extends Seeder
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
+            Log::error($e);
         }
     }
 }

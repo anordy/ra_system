@@ -92,9 +92,9 @@ class MotorVehicleRegistrationController extends Controller
             $reg->update(['plate_number'=>$plate_number,'mvr_plate_number_status_id'=>$plate_status->id,'registration_date'=>date('Y-m-d')]);
             DB::commit();
         }catch (\Exception $e){
-            report($e);
             session()->flash('error', 'Could not update status');
             DB::rollBack();
+            report($e);
         }
         return redirect()->route('mvr.show',encrypt($id));
     }

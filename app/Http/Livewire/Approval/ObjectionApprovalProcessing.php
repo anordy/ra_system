@@ -136,8 +136,8 @@ class ObjectionApprovalProcessing extends Component
 
                 DB::commit();
             } catch (\Exception $e) {
-                Log::error($e);
                 DB::rollBack(); // todo: prefer to put rollback statement at the top of the catch block
+                Log::error($e);
                 $this->alert('error', 'Something went wrong, please contact the administrator for help.');
             }
         }

@@ -113,8 +113,8 @@ class BusinessAuditAddModal extends Component
             DB::commit();
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

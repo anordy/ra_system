@@ -107,8 +107,8 @@ class DisputeWaiverApprovalProcessing extends Component
 
                 DB::commit();
             } catch (\Exception $e) {
-                Log::error($e);
                 DB::rollBack();
+                Log::error($e);
                 $this->alert('error', 'Something went wrong, please contact the administrator for help.');
             }
 
@@ -164,7 +164,6 @@ class DisputeWaiverApprovalProcessing extends Component
                 $approveNotification = 'Approved and control number has been generated successful';
             } catch (Exception $e) {
                 Log::error($e);
-                throw $e;
                 $this->alert('error', 'Something went wrong, please contact the administrator for help');
             }
 
@@ -206,8 +205,8 @@ class DisputeWaiverApprovalProcessing extends Component
                     $this->subject->save();
                     DB::commit();
                 } catch (Exception $e) {
+                    DB::rollBack();
                     Log::error($e);
-                    throw $e;
                     $this->alert('error', 'Something went wrong, please contact the administrator for help');
                 }
 

@@ -265,8 +265,8 @@ class WorkflowSubscriber implements EventSubscriberInterface
             $subject->marking = json_encode($subject->marking);
             $subject->save();
         } catch (Exception $e) {
-            report($e);
             DB::rollBack();
+            report($e);
             throw new Exception($e);
         }
 

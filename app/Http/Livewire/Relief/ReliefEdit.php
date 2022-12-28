@@ -183,7 +183,7 @@ class ReliefEdit extends Component
             return redirect()->route('reliefs.applications.index');
         } catch (\Exception$e) {
             DB::rollBack();
-            Log::error($e->getMessage());
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
 

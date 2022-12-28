@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -94,6 +95,7 @@ class LicenseApplicationsController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
+            Log::error($e);
         }
         return redirect()->route('drivers-license.applications.show', encrypt($id));
     }

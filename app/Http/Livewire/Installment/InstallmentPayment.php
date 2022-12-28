@@ -127,7 +127,6 @@ class InstallmentPayment extends Component
             DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
-            throw $e;
         }
     }
 

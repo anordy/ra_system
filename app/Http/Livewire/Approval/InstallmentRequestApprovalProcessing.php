@@ -110,8 +110,8 @@ class InstallmentRequestApprovalProcessing extends Component
             DB::commit();
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', $e->getMessage());
             return;
         }
@@ -136,8 +136,8 @@ class InstallmentRequestApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             DB::commit();
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }

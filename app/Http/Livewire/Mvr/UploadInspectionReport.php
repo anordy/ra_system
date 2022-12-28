@@ -91,9 +91,9 @@ class UploadInspectionReport extends Component
             $this->flash('success', 'Inspection Report Uploaded');
             return redirect()->route('mvr.show', encrypt($id));
         } catch (Exception $e) {
-            Log::error($e);
             if (Storage::disk('local-admin')->exists($this->inspection_report_path)) Storage::disk('local-admin')->delete($this->inspection_report_path);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help: '.$e->getMessage());
         }
     }

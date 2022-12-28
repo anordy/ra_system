@@ -123,8 +123,8 @@ class LandLeaseView extends Component
             }
             DB::commit();
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }

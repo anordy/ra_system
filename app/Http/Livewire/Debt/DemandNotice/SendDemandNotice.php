@@ -33,8 +33,8 @@ class SendDemandNotice extends Component
             DemandNotice::create(['debt_id' => $this->debt->id, 'sent_by' => 'user']);
             DB::commit();
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollback();
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
 
