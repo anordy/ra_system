@@ -66,6 +66,10 @@ class ZmBill extends Model implements Auditable, PayloadInterface
         return $this->morphTo('createdby');
     }
 
+    public function bankRecon(){
+        return $this->belongsTo(BankRecon::class, 'control_number', 'control_no');
+    }
+
     public function taxType()
     {
         return $this->belongsTo(TaxType::class);

@@ -39,7 +39,9 @@
                     </div>
                 </div>
             </div>
-            @if ($result->controllable_type === \App\Models\DualControl::USER)
+            @if ($result->action_detail === 'editing user role')
+                @include('settings.dual-control-activities.details.user-role')
+            @elseif ($result->controllable_type === \App\Models\DualControl::USER)
                 @include('settings.dual-control-activities.details.user')
             @elseif ($result->controllable_type === \App\Models\DualControl::ROLE)
                 @include('settings.dual-control-activities.details.roles')
@@ -76,6 +78,10 @@
             <div class="d-flex justify-content-end">
                 @if (approvalLevel(Auth::user()->level_id, 'Checker'))
                     <livewire:settings.dual-control-activity.approve dual_control_id="{{ encrypt($result->id) }}" />
+                @if(approvalLevel(Auth::user()->level_id, 'Checker'))
+                    @if($result->status == 'pending')
+                    <livewire:settings.dual-control-activity.approve dual_control_id="{{encrypt($result->id)}}"/>
+                    @endif
                 @endif
             </div>
         </div>

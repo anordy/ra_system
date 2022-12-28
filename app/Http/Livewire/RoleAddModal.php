@@ -23,7 +23,7 @@ class RoleAddModal extends Component
 
     public function mount()
     {
-        $this->roles = Role::all();
+        $this->roles = Role::where('is_approved',1)->get();
     }
 
 

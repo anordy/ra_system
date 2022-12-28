@@ -17,6 +17,11 @@
                     <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}</p>
                 </div>
 
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">GFS Code</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->gfs_code : $old_values->gfs_code}}</p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -33,6 +38,16 @@
                         @else
                             <p class="my-1">{{ $new_values->name }}</p>
                         @endif
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Report To</span>
+                        @if(!compareEditedValues($old_values->gfs_code,$new_values->gfs_code ))
+                            <p class="my-1 text-danger">{{ $new_values->gfs_code }}</p>
+                        @else
+                            <p class="my-1">{{ $new_values->gfs_code }}</p>
+                        @endif
+
                     </div>
                 </div>
             </div>

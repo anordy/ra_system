@@ -31,9 +31,9 @@ trait DualControlActivityTrait
         ];
         DualControl::updateOrCreate($payload);
         $data = $model::findOrFail($modelId);
-        if ($action == DualControl::EDIT) {
-            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
-        }
+//        if ($action == DualControl::EDIT) {
+//            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
+//        }
 
     }
 
@@ -97,6 +97,9 @@ trait DualControlActivityTrait
                 break;
             case DualControl::WARD:
                 return 'Ward';
+                break;
+            case DualControl::TAX_TYPE:
+                return 'Tax Type';
                 break;
 
             default:

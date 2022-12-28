@@ -2,7 +2,9 @@
 
 use App\Models\ApprovalLevel;
 use App\Models\BusinessTaxTypeChange;
+use App\Models\District;
 use App\Models\EducationLevel;
+use App\Models\Region;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserApprovalLevel;
@@ -103,4 +105,24 @@ function compareDualControlValues($old_values, $new_values)
     $old_values = strtolower($old_values);
     $new_values = strtolower($new_values);
     return $old_values === $new_values ? true : false;
+}
+
+function getDistrict($id)
+{
+    if (!empty($id))
+    {
+        $district = District::query()->findOrFail($id);
+        $district = $district->name;
+        return $district;
+    }
+}
+
+function getRegion($id)
+{
+    if (!empty($id))
+    {
+        $region = Region::query()->findOrFail($id);
+        $region = $region->name;
+        return $region;
+    }
 }

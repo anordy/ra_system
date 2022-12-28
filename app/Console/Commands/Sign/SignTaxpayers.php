@@ -21,7 +21,7 @@ class SignTaxpayers extends Command
      *
      * @var string
      */
-    protected $description = 'Sign taxpayers.';
+    protected $description = 'Sign taxpayers for verification.';
 
     /**
      * Create a new command instance.
@@ -40,19 +40,19 @@ class SignTaxpayers extends Command
      */
     public function handle()
     {
-        $this->info('Signing taxpayers.');
+        $this->info('Started signing taxpayers.');
 
         if ($this->argument('taxpayer')){
 
             if (!is_numeric($this->argument('taxpayer'))){
-                $this->error('User ID provided is not a number.');
+                $this->error('Taxpayer ID provided is not a number.');
                 return 0;
             }
 
             $taxpayer = Taxpayer::find($this->argument('taxpayer'));
 
             if (!$taxpayer){
-                $this->error('User ID not found.');
+                $this->error('Taxpayer ID not found.');
                 return 0;
             }
 
@@ -60,7 +60,7 @@ class SignTaxpayers extends Command
             return 0;
         }
 
-        $this->info('Has no taxpayer, signing all.');
+        $this->info('Taxpayer ID not provided, signing all.');
 
         foreach (Taxpayer::all() as $taxpayer){
             $this->info('Signing: ' . $taxpayer->email);
