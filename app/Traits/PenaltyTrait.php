@@ -12,6 +12,8 @@ use Carbon\Carbon;
 trait PenaltyTrait
 {
 
+    use ExchangeRateTrait;
+
 
     public function getTotalPenalties($financialMonth, $taxAmount, $taxTypeCurency){
         $lateFilingFee = 0;
@@ -113,8 +115,8 @@ trait PenaltyTrait
         $rate = 1;
 
         if($taxTypeCurency != 'TZS') {
-            $rate = 2300;
-            $percentageFee = $this->checkCurrency($percentageFee, $rate);
+            $rate = self::getExchangeRate($taxTypeCurency);
+            $percentageFee = ($percentageFee * $rate);
         }
 
         if($percentageFee >= $weGRate){
@@ -127,15 +129,6 @@ trait PenaltyTrait
         }
 
         return $weGRate;
-    }
-
-    private function checkCurrency($percentageFee, $rate) {
-        // Api from BOT
-        // USD or any from BOT
-
-        $percentageFee = ($percentageFee * $rate);
-
-        return $percentageFee;
     }
 
     public function getFilingMonth($locationId, $ReturnClass){

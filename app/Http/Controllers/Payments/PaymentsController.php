@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payments;
 
 use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
+use App\Models\BankRecon;
 use App\Models\ZmBill;
 use App\Models\ZmPayment;
 use App\Models\ZmRecon;
@@ -92,5 +93,14 @@ class PaymentsController extends Controller
         $pdf->setPaper('a4', 'landscape');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         return $pdf->download($fileName);
+    }
+
+    public function bankRecon(){
+        return view('payments.bank-recons.index');
+    }
+
+    public function showBankRecon($reconId){
+        $recon = BankRecon::findOrFail(decrypt($reconId));
+        return view('payments.bank-recons.show', compact('recon'));
     }
 }

@@ -3,7 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\District;
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -11,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DistrictTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     protected $model = District::class;
     public function configure(): void
@@ -46,6 +49,24 @@ class DistrictTable extends DataTableComponent
             Column::make('Region', 'region.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
             Column::make('Action', 'id')
                 ->format(function ($value){
                     $edit = '';
@@ -53,7 +74,7 @@ class DistrictTable extends DataTableComponent
 
                     if (Gate::allows('setting-district-edit')) {
                         $edit = <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'district-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                         HTML;
                     }
 
@@ -94,13 +115,19 @@ class DistrictTable extends DataTableComponent
 
     public function confirmed($value)
     {
+
+        DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            District::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $district = District::find($data->id);
+            $this->triggerDualControl(get_class($district), $district->id, DualControl::DELETE, 'deleting district');
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
+            DB::rollBack();
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

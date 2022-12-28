@@ -2,8 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\ExchangeRate;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -11,12 +14,13 @@ use Livewire\Component;
 
 class ExchangeRateEditModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
     public $exchange_rate;
     public $mean;
     public $spot_buying;
     public $spot_selling;
     public $exchange_date;
+    public $old_values;
 
     protected function rules()
     {
@@ -34,29 +38,38 @@ class ExchangeRateEditModal extends Component
         if (!Gate::allows('setting-exchange-rate-edit')) {
             abort(403);
         }
+        $payload = [
+            'mean' => $this->mean,
+            'spot_buying' => $this->spot_buying,
+            'spot_selling' => $this->spot_selling,
+            'exchange_date' => $this->exchange_date,
+        ];
 
+        DB::beginTransaction();
         try {
-            $this->exchange_rate->update([
-                'mean' => $this->mean,
-                'spot_buying' => $this->spot_buying,
-                'spot_selling' => $this->spot_selling,
-                'exchange_date' => $this->exchange_date,
-            ]);
-            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
+            $this->triggerDualControl(get_class($this->exchange_rate), $this->exchange_rate->id, DualControl::EDIT, 'editing interest rate', json_encode($this->old_values), json_encode($payload));
+            DB::commit();
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE);
         }
     }
 
     public function mount($id)
     {
-        $data = ExchangeRate::find($id);
-        $this->exchange_rate = $data;
-        $this->spot_buying = $data->spot_buying;
-        $this->spot_selling = $data->spot_selling;
-        $this->mean = $data->mean;
-        $this->exchange_date = $data->exchange_date;
+        $this->exchange_rate = ExchangeRate::find($id);
+        $this->spot_buying = $this->exchange_rate->spot_buying;
+        $this->spot_selling = $this->exchange_rate->spot_selling;
+        $this->mean = $this->exchange_rate->mean;
+        $this->exchange_date = $this->exchange_rate->exchange_date;
+        $this->old_values = [
+            'mean' => $this->mean,
+            'spot_buying' => $this->spot_buying,
+            'spot_selling' => $this->spot_selling,
+            'exchange_date' => $this->exchange_date,
+        ];
     }
 
     public function render()

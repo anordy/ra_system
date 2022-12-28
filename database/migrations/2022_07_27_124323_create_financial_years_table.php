@@ -18,6 +18,7 @@ class CreateFinancialYearsTable extends Migration
             $table->string('name')->comment('E.g 2021/2022, 2022/2023');
             $table->string('code')->comment('E.g 2021, 2022, 2023');
             $table->boolean('active')->default(0);
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
         });
     }

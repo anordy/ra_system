@@ -19,6 +19,7 @@ class CreateExchangeRatesTable extends Migration
             $table->decimal('mean', 20, 2);
             $table->decimal('spot_selling', 20, 2);
             $table->date('exchange_date');
+            $table->boolean('is_approved')->default(0);
             $table->timestamps();
         });
     }

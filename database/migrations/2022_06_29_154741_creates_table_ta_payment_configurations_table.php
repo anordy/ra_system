@@ -22,6 +22,10 @@ class CreatesTableTaPaymentConfigurationsTable extends Migration
 			$table->enum('currency',['TZS','USD']);
 			$table->bigInteger('created_by');
             $table->boolean('is_approved')->default(0);
+
+            $table->string('ci_payload', 4000);
+            $table->boolean('failed_verification')->default(0);
+
 	        $table->timestamps();
         });
     }

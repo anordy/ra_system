@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Region;
 use App\Models\Role;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -13,16 +16,18 @@ use Livewire\Component;
 class RegionEditModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
+
     public $name;
     public $region;
     public $location;
+    public $old_values;
 
 
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:regions,name,'.$this->region->id.',id',
+            'name' => 'required|min:2|unique:regions,name,' . $this->region->id . ',id',
             'location' => 'required'
         ];
     }
@@ -34,24 +39,34 @@ class RegionEditModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try {
-            $this->region->update([
+            $payload = [
                 'name' => $this->name,
                 'location' => $this->location
-            ]);
-            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
+            ];
+
+            $this->triggerDualControl(get_class($this->region), $this->region->id, DualControl::EDIT, 'editing region', json_encode($this->old_values), json_encode($payload));
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.region.index');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('success', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.region.index');
         }
     }
 
     public function mount($id)
     {
-        $data = Region::find($id);
-        $this->region = $data;
-        $this->name = $data->name;
-        $this->location = $data->location;
+        $this->region = Region::find($id);
+        $this->name = $this->region->name;
+        $this->location = $this->region->location;
+        $this->old_values = [
+            'name' => $this->name,
+            'location' => $this->location
+        ];
     }
 
     public function render()

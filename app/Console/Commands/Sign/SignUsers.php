@@ -21,7 +21,7 @@ class SignUsers extends Command
      *
      * @var string
      */
-    protected $description = 'Sign users.';
+    protected $description = 'Sign users for verification.';
 
     /**
      * Create a new command instance.
@@ -40,7 +40,7 @@ class SignUsers extends Command
      */
     public function handle()
     {
-        $this->info('Signing users.');
+        $this->info('Started signing users.');
 
         if ($this->argument('user')){
 
@@ -60,7 +60,7 @@ class SignUsers extends Command
             return 0;
         }
 
-        $this->info('Has no user, signing all.');
+        $this->info('User ID not provided, signing all.');
 
         foreach (User::all() as $user){
             $this->info('Signing: ' . $user->email);

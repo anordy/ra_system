@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Settings\PenaltyRate;
 
+use App\Models\DualControl;
+use App\Models\InterestRate;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use App\Models\PenaltyRate;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class PenaltyRatesTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -61,6 +64,24 @@ class PenaltyRatesTable extends DataTableComponent
             Column::make('Financial Year', 'year.code')
                 ->sortable()
                 ->searchable(),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
             Column::make('Action', 'id')
                 ->view('settings.penalty-rate.includes.actions'),
         ];
@@ -92,11 +113,13 @@ class PenaltyRatesTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            PenaltyRate::findOrFail(decrypt($data->id))->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $rate = PenaltyRate::find(decrypt($data->id));
+            $this->triggerDualControl(get_class($rate), $rate->id, DualControl::DELETE, 'deleting penalty rate');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return;
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

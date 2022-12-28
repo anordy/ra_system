@@ -21,7 +21,7 @@ class SignBill extends Command
      *
      * @var string
      */
-    protected $description = 'Sign bills.';
+    protected $description = 'Sign bills for verification.';
 
     /**
      * Create a new command instance.
@@ -40,7 +40,7 @@ class SignBill extends Command
      */
     public function handle()
     {
-        $this->info('Signing bills.');
+        $this->info('Signing bills started.');
 
         if ($this->argument('bill')){
 
@@ -60,7 +60,7 @@ class SignBill extends Command
             return 0;
         }
 
-        $this->info('Has no bill, signing all.');
+        $this->info('Bill ID not provided, signing all.');
 
         foreach (ZmBill::all() as $bill){
             $this->info('Signing: ' . $bill->id);

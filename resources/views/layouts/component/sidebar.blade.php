@@ -647,6 +647,11 @@
                             <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
                         </li>
                     @endcan
+                    @can('manage-payments-view')
+                        <li class="{{ request()->is('payments/bank-recon*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.bank-recon.index') }}">Bank Reconciliations</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

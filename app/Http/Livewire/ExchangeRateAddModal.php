@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\ExchangeRate;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +14,7 @@ use Livewire\Component;
 class ExchangeRateAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $currency;
     public $mean;
@@ -41,13 +43,14 @@ class ExchangeRateAddModal extends Component
 
         $this->validate();
         try{
-            ExchangeRate::create([
+           $exchange_rate = ExchangeRate::create([
                 'currency' => $this->currency,
                 'mean' => $this->mean,
                 'spot_buying' => $this->spot_buying,
                 'spot_selling' => $this->spot_selling,
                 'exchange_date' => $this->exchange_date,
             ]);
+            $this->triggerDualControl(get_class($exchange_rate), $exchange_rate->id, DualControl::ADD, 'adding exchange rate');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             Log::error($e);
