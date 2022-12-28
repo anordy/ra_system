@@ -39,7 +39,6 @@ class RegionAddModal extends Component
         $this->validate();
         DB::beginTransaction();
         try{
-            DB::beginTransaction();
             $region = Region::create([
                 'name' => $this->name,
                 'location' => $this->location

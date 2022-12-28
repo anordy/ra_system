@@ -6,6 +6,7 @@ use App\Models\DualControl;
 use App\Models\Region;
 use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -34,6 +35,11 @@ class RegionTable extends DataTableComponent
 
             return [];
         });
+    }
+
+    public function builder(): Builder
+    {
+        return Region::orderByDesc('id');
     }
 
     protected $listeners = [
