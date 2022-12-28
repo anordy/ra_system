@@ -71,7 +71,6 @@ class ZrbBankAccountAddModal extends Component
             ]);
             
             $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::ADD, 'adding zrb bank account');
-            // dd($zrbBankAccount);
             DB::commit();
             $this->alert('success', 'Record added successfully');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());

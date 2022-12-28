@@ -124,7 +124,7 @@ class RolesTable extends DataTableComponent
             $role = Role::find($data->id);
             $this->triggerDualControl(get_class($role), $role->id, DualControl::DELETE, 'deleting role');
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
-            return;
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
             $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);

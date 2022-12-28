@@ -34,6 +34,13 @@
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
+                        <label class="control-label">Code</label>
+                        <input type="text" disabled class="form-control" wire:model.defer="code" id="code">
+                        @error('code')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-12">
                         <label class="control-label">Unit</label>
                         <input type="text" class="form-control" wire:model.defer="unit" id="unit">
                         @error('unit')
