@@ -26,8 +26,8 @@ class CreateLeasePaymentsTable extends Migration
             $table->decimal('outstanding_amount',38, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->enum('status', LeaseStatus::getConstants());
-            $table->dateTime('due_date')->nullable();
-            $table->dateTime('paid_at')->nullable();
+            $table->timestamp('due_date')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

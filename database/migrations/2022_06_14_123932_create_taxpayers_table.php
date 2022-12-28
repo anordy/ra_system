@@ -23,9 +23,9 @@ class CreateTaxpayersTable extends Migration
             $table->string('passport_no')->nullable();
             $table->string('permit_number')->nullable();
 
-            $table->string('nida_verified_at')->nullable();
-            $table->string('zanid_verified_at')->nullable();
-            $table->string('passport_verified_at')->nullable();
+            $table->timestamp('nida_verified_at')->nullable();
+            $table->timestamp('zanid_verified_at')->nullable();
+            $table->timestamp('passport_verified_at')->nullable();
 
             $table->string('tin')->nullable();
             $table->string('tin_location')->nullable();
@@ -48,8 +48,8 @@ class CreateTaxpayersTable extends Migration
             $table->unsignedBigInteger('country_id');
 
             $table->string('password')->nullable();
-            $table->dateTime('biometric_verified_at');
-            $table->dateTime('email_verified_at')->nullable();
+            $table->timestamp('biometric_verified_at');
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->softDeletes();
 

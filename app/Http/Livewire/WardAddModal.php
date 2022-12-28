@@ -7,6 +7,7 @@ use App\Models\DualControl;
 use App\Models\Region;
 use App\Models\Ward;
 use App\Traits\DualControlActivityTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -57,6 +58,7 @@ class WardAddModal extends Component
             $ward = Ward::create([
                 'name' => $this->name,
                 'district_id' => $this->district_id,
+                'created_at' =>Carbon::now()
             ]);
             DB::commit();
             $this->triggerDualControl(get_class($ward), $ward->id, DualControl::ADD, 'adding ward');

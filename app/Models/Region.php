@@ -19,6 +19,8 @@ class Region extends Model implements Auditable
         'name',
         'location',
         'registration_count',
+        'is_approved',
+        'is_updated',
    ];
 
     public function taxagent()

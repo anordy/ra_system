@@ -10,10 +10,11 @@
             <h5 class="text-uppercase">Countries Management</h5>
             <div class="card-tools">
                 @can('setting-country-add')
-                <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'country-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
-                    Add</button>
+                    @if (approvalLevel(Auth::user()->level_id, 'Maker'))
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'country-add-modal')"><i
+                                class="fa fa-plus-circle"></i>
+                            Add</button>
+                    @endif
                 @endcan
             </div>
         </div>

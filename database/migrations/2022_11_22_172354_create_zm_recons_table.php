@@ -15,7 +15,7 @@ class CreateZmReconsTable extends Migration
     {
         Schema::create('zm_recons', function (Blueprint $table) {
             $table->id();
-            $table->date('TnxDt')->nullable();
+            $table->timestamp('TnxDt')->nullable();
             $table->integer('ReconcOpt')->nullable();
             $table->string('ReconcStsCode', 50)->nullable();
             $table->timestamps();

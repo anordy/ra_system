@@ -21,8 +21,8 @@ class CreateInstallmentRequestsTable extends Migration
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('tax_type_id');
-            $table->dateTime('installment_from')->nullable();
-            $table->dateTime('installment_to')->nullable();
+            $table->timestamp('installment_from')->nullable();
+            $table->timestamp('installment_to')->nullable();
             $table->integer('installment_count')->nullable();
             $table->string('reasons');
             $table->string('ground');

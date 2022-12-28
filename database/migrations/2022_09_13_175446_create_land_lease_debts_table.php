@@ -25,8 +25,8 @@ class CreateLandLeaseDebtsTable extends Migration
             $table->decimal('total_amount', 20, 2);
             $table->decimal('outstanding_amount', 20, 2);
             $table->enum('status', LeaseStatus::getConstants());
-            $table->dateTime('last_due_date');
-            $table->dateTime('curr_due_date');
+            $table->timestamp('last_due_date');
+            $table->timestamp('curr_due_date');
             $table->timestamps();
         });
     }

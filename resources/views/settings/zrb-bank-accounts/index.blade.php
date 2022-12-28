@@ -10,10 +10,12 @@
             <h5 class="text-uppercase">ZRB Bank Account Management</h5>
             <div class="card-tools">
                 @can('zrb-bank-account-add')
-                    <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'settings.zrb-banks.zrb-bank-account-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
-                    Add</button>
+                    @if (approvalLevel(Auth::user()->level_id, 'Maker'))
+                        <button class="btn btn-info btn-sm"
+                            onclick="Livewire.emit('showModal', 'settings.zrb-banks.zrb-bank-account-add-modal')"><i
+                                class="fa fa-plus-circle"></i>
+                            Add</button>
+                    @endif
                 @endcan
             </div>
         </div>

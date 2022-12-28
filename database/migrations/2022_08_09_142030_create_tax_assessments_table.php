@@ -42,13 +42,13 @@ class CreateTaxAssessmentsTable extends Migration
 
             $table->decimal('total_amount', 20, 2);
             $table->decimal('outstanding_amount', 20, 2)->default();
-            $table->dateTime('payment_due_date')->nullable();
-            $table->dateTime('curr_payment_due_date')->nullable();
+            $table->timestamp('payment_due_date')->nullable();
+            $table->timestamp('curr_payment_due_date')->nullable();
 
             $table->enum('payment_status', TaxAssessmentPaymentStatus::getConstants())->default(TaxAssessmentPaymentStatus::DRAFT);
             $table->enum('app_status', TaxAssessmentStatus::getConstants())->default(TaxAssessmentStatus::ASSESSMENT);
             $table->enum('assessment_step', TaxAssessmentStep::getConstants())->default('normal')->nullable();
-            $table->dateTime('paid_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
     }

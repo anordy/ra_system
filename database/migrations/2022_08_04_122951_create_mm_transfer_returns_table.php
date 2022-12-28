@@ -31,10 +31,10 @@ class CreateMMTransferReturnsTable extends Migration
             $table->decimal('total_amount_due_with_penalties',38, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->decimal('interest', 20, 2)->default(0);
-            $table->dateTime('filing_due_date')->nullable();
-            $table->dateTime('payment_due_date')->nullable();
-            $table->dateTime('submitted_at')->nullable();
-            $table->dateTime('paid_at')->nullable();
+            $table->timestamp('filing_due_date')->nullable();
+            $table->timestamp('payment_due_date')->nullable();
+            $table->timestamp('submitted_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);

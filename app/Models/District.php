@@ -13,7 +13,9 @@ class District extends Model implements Auditable
 
     protected $fillable = [
         'name',
-        'region_id'
+        'region_id',
+        'is_approved',
+        'is_updated',
    ];
 
     public function wards(){
