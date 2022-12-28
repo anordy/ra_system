@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-Region
+    Region
 @endsection
 
 @section('content')
@@ -10,11 +10,12 @@ Region
             Region Management
             <div class="card-tools">
                 @can('setting-region-add')
-                <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'region-add-modal')"><i
-                        class="bi bi-plus-circle-fill mr-1"></i>
-                    Add New Region
-                </button>
+                    @if (approvalLevel(Auth::user()->level_id, 'Maker'))
+                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-add-modal')"><i
+                                class="bi bi-plus-circle-fill mr-1"></i>
+                            Add New Region
+                        </button>
+                    @endif
                 @endcan
             </div>
         </div>
@@ -23,5 +24,5 @@ Region
     <div class="card-body">
         @livewire('region-table')
     </div>
-</div>
+    </div>
 @endsection

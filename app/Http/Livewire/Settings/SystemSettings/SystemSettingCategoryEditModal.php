@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings\SystemSettings;
 
 use App\Models\DualControl;
 use App\Models\SystemSettingCategory;
+use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -12,18 +13,18 @@ use Livewire\Component;
 
 class SystemSettingCategoryEditModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $systemSettingCategory;
     public $name;
     public $description;
+    public $old_values;
 
     protected function rules()
     {
         return [
             'name' => 'required',
-            'unit' => 'required',
-            'value' => 'required|numeric',
+            'description' => 'required',
         ];
     }
 
@@ -32,30 +33,40 @@ class SystemSettingCategoryEditModal extends Component
         $this->systemSettingCategory = SystemSettingCategory::findOrFail(decrypt($id));
         $this->name = $this->systemSettingCategory->name;
         $this->description = $this->systemSettingCategory->description;
-    }
 
+        $this->old_values = [
+            'name' => $this->name,
+            'description' => $this->description,
+        ];
+    }
 
     public function submit()
     {
         if (!Gate::allows('setting-penalty-rate-edit')) {
             abort(403);
-       }
+        }
         $this->validate();
-        DB::beginTtansaction();
+        DB::beginTransaction();
         try {
-            $this->systemSettingCategory->update([
+            $payload = [
                 'name' => $this->name,
-                'unit' => $this->unit,
-                'value' => $this->value,
                 'description' => $this->description,
-            ]);
-            $this->triggerDualControl(get_class($this->systemSettingCategory), $this->systemSettingCategory->id, DualControl::EDIT, 'edit system setting category');
+            ];
+            $this->triggerDualControl(get_class($this->systemSettingCategory), $this->systemSettingCategory->id, DualControl::EDIT, 'edit system setting category', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 10000]);
+            $this->flash(
+                'success',
+                DualControl::SUCCESS_MESSAGE,
+                [],
+                redirect()
+                    ->back()
+                    ->getTargetUrl(),
+            );
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

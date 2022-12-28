@@ -30,11 +30,6 @@ trait DualControlActivityTrait
             'status' => 'pending',
         ];
         DualControl::updateOrCreate($payload);
-        $data = $model::findOrFail($modelId);
-//        if ($action == DualControl::EDIT) {
-//            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
-//        }
-
     }
 
     public function getModule($model)

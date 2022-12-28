@@ -63,7 +63,7 @@ class ZrbBankAccountEditModal extends Component
             'swift_code' => $this->swift_code,
             'account_number' => $this->account_number,
             'currency_id' => $this->zrbBankAccount->id,
-            'currency_iso' => $this->zrbBankAccount->iso,
+            'currency_iso' => $this->zrbBankAccount->currency_iso,
         ];
 
         $this->currencies = Currency::select('id', 'iso')->get();
@@ -80,15 +80,6 @@ class ZrbBankAccountEditModal extends Component
         $currency = json_decode($this->currency);
         DB::beginTransaction();
         try {
-            // $this->zrbBankAccount->update([
-            //     'bank_id' => $this->bank_id,
-            //     'account_name' => $this->account_name,
-            //     'branch_name' => $this->branch_name,
-            //     'swift_code' => $this->swift_code,
-            //     'account_number' => $this->account_number,
-            //     'currency_id' => $currency->id,
-            //     'currency_iso' => $currency->iso,
-            // ]);
             $payload = [
                 'bank_id' => $this->bank_id,
                 'account_name' => $this->account_name,

@@ -142,7 +142,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="{{ public_path() }}/images/logo.png" alt="">
+            <img src="{{ public_path() }}/images/logo.jpg" alt="">
         </div>
         <div>
             <P>Revenue and Debt Managment Unit</P>

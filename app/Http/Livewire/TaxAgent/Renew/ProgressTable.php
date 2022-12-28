@@ -4,6 +4,7 @@ namespace App\Http\Livewire\TaxAgent\Renew;
 
 use App\Models\RenewTaxAgentRequest;
 use App\Models\TaxAgentStatus;
+use App\Models\WorkflowTask;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -29,32 +30,48 @@ class ProgressTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return RenewTaxAgentRequest::query()
-            ->where('renew_tax_agent_requests.status', '!=', TaxAgentStatus::APPROVED)
-            ->with('tax_agent')->orderByDesc('id');
+            return WorkflowTask::with('pinstance', 'user')
+            ->where('pinstance_type', RenewTaxAgentRequest::class)
+            ->where('status', '!=', 'completed')
+            ->where('owner', 'staff');
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Tax Payer", "tax_agent.taxpayer.first_name")
-                ->sortable()
-                ->searchable()
-                ->format(function ($value, $row) {
-                    return "{$row->tax_agent->taxpayer->first_name} {$row->tax_agent->taxpayer->middle_name} {$row->tax_agent->taxpayer->last_name}";
-                }),
-            Column::make("Reference No", "tax_agent.reference_no")
-                ->sortable(),
-            Column::make("TIN No", "tax_agent.tin_no")
-                ->sortable(),
-            Column::make("Plot No.", "tax_agent.plot_no")
-                ->sortable(),
-            Column::make("Block", "tax_agent.block")
-                ->sortable(),
-            Column::make("District", "tax_agent.district.name")
-                ->sortable(),
-            Column::make("Region", "tax_agent.region.name")
-                ->sortable(),
+                Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+                Column::make('Business Category', 'pinstance.category.name')
+                    ->label(fn($row) => $row->pinstance->category->name ?? 'N/A')
+                    ->sortable()
+                    ->searchable(),
+                Column::make('Business Type', 'pinstance.business_type')
+                    ->label(fn($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
+                    ->sortable()
+                    ->searchable(),
+                Column::make('Business Name', 'pinstance.name')
+                    ->label(fn($row) => $row->pinstance->name ?? 'N/A')
+                    ->sortable()
+                    ->searchable(),
+                Column::make('TIN', 'pinstance.tin')
+                    ->label(fn($row) => $row->pinstance->tin ?? '')
+                    ->sortable()
+                    ->searchable(),
+                Column::make('Buss. Reg. No.', 'pinstance.reg_no')
+                    ->label(fn($row) => $row->pinstance->reg_no ?? 'N/A')
+                    ->sortable()
+                    ->searchable(),
+                Column::make('Mobile', 'pinstance_type')
+                    ->label(fn($row) => $row->pinstance->mobile ?? '')
+                    ->sortable()
+                    ->searchable(),
+                Column::make('From State', 'from_place')
+                    ->format(fn($value) => strtoupper($value))
+                    ->sortable()
+                    ->searchable(),
+                Column::make('Current State', 'to_place')
+                    ->format(fn($value) => strtoupper($value))
+                    ->sortable()
+                    ->searchable(),
             Column::make("Status", "status")
                 ->view('taxagents.renew.includes.renewal_status'),
             Column::make('Action', 'id')

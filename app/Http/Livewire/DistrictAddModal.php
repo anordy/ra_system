@@ -6,6 +6,7 @@ use App\Models\District;
 use App\Models\DualControl;
 use App\Models\Region;
 use App\Traits\DualControlActivityTrait;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -49,6 +50,7 @@ class DistrictAddModal extends Component
             $district = District::create([
                 'name' => $this->name,
                 'region_id' => $this->region_id,
+                'created_at' =>Carbon::now()
             ]);
             $this->triggerDualControl(get_class($district), $district->id, DualControl::ADD, 'adding district');
             DB::commit();

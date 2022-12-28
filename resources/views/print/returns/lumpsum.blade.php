@@ -3,7 +3,7 @@
     <title></title>
     <style>
         body {
-            background-image: url("{{ public_path() }}/images/logo.png");
+            background-image: url("{{ public_path() }}/images/logo.jpg");
             background-repeat: no-repeat;
             background-position: center;
             background-size:contain;

@@ -1,6 +1,9 @@
 <nav id="sidebar" class="mb-3">
     <div class="sidebar-header text-center pb-0">
-        <h3 class="mt-2"><i class="bi bi-card-heading mr-2"></i> ZIDRAS</h3>
+        <h3 class="mt-2">
+            <img src="{{ asset('images/logo.jpg') }}" class="rounded-circle" width="15%">
+            ZIDRAS
+        </h3>
     </div>
 
     <ul class="list-unstyled components">
@@ -601,9 +604,9 @@
                     {{-- <a href="{{ route('queries.nil-returns') }}">Nil Returns</a> --}}
                     {{-- </li> --}}
 
-{{--                    <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">--}}
-{{--                        <a href="{{ route('queries.non-filers') }}">Non Filers</a>--}}
-{{--                    </li>--}}
+                    {{--                    <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}"> --}}
+                    {{--                        <a href="{{ route('queries.non-filers') }}">Non Filers</a> --}}
+                    {{--                    </li> --}}
 
                     <li class="{{ request()->is('queries/sales-purchases*') ? 'active' : '' }}">
                         <a href="{{ route('queries.sales-purchases') }}">Sales Vs Purchases</a>

@@ -72,7 +72,7 @@
     <div class="header">
         <div class="title1" style="float: left">
             <div  class="logo" style="float: left">
-                <img src="{{public_path()}}/images/logo.png">
+                <img src="{{public_path()}}/images/logo.jpg">
             </div>
             <div style="display: inline; margin-left: 170px;">
                 Zanzibar Revenue Board

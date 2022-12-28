@@ -36,9 +36,7 @@ class WardTable extends DataTableComponent
         });
     }
 
-    protected $listeners = [
-        'confirmed'
-    ];
+    protected $listeners = ['confirmed'];
 
     public function columns(): array
     {
@@ -55,42 +53,54 @@ class WardTable extends DataTableComponent
             Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
                     if ($value == 0) {
-                        return <<< HTML
+                        return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
                         HTML;
                     } elseif ($value == 1) {
-                        return <<< HTML
+                        return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
                         HTML;
-                    }
-                    elseif ($value == 2) {
-                        return <<< HTML
+                    } elseif ($value == 2) {
+                        return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
                         HTML;
                     }
-
-                })->html(),
-            Column::make('Action', 'id')
+                })
+                ->html(),
+            Column::make('Edit Status', 'is_updated')
                 ->format(function ($value) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
+            Column::make('Action', 'id')
+                ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-
-                    if (Gate::allows('setting-ward-edit')) {
-                        $edit =  <<< HTML
+                    if ($row->is_approved == 1 || $row->is_approved == 2) {
+                        if (Gate::allows('setting-ward-edit')) {
+                            $edit = <<<HTML
                                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                             HTML;
-                    }
-                    if (Gate::allows('setting-ward-delete')) {
-                        $delete =  <<< HTML
-                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                        HTML;
+                        }
+                        if (Gate::allows('setting-ward-delete')) {
+                            $delete = <<<HTML
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                            HTML;
+                        }
                     }
                     return $edit . ' ' . $delete;
                 })
                 ->html(true),
         ];
     }
-
 
     public function delete($id)
     {
@@ -108,9 +118,8 @@ class WardTable extends DataTableComponent
             'cancelButtonText' => 'Cancel',
             'timer' => null,
             'data' => [
-                'id' => $id
+                'id' => $id,
             ],
-
         ]);
     }
 
@@ -122,7 +131,7 @@ class WardTable extends DataTableComponent
             $ward = Ward::find($data->id);
             $this->triggerDualControl(get_class($ward), $ward->id, DualControl::DELETE, 'deleting ward');
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             DB::rollBack();
