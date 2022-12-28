@@ -21,8 +21,6 @@ class WaiverController extends Controller
         return view('assesments.waiver.index');
     }
 
-
-
     public function approval($waiverId)
     {
         $dispute = Dispute::findOrFail(decrypt($waiverId));

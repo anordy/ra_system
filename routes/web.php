@@ -66,6 +66,7 @@ use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Payments\PaymentsController;
 use App\Http\Controllers\Setting\TaxRegionController;
 use App\Http\Controllers\Assesments\DisputeController;
+use App\Http\Controllers\Assesments\ObjectionController;
 use App\Http\Controllers\MVR\DeRegistrationController;
 use App\Http\Controllers\TaxAgents\TaxAgentController;
 use App\Http\Controllers\Audit\TaxAuditFilesController;

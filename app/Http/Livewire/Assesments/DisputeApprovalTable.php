@@ -17,11 +17,10 @@ class DisputeApprovalTable extends DataTableComponent
 
     public $model = WorkflowTask::class;
 
-    public $paymentStatus,$category;
+    public $category;
 
-    public function mount($category, $payment)
+    public function mount($category)
     {
-        $this->paymentStatus = $payment;
         $this->category = $category;
     }
     public function builder(): Builder

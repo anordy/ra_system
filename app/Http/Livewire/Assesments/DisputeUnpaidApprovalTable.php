@@ -26,7 +26,6 @@ class DisputeUnpaidApprovalTable extends DataTableComponent
             ->where('disputes.category', $this->category)
             ->whereNotIn('disputes.payment_status', [BillStatus::COMPLETE])
             ->orderBy('disputes.created_at', 'desc');
-
         return $dispute;
     }
 
@@ -69,8 +68,8 @@ class DisputeUnpaidApprovalTable extends DataTableComponent
                 ->view('assesments.waiver.includes.payment_status')
                 ->html(true),
             Column::make('Action', 'id')
-                ->hideIf($this->paymentStatus != 'complete')
-                ->view('assesments.waiver.includes.action')
+                // ->hideIf($this->paymentStatus != 'complete')
+                ->view('assesments.waiver.includes.approval_progress_action')
                 ->html(true),
         ];
     }
