@@ -3,8 +3,11 @@
 namespace App\Http\Livewire;
 
 use App\Models\Bank;
+use App\Models\DualControl;
 use App\Models\EducationLevel;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -12,10 +15,11 @@ use Livewire\Component;
 
 class EducationLevelEditModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $name;
     public $level;
+    public $old_values;
 
     protected function rules()
     {
@@ -26,9 +30,12 @@ class EducationLevelEditModal extends Component
 
     public function mount($id)
     {
-        $data = EducationLevel::find($id);
-        $this->level = $data;
-        $this->name = $data->name;
+        $this->level = EducationLevel::find($id);
+        $this->name = $this->level->name;
+        $this->old_values = [
+            'name' => $this->name,
+        ];
+
     }
 
     public function submit()
@@ -38,14 +45,20 @@ class EducationLevelEditModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try {
-            $this->level->update([
+            $payload = [
                 'name' => $this->name,
-            ]);
-            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
+            ];
+            $this->triggerDualControl(get_class($this->level), $this->level->id, DualControl::EDIT, 'editing education level', json_encode($this->old_values), json_encode($payload));
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return redirect()->route('settings.education-level.index');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return redirect()->route('settings.education-level.index');
         }
     }
     public function render()

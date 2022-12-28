@@ -107,6 +107,13 @@ trait DualControlActivityTrait
                 return 'Tax Type';
                 break;
 
+            case DualControl::EDUCATION:
+                return 'Education Level';
+                break;
+            case DualControl::Business_File_Type:
+                return 'Business File Type';
+                break;
+
             default:
                 abort(404);
         }
