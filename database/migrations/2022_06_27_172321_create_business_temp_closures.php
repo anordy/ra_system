@@ -15,9 +15,9 @@ class CreateBusinessTempClosures extends Migration
     {
         Schema::create('business_temp_closures', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('closing_date');
-            $table->dateTime('opening_date');
-            $table->dateTime('reopening_date')->nullable();
+            $table->timestamp('closing_date');
+            $table->timestamp('opening_date');
+            $table->timestamp('reopening_date')->nullable();
             $table->longText('reason');
             $table->enum('closure_type', ['all', 'location'])->default('location');
             $table->boolean('is_extended')->default(false);
@@ -31,7 +31,7 @@ class CreateBusinessTempClosures extends Migration
             $table->timestamp('rejected_on')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
             $table->timestamps();
             $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('approved_by')->references('id')->on('users');

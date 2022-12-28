@@ -21,8 +21,8 @@ class CreateTaxClearanceRequestsTable extends Migration
             $table->unsignedBigInteger('business_location_id');
             $table->string('reason');
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
-            $table->dateTime('expire_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
+            $table->timestamp('expire_on')->nullable();
             $table->enum('status', TaxClearanceStatus::getConstants());
             $table->softDeletes();
             $table->timestamps();

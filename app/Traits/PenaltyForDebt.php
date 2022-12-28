@@ -97,8 +97,8 @@ class PenaltyForDebt
         $interestAmount = self::calculateInterest($penaltableAmount, $interestRate->rate, $period);
         $penaltableAmount = $penaltableAmount + $interestAmount;
 
-        $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay();
-        $end_date = Carbon::create($tax_return->curr_payment_due_date)->addDays(30);
+        $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay()->startOfDay();
+        $end_date = Carbon::create($tax_return->curr_payment_due_date)->addDays(30)->endOfDay();
 
         DebtPenalty::create([
             'debt_id' => $tax_return->id,
@@ -110,7 +110,7 @@ class PenaltyForDebt
             'rate_percentage' => $interestRate->rate,
             'rate_amount' => $interestAmount,
             'penalty_amount' => $penaltableAmount,
-            'start_date' => $start_date,
+            'start_date' => $start_date->startOfDay(),
             'end_date' => $end_date,
             'currency' => $tax_return->currency,
             'currency_rate_in_tz' => ExchangeRateTrait::getExchangeRate($tax_return->currency)
@@ -161,8 +161,8 @@ class PenaltyForDebt
         $interestAmount = self::calculateInterest($penaltableAmount, $interestRate->rate, $period);
         $penaltableAmount = $penaltableAmount + $interestAmount;
 
-        $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay();
-        $end_date = Carbon::create($tax_return->curr_payment_due_date)->addDays(30);
+        $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay()->startOfDay();
+        $end_date = Carbon::create($tax_return->curr_payment_due_date)->addDays(30)->endOfDay();
 
         $debt = DebtPenalty::create([
             'debt_id' => $tax_return->id,

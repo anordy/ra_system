@@ -114,8 +114,8 @@ class FinancialYearSeeder extends Seeder
                     'financial_year_id' => $yr->id,
                     'number'            => $index,
                     'name'              => $month,
-                    'due_date'          => Carbon::create($year['code'], $index, 20)->toDateTimeString(),
-                    'lumpsum_due_date'  => Carbon::create($year['code'], $index)->endOfMonth()->toDateTimeString(),
+                    'due_date'          => Carbon::create($year['code'], $index, 20)->endOfDay(),
+                    'lumpsum_due_date'  => Carbon::create($year['code'], $index)->endOfMonth()->endOfDay(),
                     'is_approved' => 1,
                 ]);
             }
@@ -125,7 +125,7 @@ class FinancialYearSeeder extends Seeder
                     'financial_year_id' => $yr->id,
                     'number' => $index,
                     'name' => $month,
-                    'due_date' => Carbon::create($year['code'], $index, 7)->toDateTimeString(),
+                    'due_date' => Carbon::create($year['code'], $index, 7)->endOfDay(),
                     'is_approved' => 1,
                 ]);
             }

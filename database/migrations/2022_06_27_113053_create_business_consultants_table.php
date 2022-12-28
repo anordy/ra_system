@@ -13,9 +13,9 @@ class CreateBusinessConsultantsTable extends Migration
 	        $table->id();
 	        $table->unsignedInteger('business_id');
 	        $table->unsignedInteger('taxpayer_id');
-	        $table->dateTime('reviewed_at')->nullable();
+	        $table->timestamp('reviewed_at')->nullable();
 	        $table->enum('status', ['pending', 'approved', 'rejected', 'removed'])->default('pending');
-			$table->dateTime('removed_at')->nullable();
+			$table->timestamp('removed_at')->nullable();
 	        $table->string('remarks')->nullable();
             $table->string('contract')->nullable();
             $table->softDeletes();

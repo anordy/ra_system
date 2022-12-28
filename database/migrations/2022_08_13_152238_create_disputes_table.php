@@ -41,8 +41,8 @@ class CreateDisputesTable extends Migration
             $table->enum('app_status', DisputeStatus::getConstants())->default(DisputeStatus::DRAFT);
             $table->enum('payment_status', BillStatus::getConstants())->nullable();
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
-            $table->dateTime('paid_at')->nullable();
+            $table->timestamp('approved_on')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

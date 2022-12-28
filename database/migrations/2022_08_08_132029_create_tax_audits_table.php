@@ -32,7 +32,7 @@ class CreateTaxAuditsTable extends Migration
             $table->enum('origin', ['system', 'manual'])->default('system');
             $table->enum('status', ['draft', 'pending', 'approved', 'correction'])->default('draft');
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
             $table->timestamps();
         });
     }

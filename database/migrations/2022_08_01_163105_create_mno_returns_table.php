@@ -30,10 +30,10 @@ class CreateMnoReturnsTable extends Migration
             $table->enum('currency',['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->decimal('penalty', 20,2);
             $table->decimal('interest',20,2);
-            $table->dateTime('filing_due_date')->nullable();
-            $table->dateTime('payment_due_date')->nullable();
-            $table->dateTime('submitted_at')->nullable();
-            $table->dateTime('paid_at')->nullable();
+            $table->timestamp('filing_due_date')->nullable();
+            $table->timestamp('payment_due_date')->nullable();
+            $table->timestamp('submitted_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->enum('status', ReturnStatus::getConstants());
             $table->enum('application_status', ReturnApplicationStatus::getConstants());
             $table->enum('return_category', ReturnCategory::getConstants())->default(ReturnCategory::NORMAL);

@@ -19,7 +19,7 @@ class CreateVatReturnSupplierDetailsTable extends Migration
             $table->string('taxpayer_zin_number');
             $table->string('supplier_zin_number');
             $table->string('tax_invoice_number');
-            $table->dateTime('date_of_tax_invoice');
+            $table->timestamp('date_of_tax_invoice');
             $table->string('release_number');
             $table->decimal('value',20,2);
             $table->decimal('vat',20,2);

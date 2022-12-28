@@ -25,6 +25,7 @@ use App\Services\ZanMalipo\ZmSignatureHelper;
 use App\Traits\AfterPaymentEvents;
 use App\Traits\LandLeaseTrait;
 use App\Traits\TaxVerificationTrait;
+use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ use Spatie\ArrayToXml\ArrayToXml;
 
 class ZanMalipoController extends Controller
 {
-    use TaxVerificationTrait, AfterPaymentEvents;
+    use TaxVerificationTrait, AfterPaymentEvents,WorkflowProcesssingTrait;
 
     private $billable = [
         PortReturn::class,
@@ -73,7 +74,7 @@ class ZanMalipoController extends Controller
 
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
-                $expireDate = Carbon::parse($bill->expire_date)->format('d M Y H:m:i');
+                $expireDate = Carbon::parse($bill->expire_date)->format('d M Y H:i:s');
                 $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$expireDate}.";
 
                 if (in_array($bill->billable_type, array_merge(
@@ -282,9 +283,7 @@ class ZanMalipoController extends Controller
             if ($bill->billable_type == TaxAssessment::class && in_array(Dispute::class, $assessmentBillItems)) {
                 if ($bill->paidAmount() >= $bill->amount) {
                     $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->first()->billable;
-
                     $assessment = $bill->billable;
-                    
                     if ($assessment->app_status == TaxAssessmentStatus::WAIVER_AND_OBJECTION) {
 
                         $assessment->payment_status = BillStatus::COMPLETE;
@@ -293,17 +292,15 @@ class ZanMalipoController extends Controller
                     } else {
                         $assessment->payment_status = BillStatus::PAID_PARTIALLY;
                         $assessment->save();
-
-                        $this->registerWorkflow(get_class($dispute), $dispute->id);
-                        $this->doTransition('application_submitted', []);
-                        $dispute->app_status = DisputeStatus::SUBMITTED;
+                        // $this->registerWorkflow(get_class($dispute), $dispute->id);
+                        // $this->doTransition('application_submitted', []);
+                        $dispute->app_status = DisputeStatus::PENDING;
                     }
 
                     $dispute->payment_status = BillStatus::COMPLETE;
                     $dispute->save();
-
-                    
                 }
+
             }elseif ($bill->billable_type == TaxAssessment::class ){
                 if ($bill->paidAmount() >= $bill->amount) {
                     $assessment = $bill->billable;
@@ -370,141 +367,9 @@ class ZanMalipoController extends Controller
         }
     }
 
-    // TODO: Remove on production
-    public function pay(Request $request)
-    {
-        if (config('app.env') != 'local') {
-            Log::alert('Bypassing payments on production.');
-        }
-
-        if ($request->control_number) {
-            $bill = ZmBill::where('control_number', $request->control_number)->firstOrFail();
-        } else {
-            $request->validate([
-                'bill_id' => 'required',
-            ]);
-
-            $bill = ZmBill::findOrFail($request->bill_id);
-        }
-
-        try {
-            DB::beginTransaction();
-            $payment = ZmPayment::query()->insert([
-                'zm_bill_id' => $bill->id,
-                'trx_id' => rand(100000, 1000000),
-                'sp_code' => 'SP20007',
-                'pay_ref_id' => rand(100000, 1000000),
-                'control_number' => $bill->control_number,
-                'bill_amount' => $bill->amount,
-                'paid_amount' => $bill->amount,
-                'bill_pay_opt' => $bill->payment_option,
-                'currency' => $bill->currency,
-                'trx_time' => Carbon::now()->toDateTimeString(),
-                'usd_pay_channel' => 'BANK',
-                'payer_phone_number' => '0753' . rand(100000, 900000),
-                'payer_email' => 'meshackf1@gmail.com',
-                'payer_name' => 'John Doe',
-                'psp_receipt_number' => 'RST' . rand(10000, 90000),
-                'psp_name' => 'BANK 1',
-                'ctr_acc_num' => rand(100000000, 900000000),
-                'created_at' => Carbon::now()->toDateTimeString(),
-            ]);
-
-            if ($bill->paidAmount() >= $bill->amount) {
-                $bill->status = 'paid';
-            } else {
-                $bill->status = 'partially';
-            }
-
-            $bill->paid_amount = $bill->paidAmount();
-            $bill->save();
-
-            // Check and update return
-            $this->updateBillable($bill);
-
-            // Check and update tax return
-            $this->updateTaxReturn($bill);
-
-            // Update installments
-            $this->updateInstallment($bill);
-
-            // Update disputes
-            $this->updateAssessment($bill);
-
-            //Land Lease
-            $this->updateLeasePayment($bill);
-
-            DB::commit();
-            return $payment;
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return $e->getMessage();
-        }
-    }
-
-    // TODO: Remove on production
-    public function consultant(Request $request)
-    {
-        if (config('app.env') != 'local') {
-            Log::alert('Bypassing payments on production.');
-        }
-
-        if ($request->control_number) {
-            $bill = ZmBill::where('control_number', $request->control_number)->firstOrFail();
-        } else {
-            $request->validate([
-                'bill_id' => 'required',
-            ]);
-
-            $bill = ZmBill::findOrFail($request->bill_id);
-        }
-
-        try {
-            DB::beginTransaction();
-            $payment = ZmPayment::query()->insert([
-                'zm_bill_id' => $bill->id,
-                'trx_id' => rand(100000, 1000000),
-                'sp_code' => 'SP20007',
-                'pay_ref_id' => rand(100000, 1000000),
-                'control_number' => $bill->control_number,
-                'bill_amount' => $bill->amount,
-                'paid_amount' => $bill->amount,
-                'bill_pay_opt' => $bill->payment_option,
-                'currency' => $bill->currency,
-                'trx_time' => Carbon::now()->toDateTimeString(),
-                'usd_pay_channel' => 'BANK',
-                'payer_phone_number' => '0753' . rand(100000, 900000),
-                'payer_email' => 'meshackf1@gmail.com',
-                'payer_name' => 'John Doe',
-                'psp_receipt_number' => 'RST' . rand(10000, 90000),
-                'psp_name' => 'BANK 1',
-                'ctr_acc_num' => rand(100000000, 900000000),
-                'created_at' => Carbon::now()->toDateTimeString(),
-            ]);
-
-            if ($bill->paidAmount() >= $bill->amount) {
-                $bill->status = 'paid';
-            } else {
-                $bill->status = 'partially';
-            }
-
-            $bill->paid_amount = $bill->paidAmount();
-            $bill->save();
-
-            DB::commit();
-            return $payment;
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return $e->getMessage();
-        }
-    }
-
     use LandLeaseTrait;
     private function updateLeasePayment($bill)
     {
-
         try {
             if ($bill->billable_type == LeasePayment::class) {
                 $updateLeasePayment = $bill->billable;

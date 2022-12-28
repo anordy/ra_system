@@ -73,13 +73,14 @@ class RegistrationsController extends Controller
         }
 
 
-        DB::beginTransaction();
 
         try {
 
+            DB::beginTransaction();
+
             $kyc->biometric_verified_at = Carbon::now()->toDateTimeString();
             $kyc->verified_by = Auth::id();
-            $kyc->save(); // todo: unless the exception tha would occur below will not affect this record, i suggest to put this inside trx
+            $kyc->save();
 
             $data = $kyc->makeHidden(['id', 'created_at', 'updated_at', 'deleted_at', 'verified_by', 'comments'])->toArray();
             $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
@@ -96,7 +97,6 @@ class RegistrationsController extends Controller
             // sign taxpayer
             $this->sign($taxpayer);
 
-            // todo: this should before sending the email/Sms
             if ($taxpayer) {
                 $kyc->delete();
             } else {
