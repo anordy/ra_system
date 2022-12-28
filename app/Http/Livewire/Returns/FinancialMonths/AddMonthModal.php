@@ -44,7 +44,7 @@ class AddMonthModal extends Component
             ]
         );
 
-        $this->month = date( 'F', strtotime( "$this->number/12/10" ));
+        $this->month = date('F', mktime(0, 0, 0, $this->number));
 
         DB::beginTransaction();
         try {
