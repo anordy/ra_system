@@ -30,7 +30,7 @@ class CreateTaxInvestigationsTable extends Migration
             $table->enum('origin', ['system', 'manual'])->default('system');
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'legal'])->default('draft');
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
             $table->timestamps();
         });
     }

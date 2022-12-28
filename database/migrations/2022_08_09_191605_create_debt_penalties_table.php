@@ -19,8 +19,8 @@ class CreateDebtPenaltiesTable extends Migration
             $table->unsignedBigInteger('debt_id');
             $table->string('debt_type');
             $table->string('financial_month_name');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
             $table->decimal('tax_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
             $table->decimal('rate_amount', 20, 2);
