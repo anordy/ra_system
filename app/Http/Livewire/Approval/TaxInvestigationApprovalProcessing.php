@@ -392,8 +392,8 @@ class TaxInvestigationApprovalProcessing extends Component
                 $this->alert('success', 'A control number for this verification has been generated successfully');
             }
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
         }
     }
 

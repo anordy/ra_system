@@ -60,9 +60,9 @@ class CapturePassportModal extends Component
             DB::commit();
             $this->flash('success', 'Photo Uploaded', [], route('drivers-license.applications.show',encrypt($this->application_id)));
         }catch(Exception $e){
+            DB::rollBack();
             Log::error($e);
             if (Storage::exists($this->photo_path)) Storage::delete($this->photo_path);
-            DB::rollBack();
             $this->alert('error', 'Something went wrong, please contact the administrator for help: '.$e->getMessage());
         }
     }

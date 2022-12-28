@@ -121,8 +121,8 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                     event(new SendMail('debt-waiver-approval', $notification_payload));
     
                 } catch (Exception $e) {
-                    Log::error($e);
                     DB::rollBack();
+                    Log::error($e);
                     $this->alert('error', 'Something went wrong, please contact the administrator for help');
                     return;
                 }
@@ -177,8 +177,8 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 event(new SendMail('debt-waiver-approval', $notification_payload));
 
             } catch (Exception $e) {
-                Log::error($e);
                 DB::rollBack();
+                Log::error($e);
                 $this->alert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
@@ -201,8 +201,8 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            DB::rollBack();
             Log::error($e);
+            DB::rollBack();
             $this->alert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }

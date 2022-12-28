@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
     <meta charset="utf-8">
     <title>404 Error Page</title>
-    <link rel="stylesheet" href="{{asset('css/error.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/error.css') }}">
 </head>
+
 <body>
 <div id="error-page">
     <div class="content">
@@ -22,6 +24,6 @@
             <a href="{{url()->previous()}}">Back</a>
         </div>
     </div>
-</div>
 </body>
+
 </html>

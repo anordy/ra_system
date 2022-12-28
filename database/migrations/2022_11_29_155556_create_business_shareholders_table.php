@@ -17,7 +17,7 @@ class CreateBusinessShareholdersTable extends Migration
             $table->id();
             $table->string('business_id');
             $table->string('entity_name');
-            $table->dateTime('birth_date');
+            $table->timestamp('birth_date');
             $table->string('first_name');
             $table->string('middle_name');
             $table->string('last_name');

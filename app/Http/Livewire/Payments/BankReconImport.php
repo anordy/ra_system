@@ -46,8 +46,8 @@ class BankReconImport extends Component
 
         } catch (\Exception $exception){
             $this->alert('error', $exception->getMessage());
-            Log::error($exception);
             DB::rollBack();
+            Log::error($exception);
         }
     }
 

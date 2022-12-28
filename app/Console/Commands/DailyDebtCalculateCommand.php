@@ -106,9 +106,9 @@ class DailyDebtCalculateCommand extends Command
             DB::commit();
             Log::channel('dailyJobs')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process ended");
         } catch (Exception $e) {
+            DB::rollBack();
             Log::channel('dailyJobs')->info('Daily Debt calculation process ended with error');
             Log::channel('dailyJobs')->error($e);
-            DB::rollBack();
         }
     }
 
@@ -148,9 +148,9 @@ class DailyDebtCalculateCommand extends Command
             DB::commit();
             Log::channel('dailyJobs')->info("Daily Debt marking for assessment process ended");
         } catch (Exception $e) {
+            DB::rollBack();
             Log::channel('dailyJobs')->info('Daily Debt marking for assessment process ended with error');
             Log::channel('dailyJobs')->error($e);
-            DB::rollBack();
         }
     }
 

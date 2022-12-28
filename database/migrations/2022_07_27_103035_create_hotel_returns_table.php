@@ -39,8 +39,8 @@ class CreateHotelReturnsTable extends Migration
             $table->decimal('total_amount_due_with_penalties', 20, 2)->default(0);
             $table->decimal('penalty', 20, 2)->default(0);
             $table->decimal('interest', 20, 2)->default(0);
-            $table->dateTime('submitted_at')->nullable();
-            $table->dateTime('paid_at')->nullable();
+            $table->timestamp('submitted_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->date('filing_due_date')->nullable();
             $table->date('payment_due_date')->nullable();
             $table->foreign('business_location_id')->references('id')->on('business_locations');

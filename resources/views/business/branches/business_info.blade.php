@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
-                    <p class="my-1">{{ $business->reg_no ?? 'N/A' }}/p>
+                    <p class="my-1">{{ $business->reg_no ?? 'N/A' }} </p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Owner Designation</span>

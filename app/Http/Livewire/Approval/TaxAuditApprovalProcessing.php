@@ -458,8 +458,8 @@ class TaxAuditApprovalProcessing extends Component
             }
             DB::commit();
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
         }
     }
 

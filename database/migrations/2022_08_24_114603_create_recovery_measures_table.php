@@ -17,7 +17,7 @@ class CreateRecoveryMeasuresTable extends Migration
             $table->id();
             $table->unsignedBigInteger('debt_id');
             $table->string('debt_type');
-            $table->dateTime('approved_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
             $table->enum('status', ['pending', 'approved', 'correction', 'rejected', 'unassigned'])->default('unassigned');
             $table->string('marking')->nullable();
             $table->timestamps();
