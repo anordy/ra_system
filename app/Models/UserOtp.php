@@ -7,6 +7,7 @@ use App\Events\SendSms;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class UserOtp extends Model
 {
@@ -14,23 +15,12 @@ class UserOtp extends Model
     protected $guarded = [];
     const EXPIRATION_TIME = 5;
 
-    public function __construct(array $attributes = [])
-    {
-        if (!isset($attributes['code'])) {
-            $attributes['code'] = $this->generateCode();
-        }
-
-        parent::__construct($attributes);
-    }
-
     public function user()
     {
         return $this->morphTo();
     }
 
-
-    public function generateCode($codeLength = 5)
-    {
+    public static function generate($codeLength = 5){
         $min = pow(10, $codeLength);
         $max = $min * 10 - 1;
         $code = mt_rand($min, $max);
@@ -57,11 +47,11 @@ class UserOtp extends Model
         return $this->updated_at->diffInMinutes(Carbon::now()) > static::EXPIRATION_TIME;
     }
 
-    public function sendCode()
+    public function sendCode($code)
     {
         if (config('app.env') == 'production') {
-            event(new SendSms('otp', $this->id));
-            event(new SendMail('otp', $this->id));
+            event(new SendSms('otp', $this->id, ['code' => $code]));
+            event(new SendMail('otp', $this->id, ['code' => $code]));
         }
     }
 }

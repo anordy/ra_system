@@ -25,7 +25,7 @@
         "laravel/ui": "^3.3",
         "livewire/livewire": "^2.10",
         "maatwebsite/excel": "^3.1",
-        "mews/captcha": "^3.2",
+        "mews/captcha": "3.2.8",
         "nyholm/psr7": "^1.5",
         "orchestra/parser": "^6.1",
         "owen-it/laravel-auditing": "^13.0",

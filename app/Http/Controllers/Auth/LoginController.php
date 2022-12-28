@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
@@ -89,20 +90,23 @@ class LoginController extends Controller
             if ($user->is_first_login == false) {
                 $token = $user->otp;
 
+                $code = UserOtp::generate();
+
                 if ($token == null) {
                     $token = UserOtp::create([
                         'user_id' => $user->id,
                         'user_type' => get_class($user),
-                        'used' => false
+                        'used' => false,
+                        'code' => Hash::make($code)
                     ]);
                 } else {
                     $token->used = false;
-                    $token->code = $token->generateCode();
+                    $token->code = Hash::make($code);
                     $token->updated_at = Carbon::now()->toDateTimeString();
                     $token->save();
                 }
 
-                $token->sendCode();
+                $token->sendCode($code);
 
                 return redirect()->route('twoFactorAuth.index');
             } else {
