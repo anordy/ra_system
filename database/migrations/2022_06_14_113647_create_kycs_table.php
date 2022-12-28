@@ -23,9 +23,9 @@ class CreateKYCSTable extends Migration
             $table->string('passport_no')->nullable();
             $table->string('permit_number')->nullable();
 
-            $table->string('nida_verified_at')->nullable();
-            $table->string('zanid_verified_at')->nullable();
-            $table->string('passport_verified_at')->nullable();
+            $table->timestamp('nida_verified_at')->nullable();
+            $table->timestamp('zanid_verified_at')->nullable();
+            $table->timestamp('passport_verified_at')->nullable();
 
             $table->string('first_name');
             $table->string('middle_name')->nullable();
@@ -47,7 +47,7 @@ class CreateKYCSTable extends Migration
             $table->foreign('country_id')->references('id')->on('countries');
 
             // Biometric Enrolled
-            $table->dateTime('biometric_verified_at')->nullable();
+            $table->timestamp('biometric_verified_at')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

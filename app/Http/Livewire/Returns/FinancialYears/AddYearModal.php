@@ -4,17 +4,12 @@ namespace App\Http\Livewire\Returns\FinancialYears;
 
 use App\Models\DualControl;
 use App\Models\FinancialYear;
-use App\Models\TaPaymentConfiguration;
-use App\Models\TaPaymentConfigurationHistory;
 use App\Traits\DualControlActivityTrait;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use App\TaxAgentFee;
 
 class AddYearModal extends Component
 {

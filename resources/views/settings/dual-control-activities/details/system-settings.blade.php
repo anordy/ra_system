@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header font-weight-bold text-uppercase">System Setting Category Details</div>
+    <div class="card-header font-weight-bold text-uppercase">System Setting Details</div>
     <div class="card-body">
         <table class="table table-striped table-sm">
             <thead>

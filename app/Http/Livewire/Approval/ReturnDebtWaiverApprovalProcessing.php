@@ -128,7 +128,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
                 try {
                     if ($this->debt->bill) {
-                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
+                        CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->onQueue('high');
                         GenerateControlNo::dispatch($this->debt);
                     } else {
                         GenerateControlNo::dispatch($this->debt);

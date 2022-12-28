@@ -63,7 +63,7 @@ class ZrbBankAccountEditModal extends Component
             'swift_code' => $this->swift_code,
             'account_number' => $this->account_number,
             'currency_id' => $this->zrbBankAccount->id,
-            'currency_iso' => $this->zrbBankAccount->iso,
+            'currency_iso' => $this->zrbBankAccount->currency_iso,
         ];
 
         $this->currencies = Currency::select('id', 'iso')->get();

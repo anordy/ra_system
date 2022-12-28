@@ -4,7 +4,6 @@
             <h5 class="text-uppercase">Edit Ward</h5>
         </div>
         <div class="modal-body">
-            <div class="card border-0">
                 <div class="row mx-4 mt-2">
                     <div class="col-md-12 form-group">
                         <label>Region</label>
@@ -44,10 +43,6 @@
                         @enderror
                     </div>
                 </div>
-            </div>
-
-
-
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
