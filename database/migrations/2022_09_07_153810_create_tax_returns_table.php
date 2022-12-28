@@ -73,12 +73,12 @@ class CreateTaxReturnsTable extends Migration
             $table->enum('application_status', ApplicationStatus::getConstants())->default('normal');
             $table->enum('payment_method', PaymentMethod::getConstants())->nullable();
 
-            $table->dateTime('paid_at')->nullable();
-            $table->dateTime('payment_due_date');
-            $table->dateTime('filing_due_date');
+            $table->timestamp('paid_at')->nullable();
+            $table->timestamp('payment_due_date');
+            $table->timestamp('filing_due_date');
 
-            $table->dateTime('curr_payment_due_date')->nullable();
-            $table->dateTime('curr_filing_due_date');
+            $table->timestamp('curr_payment_due_date')->nullable();
+            $table->timestamp('curr_filing_due_date');
 
             $table->boolean('failed_verification')->default(0);
             $table->text('ci_payload', 4000)->nullable();

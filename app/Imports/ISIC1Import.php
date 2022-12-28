@@ -37,6 +37,7 @@ class ISIC1Import implements ToCollection, WithHeadingRow, WithValidation, Skips
             }
         } catch (Exception $e) {
             DB::rollBack();
+            Log::error($e);
         }
         DB::commit();
     }

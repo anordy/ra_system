@@ -69,7 +69,7 @@ class SendMailFired
         }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
-            SendOTPEmail::dispatch($token->code, $token->user->email, $token->user->fullname());
+            SendOTPEmail::dispatch($event->extra['code'], $token->user->email, $token->user->fullname());
         } else if ($event->service == 'withholding_agent_registration') {
             /** TokenId is withholding agent history is */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);

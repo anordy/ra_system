@@ -38,8 +38,9 @@ class ISIC2Import implements ToCollection, WithHeadingRow, WithValidation, Skips
                     'isic1_id' =>$isic1Id,
                 ]);
             }
-        } catch (Exception $re) {
+        } catch (Exception $e) {
             DB::rollBack();
+            Log::error($e);
         }
         DB::commit();
     }

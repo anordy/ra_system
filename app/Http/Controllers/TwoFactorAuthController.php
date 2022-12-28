@@ -6,6 +6,7 @@ use App\Models\UserOtp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,7 +18,7 @@ class TwoFactorAuthController extends Controller
         if (Auth::user()->is_password_expired) {
             return redirect()->route('password.change');
         }
-        
+
         return view('layouts.otp_confirm');
     }
 
@@ -41,22 +42,28 @@ class TwoFactorAuthController extends Controller
         $code = join($validated);
 
 
-        $user  = auth()->user();
+        $user = auth()->user();
 
         $otp = UserOtp::where('user_id', $user->id)
             ->where('user_type', get_class($user))
-            ->where('code', $code)
             ->first();
+
+        if (!Hash::check($code, $otp->code)) {
+            return redirect()->back()->withErrors('Invalid token supplied');
+        }
 
         if ($otp == null) {
             return redirect()->back()->withErrors('Token supplied does not exits');
         }
+
         if ($otp->isUsed()) {
             return redirect()->back()->withErrors('Token has already used');
         }
+
         if ($otp->isExpired()) {
             return redirect()->back()->withErrors('Token has already expired');
         }
+
         $otp->used = true;
         $otp->save();
 
@@ -70,20 +77,23 @@ class TwoFactorAuthController extends Controller
         $user = auth()->user();
         $token = $user->otp;
 
+        $code = UserOtp::generate();
+
         if ($token == null) {
             $token = UserOtp::create([
                 'user_id' => $user->id,
                 'user_type' => get_class($user),
-                'used' => false
+                'used' => false,
+                'code' => Hash::make($code)
             ]);
         } else {
             $token->used = false;
-            $token->code = $token->generateCode();
+            $token->code = Hash::make($code);
             $token->updated_at = Carbon::now()->toDateTimeString();
             $token->save();
         }
 
-        $token->sendCode();
+        $token->sendCode($code);
 
         Session::flash('success', 'Token resend successfully. Check your email/sms');
 

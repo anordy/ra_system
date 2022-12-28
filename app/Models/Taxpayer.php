@@ -64,8 +64,7 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
             DB::commit();
         } catch (\Exception $e){
             DB::rollBack();
-            Log::error($e->getMessage());
-            throw $e;
+            Log::error($e);
         }
     }
 

@@ -6,15 +6,11 @@ use App\Models\DualControl;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\SevenDaysFinancialMonth;
-use App\Models\TaPaymentConfiguration;
-use App\Models\TaPaymentConfigurationHistory;
 use App\Traits\DualControlActivityTrait;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 
@@ -44,7 +40,7 @@ class AddMonthModal extends Component
             ]
         );
 
-        $this->month = date( 'F', strtotime( "$this->number/12/10" ));
+        $this->month = date('F', mktime(0, 0, 0, $this->number));
 
         DB::beginTransaction();
         try {

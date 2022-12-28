@@ -17,7 +17,7 @@ class CreateUserOtpsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('user_type');
-            $table->string('code', 20);
+            $table->string('code');
             $table->boolean('used')->default(false);
             $table->timestamps();
         });

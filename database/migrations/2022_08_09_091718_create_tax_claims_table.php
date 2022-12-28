@@ -31,7 +31,7 @@ class CreateTaxClaimsTable extends Migration
             $table->unsignedBigInteger('financial_month_id');
             $table->enum('status', TaxClaimStatus::getConstants())->default(TaxClaimStatus::DRAFT);
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
             $table->unsignedBigInteger('created_by_id');
             $table->string('created_by_type');
             $table->softDeletes();

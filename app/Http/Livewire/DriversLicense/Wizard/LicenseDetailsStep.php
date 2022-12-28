@@ -115,8 +115,8 @@ class LicenseDetailsStep extends StepComponent
             DB::commit();
             $this->flash('success', 'Request Submitted successfully', [], route('drivers-license.applications.show',encrypt($dl_application->id)));
         }catch (\Exception $e){
-            report($e);
             DB::rollBack();
+            report($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

@@ -72,9 +72,9 @@ class UploadSaleAgreementModal extends Component
             $this->alert('success', 'Document Uploaded');
             return redirect()->route('mvr.transfer-ownership.show',encrypt($this->request_id));
         }catch(Exception $e){
-            Log::error($e);
             if (Storage::disk('local-admin')->exists($this->agreement_path)) Storage::disk('local-admin')->delete($this->agreement_path);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help: '.$e->getMessage());
         }
     }

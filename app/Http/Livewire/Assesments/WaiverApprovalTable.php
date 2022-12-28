@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Assesments;
 
+use App\Enum\BillStatus;
 use App\Enum\PaymentStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\WorkflowTask;
@@ -14,38 +15,27 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class WaiverApprovalTable extends DataTableComponent
 {
     use LivewireAlert;
-    public $paymentStatus;
+    public $category;
 
-    public function mount($category, $payment)
+    public function mount($category)
     {
-        $this->paymentStatus = $payment;
         $this->category = $category;
     }
     public function builder(): Builder
     {
 
-        if ($this->paymentStatus == 'complete') {
-
-            return WorkflowTask::with('pinstance', 'user')
-                ->where('pinstance_type', Dispute::class)
-                ->where('status', '!=', 'completed')
-                ->where('owner', 'staff')
-                ->whereHas('actors', function($query){
-                    $query->where('user_id', auth()->id());
-                });
-                
-        } elseif ($this->paymentStatus == 'unpaid') {
-     
-            return WorkflowTask::with('pinstance', 'user')
-                ->where('pinstance_type', Dispute::class)
-                ->where('status', '!=', 'completed')
-                ->where('owner', 'staff')
-                ->whereHas('actors', function($query){
-                    $query->where('user_id', auth()->id());
-                });
-        } else {
-            return [];
-        }
+        $workflow = WorkflowTask::with('pinstance')
+            ->where('pinstance_type', Dispute::class)
+            ->where('status', '!=', 'completed')
+            ->whereHasMorph('pinstance', Dispute::class, function ($query) {
+                $query->where('category', $this->category)
+                       ->where('payment_status', [BillStatus::COMPLETE]);
+            })
+            ->where('owner', 'staff')
+            ->whereHas('actors', function ($query) {
+                $query->where('user_id', auth()->id());
+            });
+        return $workflow;
 
     }
 
@@ -83,7 +73,7 @@ class WaiverApprovalTable extends DataTableComponent
             Column::make('Filled On', 'created_at')
                 ->format(fn($value) => Carbon::create($value)->toDayDateTimeString()),
             Column::make('Action', 'pinstance_id')
-                ->view('investigation.approval.action')
+                ->view('assesments.waiver.includes.action')
                 ->html(true),
 
             // Column::make("Id", "id")
