@@ -23,7 +23,7 @@ class ZanMalipoInternalService
 
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
-        if (!$access_token) {
+        if ($access_token == null) {
             $billable = $bill->billable;
             if ($bill->billable_type == TaxAssessment::class || $bill->billable_type == TaxReturn::class) {
                 $billable->payment_status = ReturnStatus::CN_GENERATION_FAILED;

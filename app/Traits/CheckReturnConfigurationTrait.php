@@ -159,17 +159,19 @@ trait CheckReturnConfigurationTrait
             // Ignore TZS currency as rate will be always 1
             if ($currency->iso != 'TZS') {
 
-                $currencyRate = ExchangeRate::query()
-                    ->where('exchange_date', '=', Carbon::now()->toDateString())
-                    ->where('currency', $currency->iso)->first();
+                $currencyRate      = ExchangeRate::where('currency', $currency->iso)
+                ->whereRaw("TO_CHAR(exchange_date, 'mm') = TO_CHAR(SYSDATE, 'mm')
+                AND TO_CHAR(exchange_date, 'yyyy') = TO_CHAR(SYSDATE, 'yyyy')")
+                ->first();
 
                 // If no exchange rate add to currencies_statuses
                 if (!$currencyRate) {
-                    $payload = ['currency' => $currency->iso, 'date' => Carbon::now()->toDateString()];
+                    $month = Carbon::now()->monthName;
+                    $payload = ['currency' => $currency->iso, 'date' => $month];
                     event(new SendMail('exchange-rate', $payload));
                     event(new SendSms('exchange-rate', $payload));
                     $currencies_statuses[] = [
-                        'description' => "Todays {$currency->iso} exchange rate has not been configured",
+                        'description' => "{$currency->iso} exchange rate for month {$month} has not been configured",
                         'route' => 'settings.exchange-rate.index'
                     ];
                 }
