@@ -17,6 +17,7 @@ use App\Notifications\DatabaseNotification;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -117,8 +118,8 @@ class ApprovalProcessing extends Component
             ));
 
             if (config('app.env') == 'production') {
-                event(new SendMail('tax-agent-registration-approval', $this->agent->taxpayer_id));
-                event(new SendSms('tax-agent-registration-approval', $this->agent->taxpayer_id));
+                event(new SendMail('tax-agent-registration-approval', $taxpayer->id));
+                event(new SendSms('tax-agent-registration-approval', $taxpayer->id));
             }
 
             $this->subject->verified_at = Carbon::now()->toDateTimeString();

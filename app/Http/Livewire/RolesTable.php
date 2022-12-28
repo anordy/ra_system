@@ -122,6 +122,11 @@ class RolesTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $role = Role::find($data->id);
+            if (!$this->checkRelation($role, $role->id))
+            {
+                $this->alert('error', DualControl::RELATION_MESSAGE,  ['timer'=>4000]);
+                return;
+            }
             $this->triggerDualControl(get_class($role), $role->id, DualControl::DELETE, 'deleting role');
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             return;
