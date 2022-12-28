@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header font-weight-bold text-uppercase">System Setting Category Details</div>
+    <div class="card-header font-weight-bold text-uppercase">Zrb Bank Account Details</div>
     <div class="card-body">
         <table class="table table-striped table-sm">
             <thead>
@@ -14,22 +14,22 @@
             </thead>
             <tbody>
                 <tr>
-                    <th>Setting Category</th>
+                    <th>Bank Name</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->system_setting_category->name : \App\Models\SystemSetting::find($old_values->system_setting_category_id)->name }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->bank->name : \App\Models\Bank::find($old_values->bank_id)->name }}
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ \App\Models\SystemSetting::find($new_values->system_setting_category_id)->name ?? '' }}
+                            {{ \App\Models\Bank::find($new_values->bank_id)->name ?? '' }}
                         </td>
 
                         @if (compareDualControlValues(
                             $result->action != \App\Models\DualControl::EDIT
-                                ? $data->system_setting_category->name
-                                : \App\Models\SystemSetting::find($old_values->system_setting_category_id)->name,
-                            \App\Models\SystemSetting::find($new_values->system_setting_category_id)->name ?? ''))
+                                ? $data->bank->name
+                                : \App\Models\Bank::find($old_values->bank_id)->name,
+                            \App\Models\Bank::find($new_values->bank_id)->name ?? ''))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>
@@ -37,19 +37,19 @@
                     @endif
                 </tr>
                 <tr>
-                    <th>Name</th>
+                    <th>Account Name</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->account_name : $old_values->account_name }}
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ $new_values->name }}
+                            {{ $new_values->account_name }}
                         </td>
                         @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name,
-                            $new_values->name))
+                            $result->action != \App\Models\DualControl::EDIT ? $data->account_name : $old_values->account_name,
+                            $new_values->account_name))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>
@@ -57,19 +57,19 @@
                     @endif
                 </tr>
                 <tr>
-                    <th>Code</th>
+                    <th>Account Number</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->code : $old_values->code }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->account_number : $old_values->account_number }}
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ $new_values->code }}
+                            {{ $new_values->account_number }}
                         </td>
                         @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->code : $old_values->code,
-                            $new_values->code))
+                            $result->action != \App\Models\DualControl::EDIT ? $data->account_number : $old_values->account_number,
+                            $new_values->account_number))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>
@@ -77,19 +77,19 @@
                     @endif
                 </tr>
                 <tr>
-                    <th>Value</th>
+                    <th>Account Number</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->value : $old_values->value }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->account_number : $old_values->account_number }}
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ $new_values->value }}
+                            {{ $new_values->account_number }}
                         </td>
                         @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->value : $old_values->value,
-                            $new_values->value))
+                            $result->action != \App\Models\DualControl::EDIT ? $data->account_number : $old_values->account_number,
+                            $new_values->account_number))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>
@@ -97,19 +97,19 @@
                     @endif
                 </tr>
                 <tr>
-                    <th>Unit</th>
+                    <th>Branch Name</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->unit : $old_values->unit }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->branch_name : $old_values->branch_name }}
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ $new_values->unit }}
+                            {{ $new_values->branch_name }}
                         </td>
                         @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->unit : $old_values->unit,
-                            $new_values->unit))
+                            $result->action != \App\Models\DualControl::EDIT ? $data->branch_name : $old_values->branch_name,
+                            $new_values->branch_name))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>
@@ -117,19 +117,42 @@
                     @endif
                 </tr>
                 <tr>
-                    <th>Description</th>
+                    <th>SWIFT Code</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->description : $old_values->description }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->swift_code : $old_values->swift_code }}
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ $new_values->description }}
+                            {{ $new_values->swift_code }}
                         </td>
                         @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->description : $old_values->description,
-                            $new_values->description))
+                            $result->action != \App\Models\DualControl::EDIT ? $data->swift_code : $old_values->swift_code,
+                            $new_values->swift_code))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+                <tr>
+                    <th>Currency</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->currency->iso : \App\Models\Currency::find($old_values->currency_id)->iso }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ \App\Models\Currency::find($new_values->currency_id)->iso ?? '' }}
+                        </td>
+
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT
+                                ? $data->currency->iso
+                                : \App\Models\Currency::find($old_values->currency_id)->iso,
+                            \App\Models\Currency::find($new_values->currency_id)->iso ?? ''))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>

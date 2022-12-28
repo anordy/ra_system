@@ -131,10 +131,12 @@ use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Setting\SystemSettingsController;
 use App\Http\Controllers\Setting\ZrbBankAccountController;
+use App\Http\Controllers\v1\ZanMalipoController;
 
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/pay', [ZanMalipoController::class, 'pay']);
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
 

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Debt\Waiver;
 
 use App\Models\Debts\DebtWaiver;
 use App\Models\WaiverStatus;
+use App\Models\WorkflowTask;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -19,9 +20,10 @@ class DebtWaiverAprovalProgressTable extends DataTableComponent
     }
     public function builder(): Builder
     {
-        return DebtWaiver::query()
-            ->where('debt_waivers.status', '!=', WaiverStatus::APPROVED)
-            ->orderBy('debt_waivers.created_at', 'desc');
+        return WorkflowTask::with('pinstance', 'user')
+            ->where('pinstance_type', DebtWaiver::class)
+            ->where('status', '!=', 'completed')
+            ->where('owner', 'staff');
     }
 
     public function configure(): void
@@ -36,30 +38,43 @@ class DebtWaiverAprovalProgressTable extends DataTableComponent
 
     public function columns(): array
     {
+
         return [
-            Column::make('debt_id', 'debt_id')->hideIf(true),
-            Column::make("Business Name", "debt")
-                ->label(fn ($row) => $row->debt->business->name),
-            Column::make('Location', 'debt')
-                ->label(fn ($row) => $row->debt->location->name),
-            Column::make('Tax Type', 'debt')
-                ->label(fn ($row) => $row->debt->taxtype->name),
-            Column::make('Waiver Category', 'category')
-                ->format(function ($value, $row) {
-                    if ($value === 'interest') {
-                        return 'Interest';
-                    } else if ($value === 'penalty') {
-                        return 'Penalty';
-                    } else {
-                        return 'Penalty & Interest';
-                    }
-                }),
-            Column::make('Requested On', 'created_at')
-                ->format(fn ($value, $row) => $value),
-            Column::make('Status', 'status')
-                ->view('debts.waivers.includes.status'),
-            Column::make('Action', 'id')
-                ->view('debts.waivers.includes.action'),
+            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+            Column::make('Business Category', 'pinstance.category.name')
+                ->label(fn($row) => $row->pinstance->category->name ?? 'N/A')
+                ->sortable()
+                ->searchable(),
+            Column::make('Business Type', 'pinstance.business_type')
+                ->label(fn($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
+                ->sortable()
+                ->searchable(),
+            Column::make('Business Name', 'pinstance.name')
+                ->label(fn($row) => $row->pinstance->name ?? 'N/A')
+                ->sortable()
+                ->searchable(),
+            Column::make('TIN', 'pinstance.tin')
+                ->label(fn($row) => $row->pinstance->tin ?? '')
+                ->sortable()
+                ->searchable(),
+            Column::make('Buss. Reg. No.', 'pinstance.reg_no')
+                ->label(fn($row) => $row->pinstance->reg_no ?? 'N/A')
+                ->sortable()
+                ->searchable(),
+            Column::make('Mobile', 'pinstance_type')
+                ->label(fn($row) => $row->pinstance->mobile ?? '')
+                ->sortable()
+                ->searchable(),
+            Column::make('From State', 'from_place')
+                ->format(fn($value) => strtoupper($value))
+                ->sortable()
+                ->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn($value) => strtoupper($value))
+                ->sortable()
+                ->searchable(),
+            Column::make('Status', 'status')->view('debts.waivers.includes.status'),
+            Column::make('Action', 'id')->view('debts.waivers.includes.action'),
         ];
     }
 }
