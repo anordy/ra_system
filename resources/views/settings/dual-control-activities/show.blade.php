@@ -38,7 +38,9 @@
                     </div>
                 </div>
             </div>
-            @if ($result->controllable_type === \App\Models\DualControl::USER)
+            @if ($result->action_detail === 'editing user role')
+                @include('settings.dual-control-activities.details.user-role')
+            @elseif ($result->controllable_type === \App\Models\DualControl::USER)
                 @include('settings.dual-control-activities.details.user')
             @elseif ($result->controllable_type === \App\Models\DualControl::ROLE)
                 @include('settings.dual-control-activities.details.roles')

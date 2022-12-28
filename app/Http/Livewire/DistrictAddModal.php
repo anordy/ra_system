@@ -33,7 +33,7 @@ class DistrictAddModal extends Component
 
     public function mount()
     {
-        $this->regions = Region::all();
+        $this->regions = Region::where('is_approved',1)->get();
     }
 
 
@@ -52,11 +52,13 @@ class DistrictAddModal extends Component
             ]);
             $this->triggerDualControl(get_class($district), $district->id, DualControl::ADD, 'adding district');
             DB::commit();
-            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.district.index');
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
-            $this->alert('error', DualControl::ERROR_MESSAGE);
+            Log::error($e);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.district.index');
         }
     }
 

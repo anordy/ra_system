@@ -49,6 +49,24 @@ class DistrictTable extends DataTableComponent
             Column::make('Region', 'region.name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
             Column::make('Action', 'id')
                 ->format(function ($value){
                     $edit = '';
@@ -56,7 +74,7 @@ class DistrictTable extends DataTableComponent
 
                     if (Gate::allows('setting-district-edit')) {
                         $edit = <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'district-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                         HTML;
                     }
 

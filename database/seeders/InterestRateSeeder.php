@@ -29,6 +29,7 @@ class InterestRateSeeder extends Seeder
             InterestRate::updateOrCreate([
                 'rate' => $item['rate'],
                 'year'=> $item['year'],
+                'is_approved' => 1,
             ]);
         }
     }

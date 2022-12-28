@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Returns;
 
 use App\Models\Currency;
+use App\Traits\DualControlActivityTrait;
 use App\Traits\ReturnConfigurationTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +13,7 @@ use Livewire\Component;
 
 class EditReturnConfig extends Component
 {
-    use LivewireAlert, ReturnConfigurationTrait;
+    use LivewireAlert, ReturnConfigurationTrait, DualControlActivityTrait;
 
     public $taxtype_id, $config_id, $model, $currencies, $configs;
     public $name;
@@ -30,7 +31,7 @@ class EditReturnConfig extends Component
         $this->currencies = Currency::all();
         $code  = $this->getTaxTypeCode($this->taxtype_id);
         $this->model = $this->getConfigModel($code);
-        $this->configs = $this->model::query()->where('id', $this->config_id)->first();
+        $this->configs = $this->model::where('id', $this->config_id)->first();
         $this->name = $this->configs->name;
         $this->row_type = $this->configs->row_type;
         $this->value_calculated = $this->configs->value_calculated;

@@ -18,8 +18,8 @@
                 </div>
 
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Report To</span>
-                    <p class="my-1">{{ $report_to_old ?? '-'}}</p>
+                    <span class="font-weight-bold text-uppercase">District</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->district->name : getDistrict($old_values->district_id)}}</p>
                 </div>
 
             </div>
@@ -41,12 +41,10 @@
                     </div>
 
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Report To</span>
-                        @if(!compareEditedValues($report_to_old,$report_to_new ))
-                            <p class="my-1 text-danger">{{ $report_to_new }}</p>
-                        @else
-                            <p class="my-1">{{ $report_to_new }}</p>
-                        @endif
+                        <span class="font-weight-bold text-uppercase">District</span>
+                        <p class="my-1">
+                            {{ getDistrict($new_values->district_id)  }}
+                        </p>
 
                     </div>
                 </div>

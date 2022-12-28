@@ -18,8 +18,13 @@
                 </div>
 
                 <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Report To</span>
-                    <p class="my-1">{{ $report_to_old ?? '-'}}</p>
+                    <span class="font-weight-bold text-uppercase">Code</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->code : $old_values->code}}</p>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <span class="font-weight-bold text-uppercase">Code</span>
+                    <p class="my-1">{{ $result->action != \App\Models\DualControl::EDIT ? $data->nationality : $old_values->nationality}}</p>
                 </div>
 
             </div>
@@ -33,21 +38,17 @@
                 <div class="row m-2 pt-3">
                     <div class="col-md-3 mb-3">
                         <span class="font-weight-bold text-uppercase">Name</span>
-                        @if(!compareEditedValues($old_values->name,$new_values->name ))
-                            <p class="my-1 text-danger">{{ $new_values->name }}</p>
-                        @else
-                            <p class="my-1">{{ $new_values->name }}</p>
-                        @endif
+                        <p class="my-1">{{ $new_values->name }}</p>
                     </div>
 
                     <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Report To</span>
-                        @if(!compareEditedValues($report_to_old,$report_to_new ))
-                            <p class="my-1 text-danger">{{ $report_to_new }}</p>
-                        @else
-                            <p class="my-1">{{ $report_to_new }}</p>
-                        @endif
+                        <span class="font-weight-bold text-uppercase">Code</span>
+                        <p class="my-1">{{ $new_values->code}}</p>
+                    </div>
 
+                    <div class="col-md-3 mb-3">
+                        <span class="font-weight-bold text-uppercase">Code</span>
+                        <p class="my-1">{{ $new_values->nationality}}</p>
                     </div>
                 </div>
             </div>

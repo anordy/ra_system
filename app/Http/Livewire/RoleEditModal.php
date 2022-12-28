@@ -43,7 +43,6 @@ class RoleEditModal extends Component
                 'name' => $this->name,
                 'report_to' => $this->report_to == 'null' ? null : $this->report_to
             ];
-//            $this->role->update($payload);
             $this->triggerDualControl(get_class($this->role), $this->role->id, DualControl::EDIT, 'editing role', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
