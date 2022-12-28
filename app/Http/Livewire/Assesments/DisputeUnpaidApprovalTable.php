@@ -3,8 +3,6 @@
 namespace App\Http\Livewire\Assesments;
 
 use App\Enum\BillStatus;
-use App\Enum\DisputeStatus;
-use App\Enum\PaymentStatus;
 use App\Models\Disputes\Dispute;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -24,11 +22,12 @@ class DisputeUnpaidApprovalTable extends DataTableComponent
     public function builder(): Builder
     {
 
-        return Dispute::query()
+        $dispute = Dispute::query()
             ->where('disputes.category', $this->category)
             ->whereNotIn('disputes.payment_status', [BillStatus::COMPLETE])
             ->orderBy('disputes.created_at', 'desc');
 
+        return $dispute;
     }
 
     public function configure(): void

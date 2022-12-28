@@ -18,14 +18,10 @@ class WaiverController extends Controller
         if (!Gate::allows('dispute-waiver-view')) {
             abort(403);
         }
-
         return view('assesments.waiver.index');
     }
 
-    public function edit()
-    {
-        return view('assesments.waiver.edit');
-    }
+
 
     public function approval($waiverId)
     {
@@ -36,6 +32,14 @@ class WaiverController extends Controller
         return view('assesments.waiver.approval', compact('dispute', 'files', 'business', 'assesment'));
     }
 
+      public function view($waiverId)
+    {
+        $dispute = Dispute::findOrFail(decrypt($waiverId));
+        $assesment = TaxAssessment::find($dispute->assesment_id);
+        $business = Business::find($dispute->business_id);
+        $files = DisputeAttachment::where('dispute_id', $dispute->id)->get();
+        return view('assesments.waiver.view', compact('dispute', 'files', 'business', 'assesment'));
+    }
     public function files($path)
     {
         if ($path) {

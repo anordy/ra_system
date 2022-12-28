@@ -20,14 +20,13 @@ class ApprovalCountCard extends Component
     public function mount($modelName)
     {
         $user_id = auth()->id();
-
         switch ($modelName) {
             case 'TaxVerification':
                 $model = TaxVerification::class;
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
                     ->where('owner', 'staff')
                     ->where('status', 'running')
-                    ->whereHas('actors', function($query) use ($user_id){
+                    ->whereHas('actors', function ($query) use ($user_id) {
                         $query->where('user_id', $user_id);
                     })
                     ->get();
@@ -47,7 +46,7 @@ class ApprovalCountCard extends Component
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
                     ->where('owner', 'staff')
                     ->where('status', 'running')
-                    ->whereHas('actors', function($query) use ($user_id){
+                    ->whereHas('actors', function ($query) use ($user_id) {
                         $query->where('user_id', $user_id);
                     })
                     ->get();
@@ -66,7 +65,27 @@ class ApprovalCountCard extends Component
                 $workflowPending = WorkflowTask::where('pinstance_type', $model)
                     ->where('owner', 'staff')
                     ->where('status', 'running')
-                    ->whereHas('actors', function($query) use ($user_id){
+                    ->whereHas('actors', function ($query) use ($user_id) {
+                        $query->where('user_id', $user_id);
+                    })
+                    ->get();
+
+                $workflow = WorkflowTask::where('pinstance_type', $model)
+                    ->where('user_type', get_class(auth()->user()))
+                    ->where('user_id', $user_id)
+                    ->get();
+
+                $this->pending = $workflowPending->count();
+                $this->rejected = $workflow->where('status', 'rejected')->count();
+                $this->approved = $workflow->where('status', 'completed')->count();
+                break;
+            case 'Dispute':
+                $model = Dispute::class;
+                
+                $workflowPending = WorkflowTask::where('pinstance_type', $model)
+                    ->where('owner', 'staff')
+                    ->where('status', 'running')
+                    ->whereHas('actors', function ($query) use ($user_id) {
                         $query->where('user_id', $user_id);
                     })
                     ->get();

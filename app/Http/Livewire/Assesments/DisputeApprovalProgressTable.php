@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Assesments;
 
-use App\Enum\BillStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\WorkflowTask;
 use Carbon\Carbon;
@@ -11,35 +10,26 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class DisputeApprovalTable extends DataTableComponent
+class DisputeApprovalProgressTable extends DataTableComponent
 {
     use LivewireAlert;
+    public $category;
 
-    public $model = WorkflowTask::class;
-
-    public $paymentStatus,$category;
-
-    public function mount($category, $payment)
+    public function mount($category)
     {
-        $this->paymentStatus = $payment;
         $this->category = $category;
     }
+
     public function builder(): Builder
     {
-        $workflow = WorkflowTask::with('pinstance')
+        $workflow = WorkflowTask::with('pinstance', 'user')
             ->where('pinstance_type', Dispute::class)
             ->where('status', '!=', 'completed')
             ->whereHasMorph('pinstance', Dispute::class, function ($query) {
-                $query->where('category', $this->category)
-                      ->where('payment_status',[BillStatus::COMPLETE]);
+                $query->where('category', $this->category);
             })
-            ->where('owner', 'staff')
-            ->whereHas('actors', function ($query) {
-                $query->where('user_id', auth()->id());
-            });
+            ->where('owner', 'staff');
         return $workflow;
-
- 
 
     }
 
@@ -68,16 +58,16 @@ class DisputeApprovalTable extends DataTableComponent
                 ->label(fn($row) => $row->pinstance->business->mobile ?? ''),
             Column::make('Category', 'pinstance.category')
                 ->label(fn($row) => $row->pinstance->category ?? ''),
-            Column::make('Tax In Dispute', 'pinstance.tax_in_dispute')
-                ->label(fn($row) => number_format($row->pinstance->tax_in_dispute, 2) ?? ''),
-            Column::make('Tax Not in Dispute', 'pinstance.tax_not_in_dispute')
-                ->label(fn($row) => number_format($row->pinstance->tax_not_in_dispute, 2) ?? ''),
-            Column::make('Tax Deposit', 'pinstance.tax_deposit')
-                ->label(fn($row) => number_format($row->pinstance->tax_deposit, 2) ?? ''),
             Column::make('Filled On', 'created_at')
                 ->format(fn($value) => Carbon::create($value)->toDayDateTimeString()),
+            Column::make('From State', 'from_place')
+                ->format(fn($value) => strtoupper($value))
+                ->sortable()->searchable(),
+            Column::make('Current State', 'to_place')
+                ->format(fn($value) => strtoupper($value))
+                ->sortable()->searchable(),
             Column::make('Action', 'pinstance_id')
-                ->view('assesments.dispute.includes.action')
+                ->view('assesments.waiver.includes.approval_progress_action')
                 ->html(true),
         ];
     }

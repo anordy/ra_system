@@ -25,6 +25,7 @@ use App\Services\ZanMalipo\ZmSignatureHelper;
 use App\Traits\AfterPaymentEvents;
 use App\Traits\LandLeaseTrait;
 use App\Traits\TaxVerificationTrait;
+use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ use Spatie\ArrayToXml\ArrayToXml;
 
 class ZanMalipoController extends Controller
 {
-    use TaxVerificationTrait, AfterPaymentEvents;
+    use TaxVerificationTrait, AfterPaymentEvents,WorkflowProcesssingTrait;
 
     private $billable = [
         PortReturn::class,
@@ -282,9 +283,7 @@ class ZanMalipoController extends Controller
             if ($bill->billable_type == TaxAssessment::class && in_array(Dispute::class, $assessmentBillItems)) {
                 if ($bill->paidAmount() >= $bill->amount) {
                     $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->first()->billable;
-
                     $assessment = $bill->billable;
-                    
                     if ($assessment->app_status == TaxAssessmentStatus::WAIVER_AND_OBJECTION) {
 
                         $assessment->payment_status = BillStatus::COMPLETE;
@@ -293,17 +292,15 @@ class ZanMalipoController extends Controller
                     } else {
                         $assessment->payment_status = BillStatus::PAID_PARTIALLY;
                         $assessment->save();
-
-                        $this->registerWorkflow(get_class($dispute), $dispute->id);
-                        $this->doTransition('application_submitted', []);
-                        $dispute->app_status = DisputeStatus::SUBMITTED;
+                        // $this->registerWorkflow(get_class($dispute), $dispute->id);
+                        // $this->doTransition('application_submitted', []);
+                        $dispute->app_status = DisputeStatus::PENDING;
                     }
 
                     $dispute->payment_status = BillStatus::COMPLETE;
                     $dispute->save();
-
-                    
                 }
+
             }elseif ($bill->billable_type == TaxAssessment::class ){
                 if ($bill->paidAmount() >= $bill->amount) {
                     $assessment = $bill->billable;
@@ -406,7 +403,7 @@ class ZanMalipoController extends Controller
                 'payer_name' => 'John Doe',
                 'psp_receipt_number' => 'RST' . rand(10000, 90000),
                 'psp_name' => 'BANK 1',
-                'ctr_acc_num' => rand(100000000, 900000000),
+               'ctr_acc_num' => rand(100000000, 900000000),
                 'created_at' => Carbon::now()->toDateTimeString(),
             ]);
 
