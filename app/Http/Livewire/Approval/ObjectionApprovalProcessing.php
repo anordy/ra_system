@@ -136,9 +136,9 @@ class ObjectionApprovalProcessing extends Component
                 $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penalty, $this->interest, $this->dispute->tax_deposit);
 
                 DB::commit();
-            } catch (\Exception$e) {
-                Log::error($e);
+            } catch (\Exception $e) {
                 DB::rollBack(); // todo: prefer to put rollback statement at the top of the catch block
+                Log::error($e);
                 $this->alert('error', 'Something went wrong, please contact the administrator for help.');
             }
         }

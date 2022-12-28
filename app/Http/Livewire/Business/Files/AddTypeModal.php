@@ -48,8 +48,8 @@ class AddTypeModal extends Component
             $this->flash('success', 'Business File Type Stored.', [], redirect()->back()->getTargetUrl());
             DB::commit();
         } catch(Exception $e){
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', "Couldn't add business file type. Please try again." . $e->getMessage());
         }
     }

@@ -95,9 +95,9 @@ class DailyReOpenTempBusinessCommand extends Command
             DB::commit();
             Log::channel('dailyJobs')->info("Daily reopen business process ended");
         } catch(Exception $e) {
+            DB::rollBack();
             Log::channel('dailyJobs')->info('Daily reopen business process ended with error');
             Log::channel('dailyJobs')->error($e);
-            DB::rollBack();
         }
 
         

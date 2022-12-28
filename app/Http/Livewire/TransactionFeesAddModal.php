@@ -53,7 +53,7 @@ class TransactionFeesAddModal extends Component
             return redirect()->route('settings.transaction-fees.index');
         } catch (\Throwable $exception) {
             DB::rollBack();
-            Log::error($exception->getMessage());
+            Log::error($exception);
             $this->alert('error', 'Something went wrong');
             return redirect()->route('settings.transaction-fees.index');
         }

@@ -59,7 +59,7 @@ trait PaymentsTrait
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
+            Log::error($e);
 
             return false;
         }

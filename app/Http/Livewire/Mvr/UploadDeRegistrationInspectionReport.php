@@ -70,9 +70,9 @@ class UploadDeRegistrationInspectionReport extends Component
             ]);
             $this->flash('success', 'Inspection Report Uploaded', [], route('mvr.de-register-requests.show',encrypt($this->request_id)));
         }catch(Exception $e){
-            Log::error($e);
             if (Storage::exists($this->inspection_report_path)) Storage::delete($this->inspection_report_path);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help: '.$e->getMessage());
         }
     }

@@ -55,8 +55,7 @@ class TaxAgent extends Model implements Auditable
             DB::commit();
         } catch (\Exception $e){
             DB::rollBack();
-            Log::error($e->getMessage());
-            throw $e;
+            Log::error($e);
         }
     }
 

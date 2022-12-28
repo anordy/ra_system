@@ -37,7 +37,7 @@ class Approve extends Component
                 return redirect()->route('settings.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
-                Log::error($exception->getMessage());
+                Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
 
             }
@@ -81,7 +81,7 @@ class Approve extends Component
                 return redirect()->route('settings.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
-                Log::error($exception->getMessage());
+                Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
                 return redirect()->route('settings.dual-control-activities.index');
             }
