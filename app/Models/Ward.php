@@ -11,7 +11,7 @@ class Ward extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['district_id', 'name'];
+    protected $fillable = ['district_id', 'name', 'is_approved', 'is_updated'];
 
     public function district() {
         return $this->belongsTo(District::class, 'district_id');

@@ -38,8 +38,7 @@ class DualControlActivityController extends Controller
                 $report_to_old = $this->getRoleName($old_values->report_to);
                 $report_to_new = $this->getRoleName($new_values->report_to);
             }
-        }
-        else{
+        }else{
             if ($result->controllable_type == DualControl::ROLE) {
                 $report_to_old = $this->getRoleName($data->report_to);
             }
@@ -54,7 +53,6 @@ class DualControlActivityController extends Controller
             $role = Role::query()->findOrFail($id);
             return $role->name;
         }
-
     }
 
 

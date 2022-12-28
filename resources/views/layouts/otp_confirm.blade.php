@@ -25,7 +25,7 @@
             <div class="card rounded card-margin">
                 <div class="card-body">
                     <div class="text-center">
-                        <img src="{{ asset('images/logo.png') }}" id="logo" width="120px" height="120px">
+                        <img src="{{ asset('images/logo.jpg') }}" id="logo" width="120px" height="120px">
                     </div>
                     <h5 class="bg-white text-uppercase text-center card-header">
                         OTP VERIFICATION

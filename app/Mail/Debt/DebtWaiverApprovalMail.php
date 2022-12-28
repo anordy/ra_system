@@ -30,6 +30,6 @@ class DebtWaiverApprovalMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.debt.waiver.approval')->subject("ZRB Change of Business Information - " . strtoupper($this->payload['debt']->business->name));
+        return $this->markdown('emails.debt.waiver.approval')->subject("ZRB Debt Waiver Approval - " . strtoupper($this->payload['debt']->business->name));
     }
 }

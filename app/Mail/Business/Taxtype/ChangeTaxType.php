@@ -64,7 +64,7 @@ class ChangeTaxType extends Mailable
                         ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
                         ->size(207)
                         ->margin(0)
-                        ->logoPath(public_path('/images/logo.png'))
+                        ->logoPath(public_path('/images/logo.jpg'))
                         ->logoResizeToHeight(36)
                         ->logoResizeToWidth(36)
                         ->labelText('')

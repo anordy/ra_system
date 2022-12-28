@@ -20,6 +20,7 @@ class SystemSettingsSeeder extends Seeder
             [
                 'name' => 'Password Policy',
                 'description' => 'is a set of rules that determine the complexity and strength of passwords used on our system. The goal of a password policy is to ensure that users choose strong, unique passwords that are difficult for unauthorized individuals to guess or crack.',
+                'is_approved' => 1
             ]
         ];
 
@@ -35,6 +36,7 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'The amount of time after which a password must be changed',
                 'value' => '60',
                 'unit' => 'days',
+                'is_approved' => 1
             ],
             [
                 'system_setting_category_id' => 1,
@@ -43,6 +45,7 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'is a feature of a password policy that prevents users from reusing their previous passwords. The purpose of password history is to ensure that users are not able to simply switch back to an old password after changing it, as this would not increase the security of the system',
                 'value' => '3',
                 'unit' => 'number',
+                'is_approved' => 1
             ],
         ];
 

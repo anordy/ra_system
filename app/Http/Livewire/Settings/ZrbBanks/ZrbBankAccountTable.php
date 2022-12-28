@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Settings\ZrbBanks;
 
+use App\Models\DualControl;
 use App\Models\ZrbBankAccount;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -13,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ZrbBankAccountTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -54,7 +56,7 @@ class ZrbBankAccountTable extends DataTableComponent
                 ->searchable(),
             Column::make('Bank name', 'bank_id')
                 ->format(function ($value, $row) {
-                    return $row->bank->name ?? 'N/A';  
+                    return $row->bank->name ?? 'N/A';
                 })
                 ->sortable()
                 ->searchable(),
@@ -85,7 +87,23 @@ class ZrbBankAccountTable extends DataTableComponent
                     }
                 })
                 ->html(),
-            Column::make('Action', 'id')->view('settings.zrb-bank-accounts.includes.actions'),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
+            Column::make('Action', 'id')
+            ->format(function ($value, $row) {
+                return view('settings.zrb-bank-accounts.includes.actions', ['row' => $row]);
+            }),
         ];
     }
 
@@ -113,13 +131,12 @@ class ZrbBankAccountTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TODO: //ADD DUAL CONTROL
             $zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($data->id));
-            $zrbBankAccount->delete();
-            $this->alert('success', 'Record deleted successfully');
+            $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::DELETE, 'deleting zrb bank account');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             $this->flash(
                 'success',
-                'Record deleted successfully',
+                DualControl::SUCCESS_MESSAGE,
                 [],
                 redirect()
                     ->back()
