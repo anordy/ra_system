@@ -21,7 +21,7 @@ class SignReturns extends Command
      *
      * @var string
      */
-    protected $description = 'Sign returns.';
+    protected $description = 'Sign returns for verifications.';
 
     /**
      * Create a new command instance.
@@ -40,7 +40,7 @@ class SignReturns extends Command
      */
     public function handle()
     {
-        $this->info('Signing returns.');
+        $this->info('Signing returns started.');
 
         if ($this->argument('return')){
 
@@ -60,7 +60,7 @@ class SignReturns extends Command
             return 0;
         }
 
-        $this->info('Has no return, signing all.');
+        $this->info('Return ID not provided, signing all.');
 
         foreach (TaxReturn::all() as $return){
             $this->info('Signing: ' . $return->id);

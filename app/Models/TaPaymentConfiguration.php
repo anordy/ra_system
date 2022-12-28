@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Services\Verification\PayloadInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class TaPaymentConfiguration extends Model implements Auditable
+class TaPaymentConfiguration extends Model implements Auditable, PayloadInterface
 {
     use HasFactory, \OwenIt\Auditing\Auditable;
 
@@ -14,4 +15,19 @@ class TaPaymentConfiguration extends Model implements Auditable
 
 	protected $guarded = [];
 
+
+    public static function getPayloadColumns(): array
+    {
+        return [
+            'id',
+            'category',
+            'duration',
+            'amount'
+        ];
+    }
+
+    public static function getTableName(): string
+    {
+        return 'ta_payment_configurations';
+    }
 }
