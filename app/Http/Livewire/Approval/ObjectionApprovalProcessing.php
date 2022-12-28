@@ -47,7 +47,7 @@ class ObjectionApprovalProcessing extends Component
         $this->taxTypes = TaxType::where('code', 'disputes')->first();
         $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
         $this->total = ($this->penalty + $this->interest + $this->principal) - ($this->dispute->tax_deposit);
-
+        
         $this->registerWorkflow($modelName, $this->modelId);
     }
 
@@ -92,6 +92,7 @@ class ObjectionApprovalProcessing extends Component
 
     public function approve($transition)
     {
+        $transition = $transition['data']['transition'];
 
         $this->penalty = str_replace(',', '', $this->penalty);
         $this->interest = str_replace(',', '', $this->interest);
@@ -135,7 +136,7 @@ class ObjectionApprovalProcessing extends Component
                 $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penalty, $this->interest, $this->dispute->tax_deposit);
 
                 DB::commit();
-            } catch (\Exception $e) {
+            } catch (\Exception$e) {
                 Log::error($e);
                 DB::rollBack(); // todo: prefer to put rollback statement at the top of the catch block
                 $this->alert('error', 'Something went wrong, please contact the administrator for help.');
@@ -160,6 +161,11 @@ class ObjectionApprovalProcessing extends Component
             try {
                 $this->addDisputeToAssessment($this->assessment, $this->dispute->category, $this->principal, $this->penalty, $this->interest, $this->dispute->tax_deposit);
 
+                if ($this->total <= 0) {
+                    session()->flash('message', 'Bill amount can not be zero, null or not a number');
+                    return;
+                }
+
                 // Generate control number for waived application
                 $billitems = [
                     [
@@ -172,6 +178,7 @@ class ObjectionApprovalProcessing extends Component
                         'tax_type_id' => $this->taxTypes->id,
                     ],
                 ];
+
 
                 $taxpayer = $this->subject->business->taxpayer;
 
@@ -257,6 +264,7 @@ class ObjectionApprovalProcessing extends Component
 
     public function reject($transition)
     {
+        $transition = $transition['data']['transition'];
 
         $this->validate([
             'comments' => 'required|string',
@@ -268,6 +276,7 @@ class ObjectionApprovalProcessing extends Component
             }
 
             if ($this->checkTransition('chief_assurance_reject')) {
+
             }
 
             if ($this->checkTransition('commisioner_reject')) {
@@ -367,11 +376,34 @@ class ObjectionApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
             //            todo: no customer/user feedback in cas of error
             return;
         }
 
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
+    }
+
+    protected $listeners = [
+        'approve', 'reject',
+    ];
+
+    public function confirmPopUpModal($action, $transition)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'transition' => $transition,
+            ],
+
+        ]);
     }
 
     public function render()
