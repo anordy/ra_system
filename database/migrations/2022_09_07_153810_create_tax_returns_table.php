@@ -35,29 +35,29 @@ class CreateTaxReturnsTable extends Migration
 
             $table->enum('currency', ['TZS', 'USD']);
 
-            $table->float('principal', 20, 2);
-            $table->float('interest', 20, 2);
-            $table->float('penalty', 20, 2);
+            $table->decimal('principal', 20, 2);
+            $table->decimal('interest', 20, 2);
+            $table->decimal('penalty', 20, 2);
 
-            $table->float('infrastructure', 20, 2)->nullable();
+            $table->decimal('infrastructure', 20, 2)->nullable();
 
             // Seaport & airport
-            $table->float('airport_safety_fee', 20, 2)->nullable();
-            $table->float('airport_service_charge', 20, 2)->nullable();
-            $table->float('seaport_service_charge', 20, 2)->nullable();
-            $table->float('seaport_transport_charge', 20, 2)->nullable();
-            $table->float('infrastructure_znz_znz', 20, 2)->nullable();
-            $table->float('infrastructure_znz_tz', 20, 2)->nullable();
+            $table->decimal('airport_safety_fee', 20, 2)->nullable();
+            $table->decimal('airport_service_charge', 20, 2)->nullable();
+            $table->decimal('seaport_service_charge', 20, 2)->nullable();
+            $table->decimal('seaport_transport_charge', 20, 2)->nullable();
+            $table->decimal('infrastructure_znz_znz', 20, 2)->nullable();
+            $table->decimal('infrastructure_znz_tz', 20, 2)->nullable();
 
             // Petroleum
-            $table->float('rdf_fee', 20, 2)->nullable();
-            $table->float('road_license_fee', 20, 2)->nullable();
+            $table->decimal('rdf_fee', 20, 2)->nullable();
+            $table->decimal('road_license_fee', 20, 2)->nullable();
 
-            $table->float('withheld_tax', 20, 2)->nullable();
-            $table->float('credit_brought_forward', 20, 2)->nullable();
+            $table->decimal('withheld_tax', 20, 2)->nullable();
+            $table->decimal('credit_brought_forward', 20, 2)->nullable();
 
-            $table->float('total_amount', 20, 2)->nullable();
-            $table->float('outstanding_amount', 20, 2)->nullable();
+            $table->decimal('total_amount', 20, 2)->nullable();
+            $table->decimal('outstanding_amount', 20, 2)->nullable();
 
             $table->unsignedBigInteger('lumpsum_quarter')->nullable();
 

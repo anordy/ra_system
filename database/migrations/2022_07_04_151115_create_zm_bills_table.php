@@ -45,6 +45,7 @@ class CreateZmBillsTable extends Migration
             $table->text('ci_payload', 4000)->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

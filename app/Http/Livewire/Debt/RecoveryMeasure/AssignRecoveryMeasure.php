@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Debt\RecoveryMeasure;
 
 use Livewire\Component;
-use App\Models\Debts\Debt;
 use App\Models\Returns\TaxReturn;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
