@@ -27,10 +27,10 @@ class CreateTaxAssessmentsTable extends Migration
             $table->enum('currency', ['TZS', 'USD', 'BOTH'])->default('TZS');
             $table->string('assessment_type');
             // Original amounts
-            $table->float('original_principal_amount', 20, 2);
-            $table->float('original_interest_amount', 20, 2);
-            $table->float('original_penalty_amount', 20, 2);
-            $table->float('original_total_amount', 20, 2);
+            $table->decimal('original_principal_amount', 20, 2);
+            $table->decimal('original_interest_amount', 20, 2);
+            $table->decimal('original_penalty_amount', 20, 2);
+            $table->decimal('original_total_amount', 20, 2);
             $table->decimal('paid_amount', 20, 2)->default();
 
             $table->decimal('interest_amount', 20, 2);

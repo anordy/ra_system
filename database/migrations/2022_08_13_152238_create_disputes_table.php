@@ -24,10 +24,10 @@ class CreateDisputesTable extends Migration
             $table->unsignedBigInteger('disputes_type_id');
             $table->enum('category', ['waiver', 'objection', 'waiver-and-objection'])->default('waiver');
             $table->enum('waiver_category', ['penalty', 'interest', 'both'])->nullable();
-            $table->float('penalty_rate')->nullable();
-            $table->float('interest_rate')->nullable();
-            $table->float('penalty_amount')->nullable();
-            $table->float('interest_amount')->nullable();
+            $table->decimal('penalty_rate',20, 2)->nullable();
+            $table->decimal('interest_rate', 20, 2)->nullable();
+            $table->decimal('penalty_amount', 20,2)->nullable();
+            $table->decimal('interest_amount', 20, 2)->nullable();
             $table->unsignedBigInteger('assesment_id')->nullable();
             $table->enum('business_type', ['hotel', 'other'])->default('other');
             $table->decimal('tax_in_dispute',38, 2)->default(0);

@@ -138,7 +138,7 @@ class ReliefRegistrations extends Component
 
             foreach ($this->attachments as $attachment) {
                 if ($attachment['file'] && $attachment['name']) {
-                    $documentPath = $attachment['file']->store("/relief_documents/" . $relief->id, 'local-admin');
+                    $documentPath = $attachment['file']->store("/relief_documents/" . $relief->id, 'local');
                     $reliefDocument = ReliefAttachment::create([
                         'relief_id' => $relief->id,
                         'file_path' => $documentPath,

@@ -91,6 +91,7 @@ class ReturnDebtController extends Controller
         }     
         $debtId = decrypt($debtId);
         $tax_return = TaxReturn::findOrFail($debtId);
+        $tax_return->return->penalties = $tax_return->return->penalties->merge($tax_return->penalties)->sortBy('penalty_amount');
         return view('debts.returns.show', compact('tax_return'));
     }
 
