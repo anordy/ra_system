@@ -25,6 +25,10 @@ class BankReconImport extends Component
         'reconFile.mimes' => 'The file must be a valid csv, xls or xlsx.'
     ];
 
+    public function downloadTemplate(){
+        return response()->download(public_path('templates/bank-reconciliations.csv'));
+    }
+
     public function submit()
     {
         $this->validate();
@@ -45,9 +49,9 @@ class BankReconImport extends Component
             return redirect(request()->header('Referer'));
 
         } catch (\Exception $exception){
-            $this->alert('error', $exception->getMessage());
             DB::rollBack();
             Log::error($exception);
+            $this->alert('error', $exception->getMessage());
         }
     }
 

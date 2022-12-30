@@ -17,15 +17,6 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
     {
         Log::info('Importing');
         return new BankRecon();
-
-//        return new BankRecon([
-//            'transaction_date' => $row['Transaction Date'],
-//            'actual_transaction_date' => $row['Actual Transaction Date'],
-//            'transaction_type' => $row['model'],
-//            'serial_no' => $row['serial_no'],
-//            'imei' => $row['imei'],
-//            'created_by' => Auth::id()
-//        ]);
     }
 
     public function collection(Collection $collection)
@@ -58,7 +49,6 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                         'dr_cr' => $row['drcr'],
                         'doc_num' => $row['doc_num'],
                     ]);
-//                    Log::info($recon->id);
                     continue;
                 }
 
@@ -82,7 +72,6 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                         'doc_num' => $row['doc_num'],
                     ]);
 
-//                    Log::info($recon->id);
                     continue;
                 }
 
@@ -123,7 +112,6 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                         'dr_cr' => $row['drcr'],
                         'doc_num' => $row['doc_num'],
                     ]);
-//                    Log::info($recon->id);
                     continue;
                 }
 
@@ -151,7 +139,6 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                         'dr_cr' => $row['drcr'],
                         'doc_num' => $row['doc_num'],
                     ]);
-//                    Log::info($recon->id);
                     continue;
                 }
 
