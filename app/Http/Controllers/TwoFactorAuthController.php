@@ -48,12 +48,12 @@ class TwoFactorAuthController extends Controller
             ->where('user_type', get_class($user))
             ->first();
 
-        if (!Hash::check($code, $otp->code)) {
-            return redirect()->back()->withErrors('Invalid token supplied');
-        }
-
         if ($otp == null) {
             return redirect()->back()->withErrors('Token supplied does not exits');
+        }
+
+        if (!Hash::check($code, $otp->code)) {
+            return redirect()->back()->withErrors('Invalid token supplied');
         }
 
         if ($otp->isUsed()) {

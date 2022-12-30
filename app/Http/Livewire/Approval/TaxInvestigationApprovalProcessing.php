@@ -246,12 +246,12 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $investigationReport = "";
                 if ($this->investigationReport != $this->subject->investigation_report) {
-                    $investigationReport = $this->investigationReport->store('investigation', 'local-admin');
+                    $investigationReport = $this->investigationReport->store('investigation', 'local');
                 }
 
                 $workingsReport = "";
                 if ($this->workingsReport != $this->subject->working_report) {
-                    $workingsReport = $this->investigationReport->store('investigation', 'local-admin');
+                    $workingsReport = $this->investigationReport->store('investigation', 'local');
                 }
 
 

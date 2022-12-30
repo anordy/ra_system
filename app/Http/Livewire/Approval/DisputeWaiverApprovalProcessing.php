@@ -93,7 +93,7 @@ class DisputeWaiverApprovalProcessing extends Component
 
             $disputeReport = "";
             if ($this->disputeReport) {
-                $disputeReport = $this->disputeReport->store('waiver_report', 'local-admin');
+                $disputeReport = $this->disputeReport->store('waiver_report', 'local');
             }
 
             $dispute = Dispute::find($this->modelId);

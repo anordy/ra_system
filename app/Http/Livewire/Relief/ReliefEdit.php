@@ -162,13 +162,13 @@ class ReliefEdit extends Component
                 }
                 if($removeAttachment){
                     ReliefAttachment::find($savedAttachment->id)->delete();
-                    Storage::disk('local-admin')->delete($savedAttachment->file_path);
+                    Storage::disk('local')->delete($savedAttachment->file_path);
                 }
             }
 
             foreach ($this->attachments as $attachment) {
                 if ($attachment['file'] && $attachment['name']) {
-                    $documentPath = $attachment['file']->store("/relief_documents/" . $this->relief->id, 'local-admin');
+                    $documentPath = $attachment['file']->store("/relief_documents/" . $this->relief->id, 'local');
                     $reliefDocument = ReliefAttachment::create([
                         'relief_id' => $this->relief->id,
                         'file_path' => $documentPath,

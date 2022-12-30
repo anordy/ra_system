@@ -188,7 +188,7 @@ class TaxVerificationApprovalProcessing extends Component
 
             $assessmentReport = $this->assessmentReport;
             if ($this->assessmentReport != $this->subject->assessment_report) {
-                $assessmentReport = $this->assessmentReport->store('verification', 'local-admin');
+                $assessmentReport = $this->assessmentReport->store('verification', 'local');
             }
 
             $this->subject->assessment_report = $assessmentReport;
