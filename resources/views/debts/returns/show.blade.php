@@ -20,7 +20,7 @@
                 @endif
                 <a href="#tab5" class="nav-item nav-link font-weight-bold">Demand Notices</a>
                 @if ($tax_return->recoveryMeasure)
-                <a href="#tab6" class="nav-item nav-link font-weight-bold">Assigned Recovery Measures</a>
+                    <a href="#tab6" class="nav-item nav-link font-weight-bold">Assigned Recovery Measures</a>
                 @endif
                 @if ($tax_return->recoveryMeasure)
                     <a href="#tab7" class="nav-item nav-link font-weight-bold">Recovery Measure Approval History</a>
@@ -29,21 +29,60 @@
 
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show m-4">
-                    @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned' && $tax_return->return_category == 'overdue')
                         <div class="card-tools">
-                                <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"  class="btn btn-info btn-sm text-white" style="color: white !important;"><i
-                                    class="fa fa-plus text-white"></i>
+                            @if (!$tax_return->rollback && count($tax_return->penalties) > 0)
+                                <a href="{{ route('debts.rollback.return', encrypt($tax_return->id)) }}"
+                                    class="btn btn-info btn-sm text-white" style="color: white !important;"><i
+                                        class="bi bi-arrow-left-right text-white"></i>
+                                    Rollback Penalty & Interest
+                                </a>
+                            @endif
+                            @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned' && $tax_return->return_category == 'overdue')
+                                <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"
+                                    class="btn btn-info btn-sm text-white" style="color: white !important;"><i
+                                        class="fa fa-plus text-white"></i>
                                     Assign Recovery Measure
                                 </a>
+                            @endif
                         </div>
-                    @endif
                     @include('debts.returns.details', ['tax_return' => $tax_return])
                 </div>
                 <div id="tab3" class="tab-pane fade m-4">
-                    @php
-                        $penalties = $tax_return->return->penalties->merge($tax_return->penalties ?? []);
-                    @endphp
-                    <livewire:debt.debt-penalties :penalties="$penalties ?? []" />
+                    <table class="table table-bordered table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Tax Amount</th>
+                                <th>Late Filing Amount</th>
+                                <th>Late Payment Amount</th>
+                                <th>Interest Rate</th>
+                                <th>Interest Amount</th>
+                                <th>Penalty Amount</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (count($tax_return->return->penalties) > 0)
+                                @foreach ($tax_return->return->penalties as $penalty)
+                                    <tr>
+                                        <td>{{ $penalty['financial_month_name'] ?? $penalty['return_quater'] }}</td>
+                                        <td>{{ number_format($penalty['tax_amount'], 2) }}</td>
+                                        <td>{{ number_format($penalty['late_filing'], 2) }}</td>
+                                        <td>{{ number_format($penalty['late_payment'], 2) }}</td>
+                                        <td>{{ number_format($penalty['rate_percentage'], 2) }}</td>
+                                        <td>{{ number_format($penalty['rate_amount'], 2) }}</td>
+                                        <td>{{ number_format($penalty['penalty_amount'], 2) }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="7" class="text-center py-3">
+                                        No penalties for this debt.
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
                 </div>
                 <div id="tab4" class="tab-pane fade  m-4">
                     @include('debts.returns.waiver-details', ['tax_return' => $tax_return])
@@ -55,7 +94,7 @@
                     <h6 class="text-uppercase mt-2 ml-2">Recommended Recovery Measures</h6>
                     <hr>
                     <div class="row m-2 pt-3">
-    
+
                         @if ($tax_return->recoveryMeasure)
                             @foreach ($tax_return->recoveryMeasure->measures as $key => $recovery_measure)
                                 <div class="col-md-4 mb-3">
@@ -67,7 +106,7 @@
                         @else
                             <p class="my-1">No Assigned Recovery Measures</p>
                         @endif
-    
+
                     </div>
                 </div>
                 <div id="tab7" class="tab-pane fade m-4">

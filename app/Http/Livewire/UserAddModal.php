@@ -86,7 +86,6 @@ class UserAddModal extends Component
                 throw new Exception('Failed to verify user data.');
             }
 
-            DB::commit();
             $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding user');
 
             $admins = User::whereHas('role', function ($query) {

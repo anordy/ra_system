@@ -3,6 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Bank;
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -12,7 +16,7 @@ use Illuminate\Support\Facades\Gate;
 
 class EducationLevelTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     protected $model = EducationLevel::class;
     public function configure(): void
@@ -49,6 +53,37 @@ class EducationLevelTable extends DataTableComponent
             Column::make('Created At', 'created_at')
                 ->sortable()
                 ->searchable(),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value){
                     $edit = '';
@@ -97,13 +132,19 @@ class EducationLevelTable extends DataTableComponent
 
     public function confirmed($value)
     {
+        DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            EducationLevel::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $education = EducationLevel::find($data->id);
+            $this->triggerDualControl(get_class($education), $education->id, DualControl::DELETE, 'deleting education level');
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return redirect()->route('settings.education-level.index');
         } catch (Exception $e) {
-            report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            DB::rollBack();
+            Log::error($e);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return redirect()->route('settings.education-level.index');
         }
     }
 }

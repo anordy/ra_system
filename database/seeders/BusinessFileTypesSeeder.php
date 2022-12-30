@@ -23,7 +23,8 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::SOLE,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -31,7 +32,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Business License',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::SOLE,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -40,7 +42,8 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::SOLE,
-            'is_required' => false
+            'is_required' => false,
+            'is_approved' => 1,
         ]);
 
         // Partnership Deed Agreement
@@ -49,7 +52,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Partnership Deed Agreement',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::PARTNERSHIP,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -58,7 +62,8 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::PARTNERSHIP,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -66,7 +71,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Business License',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::PARTNERSHIP,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -75,7 +81,8 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::PARTNERSHIP,
-            'is_required' => false
+            'is_required' => false,
+            'is_approved' => 1,
         ]);
 
         // Company
@@ -84,7 +91,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Memorandum and Article of Association',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -93,7 +101,8 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -101,7 +110,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Certificate of incorporation/Compliance',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -110,7 +120,8 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => false
+            'is_required' => false,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -118,7 +129,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Business License',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         // NGO
@@ -127,7 +139,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'NGO Constitution',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::NGO,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -135,7 +148,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Application Letter for Registration',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::NGO,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -144,7 +158,8 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::NGO,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -152,7 +167,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'TIN Certificate for the NGO',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::NGO,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -160,7 +176,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Business License',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::NGO,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -169,7 +186,8 @@ class BusinessFileTypesSeeder extends Seeder
             'description' => 'If the business is governed by recognized body, a letter from the Body governing the activity',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => false
+            'is_required' => false,
+            'is_approved' => 1,
         ]);
 
         BusinessFileType::updateOrCreate([
@@ -177,7 +195,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'BPRA Consolidated Form',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true
+            'is_required' => true,
+            'is_approved' => 1,
         ]);
 
         // General/All
@@ -186,7 +205,8 @@ class BusinessFileTypesSeeder extends Seeder
             'name' => 'Lease Agreement',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::OTHER,
-            'is_required' => false
+            'is_required' => false,
+            'is_approved' => 1,
         ]);
     }
 }

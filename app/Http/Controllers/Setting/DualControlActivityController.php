@@ -43,6 +43,7 @@ class DualControlActivityController extends Controller
                 $report_to_old = $this->getRoleName($data->report_to);
             }
         }
+
         return view('settings.dual-control-activities.show', compact('result', 'data', 'old_values', 'new_values', 'report_to_new', 'report_to_old'));
     }
 

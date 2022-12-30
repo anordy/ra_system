@@ -54,7 +54,7 @@ class DailyTaxTypeEffectiveDateCommand extends Command
         DB::beginTransaction();
 
         $tax_type_changes = BusinessTaxTypeChange::where('status', 'approved')
-            ->whereRaw("CURRENT_DATE - effective_date > 0")
+            ->whereRaw("CURRENT_DATE - CAST(effective_date as date) > 0")
             ->get();
 
         try {

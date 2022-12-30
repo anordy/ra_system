@@ -34,7 +34,7 @@ class ExtensionController extends Controller
         }
         if ($file) {
             try {
-                return Storage::disk('local-admin')->response(decrypt($file));
+                return Storage::disk('local')->response(decrypt($file));
             } catch (Exception $e) {
                 report($e);
                 abort(404);

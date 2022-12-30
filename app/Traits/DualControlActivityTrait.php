@@ -30,6 +30,16 @@ trait DualControlActivityTrait
             'status' => 'pending',
         ];
         DualControl::updateOrCreate($payload);
+        $data = $model::findOrFail($modelId);
+
+        if ($action == DualControl::EDIT || $action == DualControl::DELETE) {
+            if ($data->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
+            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
+        }
+
     }
 
     public function getModule($model)
@@ -97,6 +107,13 @@ trait DualControlActivityTrait
                 return 'Tax Type';
                 break;
 
+            case DualControl::EDUCATION:
+                return 'Education Level';
+                break;
+            case DualControl::Business_File_Type:
+                return 'Business File Type';
+                break;
+
             default:
                 abort(404);
         }
@@ -109,6 +126,39 @@ trait DualControlActivityTrait
         return $data;
     }
 
+    public function checkRelation($model, $modelId)
+    {
+        $data = $model::findOrFail($modelId);
+        if (!empty($data)) {
+            switch ($model) {
+                case DualControl::ROLE:
+                    if (count($data->users) > 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    break;
+
+                case DualControl::REGION:
+                    if (count($data->landLeases) > 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    if (!empty($data->taxagent)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    break;
+
+                default:
+                    abort(404);
+            }
+
+        }
+    }
+
     public function updateControllable($data, $status)
     {
         $update = $data->controllable_type::findOrFail($data->controllable_type_id);
@@ -116,7 +166,7 @@ trait DualControlActivityTrait
             $update->update(['is_approved' => $status]);
         } elseif ($data->action == DualControl::EDIT) {
             $payload = json_decode($data->new_values);
-            $payload = (array) $payload;
+            $payload = (array)$payload;
             if ($status == DualControl::APPROVE) {
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
@@ -129,7 +179,7 @@ trait DualControlActivityTrait
             }
         } elseif ($data->action == DualControl::DEACTIVATE || $data->action == DualControl::ACTIVATE) {
             if ($status == DualControl::APPROVE) {
-                $payload = (array) json_decode($data->new_values);
+                $payload = (array)json_decode($data->new_values);
                 $update->update($payload);
             }
         }

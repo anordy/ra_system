@@ -2,13 +2,7 @@
 
     <div class="card">
         <div class="card-header">
-            @if($result->action == \App\Models\DualControl::ADD)
-                Added Values
-            @elseif($result->action == \App\Models\DualControl::EDIT)
-                Old Values
-            @else
-                Values
-            @endif
+            User Role Detail
         </div>
         <div class="card-body">
             <div class="row m-2 pt-3">
