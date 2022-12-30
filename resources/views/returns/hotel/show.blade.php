@@ -36,26 +36,77 @@
 
                     <div class="tab-pane p-2 show active" id="biz" role="tabpanel" aria-labelledby="biz-tab">
                         <div class="row m-2 pt-3">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Tax Type</span>
                                 <p class="my-1">{{ $return->taxtype->name }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Filled By</span>
-                                <p class="my-1">{{ $return->taxpayer->full_name }}</p>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Tax Payer Name</span>
+                                <p class="my-1">{{ $return->business->taxpayer->first_name.' '. $return->business->taxpayer->middle_name.' '.$return->business->taxpayer->last_name }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <span class="font-weight-bold text-uppercase">Financial Year</span>
-                                <p class="my-1">{{ $return->financialYear->name }}</p>
-                            </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Business Name</span>
                                 <p class="my-1">{{ $return->business->name }}</p>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Business Location</span>
-                                <p class="my-1">{{ $return->branch->name ?? 'Head Quarter' }}</p>
+                                <p class="my-1">{{ $return->businessLocation->name ?? 'Head Quarter' }}</p>
                             </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">TIN No</span>
+                                <p class="my-1">{{ $return->business->tin }}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Mobile</span>
+                                <p class="my-1">{{ $return->business->mobile }}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Email</span>
+                                <p class="my-1">{{ $return->business->email }}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Business Type</span>
+                                <p class="my-1">{{ $return->business->business_type }}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Filled By</span>
+                                <p class="my-1">{{ $return->taxpayer->first_name.' ' .$return->taxpayer->middle_name.' ' .$return->taxpayer->last_name}}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Return Month</span>
+                                <p class="my-1">{{$return->financialMonth->name}} {{ $return->financialYear->code }}</p>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Currency</span>
+                                <p class="my-1">{{ $return->currency ?? 'Head Quarter' }}</p>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <span class="font-weight-bold text-uppercase">Return Application Status</span>
+                                <p class="my-1">
+                                    @if($return->application_status == \App\Enum\ReturnApplicationStatus::SUBMITTED)
+                                        <span class="badge badge-success py-1 px-2"
+                                              style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                                    class="bi bi-check-circle-fill mr-1"></i>
+                                            Submitted
+                                        </span>
+
+                                    @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::ADJUSTED)
+                                        <span class="badge badge-danger py-1 px-2"
+                                              style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                                    class="bi bi-check-circle-fill mr-1"></i>
+                                            Adjusted
+                                        </span>
+                                    @elseif($return->application_status == \App\Enum\ReturnApplicationStatus::SELF_ASSESSMENT)
+                                        <span class="badge badge-success py-1 px-2"
+                                              style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%"><i
+                                                    class="bi bi-check-circle-fill mr-1"></i>
+                                            self Assessment
+                                        </span>
+                                    @endif
+                                </p>
+                            </div>
+
                         </div>
 
                         <x-bill-structure :bill="$return->tax_return->latestBill" :withCard="false"/>

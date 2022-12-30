@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\TaPaymentConfiguration;
@@ -38,8 +40,12 @@ trait DualControlActivityTrait
                 return;
             }
             $data->update(['is_updated' => DualControl::NOT_APPROVED]);
-        }
 
+            if ($model == DUalControl::USER) {
+                $message = 'We are writing to inform you that some of your ZRB staff personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $this->sendEmailToUser($data, $message);
+            }
+        }
     }
 
     public function getModule($model)
@@ -155,7 +161,6 @@ trait DualControlActivityTrait
                 default:
                     abort(404);
             }
-
         }
     }
 
@@ -166,10 +171,17 @@ trait DualControlActivityTrait
             $update->update(['is_approved' => $status]);
         } elseif ($data->action == DualControl::EDIT) {
             $payload = json_decode($data->new_values);
-            $payload = (array)$payload;
+            $payload = (array) $payload;
             if ($status == DualControl::APPROVE) {
+                
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
+
+                if ($data->controllable_type == DUalControl::USER) {
+                    $message = 'We are writing to inform you that some of your ZRB staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                    $this->sendEmailToUser($update, $message);
+                }
+
             } else {
                 $update->update(['is_updated' => $status]);
             }
@@ -179,9 +191,26 @@ trait DualControlActivityTrait
             }
         } elseif ($data->action == DualControl::DEACTIVATE || $data->action == DualControl::ACTIVATE) {
             if ($status == DualControl::APPROVE) {
-                $payload = (array)json_decode($data->new_values);
+                $payload = (array) json_decode($data->new_values);
                 $update->update($payload);
             }
         }
+    }
+
+    public function sendEmailToUser($data, $message)
+    {
+        $smsPayload = [
+            'phone' => $data->phone,
+            'message' => $message,
+        ];
+
+        $emailPayload = [
+            'email' => $data->email,
+            'userName' => $data->fname,
+            'message' => $message,
+        ];
+
+        event(new SendSms('dual-control-update-user-info-notification', $smsPayload));
+        event(new SendMail('dual-control-update-user-info-notification', $emailPayload));
     }
 }
