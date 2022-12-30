@@ -10,6 +10,7 @@ use App\Models\FinancialMonth;
 use App\Models\BusinessLocation;
 use App\Models\Debts\DebtWaiver;
 use App\Models\Debts\DebtPenalty;
+use App\Models\Debts\DebtRollback;
 use App\Models\Debts\DemandNotice;
 use App\Models\Debts\RecoveryMeasure;
 use App\Models\Installment\Installment;
@@ -68,6 +69,11 @@ class TaxReturn extends Model implements PayloadInterface
         return $this->morphMany(ZmBill::class, 'billable');
     }
 
+    public function secondLatest()
+    {
+        return $this->morphMany(ZmBill::class, 'billable')->latest();
+    }
+
     public function bill()
     {
         return $this->morphOne(ZmBill::class, 'billable');
@@ -106,8 +112,17 @@ class TaxReturn extends Model implements PayloadInterface
         return $this->morphOne(DebtWaiver::class, 'debt');
     }
 
+    public function rollback(){
+        return $this->morphOne(DebtRollback::class, 'debt');
+    }
+
     public function penalties(){
         return $this->morphMany(DebtPenalty::class, 'debt');
+    }
+
+    public function latestPenalty()
+    {
+        return $this->morphOne(DebtPenalty::class, 'debt')->latest();
     }
 
     public static function getPayloadColumns(): array

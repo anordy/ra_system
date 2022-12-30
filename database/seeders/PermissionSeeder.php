@@ -48,6 +48,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-hotel-levy-view', 'sys_module_id' => 5],
             ['name' => 'return-tour-operation-view', 'sys_module_id' => 5],
             ['name' => 'return-restaurant-levy-view', 'sys_module_id' => 5],
+            ['name' => 'return-hotel-airbnb-levy-view', 'sys_module_id' => 5],
             ['name' => 'return-vat-return-view', 'sys_module_id' => 5],
             ['name' => 'return-airport-return-view', 'sys_module_id' => 5],
             ['name' => 'return-seaport-return-view', 'sys_module_id' => 5],
@@ -96,6 +97,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-clearance-view', 'sys_module_id' => 13],
 
             # Debt Management
+            ['name' => 'debt-management-debt-rollback', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-waive', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-recovery-measure', 'sys_module_id' => 14],

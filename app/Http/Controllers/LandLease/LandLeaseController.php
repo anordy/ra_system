@@ -46,7 +46,7 @@ class LandLeaseController extends Controller
 
     public function getAgreementDocument($path)
     {
-        return Storage::disk('local-admin')->response(decrypt($path));
+        return Storage::disk('local')->response(decrypt($path));
     }
 
     public function generateReport()

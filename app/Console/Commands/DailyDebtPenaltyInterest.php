@@ -67,14 +67,14 @@ class DailyDebtPenaltyInterest extends Command
          */
         $tax_returns = TaxReturn::selectRaw('
             tax_returns.*, 
-            ROUND(MONTHS_BETWEEN(CURRENT_DATE, filing_due_date)) as periods, 
-            ROUND(MONTHS_BETWEEN(curr_payment_due_date, CURRENT_DATE)) as penatableMonths
+            ROUND(MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
+            ROUND(MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
         ')
             ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
-            ->whereRaw("CURRENT_DATE - curr_payment_due_date > 0") // This determines if the payment due date has reached
+            ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE]) // Get all non paid returns
             ->get();
-
+        
         if ($tax_returns) {
 
             DB::beginTransaction();
@@ -112,11 +112,11 @@ class DailyDebtPenaltyInterest extends Command
          */
         $tax_assessments = TaxAssessment::selectRaw('
             tax_assessments.*, 
-            ROUND(MONTHS_BETWEEN(CURRENT_DATE, curr_payment_due_date)) as periods, 
-            ROUND(MONTHS_BETWEEN(curr_payment_due_date, CURRENT_DATE)) as penatableMonths
+            ROUND(MONTHS_BETWEEN(CURRENT_DATE, CAST(curr_payment_due_date as date))) as periods, 
+            ROUND(MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
         ')
             ->whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
-            ->whereRaw("CURRENT_DATE - curr_payment_due_date > 0") // This determines if the payment due date has reached
+            ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 

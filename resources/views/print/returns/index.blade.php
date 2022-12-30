@@ -136,7 +136,7 @@
 
         <tbody>
             @php
-                $return->penalties = $return->penalties->merge($return->tax_return->penalties);
+                $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
             @endphp
         @if(count($return->penalties))
             @foreach ($return->penalties as $penalty)

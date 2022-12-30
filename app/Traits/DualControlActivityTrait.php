@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\TaPaymentConfiguration;
@@ -30,6 +32,20 @@ trait DualControlActivityTrait
             'status' => 'pending',
         ];
         DualControl::updateOrCreate($payload);
+        $data = $model::findOrFail($modelId);
+
+        if ($action == DualControl::EDIT || $action == DualControl::DELETE) {
+            if ($data->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
+            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
+
+            if ($model == DUalControl::USER) {
+                $message = 'We are writing to inform you that some of your ZRB staff personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $this->sendEmailToUser($data, $message);
+            }
+        }
     }
 
     public function getModule($model)
@@ -97,6 +113,13 @@ trait DualControlActivityTrait
                 return 'Tax Type';
                 break;
 
+            case DualControl::EDUCATION:
+                return 'Education Level';
+                break;
+            case DualControl::Business_File_Type:
+                return 'Business File Type';
+                break;
+
             default:
                 abort(404);
         }
@@ -109,6 +132,38 @@ trait DualControlActivityTrait
         return $data;
     }
 
+    public function checkRelation($model, $modelId)
+    {
+        $data = $model::findOrFail($modelId);
+        if (!empty($data)) {
+            switch ($model) {
+                case DualControl::ROLE:
+                    if (count($data->users) > 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    break;
+
+                case DualControl::REGION:
+                    if (count($data->landLeases) > 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    if (!empty($data->taxagent)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    break;
+
+                default:
+                    abort(404);
+            }
+        }
+    }
+
     public function updateControllable($data, $status)
     {
         $update = $data->controllable_type::findOrFail($data->controllable_type_id);
@@ -118,8 +173,15 @@ trait DualControlActivityTrait
             $payload = json_decode($data->new_values);
             $payload = (array) $payload;
             if ($status == DualControl::APPROVE) {
+                
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
+
+                if ($data->controllable_type == DUalControl::USER) {
+                    $message = 'We are writing to inform you that some of your ZRB staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                    $this->sendEmailToUser($update, $message);
+                }
+
             } else {
                 $update->update(['is_updated' => $status]);
             }
@@ -133,5 +195,22 @@ trait DualControlActivityTrait
                 $update->update($payload);
             }
         }
+    }
+
+    public function sendEmailToUser($data, $message)
+    {
+        $smsPayload = [
+            'phone' => $data->phone,
+            'message' => $message,
+        ];
+
+        $emailPayload = [
+            'email' => $data->email,
+            'userName' => $data->fname,
+            'message' => $message,
+        ];
+
+        event(new SendSms('dual-control-update-user-info-notification', $smsPayload));
+        event(new SendMail('dual-control-update-user-info-notification', $emailPayload));
     }
 }

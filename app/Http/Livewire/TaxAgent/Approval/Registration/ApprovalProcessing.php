@@ -118,8 +118,8 @@ class ApprovalProcessing extends Component
             ));
 
             if (config('app.env') == 'production') {
-                event(new SendMail('tax-agent-registration-approval', $this->agent->taxpayer_id));
-                event(new SendSms('tax-agent-registration-approval', $this->agent->taxpayer_id));
+                event(new SendMail('tax-agent-registration-approval', $taxpayer->id));
+                event(new SendSms('tax-agent-registration-approval', $taxpayer->id));
             }
 
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
