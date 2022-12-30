@@ -16,7 +16,6 @@ class DebtWaiverReportPreviewTable extends DataTableComponent
     use LivewireAlert, DebtReportTrait;
 
     public $parameters;
-    public $lumpsump;
 
     public function mount($parameters)
     {
