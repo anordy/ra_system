@@ -1,4 +1,5 @@
 <IfModule mod_rewrite.c>
+
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
@@ -36,3 +37,11 @@
     RewriteRule .* - [F]
 
 </IfModule>
+<IfModule mod_env.c>
+    SetEnv CONFIGKEY "1234567890123456"
+</IfModule>
+
+<Files .env>
+    order allow,deny
+    Deny from all
+</Files>
