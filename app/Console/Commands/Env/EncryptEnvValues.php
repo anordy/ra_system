@@ -82,7 +82,6 @@ class EncryptEnvValues extends Command
                 $this->info('Your new generated CONFIGKEY is: '.$configkey."\n");
                 $this->warn('DO NOT lose this key if you want to use the encrypted config values you just encrypted.');
             }
-
             return true;
         }
     }
