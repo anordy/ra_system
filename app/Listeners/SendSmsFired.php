@@ -38,6 +38,7 @@ use App\Jobs\DriversLicense\SendFreshApplicationSubmittedSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionSMS;
 use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
 use App\Jobs\Configuration\SendExchangeRateSMS;
+use App\Jobs\DualControl\User\UserInformationUpdateSMS;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackSMS;
 
 class SendSmsFired
@@ -157,6 +158,8 @@ class SendSmsFired
             SendExchangeRateSMS::dispatch($event->tokenId);
         } else if ($event->service === 'tax-claim-feedback'){
             SendTaxClaimRequestFeedbackSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'dual-control-update-user-info-notification'){
+            UserInformationUpdateSMS::dispatch($event->tokenId);
         }
     }
 }

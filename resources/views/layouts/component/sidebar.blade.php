@@ -150,6 +150,11 @@
                             <a href="{{ route('returns.hotel.index') }}">Hotel Levy</a>
                         </li>
                     @endcan
+                    @can('return-hotel-levy-view')
+                    <li class="{{ request()->is('e-filling/airbnb*') ? 'active' : '' }}">
+                        <a href="{{ route('returns.airbnb.index') }}">Hotel Airbnb</a>
+                    </li>
+                    @endcan
                     @can('return-tour-operation-view')
                         <li class="{{ request()->is('e-filling/tour*') ? 'active' : '' }}">
                             <a href="{{ route('returns.tour.index') }}">Tour Operation Levy</a>

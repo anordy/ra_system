@@ -5,6 +5,8 @@ namespace App\Http\Livewire\Business\Files;
 use App\Models\BusinessCategory;
 use App\Models\BusinessFileType;
 use App\Models\Country;
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +16,7 @@ use Livewire\Component;
 class AddTypeModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $name, $short_name, $description, $is_required, $business_category;
 
@@ -35,9 +37,9 @@ class AddTypeModal extends Component
     public function submit()
     {
         $this->validate();
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-            BusinessFileType::create([
+            $file_type = BusinessFileType::create([
                 'name' => $this->name,
                 'short_name' => $this->short_name,
                 'description' => $this->description,
@@ -45,12 +47,15 @@ class AddTypeModal extends Component
                 'business_type' => $this->business_category,
                 'file_type' => 'pdf'
             ]);
-            $this->flash('success', 'Business File Type Stored.', [], redirect()->back()->getTargetUrl());
+            $this->triggerDualControl(get_class($file_type), $file_type->id, DualControl::ADD, 'adding business file type');
             DB::commit();
+            $this->alert('success', 'Record submitted successfully', ['timer' => 8000]);
+            return redirect()->route('settings.business-files.index');
         } catch(Exception $e){
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', "Couldn't add business file type. Please try again." . $e->getMessage());
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.business-files.index');
         }
     }
 

@@ -6,6 +6,7 @@ use App\Models\DualControl;
 use App\Models\Region;
 use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -36,7 +37,14 @@ class RegionTable extends DataTableComponent
         });
     }
 
-    protected $listeners = ['confirmed'];
+    public function builder(): Builder
+    {
+        return Region::orderByDesc('id');
+    }
+
+    protected $listeners = [
+        'confirmed'
+    ];
 
     public function columns(): array
     {
@@ -47,9 +55,9 @@ class RegionTable extends DataTableComponent
             Column::make('Location', 'location')
                 ->sortable()
                 ->searchable()
-                ->format(function ($value) {
-                    return ucfirst($value);
-                }),
+            ->format(function($value){
+                return ucfirst($value);
+            }),
             Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
                     if ($value == 0) {

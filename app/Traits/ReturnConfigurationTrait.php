@@ -12,10 +12,6 @@ use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\StampDuty\StampDutyConfig;
 use App\Models\Returns\Vat\VatReturnConfig;
 use App\Models\TaxType;
-use Exception;
-use Carbon\Carbon;
-use App\Models\Audit;
-use Illuminate\Support\Facades\Log;
 
 trait ReturnConfigurationTrait
 {
@@ -32,6 +28,7 @@ trait ReturnConfigurationTrait
             case TaxType::HOTEL:
             case TaxType::RESTAURANT:
             case TaxType::TOUR_OPERATOR:
+            case TaxType::AIRBNB:
                 $model = HotelReturnConfig::class;
                 return $model;
 

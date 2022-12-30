@@ -56,6 +56,9 @@ class DeclaredSalesAnalysis extends Component
 
         switch ($this->taxType->code) {
             case TaxType::HOTEL:
+            case TaxType::RESTAURANT:
+            case TaxType::TOUR_OPERATOR:
+            case TaxType::AIRBNB:
                 $this->hotel();
                 break;
             case TaxType::PETROLEUM:
@@ -113,7 +116,7 @@ class DeclaredSalesAnalysis extends Component
             ->whereIn('config_id', $purchaseConfigs)
             ->groupBy(['financial_years.code', 'financial_months.name'])->get();
 
-        $salesConfigs = HotelReturnConfig::whereIn('code', ['HS', 'RS', 'TOS', 'OS'])->get()->pluck('id');
+        $salesConfigs = HotelReturnConfig::whereIn('code', ['HS', 'RS', 'TOS', 'OS', 'HSBNB', 'OSBNB'])->get()->pluck('id');
 
         $this->sales = HotelReturnItem::selectRaw('financial_months.name as month, financial_years.code as year, SUM(value) as total_sales, SUM(vat) as total_sales_vat')
             ->leftJoin('hotel_return_configs', 'hotel_return_configs.id', 'hotel_return_items.config_id')
