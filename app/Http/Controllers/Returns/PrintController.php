@@ -36,6 +36,7 @@ class PrintController extends Controller
             case TaxType::HOTEL:
             case TaxType::RESTAURANT:
             case TaxType::TOUR_OPERATOR:
+            case TaxType::AIRBNB:
                 $returnView = 'print.returns.includes.hotel';
                 break;
             case TaxType::PETROLEUM:

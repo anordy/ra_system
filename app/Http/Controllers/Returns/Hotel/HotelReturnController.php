@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Returns\Hotel;
 
-use Carbon\Carbon;
-use App\Models\TaxType;
 use App\Traits\HotelLevyCardReport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\ReturnSummaryCardTrait;
 use App\Models\Returns\HotelReturns\HotelReturn;
-use App\Models\Returns\HotelReturns\HotelReturnPenalty;
 
 class HotelReturnController extends Controller
 {
@@ -20,11 +17,7 @@ class HotelReturnController extends Controller
         if (!Gate::allows('return-hotel-levy-view')) {
             abort(403);
         }
-        // $tax        = TaxType::where('code', TaxType::HOTEL)->first();
-        // $summary    = $this->getSummary($tax->id);
-        // $vars       = $summary['vars'];
-        // $paidData   = $summary['paidData'];
-        // $unpaidData = $summary['unpaidData'];
+
         $cardOne    = 'returns.hotel.hotel-card-one';
         $cardTwo    = 'returns.hotel.hotel-card-two';
         $tableName  = 'returns.hotel.hotel-returns-table';
@@ -37,11 +30,7 @@ class HotelReturnController extends Controller
         if (!Gate::allows('return-tour-operation-view')) {
             abort(403);
         }
-        // $tax        = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
-        // $summary    = $this->getSummary($tax->id);
-        // $vars       = $summary['vars'];
-        // $paidData   = $summary['paidData'];
-        // $unpaidData = $summary['unpaidData'];
+
         $cardOne    = 'returns.hotel.tour-card-one';
         $cardTwo    = 'returns.hotel.tour-card-two';
         $tableName  = 'returns.hotel.tour-operator-returns-table';
@@ -54,11 +43,7 @@ class HotelReturnController extends Controller
         if (!Gate::allows('return-restaurant-levy-view')) {
             abort(403);
         }
-        // $tax        = TaxType::where('code', TaxType::RESTAURANT)->first();
-        // $summary    = $this->getSummary($tax->id);
-        // $vars       = $summary['vars'];
-        // $paidData   = $summary['paidData'];
-        // $unpaidData = $summary['unpaidData'];
+
         $cardOne    = 'returns.hotel.restaurant-card-one';
         $cardTwo    = 'returns.hotel.restaurant-card-two';
         $tableName  = 'returns.hotel.restaurant-returns-table';
@@ -74,20 +59,18 @@ class HotelReturnController extends Controller
         return view('returns.hotel.show', compact('return'));
     }
 
-    public function adjust($return_id)
+    public function airbnb()
     {
-        $returnId = decrypt($return_id);
+        if (!Gate::allows('return-hotel-airbnb-levy-view')) {
+            abort(403);
+        }
 
-        return view('returns.hotel.adjust', compact('returnId'));
+        $cardOne    = 'returns.hotel.airbnb-card-one';
+        $cardTwo    = 'returns.hotel.airbnb-card-two';
+        $tableName  = 'returns.hotel.airbnb-returns-table';
+
+        return view('returns.hotel.airbnb', compact('cardOne', 'cardTwo', 'tableName'));
     }
 
-    // public function getSummary($tax_type_id)
-    // {
-    //     $paidData   = $this->hotelLevyCardReportForPaidReturns(HotelReturn::class, HotelReturn::getTableName(), HotelReturnPenalty::getTableName(), $tax_type_id);
-    //     $unpaidData = $this->hotelLevyCardReportForUnpaidReturns(HotelReturn::class, HotelReturn::getTableName(), HotelReturnPenalty::getTableName(), $tax_type_id);
 
-    //     $vars = $this->getSummaryData(HotelReturn::query()->where('tax_type_id', $tax_type_id));
-
-    //     return ['vars' => $vars, 'paidData' => $paidData, 'unpaidData' => $unpaidData];
-    // }
 }
