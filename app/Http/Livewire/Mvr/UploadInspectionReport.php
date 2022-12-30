@@ -67,7 +67,7 @@ class UploadInspectionReport extends Component
             $data = $this->prepareMotorVehicleData();
             $taxpayer = Taxpayer::query()->where(['reference_no'=>$data['owner']['z_number']])->first();
             if (empty($taxpayer)){
-                Storage::disk('local-admin')->delete($this->inspection_report_path);
+                Storage::disk('local')->delete($this->inspection_report_path);
                 DB::rollBack();
                 $this->alert('error', "Could not find owner/taxpayer with Z number {$data['owner']['z_number']}");
                 return;
@@ -76,7 +76,7 @@ class UploadInspectionReport extends Component
             $taxpayer_agent = Taxpayer::query()->where(['reference_no'=>$data['agent']['z_number']])->first();
             if (empty($taxpayer_agent->transport_agent)){
                 $this->alert('error', "Could not find agent/taxpayer with Z number {$data['agent']['z_number']}");
-                Storage::disk('local-admin')->delete($this->inspection_report_path);
+                Storage::disk('local')->delete($this->inspection_report_path);
                 DB::rollBack();
                 return;
             }
@@ -91,7 +91,7 @@ class UploadInspectionReport extends Component
             $this->flash('success', 'Inspection Report Uploaded');
             return redirect()->route('mvr.show', encrypt($id));
         } catch (Exception $e) {
-            if (Storage::disk('local-admin')->exists($this->inspection_report_path)) Storage::disk('local-admin')->delete($this->inspection_report_path);
+            if (Storage::disk('local')->exists($this->inspection_report_path)) Storage::disk('local')->delete($this->inspection_report_path);
             DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help: '.$e->getMessage());
@@ -127,7 +127,7 @@ class UploadInspectionReport extends Component
 
         $motor_vehicle = $result['data'];
         $path = "MVR-Inspection-Report-{$this->chassis}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->inspection_report->extension();
-        $inspection_report_path = $this->inspection_report->store( $path,'local-admin');
+        $inspection_report_path = $this->inspection_report->store( $path,'local');
         $mv_data = [
             'registration_number'=>'Z-'.str_pad(MvrMotorVehicle::query()->count().rand(10,99),9,'0',STR_PAD_LEFT),
             'number_of_axle'=>$motor_vehicle['number_of_axle'],

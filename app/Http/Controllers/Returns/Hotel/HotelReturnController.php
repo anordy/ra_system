@@ -70,7 +70,7 @@ class HotelReturnController extends Controller
     {
         $returnId = decrypt($return_id);
         $return   = HotelReturn::findOrFail($returnId);
-        $return->penalties = $return->penalties->merge($return->tax_return->penalties);
+        $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
         return view('returns.hotel.show', compact('return'));
     }
 

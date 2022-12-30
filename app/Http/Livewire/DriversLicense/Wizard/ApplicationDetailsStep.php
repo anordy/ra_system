@@ -76,11 +76,11 @@ class ApplicationDetailsStep extends StepComponent
         }
         $this->validate();
         if (!empty($this->loss_report) && !is_array($this->loss_report)){
-            $this->loss_report_path = $this->loss_report->store("Driver-License-LOSS-REPORT-DRIVERS-LICENSE-{$this->dl_number}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->loss_report->extension(),'local-admin');
+            $this->loss_report_path = $this->loss_report->store("Driver-License-LOSS-REPORT-DRIVERS-LICENSE-{$this->dl_number}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->loss_report->extension(),'local');
         }
 
         if (!empty($this->certificate)){
-            $this->certificate_path = $this->certificate->store("Driver-License-CERTIFICATE-OF-COMPETENCE-{$this->cert_number}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->certificate->extension(),'local-admin');
+            $this->certificate_path = $this->certificate->store("Driver-License-CERTIFICATE-OF-COMPETENCE-{$this->cert_number}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->certificate->extension(),'local');
         }
         parent::nextStep();
     }

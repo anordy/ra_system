@@ -108,17 +108,17 @@ class ObjectionApprovalProcessing extends Component
 
             $disputeReport = "";
             if ($this->disputeReport) {
-                $disputeReport = $this->disputeReport->store('waiver_report', 'local-admin');
+                $disputeReport = $this->disputeReport->store('waiver_report', 'local');
             }
 
             $noticeReport = "";
             if ($this->noticeReport) {
-                $noticeReport = $this->noticeReport->store('notice_report', 'local-admin');
+                $noticeReport = $this->noticeReport->store('notice_report', 'local');
             }
 
             $settingReport = "";
             if ($this->settingReport) {
-                $settingReport = $this->settingReport->store('setting_report', 'local-admin');
+                $settingReport = $this->settingReport->store('setting_report', 'local');
             }
 
             $dispute = Dispute::find($this->modelId);

@@ -24,15 +24,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('daily:debt')->everyMinute()->runInBackground();
-        // $schedule->command('daily:reopen-business')->everyMinute()->runInBackground();
-        // $schedule->command('daily:debt-penalty')->everyMinute()->runInBackground();
-        // $schedule->command('daily:debt-notice')->everyMinute()->runInBackground();
-        // $schedule->command('daily:tax-effective-date')->everyMinute()->runInBackground();
-        // $schedule->command('daily:debt-zero-balance')->everyMinute()->runInBackground();
-        // $schedule->command('daily:check-taxpayer-password-expire')->everyMinute()->runInBackground();
-        // $schedule->command('daily:check-user-password-expire')->everyMinute()->runInBackground();
-
+        $schedule->command('daily:debt')->dailyAt('00:00')->runInBackground();
+        $schedule->command('daily:reopen-business')->dailyAt('00:00')->runInBackground();
+        $schedule->command('daily:debt-penalty')->dailyAt('00:00')->runInBackground();
+        $schedule->command('daily:debt-notice')->dailyAt('00:00')->runInBackground();
+        $schedule->command('daily:tax-effective-date')->dailyAt('00:00')->runInBackground();
+        $schedule->command('daily:check-taxpayer-password-expire')->dailyAt('00:00')->runInBackground();
+        $schedule->command('daily:check-user-password-expire')->dailyAt('00:00')->runInBackground();
     }
 
     /**

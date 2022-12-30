@@ -228,12 +228,12 @@ class TaxAuditApprovalProcessing extends Component
 
                 $preliminaryReport = $this->preliminaryReport;
                 if ($this->preliminaryReport != $this->subject->preliminary_report) {
-                    $preliminaryReport = $this->preliminaryReport->store('audit', 'local-admin');
+                    $preliminaryReport = $this->preliminaryReport->store('audit', 'local');
                 }
 
                 $workingReport = $this->workingReport;
                 if ($this->workingReport != $this->subject->working_report) {
-                    $workingReport = $this->workingReport->store('audit', 'local-admin');
+                    $workingReport = $this->workingReport->store('audit', 'local');
                 }
 
                 $this->subject->preliminary_report = $preliminaryReport;
@@ -287,12 +287,12 @@ class TaxAuditApprovalProcessing extends Component
 
                 $exitMinutes = $this->exitMinutes;
                 if ($this->exitMinutes != $this->subject->exit_minutes) {
-                    $exitMinutes = $this->exitMinutes->store('audit', 'local-admin');
+                    $exitMinutes = $this->exitMinutes->store('audit', 'local');
                 }
 
                 $finalReport = $this->finalReport;
                 if ($this->finalReport != $this->subject->final_report) {
-                    $finalReport = $this->finalReport->store('audit', 'local-admin');
+                    $finalReport = $this->finalReport->store('audit', 'local');
                 }
 
                 $this->subject->exit_minutes = $exitMinutes;

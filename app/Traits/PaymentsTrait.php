@@ -349,7 +349,7 @@ trait PaymentsTrait
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $this->getExchangeRate($debt->currency);
         $payer_id = $taxpayer->id;
-        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+        $expire_date = $debt->curr_payment_due_date;
         $billableId = $debt->id;
         $billableType = get_class($debt);
 
@@ -443,7 +443,7 @@ trait PaymentsTrait
         $createdby_id   = Auth::id() != null ? Auth::id() : null;
         $exchange_rate = $this->getExchangeRate($debt->currency);
         $payer_id = $taxpayer->id;
-        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
+        $expire_date = $debt->curr_payment_due_date;
         $billableId = $debt->id;
         $billableType = get_class($debt);
 

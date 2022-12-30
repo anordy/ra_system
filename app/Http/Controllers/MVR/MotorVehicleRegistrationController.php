@@ -146,7 +146,7 @@ class MotorVehicleRegistrationController extends Controller
     public function showFile($path)
     {
         try {
-            return Storage::disk('local-admin')->response(decrypt($path));
+            return Storage::disk('local')->response(decrypt($path));
         } catch (\Exception $e) {
             report($e);
         }

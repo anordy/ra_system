@@ -96,6 +96,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'tax-clearance-view', 'sys_module_id' => 13],
 
             # Debt Management
+            ['name' => 'debt-management-debt-rollback', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-waive', 'sys_module_id' => 14],
             ['name' => 'debt-management-debts-recovery-measure', 'sys_module_id' => 14],
