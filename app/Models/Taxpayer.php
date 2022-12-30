@@ -18,6 +18,12 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
 
     protected $guarded = [];
 
+    protected $auditExclude = [
+        'password',
+        'remember_token',
+        'ci_payload',
+    ];
+
     public static function getPayloadColumns(): array
     {
         return ['id', 'email', 'phone', 'status'];

@@ -12,6 +12,15 @@ class AuditController extends Controller
             abort(403);
         }
 
-        return view('audits');
+        return view('audit-trail.index');
+    }
+
+    public function show($userId)
+    {
+        if (!Gate::allows('system-audit-trail-view')) {
+            abort(403);
+        }
+
+        return view('audit-trail.show', compact('userId'));
     }
 }

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\AuditTrail;
 
-use Exception;
 use Carbon\Carbon;
 use App\Models\Audit;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,12 +10,18 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
-class AuditLogTable extends DataTableComponent
+class UserAuditLogs extends DataTableComponent
 {
     use LivewireAlert;
 
+    public $userId;
+
+    public function mount($userId) {
+        $this->userId = decrypt($userId);
+    }
+
     public function builder(): Builder {
-        return Audit::query()->with('user')->orderBy('created_at', 'DESC');
+        return Audit::query()->with('user')->where('user_id', $this->userId)->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
@@ -30,19 +35,17 @@ class AuditLogTable extends DataTableComponent
         ]);
     }
 
-
-
     public function columns(): array
     {
         return [
             Column::make('Log', 'user_id')
-                ->sortable()
-                ->searchable()
-                ->format(function($value, $row){
-                    $name = $row->user->full_name ?? '';
-                    $model_name = explode('\\',$row->auditable_type);
-                    return $name .' - '. end($model_name);
-                }),
+            ->sortable()
+            ->searchable()
+            ->format(function($value, $row){
+                $name = $row->user->full_name ?? '';
+                $model_name = explode('\\',$row->auditable_type);
+                return $name .' - '. end($model_name);
+            }),
             Column::make('Action', 'event')
                 ->sortable()
                 ->searchable(),
