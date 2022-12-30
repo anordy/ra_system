@@ -21,6 +21,8 @@ class CreateBusinessFileTypesTable extends Migration
             $table->string('file_type')->nullable();
             $table->string('business_type')->nullable();
             $table->boolean('is_required')->default(false);
+            $table->boolean('is_approved')->default(0);
+            $table->boolean('is_updated')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

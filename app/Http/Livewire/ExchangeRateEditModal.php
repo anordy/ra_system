@@ -47,13 +47,15 @@ class ExchangeRateEditModal extends Component
 
         DB::beginTransaction();
         try {
-            $this->triggerDualControl(get_class($this->exchange_rate), $this->exchange_rate->id, DualControl::EDIT, 'editing interest rate', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->exchange_rate), $this->exchange_rate->id, DualControl::EDIT, 'editing exchange rate', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.exchange-rate.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE);
+            $this->alert('success', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.exchange-rate.index');
         }
     }
 

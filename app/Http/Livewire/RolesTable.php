@@ -73,6 +73,19 @@ class RolesTable extends DataTableComponent
                     }
 
                 })->html(),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
                     $edit = '';
@@ -122,6 +135,11 @@ class RolesTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $role = Role::find($data->id);
+            if (!$this->checkRelation($role, $role->id))
+            {
+                $this->alert('error', DualControl::RELATION_MESSAGE,  ['timer'=>4000]);
+                return;
+            }
             $this->triggerDualControl(get_class($role), $role->id, DualControl::DELETE, 'deleting role');
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());

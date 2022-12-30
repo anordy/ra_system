@@ -21,11 +21,11 @@ class SalesPurchasesController extends Controller
 
     public function index()
     {
-        $diff = 10 / 100;
+        $constant_percentage = 10 / 100;
         $hotel_returns = array_replace_recursive($this->getHotelPurchases()->toArray(), $this->getAllHotelSales()->toArray());
-        $this->saveReturns($hotel_returns, $diff);
+        $this->saveReturns($hotel_returns, $constant_percentage);
         $vat_returns = array_replace_recursive($this->getVatPurchases()->toArray(), $this->getAllVatSales()->toArray());
-        $this->saveReturns($vat_returns, $diff);
+        $this->saveReturns($vat_returns, $constant_percentage);
         $returns = SalePurchase::get();
 
         return view('returns.queries.sales-purchases.index', compact('returns'));
@@ -38,12 +38,15 @@ class SalesPurchasesController extends Controller
         return view('returns.queries.sales-purchases.show', compact('return'));
     }
 
-    public function saveReturns($returns, $diff)
+    public function saveReturns($returns, $constant_percentage)
     {
         DB::beginTransaction();
         try {
             foreach ($returns as $return) {
-                if ($return['total_sales'] - $return['total_purchases'] <= $diff) {
+                $return_differences = $return['total_sales'] - $return['total_purchases'];
+                $total = $return['total_sales'] + $return['total_purchases'];
+                $return_percentage = $return_differences / $total;
+                if ($return_percentage <= $constant_percentage) {
                     SalePurchase::query()->updateOrCreate(
                         ['business_location_id' => $return['business_location_id'], 'tax_type_id' => $return['tax_type_id']],
                         [

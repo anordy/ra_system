@@ -92,6 +92,8 @@
                 @include('settings.dual-control-activities.details.ward')
             @elseif ($result->controllable_type === \App\Models\DualControl::EXCHANGE_RATE)
                 @include('settings.dual-control-activities.details.exchange-rate')
+            @elseif ($result->controllable_type === \App\Models\DualControl::EDUCATION)
+                @include('settings.dual-control-activities.details.education-level')
             @endif
 
 

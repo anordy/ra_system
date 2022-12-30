@@ -43,11 +43,13 @@ class DualControl extends Model
     public const WARD = Ward::class;
     public const EXCHANGE_RATE = ExchangeRate::class;
     public const TAX_TYPE = TaxType::class;
+    public const EDUCATION = EducationLevel::class;
+    public const Business_File_Type = BusinessFileType::class;
 
     //Messages
     public const SUCCESS_MESSAGE = 'Updated data successfully submitted, Please wait for checker to approve';
     public const ERROR_MESSAGE = 'Something went wrong, Please contact the administrator for help';
-    public const RELATION_MESSAGE = 'Operation failed, This data is already used on another occassion';
+    public const RELATION_MESSAGE = 'Operation Failed, This data is already used on another occasion';
 
     public function moduleForBlade($model)
     {

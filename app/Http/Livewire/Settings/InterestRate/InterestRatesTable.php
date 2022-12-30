@@ -73,6 +73,19 @@ class InterestRatesTable extends DataTableComponent
                     }
 
                 })->html(),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
             Column::make('Action', 'id')
                 ->format(fn ($value) => <<< HTML
                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'settings.interest-rate.interest-rate-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
