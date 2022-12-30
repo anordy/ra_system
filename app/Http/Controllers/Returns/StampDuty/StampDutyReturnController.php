@@ -28,7 +28,7 @@ class StampDutyReturnController extends Controller
         }
         $returnId = decrypt($returnId);
         $return   = StampDutyReturn::findOrFail($returnId);
-        $return->penalties = $return->penalties->merge($return->tax_return->penalties);
+        $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
         return view('returns.stamp-duty.show', compact('return'));
     }
 }

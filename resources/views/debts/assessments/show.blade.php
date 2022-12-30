@@ -16,10 +16,6 @@
                 <hr>
             </div>
 
-            {{-- <div class="row m-2 pt-3">
-                <livewire:debts.payment.make-payment :assessment="$assessment" />
-            </div> --}}
-
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Penalties</a>
@@ -27,14 +23,30 @@
             </nav>
 
             <div class="tab-content px-2 card pt-3 pb-2">
+                <div class="card-tools">
+                    @if (!$assessment->rollback && count($assessment->penalties) > 0)
+                        <a href="{{ route('debts.rollback.assessment', encrypt($assessment->id)) }}"
+                            class="btn btn-info btn-sm text-white" style="color: white !important;"><i
+                                class="bi bi-arrow-left-right text-white"></i>
+                            Rollback Penalty & Interest
+                        </a>
+                    @endif
+                    {{-- @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned' && $tax_return->return_category == 'overdue')
+                        <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"
+                            class="btn btn-info btn-sm text-white" style="color: white !important;"><i
+                                class="fa fa-plus text-white"></i>
+                            Assign Recovery Measure
+                        </a>
+                    @endif --}}
+                </div>
                 <div id="tab1" class="tab-pane fade active show m-4">
                     @include('debts.assessments.details', ['assessment' => $assessment])
                 </div>
                 <div id="tab3" class="tab-pane fade m-4">
-                    {{-- <livewire:debts.debt-penalties :penalties="$assessment->penalties ?? []" /> --}}
+                    <livewire:debt.debt-penalties :penalties="$assessment->penalties ?? []" />
                 </div>
                 <div id="tab4" class="tab-pane fade  m-4">
-                    {{-- @include('debts.assessments.waivers.waiver-details', ['assessment' => $assessment]) --}}
+                    @include('debts.assessments.waiver-details', ['assessment' => $assessment])
                 </div>
             </div>
         </div>

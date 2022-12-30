@@ -149,14 +149,12 @@ class DisputeWaiverApprovalProcessing extends Component
                 $this->subject->app_status = DisputeStatus::APPROVED;
                 $this->subject->save();
 
-                $now = Carbon::now();
-
                 // Generate control number for waived application
                 if ($this->assessment->bill) {
-                    CancelBill::dispatch($this->assessment->bill, 'Assessment dispute has been waived')->delay($now->addSeconds(10));
-                    GenerateAssessmentDisputeControlNo::dispatch($this->assessment)->delay($now->addSeconds(10));
+                    CancelBill::dispatch($this->assessment->bill, 'Assessment dispute has been waived');
+                    GenerateAssessmentDisputeControlNo::dispatch($this->assessment);
                 } else {
-                    GenerateAssessmentDisputeControlNo::dispatch($this->assessment)->delay($now->addSeconds(10));
+                    GenerateAssessmentDisputeControlNo::dispatch($this->assessment);
                 }
 
                 DB::commit();

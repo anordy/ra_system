@@ -10,12 +10,13 @@ use App\Models\BusinessLocation;
 use App\Models\Disputes\Dispute;
 use App\Models\Debts\DebtPenalty;
 use App\Models\TaxAudit\TaxAudit;
+use App\Models\Debts\DebtRollback;
 use App\Models\Debts\DemandNotice;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use App\Models\Verification\TaxVerification;
 use App\Models\Investigation\TaxInvestigation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use OwenIt\Auditing\Contracts\Auditable;
 
 
 class TaxAssessment extends Model implements Auditable
@@ -85,6 +86,15 @@ class TaxAssessment extends Model implements Auditable
         return $this->morphMany(ZmBill::class, 'billable')->latest()->first();
     }
 
+    public function secondLatest()
+    {
+        return $this->morphMany(ZmBill::class, 'billable')->latest();
+    }
+
+    public function rollback(){
+        return $this->morphOne(DebtRollback::class, 'debt');
+    }
+
     public function payments()
     {
         return $this->bills()->where('status', 'paid');
@@ -92,6 +102,11 @@ class TaxAssessment extends Model implements Auditable
 
     public function penalties(){
         return $this->morphMany(DebtPenalty::class, 'debt');
+    }
+
+    public function latestPenalty()
+    {
+        return $this->morphOne(DebtPenalty::class, 'debt')->latest();
     }
 
     public function demandNotices()
