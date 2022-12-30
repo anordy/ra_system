@@ -28,6 +28,7 @@ class ClosureApprovalProgressTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+        $this->setAdditionalSelects('pinstance_type', 'user_type');
     }
 
     public function builder(): Builder
@@ -42,28 +43,20 @@ class ClosureApprovalProgressTable extends DataTableComponent
     {
         return [
             Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('Business Category', 'pinstance.category.name')
-                ->label(fn($row) => $row->pinstance->category->name ?? 'N/A')
+            Column::make('Business', 'pinstance_type')
+                ->label(fn ($row) => $row->pinstance->business->name ?? '')
                 ->sortable()
                 ->searchable(),
-            Column::make('Business Type', 'pinstance.business_type')
-                ->label(fn($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
+            Column::make('Branch', 'pinstance_type')
+                ->label(fn ($row) => $row->pinstance->location->name ?? '')
                 ->sortable()
                 ->searchable(),
-            Column::make('Business Name', 'pinstance.name')
-                ->label(fn($row) => $row->pinstance->name ?? 'N/A')
+            Column::make('Closing Date', 'pinstance_type')
+                ->label(fn($row) => $row->pinstance->closing_date ?? '')
                 ->sortable()
                 ->searchable(),
-            Column::make('TIN', 'pinstance.tin')
-                ->label(fn($row) => $row->pinstance->tin ?? '')
-                ->sortable()
-                ->searchable(),
-            Column::make('Buss. Reg. No.', 'pinstance.reg_no')
-                ->label(fn($row) => $row->pinstance->reg_no ?? 'N/A')
-                ->sortable()
-                ->searchable(),
-            Column::make('Mobile', 'pinstance_type')
-                ->label(fn($row) => $row->pinstance->mobile ?? '')
+            Column::make('Opening Date', 'pinstance_type')
+                ->label(fn($row) => $row->pinstance->opening_date ?? '')
                 ->sortable()
                 ->searchable(),
             Column::make('From State', 'from_place')
@@ -76,7 +69,7 @@ class ClosureApprovalProgressTable extends DataTableComponent
                 ->searchable(),
             Column::make('Status', 'status')->view('business.closure.includes.status'),
             Column::make('Action', 'id')
-                ->view('business.closure.action'),
+                ->view('business.closure.approval-progress'),
         ];
     }
 }

@@ -42,6 +42,7 @@ class TaxType extends Model implements Auditable
     public const INVESTIGATION = 'investigation';
     public const GOVERNMENT_FEE = 'government-fee';
     public const DEBTS = 'debts';
+    public const AIRBNB = 'hotel-airbnb';
 
     protected $fillable = [
         'name',
