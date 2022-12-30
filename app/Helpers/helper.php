@@ -58,9 +58,13 @@ function getUser($id)
 
 function getRole($id)
 {
-    $user = User::query()->findOrFail($id);
-    $role = $user->role->name;
-    return $role;
+
+    if (!empty($id))
+    {
+        $role = Role::query()->findOrFail($id);
+        $role = $role->name;
+        return $role;
+    }
 }
 
 function getEducation($id)
