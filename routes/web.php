@@ -347,9 +347,9 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/tour', [HotelReturnController::class, 'tour'])->name('tour.index');
         Route::get('/restaurant', [HotelReturnController::class, 'restaurant'])->name('restaurant.index');
+        Route::get('/airbnb', [HotelReturnController::class, 'airbnb'])->name('airbnb.index');
 
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
-        Route::get('/hotel/adjust/{return_id}', [HotelReturnController::class, 'adjust'])->name('hotel.adjust');
 
         Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');

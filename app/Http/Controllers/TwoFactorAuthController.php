@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Validator;
 
 class TwoFactorAuthController extends Controller
 {
-
     public function index()
     {
         if (Auth::user()->is_password_expired) {
@@ -73,7 +72,6 @@ class TwoFactorAuthController extends Controller
 
     public function resend()
     {
-
         $user = auth()->user();
         $token = $user->otp;
 

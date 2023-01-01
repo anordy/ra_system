@@ -33,7 +33,6 @@ class AssessmentDebtReportPreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['tax_assessments.business_id', 'tax_assessments.location_id', 'tax_assessments.created_at']);
     }
 
     public function columns(): array

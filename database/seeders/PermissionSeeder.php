@@ -48,6 +48,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'return-hotel-levy-view', 'sys_module_id' => 5],
             ['name' => 'return-tour-operation-view', 'sys_module_id' => 5],
             ['name' => 'return-restaurant-levy-view', 'sys_module_id' => 5],
+            ['name' => 'return-hotel-airbnb-levy-view', 'sys_module_id' => 5],
             ['name' => 'return-vat-return-view', 'sys_module_id' => 5],
             ['name' => 'return-airport-return-view', 'sys_module_id' => 5],
             ['name' => 'return-seaport-return-view', 'sys_module_id' => 5],

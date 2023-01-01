@@ -9,16 +9,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable implements PayloadInterface
+class User extends Authenticatable implements PayloadInterface, Auditable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasPermissions, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasPermissions, SoftDeletes, \OwenIt\Auditing\Auditable;
+
     protected $guarded = [];
     protected $table = 'users';
 
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $auditExclude = [
+        'password',
+        'remember_token',
+        'ci_payload',
+        'auth_attempt'
     ];
 
     protected $casts = [
