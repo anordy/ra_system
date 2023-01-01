@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\Reports\Payments\PaymentReportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -438,6 +439,12 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/debts', [DebtReportController::class, 'index'])->name('debts');
         Route::get('/debts/preview/{parameters}', [DebtReportController::class, 'preview'])->name('debts.preview');
         Route::get('/debts/download-report-pdf/{data}', [DebtReportController::class, 'exportDebtReportPdf'])->name('debts.download.pdf');
+
+        //Payment Reports
+        Route::get('/payments', [PaymentReportController::class, 'index'])->name('payments');
+        Route::get('/payments/returns-preview/{data}', [PaymentReportController::class, 'returnsPreview'])->name('payments.returns-preview');
+        Route::get('/payments/consultants-preview/{data}', [PaymentReportController::class, 'consultantsPreview'])->name('payments.consultants-preview');
+        Route::get('/payments/download-report-pdf/{data}', [PaymentReportController::class, 'exportPaymentReportPdf'])->name('payments.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {

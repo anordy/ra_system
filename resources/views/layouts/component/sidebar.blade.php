@@ -586,6 +586,9 @@
                         <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
                             <a href="{{ route('reports.debts') }}">Debt Reports</a>
                         </li>
+                        <li class="{{ request()->is('reports/payments*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.payments') }}">Payment Reports</a>
+                        </li>
                     @endcan
 
                 </ul>
