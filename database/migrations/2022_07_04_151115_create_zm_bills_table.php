@@ -1,5 +1,7 @@
 <?php
 
+use App\Enum\BankReconStatus;
+use App\Enum\ZmReconStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -43,6 +45,9 @@ class CreateZmBillsTable extends Migration
 
             $table->boolean('failed_verification')->default(0);
             $table->text('ci_payload', 4000)->nullable();
+
+            $table->enum('bank_recon_status', BankReconStatus::getConstants())->default(BankReconStatus::PENDING);
+            $table->enum('zm_recon_status',ZmReconStatus::getConstants())->default(ZmReconStatus::PENDING);
 
             $table->timestamps();
         });
