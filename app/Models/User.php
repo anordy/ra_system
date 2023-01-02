@@ -5,13 +5,16 @@ namespace App\Models;
 use App\Services\Verification\PayloadInterface;
 use App\Traits\HasPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable implements PayloadInterface
+class User extends Authenticatable implements PayloadInterface, Auditable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasPermissions, SoftDeletes, \OwenIt\Auditing\Auditable;
+
     protected $guarded = [];
     protected $table = 'users';
 
@@ -20,13 +23,20 @@ class User extends Authenticatable implements PayloadInterface
         'remember_token',
     ];
 
+    protected $auditExclude = [
+        'password',
+        'remember_token',
+        'ci_payload',
+        'auth_attempt'
+    ];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
     public static function getPayloadColumns(): array
     {
-        return ['id', 'email', 'phone', 'password', 'status'];
+        return ['id', 'email', 'phone', 'status'];
     }
 
     public static function getTableName(): string

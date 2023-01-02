@@ -23,7 +23,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->unsignedBigInteger('region_id');
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('ward_id');
-            $table->dateTime('date_of_commencing');
+            $table->timestamp('date_of_commencing');
             $table->string('latitude');
             $table->string('longitude');
             $table->enum('nature_of_possession',['Owned','Rented']);
@@ -32,12 +32,12 @@ class CreateBusinessLocationsTable extends Migration
             $table->string('house_no')->nullable();
             $table->string('owner_name')->nullable();
             $table->string('owner_phone_no')->nullable();
-            $table->float('pre_estimated_turnover', 20, 2)->nullable();
-            $table->float('post_estimated_turnover', 20, 2);
+            $table->decimal('pre_estimated_turnover', 20, 2)->nullable();
+            $table->decimal('post_estimated_turnover', 20, 2);
             $table->string('meter_no')->nullable();
             $table->string('marking')->nullable();
-            $table->dateTime('approved_on')->nullable();
-            $table->dateTime('verified_at')->nullable();
+            $table->timestamp('approved_on')->nullable();
+            $table->timestamp('verified_at')->nullable();
             $table->boolean('is_headquarter')->default(false);
             $table->enum('status', ['draft', 'pending', 'approved', 'correction', 'rejected', 'temp_closed', 'deregistered'])->default('pending');
             $table->softDeletes();

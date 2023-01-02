@@ -129,9 +129,9 @@ class RegistrationChangeController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
+            DB::rollBack();
             report($e);
             session()->flash('warning', 'Approval failed, could not update data');
-            DB::rollBack();
         }
 
 

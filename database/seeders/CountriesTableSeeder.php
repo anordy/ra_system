@@ -18,25 +18,29 @@ class CountriesTableSeeder extends Seeder
         Country::updateOrcreate([
             'name' => 'Tanzania',
             'nationality' => 'Tanzanian',
-            'code' => 'TZ'
+            'code' => 'TZ',
+            'is_approved' => 1
         ]);
 
         Country::updateOrCreate([
             'name' => 'Kenya',
             'nationality' => 'Kenyan',
-            'code' => 'KE'
+            'code' => 'KE',
+            'is_approved' => 1
         ]);
 
         Country::updateOrCreate([
             'name' => 'Uganda',
             'nationality' => 'Ugandan',
-            'code' => 'UG'
+            'code' => 'UG',
+            'is_approved' => 1
         ]);
 
         Country::updateOrCreate([
             'name' => 'Japan',
             'nationality' => 'Japanese',
-            'code' => 'JP'
+            'code' => 'JP',
+            'is_approved' => 1
         ]);
     }
 }

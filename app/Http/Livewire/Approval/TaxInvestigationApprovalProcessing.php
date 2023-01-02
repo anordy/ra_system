@@ -246,12 +246,12 @@ class TaxInvestigationApprovalProcessing extends Component
 
                 $investigationReport = "";
                 if ($this->investigationReport != $this->subject->investigation_report) {
-                    $investigationReport = $this->investigationReport->store('investigation', 'local-admin');
+                    $investigationReport = $this->investigationReport->store('investigation', 'local');
                 }
 
                 $workingsReport = "";
                 if ($this->workingsReport != $this->subject->working_report) {
-                    $workingsReport = $this->investigationReport->store('investigation', 'local-admin');
+                    $workingsReport = $this->investigationReport->store('investigation', 'local');
                 }
 
 
@@ -392,8 +392,8 @@ class TaxInvestigationApprovalProcessing extends Component
                 $this->alert('success', 'A control number for this verification has been generated successfully');
             }
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
         }
     }
 

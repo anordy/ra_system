@@ -3,9 +3,13 @@
 namespace App\Http\Livewire;
 
 use App\Models\District;
+use App\Models\DualControl;
 use App\Models\Region;
 use App\Models\Ward;
+use App\Traits\DualControlActivityTrait;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -14,7 +18,7 @@ use Livewire\Component;
 class WardAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $regions = [];
     public $districts = [];
@@ -30,13 +34,13 @@ class WardAddModal extends Component
 
     public function mount()
     {
-        $this->regions = Region::all();
+        $this->regions = Region::where('is_approved',1)->get();
     }
 
     public function updated($propertyName)
     {
         if ($propertyName === 'region_id') {
-            $this->districts = District::where('region_id', $this->region_id)->select('id', 'name')->get();
+            $this->districts = District::where('region_id', $this->region_id)->where('is_approved',1)->select('id', 'name')->get();
         }
 
     }
@@ -49,16 +53,22 @@ class WardAddModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try {
-            Ward::create([
+            $ward = Ward::create([
                 'name' => $this->name,
                 'district_id' => $this->district_id,
+                'created_at' =>Carbon::now()
             ]);
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            DB::commit();
+            $this->triggerDualControl(get_class($ward), $ward->id, DualControl::ADD, 'adding ward');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.ward.index');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.ward.index');
         }
     }
 

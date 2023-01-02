@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Settings\SystemSettings;
 
+use App\Models\DualControl;
 use App\Models\SystemSetting;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -13,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class SystemSettingTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -75,7 +77,23 @@ class SystemSettingTable extends DataTableComponent
                     }
                 })
                 ->html(),
-            Column::make('Action', 'id')->view('settings.system-settings.setting-entries.includes.actions'),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
+            Column::make('Action', 'id')
+            ->format(function ($value, $row) {
+                return view('settings.system-settings.setting-entries.includes.actions', ['row' => $row]);
+            })
         ];
     }
 
@@ -103,13 +121,13 @@ class SystemSettingTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TODO: //ADD DUAL CONTROL
-            $systemsettingCategory = SystemSetting::findOrFail(decrypt($data->id));
-            $systemsettingCategory->delete();
-            $this->alert('success', 'Record deleted successfully');
+
+            $systemsetting = SystemSetting::findOrFail(decrypt($data->id));
+            $this->triggerDualControl(get_class($systemsetting), $systemsetting->id, DualControl::DELETE, 'deleting system setting entry');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             $this->flash(
                 'success',
-                'Record deleted successfully',
+                DualControl::SUCCESS_MESSAGE,
                 [],
                 redirect()
                     ->back()
@@ -117,7 +135,7 @@ class SystemSettingTable extends DataTableComponent
             );
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

@@ -25,7 +25,7 @@ class CreateWorkflowTasksTable extends Migration
             $table->enum('owner', ['staff', 'system', 'taxpayer']);
             $table->string('operator_type');
             $table->string('operators');
-            $table->dateTime('approved_on')->nullable();
+            $table->timestamp('approved_on')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('user_type')->nullable();
             $table->enum('status', $status_choices)->default('running');

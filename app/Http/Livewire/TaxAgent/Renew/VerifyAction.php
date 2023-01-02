@@ -147,7 +147,6 @@ class VerifyAction extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            report($e);
             $this->alert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }

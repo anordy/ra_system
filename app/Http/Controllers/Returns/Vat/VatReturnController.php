@@ -30,7 +30,7 @@ class VatReturnController extends Controller
             abort(403);
         }
         $return         = VatReturn::query()->findOrFail(decrypt($id));
-        $return->penalties = $return->penalties->merge($return->tax_return->penalties);
+        $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
 
         return view('returns.vat_returns.show', compact('return', 'id'));
     }

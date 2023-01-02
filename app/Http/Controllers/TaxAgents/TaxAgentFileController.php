@@ -17,22 +17,22 @@ class TaxAgentFileController extends Controller
 
         $agent = TaxAgent::find($agentId);
         if ($type == 'csv') {
-            return Storage::disk('local-admin')->response($agent->cv);
+            return Storage::disk('local')->response($agent->cv);
         }
         if ($type == 'passport_photo') {
-            return Storage::disk('local-admin')->response($agent->passport_photo);
+            return Storage::disk('local')->response($agent->passport_photo);
         }
 
         if ($type == 'tin_certificate') {
-            return Storage::disk('local-admin')->response($agent->tin_certificate);
+            return Storage::disk('local')->response($agent->tin_certificate);
         }
 
         if ($type == 'emp_letter') {
-            return Storage::disk('local-admin')->response($agent->emp_letter);
+            return Storage::disk('local')->response($agent->emp_letter);
         }
 
         if ($type == 'approval_letter') {
-            return Storage::disk('local-admin')->response($agent->approval_letter);
+            return Storage::disk('local')->response($agent->approval_letter);
         }
 
         return abort(404);
@@ -43,11 +43,11 @@ class TaxAgentFileController extends Controller
 
         $academics = TaxAgentAcademicQualification::find($agentId);
         if ($type == 'academic_certificate') {
-            return Storage::disk('local-admin')->response($academics->certificate);
+            return Storage::disk('local')->response($academics->certificate);
         }
 
         if ($type == 'academic_transcript') {
-            return Storage::disk('local-admin')->response($academics->transcript);
+            return Storage::disk('local')->response($academics->transcript);
         }
 
         return abort(404);
@@ -57,7 +57,7 @@ class TaxAgentFileController extends Controller
     {
         $pro = TaxAgentProfessionals::find($agentId);
         if ($type == 'pro_certificate') {
-            return Storage::disk('local-admin')->response($pro->attachment);
+            return Storage::disk('local')->response($pro->attachment);
         }
 
         return abort(404);
@@ -68,7 +68,7 @@ class TaxAgentFileController extends Controller
 
         $training = TaxAgentTrainingExperience::find($agentId);
         if ($type == 'tra_certificate') {
-            return Storage::disk('local-admin')->response($training->attachment);
+            return Storage::disk('local')->response($training->attachment);
         }
 
         return abort(404);

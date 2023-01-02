@@ -37,7 +37,7 @@ class Approve extends Component
                 return redirect()->route('settings.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
-                Log::error($exception->getMessage());
+                Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
 
             }
@@ -45,11 +45,31 @@ class Approve extends Component
 
     }
 
+    protected $listeners = [
+        'approve', 'reject'
+    ];
+
+    public function confirmPopUpModal($action)
+    {
+        $this->alert('warning', 'Are you sure you want to complete this action?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Confirm',
+            'onConfirmed' => $action,
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null
+
+        ]);
+    }
+
     public function reject()
     {
         if (!Gate::allows('setting-dual-control-activities-view')) {
             abort(403);
         }
+
         $req = DualControl::findOrFail($this->dual_control_id);
         if (!empty($req)) {
             DB::beginTransaction();
@@ -61,7 +81,7 @@ class Approve extends Component
                 return redirect()->route('settings.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
-                Log::error($exception->getMessage());
+                Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
                 return redirect()->route('settings.dual-control-activities.index');
             }

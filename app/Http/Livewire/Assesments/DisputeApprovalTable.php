@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Assesments;
 
+use App\Enum\BillStatus;
 use App\Models\Disputes\Dispute;
 use App\Models\WorkflowTask;
 use Carbon\Carbon;
@@ -16,6 +17,8 @@ class DisputeApprovalTable extends DataTableComponent
 
     public $model = WorkflowTask::class;
 
+    public $category;
+
     public function mount($category)
     {
         $this->category = $category;
@@ -26,13 +29,16 @@ class DisputeApprovalTable extends DataTableComponent
             ->where('pinstance_type', Dispute::class)
             ->where('status', '!=', 'completed')
             ->whereHasMorph('pinstance', Dispute::class, function ($query) {
-                $query->where('category', $this->category);
+                $query->where('category', $this->category)
+                      ->where('payment_status',[BillStatus::COMPLETE]);
             })
             ->where('owner', 'staff')
             ->whereHas('actors', function ($query) {
                 $query->where('user_id', auth()->id());
             });
         return $workflow;
+
+ 
 
     }
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\Role;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RolesTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     protected $model = Role::class;
     public function configure(): void
@@ -53,6 +55,37 @@ class RolesTable extends DataTableComponent
                         HTML;
                     }
                 })->html(true),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
                     $edit = '';
@@ -65,7 +98,7 @@ class RolesTable extends DataTableComponent
                     }
                     if (Gate::allows('setting-role-delete')) {
                         $delete =  <<< HTML
-                                <button class="btn btn-danger btn-sm" onclick="Livewire.emit('showModal', 'role-delete-modal',$value)"><i class="fa fa-trash"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                             HTML;
                     }
 
@@ -101,11 +134,18 @@ class RolesTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            Role::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
+            $role = Role::find($data->id);
+            if (!$this->checkRelation($role, $role->id))
+            {
+                $this->alert('error', DualControl::RELATION_MESSAGE,  ['timer'=>4000]);
+                return;
+            }
+            $this->triggerDualControl(get_class($role), $role->id, DualControl::DELETE, 'deleting role');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

@@ -19,8 +19,8 @@ class CreateDebtPenaltiesTable extends Migration
             $table->unsignedBigInteger('debt_id');
             $table->string('debt_type');
             $table->string('financial_month_name');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date'); // This is the curr_payment_due_date
             $table->decimal('tax_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
             $table->decimal('rate_amount', 20, 2);
@@ -30,6 +30,7 @@ class CreateDebtPenaltiesTable extends Migration
             $table->decimal('currency_rate_in_tz', 20, 2)->default(1);
             $table->enum('currency',Currencies::getConstants())->default('TZS');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

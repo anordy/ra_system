@@ -43,14 +43,15 @@ class RoleEditModal extends Component
                 'name' => $this->name,
                 'report_to' => $this->report_to == 'null' ? null : $this->report_to
             ];
-            $this->role->update($payload);
             $this->triggerDualControl(get_class($this->role), $this->role->id, DualControl::EDIT, 'editing role', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            return redirect()->route('settings.roles.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE);
+            return redirect()->route('settings.roles.index');
         }
     }
 

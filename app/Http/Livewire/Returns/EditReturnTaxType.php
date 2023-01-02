@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Returns;
 
 use App\Models\Currency;
+use App\Models\DualControl;
 use App\Models\TaxType;
+use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -12,13 +14,14 @@ use Livewire\Component;
 
 class EditReturnTaxType extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
     public $taxtype_id;
     public $tax_type;
     public $name;
     public $code;
     public $category;
     public $gfs_code;
+    public $old_values;
 
 
     protected $rules = [
@@ -34,6 +37,10 @@ class EditReturnTaxType extends Component
         $this->code = $this->tax_type->code;
         $this->category = $this->tax_type->category;
         $this->gfs_code = $this->tax_type->gfs_code;
+        $this->old_values = [
+            'name' => $this->name,
+            'gfs_code' => $this->gfs_code,
+        ];
     }
 
     public function update()
@@ -44,16 +51,18 @@ class EditReturnTaxType extends Component
         $this->validate();
         DB::beginTransaction();
         try {
-            $this->tax_type->name = $this->name;
-            $this->tax_type->gfs_code = $this->gfs_code;
-            $this->tax_type->save();
+            $payload = [
+                'name' => $this->name,
+                'gfs_code' => $this->gfs_code,
+            ];
+            $this->triggerDualControl(get_class($this->tax_type), $this->tax_type->id, DualControl::EDIT, 'editing tax type', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->flash('success', 'Record updated successfully');
+            $this->alert('success', DualControl::SUCCESS_MESSAGE);
             redirect()->route('settings.return-config.index');
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-            $this->flash('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
+            $this->flash('warning', DualControl::ERROR_MESSAGE, [], redirect()->back()->getTargetUrl());
         }
     }
 

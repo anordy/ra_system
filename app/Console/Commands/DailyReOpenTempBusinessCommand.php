@@ -57,7 +57,7 @@ class DailyReOpenTempBusinessCommand extends Command
     {
 
         $closed_businesses = BusinessTempClosure::where('status', 'approved')
-            ->whereRaw("CURRENT_DATE - opening_date > 0")
+            ->whereRaw("CURRENT_DATE - CAST(opening_date as date) > 0")
             ->get();
 
         DB::beginTransaction();
@@ -95,9 +95,9 @@ class DailyReOpenTempBusinessCommand extends Command
             DB::commit();
             Log::channel('dailyJobs')->info("Daily reopen business process ended");
         } catch(Exception $e) {
+            DB::rollBack();
             Log::channel('dailyJobs')->info('Daily reopen business process ended with error');
             Log::channel('dailyJobs')->error($e);
-            DB::rollBack();
         }
 
         

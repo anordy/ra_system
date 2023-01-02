@@ -3,9 +3,12 @@
 namespace App\Http\Livewire;
 
 use App\Models\District;
+use App\Models\DualControl;
 use App\Models\Region;
 use App\Models\Ward;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -14,7 +17,7 @@ use Livewire\Component;
 class WardEditModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $regions = [];
     public $districts = [];
@@ -22,6 +25,7 @@ class WardEditModal extends Component
     public $district_id;
     public $name;
     public $ward;
+    public $old_values;
 
     protected $rules = [
         'region_id' => 'required',
@@ -37,6 +41,10 @@ class WardEditModal extends Component
         $this->district_id = $this->ward->district_id;
         $this->region_id = $this->ward->district->region->id;
         $this->districts = District::where('region_id', $this->region_id)->select('id', 'name')->get();
+        $this->old_values = [
+            'name' => $this->name,
+            'district_id' => $this->district_id,
+        ];
     }
 
     public function updated($propertyName)
@@ -55,16 +63,21 @@ class WardEditModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try {
-            $this->ward->update([
+            $payload = [
                 'name' => $this->name,
                 'district_id' => $this->district_id,
-            ]);
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            ];
+            $this->triggerDualControl(get_class($this->ward), $this->ward->id, DualControl::EDIT, 'editing ward', json_encode($this->old_values), json_encode($payload));
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.ward.index');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.ward.index');
         }
     }
 

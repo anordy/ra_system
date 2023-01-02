@@ -3,7 +3,7 @@
     <title></title>
     <style>
         body {
-            background-image: url("{{ public_path() }}/images/logo.png");
+            background-image: url("{{ public_path() }}/images/logo.jpg");
             background-repeat: no-repeat;
             background-position: center;
             background-size:contain;
@@ -136,7 +136,7 @@
 
         <tbody>
             @php
-                $return->penalties = $return->penalties->merge($return->tax_return->penalties);
+                $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
             @endphp
         @if(count($return->penalties))
             @foreach ($return->penalties as $penalty)

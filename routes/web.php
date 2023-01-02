@@ -11,9 +11,7 @@
 |
  */
 
-use App\Http\Controllers\Setting\ApprovalLevelController;
-use App\Http\Controllers\Setting\DualControlActivityController;
-use App\Http\Controllers\TransactionFeeController;
+use App\Http\Controllers\Reports\Payments\PaymentReportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -44,11 +42,11 @@ use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\Claims\CreditsController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\Returns\ReturnController;
+use App\Http\Controllers\TransactionFeeController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\QRCodeGeneratorController;
-use App\Http\Controllers\Returns\ReturnsController;
 use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\Finances\FinanceController;
@@ -56,6 +54,7 @@ use App\Http\Controllers\WithholdingAgentController;
 use App\Http\Controllers\Assesments\WaiverController;
 use App\Http\Controllers\Business\BusinessController;
 use App\Http\Controllers\Claims\ClaimFilesController;
+use App\Http\Controllers\Debt\DebtRollbackController;
 use App\Http\Controllers\Payments\PaymentsController;
 use App\Http\Controllers\Setting\TaxRegionController;
 use App\Http\Controllers\Assesments\DisputeController;
@@ -79,10 +78,13 @@ use App\Http\Controllers\Business\RegistrationController;
 use App\Http\Controllers\MVR\MvrGenericSettingController;
 use App\Http\Controllers\MVR\OwnershipTransferController;
 use App\Http\Controllers\Returns\Vat\VatReturnController;
+use App\Http\Controllers\Setting\ApprovalLevelController;
 use App\Http\Controllers\Audit\TaxAuditApprovalController;
 use App\Http\Controllers\Audit\TaxAuditVerifiedController;
 use App\Http\Controllers\MVR\RegistrationChangeController;
 use App\Http\Controllers\MVR\WrittenOffVehiclesController;
+use App\Http\Controllers\Setting\SystemSettingsController;
+use App\Http\Controllers\Setting\ZrbBankAccountController;
 use App\Http\Controllers\TaxAgents\TaxAgentFileController;
 use App\Http\Controllers\Installment\InstallmentController;
 use App\Http\Controllers\Returns\Port\PortReturnController;
@@ -100,6 +102,7 @@ use App\Http\Controllers\Reports\Claims\ClaimReportController;
 use App\Http\Controllers\Returns\Queries\NilReturnsController;
 use App\Http\Controllers\Business\BusinessUpdateFileController;
 use App\Http\Controllers\Relief\ReliefGenerateReportController;
+use App\Http\Controllers\Setting\DualControlActivityController;
 use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
 use App\Http\Controllers\Reports\Returns\ReturnReportController;
 use App\Http\Controllers\Returns\ExciseDuty\MnoReturnController;
@@ -130,8 +133,6 @@ use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
-use App\Http\Controllers\Setting\SystemSettingsController;
-use App\Http\Controllers\Setting\ZrbBankAccountController;
 
 Auth::routes();
 
@@ -147,7 +148,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('password/change', [ChangePasswordController::class, 'index'])->name('password.change');
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
-
 });
 
 Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
@@ -211,12 +211,6 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
 
     Route::name('returns.')->prefix('returns')->group(function () {
         Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
-
-        Route::name('returns.')->prefix('returns')->group(function () {
-            Route::name('returns.')->prefix('returns')->group(function () {
-                Route::get('/', [ReturnsController::class, 'index'])->name('index');
-            });
-        });
     });
     Route::name('verification.')->prefix('verification')->group(function () {
         Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
@@ -287,6 +281,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         //waiver
         Route::get('/waiver/index', [WaiverController::class, 'index'])->name('waiver.index');
         Route::get('/waiver/approval/{waiver_id}', [WaiverController::class, 'approval'])->name('waiver.approval');
+        Route::get('/waiver/view/{waiver_id}', [WaiverController::class, 'view'])->name('waiver.view');
         Route::get('/waiver/files/{waiver_id}', [WaiverController::class, 'files'])->name('waiver.files');
         Route::get('/waiver/show/{waiver_id}', [WaiverController::class, 'show'])->name('waiver.show');
         // both waiver objection
@@ -352,9 +347,9 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/hotel', [HotelReturnController::class, 'index'])->name('hotel.index');
         Route::get('/tour', [HotelReturnController::class, 'tour'])->name('tour.index');
         Route::get('/restaurant', [HotelReturnController::class, 'restaurant'])->name('restaurant.index');
+        Route::get('/airbnb', [HotelReturnController::class, 'airbnb'])->name('airbnb.index');
 
         Route::get('/hotel/view/{return_id}', [HotelReturnController::class, 'show'])->name('hotel.show');
-        Route::get('/hotel/adjust/{return_id}', [HotelReturnController::class, 'adjust'])->name('hotel.adjust');
 
         Route::name('excise-duty.')->prefix('excise-duty')->group(function () {
             Route::get('/mno', [MnoReturnController::class, 'index'])->name('mno');
@@ -444,6 +439,12 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/debts', [DebtReportController::class, 'index'])->name('debts');
         Route::get('/debts/preview/{parameters}', [DebtReportController::class, 'preview'])->name('debts.preview');
         Route::get('/debts/download-report-pdf/{data}', [DebtReportController::class, 'exportDebtReportPdf'])->name('debts.download.pdf');
+
+        //Payment Reports
+        Route::get('/payments', [PaymentReportController::class, 'index'])->name('payments');
+        Route::get('/payments/returns-preview/{data}', [PaymentReportController::class, 'returnsPreview'])->name('payments.returns-preview');
+        Route::get('/payments/consultants-preview/{data}', [PaymentReportController::class, 'consultantsPreview'])->name('payments.consultants-preview');
+        Route::get('/payments/download-report-pdf/{data}', [PaymentReportController::class, 'exportPaymentReportPdf'])->name('payments.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -488,10 +489,16 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/waivers', [ReturnDebtController::class, 'waivers'])->name('waivers.index');
         Route::get('/returns/waiver/show/{waiverId}', [ReturnDebtController::class, 'approval'])->name('returns.waivers.approval');
 
+        // Assessment debts
         Route::get('/assessments', [AssessmentDebtController::class, 'index'])->name('assessments.index');
         Route::get('/assesments/show/{assessment_id}', [AssessmentDebtController::class, 'show'])->name('assessment.show');
         Route::get('/assessment/waiver/show/{assessment_id}', [AssessmentDebtController::class, 'showWaiver'])->name('assessment.waiver.show');
         Route::get('/assessments/waiver/show/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('assessments.waivers.approval');
+
+        // Debt rollbacks
+        Route::get('/rollbacks/return/{tax_return_id}', [DebtRollbackController::class, 'return'])->name('rollback.return');
+        Route::get('/rollbacks/assessment/{assessment_id}', [DebtRollbackController::class, 'assessment'])->name('rollback.assessment');
+
     });
 
     Route::name('tax_investigation.')->prefix('tax_investigation')->group(function () {
@@ -536,8 +543,9 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/recons/{reconId}', [PaymentsController::class, 'recons'])->name('recons');
         Route::get('/recons/transaction/{transactionId}', [PaymentsController::class, 'viewReconTransaction'])->name('recons.transaction');
         Route::get('/recon-enquire', [PaymentsController::class, 'reconEnquire'])->name('recon.enquire');
-        Route::get('/pending/download/{records}/{data}',[PaymentsController::class,'downloadPendingPaymentsPdf'])->name('pending.download.pdf');
+        Route::get('/pending/download/{records}/{data}', [PaymentsController::class, 'downloadPendingPaymentsPdf'])->name('pending.download.pdf');
         Route::get('/bank-recons', [PaymentsController::class, 'bankRecon'])->name('bank-recon.index');
+        Route::get('/bank-recons/{recon}', [PaymentsController::class, 'showBankRecon'])->name('bank-recon.show');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 

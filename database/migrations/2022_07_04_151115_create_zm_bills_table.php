@@ -50,6 +50,7 @@ class CreateZmBillsTable extends Migration
             $table->enum('zm_recon_status',ZmReconStatus::getConstants())->default(ZmReconStatus::PENDING);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -102,6 +102,7 @@ class ApproveRegistration extends Component
             if (empty($fee)) {
                 $this->alert('error', "Registration fee for selected registration type is not configured");
                 DB::rollBack();
+                Log::error($fee);
                 return;
             }
             $exchange_rate = 1;

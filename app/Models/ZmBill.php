@@ -7,11 +7,12 @@ use App\Services\ZanMalipo\ZmResponse;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class ZmBill extends Model implements Auditable, PayloadInterface
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, \OwenIt\Auditing\Auditable, SoftDeletes;
 
     protected $guarded = [];
 
@@ -64,6 +65,10 @@ class ZmBill extends Model implements Auditable, PayloadInterface
 
     public function createdBy(){
         return $this->morphTo('createdby');
+    }
+
+    public function bankRecon(){
+        return $this->belongsTo(BankRecon::class, 'control_number', 'control_no');
     }
 
     public function taxType()

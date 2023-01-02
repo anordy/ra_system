@@ -19,7 +19,7 @@ class CreateNonFilersTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('tax_type_id');
             $table->string('return_type');
-            $table->dateTime('logged_date');
+            $table->timestamp('logged_date');
             $table->timestamps();
         });
     }

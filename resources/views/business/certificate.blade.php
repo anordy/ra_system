@@ -107,7 +107,7 @@
         @endif
         <span class="embed tax-types">{{ $tax->name }}</span>
         <span class="embed location">
-            {{ $location->street }}, {{ $location->region->name }}
+            {{ $location->street }}, {{ $location->region->location }}
         </span>
         <span class="embed commencing-date">
             {{ $location->date_of_commencing->format('d/m/y') }}

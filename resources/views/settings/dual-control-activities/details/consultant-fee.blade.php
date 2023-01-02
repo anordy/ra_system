@@ -2,64 +2,111 @@
 
     <div class="card">
         <div class="card-header">
-            @if($result->action == \App\Models\DualControl::ADD)
-                Added Values
-            @else
-                Old Values
-            @endif
+            Tax Consultant Fee Details
         </div>
+
         <div class="card-body">
-            <div class="row m-2 pt-3">
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Category</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->category : $old_values->category }}</p>
-                </div>
+            <table class="table table-striped table-sm table-bordered">
+                <thead>
+                <th style="width: 18%">Property</th>
+                @if ($new_values)
+                    <th style="width: 37%">Old Data</th>
+                    <th style="width: 35%">New Data</th>
+                    <th style="width: 10%">Status</th>
+                @else
+                    <th style="width: 82%">Data</th>
+                @endif
+                </thead>
+                <tbody>
+                <tr>
+                    <th>Category</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->category : $old_values->category }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ $new_values->category ?? '' }}
+                        </td>
 
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Duration</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->duration : $old_values->duration }} Years</p>
-                </div>
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->category : $old_values->category, $new_values->category))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
 
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Amount</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? number_format($data->amount ): number_format($old_values->amount) }}</p>
-                </div>
+                <tr>
+                    <th>Duration</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->duration : $old_values->duration }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ $new_values->duration ?? '' }}
+                        </td>
 
-                <div class="col-md-3 mb-3">
-                    <span class="font-weight-bold text-uppercase">Currency</span>
-                    <p class="my-1">{{ $result->action == \App\Models\DualControl::ADD ? $data->currency : $old_values->currency }}</p>
-                </div>
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->duration : $old_values->duration, $new_values->duration))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
 
-            </div>
+                <tr>
+                    <th>Amount</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->amount : $old_values->amount }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ $new_values->amount ?? '' }}
+                        </td>
+
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->amount : $old_values->amount, $new_values->amount))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+
+                <tr>
+                    <th>Currency</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->currency : $old_values->currency }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ $new_values->currency ?? '' }}
+                        </td>
+
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->currency : $old_values->currency, $new_values->currency))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+
+
+                </tbody>
+            </table>
         </div>
+
     </div>
 
-    @if($new_values)
-        <div class="card">
-            <div class="card-header">New Values</div>
-            <div class="card-body">
-                <div class="row m-2 pt-3">
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Category</span>
-                        <p class="my-1">{{  $new_values->category }}</p>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Duration</span>
-                        <p class="my-1">{{  $new_values->duration }} Years</p>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Amount</span>
-                        <p class="my-1">{{ number_format($new_values->amount) }}</p>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <span class="font-weight-bold text-uppercase">Currency</span>
-                        <p class="my-1">{{  $new_values->currency }} </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>

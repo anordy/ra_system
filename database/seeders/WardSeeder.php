@@ -23,6 +23,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $kaskaziniADistrictID,
+                'is_approved' => 1
             ]);
         }
 
@@ -33,6 +34,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $kaskaziniBDIstrictID,
+                'is_approved' => 1
             ]);
         }
 
@@ -44,6 +46,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $micheweniID,
+                'is_approved' => 1
             ]);
         }
 
@@ -54,6 +57,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $weteID,
+                'is_approved' => 1
             ]);
         }
 
@@ -65,6 +69,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $katiID,
+                'is_approved' => 1
             ]);
         }
 
@@ -75,6 +80,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $kusiniID,
+                'is_approved' => 1
             ]);
         }
 
@@ -86,6 +92,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $chakechakeID,
+                'is_approved' => 1
             ]);
         }
 
@@ -97,6 +104,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $mkoaniID,
+                'is_approved' => 1
             ]);
         }
 
@@ -108,6 +116,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $mjiniID,
+                'is_approved' => 1
             ]);
         }
 
@@ -119,6 +128,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $magharibiAID,
+                'is_approved' => 1
             ]);
         }
         
@@ -130,6 +140,7 @@ class WardSeeder extends Seeder
             Ward::updateOrCreate([
                 'name' => $name,
                 'district_id' => $magharibiBID,
+                'is_approved' => 1
             ]);
         }
     }

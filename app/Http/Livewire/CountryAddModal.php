@@ -3,7 +3,11 @@
 namespace App\Http\Livewire;
 
 use App\Models\Country;
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -12,7 +16,7 @@ use Livewire\Component;
 class CountryAddModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $code;
     public $name;
@@ -36,17 +40,23 @@ class CountryAddModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try{
-            Country::create([
+            $country = Country::create([
                 'code' => $this->code,
                 'name' => $this->name,
                 'nationality' => $this->nationality,
+                'created_at' =>Carbon::now()
             ]);
-            $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
+            $this->triggerDualControl(get_class($country), $country->id, DualControl::ADD, 'adding country');
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.country.index');
         }catch(Exception $e){
+            DB::rollBack();
             Log::error($e);
-
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('success', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.country.index');
         }
     }
 

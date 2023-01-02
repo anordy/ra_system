@@ -3,9 +3,12 @@
 namespace App\Http\Livewire;
 
 
+use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -14,7 +17,7 @@ use Livewire\Component;
 class UserRoleEditModal extends Component
 {
     
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $roles = [];
     // public $fname;
@@ -24,6 +27,7 @@ class UserRoleEditModal extends Component
     // public $email;
     public $role = '';
     public $user;
+    public $old_values;
 
 
     protected function rules()
@@ -40,14 +44,20 @@ class UserRoleEditModal extends Component
         }
 
         $this->validate();
+        DB::beginTransaction();
         try {
-            $this->user->update([
+            $payload = [
                 'role_id' => $this->role,
-            ]);
-            $this->flash('success', 'Role updated successfully', [], redirect()->back()->getTargetUrl());
+            ];
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user role', json_encode($this->old_values), json_encode($payload));
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.users.index');
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE);
+            return redirect()->route('settings.users.index');
         }
     }
 
@@ -57,6 +67,9 @@ class UserRoleEditModal extends Component
         $user = User::find($id);
         $this->user = $user;
         $this->role = $user->role_id;
+        $this->old_values = [
+            'role_id' => $this->role,
+        ];
     }
     public function render()
     {

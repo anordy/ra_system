@@ -50,8 +50,8 @@ class BpraVerification extends Component
             
         } catch (Exception $e) {
             $this->requestSuccess = false;
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
             return $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

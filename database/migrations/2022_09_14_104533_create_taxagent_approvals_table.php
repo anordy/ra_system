@@ -20,7 +20,7 @@ class CreateTaxagentApprovalsTable extends Migration
             $table->string('destination_status');
             $table->string('comment')->nullable();
             $table->unsignedBigInteger('approved_by_id')->nullable();
-            $table->dateTime('approved_at');
+            $table->timestamp('approved_at');
             $table->timestamps();
         });
     }

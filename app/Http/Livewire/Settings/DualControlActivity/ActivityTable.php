@@ -12,17 +12,27 @@ use App\Models\DualControl;
 class ActivityTable extends DataTableComponent
 {
     use LivewireAlert, DualControlActivityTrait;
+    public $status;
 
     protected $model = DualControl::class;
+
+    public function mount($status)
+    {
+        $this->status = $status;
+    }
 
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableWrapperAttributes([
+            'default' => true,
+            'class' => 'table-bordered',
+        ]);
     }
 
     public function builder(): Builder
     {
-        return DualControl::where('status', 'pending')->orderByDesc('id');
+        return DualControl::where('status', $this->status)->orderByDesc('id');
     }
 
     public function columns(): array

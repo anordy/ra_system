@@ -188,7 +188,7 @@ class TaxVerificationApprovalProcessing extends Component
 
             $assessmentReport = $this->assessmentReport;
             if ($this->assessmentReport != $this->subject->assessment_report) {
-                $assessmentReport = $this->assessmentReport->store('verification', 'local-admin');
+                $assessmentReport = $this->assessmentReport->store('verification', 'local');
             }
 
             $this->subject->assessment_report = $assessmentReport;
@@ -212,8 +212,8 @@ class TaxVerificationApprovalProcessing extends Component
 
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            Log::error($e);
             DB::rollBack();
+            Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }

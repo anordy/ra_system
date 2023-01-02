@@ -1,6 +1,11 @@
 <nav id="sidebar" class="mb-3">
     <div class="sidebar-header text-center pb-0">
-        <h3 class="mt-2"><i class="bi bi-card-heading mr-2"></i> ZIDRAS</h3>
+        <h3 class="mt-2 d-flex justify-content-center align-items-center">
+            <div style="height: 38px; width: 38px; background-color: white; border-radius: 50%" class="mr-3">
+                <img src="{{ asset('images/logo.jpg') }}" class="rounded-circle" height="38px">
+            </div>
+            ZIDRAS
+        </h3>
     </div>
 
     <ul class="list-unstyled components">
@@ -144,6 +149,11 @@
                         <li class="{{ request()->is('e-filling/hotel*') ? 'active' : '' }}">
                             <a href="{{ route('returns.hotel.index') }}">Hotel Levy</a>
                         </li>
+                    @endcan
+                    @can('return-hotel-levy-view')
+                    <li class="{{ request()->is('e-filling/airbnb*') ? 'active' : '' }}">
+                        <a href="{{ route('returns.airbnb.index') }}">Hotel Airbnb</a>
+                    </li>
                     @endcan
                     @can('return-tour-operation-view')
                         <li class="{{ request()->is('e-filling/tour*') ? 'active' : '' }}">
@@ -583,6 +593,9 @@
                         <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
                             <a href="{{ route('reports.debts') }}">Debt Reports</a>
                         </li>
+                        <li class="{{ request()->is('reports/payments*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.payments') }}">Payment Reports</a>
+                        </li>
                     @endcan
 
                 </ul>
@@ -601,9 +614,9 @@
                     {{-- <a href="{{ route('queries.nil-returns') }}">Nil Returns</a> --}}
                     {{-- </li> --}}
 
-{{--                    <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}">--}}
-{{--                        <a href="{{ route('queries.non-filers') }}">Non Filers</a>--}}
-{{--                    </li>--}}
+                    {{--                    <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}"> --}}
+                    {{--                        <a href="{{ route('queries.non-filers') }}">Non Filers</a> --}}
+                    {{--                    </li> --}}
 
                     <li class="{{ request()->is('queries/sales-purchases*') ? 'active' : '' }}">
                         <a href="{{ route('queries.sales-purchases') }}">Sales Vs Purchases</a>

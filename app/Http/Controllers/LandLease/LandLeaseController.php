@@ -46,7 +46,7 @@ class LandLeaseController extends Controller
 
     public function getAgreementDocument($path)
     {
-        return Storage::disk('local-admin')->response(decrypt($path));
+        return Storage::disk('local')->response(decrypt($path));
     }
 
     public function generateReport()
@@ -93,7 +93,7 @@ class LandLeaseController extends Controller
             return redirect()->back();
         } catch (Exception $e) {
             DB::rollBack();
-            report($e);
+            Log::error($e);
             session()->flash('error', 'Status failed to change');
             return redirect()->back();
         }

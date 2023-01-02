@@ -2,24 +2,21 @@
 
 namespace App\Http\Livewire\Returns\FinancialMonths;
 
+use App\Models\DualControl;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use App\Models\SevenDaysFinancialMonth;
-use App\Models\TaPaymentConfiguration;
-use App\Models\TaPaymentConfigurationHistory;
+use App\Traits\DualControlActivityTrait;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use App\TaxAgentFee;
 
 class AddMonthModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $years, $year, $month, $number ;
 
@@ -43,7 +40,7 @@ class AddMonthModal extends Component
             ]
         );
 
-        $this->month = date( 'F', strtotime( "$this->number/12/10" ));
+        $this->month = date('F', mktime(0, 0, 0, $this->number));
 
         DB::beginTransaction();
         try {
@@ -55,6 +52,7 @@ class AddMonthModal extends Component
                 'name'              => $this->month,
                 'due_date'          => Carbon::create($yr['code'], $this->number, 20)->toDateTimeString(),
             ]);
+            $this->triggerDualControl(get_class($financial_month), $financial_month->id, DualControl::ADD, 'adding financial month');
 
             $seven_days = SevenDaysFinancialMonth::query()->create([
                 'financial_year_id' => $this->year,
@@ -62,6 +60,7 @@ class AddMonthModal extends Component
                 'name'              => $this->month,
                 'due_date'          => Carbon::create($yr['code'], $this->number, 7)->toDateTimeString(),
             ]);
+            $this->triggerDualControl(get_class($seven_days), $seven_days->id, DualControl::ADD, 'adding seven days financial month');
             DB::commit();
             $this->flash('success', 'Saved successfully', [], redirect()->back()->getTargetUrl());
 

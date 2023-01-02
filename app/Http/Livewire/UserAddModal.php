@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\Jobs\User\SendRegistrationEmail;
-use App\Jobs\User\SendRegistrationSMS;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
@@ -67,15 +67,6 @@ class UserAddModal extends Component
             $this->password = Str::random(8);
         }
 
-//        $role_level = DB::table('roles_approval_levels as ra')->leftJoin('approval_levels as al', 'al.id', '=', 'ra.approval_level_id')
-//            ->select('ra.id')->where('ra.role_id', Auth::user()->role_id)->first();
-//
-//        if (empty($role_level))
-//        {
-//            $this->alert('error', 'Your level of approval is not supported to register user');
-//            return;
-//        }
-
         try {
             DB::beginTransaction();
 
@@ -91,11 +82,10 @@ class UserAddModal extends Component
             ]);
 
             // Get ci_payload
-            if (!$this->sign($user)){
+            if (!$this->sign($user)) {
                 throw new Exception('Failed to verify user data.');
             }
 
-            DB::commit();
             $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding user');
 
             $admins = User::whereHas('role', function ($query) {
@@ -112,18 +102,9 @@ class UserAddModal extends Component
 
             DB::commit();
 
-            if (config('app.env') != 'local') {
-                //send SMS of credentials to the added user 
-            if ($user->phone) {
-                dispatch(new SendRegistrationSMS($this->email, $this->password, $this->fname, $this->phone));
-            }
+            event(new SendSms('user_add', $user->id));
+            event(new SendMail('user_add', $user->id));
 
-            //send Email of credentials to the added user 
-            if ($user->email) {
-                dispatch(new SendRegistrationEmail($this->fname, $this->email, $this->password));
-            }
-            }
-            
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
@@ -136,7 +117,7 @@ class UserAddModal extends Component
 
     public function mount()
     {
-        $this->roles = Role::all();
+        $this->roles = Role::where('is_approved', 1)->get();
     }
 
     public function render()

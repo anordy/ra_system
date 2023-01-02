@@ -37,7 +37,7 @@ class AssessmentReportEmailToTaxPayeryer extends Mailable
         $email = $this->markdown('emails.tax-verification.assessment-report-to-taxpayer')->subject('Assessment Notice Report');
 
         $email->attach(
-            Storage::disk('local-admin')->path($audit->assessment_report), 
+            Storage::disk('local')->path($audit->assessment_report),
             [
                 'as' => 'assessment-notice.pdf',
                 'mime' => 'application/pdf',

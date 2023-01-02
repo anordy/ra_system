@@ -20,6 +20,8 @@ class CreateTaxTypesTable extends Migration
             $table->enum('category', ['main', 'subcategory', 'other'])->default('main');
             $table->unsignedBigInteger('parent_id')->default(0);
             $table->string('gfs_code')->nullable();
+            $table->boolean('is_approved')->default(0);
+            $table->boolean('is_updated')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

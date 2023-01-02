@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\DualControl;
 use App\Models\EducationLevel;
+use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +13,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class EducationLevelAddModal extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
     public $name;
 
     protected function rules()
@@ -35,6 +37,7 @@ class EducationLevelAddModal extends Component
             $education = new EducationLevel();
             $education->name = $this->name;
             $education->save();
+            $this->triggerDualControl(get_class($education), $education->id, DualControl::ADD, 'adding education level');
             DB::commit();
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
 

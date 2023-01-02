@@ -5,7 +5,10 @@ namespace App\Http\Livewire\Business\Files;
 use App\Models\BusinessFileType;
 use App\Models\Country;
 
+use App\Models\DualControl;
+use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -13,11 +16,12 @@ use Livewire\Component;
 class EditTypeModal extends Component
 {
 
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     public $name, $short_name, $description, $is_required, $business_category, $type;
 
     public $categories;
+    public $old_values;
 
     protected $rules = [
         'name' => 'required',
@@ -29,31 +33,46 @@ class EditTypeModal extends Component
 
     public function mount($id)
     {
-        $type = BusinessFileType::find($id);
-        $this->type = $type;
-        $this->name = $type->name;
-        $this->short_name = $type->short_name;
-        $this->description = $type->description;
-        $this->is_required = $type->is_required;
-        $this->business_category = $type->business_type;
+        $this->type= BusinessFileType::find($id);
+        $this->name = $this->type->name;
+        $this->short_name = $this->type->short_name;
+        $this->description = $this->type->description;
+        $this->is_required = $this->type->is_required;
+        $this->business_category = $this->type->business_type;
+        $this->old_values = [
+            'name' => $this->name,
+            'short_name' => $this->short_name,
+            'description' => $this->description,
+            'is_required' => $this->is_required,
+            'business_type' => $this->business_category,
+            'file_type' => 'pdf'
+        ];
+
     }
 
     public function submit()
     {
         $this->validate();
+        DB::beginTransaction();
         try {
-            $this->type->update([
+            $payload = [
                 'name' => $this->name,
                 'short_name' => $this->short_name,
                 'description' => $this->description,
                 'is_required' => $this->is_required,
                 'business_type' => $this->business_category,
                 'file_type' => 'pdf'
-            ]);
-            $this->flash('success', 'Business File Type Updated', [], redirect()->back()->getTargetUrl());
+            ];
+            $this->triggerDualControl(get_class($this->type), $this->type->id, DualControl::EDIT, 'editing business file type', json_encode($this->old_values), json_encode($payload));
+            DB::commit();
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            return redirect()->route('settings.business-files.index');
+
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            return redirect()->route('settings.business-files.index');
         }
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\TaPaymentConfiguration;
@@ -17,13 +19,7 @@ use Illuminate\Support\Facades\Log;
 
 trait DualControlActivityTrait
 {
-    public function triggerDualControl(
-        $model,
-        $modelId,
-        $action,
-        $action_detail,
-        $old_values = null,
-        $edited_values = null)
+    public function triggerDualControl($model, $modelId, $action, $action_detail, $old_values = null, $edited_values = null)
     {
         $payload = [
             'controllable_type' => $model,
@@ -37,12 +33,19 @@ trait DualControlActivityTrait
         ];
         DualControl::updateOrCreate($payload);
         $data = $model::findOrFail($modelId);
-//        if ($action == DualControl::EDIT) {
-//            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
-//        }
-//        if ($action == DualControl::DELETE) {
-//            $data->update(['is_deleted' => DualControl::NOT_APPROVED]);
-//        }
+
+        if ($action == DualControl::EDIT || $action == DualControl::DELETE) {
+            if ($data->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
+            $data->update(['is_updated' => DualControl::NOT_APPROVED]);
+
+            if ($model == DUalControl::USER) {
+                $message = 'We are writing to inform you that some of your ZRB staff personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $this->sendEmailToUser($data, $message);
+            }
+        }
     }
 
     public function getModule($model)
@@ -69,6 +72,53 @@ trait DualControlActivityTrait
             case DualControl::TRANSFER_FEE:
                 return 'Transfer Fee';
                 break;
+            case DualControl::FINANCIAL_YEAR:
+                return 'Financial Year';
+                break;
+
+            case DualControl::FINANCIAL_MONTH:
+                return 'Financial Month';
+                break;
+            case DualControl::SEVEN_FINANCIAL_MONTH:
+                return 'Seven Days Financial Month';
+                break;
+            case DualControl::PENALTY_RATE:
+                return 'Penalty Rate';
+                break;
+            case DualControl::INTEREST_RATE:
+                return 'Interest Rate';
+                break;
+
+            case DualControl::ZRBBANKACCOUNT:
+                return 'Zrb Bank Account';
+                break;
+            case DualControl::EXCHANGE_RATE:
+                return 'Exchange Rate';
+                break;
+
+            case DualControl::COUNTRY:
+                return 'Country';
+                break;
+
+            case DualControl::DISTRICT:
+                return 'District';
+                break;
+            case DualControl::REGION:
+                return 'Region';
+                break;
+            case DualControl::WARD:
+                return 'Ward';
+                break;
+            case DualControl::TAX_TYPE:
+                return 'Tax Type';
+                break;
+
+            case DualControl::EDUCATION:
+                return 'Education Level';
+                break;
+            case DualControl::Business_File_Type:
+                return 'Business File Type';
+                break;
 
             default:
                 abort(404);
@@ -82,24 +132,85 @@ trait DualControlActivityTrait
         return $data;
     }
 
+    public function checkRelation($model, $modelId)
+    {
+        $data = $model::findOrFail($modelId);
+        if (!empty($data)) {
+            switch ($model) {
+                case DualControl::ROLE:
+                    if (count($data->users) > 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    break;
+
+                case DualControl::REGION:
+                    if (count($data->landLeases) > 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    if (!empty($data->taxagent)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                    break;
+
+                default:
+                    abort(404);
+            }
+        }
+    }
+
     public function updateControllable($data, $status)
     {
         $update = $data->controllable_type::findOrFail($data->controllable_type_id);
         if ($data->action == DualControl::ADD) {
             $update->update(['is_approved' => $status]);
         } elseif ($data->action == DualControl::EDIT) {
-            $payload = json_decode($data->old_values);
-            $payload = (array)$payload;
-            if ($status == DualControl::REJECT) {
+            $payload = json_decode($data->new_values);
+            $payload = (array) $payload;
+            if ($status == DualControl::APPROVE) {
+                
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
+
+                if ($data->controllable_type == DUalControl::USER) {
+                    $message = 'We are writing to inform you that some of your ZRB staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                    $this->sendEmailToUser($update, $message);
+                }
+
             } else {
                 $update->update(['is_updated' => $status]);
             }
         } elseif ($data->action == DualControl::DELETE) {
-            $update->update(['is_deleted' => $status]);
+            if ($status == DualControl::APPROVE) {
+                $update->delete();
+            }
+        } elseif ($data->action == DualControl::DEACTIVATE || $data->action == DualControl::ACTIVATE) {
+            if ($status == DualControl::APPROVE) {
+                $payload = (array) json_decode($data->new_values);
+                $update->update($payload);
+            }
         }
-
     }
 
+    public function sendEmailToUser($data, $message)
+    {
+        $smsPayload = [
+            'phone' => $data->phone,
+            'message' => $message,
+        ];
+
+        $emailPayload = [
+            'email' => $data->email,
+            'userName' => $data->fname,
+            'message' => $message,
+        ];
+
+        event(new SendSms('dual-control-update-user-info-notification', $smsPayload));
+        event(new SendMail('dual-control-update-user-info-notification', $emailPayload));
+    }
 }

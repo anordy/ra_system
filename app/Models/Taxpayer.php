@@ -11,17 +11,22 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Notifications\Notifiable;
-use Yajra\Oci8\Eloquent\OracleEloquent as Eloquent;
 
-class Taxpayer extends Eloquent implements Auditable, PayloadInterface
+class Taxpayer extends Model implements Auditable, PayloadInterface
 {
     use Notifiable, HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
+    protected $auditExclude = [
+        'password',
+        'remember_token',
+        'ci_payload',
+    ];
+
     public static function getPayloadColumns(): array
     {
-        return ['id', 'email', 'phone', 'password', 'status'];
+        return ['id', 'email', 'phone', 'status'];
     }
 
     public static function getTableName(): string
@@ -65,8 +70,7 @@ class Taxpayer extends Eloquent implements Auditable, PayloadInterface
             DB::commit();
         } catch (\Exception $e){
             DB::rollBack();
-            Log::error($e->getMessage());
-            throw $e;
+            Log::error($e);
         }
     }
 
