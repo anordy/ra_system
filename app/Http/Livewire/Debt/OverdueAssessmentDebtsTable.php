@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\Debt;
 
+use Carbon\Carbon;
 use App\Enum\ReturnCategory;
-use App\Models\TaxAssessments\TaxAssessment;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\TaxAssessments\TaxAssessment;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -54,6 +55,10 @@ class OverdueAssessmentDebtsTable extends DataTableComponent
             Column::make('Total', 'total_amount')
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount, 2);
+                }),
+            Column::make('Days', 'payment_due_date')
+                ->format(function ($value, $row) {
+                    return Carbon::now()->diffInDays($row->payment_due_date);
                 }),
             Column::make('Status', 'payment_status')->view('debts.assessments.includes.status'),
             Column::make('Actions', 'id')->view('debts.assessments.includes.actions'),
