@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\Jobs\User\SendRegistrationEmail;
-use App\Jobs\User\SendRegistrationSMS;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
@@ -82,7 +82,7 @@ class UserAddModal extends Component
             ]);
 
             // Get ci_payload
-            if (!$this->sign($user)){
+            if (!$this->sign($user)) {
                 throw new Exception('Failed to verify user data.');
             }
 
@@ -102,18 +102,9 @@ class UserAddModal extends Component
 
             DB::commit();
 
-            if (config('app.env') != 'local') {
-                //send SMS of credentials to the added user 
-            if ($user->phone) {
-                dispatch(new SendRegistrationSMS($this->email, $this->password, $this->fname, $this->phone));
-            }
+            event(new SendSms('user_add', $user->id));
+            event(new SendMail('user_add', $user->id));
 
-            //send Email of credentials to the added user 
-            if ($user->email) {
-                dispatch(new SendRegistrationEmail($this->fname, $this->email, $this->password));
-            }
-            }
-            
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
@@ -126,7 +117,7 @@ class UserAddModal extends Component
 
     public function mount()
     {
-        $this->roles = Role::where('is_approved',1)->get();
+        $this->roles = Role::where('is_approved', 1)->get();
     }
 
     public function render()
