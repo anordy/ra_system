@@ -81,10 +81,8 @@ class UserAddModal extends Component
                 'password' => Hash::make($this->password),
             ]);
 
-            // Get ci_payload
-            if (!$this->sign($user)){
-                throw new Exception('Failed to verify user data.');
-            }
+            // Sign user
+            $this->sign($user);
 
             $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding user');
 

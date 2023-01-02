@@ -4,7 +4,6 @@ namespace App\Jobs\Audit;
 
 use App\Mail\Audit\AuditSendEmailTaxpayer;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

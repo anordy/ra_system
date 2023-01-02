@@ -715,6 +715,11 @@
                             <a href="{{ route('settings.ward.index') }}">Ward</a>
                         </li>
                     @endcan
+                    @can('street-ward-view')
+                        <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.ward.index') }}">Ward</a>
+                        </li>
+                    @endcan
                     @can('setting-banks-view')
                         <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
                             <a href="{{ route('settings.banks.index') }}">Banks</a>

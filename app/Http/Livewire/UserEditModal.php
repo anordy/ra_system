@@ -55,9 +55,11 @@ class UserEditModal extends Component
         $this->validate();
         DB::beginTransaction();
         try {
+            // Verify previous user information
             if (!$this->verify($this->user)) {
                 throw new Exception('Could not verify user information.');
             }
+
             $payload = [
                 'fname' => $this->fname,
                 'lname' => $this->lname,
@@ -65,9 +67,10 @@ class UserEditModal extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
             ];
-            if (!$this->sign($this->user)) {
-                throw new Exception('Could not update user information.');
-            }
+
+            // Sign User
+            $this->sign($this->user);
+
             $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
