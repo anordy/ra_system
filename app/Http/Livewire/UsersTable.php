@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Audit;
 use App\Models\DualControl;
 use App\Models\Role;
@@ -19,13 +21,13 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersTable extends DataTableComponent
 {
-    use LivewireAlert, AuditTrait,ThrottlesLogins, DualControlActivityTrait;
+    use LivewireAlert, AuditTrait, ThrottlesLogins, DualControlActivityTrait;
 
     protected $model = User::class;
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['status']);
+        $this->setAdditionalSelects(['status', 'is_first_login']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -35,6 +37,7 @@ class UsersTable extends DataTableComponent
     protected $listeners = [
         'confirmed',
         'toggleStatus',
+        'sendCredential'
     ];
 
     public function columns(): array
@@ -101,13 +104,11 @@ class UsersTable extends DataTableComponent
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
                         HTML;
-                    }
-                    elseif ($value == 2) {
+                    } elseif ($value == 2) {
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
                         HTML;
                     }
-
                 })->html(),
 
             Column::make('Action', 'id')
@@ -115,6 +116,7 @@ class UsersTable extends DataTableComponent
                     $edit = '';
                     $changePwd = '';
                     $delete = '';
+                    $mail = '';
 
                     if (Gate::allows('setting-user-edit')) {
                         $edit = <<< HTML
@@ -132,7 +134,14 @@ class UsersTable extends DataTableComponent
                                 HTML;
                     }
 
-                    return $edit . $changePwd . $delete;
+                    if ($row->is_first_login == 1) {
+                        $mail = <<< HTML
+                            <button class="btn btn-secondary btn-sm" wire:click="resendCredential($value)"><i class="fa fa-envelope"></i> </button>
+                        HTML;
+                    }
+
+
+                    return $edit . $changePwd . $delete . $mail;
                 })
                 ->html(true),
 
@@ -170,6 +179,25 @@ class UsersTable extends DataTableComponent
         ]);
     }
 
+    public function resendCredential($id)
+    {
+  
+        $this->alert('warning', 'Are you sure you want to re-send new user credentials ?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Yes',
+            'onConfirmed' => 'sendCredential',
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'id' => $id,
+            ],
+        ]);
+    }
+
+
     public function activate($id, $status)
     {
         if (!Gate::allows('setting-user-change-status')) {
@@ -200,14 +228,13 @@ class UsersTable extends DataTableComponent
             $user = User::find($data->id);
             if ($user->status == 1) {
                 $this->triggerAudit(User::class, Audit::DEACTIVATED, 'deactivate_user', $user->id, ['status' => 1], ['status' => 0]);
-                $this->triggerDualControl(get_class($user), $user->id, DualControl::DEACTIVATE, 'deactivating user', json_encode(['status' => 1]), json_encode(['status' =>0]));
+                $this->triggerDualControl(get_class($user), $user->id, DualControl::DEACTIVATE, 'deactivating user', json_encode(['status' => 1]), json_encode(['status' => 0]));
             } else {
                 $this->triggerAudit(User::class, Audit::ACTIVATED, 'activate_user', $user->id, ['status' => 0], ['status' => 1]);
                 $this->triggerDualControl(get_class($user), $user->id, DualControl::ACTIVATE, 'activating user', json_encode(['status' => 0]), json_encode(['status' => 1, 'auth_attempt' => 0]));
-
             }
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             DB::rollBack();
@@ -216,13 +243,25 @@ class UsersTable extends DataTableComponent
         }
     }
 
+    public function sendCredential($value)
+    {
+        $data = (object) $value['data'];
+        $user = User::find($data->id);
+
+        event(new SendSms('user_add', $user->id));
+        event(new SendMail('user_add', $user->id));
+
+        $this->flash('success', 'Credentials re-send successfully', [], redirect()->back()->getTargetUrl());
+
+    }
+
     public function confirmed($value)
     {
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
             $this->triggerDualControl(get_class($user), $user->id, DualControl::DELETE, 'deleting user');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             report($e);

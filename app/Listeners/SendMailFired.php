@@ -44,6 +44,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
 use App\Jobs\Configuration\SendExchangeRateEmail;
 use App\Jobs\DualControl\User\UserInformationUpdateMAIL;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackMAIL;
+use App\Jobs\User\SendRegistrationEmail;
 
 class SendMailFired
 {
@@ -178,6 +179,8 @@ class SendMailFired
             SendTaxClaimRequestFeedbackMAIL::dispatch($event->tokenId);
         } else if ($event->service === 'dual-control-update-user-info-notification'){
             UserInformationUpdateMAIL::dispatch($event->tokenId);
+        } else if ($event->service === 'user_add') {
+            SendRegistrationEmail::dispatch($event->tokenId);
         }
     }
 }

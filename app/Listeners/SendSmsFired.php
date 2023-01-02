@@ -40,6 +40,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
 use App\Jobs\Configuration\SendExchangeRateSMS;
 use App\Jobs\DualControl\User\UserInformationUpdateSMS;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackSMS;
+use App\Jobs\User\SendRegistrationSMS as UserSendRegistrationSMS;
 
 class SendSmsFired
 {
@@ -61,7 +62,7 @@ class SendSmsFired
      */
     public function handle(SendSms $event)
     {
-        if(config('app.env') == 'local'){
+        if (config('app.env') == 'local') {
             return true;
         }
         if ($event->service == 'otp') {
@@ -71,95 +72,96 @@ class SendSmsFired
             /** TokenId is withholding agent id id */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);
             SendWithholdingAgentRegistrationSMS::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->withholdingAgent->institution_name, $withholding_agent->taxpayer->mobile);
-        } else if ($event->service === 'taxpayer-registration'){
+        } else if ($event->service === 'taxpayer-registration') {
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
             SendRegistrationSMS::dispatch($taxpayer->mobile, $taxpayer->reference_no, $event->extra['code']);
-        } else if ($event->service === 'business-registration-approved'){
+        } else if ($event->service === 'business-registration-approved') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
             SendBusinessApprovedSMS::dispatch($business);
-        } else if ($event->service === 'business-registration-correction'){
+        } else if ($event->service === 'business-registration-correction') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
             SendBusinessCorrectionSMS::dispatch($business, $event->extra['message']);
-        }
-		else if ($event->service == 'tax-agent-registration-approval') {
-			$taxpayer = Taxpayer::find($event->tokenId);
-			SendTaxAgentApprovalSMS::dispatch($taxpayer);
-		} else if ($event->service === 'business-closure-approval'){
+        } else if ($event->service == 'tax-agent-registration-approval') {
+            $taxpayer = Taxpayer::find($event->tokenId);
+            SendTaxAgentApprovalSMS::dispatch($taxpayer);
+        } else if ($event->service === 'business-closure-approval') {
             // Token ID is closure data
             $closure = $event->tokenId;
             SendBusinessClosureApprovedSMS::dispatch($closure);
-        } else if ($event->service === 'business-closure-correction'){
+        } else if ($event->service === 'business-closure-correction') {
             // Token ID is $closure
             $closure = $event->tokenId;
             SendBusinessClosureCorrectionSMS::dispatch($closure);
-        } else if ($event->service === 'business-closure-rejected'){
+        } else if ($event->service === 'business-closure-rejected') {
             // Token ID is $closure
             $closure = $event->tokenId;
             SendBusinessClosureRejectedSMS::dispatch($closure);
-        } else if ($event->service === 'business-deregister-approval'){
+        } else if ($event->service === 'business-deregister-approval') {
             // Token ID is $deregister
             $deregister = $event->tokenId;
             SendBusinessDeregisterApprovedSMS::dispatch($deregister);
-        } else if ($event->service === 'business-deregister-correction'){
+        } else if ($event->service === 'business-deregister-correction') {
             // Token ID is $deregister
             $deregister = $event->tokenId;
             SendBusinessDeregisterCorrectionSMS::dispatch($deregister);
-        } else if ($event->service === 'business-deregister-rejected'){
+        } else if ($event->service === 'business-deregister-rejected') {
             // Token ID is $deregister
             $deregister = $event->tokenId;
             SendBusinessDeregisterRejectedSMS::dispatch($deregister);
-        } else if ($event->service === 'change-tax-type-approval'){
+        } else if ($event->service === 'change-tax-type-approval') {
             // Token ID is payload data having all notification details
             SendTaxTypeSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'change-business-information-approval'){
+        } else if ($event->service === 'change-business-information-approval') {
             // Token ID is payload data having all notification details
             SendBusinessUpdateApprovalSMS::dispatch($event->tokenId);
-        }else if ($event->service === 'change-business-information-correction'){
+        } else if ($event->service === 'change-business-information-correction') {
             // Token ID is payload data having all notification details
             SendBusinessUpdateCorrectionSMS::dispatch($event->tokenId);
-        }else if ($event->service === 'change-business-information-rejected'){
+        } else if ($event->service === 'change-business-information-rejected') {
             // Token ID is payload data having all notification details
             SendBusinessUpdateRejectedSMS::dispatch($event->tokenId);
-        }else if ($event->service === 'change-business-consultant-information-approval'){
+        } else if ($event->service === 'change-business-consultant-information-approval') {
             // Token ID is payload data having all notification details
             SendBusinessUpdateApprovalConsultantSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'branch-approval'){
+        } else if ($event->service === 'branch-approval') {
             // Token ID is payload data having all notification details
             SendBranchApprovalSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'branch-correction'){
+        } else if ($event->service === 'branch-correction') {
             // Token ID is payload data having all notification details
             SendBranchCorrectionSMS::dispatch($event->tokenId);
-        }else if ($event->service === 'license-application-submitted'){
+        } else if ($event->service === 'license-application-submitted') {
             SendFreshApplicationSubmittedSMS::dispatch($event->tokenId);
-        }else if ($event->service === 'debt-waiver-approval'){
+        } else if ($event->service === 'debt-waiver-approval') {
             SendDebtWaiverApprovalSMS::dispatch($event->tokenId);
-        }else if ($event->service === 'debt-waiver-rejected'){
+        } else if ($event->service === 'debt-waiver-rejected') {
             SendDebtWaiverRejectedSMS::dispatch($event->tokenId);
-        }else if ($event->service === 'debt-balance'){
+        } else if ($event->service === 'debt-balance') {
             SendDebtBalanceSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'audit-notification-to-taxpayer'){
+        } else if ($event->service === 'audit-notification-to-taxpayer') {
             SendSmsToTaxPayer::dispatch($event->tokenId);
-        } else if ($event->service === 'tax-clearance-feedback-to-taxpayer'){
+        } else if ($event->service === 'tax-clearance-feedback-to-taxpayer') {
             RequestFeedbackJob::dispatch($event->tokenId);
-        } else if ($event->service === 'kyc-reject'){
+        } else if ($event->service === 'kyc-reject') {
             SendKycRejectSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'financial-month'){
+        } else if ($event->service === 'financial-month') {
             SendFinancialMonthSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'financial-year'){
+        } else if ($event->service === 'financial-year') {
             SendFinancialYearSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'interest-rate'){
+        } else if ($event->service === 'interest-rate') {
             SendInterestRateSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'penalty-rate'){
+        } else if ($event->service === 'penalty-rate') {
             SendPenaltyRateSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'exchange-rate'){
+        } else if ($event->service === 'exchange-rate') {
             SendExchangeRateSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'tax-claim-feedback'){
+        } else if ($event->service === 'tax-claim-feedback') {
             SendTaxClaimRequestFeedbackSMS::dispatch($event->tokenId);
-        } else if ($event->service === 'dual-control-update-user-info-notification'){
+        } else if ($event->service === 'dual-control-update-user-info-notification') {
             UserInformationUpdateSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'user_add') {
+            UserSendRegistrationSMS::dispatch($event->tokenId);
         }
     }
 }
