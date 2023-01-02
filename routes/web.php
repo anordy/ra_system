@@ -150,7 +150,7 @@ Route::middleware('auth')->group(function () {
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
 });
 
-Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
+Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
