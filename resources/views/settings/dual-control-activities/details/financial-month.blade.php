@@ -21,7 +21,7 @@
                     <th>Year</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->year->code : $old_values->year->code }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->year->code : $old_values->year->code }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -42,7 +42,7 @@
                     <th>Month</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->name : $old_values->name }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -63,7 +63,7 @@
                     <th>Phone Number</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->phone : $old_values->phone }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->phone : $old_values->phone }}
                         </p>
                     </td>
                     @if ($new_values)

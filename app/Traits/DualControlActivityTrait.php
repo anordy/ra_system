@@ -31,6 +31,7 @@ trait DualControlActivityTrait
             'create_by_id' => Auth::id(),
             'status' => 'pending',
         ];
+        
         DualControl::updateOrCreate($payload);
         $data = $model::findOrFail($modelId);
 

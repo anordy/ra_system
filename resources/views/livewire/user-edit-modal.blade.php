@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Edit User</h5>
+                <h5 class="modal-title text-uppercase">Edit User: {{$user->fname}}</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>
@@ -46,6 +46,18 @@
                             </select>
                             @error('gender')
                                 <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <<label class="">Level</label>
+                            <select class="form-control" wire:model.defer="level_id">
+                                <option value="">Choose option</option>
+                                @foreach ($levels as $row)
+                                    <option {{$level_id == $row->id ? 'selected' : ''}} value="{{ $row->id }}">{{ $row->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('level')
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>

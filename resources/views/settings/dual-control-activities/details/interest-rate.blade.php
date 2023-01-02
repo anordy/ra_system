@@ -21,7 +21,7 @@
                     <th>Year</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->year : $old_values->year }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->year : $old_values->year }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -41,7 +41,7 @@
                     <th>Rate</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->rate : $old_values->rate }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->rate : $old_values->rate }}
                         </p>
                     </td>
                     @if ($new_values)

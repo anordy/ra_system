@@ -22,7 +22,7 @@
                     <th>Name</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->name : $old_values->name }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -43,7 +43,7 @@
                     <th>Code</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->code : $old_values->code }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->code : $old_values->code }}
                         </p>
                     </td>
                     @if ($new_values)
