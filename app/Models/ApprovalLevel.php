@@ -13,6 +13,6 @@ class ApprovalLevel extends Model
     
     public function user_level()
     {
-        return $this->hasOne(UserApprovalLevel::class, 'approval_level_id', 'id');
+        return $this->hasMany(UserApprovalLevel::class, 'approval_level_id', 'id');
     }
 }
