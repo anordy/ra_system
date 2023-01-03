@@ -37,40 +37,44 @@ class FinalizeBankRecon implements ShouldQueue
         foreach ($recons as $recon) {
             Log::info('recon for ' . $recon->id);
 
-            if (!$recon->bill){
-                // Update to indicate recon not found.
+            try {
+                if (!$recon->bill){
+                    // Update to indicate recon not found.
+                    $recon->update([
+                        'is_reconciled' => true,
+                        'recon_status' => BankReconStatus::NOT_FOUND
+                    ]);
+                    continue;
+                }
+
+                if ($recon->credit_amount < $recon->bill->amount){
+                    // Update to indicate recon amount mismatch.
+                    $recon->update([
+                        'is_reconciled' => true,
+                        'recon_status' => BankReconStatus::AMOUNT_MISMATCH
+                    ]);
+                    $recon->bill->update(['bank_recon_status' => BankReconStatus::AMOUNT_MISMATCH]);
+                    continue;
+                }
+
+                if ($recon->credit_amount >= $recon->bill->amount){
+                    // Update recon to success
+                    $recon->update([
+                        'is_reconciled' => true,
+                        'recon_status' => BankReconStatus::SUCCESS
+                    ]);
+                    $recon->bill->update(['bank_recon_status' => BankReconStatus::SUCCESS]);
+                    continue;
+                }
+
                 $recon->update([
                     'is_reconciled' => true,
-                    'recon_status' => BankReconStatus::NOT_FOUND
+                    'recon_status' => BankReconStatus::FAILED
                 ]);
-                continue;
+                $recon->bill->update(['bank_recon_status' => BankReconStatus::FAILED]);
+            } catch (\Exception $e){
+                Log::error('Failed to reconcile with error: '. $e->getMessage());
             }
-
-            if ($recon->credit_amount < $recon->bill->amount){
-                // Update to indicate recon amount mismatch.
-                $recon->update([
-                    'is_reconciled' => true,
-                    'recon_status' => BankReconStatus::AMOUNT_MISMATCH
-                ]);
-                $recon->bill->update(['bank_recon_status' => BankReconStatus::AMOUNT_MISMATCH]);
-                continue;
-            }
-
-            if ($recon->credit_amount >= $recon->bill->amount){
-                // Update recon to success
-                $recon->update([
-                    'is_reconciled' => true,
-                    'recon_status' => BankReconStatus::SUCCESS
-                ]);
-                $recon->bill->update(['bank_recon_status' => BankReconStatus::SUCCESS]);
-                continue;
-            }
-
-            $recon->update([
-                'is_reconciled' => true,
-                'recon_status' => BankReconStatus::FAILED
-            ]);
-            $recon->bill->update(['bank_recon_status' => BankReconStatus::FAILED]);
         }
     }
 }

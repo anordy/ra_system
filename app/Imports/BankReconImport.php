@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Enum\BankReconStatus;
 use App\Models\BankRecon;
 use App\Models\ZmBill;
 use Carbon\Carbon;
@@ -45,7 +46,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
 
                     // Compare control No's and save only if exists;
                     if(ZmBill::where('control_number', $exploded[3])->exists()){
-                        BankRecon::create([
+                        $recon = BankRecon::create([
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -70,7 +71,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                     // Index 3 => Reference No
 
                     if(ZmBill::where('control_number', $exploded[1])->exists()) {
-                        BankRecon::create([
+                        $recon = BankRecon::create([
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -111,7 +112,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                     }
 
                     if(ZmBill::where('control_number', $exploded[1])->exists()) {
-                        BankRecon::create([
+                        $recon = BankRecon::create([
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -142,7 +143,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                 // Index 3 => Ref No substr(4)
                 if (count($exploded) == 4){
                     if(ZmBill::where('control_number', $exploded[3])->exists()) {
-                        BankRecon::create([
+                        $recon = BankRecon::create([
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -162,6 +163,11 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
 
                 Log::info('Skipping row ' . $key);
                 Log::info($exploded);
+
+                // Alternative to dispatching a job.
+                // if (isset($recon) && $recon){
+                //    $this->reconcile($recon);
+                //}
             }
             else {
                 Log::info('Skipping unhandled row ' . $key);
@@ -189,5 +195,42 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
         return [
             'actual_transaction_date.required' => 'The actual transaction date is required.',
         ];
+    }
+
+    public function reconcile(BankRecon $recon){
+        if (!$recon->bill){
+            // Update to indicate recon not found.
+            $recon->update([
+                'is_reconciled' => true,
+                'recon_status' => BankReconStatus::NOT_FOUND
+            ]);
+            return;
+        }
+
+        if ($recon->credit_amount < $recon->bill->amount){
+            // Update to indicate recon amount mismatch.
+            $recon->update([
+                'is_reconciled' => true,
+                'recon_status' => BankReconStatus::AMOUNT_MISMATCH
+            ]);
+            $recon->bill->update(['bank_recon_status' => BankReconStatus::AMOUNT_MISMATCH]);
+            return;
+        }
+
+        if ($recon->credit_amount >= $recon->bill->amount){
+            // Update recon to success
+            $recon->update([
+                'is_reconciled' => true,
+                'recon_status' => BankReconStatus::SUCCESS
+            ]);
+            $recon->bill->update(['bank_recon_status' => BankReconStatus::SUCCESS]);
+            return;
+        }
+
+        $recon->update([
+            'is_reconciled' => true,
+            'recon_status' => BankReconStatus::FAILED
+        ]);
+        $recon->bill->update(['bank_recon_status' => BankReconStatus::FAILED]);
     }
 }
