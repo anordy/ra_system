@@ -41,10 +41,10 @@
                             </div>
                         @endif
                         @if (session()->has('error'))
-                        <div class="alert alert-danger">
-                            {{ session()->get('error') }}
-                        </div>
-                    @endif
+                            <div class="alert alert-danger">
+                                {{ session()->get('error') }}
+                            </div>
+                        @endif
                         <form method="POST" action="{{ route('login') }}" novalidate autocomplete="off">
                             @csrf
                             <div class="mt-2">

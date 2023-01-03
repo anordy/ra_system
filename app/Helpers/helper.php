@@ -129,3 +129,12 @@ function getRegion($id)
         return $region;
     }
 }
+
+function getWard($id){
+    if (!empty($id))
+    {
+        $ward = \App\Models\Ward::query()->findOrFail($id);
+        $ward = $ward->name;
+        return $ward;
+    }
+}

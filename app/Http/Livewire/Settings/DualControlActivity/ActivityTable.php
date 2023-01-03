@@ -16,7 +16,7 @@ class ActivityTable extends DataTableComponent
 
     protected $model = DualControl::class;
 
-    public function mount($status)
+    public function mount($status = 'pending')
     {
         $this->status = $status;
     }

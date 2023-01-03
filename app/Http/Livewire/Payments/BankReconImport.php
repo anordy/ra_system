@@ -17,7 +17,7 @@ class BankReconImport extends Component
     public $reconFile, $path;
 
     protected $rules = [
-        'reconFile' => 'required|file|mimes:csv,xls,xlsx',
+        'reconFile' => 'required|file|mimes:txt,csv,xls,xlsx', // Accept .txt since php confuses .txt for csv sometimes
     ];
 
     protected $messages = [
@@ -26,6 +26,9 @@ class BankReconImport extends Component
     ];
 
     public function downloadTemplate(){
+        if (config('app.env') == 'production'){
+            return response()->download(public_path('templates/prod-template.csv'));
+        }
         return response()->download(public_path('templates/bank-reconciliations.csv'));
     }
 

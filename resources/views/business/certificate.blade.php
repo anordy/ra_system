@@ -48,7 +48,7 @@
         }
         .tax-types {
             font-size: 1.1em;
-            top: 61%;
+            top: 62%;
         }
         .location {
             font-size: 1.2em;
@@ -107,7 +107,7 @@
         @endif
         <span class="embed tax-types">{{ $tax->name }}</span>
         <span class="embed location">
-            {{ $location->street }}, {{ $location->region->location }}
+            {{ $location->street->name }}, {{ $location->region->location }}
         </span>
         <span class="embed commencing-date">
             {{ $location->date_of_commencing->format('d/m/y') }}
