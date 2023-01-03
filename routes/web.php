@@ -413,11 +413,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
-        Route::get('/returns/preview/{parameters}', [ReturnReportController::class, 'preview'])->name('returns.preview');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
 
         Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
-        Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
 
         //  Assesment Report
