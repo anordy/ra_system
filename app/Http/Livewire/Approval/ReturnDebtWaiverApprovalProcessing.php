@@ -77,12 +77,14 @@ class ReturnDebtWaiverApprovalProcessing extends Component
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
+
         if (!Gate::allows('debt-management-debts-waive')) {
             abort(403);
         }
         if ($this->checkTransition('debt_manager_review')) {
 
         }
+
 
         if ($this->checkTransition('crdm_complete')) {
             if (!$this->forwardToCommisioner) {
@@ -141,7 +143,8 @@ class ReturnDebtWaiverApprovalProcessing extends Component
        
         }
 
-        if ($this->checkTransition('commisioner_complete')) {
+        if ($this->checkTransition('commissioner_complete')) {
+
             $this->validate([
                 'interestPercent' => 'required',
                 'penaltyPercent' => 'required',
@@ -184,12 +187,12 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
             try {
                 if ($this->debt->bill) {
-                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived');
+                    CancelBill::dispatch($this->debt->bill, 'Debt has been waived')->onQueue('high');
                     GenerateControlNo::dispatch($this->debt);
                 } else {
                     GenerateControlNo::dispatch($this->debt);
                 }
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 Log::error($e);
             }
 
@@ -234,7 +237,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                 event(new SendMail('debt-waiver-rejected', $notification_payload));
             }
 
-            if ($this->checkTransition('commisioner_reject')) {
+            if ($this->checkTransition('commissioner_reject')) {
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();
