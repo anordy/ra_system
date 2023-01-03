@@ -20,6 +20,7 @@ class RoleEditModal extends Component
     public $report_to = null;
     public $roles;
     public $old_values;
+    public $role;
 
 
     protected function rules()
@@ -43,7 +44,7 @@ class RoleEditModal extends Component
                 'name' => $this->name,
                 'report_to' => $this->report_to == 'null' ? null : $this->report_to
             ];
-            $this->triggerDualControl(get_class($this->role), $this->role->id, DualControl::EDIT, 'editing role '.$this->name.'', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->role), $this->role->id, DualControl::EDIT, 'editing role '.$this->name, json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             return redirect()->route('settings.roles.index');
@@ -57,10 +58,9 @@ class RoleEditModal extends Component
 
     public function mount($id)
     {
-        $data = Role::find($id);
-        $this->role = $data;
-        $this->name = $data->name;
-        $this->report_to = $data->report_to;
+        $this->role = Role::find($id);
+        $this->name = $this->role->name;
+        $this->report_to = $this->role->report_to;
 
         $this->old_values = [
             'name' => $this->name,

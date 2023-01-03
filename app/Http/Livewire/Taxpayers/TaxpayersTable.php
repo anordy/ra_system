@@ -25,7 +25,7 @@ class TaxpayersTable extends DataTableComponent
     }
 
     protected $listeners = [
-        'sendCredential'
+        'sendCredential', 'amendmentDetailsRequest'
     ];
 
     public function builder(): Builder

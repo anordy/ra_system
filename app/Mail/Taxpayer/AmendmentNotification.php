@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Mail\DualControl\User;
+namespace App\Mail\Taxpayer;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserInformationUpdate extends Mailable
+class AmendmentNotification extends Mailable
 {
     use Queueable, SerializesModels;
+
     public $payload;
     /**
      * Create a new message instance.
@@ -29,7 +30,7 @@ class UserInformationUpdate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.taxpayer.taxpayer-notification')
-        ->subject('Important: Staff Account Information Update');
+        return $this->markdown('emails.dual-control.user-notification')
+        ->subject('Important: Taxpayer Account Information Update');
     }
 }

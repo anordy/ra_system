@@ -48,6 +48,10 @@ class UserRoleEditModal extends Component
         try {
             $payload = [
                 'role_id' => $this->role,
+                'fname' => $this->user->fname,
+                'lname' => $this->user->lname,
+                'email' => $this->user->email,
+                'phone' => $this->user->phone,
             ];
             
             if ($this->role == $this->old_values['role_id']) {
@@ -55,7 +59,7 @@ class UserRoleEditModal extends Component
                 return;
             }
 
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user role', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user role '.$this->user->fname.' '.$this->user->lname.'', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.users.index');
@@ -75,6 +79,10 @@ class UserRoleEditModal extends Component
         $this->role = $user->role_id;
         $this->old_values = [
             'role_id' => $this->role,
+            'fname' => $this->user->fname,
+            'lname' => $this->user->lname,
+            'email' => $this->user->email,
+            'phone' => $this->user->phone,
         ];
     }
     public function render()

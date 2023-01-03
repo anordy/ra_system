@@ -16,7 +16,6 @@ class AddPasswordPolicyColumnsToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
             $table->timestamp('pass_expired_on')->after('updated_at')->nullable();
-            $table->boolean('is_password_expired')->after('password')->default(false);
         });
     }
 
@@ -30,7 +29,6 @@ class AddPasswordPolicyColumnsToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
             $table->dropColumn('pass_expired_on');
-            $table->dropColumn('is_password_expired');
         });
     }
 }
