@@ -30,6 +30,6 @@ class BusinessInformationApproval extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.updates.business-information')->subject("ZRB Change of Business Information - " . strtoupper($this->payload['business']->name));
+        return $this->markdown('emails.business.updates.business-information')->subject("ZIDRAS Change of Business Information - " . strtoupper($this->payload['business']->name));
     }
 }

@@ -58,10 +58,14 @@ class ReportPreviewTable extends DataTableComponent
                 ->sortable()
                 ->label(fn($row) => $row->location->name ?? ''),
 
-            Column::make("Tax Type")
+            Column::make("Tax Type",'tax_type_id')
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->taxtype->code ?? ''),
+                ->format(
+                    function ($value) {
+                        return TaxType::find($value)->name ?? '';
+                    }
+                ),
 
             Column::make("Reporting Month")
                 ->searchable()
@@ -73,35 +77,56 @@ class ReportPreviewTable extends DataTableComponent
                 ->sortable()
                 ->label(fn($row) => $row->taxpayer->fullName ?? ''),
 
-            Column::make("Currency")
+            Column::make("Currency",'currency')
                 ->searchable()
-                ->sortable()
-                ->label(fn($row) => $row->currency,2 ?? ''),
+                ->sortable(),
+                
+                // ->label(fn($row) => $row->currency ?? ''),
 
-            Column::make("Principal Amount")
+            Column::make("Principal Amount",'principal')
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->principal,2 ?? ''),
+                ->format(
+                    function ($value) {
+                        return number_format($value,2);
+                    }
+                ),
 
-            Column::make("Interest")
+            Column::make("Interest",'interest')
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->interest ?? ''),
+                ->format(
+                    function ($value) {
+                        return number_format($value,2);
+                    }
+                ),
 
-            Column::make("Penalty")
+            Column::make("Penalty",'penalty')
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->penalty ?? ''),
+                ->format(
+                    function ($value) {
+                        return number_format($value,2);
+                    }
+                ),
 
-            Column::make("Total Amount")
+            Column::make("Total Amount",'total_amount')
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->total_amount ?? ''),
+                ->format(
+                    function ($value) {
+                        return number_format($value,2);
+                    }
+                ),
 
-            Column::make("Outstanding Amount")
+            Column::make("Outstanding Amount",'outstanding_amount')
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->outstanding_amount ?? ''),
+                ->format(
+                    function ($value) {
+                        return number_format($value,2);
+                    }
+                ),
 
             Column::make("Filing Due Date")
                 ->searchable()

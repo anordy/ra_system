@@ -37,6 +37,11 @@
                             <a href="{{ route('taxpayers.registrations.index') }}">KYC</a>
                         </li>
                     @endcan
+                    @can('taxpayer-amendment-requests-view')
+                        <li class="{{ request()->is('taxpayers-amendment*') ? 'active' : '' }}">
+                            <a href="{{ route('taxpayers-amendment.index') }}">Taxpayer Details Amendment Requests</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan

@@ -98,7 +98,7 @@ class UserAddModal extends Component
             // Sign user
             $this->sign($user);
 
-            $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding user');
+            $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding new user '.$this->fname.' '.$this->lname.'');
 
             $admins = User::whereHas('role', function ($query) {
                 $query->where('name', 'Administrator');
