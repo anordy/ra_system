@@ -103,4 +103,8 @@ class PaymentsController extends Controller
         $recon = BankRecon::findOrFail(decrypt($reconId));
         return view('payments.bank-recons.show', compact('recon'));
     }
+
+    public function reconReport(){
+        return view('payments.recon-report-filter');
+    }
 }

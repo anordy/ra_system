@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Traits\DualControlActivityTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class DualControl extends Model
+class DualControl extends Model implements Auditable
 {
-    use HasFactory, DualControlActivityTrait;
+    use HasFactory, DualControlActivityTrait, \OwenIt\Auditing\Auditable;
     protected $guarded = '';
 
     //Actions

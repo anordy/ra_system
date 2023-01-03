@@ -3,21 +3,22 @@
 namespace App\Jobs\User;
 
 use App\Mail\User\UserRegistration;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
-class SendRegistrationEmail implements ShouldQueue {
+class SendRegistrationEmail implements ShouldQueue
+{
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $password;
-    public $full_name;
-    public $email;
+    public $payload;
+
 
     /**
      * Create a new job instance.
@@ -28,11 +29,9 @@ class SendRegistrationEmail implements ShouldQueue {
      *
      * @return void
      */
-    public function __construct($_full_name,$_email, $_password)
+    public function __construct($payload)
     {
-        $this->full_name = $_full_name;
-        $this->password = $_password;
-        $this->email = $_email;
+        $this->payload = $payload;
     }
 
     /**
@@ -42,6 +41,10 @@ class SendRegistrationEmail implements ShouldQueue {
      */
     public function handle()
     {
-        Mail::to($this->email)->send(new UserRegistration($this->full_name,$this->email,$this->password));
+        $user = User::find($this->payload);
+        $code = Str::random(8);
+        $user->password = Hash::make($code);
+        $user->save();
+        Mail::to($user->email)->send(new UserRegistration($user->full_name, $user->email, $code));
     }
 }

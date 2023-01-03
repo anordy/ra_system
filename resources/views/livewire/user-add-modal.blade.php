@@ -60,6 +60,18 @@
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="form-group col-lg-6">
+                            <<label class="">Level</label>
+                            <select class="form-control" wire:model.defer="level_id">
+                                <option value="">Choose option</option>
+                                @foreach ($levels as $row)
+                                    <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('level')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>

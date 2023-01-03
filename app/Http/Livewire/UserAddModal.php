@@ -4,6 +4,9 @@ namespace App\Http\Livewire;
 
 use App\Jobs\User\SendRegistrationEmail;
 use App\Jobs\User\SendRegistrationSMS;
+use App\Models\ApprovalLevel;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
@@ -34,6 +37,8 @@ class UserAddModal extends Component
     public $password;
     public $password_confirmation;
     public $passwordStrength = 0;
+    public $levels;
+    public $level_id;
 
     protected function rules()
     {
@@ -44,6 +49,7 @@ class UserAddModal extends Component
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'level_id' => 'required',
         ];
     }
 
@@ -78,6 +84,7 @@ class UserAddModal extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'status' => 1,
+                'level_id' => $this->level_id,
                 'password' => Hash::make($this->password),
             ]);
 
@@ -100,18 +107,9 @@ class UserAddModal extends Component
 
             DB::commit();
 
-            if (config('app.env') != 'local') {
-                //send SMS of credentials to the added user 
-            if ($user->phone) {
-                dispatch(new SendRegistrationSMS($this->email, $this->password, $this->fname, $this->phone));
-            }
+            event(new SendSms('user_add', $user->id));
+            event(new SendMail('user_add', $user->id));
 
-            //send Email of credentials to the added user 
-            if ($user->email) {
-                dispatch(new SendRegistrationEmail($this->fname, $this->email, $this->password));
-            }
-            }
-            
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
@@ -125,6 +123,7 @@ class UserAddModal extends Component
     public function mount()
     {
         $this->roles = Role::where('is_approved',1)->get();
+        $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
     }
 
     public function render()

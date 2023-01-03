@@ -58,7 +58,6 @@ function getUser($id)
 
 function getRole($id)
 {
-
     if (!empty($id))
     {
         $role = Role::query()->findOrFail($id);

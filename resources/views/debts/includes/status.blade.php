@@ -1,4 +1,30 @@
-<span class="badge badge-danger py-1 px-2" style="border-radius: 1rem; background: rgba(53,220,220,0.35); color: #1caecf; font-size: 85%">
-    <i class="bi bi-clock-history mr-1"></i>
-    {{ $row->payment_status }}
-</span>
+@if ($row->payment_status == 'complete')
+    <span class="badge badge-success"
+        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%; padding:3%">
+        <i class="bi bi-check-circle-fill mr-1"></i>
+        PAID
+    </span>
+@elseif ($row->payment_status == 'control-number-generated')
+    <span class="badge badge-warning "
+        style="border-radius: 1rem; background: #d4dc3559; color: #474704; font-size: 100%; padding:3%">
+        <i class="bi bi-check-circle-fill mr-1"></i>
+        Control Number Generated
+    </span>
+@elseif ($row->payment_status == 'control-number-generating')
+    <span class="badge badge-warning "
+        style="border-radius: 1rem; background: #dcd43559; color: #474704; font-size: 100%; padding:3%">
+        <i class="fas fa-clock mr-1 "></i>
+        Control Number Generating
+    </span>
+@elseif ($row->payment_status == 'control-number-generating-failed')
+    <span class="badge badge-warning "
+        style="border-radius: 1rem; background: #f40f0b59; color: #5e3e3e; font-size: 80%; padding:3%">
+        <i class="fas fa-exclamation"> </i>
+        Control Number Generation Failed
+    </span>
+@else
+    <span class="badge badge-warning "
+        style="border-radius: 1rem; background: #d1dc3559; color: #474704; font-size: 100%; padding:3%">
+        {{ $row->payment_status }}
+    </span>
+@endif

@@ -76,12 +76,44 @@
         </div>
         <div class="col-md-4 mb-3">
             <span class="font-weight-bold text-uppercase">Outstanding Amount</span>
-            <p class="my-1">{{ $tax_return->currency }}. {{ number_format($tax_return->outstanding_amount ?? 0, 2) }}</p>
+            <p class="my-1">{{ $tax_return->currency }}.
+                {{ number_format($tax_return->outstanding_amount ?? 0, 2) }}</p>
         </div>
         @if ($tax_return->status != 'submitted')
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Payment Status</span>
-                <p class="my-1"><span class="badge badge-info">{{ $tax_return->payment_status ?? '' }}</span></p>
+                <p class="my-1">
+                    @if ($tax_return->payment_status == 'complete')
+                        <span class="badge badge-success"
+                            style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 100%; padding:3%">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            PAID
+                        </span>
+                    @elseif ($tax_return->payment_status == 'control-number-generated')
+                        <span class="badge badge-warning "
+                            style="border-radius: 1rem; background: #d4dc3559; color: #474704; font-size: 100%; padding:3%">
+                            <i class="bi bi-check-circle-fill mr-1"></i>
+                            Control Number Generated
+                        </span>
+                    @elseif ($tax_return->payment_status == 'control-number-generating')
+                        <span class="badge badge-warning "
+                            style="border-radius: 1rem; background: #dcd43559; color: #474704; font-size: 100%; padding:3%">
+                            <i class="fas fa-clock mr-1 "></i>
+                            Control Number Generating
+                        </span>
+                    @elseif ($tax_return->payment_status == 'control-number-generating-failed')
+                        <span class="badge badge-warning "
+                            style="border-radius: 1rem; background: #f40f0b59; color: #5e3e3e; font-size: 80%; padding:3%">
+                            <i class="fas fa-exclamation"> </i>
+                            Control Number Generation Failed
+                        </span>
+                    @else
+                        <span class="badge badge-warning "
+                            style="border-radius: 1rem; background: #d1dc3559; color: #474704; font-size: 100%; padding:3%">
+                            {{ $tax_return->payment_status }}
+                        </span>
+                    @endif
+                </p>
             </div>
         @endif
         <div class="col-md-4 mb-3">

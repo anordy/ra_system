@@ -49,6 +49,12 @@ class UserRoleEditModal extends Component
             $payload = [
                 'role_id' => $this->role,
             ];
+            
+            if ($this->role == $this->old_values['role_id']) {
+                $this->alert('error', 'You have selected the same role. Please try again with different one.');
+                return;
+            }
+
             $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user role', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\ApprovalLevel;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Models\User;
@@ -38,6 +39,7 @@ class UserEditModal extends Component
             'email' => 'required|unique:users,email,' . $this->user->id . ',id',
             'gender' => 'required|in:M,F',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'level_id' => 'required',
         ];
     }
 
@@ -66,6 +68,7 @@ class UserEditModal extends Component
                 'gender' => $this->gender,
                 'email' => $this->email,
                 'phone' => $this->phone,
+                'level_id' => $this->level_id,
             ];
 
             // Sign User
@@ -84,6 +87,7 @@ class UserEditModal extends Component
     public function mount($id)
     {
         $this->roles = Role::all();
+        $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
         $user = User::find($id);
         $this->user = $user;
         $this->fname = $user->fname;
@@ -91,6 +95,7 @@ class UserEditModal extends Component
         $this->phone = $user->phone;
         $this->email = $user->email;
         $this->gender = $user->gender ?? '';
+        $this->level_id = $user->level_id;
         $this->old_values = [
             'fname' => $this->fname,
             'lname' => $this->lname,

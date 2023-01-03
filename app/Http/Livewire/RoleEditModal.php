@@ -25,8 +25,8 @@ class RoleEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:roles,name,' . $this->role->id . ',id',
-            'report_to' => 'nullable|unique:roles',
+            'name' => 'required',
+            'report_to' => 'nullable',
         ];
     }
 

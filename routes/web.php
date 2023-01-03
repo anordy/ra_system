@@ -12,6 +12,7 @@
  */
 
 use App\Http\Controllers\StreetController;
+use App\Http\Controllers\Reports\Payments\PaymentReportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
@@ -150,7 +151,7 @@ Route::middleware('auth')->group(function () {
     Route::post('password/change', [ChangePasswordController::class, 'updatePassword'])->name('password.store');
 });
 
-Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
+Route::middleware(['2fa', 'auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
 
@@ -202,8 +203,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::resource('/transaction-fees', TransactionFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
-        Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
-        Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
+
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -220,6 +220,8 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
     Route::prefix('system')->name('system.')->group(function () {
         Route::resource('audits', AuditController::class);
         Route::resource('workflow', WorkflowController::class);
+        Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
+        Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
     });
 
     Route::prefix('taxpayers')->as('taxpayers.')->group(function () {
@@ -440,6 +442,12 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/debts', [DebtReportController::class, 'index'])->name('debts');
         Route::get('/debts/preview/{parameters}', [DebtReportController::class, 'preview'])->name('debts.preview');
         Route::get('/debts/download-report-pdf/{data}', [DebtReportController::class, 'exportDebtReportPdf'])->name('debts.download.pdf');
+
+        //Payment Reports
+        Route::get('/payments', [PaymentReportController::class, 'index'])->name('payments');
+        Route::get('/payments/returns-preview/{data}', [PaymentReportController::class, 'returnsPreview'])->name('payments.returns-preview');
+        Route::get('/payments/consultants-preview/{data}', [PaymentReportController::class, 'consultantsPreview'])->name('payments.consultants-preview');
+        Route::get('/payments/download-report-pdf/{data}', [PaymentReportController::class, 'exportPaymentReportPdf'])->name('payments.download.pdf');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -541,6 +549,7 @@ Route::middleware(['firstLogin', '2fa', 'auth'])->group(function () {
         Route::get('/pending/download/{records}/{data}', [PaymentsController::class, 'downloadPendingPaymentsPdf'])->name('pending.download.pdf');
         Route::get('/bank-recons', [PaymentsController::class, 'bankRecon'])->name('bank-recon.index');
         Route::get('/bank-recons/{recon}', [PaymentsController::class, 'showBankRecon'])->name('bank-recon.show');
+        Route::get('/recon-reports/index', [PaymentsController::class, 'reconReport'])->name('recon-reports.index');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 
