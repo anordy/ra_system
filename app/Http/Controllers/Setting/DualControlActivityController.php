@@ -18,7 +18,7 @@ class DualControlActivityController extends Controller
         if (!Gate::allows('setting-dual-control-activities-view')) {
             abort(403);
         }
-        return view('settings.dual-control-activities.index');
+        return view('dual-control-activities.index');
     }
 
     public function show($id)
@@ -44,7 +44,7 @@ class DualControlActivityController extends Controller
             }
         }
 
-        return view('settings.dual-control-activities.show', compact('result', 'data', 'old_values', 'new_values', 'report_to_new', 'report_to_old'));
+        return view('dual-control-activities.show', compact('result', 'data', 'old_values', 'new_values', 'report_to_new', 'report_to_old'));
     }
 
     public function getRoleName($id)

@@ -23,11 +23,11 @@ class CreateBusinessLocationsTable extends Migration
             $table->unsignedBigInteger('region_id');
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('ward_id');
+            $table->unsignedBigInteger('street_id');
             $table->timestamp('date_of_commencing');
             $table->string('latitude');
             $table->string('longitude');
             $table->enum('nature_of_possession',['Owned','Rented']);
-            $table->string('street');
             $table->string('physical_address')->nullable();
             $table->string('house_no')->nullable();
             $table->string('owner_name')->nullable();

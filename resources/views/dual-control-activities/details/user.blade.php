@@ -22,7 +22,7 @@
                     <th>First Name</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->fname : $old_values->fname }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->fname : $old_values->fname }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -43,7 +43,7 @@
                     <th>Last Name</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->lname : $old_values->lname }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->lname : $old_values->lname }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -64,7 +64,7 @@
                     <th>Phone Number</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->phone : $old_values->phone }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->phone : $old_values->phone }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -85,7 +85,7 @@
                     <th>Email</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->email : $old_values->email }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->email : $old_values->email }}
                         </p>
                     </td>
                     @if ($new_values)

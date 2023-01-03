@@ -43,12 +43,12 @@
                     <th>Duration</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->duration : $old_values->duration }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->duration : $old_values->duration }} years
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ $new_values->duration ?? '' }}
+                            {{ $new_values->duration ?? '' }} years
                         </td>
 
                         @if (compareDualControlValues(

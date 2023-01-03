@@ -723,6 +723,11 @@
                             <a href="{{ route('settings.ward.index') }}">Ward</a>
                         </li>
                     @endcan
+                    @can('setting-street-view')
+                        <li class="{{ request()->is('settings/street*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.street.index') }}">Streets</a>
+                        </li>
+                    @endcan
                     @can('setting-banks-view')
                         <li class="{{ request()->is('settings/banks*') ? 'active' : '' }}">
                             <a href="{{ route('settings.banks.index') }}">Banks</a>
@@ -941,11 +946,7 @@
                             <a href="{{ route('settings.zrb-bank-accounts.index') }}">ZRB Bank Accounts</a>
                         </li>
                     @endcan
-                    {{--                    @can('setting-dual-control-activities') --}}
-                    <li class="{{ request()->is('settings/dual-control-activities/*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.dual-control-activities.index') }}">Dual Control Activities</a>
-                    </li>
-                    {{--                    @endcan --}}
+
                 </ul>
             </li>
         @endcan
@@ -964,6 +965,12 @@
                             <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                         </li>
                     @endcan
+
+                        {{--                    @can('setting-dual-control-activities') --}}
+                        <li class="{{ request()->is('system/dual-control-activities/*') ? 'active' : '' }}">
+                            <a href="{{ route('system.dual-control-activities.index') }}">Dual Control Activities</a>
+                        </li>
+                        {{--                    @endcan --}}
                     {{-- @can('system-all-pdfs-view')
                         <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                             <a href="{{ route('pdf.all') }}">All PDF's</a>

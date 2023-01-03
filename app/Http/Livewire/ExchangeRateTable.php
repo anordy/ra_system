@@ -6,6 +6,7 @@ use App\Models\DualControl;
 use App\Models\ExchangeRate;
 use App\Traits\DualControlActivityTrait;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -35,6 +36,11 @@ class ExchangeRateTable extends DataTableComponent
 
             return [];
         });
+    }
+
+    public function builder(): Builder
+    {
+        return ExchangeRate::orderByDesc('id');
     }
 
     protected $listeners = ['confirmed'];

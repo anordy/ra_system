@@ -57,9 +57,11 @@ class UserEditModal extends Component
         $this->validate();
         DB::beginTransaction();
         try {
+            // Verify previous user information
             if (!$this->verify($this->user)) {
                 throw new Exception('Could not verify user information.');
             }
+
             $payload = [
                 'fname' => $this->fname,
                 'lname' => $this->lname,
@@ -68,10 +70,11 @@ class UserEditModal extends Component
                 'phone' => $this->phone,
                 'level_id' => $this->level_id,
             ];
-            if (!$this->sign($this->user)) {
-                throw new Exception('Could not update user information.');
-            }
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user', json_encode($this->old_values), json_encode($payload));
+
+            // Sign User
+            $this->sign($this->user);
+
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user '.$this->user->fname.' '. $this->user->lname.'', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

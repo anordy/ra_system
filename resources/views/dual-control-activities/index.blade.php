@@ -23,7 +23,6 @@
                 <div id="tab2" class="tab-pane fade p-2">
                     <livewire:settings.dual-control-activity.activity-table status="approved"/>
                 </div>
-
                 <div id="tab3" class="tab-pane fade p-2">
                     <livewire:settings.dual-control-activity.activity-table status="rejected"/>
                 </div>

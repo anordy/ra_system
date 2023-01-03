@@ -16,6 +16,7 @@ class CreateVatMainlandPurchasesTable extends Migration
         Schema::create('vat_mainland_purchases', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('financial_month_id');
+            $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('vat_return_id')->nullable();
             $table->string('supplier_ztn_number');
             $table->string('tax_invoice_number');
