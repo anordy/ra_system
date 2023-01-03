@@ -14,13 +14,13 @@ class AddColumnContactsToBusinessLocationsTable extends Migration
     public function up()
     {
         Schema::table('business_locations', function (Blueprint $table) {
-            $table->string('contact_name')->nullable()->after('street');
-            $table->string('mobile')->nullable()->after('street');
-            $table->string('alt_mobile')->nullable()->after('street');
-            $table->string('fax')->nullable()->after('street');
-            $table->string('email')->nullable()->after('street');
-            $table->string('po_box')->nullable()->after('street');
-            $table->string('address_type')->nullable()->after('street');
+            $table->string('contact_name')->nullable()->after('street_id');
+            $table->string('mobile')->nullable()->after('street_id');
+            $table->string('alt_mobile')->nullable()->after('street_id');
+            $table->string('fax')->nullable()->after('street_id');
+            $table->string('email')->nullable()->after('street_id');
+            $table->string('po_box')->nullable()->after('street_id');
+            $table->string('address_type')->nullable()->after('street_id');
         });
     }
 
