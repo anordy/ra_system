@@ -59,12 +59,7 @@ class AssignApprovalLevelAddModal extends Component
         ];
         DB::beginTransaction();
         try {
-            $this->user_level = UserApprovalLevel::select('id', 'user_id', 'approval_level_id')
-                ->where('approval_level_id', $this->level)->first();
-            if (!empty($this->user_level)) {
-                User::query()->where('id', $this->user_level->user_id)->update(['level_id'=> null]);
-                $this->user_level->delete();
-            }
+
             UserApprovalLevel::create($payload);
             $this->user->update(['level_id'=>$this->level]);
             DB::commit();
