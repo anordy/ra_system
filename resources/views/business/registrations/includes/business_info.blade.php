@@ -68,11 +68,11 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Name</span>
-                    <p class="my-1">{{ $business->name }}</p>
+                    <p class="my-1">{{ $business->name ?? '' }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Category</span>
-                    <p class="my-1">{{ $business->category->name }}</p>
+                    <p class="my-1">{{ $business->category->name ?? '' }}</p>
                 </div>
                 @if ($business->business_type === \App\Models\BusinessType::HOTEL)
                     <div class="col-md-4 mb-3">
@@ -646,7 +646,7 @@
                         <a class="file-item" target="_blank" href="{{ route('business.file', encrypt($file->id)) }}">
                             <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                             <div style="font-weight: 500;" class="ml-1">
-                                {{ $file->type->name }}
+                                {{ $file->type->name ?? 'N/A' }}
                                 @if ($file->type->short_name === \App\Models\BusinessFileType::TIN)
                                     - {{ $file->taxpayer->full_name }} (<b>{{ $file->taxpayer->reference_no }}</b>)
                                 @endif
