@@ -27,6 +27,7 @@ class MobileMoneyTransferTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects(['business_location_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
@@ -59,9 +60,12 @@ class MobileMoneyTransferTable extends DataTableComponent
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch Name', 'businessLocation.name')
+            Column::make('Branch / Location', 'businessLocation.name')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->businessLocation->name}";
+                }),
             Column::make('Total VAT', 'total_amount_due')
                 ->sortable()
                 ->format(function ($value, $row) {
