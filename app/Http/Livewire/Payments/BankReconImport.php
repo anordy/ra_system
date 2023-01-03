@@ -9,6 +9,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class BankReconImport extends Component
 {
@@ -17,7 +18,7 @@ class BankReconImport extends Component
     public $reconFile, $path;
 
     protected $rules = [
-        'reconFile' => 'required|file|mimes:txt,csv,xls,xlsx', // Accept .txt since php confuses .txt for csv sometimes
+        'reconFile' => 'required|file', // Accept .txt since php confuses .txt for csv sometimes
     ];
 
     protected $messages = [
@@ -51,7 +52,14 @@ class BankReconImport extends Component
 
             return redirect(request()->header('Referer'));
 
-        } catch (\Exception $exception){
+        } catch (ValidationException $exception){
+            DB::rollBack();
+            foreach ($exception->failures() as $error) {
+                $this->alert('error', 'Error at row ' . $error->row() . '. ' . $error->errors()[0], ['timer' => 12000]);
+            }
+            Log::error($exception->failures());
+        }
+        catch (\Exception $exception){
             DB::rollBack();
             Log::error($exception);
             $this->alert('error', $exception->getMessage());

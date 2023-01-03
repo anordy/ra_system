@@ -44,7 +44,6 @@ class ResetPasswordController extends Controller
 
         $this->setUserPassword($user, $password);
         $user->setRememberToken(Str::random(60));
-        $user->is_password_expired = false;
         $user->pass_expired_on = Carbon::now()->addDay($passwordExpirationDuration);
         $user->save();
 

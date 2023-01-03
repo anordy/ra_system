@@ -49,7 +49,7 @@ class RoleAddModal extends Component
                 'name' => $this->name,
                 'report_to' => $this->report_to,
             ]);
-            $this->triggerDualControl(get_class($role), $role->id, DualControl::ADD, 'adding new role '.$this->name.'');
+            $this->triggerDualControl(get_class($role), $role->id, DualControl::ADD, 'adding new role '.$this->name);
             DB::commit();
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){

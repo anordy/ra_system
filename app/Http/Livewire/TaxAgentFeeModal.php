@@ -77,7 +77,7 @@ class TaxAgentFeeModal extends Component
                 if (!$this->sign($agent_fee)) {
                     throw new Exception('Failed to verify consultant fee.');
                 }
-                $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::ADD, 'adding tax consultant fee');
+                $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::ADD, 'adding tax consultant fee for '.$this->category);
 
             } else {
 

@@ -46,7 +46,7 @@ class RegionEditModal extends Component
                 'location' => $this->location
             ];
 
-            $this->triggerDualControl(get_class($this->region), $this->region->id, DualControl::EDIT, 'editing region '.$this->region->name.'', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->region), $this->region->id, DualControl::EDIT, 'editing region '.$this->region->name, json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.region.index');

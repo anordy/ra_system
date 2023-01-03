@@ -38,7 +38,7 @@ class UserInformationUpdateMAIL implements ShouldQueue
         if ($this->payload['email']) {
             Mail::to($this->payload['email'])->send(new UserInformationUpdate($this->payload));
         } else {
-            Log::error("User Information Update MAIL: { $this->payload['email'] } Invalid Email");
+            Log::error("User Information MAIL: { $this->payload['email'] } Invalid Email");
         }
     }
 }
