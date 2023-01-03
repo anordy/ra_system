@@ -97,6 +97,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowRenewTaxConsultantSeeder::class);
         $this->call(ApprovalLevelsSeeder::class);
         $this->call(TransactionFeesTableSeeder::class);
-
+        $this->call(StreetTableSeeder::class);
     }
 }

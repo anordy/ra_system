@@ -34,11 +34,12 @@ class Approve extends Component
                 $this->updateControllable($req, DualControl::APPROVE);
                 DB::commit();
                 $this->alert('success', 'Approved Successfully');
-                return redirect()->route('settings.dual-control-activities.index');
+                return redirect()->route('system.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
                 Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
+                return redirect()->route('system.dual-control-activities.index');
 
             }
         }
@@ -78,12 +79,12 @@ class Approve extends Component
                 $this->updateControllable($req, DualControl::REJECT);
                 DB::commit();
                 $this->alert('success', 'Rejected Successfully');
-                return redirect()->route('settings.dual-control-activities.index');
+                return redirect()->route('system.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
                 Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
-                return redirect()->route('settings.dual-control-activities.index');
+                return redirect()->route('system.dual-control-activities.index');
             }
         }
     }

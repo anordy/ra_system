@@ -16,7 +16,7 @@ class ActivityTable extends DataTableComponent
 
     protected $model = DualControl::class;
 
-    public function mount($status)
+    public function mount($status = 'pending')
     {
         $this->status = $status;
     }
@@ -49,9 +49,9 @@ class ActivityTable extends DataTableComponent
             Column::make("Created at", "created_at")
                 ->sortable(),
             Column::make('Status', 'status')
-                ->view('settings.dual-control-activities.includes.status'),
+                ->view('dual-control-activities.includes.status'),
             Column::make("Action", "id")
-                ->view('settings.dual-control-activities.includes.actions'),
+                ->view('dual-control-activities.includes.actions'),
 
         ];
     }

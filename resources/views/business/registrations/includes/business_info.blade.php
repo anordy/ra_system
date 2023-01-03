@@ -283,7 +283,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Street</span>
-                        <p class="my-1">{{ $location->street }}</p>
+                        <p class="my-1">{{ $location->street->name }}</p>
                     </div>
                     @if ($location->po_box)
                     <div class="col-md-4 mb-3">

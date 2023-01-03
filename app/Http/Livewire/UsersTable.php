@@ -12,6 +12,7 @@ use App\Traits\AuditTrait;
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use id;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -32,6 +33,11 @@ class UsersTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
+    }
+
+    public function builder(): Builder
+    {
+        return User::orderByDesc('id');
     }
 
     protected $listeners = [

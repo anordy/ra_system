@@ -39,6 +39,13 @@ class UserAddModal extends Component
     public $passwordStrength = 0;
     public $levels;
     public $level_id;
+    public $isAdmin = false;
+
+    public function mount()
+    {
+        $this->roles = Role::where('is_approved',1)->get();
+        $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
+    }
 
     protected function rules()
     {
@@ -88,10 +95,8 @@ class UserAddModal extends Component
                 'password' => Hash::make($this->password),
             ]);
 
-            // Get ci_payload
-            if (!$this->sign($user)) {
-                throw new Exception('Failed to verify user data.');
-            }
+            // Sign user
+            $this->sign($user);
 
             $this->triggerDualControl(get_class($user), $user->id, DualControl::ADD, 'adding user');
 
@@ -118,14 +123,6 @@ class UserAddModal extends Component
             Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
-    }
-
-
-
-    public function mount()
-    {
-        $this->roles = Role::where('is_approved',1)->get();
-        $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
     }
 
     public function render()
