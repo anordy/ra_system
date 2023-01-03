@@ -68,7 +68,7 @@ class StreetAddModal extends Component
                 'created_at' =>Carbon::now()
             ]);
             DB::commit();
-            $this->triggerDualControl(get_class($street), $street->id, DualControl::ADD, 'adding street');
+            $this->triggerDualControl(get_class($street), $street->id, DualControl::ADD, 'adding street'.$this->name);
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.street.index');
         } catch (Exception $e) {

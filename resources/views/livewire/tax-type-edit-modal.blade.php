@@ -15,6 +15,13 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">GFS Code</label>
+                        <input type="text" class="form-control" wire:model.defer="gfs_code" id="gfs_code">
+                        @error('gfs_code')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

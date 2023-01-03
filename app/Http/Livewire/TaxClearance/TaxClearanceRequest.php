@@ -14,16 +14,16 @@ use Livewire\Component;
 class TaxClearanceRequest extends Component
 {
     public $debts;
-    public $taxClearence;
+    public $taxClearance;
 
-    public function mount($debts, $taxClearence){
+    public function mount($debts, $taxClearance){
 
         if (!Gate::allows('tax-clearance-view')) {
             abort(403);
         }
 
         $this->debts = $debts;
-        $this->taxClearence = $taxClearence;
+        $this->taxClearance = $taxClearance;
     }
 
     public function render()
