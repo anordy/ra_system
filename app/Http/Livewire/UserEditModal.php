@@ -74,7 +74,7 @@ class UserEditModal extends Component
             // Sign User
             $this->sign($this->user);
 
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user '.$this->user->fname.' '. $this->user->lname.'', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user '.$this->user->fullname().'', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -87,7 +87,6 @@ class UserEditModal extends Component
     public function mount($id)
     {
         $this->roles = Role::all();
-        $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
         $user = User::find($id);
         $this->user = $user;
         $this->fname = $user->fname;
@@ -95,7 +94,6 @@ class UserEditModal extends Component
         $this->phone = $user->phone;
         $this->email = $user->email;
         $this->gender = $user->gender ?? '';
-        $this->level_id = $user->level_id;
         $this->old_values = [
             'fname' => $this->fname,
             'lname' => $this->lname,
