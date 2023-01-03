@@ -61,7 +61,7 @@ class WardAddModal extends Component
                 'created_at' =>Carbon::now()
             ]);
             DB::commit();
-            $this->triggerDualControl(get_class($ward), $ward->id, DualControl::ADD, 'adding ward');
+            $this->triggerDualControl(get_class($ward), $ward->id, DualControl::ADD, 'adding new ward '.$this->name.'');
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.ward.index');
         } catch (Exception $e) {
