@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\DualControl\User;
+namespace App\Jobs\Taxpayer;
 
-use App\Mail\DualControl\User\UserInformationUpdate;
+use App\Mail\Taxpayer\AmendmentNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class UserInformationUpdateMAIL implements ShouldQueue
+class TaxpayerAmendmentNotificationEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $payload;
@@ -36,7 +36,7 @@ class UserInformationUpdateMAIL implements ShouldQueue
     {
         //
         if ($this->payload['email']) {
-            Mail::to($this->payload['email'])->send(new UserInformationUpdate($this->payload));
+            Mail::to($this->payload['email'])->send(new AmendmentNotification($this->payload));
         } else {
             Log::error("User Information MAIL: { $this->payload['email'] } Invalid Email");
         }

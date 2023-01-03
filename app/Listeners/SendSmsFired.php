@@ -40,6 +40,7 @@ use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantSMS;
 use App\Jobs\Configuration\SendExchangeRateSMS;
 use App\Jobs\DualControl\User\UserInformationUpdateSMS;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackSMS;
+use App\Jobs\Taxpayer\TaxpayerAmendmentNotificationSMS;
 use App\Jobs\User\SendRegistrationSMS as UserSendRegistrationSMS;
 
 class SendSmsFired
@@ -162,6 +163,8 @@ class SendSmsFired
             UserInformationUpdateSMS::dispatch($event->tokenId);
         } else if ($event->service === 'user_add') {
             UserSendRegistrationSMS::dispatch($event->tokenId);
+        } else if ($event->service === 'taxpayer-amendment-notification') {
+            TaxpayerAmendmentNotificationSMS::dispatch($event->tokenId);
         }
     }
 }

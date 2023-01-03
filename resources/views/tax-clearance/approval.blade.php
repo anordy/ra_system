@@ -12,8 +12,8 @@
                         role="tab" aria-controls="taxclearance-info" aria-selected="true">Tax Clearence Information </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos"
-                        role="tab" aria-controls="debt-infos" aria-selected="false">Debts Information</a>
+                    <a class="nav-link" id="debt-infos-tab" data-toggle="tab" href="#debt-infos" role="tab"
+                        aria-controls="debt-infos" aria-selected="false">Debts Information</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="approvalHistory-tab" data-toggle="tab" href="#approvalHistory" role="tab"
@@ -24,35 +24,39 @@
             <div class="tab-content bg-white border shadow-sm" id="waiverContent">
                 <div class="tab-pane fade show active" id="taxclearance-info" role="tabpanel"
                     aria-labelledby="taxclearance-info-tab">
-                    
+
                     <div class="row m-2 pt-3">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Tax Clearence Status</span>
                             <p class="my-1">
                                 @if ($taxClearence->status === 'approved')
-                                    <span class="font-weight-bold text-success">
+                                    <span class="badge badge-success py-1 px-2"
+                                        style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%">
                                         <i class="bi bi-check-circle-fill mr-1"></i>
                                         Approved
                                     </span>
                                 @elseif($taxClearence->status === 'requested')
-                                    <span class="font-weight-bold text-warning">
-                                        <i class="bi bi-check-circle-fill mr-1"></i>
+                                    <span class="badge badge-success py-1 px-2"
+                                        style="border-radius: 1rem; background: #b56509; color: #fbe577; font-size: 85%">
+                                        <i class="bi bi-hourglass-bottom"></i>
                                         Requested
                                     </span>
                                 @elseif($taxClearence->status === 'rejected')
-                                    <span class="font-weight-bold text-danger">
-                                        <i class="bi bi-pen-fill mr-1"></i>
+                                    <span class="badge badge-success py-1 px-2"
+                                        style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+                                        <i class="bi bi-x-circle mr-1"></i>
                                         Rejected
                                     </span>
                                 @else
-                                    <span class="font-weight-bold text-info">
-                                        <i class="bi bi-clock-history mr-1"></i>
+                                    <span class="badge badge-danger py-1 px-2"
+                                        style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+                                        <i class="bi bi-x-circle-fill mr-1"></i>
                                         Waiting Approval
                                     </span>
                                 @endif
                             </p>
                         </div>
-                    
+
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Business Name</span>
                             <p class="my-1">{{ $taxClearence->businessLocation->business->name }}</p>
@@ -104,7 +108,7 @@
                             </p>
                         </div>
                     </div>
-                    
+
                     <livewire:approval.tax-clearence-approval-processing modelName='App\Models\TaxClearanceRequest'
                         modelId="{{ encrypt($taxClearence->id) }}" />
                 </div>

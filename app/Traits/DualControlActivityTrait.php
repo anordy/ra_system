@@ -31,7 +31,7 @@ trait DualControlActivityTrait
             'create_by_id' => Auth::id(),
             'status' => 'pending',
         ];
-        
+
         DualControl::updateOrCreate($payload);
         $data = $model::findOrFail($modelId);
 
@@ -212,7 +212,7 @@ trait DualControlActivityTrait
 
         $emailPayload = [
             'email' => $data->email,
-            'userName' => $data->fname,
+            'userName' => $data->first_name,
             'message' => $message,
         ];
 

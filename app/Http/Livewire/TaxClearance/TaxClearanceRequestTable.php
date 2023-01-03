@@ -21,7 +21,7 @@ class TaxClearanceRequestTable extends DataTableComponent
         if (!Gate::allows('tax-clearance-view')) {
             abort(403);
         }
-
+        
         if($status == TaxClearanceStatus::APPROVED){
             $this->approved = true;
         } elseif($status == TaxClearanceStatus::REJECTED){

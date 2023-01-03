@@ -42,11 +42,13 @@
                                         <th>Penalty Amount</th>
                                         <th>Interest Amount</th>
                                         <th>Total Debt</th>
+                                        <th>Filing Month</th>
+                                        <th>Payment Due Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if (count($tax_return_debts))
-                                        @foreach ($tax_return_debts as $debt)
+                                       @foreach ($tax_return_debts as $debt)
                                             <tr>
                                                 <td>{{ $debt->taxtype->name }}</td>
                                                 <td>
@@ -64,6 +66,12 @@
                                                 <td>
                                                     {{ number_format($debt->outstanding_amount, 2) }}
                                                     {{ $debt->currency }}
+                                                </td>
+                                                <td>
+                                                    {{$debt->financialMonth->name}} - {{\Carbon\Carbon::parse($debt->financialMonth->due_date)->format('Y')}}
+                                                </td>
+                                                <td>
+                                                    {{\Carbon\Carbon::parse($debt->curr_payment_due_date)->format('d-m-Y h:i:s')}}
                                                 </td>
                                             </tr>
                                         @endforeach

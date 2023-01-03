@@ -45,7 +45,7 @@ class RegionAddModal extends Component
                 'location' => $this->location,
                 'created_at' =>Carbon::now()
             ]);
-            $this->triggerDualControl(get_class($region), $region->id, DualControl::ADD, 'adding region');
+            $this->triggerDualControl(get_class($region), $region->id, DualControl::ADD, 'adding new region '.$this->name.'');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.region.index');
