@@ -47,7 +47,10 @@ class AssignApprovalLevelAddModal extends Component
             $this->alert('error', 'The selected user is not approved');
             return;
         }
-
+        if ($this->user->role->name != 'Administrator') {
+            $this->alert('error', 'This level of approval is only allowed for Administrator role only');
+            return;
+        }
         $payload = [
             'role_id' => $this->user->role_id,
             'user_id' => $this->user->id,
@@ -56,6 +59,7 @@ class AssignApprovalLevelAddModal extends Component
         ];
         DB::beginTransaction();
         try {
+
             UserApprovalLevel::create($payload);
             $this->user->update(['level_id'=>$this->level]);
             DB::commit();
