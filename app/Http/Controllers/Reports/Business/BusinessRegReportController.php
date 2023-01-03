@@ -14,11 +14,6 @@ class BusinessRegReportController extends Controller
         return view('reports.business.init');
     }
 
-    public function preview($parameters)
-    {
-        return view('reports.business.preview',compact('parameters')); 
-    }
-
     public function exportBusinessesReportPdf($data)
     {
         $parameters = json_decode(decrypt($data),true);

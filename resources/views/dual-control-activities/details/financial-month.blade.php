@@ -1,8 +1,7 @@
 <div>
-
     <div class="card">
         <div class="card-header">
-            Role Details
+            Financial Month Detail
         </div>
 
         <div class="card-body">
@@ -19,10 +18,31 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <th>Name</th>
+                    <th>Year</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->name : $old_values->name }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->year->code : $old_values->year->code }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            {{ $new_values->year->code ?? '' }}
+                        </td>
+
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->year->code : $old_values->year->code, $new_values->year->code))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+
+                <tr>
+                    <th>Month</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -38,20 +58,21 @@
                         @endif
                     @endif
                 </tr>
+
                 <tr>
-                    <th>Report To</th>
+                    <th>Due Date</th>
                     <td>
                         <p class="my-1">
-                            {{ $report_to_old }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->due_date : $old_values->due_date }}
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ $report_to_new ?? '' }}
+                            {{ $new_values->due_date ?? '' }}
                         </td>
 
                         @if (compareDualControlValues(
-                            $report_to_old, $report_to_new))
+                            $result->action != \App\Models\DualControl::EDIT ? $data->due_date : $old_values->due_date, $new_values->due_date))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>
@@ -62,5 +83,4 @@
             </table>
         </div>
     </div>
-
 </div>

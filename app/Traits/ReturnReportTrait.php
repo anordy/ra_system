@@ -127,11 +127,11 @@ trait ReturnReportTrait
     {
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
+            $this->hasData = false;
             $this->alert('error', 'No Records Found in the selected criteria');
-
             return;
+        }else{
+            $this->hasData = true;
         }
-
-        return redirect()->route('reports.returns.preview', encrypt(json_encode($parameters)));
     }
 }

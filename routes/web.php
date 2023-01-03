@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\StreetController;
 use App\Http\Controllers\Reports\Payments\PaymentReportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -165,6 +166,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/region', RegionController::class);
         Route::resource('/district', DistrictController::class);
         Route::resource('/ward', WardController::class);
+        Route::resource('/street', StreetController::class);
         Route::resource('/education-level', EducationLevelController::class);
         Route::resource('/banks', BankController::class);
         Route::resource('/business-categories', BusinessCategoryController::class);
@@ -202,8 +204,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/transaction-fees', TransactionFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
-        Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
-        Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
+
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -220,6 +221,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::prefix('system')->name('system.')->group(function () {
         Route::resource('audits', AuditController::class);
         Route::resource('workflow', WorkflowController::class);
+        Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
+        Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
     });
 
     Route::prefix('taxpayers')->as('taxpayers.')->group(function () {
@@ -420,11 +423,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     //Managerial Reports
     Route::name('reports.')->prefix('reports')->group(function () {
         Route::get('/returns', [ReturnReportController::class, 'index'])->name('returns');
-        Route::get('/returns/preview/{parameters}', [ReturnReportController::class, 'preview'])->name('returns.preview');
         Route::get('/returns/download-report-pdf/{data}', [ReturnReportController::class, 'exportReturnReportPdf'])->name('returns.download.pdf');
 
         Route::get('/business', [BusinessRegReportController::class, 'init'])->name('business.init');
-        Route::get('/business/preview/{parameters}', [BusinessRegReportController::class, 'preview'])->name('business.preview');
         Route::get('/business/download-report-pdf/{data}', [BusinessRegReportController::class, 'exportBusinessesReportPdf'])->name('business.download.pdf');
 
         //  Assesment Report
@@ -553,6 +554,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/pending/download/{records}/{data}', [PaymentsController::class, 'downloadPendingPaymentsPdf'])->name('pending.download.pdf');
         Route::get('/bank-recons', [PaymentsController::class, 'bankRecon'])->name('bank-recon.index');
         Route::get('/bank-recons/{recon}', [PaymentsController::class, 'showBankRecon'])->name('bank-recon.show');
+        Route::get('/recon-reports/index', [PaymentsController::class, 'reconReport'])->name('recon-reports.index');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 

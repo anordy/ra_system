@@ -15,6 +15,7 @@ class CreateVatZeroRatedSalesTable extends Migration
     {
         Schema::create('vat_zero_rated_sales', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('business_location_id');
             $table->unsignedBigInteger('financial_month_id');
             $table->unsignedBigInteger('vat_return_id')->nullable();
             $table->string('receipt_number');

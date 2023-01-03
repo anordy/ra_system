@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings\DualControlActivity;
 
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -27,6 +28,10 @@ class Approve extends Component
             abort(403);
         }
         $req = DualControl::findOrFail($this->dual_control_id);
+        if ($req->create_by_id == Auth::id()) {
+            $this->alert('error','You are not allowed to complete this action', ['timer' => 8000]);
+            return;
+        }
         if (!empty($req)) {
             DB::beginTransaction();
             try {
@@ -34,11 +39,12 @@ class Approve extends Component
                 $this->updateControllable($req, DualControl::APPROVE);
                 DB::commit();
                 $this->alert('success', 'Approved Successfully');
-                return redirect()->route('settings.dual-control-activities.index');
+                return redirect()->route('system.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
                 Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
+                return redirect()->route('system.dual-control-activities.index');
 
             }
         }
@@ -71,6 +77,10 @@ class Approve extends Component
         }
 
         $req = DualControl::findOrFail($this->dual_control_id);
+        if ($req->create_by_id == Auth::id()) {
+            $this->alert('error','You are not allowed to complete this action', ['timer' => 8000]);
+            return;
+        }
         if (!empty($req)) {
             DB::beginTransaction();
             try {
@@ -78,12 +88,12 @@ class Approve extends Component
                 $this->updateControllable($req, DualControl::REJECT);
                 DB::commit();
                 $this->alert('success', 'Rejected Successfully');
-                return redirect()->route('settings.dual-control-activities.index');
+                return redirect()->route('system.dual-control-activities.index');
             } catch (\Throwable $exception) {
                 DB::rollBack();
                 Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
-                return redirect()->route('settings.dual-control-activities.index');
+                return redirect()->route('system.dual-control-activities.index');
             }
         }
     }

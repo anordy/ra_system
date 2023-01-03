@@ -32,7 +32,7 @@ class RolesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $query = Role::query()->with('reportTo');
+        $query = Role::with('reportTo')->orderByDesc('id');
         return $query;
     }
 
