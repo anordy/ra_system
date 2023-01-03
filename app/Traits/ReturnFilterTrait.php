@@ -67,22 +67,23 @@ trait ReturnFilterTrait
     public function paidReturns($returnClass, $returnTableName, $penaltyTableName)
     {
         $returnClass1   = clone $returnClass;
-        $penaltyData    = $returnClass->where("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+        $returnClass2   = clone $returnClass;
+        $penaltyData    = $returnClass1->where("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
-            DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totalLateFiling'),
-            DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totalLatePayment'),
-            DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalRate'),
+            DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totallatefiling'),
+            DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totallatepayment'),
+            DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalrate'),
         )
         ->groupBy('return_id')
         ->get();
 
-        $returnQuery = $returnClass1->where($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
+        $totalTaxAmount = $returnClass2->where($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->sum("{$returnTableName}.total_amount_due");
 
         return  [
-            'totalTaxAmount'   => $returnQuery->sum('total_amount_due'),
-            'totalLateFiling'  => $penaltyData->sum('totalLateFiling'),
-            'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
-            'totalRate'        => $penaltyData->sum('totalRate'),
+            'totalTaxAmount'   => $totalTaxAmount,
+            'totalLateFiling'  => $penaltyData->sum('totallatefiling'),
+            'totalLatePayment' => $penaltyData->sum('totallatepayment'),
+            'totalRate'        => $penaltyData->sum('totalrate'),
         ];
     }
 
@@ -90,23 +91,24 @@ trait ReturnFilterTrait
     public function unPaidReturns($returnClass, $returnTableName, $penaltyTableName)
     {
         $returnClass1   = clone $returnClass;
+        $returnClass2   = clone $returnClass;
 
-        $penaltyData = $returnClass->whereNotIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
+        $penaltyData = $returnClass1->whereNotIn("{$returnTableName}.status", [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->leftJoin("{$penaltyTableName}", "{$returnTableName}.id", '=', "{$penaltyTableName}.return_id")
         ->select(
-            DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totalLateFiling'),
-            DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totalLatePayment'),
-            DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalRate'),
+            DB::raw('SUM(' . $penaltyTableName . '.late_filing) as totallatefiling'),
+            DB::raw('SUM(' . $penaltyTableName . '.late_payment) as totallatepayment'),
+            DB::raw('SUM(' . $penaltyTableName . '.rate_amount) as totalrate'),
         )
         ->groupBy('return_id')
         ->get();
 
-        $returnQuery = $returnClass1->whereNotIn($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT]);
+        $totalTaxAmount = $returnClass2->whereNotIn($returnTableName . '.status', [ReturnStatus::COMPLETE, ReturnStatus::PAID_BY_DEBT])->sum("{$returnTableName}.total_amount_due");
 
         return  [
-            'totalTaxAmount'   => $returnQuery->sum("{$returnTableName}.total_amount_due"),
-            'totalLateFiling'  => $penaltyData->sum('totalLateFiling'),
-            'totalLatePayment' => $penaltyData->sum('totalLatePayment'),
-            'totalRate'        => $penaltyData->sum('totalRate'),
+            'totalTaxAmount'   => $totalTaxAmount,
+            'totalLateFiling'  => $penaltyData->sum('totallatefiling'),
+            'totalLatePayment' => $penaltyData->sum('totallatepayment'),
+            'totalRate'        => $penaltyData->sum('totalrate'),
         ];
     }
 }

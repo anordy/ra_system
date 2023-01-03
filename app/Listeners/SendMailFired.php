@@ -44,6 +44,8 @@ use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
 use App\Jobs\Configuration\SendExchangeRateEmail;
 use App\Jobs\DualControl\User\UserInformationUpdateMAIL;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackMAIL;
+use App\Jobs\Taxpayer\TaxpayerAmendmentNotification;
+use App\Jobs\Taxpayer\TaxpayerAmendmentNotificationEmail;
 use App\Jobs\User\SendRegistrationEmail;
 
 class SendMailFired
@@ -66,9 +68,9 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        // if(config('app.env') == 'local'){
-        //     return true;
-        // }
+        if(config('app.env') == 'local'){
+            return true;
+        }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             SendOTPEmail::dispatch($event->extra['code'], $token->user->email, $token->user->fullname());
@@ -181,6 +183,8 @@ class SendMailFired
             UserInformationUpdateMAIL::dispatch($event->tokenId);
         } else if ($event->service === 'user_add') {
             SendRegistrationEmail::dispatch($event->tokenId);
+        } else if ($event->service === 'taxpayer-amendment-notification') {
+            TaxpayerAmendmentNotificationEmail::dispatch($event->tokenId);
         }
     }
 }

@@ -62,12 +62,13 @@ class TaxClearanceController extends Controller
         $tax_return_debts = TaxReturn::where('location_id', $taxClearence->business_location_id)
             ->where('business_id', $taxClearence->business_id)
             ->where('payment_status', '!=', ReturnStatus::COMPLETE)
-            ->with('installment')
+            ->with('financialMonth:id,name,due_date')
             ->get();
 
+        
         $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
-        ->whereIn('status', '!=' , [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
-        ->get();
+            ->whereNotIn('status', [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
+            ->get();
 
         $locations = [$taxClearence->business_location_id];
 
@@ -98,7 +99,7 @@ class TaxClearanceController extends Controller
         }
 
         $request_id = decrypt($requestId);
-
+        
         $taxClearence = TaxClearanceRequest::where('id', $request_id)
             ->with('businessLocation')
             ->with('businessLocation.business')
@@ -108,16 +109,15 @@ class TaxClearanceController extends Controller
         $tax_return_debts = TaxReturn::where('location_id', $taxClearence->business_location_id)
             ->where('business_id', $taxClearence->business_id)
             ->where('payment_status', '!=', ReturnStatus::COMPLETE)
-            ->with('installment')
+            ->with('financialMonth:id,name,due_date')
             ->get();
 
         $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearence->business_location_id)
-        ->whereIn('status', '!=' , [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
+        ->whereNotIn('status', [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
         ->get();
-
         
         $locations = [$taxClearence->business_location_id];
-
+        
         $investigationDebts = TaxAssessment::whereHasMorph('assessment', [TaxInvestigation::class], function($query) use($locations) {
                 $query->whereHas('taxInvestigationLocations', function($q) use($locations) {
                     $q->whereIn('business_location_id', $locations);
@@ -135,7 +135,7 @@ class TaxClearanceController extends Controller
         $verificateionDebts = TaxAssessment::whereHasMorph('assessment', [TaxVerification::class])
                                 ->where('location_id', $taxClearence->business_location_id)
                                 ->get();
-
+        
         return view('tax-clearance.approval', compact('tax_return_debts', 'taxClearence', 'land_lease_debts', 'investigationDebts', 'auditDebts', 'verificateionDebts'));
     }
 

@@ -61,8 +61,8 @@ class TwoFactorAuthController extends Controller
 
         $otp->used = true;
         $otp->save();
-        
-        if ($user->is_first_login == true || $user->is_password_expired == 1) {
+            
+        if ($user->is_first_login == true || $user->pass_expired_on <= Carbon::now()) {
             return redirect()->route('password.change');
         } else {
             session()->put('user_2fa', $user->id);

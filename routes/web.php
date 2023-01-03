@@ -133,6 +133,7 @@ use App\Http\Controllers\Returns\ExciseDuty\MobileMoneyTransferController;
 use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
+use App\Http\Controllers\Taxpayers\AmendmentRequestController;
 
 Auth::routes();
 
@@ -226,6 +227,12 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('registrations/enroll-fingerprint/{kyc_id}', [RegistrationsController::class, 'enrollFingerprint'])->name('enroll-fingerprint');
         Route::get('registrations/verify-user/{kyc_id}', [RegistrationsController::class, 'verifyUser'])->name('verify-user');
         Route::resource('taxpayer', TaxpayersController::class);
+    });
+
+
+    Route::prefix('taxpayers-amendment')->as('taxpayers-amendment.')->group(function () {
+        Route::get('view/all', [AmendmentRequestController::class, 'index'])->name('index');
+        Route::get('view/{id}', [AmendmentRequestController::class, 'show'])->name('show');
     });
 
     Route::resource('taxpayers', TaxpayersController::class);

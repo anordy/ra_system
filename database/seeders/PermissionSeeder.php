@@ -295,6 +295,12 @@ class PermissionSeeder extends Seeder
             ['name' => 'zrb-bank-account-edit', 'sys_module_id' => 18],
             ['name' => 'zrb-bank-account-delete', 'sys_module_id' => 18],
 
+            ['name' => 'taxpayer-amendment-requests-view', 'sys_module_id' => 18],
+            ['name' => 'taxpayer-amendment-request-view', 'sys_module_id' => 18],
+            ['name' => 'taxpayer-amendment-request-add', 'sys_module_id' => 18],
+            ['name' => 'taxpayer-amendment-request-edit', 'sys_module_id' => 18],
+            ['name' => 'taxpayer-amendment-request-delete', 'sys_module_id' => 18],
+
             
 
             # System
