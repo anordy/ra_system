@@ -1,89 +1,60 @@
 <?php
 
-namespace App\Http\Livewire\Business\TaxType;
+namespace App\Http\Livewire\Taxpayers;
 
-use Exception;
-use Carbon\Carbon;
-use App\Events\SendSms;
-use App\Models\TaxType;
-use Livewire\Component;
 use App\Events\SendMail;
-use App\Models\Business;
-use App\Models\BusinessStatus;
-use App\Models\BusinessTaxType;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use App\Models\BusinessTaxTypeChange;
+use App\Events\SendSms;
+use App\Models\Taxpayer;
+use App\Models\TaxpayerAmendmentRequest;
 use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
-
-class TaxTypeChangeApprovalProcessing extends Component
+class DetailsAmendmentRequestApprovalProcessing extends Component
 {
     use WorkflowProcesssingTrait, LivewireAlert;
     public $modelId;
     public $modelName;
     public $comments;
-    public $taxchange;
-    public $selectedTaxTypes = [];
-    public $oldTaxTypes = [];
-    public $taxTypes;
-    public $from_tax_type_id;
-    public $to_tax_type_id;
-    public $to_tax_type_currency;
-    public $effective_date;
-    public $today;
+    public $amendmentRequest;
+    public $taxpayer_id;
+    public $business;
+    public $consultant;
 
-    public function mount($modelName, $modelId)
+    public function mount($modelName, $modelId, $amendmentRequest)
     {
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
+        $this->amendmentRequest = $amendmentRequest;
+        $this->taxpayer_id = $amendmentRequest->taxpayer_id;
         $this->registerWorkflow($modelName, $this->modelId);
-        $this->taxchange = BusinessTaxTypeChange::findOrFail($this->modelId);
-        $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
-        $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
-        $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
-        $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
-        $this->today = Carbon::today()->addDay()->format('Y-m-d');
     }
-
 
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate([
-            'effective_date' => 'required', 
-            'to_tax_type_currency' => 'required', 
-            'to_tax_type_id' => 'required'
-        ]);
-
-        if ($this->to_tax_type_id == $this->from_tax_type_id) {
-            $this->alert('warning', 'You cannot change to an existing tax type');
-            return;
-        }
-
-        DB::beginTransaction();
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
-                $this->subject->status = BusinessStatus::APPROVED;
-                $this->subject->effective_date = $this->effective_date;
-                $this->subject->approved_on = Carbon::now()->toDateTimeString();
+                    $new_values = json_decode($this->amendmentRequest->new_values, true);
 
-                $notification_payload = [
-                    'tax_change' => $this->taxchange,
-                ];
+                    $taxpayer_details = $new_values;
 
-                DB::commit();
-                
-                event(new SendMail('change-tax-type-approval', $notification_payload));
-                event(new SendSms('change-tax-type-approval', $notification_payload));
+                    /** Update business information */
+                    $taxpayer = Taxpayer::findOrFail($this->taxpayer_id);
+                    $taxpayer->update($taxpayer_details);
 
+                    $this->subject->status = TaxpayerAmendmentRequest::APPROVED;
+                    
+                    $message = 'We are writing to inform you that some of your ZIDRAS taxpayer personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                    $this->sendEmailToUser($taxpayer, $message);
             }
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            DB::rollback();
             Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
@@ -93,10 +64,16 @@ class TaxTypeChangeApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate(['comments' => 'required']);
+        $taxpayer = Taxpayer::findOrFail($this->taxpayer_id);
+
         try {
             if ($this->checkTransition('registration_manager_reject')) {
-                $this->subject->status = BusinessStatus::REJECTED;
+                $this->subject->status = TaxpayerAmendmentRequest::REJECTED;
+                
+                $message = 'We are writing to inform you that some of your Request for ZIDRAS taxpayer personal information has been rejected.';
+                $this->sendEmailToUser($taxpayer, $message);
             }
+
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
@@ -127,9 +104,25 @@ class TaxTypeChangeApprovalProcessing extends Component
         ]);
     }
 
+    public function sendEmailToUser($data, $message)
+    {
+        $smsPayload = [
+            'phone' => $data->phone,
+            'message' => 'Hello, {$data->first_name}. {$message}',
+        ];
+
+        $emailPayload = [
+            'email' => $data->email,
+            'userName' => $data->first_name,
+            'message' => $message,
+        ];
+
+        event(new SendMail('taxpayer-amendment-notification', $emailPayload));
+        event(new SendSms('taxpayer-amendment-notification', $smsPayload));
+    }
 
     public function render()
     {
-        return view('livewire.approval.taxtype-change');
+        return view('livewire.taxpayers.details-amendment-request-approval-processing');
     }
 }
