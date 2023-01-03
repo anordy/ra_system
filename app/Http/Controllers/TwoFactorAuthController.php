@@ -98,9 +98,10 @@ class TwoFactorAuthController extends Controller
         return back();
     }
 
-    public function kill()
+    public function kill(Request $request)
     {
         Auth::logout();
+        $request->session()->flush();
         return redirect()->route('login');
     }
 }
