@@ -52,29 +52,18 @@
 
             <div class="col-md-12 text-center">
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class=" btn btn-success ml-2 px-2" wire:click='pdf()'
-                        wire:loading.attr="disabled">
-                        <div wire:loading.remove wire:target='pdf'>
-                            <i class="fas fa-file-pdf"></i>
-                            Export summary
-                        </div>
-                        <div wire:loading wire:target='pdf'>
-                            <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"> </div>
-                            Loading...
-                        </div>
-                    </button>
 
-                    <button type="submit" class=" btn btn-primary ml-2 px-2" wire:click='fillter()'
-                    wire:loading.attr="disabled">
-                    <div wire:loading.remove wire:target='fillter'>
-                        <i class="fa fa-filter"></i>
-                        Fillter
-                    </div>
-                    <div wire:loading wire:target='fillter'>
-                        <div class="spinner-border mr-1 spinner-border-sm text-light" role="status"> </div>
-                        Loading...
-                    </div>
-                </button>
+                    <button class="btn btn-primary ml-2" wire:click="fillter " wire:loading.attr="disabled">
+                        <i class="bi bi-filter ml-1" wire:loading.remove wire:target="fillter"></i>
+                        <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="fillter"></i>
+                            Fillter
+                    </button>
+    
+                    <button class="btn btn-success ml-2" wire:click="pdf" wire:loading.attr="disabled">
+                        <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="pdf"></i>
+                        <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="pdf"></i>
+                            Export summary
+                    </button>      
                 </div>
             </div>
 

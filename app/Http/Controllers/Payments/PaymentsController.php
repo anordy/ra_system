@@ -100,6 +100,10 @@ class PaymentsController extends Controller
     }
 
     public function showBankRecon($reconId){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
+
         $recon = BankRecon::findOrFail(decrypt($reconId));
         return view('payments.bank-recons.show', compact('recon'));
     }
