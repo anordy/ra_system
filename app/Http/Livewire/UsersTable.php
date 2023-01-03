@@ -149,7 +149,7 @@ class UsersTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     if (Gate::allows('setting-user-change-role')) {
                         return <<< HTML
-                                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal',$value)"><i class="fa fa-user-tag"></i> </button>
+                                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $row->id)"><i class="fa fa-user-tag"></i> </button>
                                 HTML;
                     }
                 })

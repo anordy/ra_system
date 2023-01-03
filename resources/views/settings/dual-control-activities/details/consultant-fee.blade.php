@@ -22,7 +22,7 @@
                     <th>Category</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->category : $old_values->category }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->category : $old_values->category }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -43,7 +43,7 @@
                     <th>Duration</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->duration : $old_values->duration }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->duration : $old_values->duration }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -64,7 +64,7 @@
                     <th>Amount</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->amount : $old_values->amount }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->amount : $old_values->amount }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -85,7 +85,7 @@
                     <th>Currency</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->currency : $old_values->currency }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->currency : $old_values->currency }}
                         </p>
                     </td>
                     @if ($new_values)

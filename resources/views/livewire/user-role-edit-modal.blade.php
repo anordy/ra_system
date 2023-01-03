@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Edit User Role</h5>
+                <h5 class="modal-title text-uppercase">Edit User Role for {{$user->fname}}</h5>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                         class="fa fa-times-circle"></i></button>
             </div>

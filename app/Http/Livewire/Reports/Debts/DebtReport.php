@@ -32,9 +32,11 @@ class DebtReport extends Component
     public $period;
     public $quater;
     public $semiAnnual;
-    public $report_type = 'all';
+    public $report_type;
     public $filing_report_type;
     public $payment_report_type;
+    public $startMonth;
+    public $endMonth;
 
     protected function rules()
     {

@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Jobs\User\SendRegistrationEmail;
+use App\Jobs\User\SendRegistrationSMS;
+use App\Models\ApprovalLevel;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\DualControl;
@@ -34,6 +37,8 @@ class UserAddModal extends Component
     public $password;
     public $password_confirmation;
     public $passwordStrength = 0;
+    public $levels;
+    public $level_id;
 
     protected function rules()
     {
@@ -44,6 +49,7 @@ class UserAddModal extends Component
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'level_id' => 'required',
         ];
     }
 
@@ -78,6 +84,7 @@ class UserAddModal extends Component
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'status' => 1,
+                'level_id' => $this->level_id,
                 'password' => Hash::make($this->password),
             ]);
 
@@ -117,7 +124,8 @@ class UserAddModal extends Component
 
     public function mount()
     {
-        $this->roles = Role::where('is_approved', 1)->get();
+        $this->roles = Role::where('is_approved',1)->get();
+        $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
     }
 
     public function render()

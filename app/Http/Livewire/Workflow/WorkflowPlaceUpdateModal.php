@@ -73,7 +73,7 @@ class WorkflowPlaceUpdateModal extends Component
         $workflowPlaces[$this->name] = $place;
 
         try {
-            $this->workflow->places = $workflowPlaces;
+            $this->workflow->places = json_encode($workflowPlaces);
             $this->workflow->save();
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

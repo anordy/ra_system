@@ -21,7 +21,7 @@
                     <th>Mean</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->mean : $old_values->mean }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->mean : $old_values->mean }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -42,7 +42,7 @@
                     <th>Spot Buying</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->spot_buying : $old_values->spot_buying }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->spot_buying : $old_values->spot_buying }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -63,7 +63,7 @@
                     <th>Spot Selling</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->spot_selling : $old_values->spot_selling }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->spot_selling : $old_values->spot_selling }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -84,7 +84,7 @@
                     <th>Exchange Date</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->exchange_date : $old_values->exchange_date }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->exchange_date : $old_values->exchange_date }}
                         </p>
                     </td>
                     @if ($new_values)

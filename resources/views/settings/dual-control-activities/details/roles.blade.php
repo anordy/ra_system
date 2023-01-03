@@ -22,7 +22,7 @@
                     <th>Name</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->name : $old_values->name }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? ($result->name ?? '') : ($old_values->name ?? '') }}
                         </p>
                     </td>
                     @if ($new_values)
@@ -31,7 +31,7 @@
                         </td>
 
                         @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name, $new_values->name))
+                            $result->action != \App\Models\DualControl::EDIT ? ($data->name ?? 'Not Set') : ($old_values->name ?? ''), ($new_values->name ?? '')))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>

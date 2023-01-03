@@ -87,31 +87,27 @@ class LoginController extends Controller
             $this->clearLoginAttempts($request);
             $user = auth()->user();
 
-            if ($user->is_first_login == false) {
-                $token = $user->otp;
+            $token = $user->otp;
 
-                $code = UserOtp::generate();
+            $code = UserOtp::generate();
 
-                if ($token == null) {
-                    $token = UserOtp::create([
-                        'user_id' => $user->id,
-                        'user_type' => get_class($user),
-                        'used' => false,
-                        'code' => Hash::make($code)
-                    ]);
-                } else {
-                    $token->used = false;
-                    $token->code = Hash::make($code);
-                    $token->updated_at = Carbon::now()->toDateTimeString();
-                    $token->save();
-                }
-
-                $token->sendCode($code);
-
-                return redirect()->route('twoFactorAuth.index');
+            if ($token == null) {
+                $token = UserOtp::create([
+                    'user_id' => $user->id,
+                    'user_type' => get_class($user),
+                    'used' => false,
+                    'code' => Hash::make($code)
+                ]);
             } else {
-                return redirect()->route('password.change');
+                $token->used = false;
+                $token->code = Hash::make($code);
+                $token->updated_at = Carbon::now()->toDateTimeString();
+                $token->save();
             }
+
+            $token->sendCode($code);
+
+            return redirect()->route('twoFactorAuth.index');
         } else {
             $this->incrementLoginAttempts($user, $request);
             return $this->sendFailedLoginResponse($request);
