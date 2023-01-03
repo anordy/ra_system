@@ -60,31 +60,10 @@
                 </tr>
 
                 <tr>
-                    <th>Phone Number</th>
-                    <td>
-                        <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->phone : $old_values->phone }}
-                        </p>
-                    </td>
-                    @if ($new_values)
-                        <td>
-                            {{ $new_values->phone ?? '' }}
-                        </td>
-
-                        @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->phone : $old_values->phone, $new_values->phone))
-                            <td class="table-success">NOT CHANGED</td>
-                        @else
-                            <td class="table-danger">CHANGED</td>
-                        @endif
-                    @endif
-                </tr>
-
-                <tr>
                     <th>Due Date</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $result->due_date : $old_values->due_date }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->due_date : $old_values->due_date }}
                         </p>
                     </td>
                     @if ($new_values)

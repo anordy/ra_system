@@ -70,8 +70,8 @@ trait DualControlActivityTrait
                 return 'System Setting Category Configuration';
                 break;
 
-            case DualControl::TRANSFER_FEE:
-                return 'Transfer Fee';
+            case DualControl::TRANSACTION_FEE:
+                return 'Transaction Fee';
                 break;
             case DualControl::FINANCIAL_YEAR:
                 return 'Financial Year';
@@ -169,7 +169,8 @@ trait DualControlActivityTrait
     {
         $update = $data->controllable_type::findOrFail($data->controllable_type_id);
         if ($data->action == DualControl::ADD) {
-            $update->update(['is_approved' => $status]);
+            $update->is_approved = $status;
+            $update->save();
         } elseif ($data->action == DualControl::EDIT) {
             $payload = json_decode($data->new_values);
             $payload = (array) $payload;

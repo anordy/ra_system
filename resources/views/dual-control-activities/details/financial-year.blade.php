@@ -21,16 +21,16 @@
                     <th>Year</th>
                     <td>
                         <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name }}
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->code : $old_values->code }}
                         </p>
                     </td>
                     @if ($new_values)
                         <td>
-                            {{ $new_values->name ?? '' }}
+                            {{ $new_values->code ?? '' }}
                         </td>
 
                         @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->name : $old_values->name, $new_values->name))
+                            $result->action != \App\Models\DualControl::EDIT ? $data->code : $old_values->code, $new_values->code))
                             <td class="table-success">NOT CHANGED</td>
                         @else
                             <td class="table-danger">CHANGED</td>

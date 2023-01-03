@@ -21,7 +21,7 @@
                         <th>Role</th>
                         <td>
                             <p class="my-1">
-                                {{ $result->action != \App\Models\DualControl::EDIT ? getRole($result->role_id): getRole($old_values->role_id) }}
+                                {{ $result->action != \App\Models\DualControl::EDIT ? getRole($data->role_id): getRole($old_values->role_id) }}
                             </p>
                         </td>
                         @if ($new_values)
@@ -30,7 +30,7 @@
                             </td>
 
                             @if (compareDualControlValues(
-                                $result->action != \App\Models\DualControl::EDIT ? getRole($result->role_id): getRole($old_values->role_id),
+                                $result->action != \App\Models\DualControl::EDIT ? getRole($data->role_id): getRole($old_values->role_id),
                                 getRole($new_values->role_id)))
                                 <td class="table-success">NOT CHANGED</td>
                             @else
