@@ -90,6 +90,8 @@
                 @include('settings.dual-control-activities.details.district')
             @elseif ($result->controllable_type === \App\Models\DualControl::WARD)
                 @include('settings.dual-control-activities.details.ward')
+            @elseif ($result->controllable_type === \App\Models\DualControl::STREET)
+                @include('settings.dual-control-activities.details.street')
             @elseif ($result->controllable_type === \App\Models\DualControl::EXCHANGE_RATE)
                 @include('settings.dual-control-activities.details.exchange-rate')
             @elseif ($result->controllable_type === \App\Models\DualControl::EDUCATION)

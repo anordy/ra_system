@@ -2,26 +2,16 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use App\Models\Ward;
-use App\Models\Region;
-use App\Models\Business;
-use App\Models\District;
-use App\Models\Taxpayer;
-use App\Models\LandLease;
-use App\Models\TaxRegion;
-use App\Models\BusinessHotel;
 use App\Models\Relief\Relief;
-use App\Traits\WorkflowTrait;
-use App\Models\BusinessCategory;
 use App\Models\Returns\TaxReturn;
-use Illuminate\Support\Facades\DB;
-use App\Models\TaxClearanceRequest;
-use Illuminate\Support\Facades\Log;
+use App\Traits\WorkflowTrait;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class BusinessLocation extends Model implements Auditable
@@ -122,6 +112,10 @@ class BusinessLocation extends Model implements Auditable
 
     public function ward(){
         return $this->belongsTo(Ward::class);
+    }
+
+    public function street(){
+        return $this->belongsTo(Street::class);
     }
 
     public function taxpayer(){

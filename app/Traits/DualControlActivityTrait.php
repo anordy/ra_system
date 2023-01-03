@@ -108,6 +108,8 @@ trait DualControlActivityTrait
                 break;
             case DualControl::WARD:
                 return 'Ward';
+            case DualControl::STREET:
+                return 'Street';
                 break;
             case DualControl::TAX_TYPE:
                 return 'Tax Type';
@@ -175,7 +177,9 @@ trait DualControlActivityTrait
             if ($status == DualControl::APPROVE) {
                 
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
+
                 $update->update($payload);
+
 
                 if ($data->controllable_type == DUalControl::USER) {
                     $message = 'We are writing to inform you that some of your ZRB staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
