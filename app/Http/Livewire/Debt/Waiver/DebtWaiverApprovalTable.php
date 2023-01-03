@@ -37,7 +37,13 @@ class DebtWaiverApprovalTable extends DataTableComponent
     {
         return [
             Column::make('debt_id', 'debt_id')->hideIf(true),
+            Column::make('ZIN', 'debt')
+                ->sortable()
+                ->searchable()
+                ->label(fn ($row) => $row->debt->location->zin),
             Column::make("Business Name", "debt")
+                ->sortable()
+                ->searchable()
                 ->label(fn ($row) => $row->debt->business->name),
             Column::make('Location', 'debt')
                 ->label(fn ($row) => $row->debt->location->name),

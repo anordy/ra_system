@@ -34,6 +34,12 @@ class ReturnOverdueDebtsTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('ZIN', 'location.zin')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->location->zin}";
+                }),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
