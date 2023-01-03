@@ -46,7 +46,7 @@ class ReportPreviewTable extends DataTableComponent
             Column::make("Filing Date")
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->created_at ?? ''),
+                ->label(fn($row) => date('M, d Y', strtotime($row->created_at)) ?? ''),
 
             Column::make("Business")
                 ->searchable()
@@ -61,7 +61,7 @@ class ReportPreviewTable extends DataTableComponent
             Column::make("Tax Type")
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->taxType->name ?? ''),
+                ->label(fn($row) => $row->taxtype->code ?? ''),
 
             Column::make("Reporting Month")
                 ->searchable()
@@ -76,12 +76,12 @@ class ReportPreviewTable extends DataTableComponent
             Column::make("Currency")
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->currency),
+                ->label(fn($row) => $row->currency,2 ?? ''),
 
             Column::make("Principal Amount")
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => $row->principal ?? ''),
+                ->label(fn($row) => $row->principal,2 ?? ''),
 
             Column::make("Interest")
                 ->searchable()
