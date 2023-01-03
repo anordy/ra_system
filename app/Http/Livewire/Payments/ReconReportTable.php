@@ -60,10 +60,10 @@ class ReconReportTable extends DataTableComponent
                 ->label(fn ($row) => $row->taxType->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
-            Column::make('ZanMalipo Recon Status', 'bank_recon_status')
+            Column::make('ZanMalipo Recon Status', 'zm_recon_status')
                 ->sortable()
                 ->searchable(),
-            Column::make('Bank Recon Status', 'zm_recon_status')
+            Column::make('Bank Recon Status', 'bank_recon_status')
                 ->sortable()
                 ->searchable(),
             Column::make('Actions', 'id')
