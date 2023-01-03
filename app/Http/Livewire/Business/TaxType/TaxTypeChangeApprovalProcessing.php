@@ -66,18 +66,12 @@ class TaxTypeChangeApprovalProcessing extends Component
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
-                $current_tax_type = BusinessTaxType::where('business_id', $this->taxchange->business_id)
-                    ->where('tax_type_id', $this->taxchange->from_tax_type_id)
-                    ->firstOrFail();
-
                 $this->subject->status = BusinessStatus::APPROVED;
                 $this->subject->effective_date = $this->effective_date;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
                 $notification_payload = [
-                    'tax_type' => $current_tax_type,
                     'tax_change' => $this->taxchange,
-                    'time' => Carbon::now()->format('d-m-Y')
                 ];
 
                 DB::commit();
