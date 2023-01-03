@@ -54,16 +54,16 @@ class ReconReportTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return $value ? $value : 'Pending';
+                    return $value ? number_format($value) : 'Pending';
                 }),
             Column::make('Tax Type', 'tax_type_id')
                 ->label(fn ($row) => $row->taxType->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
-            Column::make('ZanMalipo Recon Status', 'bank_recon_status')
+            Column::make('ZanMalipo Recon Status', 'zm_recon_status')
                 ->sortable()
                 ->searchable(),
-            Column::make('Bank Recon Status', 'zm_recon_status')
+            Column::make('Bank Recon Status', 'bank_recon_status')
                 ->sortable()
                 ->searchable(),
             Column::make('Actions', 'id')

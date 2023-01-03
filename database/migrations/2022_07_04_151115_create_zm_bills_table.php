@@ -47,7 +47,7 @@ class CreateZmBillsTable extends Migration
             $table->text('ci_payload', 4000)->nullable();
 
             $table->enum('bank_recon_status', BankReconStatus::getConstants())->default(BankReconStatus::PENDING);
-            $table->enum('zm_recon_status',ZmReconStatus::getConstants())->default(ZmReconStatus::PENDING);
+            $table->enum('zm_recon_status', ZmReconStatus::getConstants())->default(ZmReconStatus::PENDING);
 
             $table->timestamps();
             $table->softDeletes();
