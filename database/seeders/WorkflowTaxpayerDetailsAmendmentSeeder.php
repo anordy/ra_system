@@ -33,12 +33,12 @@ class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 2]
             ],
-            'tempered_information' => [
+            'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => []
             ],
-            'completed' => [
+            'tempered_information' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
                 'operators' => []

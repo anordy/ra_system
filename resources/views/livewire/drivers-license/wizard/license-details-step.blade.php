@@ -80,7 +80,7 @@
             <div class="col-md-12 d-flex justify-content-end">
                 <a type="button" class="btn btn-danger text-white mr-2" wire:loading.class="disabled"
                    href="">
-                    <i class="bi bi-x-circle mr-1"></i>
+                    <i class="bi bi-x-circle-fill mr-1"></i>
                     Cancel
                 </a>
                 <button type="button" class="btn btn-primary mr-1" wire:click="previousStep"

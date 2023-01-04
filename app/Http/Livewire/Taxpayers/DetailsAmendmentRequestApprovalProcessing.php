@@ -47,7 +47,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
                     /** Update taxpayer information */
 
                     $taxpayer = Taxpayer::findOrFail($this->taxpayer_id);
-                    if (!$this->verify($taxpayer)){
+                    if ($this->verify($taxpayer)){
                         $taxpayer->update($taxpayer_details);
                         $this->sign($taxpayer);
                         $this->subject->status = TaxpayerAmendmentRequest::APPROVED;
@@ -55,6 +55,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
                         $message = 'We are writing to inform you that some of your ZIDRAS taxpayer personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                         $this->sendEmailToUser($taxpayer, $message);
                     } else {
+                        $this->subject->status = TaxpayerAmendmentRequest::TEMPERED;
                         $this->doTransition('tempered_information_detected', ['status' => 'agree', 'comment' => $this->comments]);
                         $this->flash('error', 'Data submitted could not be verified, please contact system administrator.', [], redirect()->back()->getTargetUrl());
                         return;
