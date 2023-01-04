@@ -16,7 +16,6 @@ class WardSeeder extends Seeder
     public function run()
     {
 
-        
         $KaskaziniAWards =  ['Chaani Masingini','Mchenza Shauri','Chaani Kubwa','Bandamaji','Kikobweni','Kinyasini','Kandwi','Pwani Mchangani','Kigongoni','Potoa','Kijini Matemwe','Mbuyutende','Kigomani','Juga Kuu','Muwange','Pitanazako','Kivunge','Kibeni','Mkwajuni','Kidombo','Chutama','Moga','Matemwe Kaskazini','Matemwe Kusini','Gamba','Mtakuja','Gomani','Uvivini','Jongowe','Mto wa Pwani','Mkokotoni','Pale','Muwanda','Kipange','Mchangani','Bandakuu','Kiungani','Kilindi','Kigunda','Tazari','Kilimani Tazari','Kidoti','Bwereu','Fukuchani'];
         $kaskaziniADistrictID = District::where('name', 'Kaskazini A')->value('id');
         foreach ($KaskaziniAWards as $name) {
@@ -62,7 +61,7 @@ class WardSeeder extends Seeder
         }
 
 
-        $katiWards = ['Ndijani Mwembepunda','Ndijani Mseweni','Cheju','Zawiyani','Charawe','Ukongoroni','Pete','Pongwe','Uroa','Marumbi','Jendele','Chwaka','Kidimni','Koani','Machui','Miwani','Ghana','Kiboje Mwembeshauri','Tunduni','Mitakawani','Uzini','Kiboje Mkwajuni','Mgeni Haji','Mchangani Shamba','Kijibwemtu','Bambi','Mpapa','Pagali','Umbuji','Ubago','Dunga Bweni','Dunga Kiembeni','Binguni','Jumbi','Tunguu','Bungi','Kikungwi','Unguja Ukuu Kaebona','Tindini','Unguja Ukuu Kaepwani','Uzi',"Ng'ambwa"];
+        $katiWards = ['Ndijani Muembe Punda','Ndijani Mseweni','Cheju','Cheju Zuwiyani', 'Cheju Hanyegwa Mchana', 'Charawe','Ukongoroni','Pete','Pongwe','Uroa','Marumbi','Jendele','Chwaka','Kidimni','Koani','Machui','Miwani','Ghana','Kiboje Mwembeshauri','Tunduni','Mitakawani','Uzini','Kiboje Mkwajuni','Mgeni Haji','Mchangani Shamba','Kijibwe Mtu','Bambi','Mpapa','Pagali','Umbuji','Ubago','Dunga Bweni','Dunga Kiembeni','Binguni','Jumbi','Tunguu','Bungi','Kikungwi','Unguja Ukuu Kaebona','Tindini','Unguja Ukuu Kaepwani','Uzi',"Ng'ambwa"];
         $katiID = District::where('name', 'Kati')->value('id');
 
         foreach ($katiWards as $name) {

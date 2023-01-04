@@ -2,23 +2,31 @@
 
 namespace App\Http\Livewire\Taxpayers;
 
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Hash;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxpayersTable extends DataTableComponent
 {
-
+    use LivewireAlert;
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        $this->setAdditionalSelects(['first_name', 'middle_name', 'last_name']);
+        $this->setAdditionalSelects(['first_name', 'middle_name', 'last_name', 'is_first_login']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
     }
+
+    protected $listeners = [
+        'sendCredential', 'amendmentDetailsRequest'
+    ];
 
     public function builder(): Builder
     {
@@ -49,5 +57,41 @@ class TaxpayersTable extends DataTableComponent
             Column::make('Street', 'street'),
             Column::make('Action', 'id')->view('taxpayers.actions')
         ];
+    }
+
+    public function sendCredential($value)
+    {
+        $data = (object) $value['data'];
+        $taxpayer = Taxpayer::find($data->id);
+
+        $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
+        $password = substr(str_shuffle($permitted_chars), 0, 8);
+        $taxpayer->password = Hash::make($password);
+        $taxpayer->save();
+
+        event(new SendSms('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+        if ($taxpayer->email) {
+            event(new SendMail('taxpayer-registration', $taxpayer->id, ['code' => $password]));
+        }
+        $this->flash('success', 'Credentials re-send successfully', [], redirect()->back()->getTargetUrl());
+
+    }
+
+    public function resendCredential($id)
+    {
+  
+        $this->alert('warning', 'Are you sure you want to re-send new user credentials ?', [
+            'position' => 'center',
+            'toast' => false,
+            'showConfirmButton' => true,
+            'confirmButtonText' => 'Yes',
+            'onConfirmed' => 'sendCredential',
+            'showCancelButton' => true,
+            'cancelButtonText' => 'Cancel',
+            'timer' => null,
+            'data' => [
+                'id' => $id,
+            ],
+        ]);
     }
 }

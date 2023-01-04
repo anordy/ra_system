@@ -7,7 +7,7 @@ return [
         'host'           => env('DB_HOST', ''),
         'port'           => env('DB_PORT', '1521'),
         'database'       => secEnv('DB_DATABASE', ''),
-        'service_name'   => secEnv('DB_SERVICENAME', ''),
+        'service_name'   => secenv('DB_SERVICENAME', ''),
         'username'       => secEnv('DB_USERNAME', ''),
         'password'       => secEnv('DB_PASSWORD', ''),
         'charset'        => env('DB_CHARSET', 'AL32UTF8'),

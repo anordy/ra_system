@@ -7,6 +7,8 @@ use App\Models\TaPaymentConfiguration;
 use App\Models\TaPaymentConfigurationHistory;
 use App\Traits\DualControlActivityTrait;
 use App\Traits\ValidationTrait;
+use App\Traits\VerificationTrait;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +20,7 @@ use Illuminate\Support\Facades\Gate;
 
 class TaxAgentFeeModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use LivewireAlert, DualControlActivityTrait, VerificationTrait;
 
     public $category, $duration, $amount, $currency, $nationality, $old_values, $new_values;
 
@@ -71,9 +73,14 @@ class TaxAgentFeeModal extends Component
             ];
             if ($fee == null) {
                 $agent_fee = TaPaymentConfiguration::query()->create($this->new_values);
-                $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::ADD, 'adding tax consultant fee');
+                // Get ci_payload
+                if (!$this->sign($agent_fee)) {
+                    throw new Exception('Failed to verify consultant fee.');
+                }
+                $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::ADD, 'adding tax consultant fee for '.$this->category);
 
             } else {
+
                 $this->old_values = [
                     'tapc_id' => $fee->id,
                     'category' => $fee->category,
@@ -84,11 +91,19 @@ class TaxAgentFeeModal extends Component
                     'created_by' => $fee->created_by,
                 ];
 
+                if (!$this->verify($fee)) {
+                    throw new Exception('Failed to verify consultant fee.');
+                }
                 TaPaymentConfigurationHistory::query()->create($this->old_values);
 
                 $fee->delete();
 
                 $agent_fee = TaPaymentConfiguration::query()->create($this->new_values);
+                // Get ci_payload
+                if (!$this->sign($agent_fee)) {
+                    throw new Exception('Failed to verify consultant fee.');
+                }
+
                 $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::EDIT, 'editing tax consultant fee', json_encode($this->old_values), json_encode($this->new_values));
             }
 

@@ -74,6 +74,7 @@ class Init extends Component
 
     //toggle button
     public $showMoreFilters;
+    public $hasData = false;
 
     //paramenters
     public $parameters = [];
@@ -210,10 +211,14 @@ class Init extends Component
         $this->extraFilters();
         $records = $this->getBusinessBuilder($this->parameters);
         if($records->get()->count()<1){
+            $this->hasData = false;
             $this->alert('error','No Data Found for selected options');
             return;
+        }else{
+            $this->hasData = true;
         }
-        return redirect()->route('reports.business.preview',encrypt(json_encode($this->parameters)));
+        
+        // return redirect()->route('reports.business.preview',encrypt(json_encode($this->parameters)));
     }
 
     //export excel

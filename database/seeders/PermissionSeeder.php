@@ -184,6 +184,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'setting-ward-edit', 'sys_module_id' => 18],
             ['name' => 'setting-ward-delete', 'sys_module_id' => 18],
 
+            ['name' => 'setting-street-view', 'sys_module_id' => 18],
+            ['name' => 'setting-street-add', 'sys_module_id' => 18],
+            ['name' => 'setting-street-edit', 'sys_module_id' => 18],
+            ['name' => 'setting-street-delete', 'sys_module_id' => 18],
+
             ['name' => 'setting-bank-view', 'sys_module_id' => 18],
             ['name' => 'setting-bank-add', 'sys_module_id' => 18],
             ['name' => 'setting-bank-edit', 'sys_module_id' => 18],
@@ -294,6 +299,12 @@ class PermissionSeeder extends Seeder
             ['name' => 'zrb-bank-account-add', 'sys_module_id' => 18],
             ['name' => 'zrb-bank-account-edit', 'sys_module_id' => 18],
             ['name' => 'zrb-bank-account-delete', 'sys_module_id' => 18],
+
+            ['name' => 'taxpayer-amendment-requests-view', 'sys_module_id' => 18],
+            ['name' => 'taxpayer-amendment-request-view', 'sys_module_id' => 18],
+            ['name' => 'taxpayer-amendment-request-add', 'sys_module_id' => 18],
+            ['name' => 'taxpayer-amendment-request-edit', 'sys_module_id' => 18],
+            ['name' => 'taxpayer-amendment-request-delete', 'sys_module_id' => 18],
 
             
 

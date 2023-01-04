@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Debt;
 
 use App\Enum\ReturnCategory;
 use App\Models\Returns\TaxReturn;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -33,6 +34,12 @@ class ReturnOverdueDebtsTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('ZIN', 'location.zin')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->location->zin}";
+                }),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
@@ -47,6 +54,10 @@ class ReturnOverdueDebtsTable extends DataTableComponent
             Column::make('Outstanding Amount', 'outstanding_amount')
                 ->format(function ($value, $row) {
                     return number_format($row->outstanding_amount, 2);
+                }),
+            Column::make('Days', 'filing_due_date')
+                ->format(function ($value, $row) {
+                    return Carbon::now()->diffInDays($row->filing_due_date);
                 }),
             Column::make('Payment Status', 'payment_status')->view('debts.includes.status'),
             Column::make('Action', 'id')->view('debts.includes.actions'),

@@ -52,7 +52,7 @@ class DistrictAddModal extends Component
                 'region_id' => $this->region_id,
                 'created_at' =>Carbon::now()
             ]);
-            $this->triggerDualControl(get_class($district), $district->id, DualControl::ADD, 'adding district');
+            $this->triggerDualControl(get_class($district), $district->id, DualControl::ADD, 'adding new district '.$this->name.'');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.district.index');

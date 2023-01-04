@@ -35,12 +35,15 @@ class TaxTypeAddModal extends Component
         }
 
         $this->validate();
+        $newName = strtolower($this->name);
+        $code = str_replace(' ', '-', $newName);
         DB::beginTransaction();
         try{
             $tax_type = TaxType::create([
+                'code' => $code,
                 'name' => $this->name,
             ]);
-            $this->triggerDualControl(get_class($tax_type), $tax_type->id, DualControl::ADD, 'adding tax type');
+            $this->triggerDualControl(get_class($tax_type), $tax_type->id, DualControl::ADD, 'adding tax type '.$this->name);
             DB::commit();
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){

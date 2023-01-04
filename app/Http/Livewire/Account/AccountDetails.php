@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Account;
 
+use App\Traits\VerificationTrait;
 use Exception;
 use App\Models\User;
 use Livewire\Component;
@@ -11,7 +12,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class AccountDetails extends Component
 {
-    use LivewireAlert;
+    use LivewireAlert, VerificationTrait;
 
     public $user, $first_name, $last_name, $email, $mobile;
 
@@ -32,9 +33,18 @@ class AccountDetails extends Component
     {
         $this->validate();
 
+        // Verify
+        if (!$this->verify($this->user)){
+            throw new Exception('Could not verify user account.');
+        }
+
         try {
             $this->user->phone = $this->mobile;
             $this->user->save();
+
+            // Sign
+            $this->sign($this->user);
+
             session()->flash('success', 'Your profile information has been changed successful');
             $this->redirect(route('account'));
         } catch (Exception $e) {

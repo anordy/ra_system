@@ -58,9 +58,7 @@ function getUser($id)
 
 function getRole($id)
 {
-
-    if (!empty($id))
-    {
+    if (!empty($id)) {
         $role = Role::query()->findOrFail($id);
         $role = $role->name;
         return $role;
@@ -94,9 +92,11 @@ function isNullOrEmpty($value)
 
 function approvalLevel($level_id, $level_name)
 {
-    $approval = ApprovalLevel::query()->where('id', $level_id)->where('name', $level_name)->first();
+    $approval = ApprovalLevel::where('id', $level_id)->where('name', $level_name)->first();
     if (!empty($approval)) {
-        if (!empty($approval->user_level) && $approval->user_level->user_id == Auth::id()) {
+        $level = UserApprovalLevel::where('approval_level_id', $approval->id)
+            ->where('user_id', Auth::id())->orderByDesc('id')->first();
+        if (!empty($level)) {
             return true;
         }
         return false;
@@ -113,8 +113,7 @@ function compareDualControlValues($old_values, $new_values)
 
 function getDistrict($id)
 {
-    if (!empty($id))
-    {
+    if (!empty($id)) {
         $district = District::query()->findOrFail($id);
         $district = $district->name;
         return $district;
@@ -123,10 +122,18 @@ function getDistrict($id)
 
 function getRegion($id)
 {
-    if (!empty($id))
-    {
+    if (!empty($id)) {
         $region = Region::query()->findOrFail($id);
         $region = $region->name;
         return $region;
+    }
+}
+
+function getWard($id)
+{
+    if (!empty($id)) {
+        $ward = \App\Models\Ward::query()->findOrFail($id);
+        $ward = $ward->name;
+        return $ward;
     }
 }

@@ -34,7 +34,7 @@ return [
             'driver' => 'sftp',
             'host' => env('SFTP_HOST'),
             'username' => env('SFTP_USERNAME'),
-            'port' => '22',
+            'port' => env('SFTP_PORT'),
             'privateKey' => env('SFTP_PRIVATE_KEY'),
             'root' => 'uploads/',
         ],

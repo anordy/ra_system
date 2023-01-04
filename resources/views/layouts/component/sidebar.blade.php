@@ -1,7 +1,9 @@
 <nav id="sidebar" class="mb-3">
     <div class="sidebar-header text-center pb-0">
-        <h3 class="mt-2">
-            <img src="{{ asset('images/logo.jpg') }}" class="rounded-circle" width="15%">
+        <h3 class="mt-2 d-flex justify-content-center align-items-center">
+            <div style="height: 38px; width: 38px; background-color: white; border-radius: 50%" class="mr-3">
+                <img src="{{ asset('images/logo.jpg') }}" class="rounded-circle" height="38px">
+            </div>
             ZIDRAS
         </h3>
     </div>
@@ -28,6 +30,11 @@
                     @can('taxpayer_view')
                         <li class="{{ request()->is('taxpayers/taxpayer*') ? 'active' : '' }}">
                             <a href="{{ route('taxpayers.taxpayer.index') }}">Taxpayers</a>
+                        </li>
+                    @endcan
+                    @can('taxpayer-amendment-requests-view')
+                        <li class="{{ request()->is('taxpayers-amendment*') ? 'active' : '' }}">
+                            <a href="{{ route('taxpayers-amendment.index') }}">Taxpayer Amendments</a>
                         </li>
                     @endcan
                     @can('kyc_view')
@@ -591,6 +598,9 @@
                         <li class="{{ request()->is('reports/debts*') ? 'active' : '' }}">
                             <a href="{{ route('reports.debts') }}">Debt Reports</a>
                         </li>
+                        <li class="{{ request()->is('reports/payments*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.payments') }}">Payment Reports</a>
+                        </li>
                     @endcan
 
                 </ul>
@@ -660,6 +670,11 @@
                             <a href="{{ route('payments.bank-recon.index') }}">Bank Reconciliations</a>
                         </li>
                     @endcan
+                    @can('manage-payments-view')
+                        <li class="{{ request()->is('payments/recon-reports/index*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.recon-reports.index') }}">Reconciliations Report</a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan
@@ -711,6 +726,11 @@
                     @can('setting-ward-view')
                         <li class="{{ request()->is('settings/ward*') ? 'active' : '' }}">
                             <a href="{{ route('settings.ward.index') }}">Ward</a>
+                        </li>
+                    @endcan
+                    @can('setting-street-view')
+                        <li class="{{ request()->is('settings/street*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.street.index') }}">Streets</a>
                         </li>
                     @endcan
                     @can('setting-banks-view')
@@ -931,11 +951,7 @@
                             <a href="{{ route('settings.zrb-bank-accounts.index') }}">ZRB Bank Accounts</a>
                         </li>
                     @endcan
-                    {{--                    @can('setting-dual-control-activities') --}}
-                    <li class="{{ request()->is('settings/dual-control-activities/*') ? 'active' : '' }}">
-                        <a href="{{ route('settings.dual-control-activities.index') }}">Dual Control Activities</a>
-                    </li>
-                    {{--                    @endcan --}}
+
                 </ul>
             </li>
         @endcan
@@ -954,6 +970,12 @@
                             <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                         </li>
                     @endcan
+
+                        {{--                    @can('setting-dual-control-activities') --}}
+                        <li class="{{ request()->is('system/dual-control-activities/*') ? 'active' : '' }}">
+                            <a href="{{ route('system.dual-control-activities.index') }}">Dual Control Activities</a>
+                        </li>
+                        {{--                    @endcan --}}
                     {{-- @can('system-all-pdfs-view')
                         <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
                             <a href="{{ route('pdf.all') }}">All PDF's</a>

@@ -17,7 +17,7 @@ class ISIC3Seeder extends Seeder
     {
         try{
             $import = new ISIC3Import;
-            $import->import(public_path('isics/ISIC_LEVEL_3.xlsx'));
+            $import->import(public_path('imports/ISIC_LEVEL_3.xlsx'));
         }catch(Exception $e){
             echo $e->getMessage();
         }

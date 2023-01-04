@@ -9,6 +9,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class BankReconImport extends Component
 {
@@ -17,13 +18,20 @@ class BankReconImport extends Component
     public $reconFile, $path;
 
     protected $rules = [
-        'reconFile' => 'required|file|mimes:csv,xls,xlsx',
+        'reconFile' => 'required|file', // Accept .txt since php confuses .txt for csv sometimes
     ];
 
     protected $messages = [
         'reconFile.required' => 'Please provide a file to import.',
         'reconFile.mimes' => 'The file must be a valid csv, xls or xlsx.'
     ];
+
+    public function downloadTemplate(){
+        if (config('app.env') == 'production'){
+            return response()->download(public_path('templates/prod-template.csv'));
+        }
+        return response()->download(public_path('templates/bank-reconciliations.csv'));
+    }
 
     public function submit()
     {
@@ -44,10 +52,17 @@ class BankReconImport extends Component
 
             return redirect(request()->header('Referer'));
 
-        } catch (\Exception $exception){
-            $this->alert('error', $exception->getMessage());
+        } catch (ValidationException $exception){
+            DB::rollBack();
+            foreach ($exception->failures() as $error) {
+                $this->alert('error', 'Error at row ' . $error->row() . '. ' . $error->errors()[0], ['timer' => 12000]);
+            }
+            Log::error($exception->failures());
+        }
+        catch (\Exception $exception){
             DB::rollBack();
             Log::error($exception);
+            $this->alert('error', $exception->getMessage());
         }
     }
 

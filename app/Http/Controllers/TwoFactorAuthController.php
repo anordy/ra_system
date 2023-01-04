@@ -12,13 +12,8 @@ use Illuminate\Support\Facades\Validator;
 
 class TwoFactorAuthController extends Controller
 {
-
     public function index()
     {
-        if (Auth::user()->is_password_expired) {
-            return redirect()->route('password.change');
-        }
-
         return view('layouts.otp_confirm');
     }
 
@@ -66,14 +61,17 @@ class TwoFactorAuthController extends Controller
 
         $otp->used = true;
         $otp->save();
-
-        session()->put('user_2fa', $user->id);
-        return redirect()->route('home');
+            
+        if ($user->is_first_login == true || $user->pass_expired_on <= Carbon::now()) {
+            return redirect()->route('password.change');
+        } else {
+            session()->put('user_2fa', $user->id);
+            return redirect()->route('home');
+        }
     }
 
     public function resend()
     {
-
         $user = auth()->user();
         $token = $user->otp;
 
@@ -100,9 +98,10 @@ class TwoFactorAuthController extends Controller
         return back();
     }
 
-    public function kill()
+    public function kill(Request $request)
     {
         Auth::logout();
+        $request->session()->flush();
         return redirect()->route('login');
     }
 }

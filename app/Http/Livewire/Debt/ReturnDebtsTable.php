@@ -2,10 +2,11 @@
 
 namespace App\Http\Livewire\Debt;
 
+use Carbon\Carbon;
 use App\Enum\ReturnCategory;
+use App\Models\Returns\TaxReturn;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\Returns\TaxReturn;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
@@ -17,8 +18,8 @@ class ReturnDebtsTable extends DataTableComponent
     public function builder(): Builder
     {
         return TaxReturn::query()
-                    ->where('return_category', ReturnCategory::DEBT)
-                    ->orderBy('tax_returns.created_at', 'desc');
+            ->where('return_category', ReturnCategory::DEBT)
+            ->orderBy('tax_returns.created_at', 'desc');
     }
 
     public function configure(): void
@@ -34,6 +35,12 @@ class ReturnDebtsTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            Column::make('ZIN', 'location.zin')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->location->zin}";
+                }),
             Column::make('Business Name', 'business.name')
                 ->sortable()
                 ->searchable(),
@@ -48,6 +55,10 @@ class ReturnDebtsTable extends DataTableComponent
             Column::make('Outstanding Amount', 'outstanding_amount')
                 ->format(function ($value, $row) {
                     return number_format($row->outstanding_amount, 2);
+                }),
+            Column::make('Days', 'filing_due_date')
+                ->format(function ($value, $row) {
+                    return Carbon::now()->diffInDays($row->filing_due_date);
                 }),
             Column::make('Payment Status', 'payment_status')->view('debts.includes.status'),
             Column::make('Action', 'id')->view('debts.includes.actions'),

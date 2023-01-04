@@ -25,9 +25,9 @@
                 <div class="tab-pane p-4 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <livewire:tax-agent.verification-requests-table/>
                 </div>
-                <div class="tab-pane p-4" id="progress" role="tabpanel" aria-labelledby="progress-tab">
-                    <livewire:tax-agent.verification-progress-requests-table/>
-                </div>
+{{--                <div class="tab-pane p-4" id="progress" role="tabpanel" aria-labelledby="progress-tab">--}}
+{{--                    <livewire:tax-agent.verification-progress-requests-table/>--}}
+{{--                </div>--}}
                 <div class="tab-pane p-4" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
                     <livewire:tax-agent.rejected-tax-agent-table/>
                 </div>

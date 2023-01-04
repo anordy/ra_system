@@ -29,7 +29,7 @@ class UserInformationUpdate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.dual-control.user-notification')
+        return $this->markdown('emails.taxpayer.taxpayer-notification')
         ->subject('Important: Staff Account Information Update');
     }
 }

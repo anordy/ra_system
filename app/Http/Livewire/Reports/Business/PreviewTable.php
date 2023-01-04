@@ -28,7 +28,7 @@ class PreviewTable extends DataTableComponent
 
     public function mount($parameters)
     {
-        $this->parameters = json_decode(decrypt($parameters), true);
+        $this->parameters = $parameters;
     }
 
     public function builder(): Builder

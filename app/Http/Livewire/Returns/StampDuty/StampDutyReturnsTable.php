@@ -18,6 +18,7 @@ class StampDutyReturnsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects(['business_location_id', 'financial_month_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class'   => 'table-bordered table-sm',
@@ -49,19 +50,22 @@ class StampDutyReturnsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->businessLocation->name}";
+                }),
             Column::make('TIN', 'business.tin')
                 ->sortable()
                 ->searchable(),
             Column::make('Total Tax', 'total_amount_due')
                 ->sortable()
                 ->searchable(),
-            Column::make('Financial Year', 'financialYear.name')
-                ->sortable()
-                ->searchable(),
             Column::make('Financial Month', 'financialMonth.name')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->financialMonth->name} {$row->financialMonth->year->code}";
+                }),
             Column::make('Action', 'id')->view('returns.stamp-duty.includes.actions'),
         ];
     }

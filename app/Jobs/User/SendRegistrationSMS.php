@@ -3,34 +3,30 @@
 namespace App\Jobs\User;
 
 use App\Http\Controllers\v1\SMSController;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class SendRegistrationSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $email;
-    private $password;
-    private $first_name;
-    private $phone_number;
+    private $payload;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($email, $password, $first_name, $phone_number)
+    public function __construct($payload)
     {
-        $this->email = $email;
-        $this->password = $password;
-        $this->first_name = $first_name;
-        $this->phone_number = $phone_number;
+        $this->payload = $payload;
     }
 
     /**
@@ -40,10 +36,15 @@ class SendRegistrationSMS implements ShouldQueue
      */
     public function handle()
     {
+        $user = User::find($this->payload);
+        $code = Str::random(8);
+        $user->password = Hash::make($code);
+        $user->save();
+
         $sms_controller = new SMSController;
-        $send_to = $this->phone_number;
+        $send_to = $user->phone_number;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Dear {$this->first_name}, You have been registered into ZRB System. Please use credentials below to Log into the system. Email: {$this->email} Password: {$this->password}";
+        $customer_message = "Dear {$user->fname}, You have been registered into ZRB System. Please use credentials below to Log into the system. Email: {$user->email} Password: {$code}";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

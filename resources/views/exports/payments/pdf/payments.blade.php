@@ -4,7 +4,7 @@
     <title></title>
     <style>
         body {
-            background-image: url("{{ public_path() }}/images/logo.jpg");
+            background-image: url("{{ public_path() }}/images/logo.png");
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -57,53 +57,14 @@
     <table style="border-collapse:collapse; width:100%">
         <thead>
             <tr>
-                {{-- <th style="text-align:center;" colspan="15">
+                <th style="text-align:center;" colspan="15">
                     <strong>ZANZIBAR REVENUE BOARD</strong><br>
-                    <strong>Report of
-                        {{ $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] : $parameters['payment_report_type'] }}
-                        for {{ $parameters['tax_type_name'] }} </strong><br>
-                    @if ($parameters['dates']['startDate'] != null)
-                        <strong>From {{ date('M, d Y', strtotime($parameters['dates']['from'])) }} To
-                            {{ date('M, d Y', strtotime($parameters['dates']['to'])) }}
-                        </strong><br>
-                    @endif
-
-                    <strong>Tax Regions :
-                        @foreach ($parameters['tax_regions'] as $t => $id)
-                            <span>{{ App\Models\TaxRegion::find($id)->name }}</span>
-                            @if (count($parameters['tax_regions']) > 1)
-                                @if ($t == end($parameters['tax_regions']) - 2)
-                                    and
-                                @else
-                                    ,
-                                @endif
-                            @endif &nbsp;
-                        @endforeach
-                    </strong><br>
-
-                    Location:
-                    @if ($parameters['region'] == 'all')
-                        <strong> Pemba and Unguja </strong><br>
-                    @else
-                        <strong>{{ App\Models\Region::find($parameters['region'])->name }}</strong><br>
-                    @endif
-
-
-                    @if ($parameters['district'] != 'all')
-                        <strong>District: {{ App\Models\District::find($parameters['district'])->name }}</strong><br>
-                    @endif
-
-
-                    @if ($parameters['ward'] != 'all')
-                        <strong> Ward: {{ App\Models\Ward::find($parameters['ward'])->name }}</strong><br>
-                    @endif
-
-                    <strong>Total Number of Records: {{ $records->count() }} </strong>
-                </th> --}}
+                </th>
             </tr>
         </thead>
     </table>
     <br>
+
     <table class="table">
         <thead class="tableHead">
             <tr>

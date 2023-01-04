@@ -53,11 +53,11 @@ class AirbnbReturnsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
-            ->sortable()
-            ->searchable()
-            ->format(function ($value, $row) {
-                return "{$row->businessLocation->name}";
-            }),
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->businessLocation->name}";
+                }),
             Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),

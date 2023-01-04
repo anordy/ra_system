@@ -10,7 +10,7 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="">Level</label>
-                        <select class="form-control" wire:model.lazy="level">
+                        <select class="form-control" wire:model.defer="level">
                             <option value="">Choose option</option>
                             @foreach ($levels as $row)
                                 <option @if(!empty($role_level) && $role_level->approval_level_id == $row->id) selected @endif value="{{ $row->id }}">{{ $row->name }}</option>

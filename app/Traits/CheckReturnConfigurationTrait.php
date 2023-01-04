@@ -41,14 +41,14 @@ trait CheckReturnConfigurationTrait
 
             if (!$this->doesPenaltyRateExists($financialYear)) {
                 $issues[] = [
-                    'description' => "{$financialYear->code} penalty rate has not been configured", 
+                    'description' => "{$financialYear->code} penalty rate has not been configured",
                     'route' => 'settings.penalty-rates.index'
                 ];
             }
 
             if (!$this->doesInterestRateExists($financialYear)) {
                 $issues[] = [
-                    'description' => "{$financialYear->code} interest rate has not been configured", 
+                    'description' => "{$financialYear->code} interest rate has not been configured",
                     'route' => 'settings.interest-rates.index'
                 ];
             }
@@ -66,7 +66,7 @@ trait CheckReturnConfigurationTrait
                 // Return false if the next financial year does not exist
                 if (!$year) {
                     $issues[] = [
-                        'description' => "{$nextFinancialYear} financial year has not been configured", 
+                        'description' => "{$nextFinancialYear} financial year has not been configured",
                         'route' => 'settings.financial-months'
                     ];
                     Log::error("{$nextFinancialYear} FINANCIAL YEAR DOES NOT EXIST");
@@ -83,7 +83,7 @@ trait CheckReturnConfigurationTrait
 
                 if (!$month) {
                     $issues[] = [
-                        'description' => "Financial month {$filingFinancialMonth} for the year {$currentYear} financial year has not been configured", 
+                        'description' => "Financial month {$filingFinancialMonth} for the year {$currentYear} financial year has not been configured",
                         'route' => 'settings.financial-months'
                     ];
                     Log::error("FINANCIAL MONTH {$filingFinancialMonth} FOR THE YEAR {$currentYear} DOES NOT EXIST");
@@ -92,10 +92,9 @@ trait CheckReturnConfigurationTrait
                     event(new SendSms('financial-month', $payload));
                 }
             }
-
         } else {
             $issues[] = [
-                'description' => "{$currentYear} financial year has not been configured", 
+                'description' => "{$currentYear} financial year has not been configured",
                 'route' => 'settings.financial-months'
             ];
             Log::error("{$currentYear} FINANCIAL YEAR DOES NOT EXIST");
@@ -159,10 +158,17 @@ trait CheckReturnConfigurationTrait
             // Ignore TZS currency as rate will be always 1
             if ($currency->iso != 'TZS') {
 
-                $currencyRate      = ExchangeRate::where('currency', $currency->iso)
-                ->whereRaw("TO_CHAR(exchange_date, 'mm') = TO_CHAR(SYSDATE, 'mm')
-                AND TO_CHAR(exchange_date, 'yyyy') = TO_CHAR(SYSDATE, 'yyyy')")
-                ->first();
+                if (config('database.default') == 'mysql') {
+
+                    $currencyRate = ExchangeRate::query()
+                        ->where('exchange_date', '=', Carbon::now()->toDateString())
+                        ->where('currency', $currency->iso)->first();
+                } else {
+                    $currencyRate = ExchangeRate::where('currency', $currency->iso)
+                        ->whereRaw("TO_CHAR(exchange_date, 'mm') = TO_CHAR(SYSDATE, 'mm')
+                            AND TO_CHAR(exchange_date, 'yyyy') = TO_CHAR(SYSDATE, 'yyyy')")
+                        ->first();
+                }
 
                 // If no exchange rate add to currencies_statuses
                 if (!$currencyRate) {

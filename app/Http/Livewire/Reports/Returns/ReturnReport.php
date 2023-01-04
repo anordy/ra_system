@@ -28,7 +28,7 @@ class ReturnReport extends Component
     public $optionTaxTypes;
     public $optionReportTypes;
     public $optionFilingTypes;
-    public $optionPaymentReportTypes;
+    public $optionPaymentTypes;
     public $showPreviewTable = false;
     public $activateButtons = false;
     public $optionVatTypes;
@@ -46,9 +46,14 @@ class ReturnReport extends Component
     public $range_start;
     public $range_end;
     public $vat_type = 'All-VAT-Returns';
+    public $showMoreFilters = false;
+    public $startMonth;
+    public $endMonth;
+    public $hasData;
 
     //extra filters
     public $optionTaxRegions = [];
+    public $selectedTaxReginIds=[];
     public $regions;
     public $districts;
     public $wards;

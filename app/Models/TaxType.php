@@ -45,7 +45,7 @@ class TaxType extends Model implements Auditable
     public const AIRBNB = 'hotel-airbnb';
 
     protected $fillable = [
-        'name',
+        'name', 'gfs_code', 'is_approved', 'is_updated'
     ];
 
     public function landLeases()
