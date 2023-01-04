@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\SendMail;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserOtp;
@@ -56,6 +57,12 @@ class LoginController extends Controller
 
         $attempts = $this->hasTooManyLoginAttempts($user);
         if ($attempts) {
+            $message = 'We have detected multiple login attempts on your account. For security purposes, we have temporarily disabled your account. If you believe this is an error, please contact ZIDRAS support immediately.';
+            $payload = [
+                'email' => $request['email'],
+                'message' => $message,
+            ];
+            event(new SendMail('too-many-login-attempts', $payload));
             return $this->sendLockoutResponse($user);
         }
 

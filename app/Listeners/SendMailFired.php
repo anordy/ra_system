@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Jobs\User\TooManyLoginAttempts;
 use App\Models\UserOtp;
 use App\Events\SendMail;
 use App\Models\Business;
@@ -185,6 +186,8 @@ class SendMailFired
             SendRegistrationEmail::dispatch($event->tokenId);
         } else if ($event->service === 'taxpayer-amendment-notification') {
             TaxpayerAmendmentNotificationEmail::dispatch($event->tokenId);
+        } else if ($event->service === 'too-many-login-attempts'){
+            TooManyLoginAttempts::dispatch($event->tokenId);
         }
     }
 }
