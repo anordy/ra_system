@@ -10,6 +10,7 @@ use App\Models\BusinessUpdate;
 use App\Models\Currency;
 use App\Models\District;
 use App\Models\Region;
+use App\Models\Street;
 use App\Models\Taxpayer;
 use App\Models\Ward;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -51,6 +52,8 @@ class ShowChanges extends Component
             return Bank::find($id)->name;
         } else if ($type == 'account_type_id') {
             return AccountType::find($id)->name;
+        } else if ($type == 'street_id') {
+            return Street::find($id)->name;
         }
     }
 

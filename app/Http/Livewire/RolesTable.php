@@ -83,23 +83,28 @@ class RolesTable extends DataTableComponent
                         return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
                         HTML;
+                    } elseif ($value == 2) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge danger p-2" >Rejected</span>
+                        HTML;
                     }
                 })
                 ->html(),
             Column::make('Action', 'id')
-                ->format(function ($value) {
+                ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-
-                    if (Gate::allows('setting-role-edit')) {
-                        $edit =  <<< HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                            HTML;
-                    }
-                    if (Gate::allows('setting-role-delete')) {
-                        $delete =  <<< HTML
-                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                            HTML;
+                    if ($row->is_approved == 1) {
+                        if (Gate::allows('setting-role-edit')) {
+                            $edit =  <<< HTML
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                HTML;
+                        }
+                        if (Gate::allows('setting-role-delete')) {
+                            $delete =  <<< HTML
+                                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                HTML;
+                        }
                     }
 
                     return $edit . $delete;
@@ -135,6 +140,10 @@ class RolesTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $role = Role::find($data->id);
+            if ($role->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
             if (!$this->checkRelation($role, $role->id))
             {
                 $this->alert('error', DualControl::RELATION_MESSAGE,  ['timer'=>4000]);

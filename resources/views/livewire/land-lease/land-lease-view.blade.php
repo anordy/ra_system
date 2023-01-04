@@ -68,7 +68,7 @@
                             <div class="col-md-3 mb-3">
                                 <span class="font-weight-bold text-uppercase">Street</span>
                                 <p class="my-1">
-                                    {{ $landLease->businessLocation->street }}
+                                    {{ $landLease->businessLocation->street->name ?? 'N/A' }}
                                 </p>
                             </div>
                         </div>

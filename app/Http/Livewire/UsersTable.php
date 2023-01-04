@@ -124,20 +124,25 @@ class UsersTable extends DataTableComponent
                     $delete = '';
                     $mail = '';
 
-                    if (Gate::allows('setting-user-edit')) {
-                        $edit = <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                                HTML;
+                    if ($row->is_approved == 1) {
+                        if (Gate::allows('setting-user-edit')) {
+                            $edit = <<< HTML
+                                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                    HTML;
+                        }
                     }
                     if (Gate::allows('setting-user-change-password')) {
                         $changePwd = <<< HTML
                                     <button class="btn btn-warning btn-sm" onclick="Livewire.emit('showModal', 'user-change-password-modal',$value)"><i class="fa fa-key"></i> </button>
                                 HTML;
                     }
-                    if (Gate::allows('setting-user-delete') && $value != auth()->user()->id) {
-                        $delete = <<< HTML
-                                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                                HTML;
+
+                    if ($row->is_approved == 1) {
+                        if (Gate::allows('setting-user-delete') && $value != auth()->user()->id) {
+                            $delete = <<< HTML
+                                        <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                    HTML;
+                        }
                     }
 
                     if ($row->is_first_login == 1) {
@@ -153,10 +158,12 @@ class UsersTable extends DataTableComponent
 
             Column::make('Role Action', 'role.id')
                 ->format(function ($value, $row) {
-                    if (Gate::allows('setting-user-change-role')) {
-                        return <<< HTML
-                                    <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $row->id)"><i class="fa fa-user-tag"></i> </button>
-                                HTML;
+                    if ($row->is_approved == 1) {
+                        if (Gate::allows('setting-user-change-role')) {
+                            return <<< HTML
+                                        <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $row->id)"><i class="fa fa-user-tag"></i> </button>
+                                    HTML;
+                        }
                     }
                 })
                 ->html(true),
@@ -232,6 +239,10 @@ class UsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
+            if ($user->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
             if ($user->status == 1) {
                 $this->triggerAudit(User::class, Audit::DEACTIVATED, 'deactivate_user', $user->id, ['status' => 1], ['status' => 0]);
                 $this->triggerDualControl(get_class($user), $user->id, DualControl::DEACTIVATE, 'deactivating user', json_encode(['status' => 1]), json_encode(['status' => 0]));
@@ -266,6 +277,10 @@ class UsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
+            if ($user->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
             $this->triggerDualControl(get_class($user), $user->id, DualControl::DELETE, 'deleting user');
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return;

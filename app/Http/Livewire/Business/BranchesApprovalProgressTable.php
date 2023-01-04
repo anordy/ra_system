@@ -44,8 +44,8 @@ class BranchesApprovalProgressTable extends DataTableComponent
             Column::make("District", "pinstance.district.name")
                 ->label(fn ($row) => $row->pinstance->district->name ?? '')
                 ->searchable(),
-            Column::make("Street", "pinstance.street")
-                ->label(fn ($row) => $row->pinstance->street ?? '')
+            Column::make("Street", "pinstance.street.name")
+                ->label(fn ($row) => $row->pinstance->street->name ?? '')
                 ->searchable(),
             Column::make('From State', 'from_place')
                 ->format(fn ($value) => strtoupper($value))

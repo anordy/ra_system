@@ -93,7 +93,7 @@ class StreetTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-                    if ($row->is_approved == 1 || $row->is_approved == 2) {
+                    if ($row->is_approved == 1) {
                         if (Gate::allows('setting-street-edit')) {
                             $edit = <<<HTML
                                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'street-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
@@ -137,8 +137,12 @@ class StreetTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $ward = Street::find($data->id);
-            $this->triggerDualControl(get_class($ward), $ward->id, DualControl::DELETE, 'deleting ward');
+            $street = Street::find($data->id);
+            if ($street->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                return;
+            }
+            $this->triggerDualControl(get_class($street), $street->id, DualControl::DELETE, 'deleting ward');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;

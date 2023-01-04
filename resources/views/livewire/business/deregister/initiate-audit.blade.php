@@ -34,7 +34,7 @@
                             @if ($locations)
                                 @foreach ($locations as $location)
                                     <option value="{{ $location->id }}">
-                                        {{ $location->is_headquarter ? $location->street . ' - HQ' : $location->street }}
+                                        {{ $location->is_headquarter ? $location->street->name . ' - HQ' : $location->street->name }}
                                     </option>
                                 @endforeach
                             @endif

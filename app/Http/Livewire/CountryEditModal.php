@@ -39,6 +39,10 @@ class CountryEditModal extends Component
         }
 
         $this->validate();
+        if ($this->country->is_approved == DualControl::NOT_APPROVED) {
+            $this->alert('error', 'The updated module has not been approved already');
+            return;
+        }
         try {
             $payload  = [
                 'code' => $this->code,

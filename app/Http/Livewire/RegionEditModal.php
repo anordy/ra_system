@@ -39,6 +39,10 @@ class RegionEditModal extends Component
         }
 
         $this->validate();
+        if ($this->region->is_approved == DualControl::NOT_APPROVED) {
+            $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+            return;
+        }
         DB::beginTransaction();
         try {
             $payload = [

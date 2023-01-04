@@ -14,7 +14,7 @@
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Pending Approval</a>
                 <a href="#tab2" class="nav-item nav-link font-weight-bold">Confirmed Changes</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Rejected Changes</a>
-                <a href="#tab4" class="nav-item nav-link font-weight-bold">Pending Correction</a>
+                <a href="#tab4" class="nav-item nav-link font-weight-bold">Tempered Information</a>
             </nav>
             <div class="tab-content px-2 card pt-3 pb-2">
                 <div id="tab1" class="tab-pane fade active show m-2">
@@ -27,7 +27,7 @@
                     <livewire:taxpayers.details-amendment-request-table status='rejected'></livewire:taxpayers.details-amendment-request-table>
                 </div>
                 <div id="tab4" class="tab-pane fade m-2">
-                    <livewire:taxpayers.details-amendment-request-table status='correction'></livewire:taxpayers.details-amendment-request-table>
+                    <livewire:taxpayers.details-amendment-request-table status='tempered'></livewire:taxpayers.details-amendment-request-table>
                 </div>
             </div>
         </div>
