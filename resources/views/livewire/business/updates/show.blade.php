@@ -201,26 +201,6 @@
                                 @endif
                             </tr>
                             <tr>
-                                <th>Physical Address</th>
-                                <td>{{ $old_values->business_location->physical_address }}</td>
-                                <td>{{ $new_values->business_location->physical_address }}</td>
-                                @if ($old_values->business_location->physical_address == $new_values->business_location->physical_address)
-                                    <td class="table-primary">Unchanged</td>
-                                @else
-                                    <td class="table-success">Changed</td>
-                                @endif
-                            </tr>
-                            <tr>
-                                <th>Street</th>
-                                <td>{{ $old_values->business_location->street }}</td>
-                                <td>{{ $new_values->business_location->street }}</td>
-                                @if ($old_values->business_location->street == $new_values->business_location->street)
-                                    <td class="table-primary">Unchanged</td>
-                                @else
-                                    <td class="table-success">Changed</td>
-                                @endif
-                            </tr>
-                            <tr>
                                 <th>House No</th>
                                 <td>{{ $old_values->business_location->house_no }}</td>
                                 <td>{{ $new_values->business_location->house_no }}</td>
@@ -295,6 +275,19 @@
                                     <td class="table-success">Changed</td>
                                 @endif
                             </tr>
+                            @if ($old_values->business_location->street_id || $new_values->business_location->street_id)
+                            <tr>
+                                <th>Street</th>
+                                <td>{{ $old_values->business_location->street_id->name }}</td>
+                                <td>{{ $this->getNameById('street_id', $new_values->business_location->street_id) }}</td>
+                                @if ($old_values->business_location->street_id->name ==
+                                    $this->getNameById('street_id', $new_values->business_location->street_id))
+                                    <td class="table-primary">Unchanged</td>
+                                @else
+                                    <td class="table-success">Changed</td>
+                                @endif
+                            </tr>
+                            @endif
                             <tr>
                                 <th>Fax No</th>
                                 <td>{{ $old_values->business_location->fax ?? 'N/A' }}</td>
