@@ -6,6 +6,7 @@ use PDF;
 use App\Models\TaxType;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use App\Models\BusinessTaxType;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
@@ -47,14 +48,16 @@ class ChangeTaxType extends Mailable
             foreach ($business_locations as $location) {
 
                 if ($location->status == 'approved') {
-                    $taxType = TaxType::find($this->payload['tax_type']->tax_type_id);
-                    $tax = $taxType;
+                    $taxTypeId = $this->payload['tax_change']->to_tax_type_id;
+                    $tax = TaxType::find($taxTypeId);
+                    $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
+
+                    $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
 
                     $code = 'ZIN: ' . $location->zin . ", " .
-                        'Business Name: ' . $location->business->name . ", " .
-                        'Tax Type: ' . $taxType->name . ", " .
-                        'Location: ' . "{$location->street}, {$location->district->name}, {$location->region->name}" . ", " .
-                        'Website: ' . 'https://uat.ubx.co.tz:8888/zrb_client/public/login';
+                    'Business Name: ' . $location->business->name . ", " .
+                    'Tax Type: ' . $tax->name . ", " .
+                    'Location: ' . "{$location->street}, {$location->district->name}, {$location->region->name}";
 
                     $result = Builder::create()
                         ->writer(new PngWriter())
@@ -75,14 +78,29 @@ class ChangeTaxType extends Mailable
 
                     $dataUri = $result->getDataUri();
 
-                    $pdf = PDF::loadView('business.certificate', compact('location', 'taxType', 'dataUri', 'tax'));
+                    $pdf = PDF::loadView('business.tax-change-certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber'));
+
                     $pdf->setPaper('a4', 'portrait');
                     $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
-                    $email->attachData($pdf->output(), "{$this->payload['tax_change']->business->name}_{$taxType->name}_certificate.pdf");
+                    $email->attachData($pdf->output(), "{$location->business->name}_{$location->name}_{$taxType->name}_certificate.pdf");
                 }
             }
             return $email;
         }
+    }
+
+    public function generateCertificateNumber($location, $taxTypePrefix){
+        $certificateNumber = $location->business->ztn_number;
+        $taxRegionPrefix = $location->taxRegion->prefix;
+        $ztn_location_number = $location->ztn_location_number;
+
+        //If business is hotel and tax type is VAT change to Hotel VAT Prefix
+        if ($location->business->business_type == 'hotel' && $taxTypePrefix == 'A') {
+            $taxTypePrefix = 'B';
+        }
+        
+        $certificateNumber = $certificateNumber.'-'.$taxRegionPrefix.$taxTypePrefix.$ztn_location_number;
+        return $certificateNumber;
     }
 }
