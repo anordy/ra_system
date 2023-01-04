@@ -31,7 +31,7 @@
             top: 33.5%;
         }
         .taxpayer-name {
-            font-size: 1.5em;
+            font-size: 1.6em;
             top: 41%;
         }
         .reg-no {
@@ -47,8 +47,8 @@
             top: 55.5%;
         }
         .tax-types {
-            font-size: 1.1em;
-            top: 62%;
+            font-size: 1.6em;
+            top: 61.1%;
         }
         .location {
             font-size: 1.2em;
@@ -98,14 +98,14 @@
     <body>
         <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
         <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
-        <span class="embed taxpayer-name">{{ $location->business->tin ?? '' }}</span>
+        <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
         @if($location->vrn)
             <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
             <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
         @else
             <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
         @endif
-        <span class="embed tax-types">{{ $tax->name }}</span>
+        <span class="embed tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
         <span class="embed location">
             {{ $location->street->name }}, {{ $location->region->location }}
         </span>
