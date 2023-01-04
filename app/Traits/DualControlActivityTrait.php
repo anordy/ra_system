@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\DualControl;
+use App\Models\DualControlHistory;
 use App\Models\Role;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TransactionFee;
@@ -32,17 +33,13 @@ trait DualControlActivityTrait
             'status' => 'pending',
         ];
 
-        DualControl::updateOrCreate($payload);
+        $result = DualControl::updateOrCreate($payload);
+
+        $this->updateHistory($model, $modelId, $result->id,  'pending', null );
         $data = $model::findOrFail($modelId);
-
         if ($action == DualControl::EDIT || $action == DualControl::DELETE) {
-            if ($data->is_approved == DualControl::NOT_APPROVED) {
-                $this->alert('error', 'The updated module has not been approved already');
-                return;
-            }
             $data->update(['is_updated' => DualControl::NOT_APPROVED]);
-
-            if ($model == DUalControl::USER) {
+            if ($model == DualControl::USER) {
                 $message = 'We are writing to inform you that some of your ZRB staff personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                 $this->sendEmailToUser($data, $message);
             }
@@ -218,5 +215,26 @@ trait DualControlActivityTrait
 
         event(new SendSms('dual-control-update-user-info-notification', $smsPayload));
         event(new SendMail('dual-control-update-user-info-notification', $emailPayload));
+    }
+
+    public function updateHistory(
+        $controllable_type,
+        $controllable_id,
+        $dual_control_id,
+        $status,
+        $comment
+
+    )
+    {
+        $payload = [
+            'controllable_type' => $controllable_type,
+            'controllable_id' => $controllable_id,
+            'dual_control_id' => $dual_control_id,
+            'approved_at' => now(),
+            'approved_by' => Auth::id(),
+            'status' => $status,
+            'comment' => $comment,
+        ];
+        DualControlHistory::create($payload);
     }
 }

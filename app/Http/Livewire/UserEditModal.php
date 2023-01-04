@@ -55,6 +55,11 @@ class UserEditModal extends Component
         }
 
         $this->validate();
+
+        if ($this->user->is_approved == DualControl::NOT_APPROVED) {
+            $this->alert('error', 'The updated module has not been approved already');
+            return;
+        }
         DB::beginTransaction();
         try {
             // Verify previous user information

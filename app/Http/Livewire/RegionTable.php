@@ -139,6 +139,10 @@ class RegionTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $region = Region::find($data->id);
+            if ($region->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                return;
+            }
             $this->triggerDualControl(get_class($region), $region->id, DualControl::DELETE, 'deleting region');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);

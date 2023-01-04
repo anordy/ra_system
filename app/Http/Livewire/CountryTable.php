@@ -132,6 +132,10 @@ class CountryTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $country = Country::find($data->id);
+            if ($country->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                return;
+            }
             $this->triggerDualControl(get_class($country), $country->id, DualControl::DELETE, 'deleting country');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);

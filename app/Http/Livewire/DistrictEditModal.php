@@ -40,6 +40,10 @@ class DistrictEditModal extends Component
         }
 
         $this->validate();
+        if ($this->district->is_approved == DualControl::NOT_APPROVED) {
+            $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+            return;
+        }
         DB::beginTransaction();
         try {
             $payload = [

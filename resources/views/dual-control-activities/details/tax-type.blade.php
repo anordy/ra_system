@@ -2,7 +2,7 @@
 
     <div class="card">
         <div class="card-header">
-            Tax Types Detais
+            Tax Types Details
         </div>
 
         <div class="card-body">

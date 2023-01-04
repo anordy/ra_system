@@ -135,6 +135,10 @@ class WardTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $ward = Ward::find($data->id);
+            if ($ward->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                return;
+            }
             $this->triggerDualControl(get_class($ward), $ward->id, DualControl::DELETE, 'deleting ward');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);

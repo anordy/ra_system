@@ -38,6 +38,10 @@ class RoleEditModal extends Component
         }
 
         $this->validate();
+        if ($this->role->is_approved == DualControl::NOT_APPROVED) {
+            $this->alert('error', 'The updated module has not been approved already');
+            return;
+        }
         DB::beginTransaction();
         try {
             $payload = [

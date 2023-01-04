@@ -29,6 +29,20 @@ class UserRoleEditModal extends Component
     public $user;
     public $old_values;
 
+    public function mount($id)
+    {
+        $this->roles = Role::all();
+        $user = User::find($id);
+        $this->user = $user;
+        $this->role = $user->role_id;
+        $this->old_values = [
+            'role_id' => $this->role,
+            'fname' => $this->user->fname,
+            'lname' => $this->user->lname,
+            'email' => $this->user->email,
+            'phone' => $this->user->phone,
+        ];
+    }
 
     protected function rules()
     {
@@ -44,6 +58,11 @@ class UserRoleEditModal extends Component
         }
 
         $this->validate();
+
+        if ($this->user->is_approved == DualControl::NOT_APPROVED) {
+            $this->alert('error', 'The updated module has not been approved already');
+            return;
+        }
         DB::beginTransaction();
         try {
             $payload = [
@@ -71,20 +90,6 @@ class UserRoleEditModal extends Component
         }
     }
 
-    public function mount($id)
-    {
-        $this->roles = Role::all();
-        $user = User::find($id);
-        $this->user = $user;
-        $this->role = $user->role_id;
-        $this->old_values = [
-            'role_id' => $this->role,
-            'fname' => $this->user->fname,
-            'lname' => $this->user->lname,
-            'email' => $this->user->email,
-            'phone' => $this->user->phone,
-        ];
-    }
     public function render()
     {
         return view('livewire.user-role-edit-modal');

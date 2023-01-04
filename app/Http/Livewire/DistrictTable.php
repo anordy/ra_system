@@ -129,6 +129,10 @@ class DistrictTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $district = District::find($data->id);
+            if ($district->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                return;
+            }
             $this->triggerDualControl(get_class($district), $district->id, DualControl::DELETE, 'deleting district');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
