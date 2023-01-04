@@ -55,17 +55,13 @@ class DailyReOpenTempBusinessCommand extends Command
      */
     protected function reopenTempClosedBusinesses()
     {
-
         $closed_businesses = BusinessTempClosure::where('status', 'approved')
             ->whereRaw("CURRENT_DATE - CAST(opening_date as date) > 0")
             ->get();
 
-        DB::beginTransaction();
-
-        try {
-
-            foreach ($closed_businesses as $closed_business) {
-
+        foreach ($closed_businesses as $closed_business) {
+            DB::beginTransaction();
+            try {
                 if ($closed_business->closure_type == 'all') {
                     // Update main business
                     $closed_business->business->status = BusinessStatus::APPROVED;
@@ -77,7 +73,6 @@ class DailyReOpenTempBusinessCommand extends Command
                         $location->status = BranchStatus::APPROVED;
                         $location->save();
                     }
-
                 }
 
                 if ($closed_business->closure_type == 'location') {
@@ -89,17 +84,15 @@ class DailyReOpenTempBusinessCommand extends Command
                 $closed_business->status = 'reopened';
                 $closed_business->reopening_date = Carbon::now()->toDateString();
                 $closed_business->save();
-            
+
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::channel('dailyJobs')->info('Daily reopen business process ended with error');
+                Log::channel('dailyJobs')->error($e);
             }
 
-            DB::commit();
             Log::channel('dailyJobs')->info("Daily reopen business process ended");
-        } catch(Exception $e) {
-            DB::rollBack();
-            Log::channel('dailyJobs')->info('Daily reopen business process ended with error');
-            Log::channel('dailyJobs')->error($e);
         }
-
-        
     }
 }

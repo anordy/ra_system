@@ -24,11 +24,35 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        /**
+         * For Cron Jobs use:
+         *   NOTE: JOBS MUST BE PLACED SEQUENTIALLY
+         *   CRON FORMAT: 
+         * 
+         * *    *    *    *    *
+         *    -    -    -    -    -
+         *  |    |    |    |    |
+         *  |    |    |    |    |
+         *  |    |    |    |    +----- day of week (0 - 7) (Sunday=0 or 7)
+         *  |    |    |    +---------- month (1 - 12)
+         *  |    |    +--------------- day of month (1 - 31)
+         *  |    +-------------------- hour (0 - 23)
+         *  +------------------------- min (0 - 59)
+         *   SAMPLE CODE: $schedule->command('daily:debt')->cron('55 12 04 01 *')->runInBackground();
+         */
         $schedule->command('daily:debt')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:reopen-business')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:debt-penalty')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:debt-notice')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:tax-effective-date')->dailyAt('00:00')->runInBackground();
+
+        // RUNNING AT SPECIFIC TIME & DAY
+        // $schedule->command('daily:debt')->cron('51 14 04 01 *')->runInBackground();
+        // $schedule->command('daily:reopen-business')->cron('51 14 04 01 *')->runInBackground();
+        // $schedule->command('daily:debt-penalty')->cron('51 14 04 01 *')->runInBackground();
+        // $schedule->command('daily:debt-notice')->cron('51 14 04 01 *')->runInBackground();
+        // $schedule->command('daily:tax-effective-date')->cron('51 14 04 01 *')->runInBackground();
+
     }
 
     /**
@@ -38,7 +62,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
