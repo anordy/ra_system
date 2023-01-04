@@ -78,20 +78,21 @@ class TaxTypesTable extends DataTableComponent
                 })
                 ->html(),
             Column::make('Action', 'id')
-                ->format(function ($value) {
+                ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
+                    if ($row->is_approved == 1) {
+                        if (Gate::allows('setting-tax-type-edit')) {
+                            $edit =  <<< HTML
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'tax-type-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                HTML;
+                        }
 
-                    if (Gate::allows('setting-tax-type-edit')) {
-                        $edit =  <<< HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'tax-type-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                            HTML;
-                    }
-
-                    if (Gate::allows('setting-tax-type-delete')) {
-                        $delete =  <<< HTML
-                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                            HTML;
+                        if (Gate::allows('setting-tax-type-delete')) {
+                            $delete =  <<< HTML
+                                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                HTML;
+                        }
                     }
                     return $edit . $delete;
                 })

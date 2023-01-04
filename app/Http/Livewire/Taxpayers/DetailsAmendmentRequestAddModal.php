@@ -58,11 +58,11 @@ class DetailsAmendmentRequestAddModal extends Component
 
     protected $rules = [
         'first_name' => 'required',
-        'middle_name' => 'required',
+        'middle_name' => 'nullable',
         'last_name' => 'required',
-        'email' => 'required',
-        'mobile' => 'required',
-        'alt_mobile' => 'required',
+        'email' => 'nullable:email|unique:taxpayers,email',
+        'mobile' => 'required|unique:taxpayers,mobile|size:10',
+        'alt_mobile' => 'nullable|size:10',
         'physical_address' => 'required',
     ];
 

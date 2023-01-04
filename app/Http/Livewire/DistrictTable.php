@@ -74,6 +74,10 @@ class DistrictTable extends DataTableComponent
                         return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
                         HTML;
+                    } elseif ($value == 2) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge danger p-2" >Rejected</span>
+                        HTML;
                     }
                 })
                 ->html(),
@@ -82,7 +86,7 @@ class DistrictTable extends DataTableComponent
                     $edit = '';
                     $delete = '';
 
-                    if ($row->is_approved == 1 || $row->is_approved == 2) {
+                    if ($row->is_approved == 1) {
                         if (Gate::allows('setting-district-edit')) {
                             $edit = <<<HTML
                                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'district-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
