@@ -239,6 +239,10 @@ class UsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
+            if ($user->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
             if ($user->status == 1) {
                 $this->triggerAudit(User::class, Audit::DEACTIVATED, 'deactivate_user', $user->id, ['status' => 1], ['status' => 0]);
                 $this->triggerDualControl(get_class($user), $user->id, DualControl::DEACTIVATE, 'deactivating user', json_encode(['status' => 1]), json_encode(['status' => 0]));
@@ -273,6 +277,10 @@ class UsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
+            if ($user->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
             $this->triggerDualControl(get_class($user), $user->id, DualControl::DELETE, 'deleting user');
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return;

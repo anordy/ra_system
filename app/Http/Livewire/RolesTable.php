@@ -140,6 +140,10 @@ class RolesTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $role = Role::find($data->id);
+            if ($role->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', 'The updated module has not been approved already');
+                return;
+            }
             if (!$this->checkRelation($role, $role->id))
             {
                 $this->alert('error', DualControl::RELATION_MESSAGE,  ['timer'=>4000]);
