@@ -69,7 +69,7 @@ class TransactionFeesEditModal extends Component
                 'created_by' => Auth::id()
             ]);
 
-            $this->triggerDualControl(get_class($this->data), $this->data->id, DualControl::EDIT, 'editing transaction fee', $this->old_values, $this->new_values);
+            $this->triggerDualControl(get_class($this->data), $this->data->id, DualControl::EDIT, 'Editing transaction fee', $this->old_values, $this->new_values);
 
             $this->flash('success', 'Fee updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

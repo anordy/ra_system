@@ -56,7 +56,7 @@ class TaxTypeEditModal extends Component
                 'gfs_code' => $this->gfs_code
             ];
             
-            $this->triggerDualControl(get_class($this->taxType), $this->taxType->id, DualControl::EDIT, 'Editing tax type '.$this->name, json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->taxType), $this->taxType->id, DualControl::EDIT, 'Editing tax type '.$this->taxType->name, json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
