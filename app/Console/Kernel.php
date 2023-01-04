@@ -29,8 +29,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('daily:debt-penalty')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:debt-notice')->dailyAt('00:00')->runInBackground();
         $schedule->command('daily:tax-effective-date')->dailyAt('00:00')->runInBackground();
-        $schedule->command('daily:check-taxpayer-password-expire')->dailyAt('00:00')->runInBackground();
-        $schedule->command('daily:check-user-password-expire')->dailyAt('00:00')->runInBackground();
     }
 
     /**

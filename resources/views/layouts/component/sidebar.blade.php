@@ -32,14 +32,14 @@
                             <a href="{{ route('taxpayers.taxpayer.index') }}">Taxpayers</a>
                         </li>
                     @endcan
+                    @can('taxpayer-amendment-requests-view')
+                        <li class="{{ request()->is('taxpayers-amendment*') ? 'active' : '' }}">
+                            <a href="{{ route('taxpayers-amendment.index') }}">Taxpayer Amendments</a>
+                        </li>
+                    @endcan
                     @can('kyc_view')
                         <li class="{{ request()->is('taxpayers/registrations*') ? 'active' : '' }}">
                             <a href="{{ route('taxpayers.registrations.index') }}">KYC</a>
-                        </li>
-                    @endcan
-                    @can('taxpayer-amendment-requests-view')
-                        <li class="{{ request()->is('taxpayers-amendment*') ? 'active' : '' }}">
-                            <a href="{{ route('taxpayers-amendment.index') }}">Taxpayer Details Amendment Requests</a>
                         </li>
                     @endcan
                 </ul>

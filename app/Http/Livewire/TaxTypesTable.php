@@ -43,6 +43,9 @@ class TaxTypesTable extends DataTableComponent
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
+            Column::make('GFS Code', 'gfs_code')
+                ->sortable()
+                ->searchable(),
             Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
                     if ($value == 0) {

@@ -20,6 +20,7 @@ class VatReturnTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects(['business_location_id']);
     }
 
     public function filterData($data)
@@ -50,8 +51,11 @@ class VatReturnTable extends DataTableComponent
             Column::make('Business Name', 'business.name')
                 ->sortable()->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
-            ->sortable()
-            ->searchable(),
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->businessLocation->name}";
+                }),
             Column::make('Total Input Tax', 'total_input_tax')
                 ->format(function ($value, $row) {
                     return number_format($row->total_input_tax, 2);

@@ -96,6 +96,8 @@
                 @include('dual-control-activities.details.exchange-rate')
             @elseif ($result->controllable_type === \App\Models\DualControl::EDUCATION)
                 @include('dual-control-activities.details.education-level')
+            @elseif ($result->controllable_type === \App\Models\DualControl::TAXTYPE)
+                @include('dual-control-activities.details.tax-type')
             @endif
 
 

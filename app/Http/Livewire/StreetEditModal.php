@@ -78,7 +78,7 @@ class StreetEditModal extends Component
                 'name' => $this->name,
                 'ward_id' => $this->ward_id,
             ];
-            $this->triggerDualControl(get_class($this->street), $this->street->id, DualControl::EDIT, 'editing street', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->street), $this->street->id, DualControl::EDIT, 'editing street '.$this->street->name, json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.street.index');

@@ -54,7 +54,7 @@ class ReconReportTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return $value ? $value : 'Pending';
+                    return $value ? number_format($value) : 'Pending';
                 }),
             Column::make('Tax Type', 'tax_type_id')
                 ->label(fn ($row) => $row->taxType->name ?? 'N/A')
