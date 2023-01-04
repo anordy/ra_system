@@ -78,7 +78,7 @@ class ChangeTaxType extends Mailable
 
                     $dataUri = $result->getDataUri();
 
-                    $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber'));
+                    $pdf = PDF::loadView('business.tax-change-certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber'));
 
                     $pdf->setPaper('a4', 'portrait');
                     $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
