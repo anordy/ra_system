@@ -75,9 +75,9 @@ class DailyDebtCalculateCommand extends Command
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
-        DB::beginTransaction();
-        try {
-            foreach ($tax_returns as $tax_return) {
+        foreach ($tax_returns as $tax_return) {
+            DB::beginTransaction();
+            try {
                 /**
                  * Mark return process as debt if days_passed is less than 30
                  * 1. return_category from normal to debt
@@ -101,15 +101,15 @@ class DailyDebtCalculateCommand extends Command
                     ]);
                     $tax_return->return->update(['return_category' => ReturnCategory::OVERDUE]);
                 }
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::channel('dailyJobs')->info('Daily Debt calculation process ended with error');
+                Log::channel('dailyJobs')->error($e);
             }
-
-            DB::commit();
-            Log::channel('dailyJobs')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process ended");
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::channel('dailyJobs')->info('Daily Debt calculation process ended with error');
-            Log::channel('dailyJobs')->error($e);
         }
+
+        Log::channel('dailyJobs')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process ended");
     }
 
     /**
@@ -125,9 +125,9 @@ class DailyDebtCalculateCommand extends Command
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
-        DB::beginTransaction();
-        try {
-            foreach ($tax_assessments as $tax_assessment) {
+        foreach ($tax_assessments as $tax_assessment) {
+            DB::beginTransaction();
+            try {
                 /**
                  * Mark assessment process as debt if days_passed is less than 30
                  */
@@ -143,14 +143,13 @@ class DailyDebtCalculateCommand extends Command
                         'assessment_step' => ApplicationStep::OVERDUE
                     ]);
                 }
+                DB::commit();
+                Log::channel('dailyJobs')->info("Daily Debt marking for assessment process ended");
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::channel('dailyJobs')->info('Daily Debt marking for assessment process ended with error');
+                Log::channel('dailyJobs')->error($e);
             }
-
-            DB::commit();
-            Log::channel('dailyJobs')->info("Daily Debt marking for assessment process ended");
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::channel('dailyJobs')->info('Daily Debt marking for assessment process ended with error');
-            Log::channel('dailyJobs')->error($e);
         }
     }
 

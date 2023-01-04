@@ -400,7 +400,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Street</span>
-                            <p class="my-1">{{ $location->street }}</p>
+                            <p class="my-1">{{ $location->street->name ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Physical Address</span>
