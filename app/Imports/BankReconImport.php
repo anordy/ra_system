@@ -45,7 +45,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                     // 'Payer Name' => $exploded[7]
 
                     // Compare control No's and save only if exists;
-                    if(ZmBill::where('control_number', $exploded[3])->exists()){
+                    if(!ZmBill::where('control_number', $exploded[3])->exists()){
                         $recon = BankRecon::create([
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
