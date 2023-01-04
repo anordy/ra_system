@@ -17,15 +17,6 @@ class BusinessFileTypesSeeder extends Seeder
      */
     public function run()
     {
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'title_deed',
-            'name' => 'Title deed or lease agreement',
-            'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::SOLE,
-            'is_required' => true,
-            'is_approved' => 1,
-        ]);
 
         BusinessFileType::updateOrCreate([
             'short_name' => 'license',
@@ -57,16 +48,6 @@ class BusinessFileTypesSeeder extends Seeder
         ]);
 
         BusinessFileType::updateOrCreate([
-            'short_name' => 'title_deed',
-            'name' => 'Title deed or lease agreement',
-            'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::PARTNERSHIP,
-            'is_required' => true,
-            'is_approved' => 1,
-        ]);
-
-        BusinessFileType::updateOrCreate([
             'short_name' => 'business_license',
             'name' => 'Business License',
             'file_type' => FileType::PDF,
@@ -89,16 +70,6 @@ class BusinessFileTypesSeeder extends Seeder
         BusinessFileType::updateOrCreate([
             'short_name' => 'memorandum',
             'name' => 'Memorandum and Article of Association',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::COMPANY,
-            'is_required' => true,
-            'is_approved' => 1,
-        ]);
-
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'title_deed',
-            'name' => 'Title deed or lease agreement',
-            'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::COMPANY,
             'is_required' => true,
@@ -146,16 +117,6 @@ class BusinessFileTypesSeeder extends Seeder
         BusinessFileType::updateOrCreate([
             'short_name' => 'application_letter',
             'name' => 'Application Letter for Registration',
-            'file_type' => FileType::PDF,
-            'business_type' => BusinessCategory::NGO,
-            'is_required' => true,
-            'is_approved' => 1,
-        ]);
-
-        BusinessFileType::updateOrCreate([
-            'short_name' => 'title_deed',
-            'name' => 'Title deed or lease agreement',
-            'description' => 'Title deed for the premises or lease agreement of which stamp duty has been paid.',
             'file_type' => FileType::PDF,
             'business_type' => BusinessCategory::NGO,
             'is_required' => true,

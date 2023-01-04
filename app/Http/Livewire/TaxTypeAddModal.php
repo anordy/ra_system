@@ -43,7 +43,7 @@ class TaxTypeAddModal extends Component
                 'code' => $code,
                 'name' => $this->name,
             ]);
-            $this->triggerDualControl(get_class($tax_type), $tax_type->id, DualControl::ADD, 'adding tax type');
+            $this->triggerDualControl(get_class($tax_type), $tax_type->id, DualControl::ADD, 'adding tax type '.$this->name);
             DB::commit();
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){

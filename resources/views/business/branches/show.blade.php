@@ -37,7 +37,7 @@
                                     @if ($location->zin)
                                         <div class="col-md-4 mb-3">
                                             <span class="font-weight-bold text-uppercase">ZIN</span>
-                                            <p class="my-1">{{ $location->zin }}</p>
+                                            <p class="my-1">{{ $location->zin ?? 'N/A' }}</p>
                                         </div>
                                     @endif
                                     @if ($location->taxRegion)
@@ -64,7 +64,7 @@
                                     @endif
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Electric Metre No.</span>
-                                        <p class="my-1">{{ $location->meter_no }}</p>
+                                        <p class="my-1">{{ $location->meter_no ?? 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Region.</span>
@@ -80,11 +80,7 @@
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Street</span>
-                                        <p class="my-1">{{ $location->street }}</p>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <span class="font-weight-bold text-uppercase">Physical Address</span>
-                                        <p class="my-1">{{ $location->physical_address }}</p>
+                                        <p class="my-1">{{ $location->street->name }}</p>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Date of Commencing</span>
@@ -102,7 +98,7 @@
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">House No.</span>
-                                        <p class="my-1">{{ $location->house_no }}</p>
+                                        <p class="my-1">{{ $location->house_no ?? 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Contact Name</span>
@@ -128,11 +124,11 @@
                                     @endif
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Latitude</span>
-                                        <p class="my-1">{{ $location->latitude }}</p>
+                                        <p class="my-1">{{ $location->latitude ?? 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Longitude</span>
-                                        <p class="my-1">{{ $location->longitude }}</p>
+                                        <p class="my-1">{{ $location->longitude ?? 'N/A' }}</p>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <span class="font-weight-bold text-uppercase">Branch Status</span>

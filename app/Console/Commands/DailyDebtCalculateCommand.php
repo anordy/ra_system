@@ -62,7 +62,6 @@ class DailyDebtCalculateCommand extends Command
     protected function markReturnAsDebt($financialMonth)
     {
         Log::channel('dailyJobs')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process started");
-        DB::beginTransaction();
 
         /**
          * Get all tax returns which are normal
@@ -76,6 +75,7 @@ class DailyDebtCalculateCommand extends Command
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
+        DB::beginTransaction();
         try {
             foreach ($tax_returns as $tax_return) {
                 /**
@@ -118,7 +118,6 @@ class DailyDebtCalculateCommand extends Command
     protected function markAssessmentAsDebt()
     {
         Log::channel('dailyJobs')->info("Daily Debt marking for assessment process started");
-        DB::beginTransaction();
 
         $tax_assessments = TaxAssessment::selectRaw('tax_assessments.*, CURRENT_DATE - CAST(payment_due_date as date) as days_passed')
             ->whereIn('assessment_step', [ReturnCategory::NORMAL, ReturnCategory::DEBT])
@@ -126,6 +125,7 @@ class DailyDebtCalculateCommand extends Command
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE])
             ->get();
 
+        DB::beginTransaction();
         try {
             foreach ($tax_assessments as $tax_assessment) {
                 /**

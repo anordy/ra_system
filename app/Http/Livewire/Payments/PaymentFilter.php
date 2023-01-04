@@ -7,6 +7,7 @@ use App\Models\TaxType;
 use App\Models\ZmBill;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use PDF;
 
 class PaymentFilter extends Component
 {
@@ -20,7 +21,7 @@ class PaymentFilter extends Component
     public $range_start;
     public $range_end;
 
-    protected $rules =[
+    protected $rules = [
         'range_start' => 'required',
         'range_end' => 'required'
     ];
@@ -32,7 +33,7 @@ class PaymentFilter extends Component
         $this->range_start = date('Y-m-d', strtotime(now()));
         $this->range_end = date('Y-m-d', strtotime(now()));
     }
-    
+
     public function fillter()
     {
         $this->validate();
@@ -60,18 +61,29 @@ class PaymentFilter extends Component
             $filter->Where('currency', $data['currency']);
         }
         if (isset($data['range_start']) && isset($data['range_end'])) {
-            $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
+            $filter->WhereBetween('created_at', [$data['range_start'], $data['range_end']]);
         }
 
-        
-        $records  = $filter->where('status',PaymentStatus::PENDING)->orderBy('created_at', 'DESC')->get();
 
-        if($records->count() < 1){
-            $this->alert('error','No Data Found for selected options');
+        $records  = $filter->where('status', PaymentStatus::PENDING)->orderBy('created_at', 'DESC')->get();
+
+        if ($records->count() < 1) {
+            $this->alert('error', 'No Data Found for selected options');
             return;
         }
 
-        return redirect()->route('payments.pending.download.pdf',[encrypt($records),encrypt($data)]);
+        $fileName = 'pending_payments' . '_' . $data['currency'] . '.pdf';
+        $title = 'pending_payments' . '_' . $data['currency'] . '.pdf';
+
+        $parameters    = $data;
+        $pdf = PDF::loadView('exports.payments.pdf.payments', compact('records', 'title', 'parameters'));
+        $pdf->setPaper('a4', 'landscape');
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+        return response()->streamDownload(
+            fn () => print($pdf->output()),
+            $fileName
+        );
     }
 
     public function excel()

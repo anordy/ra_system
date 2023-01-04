@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Approval;
 
-use App\Models\BranchStatus;
 use App\Models\Business;
 use App\Models\BusinessDirector;
 use App\Models\BusinessLocation;
@@ -291,11 +290,6 @@ class ApprovalProcessing extends Component
             if (!$location->business->taxTypes->where('code', 'vat')->isEmpty()) {
                 $location->generateVrn();
             }
-
-            // Approve locations
-            $location->update([
-                'status' => BranchStatus::APPROVED,
-            ]);
 
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status = BusinessStatus::APPROVED;

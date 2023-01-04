@@ -16,7 +16,7 @@ class ChangePasswordController extends Controller
 
     public function index()
     {
-        return view('auth.passwords.change' , ['expired_message' => Auth::user()->is_password_expired ? 'Your password has expired. Please reset!. Note that you cannot use your previous two passwords when creating a new password!' : '']);
+        return view('auth.passwords.change' , ['expired_message' => Auth::user()->pass_expired_on <= Carbon::now() ? 'Your password has expired. Please reset!. Note that you cannot use your previous two passwords when creating a new password!' : '']);
     }
 
     public function updatePassword(Request $request)
@@ -43,7 +43,6 @@ class ChangePasswordController extends Controller
 
         $user->is_first_login = false;
         $user->password = Hash::make($request->password);
-        $user->is_password_expired = false;
         $user->pass_expired_on = Carbon::now()->addDay($passwordExpirationDuration);
         $user->save();
         
