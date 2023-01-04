@@ -60,7 +60,7 @@ class BranchesTable extends DataTableComponent
                 ->searchable(),
             Column::make("District", "district.name")
                 ->searchable(),
-            Column::make("Street", "street")
+            Column::make("Street", "street.name")
                 ->searchable(),
             Column::make('Status', 'status')->view('business.branches.includes.status'),
             Column::make('Action', 'id')->view('business.branches.includes.actions'),

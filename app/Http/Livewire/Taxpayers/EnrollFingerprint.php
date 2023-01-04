@@ -82,7 +82,7 @@ class EnrollFingerprint extends Component
             abort(403);
         }
         $kyc = $this->kyc;
-        // dd($kyc);
+
         if (config('app.env') != 'local') {
             $biometrics = Biometric::where('reference_no', $kyc->id)
                 ->get();
