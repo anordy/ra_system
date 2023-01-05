@@ -644,30 +644,29 @@
                         <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
                             <a href="{{ route('payments.pending') }}">Pending Payments</a>
                         </li>
-                    @endcan
-                    @can('manage-payments-view')
+
                         <li class="{{ request()->is('payments/completed*') ? 'active' : '' }}">
                             <a href="{{ route('payments.complete') }}">Completed Payments</a>
                         </li>
-                    @endcan
-                    @can('manage-payments-view')
+
                         <li class="{{ request()->is('payments/cancelled*') ? 'active' : '' }}">
                             <a href="{{ route('payments.cancelled') }}">Cancelled Payments</a>
                         </li>
-                    @endcan
-                    @can('manage-payments-view')
+
                         <li class="{{ request()->is('payments/failed*') ? 'active' : '' }}">
                             <a href="{{ route('payments.failed') }}">Failed Payments</a>
                         </li>
-                    @endcan
-                    @can('manage-payments-view')
+
                         <li class="{{ request()->is('payments/recon-enquire*') ? 'active' : '' }}">
                             <a href="{{ route('payments.recon.enquire') }}">Reconciliations</a>
                         </li>
-                    @endcan
-                    @can('manage-payments-view')
+
                         <li class="{{ request()->is('payments/bank-recon*') ? 'active' : '' }}">
                             <a href="{{ route('payments.bank-recon.index') }}">Bank Reconciliations</a>
+                        </li>
+
+                        <li class="{{ request()->is('payments/missing-bank-recon*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.bank-recon.missing') }}">Missing Bank Recons</a>
                         </li>
                     @endcan
                     @can('manage-payments-view')

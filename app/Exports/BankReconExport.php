@@ -57,6 +57,6 @@ class BankReconExport implements FromView, WithEvents, ShouldAutoSize
     {
         $records = $this->records;
         $title = $this->title;
-        return view('exports.payments.reports.excel.bank-recon', compact('records', 'title'));
+        return view('exports.payments.reports.excel.missing-bank-recon', compact('records', 'title'));
     }
 }

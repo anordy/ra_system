@@ -5,9 +5,9 @@
         </label>
         <input type="date" max="{{ $today }}" class="form-control" wire:model="range_start">
         @error('range_start')
-            <div class="text-danger">
-                {{ $message }}
-            </div>
+        <div class="text-danger">
+            {{ $message }}
+        </div>
         @enderror
     </div>
     <div class="flex-grow-1 form-group">
@@ -16,9 +16,9 @@
         </label>
         <input type="date" min="{{ $range_start ?? $today }}"  max="{{$today }}" class="form-control" wire:model="range_end">
         @error('range_end')
-            <div class="text-danger">
-                {{ $message }}
-            </div>
+        <div class="text-danger">
+            {{ $message }}
+        </div>
         @enderror
     </div>
 
@@ -37,19 +37,12 @@
                 </button>
             @endif
 
-            @can('bank-recon-import')
-                <button class="btn btn-primary"
-                        onclick="Livewire.emit('showModal', 'payments.bank-recon-import-modal')">
-                    <i class="bi bi-arrow-bar-down mr-2"></i>
-                    Import Bank Reconciliations
-                </button>
-            @endcan
         </div>
     </div>
 
     @if ($hasData)
         <div class="col-md-12 mt-3">
-            @livewire('payments.bank-recon-table', ['parameters' => $parameters])
+            @livewire('payments.missing-bank-recon-table', ['parameters' => $parameters])
         </div>
     @endif
 </div>
