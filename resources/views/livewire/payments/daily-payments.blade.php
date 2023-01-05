@@ -24,11 +24,11 @@
                     <tr>
                         <th>Source</th>
                         <th>Shilings</th>
-                        <th>Dollar</th>
+                        <th>Dollars</th>
                         <th></th>
                         <th></th>
                         <th>Shilings</th>
-                        <th>Dollar</th>
+                        <th>Dollars</th>
                         <th></th>
                     </tr>
                 </thead>
