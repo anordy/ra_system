@@ -30,6 +30,8 @@ class User extends Authenticatable implements PayloadInterface, Auditable
         'auth_attempt'
     ];
 
+    private $maxAttempts = 3;
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -54,34 +56,37 @@ class User extends Authenticatable implements PayloadInterface, Auditable
         return $this->belongsTo(ApprovalLevel::class);
     }
 
-    public function otp(){
+    public function otp()
+    {
         return $this->morphOne(UserOtp::class, 'user');
     }
 
-    public function fullname(){
-        return $this->fname . ' '. $this->lname;
+    public function fullname()
+    {
+        return $this->fname . ' ' . $this->lname;
     }
 
-    public function getFullNameAttribute(){
+    public function getFullNameAttribute()
+    {
         return "{$this->fname} {$this->lname}";
     }
 
     public function is_role(array $roles)
     {
-        if (in_array($this->role->id, $roles))
-        {
+        if (in_array($this->role->id, $roles)) {
             return true;
         }
 
         return false;
     }
-    
+
     public function passwordHistories()
     {
         return $this->morphMany(PasswordHistory::class, 'user');
     }
 
-    public function passwordExistInHistory($password){
+    public function passwordExistInHistory($password)
+    {
         if (!$this->passwordHistories->isEmpty()) {
             foreach ($this->passwordHistories as $passwordHistory) {
                 if (password_verify($password, $passwordHistory->password_entry)) {
@@ -89,6 +94,14 @@ class User extends Authenticatable implements PayloadInterface, Auditable
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public function accountLocked()
+    {
+        if ($this->status == 0) {
+            return true;
         }
         return false;
     }

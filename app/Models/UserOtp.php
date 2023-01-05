@@ -20,7 +20,8 @@ class UserOtp extends Model
         return $this->morphTo();
     }
 
-    public static function generate($codeLength = 5){
+    public static function generate($codeLength = 5)
+    {
         $min = pow(10, $codeLength);
         $max = $min * 10 - 1;
         $code = mt_rand($min, $max);
@@ -49,9 +50,7 @@ class UserOtp extends Model
 
     public function sendCode($code)
     {
-        if (config('app.env') == 'production') {
-            event(new SendSms('otp', $this->id, ['code' => $code]));
-            event(new SendMail('otp', $this->id, ['code' => $code]));
-        }
+        event(new SendSms('otp', $this->id, ['code' => $code]));
+        event(new SendMail('otp', $this->id, ['code' => $code]));
     }
 }
