@@ -43,7 +43,15 @@ class PaymentFilter extends Component
             'range_start' => date('Y-m-d 00:00:00', strtotime($this->range_start)),
             'range_end'   => date('Y-m-d 23:59:59', strtotime($this->range_end)),
         ];
-        $this->emitTo('App\Http\Livewire\Payments\PendingPaymentsTable', 'filterData', $filters);
+        if ($this->tableName == 'complete-payments-table') {
+            $this->emitTo('App\Http\Livewire\Payments\CompletePaymentsTable', 'filterData', $filters);
+        } elseif ($this->tableName == 'pending-payments-table') {
+            $this->emitTo('App\Http\Livewire\Payments\PendingPaymentsTable', 'filterData', $filters);
+        } elseif ($this->tableName == 'cancelled-payments-table') {
+            $this->emitTo('App\Http\Livewire\Payments\PendingPaymentsTable', 'filterData', $filters);
+        } elseif ($this->tableName == 'failed-payments-table') {
+            $this->emitTo('App\Http\Livewire\Payments\FailedPaymentsTable', 'filterData', $filters);
+        }
         $this->data = $filters;
     }
 

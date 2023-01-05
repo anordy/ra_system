@@ -3,13 +3,14 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Enum\PaymentStatus;
+use App\Models\TaxType;
 use App\Models\ZmBill;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class FailedPaymentsTable extends DataTableComponent
+class CompletePaymentsTable extends DataTableComponent
 {
     use LivewireAlert;
 
@@ -38,7 +39,7 @@ class FailedPaymentsTable extends DataTableComponent
             $filter->WhereBetween('created_at', [$data['range_start'],$data['range_end']]);
         }
 
-        return $filter->whereIn('status', [PaymentStatus::FAILED])->orderBy('created_at', 'DESC');
+        return $filter->whereIn('status', [PaymentStatus::PAID])->orderBy('created_at', 'DESC');
     }
 
     public function configure(): void
