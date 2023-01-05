@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Taxpayers;
 
+use App\Models\Country;
 use App\Models\TaxpayerAmendmentRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -47,8 +48,8 @@ class DetailsAmendmentRequestTable extends DataTableComponent
         } else if ($this->status == TaxpayerAmendmentRequest::REJECTED) {
             return TaxpayerAmendmentRequest::where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::REJECTED)->orderBy('taxpayer_amendment_requests.created_at', 'DESC')
                 ->with('taxpayer');
-        }else if ($this->status == TaxpayerAmendmentRequest::CORRECTION) {
-            return TaxpayerAmendmentRequest::where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::CORRECTION)->orderBy('taxpayer_amendment_requests.created_at', 'DESC')
+        }else if ($this->status == TaxpayerAmendmentRequest::TEMPERED) {
+            return TaxpayerAmendmentRequest::where('taxpayer_amendment_requests.status', TaxpayerAmendmentRequest::TEMPERED)->orderBy('taxpayer_amendment_requests.created_at', 'DESC')
                 ->with('taxpayer');
         }
         return TaxpayerAmendmentRequest::query();
@@ -65,8 +66,9 @@ class DetailsAmendmentRequestTable extends DataTableComponent
                 )
                 ->sortable()
                 ->searchable(),
-            Column::make('Mobile No', 'taxpayer.mobile'),
-            Column::make('Email Address', 'taxpayer.email'),
+            Column::make('Nationality', 'taxpayer.country_id')
+                ->format(fn ($value, $row) => Country::find($value)->value('nationality') ?? ''),
+            Column::make('Street', 'taxpayer.street'),
             Column::make('Action', 'id')
                 ->view('taxpayers.amendments.includes.actions'),
         ];

@@ -91,6 +91,10 @@ class ExchangeRateTable extends DataTableComponent
                         return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
                         HTML;
+                    } elseif ($value == 2) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge danger p-2" >Rejected</span>
+                        HTML;
                     }
                 })
                 ->html(),

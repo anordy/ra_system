@@ -77,6 +77,10 @@ class CountryTable extends DataTableComponent
                         return <<<HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
                         HTML;
+                    } elseif ($value == 2) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge danger p-2" >Rejected</span>
+                        HTML;
                     }
                 })
                 ->html(),
@@ -85,7 +89,7 @@ class CountryTable extends DataTableComponent
                     $edit = '';
                     $delete = '';
 
-                    if ($row->is_approved == 1 || $row->is_approved == 2) {
+                    if ($row->is_approved == 1) {
                         if (Gate::allows('setting-country-edit')) {
                             $edit = <<<HTML
                                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'country-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
@@ -132,6 +136,10 @@ class CountryTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $country = Country::find($data->id);
+            if ($country->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                return;
+            }
             $this->triggerDualControl(get_class($country), $country->id, DualControl::DELETE, 'deleting country');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);

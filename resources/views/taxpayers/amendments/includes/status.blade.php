@@ -16,6 +16,12 @@
         <i class="bi bi-x-circle mr-1"></i>
         Rejected
     </span>
+@elseif($amendmentRequest->status === \App\Models\TaxpayerAmendmentRequest::TEMPERED)
+    <span class="badge badge-danger py-1 px-2"
+          style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        Tempered
+    </span>
 @else
     <span class="badge badge-danger py-1 px-2"
         style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">

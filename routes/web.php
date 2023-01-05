@@ -223,6 +223,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('workflow', WorkflowController::class);
         Route::get('/dual-control-activities', [DualControlActivityController::class, 'index'])->name('dual-control-activities.index');
         Route::get('/dual-control-activities/show/{id}', [DualControlActivityController::class, 'show'])->name('dual-control-activities.show');
+        Route::get('/dual-control-configure', [DualControlActivityController::class, 'configure'])->name('dual-control-activities.configure');
     });
 
     Route::prefix('taxpayers')->as('taxpayers.')->group(function () {

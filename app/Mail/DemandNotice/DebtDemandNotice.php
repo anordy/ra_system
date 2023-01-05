@@ -39,7 +39,7 @@ class DebtDemandNotice extends Mailable
     public function build()
     {
         $debt = $this->payload['debt'];
-
+        DB::beginTransaction();
         try {
             DemandNotice::create([
                 'debt_id' => $this->payload['debt']->id,
@@ -51,6 +51,7 @@ class DebtDemandNotice extends Mailable
                 'next_notify_days' => $this->payload['next_notify_days'],
                 'next_notify_date' => Carbon::today()->addDays($this->payload['next_notify_days'])
             ]);
+            DB::commit();
     
             $now = Carbon::now()->format('d M Y');
             $paid_within_days = $this->payload['paid_within_days'];
@@ -76,6 +77,7 @@ class DebtDemandNotice extends Mailable
                 return $email;
             }
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
         }
 

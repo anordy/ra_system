@@ -28,15 +28,19 @@ class Approve extends Component
             abort(403);
         }
         $req = DualControl::findOrFail($this->dual_control_id);
-        if ($req->create_by_id == Auth::id()) {
-            $this->alert('error','You are not allowed to complete this action', ['timer' => 8000]);
-            return;
-        }
+
         if (!empty($req)) {
+
+            if ($req->create_by_id == Auth::id()) {
+                $this->alert('error', 'You are not allowed to complete this action', ['timer' => 8000]);
+                return;
+            }
+
             DB::beginTransaction();
             try {
                 $req->update(['status' => 'approved']);
                 $this->updateControllable($req, DualControl::APPROVE);
+                $this->updateHistory($req->controllable_type, $req->controllable_type_id, $this->dual_control_id, 'approved', 'ok');
                 DB::commit();
                 $this->alert('success', 'Approved Successfully');
                 return redirect()->route('system.dual-control-activities.index');
@@ -77,15 +81,19 @@ class Approve extends Component
         }
 
         $req = DualControl::findOrFail($this->dual_control_id);
-        if ($req->create_by_id == Auth::id()) {
-            $this->alert('error','You are not allowed to complete this action', ['timer' => 8000]);
-            return;
-        }
+
         if (!empty($req)) {
+
+            if ($req->create_by_id == Auth::id()) {
+                $this->alert('error', 'You are not allowed to complete this action', ['timer' => 8000]);
+                return;
+            }
+
             DB::beginTransaction();
             try {
                 $req->update(['status' => 'rejected']);
                 $this->updateControllable($req, DualControl::REJECT);
+                $this->updateHistory($req->controllable_type, $req->controllable_type_id, $this->dual_control_id, 'rejected', 'not ok');
                 DB::commit();
                 $this->alert('success', 'Rejected Successfully');
                 return redirect()->route('system.dual-control-activities.index');

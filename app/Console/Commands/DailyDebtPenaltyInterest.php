@@ -74,14 +74,12 @@ class DailyDebtPenaltyInterest extends Command
             ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE]) // Get all non paid returns
             ->get();
-        
+
         if ($tax_returns) {
 
-            DB::beginTransaction();
-            try {
-
-                foreach ($tax_returns as $tax_return) {
-
+            foreach ($tax_returns as $tax_return) {
+                DB::beginTransaction();
+                try {
                     // Generate penalty
                     PenaltyForDebt::generateReturnsPenalty($tax_return);
 
@@ -91,15 +89,13 @@ class DailyDebtPenaltyInterest extends Command
                     }
 
                     GenerateControlNo::dispatch($tax_return);
+                    DB::commit();
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Log::error($e);
                 }
-
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                Log::error($e);
             }
         }
-
     }
 
     public function generateAssessmentDebtPenalty()
@@ -122,12 +118,12 @@ class DailyDebtPenaltyInterest extends Command
 
         if ($tax_assessments) {
 
-            DB::beginTransaction();
-            try {
-
-                foreach ($tax_assessments as $tax_assessment) {
+            foreach ($tax_assessments as $tax_assessment) {
+                DB::beginTransaction();
+                try {
                     // Generate penalty
                     PenaltyForDebt::generateAssessmentsPenalty($tax_assessment);
+                    DB::commit();
 
                     // Cancel previous latest bill if exists
                     if ($tax_assessment->latestBill) {
@@ -135,14 +131,11 @@ class DailyDebtPenaltyInterest extends Command
                     }
 
                     GenerateAssessmentDebtControlNo::dispatch($tax_assessment);
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Log::error($e);
                 }
-
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                Log::error($e);
             }
         }
-
     }
 }

@@ -1,5 +1,5 @@
 <div>
-    @if ($row->is_approved == 1 || $row->is_approved == 2)
+    @if ($row->is_approved == 1)
         <button class="btn btn-info btn-sm"
             onclick="Livewire.emit('showModal', 'settings.system-settings.system-setting-category-edit-modal','{{ encrypt($row->id) }}')"><i
                 class="fa fa-edit"></i> </button>
