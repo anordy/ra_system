@@ -111,4 +111,8 @@ class PaymentsController extends Controller
     public function reconReport(){
         return view('payments.recon-report-filter');
     }
+
+    public function dailyPayments(){
+        return view('payments.daily-payments');
+    }
 }
