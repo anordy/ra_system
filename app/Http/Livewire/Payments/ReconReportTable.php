@@ -67,7 +67,7 @@ class ReconReportTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Actions', 'id')
-                ->view('payments.includes.actions')
+                ->view('payments.includes.actions') 
         ];
     }
 }

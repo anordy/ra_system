@@ -641,6 +641,11 @@
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('payments*') ? 'show' : '' }}" id="payments">
                     @can('manage-payments-view')
+                        <li class="{{ request()->is('payments/daily-payments*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.daily-payments.index') }}">Daily Payments</a>
+                        </li>
+                    @endcan
+                    @can('manage-payments-view')
                         <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
                             <a href="{{ route('payments.pending') }}">Pending Payments</a>
                         </li>
