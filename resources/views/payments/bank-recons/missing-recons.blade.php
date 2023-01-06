@@ -1,14 +1,14 @@
 @extends('layouts.master')
 
-@section('title', 'Bank Reconciliations')
+@section('title', 'Missing Bank Reconciliations')
 
 @section('content')
     <div class="card rounded-0">
         <div class="card-header font-weight-bold text-uppercase bg-white">
-            Bank Reconciliations
+            Missing Bank Reconciliations
         </div>
         <div class="card-body">
-            <livewire:payments.bank-recon-filter />
+            <livewire:payments.missing-bank-recon-filter />
         </div>
     </div>
 @endsection

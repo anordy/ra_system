@@ -2,14 +2,14 @@
 
 namespace App\Http\Livewire\Payments;
 
-use App\Models\BankRecon;
+use App\Models\MissingBankRecon;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class BankReconTable extends DataTableComponent
+class MissingBankReconTable extends DataTableComponent
 {
     use LivewireAlert;
 
@@ -28,7 +28,7 @@ class BankReconTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return BankRecon::query()
+        return MissingBankRecon::query()
             ->whereBetween('created_at', [$this->parameters['range_start'], $this->parameters['range_end']])
             ->orderBy('created_at', 'desc');
     }
@@ -72,14 +72,18 @@ class BankReconTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return $value ? $value->toFormattedDateString() : 'N/A';
                 }),
+            Column::make('Transaction Origin', 'transaction_origin')
+                ->format(function ($value, $row) {
+                    return $value ? $value : 'N/A';
+                }),
             Column::make('Payer Name', 'payer_name')
                 ->format(function ($value, $row) {
                     return $value ?: 'N/A';
                 }),
-            Column::make('Recon. Status', 'recon_status')
-                ->view('payments.includes.bank-recon-status'),
-            Column::make('Action', 'id')
-                ->view('payments.includes.bank-recon-actions')
+            Column::make('DR/CR', 'dr_cr')
+                ->format(function ($value, $row) {
+                    return $value ?: 'N/A';
+                }),
         ];
     }
 }
