@@ -8,7 +8,7 @@
                 <div class="row mx-4 mt-2">
                     <div class="col-md-4 form-group">
                         <label for="tin">Institution Tax Identification No. (TIN) *</label>
-                        <input type="number" maxlength="10" minlength="8" wire:model.lazy="tin" required
+                        <input type="number" maxlength="10" minlength="8" wire:model.defer="tin" required
                             class="form-control {{ $errors->has('tin') ? 'is-invalid' : '' }}">
                         @error('tin')
                             <div class="invalid-feedback">
@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="institution_name">Institution Name *</label>
-                        <input type="text" wire:model.lazy="institution_name"
+                        <input type="text" wire:model.defer="institution_name"
                             class="form-control {{ $errors->has('institution_name') ? 'is-invalid' : '' }}">
                         @error('institution_name')
                             <div class="invalid-feedback">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="address">Institution Address *</label>
-                        <input type="text" wire:model.lazy="address"
+                        <input type="text" placeholder="PO BOX..." wire:model.defer="address"
                             class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}">
                         @error('address')
                             <div class="invalid-feedback">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="institution_place">Place Of Institution *</label>
-                        <input type="text" wire:model.lazy="institution_place" name="institution_place"
+                        <input type="text" wire:model.defer="institution_place" name="institution_place"
                             id="institution_place"
                             class="form-control {{ $errors->has('institution_place') ? 'is-invalid' : '' }}">
                         @error('institution_place')
@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="mobile">Institution Contact Number *</label>
-                        <input type="text" maxlength="10" wire:model.lazy="mobile" name="mobile" id="mobile"
+                        <input type="text" maxlength="10" wire:model.defer="mobile" name="mobile" id="mobile"
                             class="form-control {{ $errors->has('mobile') ? 'is-invalid' : '' }}">
                         @error('mobile')
                             <div class="invalid-feedback">
@@ -59,7 +59,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="alt_mobile">Institution Alternative Contact Number</label>
-                        <input type="text" maxlength="10" wire:model.lazy="alt_mobile" name="alt_mobile"
+                        <input type="text" maxlength="10" wire:model.defer="alt_mobile" name="alt_mobile"
                             id="alt_mobile" class="form-control {{ $errors->has('alt_mobile') ? 'is-invalid' : '' }}">
                         @error('alt_mobile')
                             <div class="invalid-feedback">
@@ -69,7 +69,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="fax">Institution Fax Number</label>
-                        <input type="text" maxlength="10" wire:model.lazy="fax" name="fax" id="fax"
+                        <input type="text" maxlength="10" wire:model.defer="fax" name="fax" id="fax"
                             class="form-control {{ $errors->has('mobile') ? 'is-invalid' : '' }}">
                         @error('fax')
                             <div class="invalid-feedback">
@@ -79,7 +79,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="email">Institution Email Address *</label>
-                        <input type="email" wire:model.lazy="email" name="email" id="email"
+                        <input type="email" wire:model.defer="email" name="email" id="email"
                             class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}">
                         @error('email')
                             <div class="invalid-feedback">
@@ -133,8 +133,25 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
+                        <label><span>Street *</span></label>
+                        <select wire:model.lazy="street_id" class="form-control @error('street_id') is-invalid @enderror">
+                            <option></option>
+                            <option wire:loading wire:target="district_id">
+                                Loading...
+                            </option>
+                            @foreach($streets as $street)
+                                <option value="{{ $street->id }}">{{ $street->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('street_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="col-md-4 form-group">
                         <label for="date_of_commencing">Date of Commencing *</label>
-                        <input type="date" wire:model.lazy="date_of_commencing" name="date_of_commencing"
+                        <input type="date" wire:model.defer="date_of_commencing" name="date_of_commencing"
                             id="date_of_commencing"
                             class="form-control {{ $errors->has('date_of_commencing') ? 'is-invalid' : '' }}">
                         @error('date_of_commecning')
@@ -156,7 +173,7 @@
                 <div class="row mx-4">
                     <div class="col-md-4 form-group">
                         <label for="ztnNumber">ZTN Number</label>
-                        <input type="text" wire:model.lazy="ztnNumber" name="ztnNumber" id="ztnNumber"
+                        <input type="text" wire:model.defer="ztnNumber" name="ztnNumber" id="ztnNumber"
                             class="form-control {{ $errors->has('ztnNumber') ? 'is-invalid' : '' }}">
                         @error('ztnNumber')
                             <div class="invalid-feedback">
@@ -166,7 +183,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <label for="reference_no">Responsible person ZRB Reference No. *</label>
-                        <input type="text" wire:model.lazy="reference_no" name="reference_no" id="reference_no"
+                        <input type="text" wire:model.defer="reference_no" name="reference_no" id="reference_no"
                             class="form-control {{ $errors->has('reference_no') ? 'is-invalid' : '' }}">
                         @error('reference_no')
                             <div class="invalid-feedback">
@@ -212,7 +229,7 @@
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="position">Position of Responsible Person</label>
-                            <input type="text" wire:model.lazy="position" name="position" id="position"
+                            <input type="text" wire:model.defer="position" name="position" id="position"
                                 class="form-control {{ $errors->has('position') ? 'is-invalid' : '' }}">
                             @error('position')
                                 <div class="invalid-feedback">

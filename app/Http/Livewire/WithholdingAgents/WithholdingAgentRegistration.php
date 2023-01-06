@@ -6,6 +6,7 @@ namespace App\Http\Livewire\WithholdingAgents;
 use Exception;
 use App\Models\Ward;
 use App\Models\Region;
+use App\Models\Street;
 use App\Events\SendSms;
 use Livewire\Component;
 use App\Events\SendMail;
@@ -27,7 +28,8 @@ class WithholdingAgentRegistration extends Component
     public $districts = [];
     public $responsible_persons = [];
     public $wards = [];
-    public $region_id, $district_id, $ward_id, $tin, $institution_name, $institution_place, $address;
+    public $streets = [];
+    public $region_id, $district_id, $ward_id, $street_id, $tin, $institution_name, $institution_place, $address;
     public $fax, $alt_mobile, $mobile, $email, $responsible_person_id, $officer_id, $title, $position, $date_of_commencing;
     public $reference_no;
     public $search_triggered = false;
@@ -36,7 +38,7 @@ class WithholdingAgentRegistration extends Component
     public $business;
 
     protected $rules = [
-        'tin' => 'required|integer|digits_between:10,10',
+        'tin' => 'required|integer|digits_between:8,10',
         'institution_name' => 'required',
         'institution_place' => 'required',
         'email' => 'required|email|unique:withholding_agents,email',
@@ -48,6 +50,7 @@ class WithholdingAgentRegistration extends Component
         'region_id' => 'required',
         'district_id' => 'required',
         'ward_id' => 'required',
+        'street_id' => 'required',
         'title' => 'required',
         'position' => 'required',
         'date_of_commencing' => 'required',
@@ -69,6 +72,11 @@ class WithholdingAgentRegistration extends Component
         if ($propertyName === 'district_id') {
             $this->wards = [];
             $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name')->get();
+        }
+
+        if ($propertyName === 'ward_id'){
+            $this->streets = [];
+            $this->streets = Street::where('ward_id', $this->ward_id)->select('id', 'name')->get();
         }
     }
 
@@ -93,6 +101,7 @@ class WithholdingAgentRegistration extends Component
                 'region_id' => $this->region_id,
                 'district_id' => $this->district_id,
                 'ward_id' => $this->ward_id,
+                'street_id' => $this->street_id
             ];
             
             $withholding_agent = WithholdingAgent::create($withholding_agent);
