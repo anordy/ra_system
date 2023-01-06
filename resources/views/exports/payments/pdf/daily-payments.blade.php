@@ -7,7 +7,7 @@
             background-image: url("{{ public_path() }}/images/logo.png");
             background-repeat: no-repeat;
             background-position: center;
-            /* background-size: contain; */
+            background-size: contain;
             margin: 15px;
             opacity: 0.1;
         }
