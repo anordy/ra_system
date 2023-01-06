@@ -342,7 +342,7 @@ trait PaymentsTrait
         $payer_name     = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
         $payer_email    = $taxpayer->email;
         $payer_phone    = $taxpayer->mobile;
-        $description    = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name}";
+        $description    = "{$debt->taxtype->name} Debt Payment for {$debt->business->name} {$debt->location->name} on {$debt->financialMonth->name} {$debt->financialMonth->year->code}";
         $payment_option = ZmCore::PAYMENT_OPTION_FULL;
         $currency       = $debt->currency;
         $createdby_type = Auth::user() != null ? get_class(Auth::user()) : null;
