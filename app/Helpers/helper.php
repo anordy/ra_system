@@ -137,3 +137,15 @@ function getWard($id)
         return $ward;
     }
 }
+
+function getFormattedTinNo($getter){
+    if ($getter instanceof \App\Models\BusinessLocation){
+        return implode("-", str_split($getter->business->tin, 3));
+    }
+
+    if ($getter instanceof \App\Models\Business){
+        return implode("-", str_split($getter->tin, 3));
+    }
+
+    return '';
+}

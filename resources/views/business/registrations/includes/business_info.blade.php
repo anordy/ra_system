@@ -105,6 +105,12 @@
                     {{--End Will be implementated after TRA intergration --}}
                     
                 </div>
+                @if($business->previous_zno)
+                    <div class="col-md-4 mb-3">
+                        <span class="font-weight-bold text-uppercase">Previous ZNO</span>
+                        <p class="my-1">{{ $business->previous_zno }}</p>
+                    </div>
+                @endif
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Business Reg. No.</span>
                     <p class="my-1">{{ $business->reg_no ?? 'N/A' }}</p>
@@ -132,10 +138,6 @@
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Place of Business</span>
                     <p class="my-1">{{ $business->place_of_business }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <span class="font-weight-bold text-uppercase">Physical Address</span>
-                    <p class="my-1">{{ $business->physical_address }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Type of Business Activities</span>
@@ -297,10 +299,12 @@
                         <p class="my-1">{{ $location->fax }}</p>
                     </div>
                     @endif
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Physical Address</span>
-                        <p class="my-1">{{ $location->physical_address }}</p>
-                    </div>
+                    @if($location->physical_address)
+                        <div class="col-md-4 mb-3">
+                            <span class="font-weight-bold text-uppercase">Physical Address</span>
+                            <p class="my-1">{{ $location->physical_address }}</p>
+                        </div>
+                    @endif
                     @if($location->house_no)
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">House No.</span>
@@ -402,10 +406,12 @@
                             <span class="font-weight-bold text-uppercase">Street</span>
                             <p class="my-1">{{ $location->street->name ?? 'N/A' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <span class="font-weight-bold text-uppercase">Physical Address</span>
-                            <p class="my-1">{{ $location->physical_address }}</p>
-                        </div>
+                        @if($location->physical_address)
+                            <div class="col-md-4 mb-3">
+                                <span class="font-weight-bold text-uppercase">Physical Address</span>
+                                <p class="my-1">{{ $location->physical_address }}</p>
+                            </div>
+                        @endif
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">House No.</span>
                             <p class="my-1">{{ $location->house_no }}</p>

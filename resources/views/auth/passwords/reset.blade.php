@@ -1,4 +1,4 @@
-@extends('layouts.login')
+@extends('layouts.password')
 
 @section('title')
 Reset

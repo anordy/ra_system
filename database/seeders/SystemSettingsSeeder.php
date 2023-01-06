@@ -43,7 +43,7 @@ class SystemSettingsSeeder extends Seeder
                 'name' => 'Password history number',
                 'code' => 'password-histroy-number',
                 'description' => 'is a feature of a password policy that prevents users from reusing their previous passwords. The purpose of password history is to ensure that users are not able to simply switch back to an old password after changing it, as this would not increase the security of the system',
-                'value' => '3',
+                'value' => '12',
                 'unit' => 'number',
                 'is_approved' => 1
             ],

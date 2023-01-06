@@ -9,6 +9,8 @@ use App\Models\InterestRate;
 use App\Models\FinancialYear;
 use App\Models\Debts\DebtPenalty;
 use App\Models\Debts\DebtScheduleState;
+use App\Models\Returns\EmTransactionReturn;
+use App\Models\Returns\MmTransferReturn;
 use App\Models\Returns\TaxReturn;
 use Illuminate\Support\Facades\DB;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -85,7 +87,7 @@ class PenaltyForDebt
         }
 
         $latePaymentAfterRate = PenaltyRate::where('financial_year_id', $year->id)
-            ->where('code', 'LPA')
+            ->where('code', PenaltyRate::LATE_PAYMENT_AFTER)
             ->first();
 
         if (!$latePaymentAfterRate) {
@@ -95,10 +97,20 @@ class PenaltyForDebt
         $period = $tax_return->periods + $tax_return->penatableMonths;
 
         $penaltableAmount = $outstanding_amount;
-        $latePaymentAmount = $latePaymentAfterRate->rate * $penaltableAmount;
-        $penaltableAmount = $latePaymentAmount + $penaltableAmount;
-        $interestAmount = self::calculateInterest($penaltableAmount, $interestRate->rate, $period);
-        $penaltableAmount = $penaltableAmount + $interestAmount;
+
+        /**
+         * If return is EM or MM Do not calculate interest Amount and Late payment amount is always constant ie. 1,000,000 (Fetched from DB)
+         */
+        if ($tax_return->return_type == EmTransactionReturn::class || $tax_return->return_type == MmTransferReturn::class) {
+            $latePaymentAmount = PenaltyRate::where('financial_year_id', $tax_return->financialMonth->year->id)->where('code', PenaltyRate::PENALTY_FOR_MM_TRANSACTION)->firstOrFail()->rate;
+            $interestAmount = 0;
+            $penaltableAmount = $latePaymentAmount + $penaltableAmount;
+        } else {
+            $latePaymentAmount = $latePaymentAfterRate->rate * $penaltableAmount;
+            $penaltableAmount = $latePaymentAmount + $penaltableAmount;
+            $interestAmount = self::calculateInterest($penaltableAmount, $interestRate->rate, $period);
+            $penaltableAmount = $penaltableAmount + $interestAmount;
+        }
 
         $start_date = Carbon::create($tax_return->curr_payment_due_date)->addDay()->startOfDay();
         $end_date = Carbon::create($tax_return->curr_payment_due_date)->addDays(30)->endOfDay();

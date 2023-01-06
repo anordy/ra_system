@@ -10,6 +10,7 @@
             Failed Payments
         </div>
         <div class="card-body">
+            @livewire('payments.payment-filter', ['tablename' => 'failed-payments-table']) <br>
             <livewire:payments.failed-payments-table />
         </div>
     </div>

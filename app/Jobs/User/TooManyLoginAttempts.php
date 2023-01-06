@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class TooManyLoginAttempts implements ShouldQueue
@@ -33,7 +34,6 @@ class TooManyLoginAttempts implements ShouldQueue
      */
     public function handle()
     {
-        //
         if ($this->payload['email']) {
             Mail::to($this->payload['email'])->send(new TooManyLoginAttemptsMAIL($this->payload));
         } elseif ($this->payload['phone']) {

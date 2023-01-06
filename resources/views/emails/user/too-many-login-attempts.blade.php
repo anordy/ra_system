@@ -3,6 +3,6 @@
 
     {{ $payload['message'] }}
 
-    Thanks,<br>
+    Thanks,
     {{ config('app.name') }}
 @endcomponent

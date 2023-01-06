@@ -108,7 +108,15 @@ class PaymentsController extends Controller
         return view('payments.bank-recons.show', compact('recon'));
     }
 
+    public function missingBankRecon(){
+        return view('payments.bank-recons.missing-recons');
+    }
+
     public function reconReport(){
         return view('payments.recon-report-filter');
+    }
+
+    public function dailyPayments(){
+        return view('payments.daily-payments');
     }
 }

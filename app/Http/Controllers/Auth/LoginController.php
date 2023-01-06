@@ -125,6 +125,8 @@ class LoginController extends Controller
         if ($user->auth_attempt >= $this->maxAttempts) {
             return true;
         }
+
+        return false;
     }
 
     protected function incrementLoginAttempts($user, $request)
@@ -141,6 +143,7 @@ class LoginController extends Controller
     protected function sendLockoutResponse($user)
     {
         $user->status = 0;
+        $user->auth_attempt = 0;
         $user->save();
         $message   = __('Your Account has been locked out because of too many Login attempts. Please contact your admin to unblock your account');
 

@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Enum\BankReconStatus;
 use App\Models\BankRecon;
+use App\Models\MissingBankRecon;
 use App\Models\ZmBill;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -61,6 +62,22 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
                         ]);
+                    } else {
+                        MissingBankRecon::create([
+                            'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
+                            'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
+                            'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
+                            'original_record' => $row['explanation_text'],
+                            'transaction_type' => 'Tax Bank',
+                            'control_no' => $exploded[3],
+                            'payment_ref' => $exploded[4],
+                            'payer_name' => $exploded[7],
+                            'debit_amount' => floatval(str_replace(',', '', $row['debit_amount'])),
+                            'credit_amount' => floatval(str_replace(',', '', $row['credit_amount'])),
+                            'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
+                            'dr_cr' => $row['drcr'],
+                            'doc_num' => $row['doc_num'],
+                        ]);
                     }
                     continue;
                 }
@@ -72,6 +89,22 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
 
                     if(ZmBill::where('control_number', $exploded[1])->exists()) {
                         $recon = BankRecon::create([
+                            'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
+                            'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
+                            'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
+                            'original_record' => $row['explanation_text'],
+                            'transaction_type' => 'Tax Bank',
+                            'control_no' => $exploded[1],
+                            'payment_ref' => $exploded[3],
+                            'payer_name' => $exploded[2],
+                            'debit_amount' => floatval(str_replace(',', '', $row['debit_amount'])),
+                            'credit_amount' => floatval(str_replace(',', '', $row['credit_amount'])),
+                            'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
+                            'dr_cr' => $row['drcr'],
+                            'doc_num' => $row['doc_num'],
+                        ]);
+                    } else {
+                        MissingBankRecon::create([
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -128,6 +161,23 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
                         ]);
+                    } else {
+                        MissingBankRecon::create([
+                            'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
+                            'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
+                            'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
+                            'original_record' => $row['explanation_text'],
+                            'transaction_type' => 'Cash Deposit',
+                            'control_no' => $exploded[1],
+                            'payment_ref' => $index3[0],
+                            'transaction_origin' => $index3[1],
+                            'payer_name' => $exploded[2],
+                            'debit_amount' => floatval(str_replace(',', '', $row['debit_amount'])),
+                            'credit_amount' => floatval(str_replace(',', '', $row['credit_amount'])),
+                            'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
+                            'dr_cr' => $row['drcr'],
+                            'doc_num' => $row['doc_num'],
+                        ]);
                     }
                     continue;
                 }
@@ -144,6 +194,21 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                 if (count($exploded) == 4){
                     if(ZmBill::where('control_number', $exploded[3])->exists()) {
                         $recon = BankRecon::create([
+                            'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
+                            'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
+                            'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
+                            'original_record' => $row['explanation_text'],
+                            'transaction_type' => 'PG Transfer',
+                            'control_no' => $exploded[1],
+                            'payment_ref' => substr($exploded[3], 4),
+                            'debit_amount' => floatval(str_replace(',', '', $row['debit_amount'])),
+                            'credit_amount' => floatval(str_replace(',', '', $row['credit_amount'])),
+                            'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
+                            'dr_cr' => $row['drcr'],
+                            'doc_num' => $row['doc_num'],
+                        ]);
+                    } else {
+                        MissingBankRecon::create([
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
