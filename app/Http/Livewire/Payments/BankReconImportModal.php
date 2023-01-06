@@ -12,8 +12,9 @@ use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\ValidationException;
 
-class BankReconImport extends Component
+class BankReconImportModal extends Component
 {
+
     use LivewireAlert, WithFileUploads;
 
     public $reconFile, $path;
@@ -73,6 +74,6 @@ class BankReconImport extends Component
 
     public function render()
     {
-        return view('livewire.payments.bank-recon-import');
+        return view('livewire.payments.bank-recon-import-modal');
     }
 }

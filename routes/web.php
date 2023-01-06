@@ -555,6 +555,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/pending/download/{records}/{data}', [PaymentsController::class, 'downloadPendingPaymentsPdf'])->name('pending.download.pdf');
         Route::get('/bank-recons', [PaymentsController::class, 'bankRecon'])->name('bank-recon.index');
         Route::get('/bank-recons/{recon}', [PaymentsController::class, 'showBankRecon'])->name('bank-recon.show');
+        Route::get('/missing-bank-recons', [PaymentsController::class, 'missingBankRecon'])->name('bank-recon.missing');
         Route::get('/recon-reports/index', [PaymentsController::class, 'reconReport'])->name('recon-reports.index');
         Route::get('/daily-payments/index', [PaymentsController::class, 'dailyPayments'])->name('daily-payments.index');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');

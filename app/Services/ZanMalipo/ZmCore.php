@@ -134,19 +134,21 @@ class ZmCore
         DB::beginTransaction();
         try {
             foreach ($items as $item) {
-                $zm_item = new ZmBillItem([
-                    'zm_bill_id' => $bill->id,
-                    'billable_id' => $item['billable_id'],
-                    'billable_type' => $item['billable_type'],
-                    'use_item_ref_on_pay' => 'N',
-                    'tax_type_id' => $item['tax_type_id'],
-                    'amount' => $item['amount'],
-                    'currency' => $item['currency'],
-                    'exchange_rate' => $bill->exchange_rate,
-                    'equivalent_amount' => $bill->exchange_rate * $item['amount'],
-                    'gfs_code' => $item['gfs_code']
-                ]);
-                $zm_item->save();
+                if ($item['amount'] > 0) {
+                    $zm_item = new ZmBillItem([
+                        'zm_bill_id' => $bill->id,
+                        'billable_id' => $item['billable_id'],
+                        'billable_type' => $item['billable_type'],
+                        'use_item_ref_on_pay' => 'N',
+                        'tax_type_id' => $item['tax_type_id'],
+                        'amount' => $item['amount'],
+                        'currency' => $item['currency'],
+                        'exchange_rate' => $bill->exchange_rate,
+                        'equivalent_amount' => $bill->exchange_rate * $item['amount'],
+                        'gfs_code' => $item['gfs_code']
+                    ]);
+                    $zm_item->save();
+                }
             }
             DB::commit();
             return true;
