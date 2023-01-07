@@ -5,7 +5,7 @@ Financial year {{ $payload['currentYear'] }} has not been configured. Please log
 
 Be advised to configure penalty rates, interest rates and financial months for the missing financial year.
 
-System will not function without configuring the rate.
+System will not function without configuring the financial month.
 
 Thanks,<br>
 {{ config('app.name') }}

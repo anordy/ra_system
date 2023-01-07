@@ -3,7 +3,9 @@
 
 Financial month {{ $payload['currentMonth'] }} for the year {{ $payload['currentYear'] }} has not been configured.
 
-System will not function without configuring the rate. Please log into the system and perform configurations.
+Be advised to configure Financial Month for Seven Day Returns.
+
+System will not function without configuring the financial month. Please log into the system and perform configurations.
 
 Thanks,<br>
 {{ config('app.name') }}
