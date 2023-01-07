@@ -6,6 +6,7 @@ use App\Enum\ReturnCategory;
 use App\Jobs\Bill\CancelBill;
 use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
 use App\Jobs\Debt\GenerateControlNo;
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -78,21 +79,24 @@ class DailyDebtPenaltyInterest extends Command
         if ($tax_returns) {
 
             foreach ($tax_returns as $tax_return) {
-                DB::beginTransaction();
-                try {
-                    // Generate penalty
-                    PenaltyForDebt::generateReturnsPenalty($tax_return);
+                // Lumpsum return is handled differently
+                if ($tax_return->return_type != LumpSumReturn::class) {
+                    DB::beginTransaction();
+                    try {
+                        // Generate penalty
+                        PenaltyForDebt::generateReturnsPenalty($tax_return);
 
-                    // Cancel previous latest bill if exists
-                    if ($tax_return->latestBill) {
-                        CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
+                        // Cancel previous latest bill if exists
+                        if ($tax_return->latestBill) {
+                            CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
+                        }
+
+                        GenerateControlNo::dispatch($tax_return);
+                        DB::commit();
+                    } catch (Exception $e) {
+                        DB::rollBack();
+                        Log::error($e);
                     }
-
-                    GenerateControlNo::dispatch($tax_return);
-                    DB::commit();
-                } catch (Exception $e) {
-                    DB::rollBack();
-                    Log::error($e);
                 }
             }
         }
