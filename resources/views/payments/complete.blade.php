@@ -11,6 +11,7 @@
             Complete Payments
         </div>
         <div class="card-body">
+            @livewire('payments.payment-filter', ['tablename' => 'complete-payments-table']) <br>
             <livewire:payments.payments-table />
         </div>
     </div>

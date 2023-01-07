@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Payments;
 
 use App\Jobs\Payments\FinalizeBankRecon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -35,6 +36,10 @@ class BankReconImport extends Component
 
     public function submit()
     {
+        if (!Gate::allows('bank-recon-import')) {
+            abort(403);
+        }
+
         $this->validate();
 
         $this->path = $this->reconFile->store('bank-reconciliations');

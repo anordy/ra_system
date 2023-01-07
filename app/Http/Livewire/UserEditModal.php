@@ -29,6 +29,8 @@ class UserEditModal extends Component
     // public $role = '';
     public $user;
     public $old_values;
+    public $levels;
+    public $level_id;
 
 
     protected function rules()
@@ -81,7 +83,8 @@ class UserEditModal extends Component
 
             $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user '.$this->user->fullname().'', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
+            $this->alert('success', DualControl::SUCCESS_MESSAGE );
+            $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
@@ -94,7 +97,9 @@ class UserEditModal extends Component
         $this->roles = Role::all();
         $user = User::find($id);
         $this->user = $user;
+        $this->levels = ApprovalLevel::select('id', 'name')->get();
         $this->fname = $user->fname;
+        $this->level_id = $user->level_id;
         $this->lname = $user->lname;
         $this->phone = $user->phone;
         $this->email = $user->email;

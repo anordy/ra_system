@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Traits\VerificationTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -30,6 +31,7 @@ class UserSeeder extends Seeder
             'status' => true,
             'is_first_login' => false,
             'is_approved' => 1,
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
 
         User::updateOrCreate([
@@ -86,6 +88,7 @@ class UserSeeder extends Seeder
             'status' => true,
             'is_first_login' => false,
             'is_approved' => 1,
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
 
         User::updateOrCreate([
@@ -100,6 +103,7 @@ class UserSeeder extends Seeder
             'status' => true,
             'is_first_login' => false,
             'is_approved' => 1,
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
 
         User::updateOrCreate([

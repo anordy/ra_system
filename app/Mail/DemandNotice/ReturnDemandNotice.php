@@ -38,7 +38,7 @@ class ReturnDemandNotice extends Mailable
     public function build()
     {
         $paid_within_days = 30;
-
+        DB::beginTransaction();
         try {
             DemandNotice::create([
                 'debt_id' => $this->payload['return']->id,
@@ -48,6 +48,7 @@ class ReturnDemandNotice extends Mailable
                 'category' => 'normal',
                 'paid_within_days' => $paid_within_days
             ]);
+            DB::commit();
 
             $tax_return = $this->payload['return'];
     
@@ -62,6 +63,7 @@ class ReturnDemandNotice extends Mailable
             $email->attachData($pdf->output(), "{$tax_return->business->name}_demand_notice.pdf");
             return $email;
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
         }
    

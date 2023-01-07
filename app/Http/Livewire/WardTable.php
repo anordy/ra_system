@@ -90,7 +90,7 @@ class WardTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-                    if ($row->is_approved == 1 || $row->is_approved == 2) {
+                    if ($row->is_approved == 1) {
                         if (Gate::allows('setting-ward-edit')) {
                             $edit = <<<HTML
                                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-edit-modal',$value)"><i class="fa fa-edit"></i> </button>

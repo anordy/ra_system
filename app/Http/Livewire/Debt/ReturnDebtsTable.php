@@ -29,7 +29,7 @@ class ReturnDebtsTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_type_id', 'location_id']);
+        $this->setAdditionalSelects(['tax_returns.business_id', 'tax_type_id', 'location_id', 'financial_month_id']);
     }
 
     public function columns(): array
@@ -48,6 +48,12 @@ class ReturnDebtsTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Tax Type', 'taxtype.name'),
+            Column::make('Financial Month', 'financialMonth.name')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->financialMonth->name} {$row->financialMonth->year->code}";
+                }),
             Column::make('Total Payable Amount', 'total_amount')
                 ->format(function ($value, $row) {
                     return number_format($row->total_amount, 2);

@@ -38,6 +38,11 @@ class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => []
             ],
+            'tempered_information' => [
+                'owner' => 'staff',
+                'operator_type' => 'role',
+                'operators' => []
+            ],
         ];
         $transitions = [
             'application_submitted' => [
@@ -53,6 +58,11 @@ class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
             'registration_manager_reject' => [
                 'from' => 'registration_manager',
                 'to'   => 'completed',
+                'condition' => '',
+            ],
+            'tempered_information_detected' => [
+                'from' => 'registration_manager',
+                'to'   => 'tempered_information',
                 'condition' => '',
             ],
         ];

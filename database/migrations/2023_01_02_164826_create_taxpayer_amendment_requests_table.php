@@ -18,7 +18,7 @@ class CreateTaxpayerAmendmentRequestsTable extends Migration
             $table->bigInteger('taxpayer_id');
             $table->longText('old_values')->nullable();
             $table->longText('new_values');
-			$table->enum('status', ['pending', 'verified', 'rejected','approved'])->default('pending');
+			$table->enum('status', ['pending', 'tempered', 'rejected','approved'])->default('pending');
             $table->string('app_true_comment')->nullable();
             $table->string('app_reject_comment')->nullable();
             $table->unsignedBigInteger('approved_by_id')->nullable();

@@ -16,7 +16,7 @@ class TaxpayerAmendmentRequest extends Model implements Auditable
 
     public const PENDING = 'pending';
     public const APPROVED = 'approved';
-    public const CORRECTION = 'correction';
+    public const TEMPERED = 'tempered';
     public const REJECTED = 'rejected';
 
     public function taxpayer(){

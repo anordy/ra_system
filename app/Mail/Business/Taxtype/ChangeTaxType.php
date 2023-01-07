@@ -57,7 +57,7 @@ class ChangeTaxType extends Mailable
                     $code = 'ZIN: ' . $location->zin . ", " .
                     'Business Name: ' . $location->business->name . ", " .
                     'Tax Type: ' . $tax->name . ", " .
-                    'Location: ' . "{$location->street}, {$location->district->name}, {$location->region->name}";
+                    'Location: ' . "{$location->street->name}, {$location->district->name}, {$location->region->name}";
 
                     $result = Builder::create()
                         ->writer(new PngWriter())

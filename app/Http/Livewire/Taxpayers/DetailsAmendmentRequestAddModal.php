@@ -56,16 +56,19 @@ class DetailsAmendmentRequestAddModal extends Component
         return view('livewire.taxpayers.details-amendment-request-add-modal');
     }
 
-    protected $rules = [
-        'first_name' => 'required',
-        'middle_name' => 'required',
-        'last_name' => 'required',
-        'email' => 'required',
-        'mobile' => 'required',
-        'alt_mobile' => 'required',
-        'physical_address' => 'required',
-    ];
 
+    protected function rules()
+    {
+        return  [
+            'first_name' => 'required',
+            'middle_name' => 'nullable',
+            'last_name' => 'required',
+            'email' => 'nullable:email|unique:taxpayers,email,' . $this->taxpayer->id . ',id',
+            'mobile' => 'required|unique:taxpayers,mobile,'. $this->taxpayer->id . ',id|size:10',
+            'alt_mobile' => 'nullable|size:10',
+            'physical_address' => 'required',
+        ];
+    }
     public function submit()
     {
         $this->validate();

@@ -10,6 +10,7 @@
             Cancelled Payments
         </div>
         <div class="card-body">
+            @livewire('payments.payment-filter', ['tablename' => 'cancelled-payments-table']) <br>
             <livewire:payments.cancelled-payments-table />
         </div>
     </div>

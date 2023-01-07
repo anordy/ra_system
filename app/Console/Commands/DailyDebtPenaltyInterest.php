@@ -6,6 +6,7 @@ use App\Enum\ReturnCategory;
 use App\Jobs\Bill\CancelBill;
 use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
 use App\Jobs\Debt\GenerateControlNo;
+use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -74,32 +75,31 @@ class DailyDebtPenaltyInterest extends Command
             ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
             ->whereNotIn('payment_status', [ReturnStatus::COMPLETE]) // Get all non paid returns
             ->get();
-        
+
         if ($tax_returns) {
 
-            DB::beginTransaction();
-            try {
+            foreach ($tax_returns as $tax_return) {
+                // Lumpsum return is handled differently
+                if ($tax_return->return_type != LumpSumReturn::class) {
+                    DB::beginTransaction();
+                    try {
+                        // Generate penalty
+                        PenaltyForDebt::generateReturnsPenalty($tax_return);
 
-                foreach ($tax_returns as $tax_return) {
+                        // Cancel previous latest bill if exists
+                        if ($tax_return->latestBill) {
+                            CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
+                        }
 
-                    // Generate penalty
-                    PenaltyForDebt::generateReturnsPenalty($tax_return);
-
-                    // Cancel previous latest bill if exists
-                    if ($tax_return->latestBill) {
-                        CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
+                        GenerateControlNo::dispatch($tax_return);
+                        DB::commit();
+                    } catch (Exception $e) {
+                        DB::rollBack();
+                        Log::error($e);
                     }
-
-                    GenerateControlNo::dispatch($tax_return);
                 }
-
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                Log::error($e);
             }
         }
-
     }
 
     public function generateAssessmentDebtPenalty()
@@ -122,12 +122,12 @@ class DailyDebtPenaltyInterest extends Command
 
         if ($tax_assessments) {
 
-            DB::beginTransaction();
-            try {
-
-                foreach ($tax_assessments as $tax_assessment) {
+            foreach ($tax_assessments as $tax_assessment) {
+                DB::beginTransaction();
+                try {
                     // Generate penalty
                     PenaltyForDebt::generateAssessmentsPenalty($tax_assessment);
+                    DB::commit();
 
                     // Cancel previous latest bill if exists
                     if ($tax_assessment->latestBill) {
@@ -135,14 +135,11 @@ class DailyDebtPenaltyInterest extends Command
                     }
 
                     GenerateAssessmentDebtControlNo::dispatch($tax_assessment);
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Log::error($e);
                 }
-
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                Log::error($e);
             }
         }
-
     }
 }

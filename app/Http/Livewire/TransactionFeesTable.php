@@ -84,17 +84,18 @@ class TransactionFeesTable extends DataTableComponent
                     $delete = '';
                     $approve = '';
                     $reject = '';
+                    if ($row->is_approved == 1) {
+                        if (Gate::allows('setting-transaction-fees-edit') && approvalLevel(Auth::user()->level_id, 'maker')) {
+                            $edit = <<< HTML
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                            HTML;
+                        }
 
-                    if (Gate::allows('setting-transaction-fees-edit') && $row->is_approved != 2 && approvalLevel(Auth::user()->level_id, 'maker')) {
-                        $edit = <<< HTML
-                            <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                        HTML;
-                    }
-
-                    if (Gate::allows('setting-transaction-fees-delete')) {
-                        $delete = <<< HTML
-                            <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                        HTML;
+                        if (Gate::allows('setting-transaction-fees-delete')) {
+                            $delete = <<< HTML
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                            HTML;
+                        }
                     }
                     return $edit . $delete ;
 

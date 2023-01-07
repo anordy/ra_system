@@ -54,6 +54,10 @@
                 <p class="my-1">{{ $withholding_agent->ward->name }}</p>
             </div>
             <div class="col-md-4 mb-3">
+                <span class="font-weight-bold text-uppercase">Street</span>
+                <p class="my-1">{{ $withholding_agent->street->name ?? '' }}</p>
+            </div>
+            <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Date of Commencing</span>
                 <p class="my-1">{{ \Carbon\Carbon::parse($withholding_agent->date_of_commencing)->format('d M Y') }}</p>
             </div>

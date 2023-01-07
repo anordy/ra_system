@@ -17,7 +17,7 @@
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
-                <i class="bi bi-x-circle"></i> Reject
+                <i class="bi bi-x-circle-fill"></i> Reject
             </button>
         @endcan
 </div>

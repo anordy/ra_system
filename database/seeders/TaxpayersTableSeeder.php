@@ -35,6 +35,7 @@ class TaxpayersTableSeeder extends Seeder
             'country_id' => 1,
             'biometric_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make('password'),
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
 
         $taxpayer = Taxpayer::create([
@@ -55,6 +56,7 @@ class TaxpayersTableSeeder extends Seeder
             'country_id' => 1,
             'biometric_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make('password'),
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
 
         $taxpayer = Taxpayer::create([
@@ -77,6 +79,7 @@ class TaxpayersTableSeeder extends Seeder
             'country_id' => 1,
             'biometric_verified_at' => Carbon::now()->toDateTimeString(),
             'password' => Hash::make('password'),
+            'pass_expired_on' => Carbon::now()->addYear()
         ]);
     }
 }

@@ -35,7 +35,6 @@ class BusinessSeeder extends Seeder
             "alt_mobile" => null,
             "email" => "goodman@mailinator.com",
             "place_of_business" => "Mazizini",
-            "physical_address" => "PO BOX 456 Mazizini",
             "goods_and_services_types" => "Food and drinks",
             "goods_and_services_example" => "Azam-cola and Minute maid",
             "is_own_consultant" => 1,
@@ -45,7 +44,8 @@ class BusinessSeeder extends Seeder
             "isiic_ii" => 62,
             "isiic_iii" => 45,
             "isiic_iv" => 32,
-            "verified_at" => "2022-01-01"
+            "verified_at" => "2022-01-01",
+            "previous_zno" => 'Z8898933'
         ];
 
         $location = [

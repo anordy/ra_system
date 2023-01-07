@@ -12,6 +12,12 @@
                 <hr>
             </div>
 
+            <div class="row mx-1">
+                <div class="col-md-12">
+                    <livewire:returns.return-payment :return="$tax_return" />
+                </div>
+            </div>
+
             <nav class="nav nav-tabs mt-0 border-top-0">
                 <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
                 <a href="#tab3" class="nav-item nav-link font-weight-bold">Penalties</a>

@@ -51,16 +51,14 @@ class DailyTaxTypeEffectiveDateCommand extends Command
 
     protected function initEffectiveDate()
     {
-        DB::beginTransaction();
-
         $tax_type_changes = BusinessTaxTypeChange::where('status', 'approved')
             ->whereRaw("CURRENT_DATE - CAST(effective_date as date) > 0")
             ->get();
 
-        try {
 
-            foreach ($tax_type_changes as $tax_change) {
-
+        foreach ($tax_type_changes as $tax_change) {
+            DB::beginTransaction();
+            try {
                 $current_tax_type = BusinessTaxType::where('business_id', $tax_change->business_id)
                     ->where('tax_type_id', $tax_change->from_tax_type_id)
                     ->firstOrFail();
@@ -79,16 +77,15 @@ class DailyTaxTypeEffectiveDateCommand extends Command
                     'tax_change' => $tax_change,
                     'time' => Carbon::now()->format('d-m-Y')
                 ];
-
+                DB::commit();
                 $this->sendTaxChangeEmail($payload);
+            } catch (Exception $e) {
+                DB::rollBack();
+                Log::channel('dailyJobs')->info('Daily Tax Type Change Effective Date Marking process ended with an error');
+                Log::channel('dailyJobs')->error($e);
             }
 
-            DB::commit();
             Log::channel('dailyJobs')->info('Daily Tax Type Change Effective Date Marking process ended');
-        } catch (Exception $e) {
-            Log::channel('dailyJobs')->info('Daily Tax Type Change Effective Date Marking process ended with an error');
-            Log::channel('dailyJobs')->error($e);
-            DB::rollBack();
         }
     }
 
