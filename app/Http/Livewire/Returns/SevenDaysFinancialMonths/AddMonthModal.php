@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Returns\FinancialMonths;
+namespace App\Http\Livewire\Returns\SevenDaysFinancialMonths;
 
 use App\Models\DualControl;
 use App\Models\FinancialMonth;
@@ -70,8 +70,11 @@ class AddMonthModal extends Component
                 'month_number.required' => 'This field is required',
             ]
         );
+        if ($this->day > 8) {
+            $this->alert('error', 'The day field must be less than or equal to seven days');
+            return;
+        }
         $yr = FinancialYear::query()->findOrFail($this->year);
-
         if (Carbon::create($yr['code'], $this->month_number, $this->day)->isWeekend()) {
             $this->alert('error', 'The selected day is weekend. Please choose another day');
             return;
@@ -79,27 +82,28 @@ class AddMonthModal extends Component
         $this->month = date('F', mktime(0, 0, 0, $this->month_number));
         DB::beginTransaction();
         try {
-            $financial_month = FinancialMonth::query()->create([
+            $seven_days = SevenDaysFinancialMonth::query()->create([
                 'financial_year_id' => $this->year,
                 'number' => $this->month_number,
                 'name' => $this->month,
                 'due_date' => Carbon::create($yr['code'], $this->month_number, $this->day)->endOfDay()->toDateTimeString(),
-                'lumpsum_due_date'  => Carbon::create($yr['code'], $this->month_number)->endOfMonth()->endOfDay()->toDateTimeString(),
             ]);
-            $this->triggerDualControl(get_class($financial_month), $financial_month->id, DualControl::ADD, 'adding financial month '.$this->month.' '.$yr['code']);
+            $this->triggerDualControl(get_class($seven_days), $seven_days->id, DualControl::ADD, 'adding seven days financial month '.$this->month.' '.$yr['code']);
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer'=>8000]);
             return redirect()->route('settings.financial-months');
+
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
             $this->alert('error', DualControl::ERROR_MESSAGE, ['timer'=>2000]);
             return redirect()->route('settings.financial-months');
+
         }
     }
 
     public function render()
     {
-        return view('livewire.returns.financial-months.add-month-modal');
+        return view('livewire.returns.seven-days-financial-months.add-month-modal');
     }
 }

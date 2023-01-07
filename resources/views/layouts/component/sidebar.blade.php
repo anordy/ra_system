@@ -978,9 +978,9 @@
                         {{--                    @endcan --}}
 
                         {{--                    @can('setting-dual-control-activities') --}}
-                        <li class="{{ request()->is('system/dual-control-configure/*') ? 'active' : '' }}">
-                            <a href="{{ route('system.dual-control-activities.configure') }}">Dual Control Configure</a>
-                        </li>
+{{--                        <li class="{{ request()->is('system/dual-control-configure/*') ? 'active' : '' }}">--}}
+{{--                            <a href="{{ route('system.dual-control-activities.configure') }}">Dual Control Configure</a>--}}
+{{--                        </li>--}}
                         {{--                    @endcan --}}
                     {{-- @can('system-all-pdfs-view')
                         <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">
