@@ -6,7 +6,6 @@ use App\Enum\ReturnCategory;
 use App\Jobs\Bill\CancelBill;
 use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
 use App\Jobs\Debt\GenerateControlNo;
-use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -68,8 +67,8 @@ class DailyDebtPenaltyInterest extends Command
          */
         $tax_returns = TaxReturn::selectRaw('
             tax_returns.*, 
-            ROUND(MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
-            ROUND(MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
+            (MONTHS_BETWEEN(CURRENT_DATE, CAST(filing_due_date as date))) as periods, 
+            (MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
         ')
             ->whereIn('return_category', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
             ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
@@ -79,8 +78,6 @@ class DailyDebtPenaltyInterest extends Command
         if ($tax_returns) {
 
             foreach ($tax_returns as $tax_return) {
-                // Lumpsum return is handled differently
-                if ($tax_return->return_type != LumpSumReturn::class) {
                     DB::beginTransaction();
                     try {
                         // Generate penalty
@@ -97,7 +94,6 @@ class DailyDebtPenaltyInterest extends Command
                         DB::rollBack();
                         Log::error($e);
                     }
-                }
             }
         }
     }
@@ -112,8 +108,8 @@ class DailyDebtPenaltyInterest extends Command
          */
         $tax_assessments = TaxAssessment::selectRaw('
             tax_assessments.*, 
-            ROUND(MONTHS_BETWEEN(CURRENT_DATE, CAST(curr_payment_due_date as date))) as periods, 
-            ROUND(MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
+            (MONTHS_BETWEEN(CURRENT_DATE, CAST(curr_payment_due_date as date))) as periods, 
+            (MONTHS_BETWEEN(CAST(curr_payment_due_date as date), CURRENT_DATE)) as penatableMonths
         ')
             ->whereIn('assessment_step', [ReturnCategory::DEBT, ReturnCategory::OVERDUE])
             ->whereRaw("CURRENT_DATE - CAST(curr_payment_due_date as date) > 0") // This determines if the payment due date has reached
