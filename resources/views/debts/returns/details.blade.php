@@ -5,12 +5,12 @@
 </div> 
 <table class="table table-bordered table-striped table-sm">
     <div class="d-flex justify-content-between align-items-center">
-        <label class="text-left font-weight-bold text-uppercase">{{ $tax_return->taxtype->name }} Debt for {{$tax_return->return->financialMonth->name}} {{ $tax_return->return->financialYear->code }}</label>
+        <label class="text-left font-weight-bold text-uppercase">{{ $tax_return->business->name }} - {{ $tax_return->location->name }} {{ $tax_return->taxtype->name }} Debt for {{$tax_return->return->financialMonth->name}} {{ $tax_return->return->financialYear->code }}</label>
     </div>
     <thead>
         <th style="width: 20%"></th>
         <th class="text-uppercase" style="width: 30%">Return Figure</th>
-        <th class="text-uppercase" style="width: 30%">Debt Figure</th>
+        <th class="text-uppercase" style="width: 30%">Return Debt Figure</th>
     </thead>
     <tbody>
         <tr>
@@ -35,7 +35,7 @@
         </tr>
         <tr>
             <th>Outstanding Amount</th>
-            <td></td>
+            <td>N/A</td>
             <td>{{ $tax_return->currency }}. {{ number_format($tax_return->outstanding_amount ?? 0, 2) }}</td>
         </tr>
         <tr>
@@ -48,7 +48,7 @@
             <td></td>
             <td> 
                 @if ($tax_return->status != 'submitted')
-                <div class="col-md-4 mb-3">
+                <div class="mb-3">
                     <p class="my-1">
                         @if ($tax_return->payment_status == 'complete')
                             <span class="badge badge-success"
@@ -92,7 +92,7 @@
     </tbody>
 </table>
 
-<table class="table table-bordered table-sm mb-0">
+<table class="table table-bordered table-striped table-sm">
     <div class="d-flex justify-content-between align-items-center">
         <label class="text-left font-weight-bold text-uppercase">Accumulated Penalties</label>
     </div>

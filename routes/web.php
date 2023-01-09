@@ -492,6 +492,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
         Route::get('/returns/recovery-measure/{debtId}', [ReturnDebtController::class, 'recovery'])->name('debt.recovery');
         Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('return.show');
+        Route::get('/returns/file/{fileId}', [ReturnDebtController::class, 'getAttachment'])->name('return.file');
         Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('return.showOverdue');
         Route::get('/demand-notice/view/{demandNoticeId}', [ReturnDebtController::class, 'showReturnDemandNotice'])->name('demandNotice');
 
@@ -501,6 +502,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         // Assessment debts
         Route::get('/assessments', [AssessmentDebtController::class, 'index'])->name('assessments.index');
         Route::get('/assesments/show/{assessment_id}', [AssessmentDebtController::class, 'show'])->name('assessment.show');
+        Route::get('/assesments/file/{fileId}', [AssessmentDebtController::class, 'getAttachment'])->name('assessment.file');
         Route::get('/assessment/waiver/show/{assessment_id}', [AssessmentDebtController::class, 'showWaiver'])->name('assessment.waiver.show');
         Route::get('/assessments/waiver/show/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('assessments.waivers.approval');
 
