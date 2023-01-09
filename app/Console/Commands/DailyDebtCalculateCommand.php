@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Enum\ApplicationStep;
 use App\Enum\ReturnCategory;
-use App\Models\Debts\Debt;
-use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -77,8 +75,6 @@ class DailyDebtCalculateCommand extends Command
             ->get();
 
         foreach ($tax_returns as $tax_return) {
-            // Lumpsum debt penalty is handled differently
-            if ($tax_return->return_type != LumpSumReturn::class) {
             DB::beginTransaction();
                 try {
                     /**
@@ -110,7 +106,6 @@ class DailyDebtCalculateCommand extends Command
                     Log::channel('dailyJobs')->info('Daily Debt calculation process ended with error');
                     Log::channel('dailyJobs')->error($e);
                 }
-            }
         }
 
         Log::channel('dailyJobs')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process ended");

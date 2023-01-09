@@ -291,6 +291,10 @@ class ApprovalProcessing extends Component
                 $location->generateVrn();
             }
 
+            $location->status = BusinessStatus::APPROVED;
+            $location->approved_on = Carbon::now()->toDateTimeString();
+            $location->save();
+
             $this->subject->verified_at = Carbon::now()->toDateTimeString();
             $this->subject->status = BusinessStatus::APPROVED;
         }
