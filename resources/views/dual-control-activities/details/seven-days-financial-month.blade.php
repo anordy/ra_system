@@ -1,7 +1,7 @@
 <div>
     <div class="card">
         <div class="card-header">
-            Financial Month Detail
+           Seven Days Financial Month Detail
         </div>
 
         <div class="card-body">

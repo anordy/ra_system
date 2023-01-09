@@ -99,5 +99,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TransactionFeesTableSeeder::class);
         $this->call(WorkflowTaxpayerDetailsAmendmentSeeder::class);
         $this->call(StreetTableSeeder::class);
+        $this->call(SubSysModuleSeeder::class);
     }
 }
