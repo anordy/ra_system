@@ -11,6 +11,8 @@ class SystemSetting extends Model implements Auditable
     use HasFactory, \OwenIt\Auditing\Auditable;
 
     const PASSWORD_EXPIRATION_DURATION = 'password-expiration-duration';
+    const MAXIMUM_NUMBER_OF_ATTEMPTS = 'max-login-attempts';
+    const LOGIN_DECAY_MINUTES = 'login-decay-minutes';
     
     protected $guarded = [];
     

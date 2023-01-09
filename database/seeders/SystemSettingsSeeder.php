@@ -21,6 +21,11 @@ class SystemSettingsSeeder extends Seeder
                 'name' => 'Password Policy',
                 'description' => 'is a set of rules that determine the complexity and strength of passwords used on our system. The goal of a password policy is to ensure that users choose strong, unique passwords that are difficult for unauthorized individuals to guess or crack.',
                 'is_approved' => 1
+            ],
+            [
+                'name' => 'Login Settings',
+                'description' => 'all settings related to login attempts, lockouts and others.',
+                'is_approved' => 1
             ]
         ];
 
@@ -39,12 +44,21 @@ class SystemSettingsSeeder extends Seeder
                 'is_approved' => 1
             ],
             [
-                'system_setting_category_id' => 1,
-                'name' => 'Password history number',
-                'code' => 'password-histroy-number',
-                'description' => 'is a feature of a password policy that prevents users from reusing their previous passwords. The purpose of password history is to ensure that users are not able to simply switch back to an old password after changing it, as this would not increase the security of the system',
-                'value' => '12',
+                'system_setting_category_id' => 2,
+                'name' => 'Max Attempts',
+                'code' => 'max-login-attempts',
+                'description' => 'Maximum login attempts',
+                'value' => '3',
                 'unit' => 'number',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 2,
+                'name' => 'Decay Minutes',
+                'code' => 'login-decay-minutes',
+                'description' => 'Maximum duration before user allowed to login again',
+                'value' => '2',
+                'unit' => 'minutes',
                 'is_approved' => 1
             ],
         ];
