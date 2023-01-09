@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Events\SendMail;
 use App\Http\Controllers\Controller;
+use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\UserOtp;
 use App\Traits\VerificationTrait;
@@ -18,7 +19,7 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers, VerificationTrait;
 
-    protected $maxAttempts = 3;
+    protected $maxAttempts;
     protected $decayMinutes = 2;
 
 
@@ -122,6 +123,7 @@ class LoginController extends Controller
 
     protected function hasTooManyLoginAttempts($user)
     {
+        $this->maxAttempts = SystemSetting::where('code', SystemSetting::MAXIMUM_NUMBER_OF_ATTEMPTS)->value('value');
         if ($user->auth_attempt >= $this->maxAttempts) {
             return true;
         }
@@ -136,7 +138,7 @@ class LoginController extends Controller
         $user->save();
         $this->limiter()->hit(
             $this->throttleKey($request),
-            $this->decayMinutes() * 60
+            $this->decayMinutes() * 60 //pull configured value for decay minutes from system_settings table
         );
     }
 
