@@ -34,6 +34,14 @@
             font-size: 1.6em;
             top: 41%;
         }
+        .sole-owner {
+            font-size: 1.2em;
+            top: 32.5%;
+        }
+        .trading-as {
+            font-size: 0.8em;
+            top: 34.9%;
+        }
         .reg-no {
             font-size: 1.5em;
             top: 53%;
@@ -97,7 +105,12 @@
 </head>
     <body>
         <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
-        <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
+        @if ($location->business->category->short_name == \App\Models\BusinessCategory::SOLE && $location->business->bpra_no)
+            <span class="embed sole-owner">{{ $location->business->responsiblePerson->fullname ?? '' }}</span>
+            <span class="embed trading-as">T/A {{ $location->business->name ?? '' }}</span>
+        @else
+            <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
+        @endif
         <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
         @if($location->vrn)
             <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>

@@ -11,6 +11,7 @@
             background-size: cover;
             margin: -70px;
         }
+
         .embed {
             position: absolute;
             text-transform: uppercase;
@@ -20,45 +21,65 @@
             padding-left: 70px;
             padding-right: 70px;
         }
+
         .rc-number {
             font-size: 1.15em;
             top: 3.3%;
             text-align: right;
             right: 20px;
         }
+
         .business-name {
             font-size: 1.15em;
             top: 33.5%;
         }
+
         .taxpayer-name {
             font-size: 1.5em;
             top: 41%;
         }
+
+        .sole-owner {
+            font-size: 1.2em;
+            top: 32.5%;
+        }
+
+        .trading-as {
+            font-size: 0.8em;
+            top: 34.9%;
+        }
+
         .reg-no {
             font-size: 1.5em;
             top: 53%;
         }
+
         .reg-no-alt {
             font-size: 1.5em;
             top: 52.5%;
         }
+
         .vrn-no {
             font-size: .8em;
             top: 55.5%;
         }
+
         .tax-types {
             font-size: 1.1em;
             top: 62%;
         }
+
         .location {
             font-size: 1.2em;
             top: 72%;
         }
+
         .commencing-date {
             font-size: 1.2em;
             top: 80%;
             padding-left: 90px;
         }
+
         .commissioner-signature {
             top: 86%;
             position: absolute;
@@ -69,9 +90,10 @@
             padding-right: 70px;
             left: 30px;
         }
+
         .qr-code {
             overflow: hidden;
-            position:absolute;
+            position: absolute;
             top: 83%;
             left: 44%;
             background: white;
@@ -80,6 +102,7 @@
             width: 180px;
             padding: 5px;
         }
+
         .watermark {
             -webkit-transform: rotate(331deg);
             -moz-transform: rotate(331deg);
@@ -94,30 +117,39 @@
             top: 40%;
         }
     </style>
+
 </head>
-    <body>
-        <span class="embed rc-number">{{ sprintf("%05s", $taxType->id) }}</span>
-        <p class="watermark">Online Copy</p>
+
+<body>
+    <span class="embed rc-number">{{ sprintf('%05s', $taxType->id) }}</span>
+    <p class="watermark">Online Copy</p>
+    @if ($location->business->category->short_name == \App\Models\BusinessCategory::SOLE &&
+        $location->business->bpra_no)
+        <span class="embed sole-owner">{{ $location->business->responsiblePerson->fullname ?? '' }}</span>
+        <span class="embed trading-as">T/A {{ $location->business->name ?? '' }}</span>
+    @else
         <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
-        <span class="embed taxpayer-name">{{ $location->business->tin ?? '' }}</span>
-        @if($location->vrn)
-            <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
-            <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
-        @else
-            <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
-        @endif
-        <span class="embed tax-types">{{ $tax->name }}</span>
-        <span class="embed location">
-            {{ $location->street->name }}, {{ $location->region->location }}
-        </span>
-        <span class="embed commencing-date">
-            {{ $location->date_of_commencing->format('d/m/y') }}
-        </span>
-        <span class="commissioner-signature">
-            <img src="{{ public_path()}}/sign/commissioner.png">
-        </span>
-        <div class="qr-code">
-            <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
-        </div>
-    </body>
+    @endif
+    <span class="embed taxpayer-name">{{ getFormattedTinNo($location) ?? '' }}</span>
+    @if ($location->vrn)
+        <span class="embed reg-no-alt">{{ $location->business->ztn_number ?? '' }}</span>
+        <span class="embed vrn-no">VRN NO: {{ $location->vrn ?? '' }}</span>
+    @else
+        <span class="embed reg-no">{{ $location->business->ztn_number ?? '' }}</span>
+    @endif
+    <span class="embed tax-types">{{ $tax->name == 'VAT' ? 'VALUE ADDED TAX' : $tax->name }}</span>
+    <span class="embed location">
+        {{ $location->street->name }}, {{ $location->region->location }}
+    </span>
+    <span class="embed commencing-date">
+        {{ $location->date_of_commencing->format('d/m/Y') }}
+    </span>
+    <span class="commissioner-signature">
+        <img src="{{ public_path() }}/sign/commissioner.png">
+    </span>
+    <div class="qr-code">
+        <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">
+    </div>
+</body>
+
 </html>
