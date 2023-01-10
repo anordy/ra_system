@@ -8,10 +8,7 @@
                     @if ($vars['range_start'] == date('Y-m-d'))
                     Collections on <span> {{ date('d-M-Y') }} </span>
                     @else
-                    Collections From
-                    <span> {{ date('d-M-Y',strtotime($vars['range_start'])) }} </span>
-                    to
-                    <span> {{ date('d-M-Y',strtotime($vars['range_end'])) }} </span>
+                    Collections From <span> {{ date('d-M-Y',strtotime($vars['range_start'])) }} </span> to <span> {{ date('d-M-Y',strtotime($vars['range_end'])) }} </span>
                     @endif
                 </strong><br>
                 <strong>Total Number of Records: {{ $taxTypes->count() }} </strong>
