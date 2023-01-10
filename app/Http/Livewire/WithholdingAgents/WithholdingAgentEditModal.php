@@ -44,7 +44,7 @@ class WithholdingAgentEditModal extends Component
 
 
     protected $rules = [
-        'tin' => 'required|integer',
+        'tin' => 'required|numeric|digits:9',
         'institution_name' => 'required',
         'institution_place' => 'required',
         'email' => 'required|email',
