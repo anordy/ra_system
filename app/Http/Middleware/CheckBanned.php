@@ -19,7 +19,7 @@ class CheckBanned
     {
         if (auth()->check() && (auth()->user()->status == 0)) {
             Auth::logout();
-
+            $request->session()->flush();
             $request->session()->invalidate();
 
             $request->session()->regenerateToken();

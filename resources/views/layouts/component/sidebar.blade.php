@@ -22,11 +22,11 @@
         </li>
 
         @can('taxpayer-management')
-            <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
+            <li class="{{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'active' : '' }}">
                 <a href="#taxpayersMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers
+                    aria-expanded="{{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers
                     Management</a>
-                <ul class="collapse list-unstyled {{ request()->is('taxpayers*') ? 'show' : '' }}" id="taxpayersMenu">
+                <ul class="collapse list-unstyled {{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'show' : '' }}" id="taxpayersMenu">
                     @can('taxpayer_view')
                         <li class="{{ request()->is('taxpayers/taxpayer*') ? 'active' : '' }}">
                             <a href="{{ route('taxpayers.taxpayer.index') }}">Taxpayers</a>

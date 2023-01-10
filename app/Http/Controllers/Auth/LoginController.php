@@ -10,6 +10,7 @@ use App\Models\UserOtp;
 use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -72,6 +73,7 @@ class LoginController extends Controller
 
             if ($user->status == 0) {
                 Auth::logout();
+                $request->session()->flush();
                 throw ValidationException::withMessages([
                     $this->username() =>  "Your account is locked, Please contact your admin to unlock your account",
                 ]);
@@ -79,6 +81,7 @@ class LoginController extends Controller
 
             if (!$this->verify($user)) {
                 Auth::logout();
+                $request->session()->flush();
                 throw ValidationException::withMessages([
                     $this->username() =>  "Your account could not be verified, please contact system administrator.",
                 ]);
@@ -86,6 +89,7 @@ class LoginController extends Controller
 
             if ($user->is_approved == 0) {
                 Auth::logout();
+                $request->session()->flush();
                 throw ValidationException::withMessages([
                     $this->username() =>  "Your account has not been approved, please contact system administrator.",
                 ]);
@@ -160,5 +164,21 @@ class LoginController extends Controller
         $user->auth_attempt = 0;
         $user->save();
         $this->limiter()->clear($this->throttleKey($request));
+    }
+
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+        $request->session()->flush();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 204)
+            : redirect('/');
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use App\Models\InterestRate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -19,7 +20,7 @@ class InterestRatesTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return  InterestRate::query()
+        return InterestRate::query()
             ->orderBy('year', 'Desc');
     }
 
@@ -65,8 +66,7 @@ class InterestRatesTable extends DataTableComponent
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
                         HTML;
-                    }
-                    elseif ($value == 2) {
+                    } elseif ($value == 2) {
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
                         HTML;
@@ -87,11 +87,19 @@ class InterestRatesTable extends DataTableComponent
                 })
                 ->html(),
             Column::make('Action', 'id')
-                ->format(fn ($value) => <<< HTML
-                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'settings.interest-rate.interest-rate-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-                HTML)
-                ->html(true),
+                ->format(function ($value, $row) {
+                    $button = '';
+                    if ($row->is_approved == 1) {
+                        if (approvalLevel(Auth::user()->level_id, 'Maker')) {
+                            $button = <<< HTML
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                HTML;
+                        }
+                    }
+
+                    return $button;
+                })->html(true),
         ];
     }
 
@@ -120,10 +128,10 @@ class InterestRatesTable extends DataTableComponent
     public function confirmed($value)
     {
         try {
-            $data = (object) $value['data'];
+            $data = (object)$value['data'];
             $rate = InterestRate::find($data->id);
             $this->triggerDualControl(get_class($rate), $rate->id, DualControl::DELETE, 'deleting interest rate');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             report($e);

@@ -2,63 +2,86 @@
 
 namespace App\Http\Livewire\Payments;
 
-use App\Models\TaxType;
-use App\Models\ZmPayment;
-use Carbon\Carbon;
+use App\Exports\DailyPaymentExport;
+use App\Traits\DailyPaymentTrait;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 
 class DailyPayments extends Component
 {
+    use LivewireAlert;
+    use DailyPaymentTrait;
+
+    public $today;
+    public $range_start;
+    public $range_end;
+
     public $taxTypes;
-    public $todayTzsTotalCollection;
-    public $todayUsdTotalCollection;
-    public $monthUsdTotalCollection;
-    public $monthTzsTotalCollection;
+    public $optionTaxRegions;
+    public $tax_region_id;
+    public $vars;
+
+    protected $rules =[
+        'range_start'=>'required',
+        'range_end' => 'required',
+    ];
 
     public function mount()
     {
-        $this->taxTypes = TaxType::whereIn('id', function ($query) {
-            $query->select('zm_bills.tax_type_id')
-                ->from('zm_payments')
-                ->leftJoin('zm_bills', 'zm_payments.zm_bill_id', 'zm_bills.id')
-                ->whereBetween('zm_payments.trx_time', [Carbon::today()->firstOfMonth(), Carbon::today()->endOfDay()])
-                ->distinct();
-        })->get();
-
-        $this->todayTzsTotalCollection = ZmPayment::where('currency','TZS')
-                ->whereDate('trx_time', [Carbon::today()])
-                ->sum('paid_amount');
-
-        $this->todayUsdTotalCollection = ZmPayment::where('currency','USD')
-                ->whereDate('trx_time', [Carbon::today()])
-                ->sum('paid_amount');
-
-        $this->monthTzsTotalCollection = ZmPayment::where('currency','TZS')
-                ->whereBetween('trx_time', [Carbon::today()->firstOfMonth(), Carbon::today()->endOfDay()])
-                ->sum('paid_amount');
-
-        $this->monthUsdTotalCollection = ZmPayment::where('currency','USD')
-                ->whereBetween('trx_time', [Carbon::today()->firstOfMonth(), Carbon::today()->endOfDay()])
-                ->sum('paid_amount');
+        $this->today = date('Y-m-d');
+        $this->range_start = date('Y-m-d');
+        $this->range_end = date('Y-m-d');
+        $this->getData();
     }
 
-    public function downloadPdf(){
-        $fileName = 'daily_payments_' . now()->format('d-m-Y') . '.pdf';
-        $vars['taxTypes'] = $this->taxTypes;
-        $vars['todayTzsTotalCollection'] = $this->todayTzsTotalCollection;
-        $vars['todayUsdTotalCollection'] = $this->todayUsdTotalCollection;
-        $vars['monthTzsTotalCollection'] = $this->monthTzsTotalCollection;
-        $vars['monthUsdTotalCollection'] = $this->monthUsdTotalCollection;
+    public function search()
+    {
+        $this->validate();
+        $this->getData();
+    }
 
-        $pdf = PDF::loadView('exports.payments.pdf.daily-payments', compact('vars'));
-        $pdf->setPaper('a4', 'landscape');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
-        return response()->streamDownload(
-            fn () => print($pdf->output()),
-            $fileName
-        );
+    public function downloadPdf()
+    {
+        try{
+            $fileName = 'daily_payments_' . now()->format('d-m-Y') . '.pdf';
+            $pdf = PDF::loadView('exports.payments.pdf.daily-payments', ['vars'=>$this->vars,'taxTypes'=>$this->taxTypes]);
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()), $fileName
+            );
+        }catch(Exception $e){
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            Log::error($e);
+        }
+    }
+
+    public function downloadExcel()
+    {
+        $fileName = 'daily_payments_' . now()->format('d-m-Y') . '.xlsx';
+        $title = 'Daily Receipts Provisional';
+        $this->alert('success', 'Exporting Excel File');
+        return Excel::download(new DailyPaymentExport($this->vars,$this->taxTypes,$title), $fileName);
+    }
+
+
+    public function getData()
+    {
+        $this->taxTypes = $this->getInvolvedTaxTypes($this->range_start,$this->range_end);
+
+        $this->vars['tzsTotalCollection'] = $this->getTotalCollectionPerCurrency('TZS',$this->range_start,$this->range_end);
+
+        $this->vars['usdTotalCollection'] = $this->getTotalCollectionPerCurrency('USD',$this->range_start,$this->range_end);
+
+        $this->vars['range_start'] = $this->range_start;
+
+        $this->vars['range_end'] = $this->range_end;
     }
 
     public function render()

@@ -7,6 +7,7 @@ use App\Models\ExchangeRate;
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -104,13 +105,13 @@ class ExchangeRateTable extends DataTableComponent
                         $edit = '';
                         $delete = '';
 
-                        if (Gate::allows('setting-exchange-rate-edit')) {
+                        if (Gate::allows('setting-exchange-rate-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<< HTML
                                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'exchange-rate-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                             HTML;
                         }
 
-                        if (Gate::allows('setting-exchange-rate-delete')) {
+                        if (Gate::allows('setting-exchange-rate-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<< HTML
                                 <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                             HTML;

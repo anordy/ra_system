@@ -28,6 +28,7 @@ class Check2FA
         $token = Session::get('user_2fa');
         if ($token != $user) {
             Auth::logout();
+            $request->session()->flush();
             return redirect()->route('login')->withErrors('Suspicious Login Attempt');
         }
 

@@ -55,6 +55,7 @@ class ChangePasswordController extends Controller
         $passwordHistory->save();
 
         Auth::logout();
+        $request->session()->flush();
         return redirect()->route('login')->with('success', 'Your password changed successfully, Login with your new password');
     }
 
