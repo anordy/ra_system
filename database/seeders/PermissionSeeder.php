@@ -307,6 +307,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'taxpayer-amendment-request-edit', 'sys_module_id' => 18],
             ['name' => 'taxpayer-amendment-request-delete', 'sys_module_id' => 18],
 
+            ['name' => 'all-kyc-amendment-requests-view', 'sys_module_id' => 18],
+            ['name' => 'kyc-amendment-request-view', 'sys_module_id' => 18],
+            ['name' => 'kyc-amendment-request-add', 'sys_module_id' => 18],
+            ['name' => 'kyc-amendment-request-edit', 'sys_module_id' => 18],
+            ['name' => 'kyc-amendment-request-delete', 'sys_module_id' => 18],
             
 
             # System

@@ -23,13 +23,37 @@
 
                     <div class="form-group col-lg-6">
                         <label class="control-label">Month</label>
-                        <select wire:model="number" class="form-control">
+                        <select wire:model="month_number" class="form-control">
                             <option value="">select month</option>
                             @for($x = 1; $x <= 12; $x ++)
                                 <option value="{{$x}}">{{date( 'F', strtotime( "$x/12/10" ))}}</option>
                             @endfor
                         </select>
-                        @error('number')
+                        @error('month_number')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-lg-6">
+                        <label class="control-label">Days</label>
+                        <select wire:model="day" class="form-control">
+                            <option value="">select day</option>
+                            @if($is_leap)
+                                @for($x = 1; $x <= 29; $x ++)
+                                    <option value="{{$x}}">{{ $x }}</option>
+                                @endfor
+                            @elseif($is_non_leap)
+                                @for($x = 1; $x <= 28; $x ++)
+                                    <option value="{{$x}}">{{ $x }}</option>
+                                @endfor
+                            @else
+                                @for($x = 1; $x <= 31; $x ++)
+                                    <option value="{{$x}}">{{ $x }}</option>
+                                @endfor
+                            @endif
+
+                        </select>
+                        @error('day')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

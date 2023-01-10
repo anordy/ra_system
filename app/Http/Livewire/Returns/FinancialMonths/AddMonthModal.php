@@ -18,11 +18,42 @@ class AddMonthModal extends Component
 {
     use LivewireAlert, DualControlActivityTrait;
 
-    public $years, $year, $month, $number ;
+    public $years;
+    public $year;
+    public $month;
+    public $month_number;
+    public $day;
+    public $is_leap = false;
+    public $is_non_leap = false;
 
     public function mount()
     {
-        $this->years = FinancialYear::query()->where('active',0)->orderByDesc('code')->get();
+        $this->years = FinancialYear::query()->where('active', 0)->orderByDesc('code')->get();
+    }
+
+    public function updated($property)
+    {
+        $yr = FinancialYear::query()->findOrFail($this->year);
+        if ($property == 'year')
+        {
+            $this->month_number = '';
+            $this->day  = '';
+        }
+        if ($property == 'month_number' && $this->month_number == 2)
+        {
+            if (Carbon::create($yr['code'], $this->month_number)->isLeapYear()) {
+                $this->is_leap = true;
+                $this->is_non_leap = false;
+            }
+            else{
+                $this->is_non_leap = true;
+                $this->is_leap = false;
+            }
+        }
+        else{
+            $this->is_non_leap = false;
+            $this->is_leap = false;
+        }
     }
 
     public function submit()
@@ -31,45 +62,39 @@ class AddMonthModal extends Component
             abort(403);
         }
 
-        $validate = $this->validate([
+        $this->validate([
             'year' => 'required',
-            'number' => 'required',
+            'month_number' => 'required',
         ],
             [
-                'number.required' => 'This field is required',
+                'month_number.required' => 'This field is required',
             ]
         );
+        $yr = FinancialYear::query()->findOrFail($this->year);
 
-        $this->month = date('F', mktime(0, 0, 0, $this->number));
-
+        if (Carbon::create($yr['code'], $this->month_number, $this->day)->isWeekend()) {
+            $this->alert('error', 'The selected day is weekend. Please choose another day');
+            return;
+        }
+        $this->month = date('F', mktime(0, 0, 0, $this->month_number));
         DB::beginTransaction();
         try {
-            $yr = FinancialYear::query()->findOrFail($this->year);
-
             $financial_month = FinancialMonth::query()->create([
                 'financial_year_id' => $this->year,
-                'number'            => $this->number,
-                'name'              => $this->month,
-                'due_date'          => Carbon::create($yr['code'], $this->number, 20)->toDateTimeString(),
+                'number' => $this->month_number,
+                'name' => $this->month,
+                'due_date' => Carbon::create($yr['code'], $this->month_number, $this->day)->endOfDay()->toDateTimeString(),
+                'lumpsum_due_date'  => Carbon::create($yr['code'], $this->month_number)->endOfMonth()->endOfDay()->toDateTimeString(),
             ]);
-            $this->triggerDualControl(get_class($financial_month), $financial_month->id, DualControl::ADD, 'adding financial month');
-
-            $seven_days = SevenDaysFinancialMonth::query()->create([
-                'financial_year_id' => $this->year,
-                'number'            => $this->number,
-                'name'              => $this->month,
-                'due_date'          => Carbon::create($yr['code'], $this->number, 7)->toDateTimeString(),
-            ]);
-            $this->triggerDualControl(get_class($seven_days), $seven_days->id, DualControl::ADD, 'adding seven days financial month');
+            $this->triggerDualControl(get_class($financial_month), $financial_month->id, DualControl::ADD, 'adding financial month '.$this->month.' '.$yr['code']);
             DB::commit();
-            $this->flash('success', 'Saved successfully', [], redirect()->back()->getTargetUrl());
-
+            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer'=>8000]);
+            return redirect()->route('settings.financial-months');
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-
-            $this->flash('warning', 'Something went wrong, please contact the administrator for help', [], redirect()->back()->getTargetUrl());
-
+            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer'=>2000]);
+            return redirect()->route('settings.financial-months');
         }
     }
 

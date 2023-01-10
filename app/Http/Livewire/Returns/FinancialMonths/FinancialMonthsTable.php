@@ -5,16 +5,13 @@ namespace App\Http\Livewire\Returns\FinancialMonths;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\TaPaymentConfiguration;
 
 class FinancialMonthsTable extends DataTableComponent
 {
     public $today;
-//    protected $model = TaPaymentConfiguration::class;
-
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -48,14 +45,57 @@ class FinancialMonthsTable extends DataTableComponent
                 ->sortable()->searchable(),
             Column::make("Normal Due Date", "due_date")
                 ->sortable()->searchable(),
+            Column::make("Lumpsum Due Date", "lumpsum_due_date")
+                ->sortable()->searchable(),
             Column::make("Created At", "created_at")
                 ->sortable()->searchable(),
-            Column::make("Action", "id")
+
+            Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
+
+            Column::make('Action', 'id')
+                ->format(function ($value, $row) {
+                    $edit = '';
+                    $extend = '';
+                    if (Gate::allows('setting-user-edit')) {
+                        $edit = <<< HTML
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                HTML;
+                    }
                     if ($this->today == $value){
-                    return <<< HTML
+                        $extend = <<< HTML
                     <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.extend-month-modal',$value)"><i class="fa fa-edit mr-1"></i>Extend</button>
                 HTML;}
+                    return $edit.$extend;
                 })
                 ->html(true),
         ];

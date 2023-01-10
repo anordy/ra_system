@@ -10,7 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class DualControl extends Model implements Auditable
 {
     use HasFactory, DualControlActivityTrait, \OwenIt\Auditing\Auditable;
-    protected $guarded = '';
+    protected $guarded = [];
 
     //Actions
     public const ADD = 'add';

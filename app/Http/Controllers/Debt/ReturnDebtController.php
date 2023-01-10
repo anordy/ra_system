@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Debt;
 
 use PDF;
+use Carbon\Carbon;
 use App\Models\Debts\DebtWaiver;
 use App\Models\Returns\TaxReturn;
+use App\Models\Debts\DemandNotice;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Debts\DebtWaiverAttachment;
-use App\Models\Debts\DemandNotice;
-use Carbon\Carbon;
 
 class ReturnDebtController extends Controller
 {
@@ -113,6 +114,15 @@ class ReturnDebtController extends Controller
         $debtId = decrypt($debtId);
         $tax_return = TaxReturn::findOrFail($debtId);
         return view('debts.returns.show', compact('tax_return'));
+    }
+
+    public function getAttachment($fileId)
+    {
+        $file = DebtWaiverAttachment::find(decrypt($fileId));
+        if ($file) {
+            return Storage::response($file->file_path);
+        }
+        return abort(404);
     }
     
 }
