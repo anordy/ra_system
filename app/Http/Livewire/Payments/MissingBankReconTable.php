@@ -65,6 +65,9 @@ class MissingBankReconTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
+            Column::make('Currency', 'currency')
+                ->sortable()
+                ->searchable(),
             Column::make('Transaction Type', 'transaction_type')
                 ->searchable()
                 ->sortable(),

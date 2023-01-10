@@ -6,6 +6,7 @@ use App\Jobs\Payments\FinalizeBankRecon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules\In;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -17,15 +18,19 @@ class BankReconImportModal extends Component
 
     use LivewireAlert, WithFileUploads;
 
-    public $reconFile, $path;
+    public $reconFile, $path, $currency;
 
-    protected $rules = [
-        'reconFile' => 'required|file', // Accept .txt since php confuses .txt for csv sometimes
-    ];
+    protected function rules(){
+        return [
+            'reconFile' => 'required|file', // Accept .txt since php confuses .txt for csv sometimes
+            'currency' => ['required', new In(['USD', 'TZS'])],
+        ];
+    }
 
     protected $messages = [
         'reconFile.required' => 'Please provide a file to import.',
-        'reconFile.mimes' => 'The file must be a valid csv, xls or xlsx.'
+        'reconFile.mimes' => 'The file must be a valid csv, xls or xlsx.',
+        'currency.required' => 'Please specify currency to import as.'
     ];
 
     public function downloadTemplate(){
@@ -48,7 +53,7 @@ class BankReconImportModal extends Component
         try {
             DB::beginTransaction();
 
-            Excel::import(new \App\Imports\BankReconImport(), $this->path);
+            Excel::import(new \App\Imports\BankReconImport($this->currency), $this->path);
 
             DB::commit();
 

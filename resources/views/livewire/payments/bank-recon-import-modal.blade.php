@@ -12,6 +12,21 @@
 
                 <div class="row mx-0">
                     <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Currency</label>
+                            <select class="form-control @error('currency') is-invalid @enderror" wire:model="currency" >
+                                <option>Please select currency</option>
+                                <option>USD</option>
+                                <option>TZS</option>
+                            </select>
+                            @error('currency')
+                                <span class="invalid-feedback">
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-12">
                         <div class="form-group mb-0">
                             <label class="font-weight-bold">Select file to import</label>
                             <input wire:model="reconFile"

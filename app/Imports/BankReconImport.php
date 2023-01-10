@@ -16,6 +16,11 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 
 class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, SkipsEmptyRows
 {
+    private $currency;
+
+    public function __construct($currency){
+        $this->currency = $currency;
+    }
     public function model(array $row): BankRecon
     {
         Log::info('Importing');
@@ -61,6 +66,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     } else {
                         MissingBankRecon::create([
@@ -77,6 +83,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     }
                     continue;
@@ -102,6 +109,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     } else {
                         MissingBankRecon::create([
@@ -118,6 +126,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     }
                     continue;
@@ -160,6 +169,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     } else {
                         MissingBankRecon::create([
@@ -177,6 +187,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     }
                     continue;
@@ -192,7 +203,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                 // Index 1 => Control No
                 // Index 3 => Ref No substr(4)
                 if (count($exploded) == 4){
-                    if(ZmBill::where('control_number', $exploded[3])->exists()) {
+                    if(ZmBill::where('control_number', $exploded[1])->exists()) {
                         $recon = BankRecon::create([
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
@@ -206,6 +217,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     } else {
                         MissingBankRecon::create([
@@ -221,6 +233,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     }
                     continue;
