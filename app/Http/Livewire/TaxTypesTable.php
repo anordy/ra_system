@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\TaxType;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -82,13 +83,13 @@ class TaxTypesTable extends DataTableComponent
                     $edit = '';
                     $delete = '';
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-tax-type-edit')) {
+                        if (Gate::allows('setting-tax-type-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit =  <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'tax-type-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
                         }
 
-                        if (Gate::allows('setting-tax-type-delete')) {
+                        if (Gate::allows('setting-tax-type-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete =  <<< HTML
                                     <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                                 HTML;

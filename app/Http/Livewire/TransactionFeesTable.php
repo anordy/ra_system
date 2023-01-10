@@ -91,7 +91,7 @@ class TransactionFeesTable extends DataTableComponent
                             HTML;
                         }
 
-                        if (Gate::allows('setting-transaction-fees-delete')) {
+                        if (Gate::allows('setting-transaction-fees-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<< HTML
                                 <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                             HTML;
