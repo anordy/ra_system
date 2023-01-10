@@ -269,11 +269,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
     public function announceEvent(Event $event)
     {
         try {
-            $user = auth()->user();
             $subject = $event->getSubject();
             $marking = $event->getMarking();
             $placesCurrent = $marking->getPlaces();
-            $transition = $event->getTransition();
 
             $places = $placesCurrent[key($placesCurrent)];
 
@@ -327,7 +325,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 if (key($placesCurrent) == 'completed') {
                     if ($event->getSubject()->taxpayer) {
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                            $subject = $notificationName,
+                            $title = $notificationName,
                             $message = 'Your request has been approved successfully.',
                             $href = $hrefClient ?? null,
                             $hrefText = 'View',
@@ -338,7 +336,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 } elseif (key($placesCurrent) == 'rejected') {
                     if ($event->getSubject()->taxpayer) {
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                            $subject = $notificationName,
+                            $title = $notificationName,
                             $message = 'Your request has been rejected .',
                             $href = $hrefClient ?? null,
                             $hrefText = 'View',
@@ -349,13 +347,18 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 }
 
                 if ($places['owner'] == 'staff') {
+
                     $task = $subject->pinstance;
-                    $actor = $task->actors->pluck('id')->toArray();
+                    
+                    $actors = json_decode($task->operators);
+                    if (gettype($actors) != "array") {
+                        $actors = [];
+                    }
                     if ($places['operator_type'] == 'role') {
-                        $users = User::whereIn('role_id', $actor)->get();
+                        $users = User::whereIn('role_id', $actors)->get();
                         foreach ($users as $u) {
                             $u->notify(new DatabaseNotification(
-                                $subject = $notificationName,
+                                $title = $notificationName,
                                 $message = 'You have a request to review',
                                 $href = $hrefAdmin ?? null,
                                 $hrefText = 'view'
