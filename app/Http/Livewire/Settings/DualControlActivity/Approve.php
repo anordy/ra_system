@@ -40,7 +40,7 @@ class Approve extends Component
             try {
                 $req->update(['status' => 'approved']);
                 $this->updateControllable($req, DualControl::APPROVE);
-                $this->updateHistory($req->controllable_type, $req->controllable_type_id, $this->dual_control_id, 'approved', 'ok');
+                $this->updateHistory($req->controllable_type, $req->controllable_type_id, $this->dual_control_id, 'approve', 'ok');
                 DB::commit();
                 $this->alert('success', 'Approved Successfully');
                 return redirect()->route('system.dual-control-activities.index');
@@ -48,7 +48,7 @@ class Approve extends Component
                 DB::rollBack();
                 Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
-                return redirect()->route('system.dual-control-activities.index');
+                return redirect()->route('system.dual-control-activities.show', [encrypt($this->dual_control_id)]);
 
             }
         }
@@ -93,7 +93,7 @@ class Approve extends Component
             try {
                 $req->update(['status' => 'rejected']);
                 $this->updateControllable($req, DualControl::REJECT);
-                $this->updateHistory($req->controllable_type, $req->controllable_type_id, $this->dual_control_id, 'rejected', 'not ok');
+                $this->updateHistory($req->controllable_type, $req->controllable_type_id, $this->dual_control_id, 'reject', 'not ok');
                 DB::commit();
                 $this->alert('success', 'Rejected Successfully');
                 return redirect()->route('system.dual-control-activities.index');
@@ -101,7 +101,7 @@ class Approve extends Component
                 DB::rollBack();
                 Log::error($exception);
                 $this->alert('error', 'Something went wrong. Please contact an admin');
-                return redirect()->route('system.dual-control-activities.index');
+                return redirect()->route('system.dual-control-activities.show', [encrypt($this->dual_control_id)]);
             }
         }
     }

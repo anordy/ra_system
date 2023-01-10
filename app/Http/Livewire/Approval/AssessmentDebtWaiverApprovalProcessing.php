@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Approval;
 
 use Exception;
-use Carbon\Carbon;
 use App\Events\SendSms;
 use App\Models\TaxType;
 use Livewire\Component;
@@ -142,7 +141,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
        
         }
 
-        if ($this->checkTransition('commisioner_complete')) {
+        if ($this->checkTransition('commissioner_complete')) {
             $this->validate([
                 'interestPercent' => 'required',
                 'penaltyPercent' => 'required',
@@ -236,7 +235,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 event(new SendMail('debt-waiver-rejected', $notification_payload));
             }
 
-            if ($this->checkTransition('commisioner_reject')) {
+            if ($this->checkTransition('commissioner_reject')) {
                 $this->subject->status = WaiverStatus::REJECTED;
                 $this->debt->update(['application_status' => 'normal']);
                 $this->subject->save();

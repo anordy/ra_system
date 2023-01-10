@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Debt;
 use App\Models\Debts\DebtWaiver;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Debts\DebtWaiverAttachment;
 use App\Models\TaxAssessments\TaxAssessment;
 
@@ -45,6 +46,15 @@ class AssessmentDebtController extends Controller
         } 
         $waiver = DebtWaiver::findOrFail(decrypt($waiver_id));
         return view('debts.assessments.waivers.show', compact('waiver'));
+    }
+
+    public function getAttachment($fileId)
+    {
+        $file = DebtWaiverAttachment::find(decrypt($fileId));
+        if ($file) {
+            return Storage::response($file->file_path);
+        }
+        return abort(404);
     }
 
     
