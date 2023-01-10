@@ -44,6 +44,7 @@ class PaymentFilter extends Component
             'range_end'   => date('Y-m-d 23:59:59', strtotime($this->range_end)),
         ];
         $this->data = $filters;
+        
         if ($this->tableName == 'complete-payments-table') {
             $this->emitTo('App\Http\Livewire\Payments\CompletePaymentsTable', 'filterData', $filters);
         } elseif ($this->tableName == 'pending-payments-table') {
@@ -53,7 +54,6 @@ class PaymentFilter extends Component
         } elseif ($this->tableName == 'failed-payments-table') {
             $this->emitTo('App\Http\Livewire\Payments\FailedPaymentsTable', 'filterData', $filters);
         }
-        
     }
 
     public function pdf()

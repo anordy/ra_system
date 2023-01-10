@@ -9,11 +9,12 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class KYC extends Model implements Auditable
 {
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
+
     protected $table = 'kycs';
 
     protected $guarded = [];
 
-    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     public function region(){
         return $this->belongsTo(Region::class);

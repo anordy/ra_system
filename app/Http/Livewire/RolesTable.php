@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -95,12 +96,12 @@ class RolesTable extends DataTableComponent
                     $edit = '';
                     $delete = '';
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-role-edit')) {
+                        if (Gate::allows('setting-role-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit =  <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
                         }
-                        if (Gate::allows('setting-role-delete')) {
+                        if (Gate::allows('setting-role-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete =  <<< HTML
                                     <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                                 HTML;

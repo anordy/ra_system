@@ -10,6 +10,11 @@ trait WorkflowTrait
     public function pinstances()
     {
         return $this->morphMany(WorkflowTask::class, 'pinstance');
+    }    
+    
+    public function pinstance()
+    {
+        return $this->morphOne(WorkflowTask::class, 'pinstance')->latest();
     }
 
     public function pinstancesActive()

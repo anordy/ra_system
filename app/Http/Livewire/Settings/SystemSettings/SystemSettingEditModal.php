@@ -58,7 +58,7 @@ class SystemSettingEditModal extends Component
 
     public function submit()
     {
-        if (!Gate::allows('setting-penalty-rate-edit')) {
+        if (!Gate::allows('system-setting-edit')) {
             abort(403);
        }
         $this->validate();
