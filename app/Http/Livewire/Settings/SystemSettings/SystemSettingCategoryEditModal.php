@@ -42,7 +42,7 @@ class SystemSettingCategoryEditModal extends Component
 
     public function submit()
     {
-        if (!Gate::allows('setting-penalty-rate-edit')) {
+        if (!Gate::allows('setting-system-category-edit')) {
             abort(403);
         }
         $this->validate();
