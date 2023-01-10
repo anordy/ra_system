@@ -135,6 +135,7 @@ use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
+use App\Http\Controllers\KYC\KycAmendmentRequestController;
 
 Auth::routes();
 
@@ -237,6 +238,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::prefix('taxpayers-amendment')->as('taxpayers-amendment.')->group(function () {
         Route::get('view/all', [AmendmentRequestController::class, 'index'])->name('index');
         Route::get('view/{id}', [AmendmentRequestController::class, 'show'])->name('show');
+    });
+
+    Route::prefix('kycs-amendment')->as('kycs-amendment.')->group(function () {
+        Route::get('view/all', [KycAmendmentRequestController::class, 'index'])->name('index');
+        Route::get('view/{id}', [KycAmendmentRequestController::class, 'show'])->name('show');
     });
 
     Route::resource('taxpayers', TaxpayersController::class);
