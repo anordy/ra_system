@@ -15,7 +15,7 @@ class CreateInterestRatesTable extends Migration
     {
         Schema::create('interest_rates', function (Blueprint $table) {
             $table->id();
-            $table->decimal('rate', 3, 4);
+            $table->decimal('rate', 8, 4);
             $table->integer('year');
             $table->boolean('is_approved')->default(0);
             $table->boolean('is_updated')->default(0);

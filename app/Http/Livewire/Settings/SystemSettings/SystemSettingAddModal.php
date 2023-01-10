@@ -50,7 +50,7 @@ class SystemSettingAddModal extends Component
     public function submit()
     {
         
-        if (!Gate::allows('setting-system-category-add')) {
+        if (!Gate::allows('system-setting-add')) {
             abort(403);
         }
         $this->validate();
