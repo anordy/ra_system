@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Returns\SevenDaysFinancialMonths;
 use App\Models\FinancialYear;
 use App\Models\SevenDaysFinancialMonth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -82,12 +83,12 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $extend = '';
-                    if (Gate::allows('setting-user-edit')) {
+                    if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $edit = <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
                     }
-                    if ($this->today == $value) {
+                    if ($this->today == $value && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $extend = <<< HTML
                     <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.extend-month-modal',$value)"><i class="fa fa-edit mr-1"></i>Extend</button>
                 HTML;

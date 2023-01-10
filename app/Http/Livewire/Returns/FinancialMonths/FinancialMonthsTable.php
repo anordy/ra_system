@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Returns\FinancialMonths;
 use App\Models\FinancialMonth;
 use App\Models\FinancialYear;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -86,7 +87,7 @@ class FinancialMonthsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $extend = '';
-                    if (Gate::allows('setting-user-edit')) {
+                    if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $edit = <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
