@@ -219,9 +219,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->app_status = DisputeStatus::REJECTED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
-
-            }
-            elseif ($placeName == 'TAX_CONSULTANT_VERIFICATION') {
+            } elseif ($placeName == 'TAX_CONSULTANT_VERIFICATION') {
                 if (key($places) == 'completed') {
                     $subject->status = TaxAgentStatus::APPROVED;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
@@ -230,10 +228,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->status = TaxAgentStatus::REJECTED;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
-
-            }
-
-            elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
+            } elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
                 if (key($places) == 'completed') {
                     $subject->status = TaxAgentStatus::APPROVED;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
@@ -242,9 +237,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->status = TaxAgentStatus::REJECTED;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
-
-            }
-            elseif ($placeName == 'BUSINESS_REGISTRATION') {
+            } elseif ($placeName == 'BUSINESS_REGISTRATION') {
                 if (key($places) == 'correct_application') {
                     event(new SendSms('business-registration-correction', $subject->id, ['message' => $context['comment']]));
                     event(new SendMail('business-registration-correction', $subject->id, ['message' => $context['comment']]));
@@ -332,17 +325,16 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
             } else {
                 if (key($placesCurrent) == 'completed') {
-                    if ($event->getSubject()->taxpayer){
-                            $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                                $subject = $notificationName,
-                                $message = 'Your request has been approved successfully.',
-                                $href = $hrefClient ?? null,
-                                $hrefText = 'View',
-                                $hrefParameters = null,
-                                $owner = 'taxpayer'
-                            ));
+                    if ($event->getSubject()->taxpayer) {
+                        $event->getSubject()->taxpayer->notify(new DatabaseNotification(
+                            $subject = $notificationName,
+                            $message = 'Your request has been approved successfully.',
+                            $href = $hrefClient ?? null,
+                            $hrefText = 'View',
+                            $hrefParameters = null,
+                            $owner = 'taxpayer'
+                        ));
                     }
-
                 } elseif (key($placesCurrent) == 'rejected') {
                     if ($event->getSubject()->taxpayer) {
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
@@ -357,9 +349,10 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 }
 
                 if ($places['owner'] == 'staff') {
-                    $operators = $places['operators'];
+                    $task = $subject->pinstance;
+                    $actor = $task->actors->pluck('id')->toArray();
                     if ($places['operator_type'] == 'role') {
-                        $users = User::whereIn('role_id', $operators)->get();
+                        $users = User::whereIn('role_id', $actor)->get();
                         foreach ($users as $u) {
                             $u->notify(new DatabaseNotification(
                                 $subject = $notificationName,
