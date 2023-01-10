@@ -10,9 +10,13 @@
             <h6 class="text-uppercase">Business File Types Management</h6>
             <div class="card-tools">
                 @can('setting-business-file-add')
-                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'business.files.add-type-modal')">
-                    <i class="bi bi-plus-circle-fill"></i>
-                    New File Type</button>
+                    @if(approvalLevel(Auth::user()->level_id, 'Maker'))
+                        <button class="btn btn-info btn-sm"
+                                onclick="Livewire.emit('showModal', 'business.files.add-type-modal')">
+                            <i class="bi bi-plus-circle-fill"></i>
+                            New File Type
+                        </button>
+                    @endif
                 @endcan
             </div>
         </div>

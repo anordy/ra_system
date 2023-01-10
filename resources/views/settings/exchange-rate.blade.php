@@ -10,10 +10,13 @@
             <h5 class="text-uppercase">Exchange Rate Management</h5>
             <div class="card-tools">
                 @can('setting-exchange-rate-add')
-                    <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'exchange-rate-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
-                    Add</button>
+                    @if(approvalLevel(Auth::user()->level_id, 'Maker'))
+                        <button class="btn btn-info btn-sm"
+                                onclick="Livewire.emit('showModal', 'exchange-rate-add-modal')"><i
+                                    class="fa fa-plus-circle"></i>
+                            Add
+                        </button>
+                    @endif
                 @endcan
             </div>
         </div>
