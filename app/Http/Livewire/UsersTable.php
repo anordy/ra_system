@@ -14,6 +14,7 @@ use Exception;
 use id;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -125,7 +126,7 @@ class UsersTable extends DataTableComponent
                     $mail = '';
 
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-user-edit')) {
+                        if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker') ) {
                             $edit = <<< HTML
                                         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                     HTML;
@@ -138,7 +139,7 @@ class UsersTable extends DataTableComponent
                     }
 
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-user-delete') && $value != auth()->user()->id) {
+                        if (Gate::allows('setting-user-delete') && $value != auth()->user()->id && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<< HTML
                                         <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                                     HTML;

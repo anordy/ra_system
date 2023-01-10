@@ -31,6 +31,7 @@ class EmTransactionsTable extends DataTableComponent
             'default' => true,
             'class'   => 'table-bordered table-sm',
         ]);
+        $this->setAdditionalSelects(['financial_month_id', 'business_location_id']);
     }
 
     public function filterData($data)
@@ -57,13 +58,19 @@ class EmTransactionsTable extends DataTableComponent
                 ->searchable(),
             Column::make('Branch / Location', 'businessLocation.name')
                 ->sortable()
-                ->searchable(),
-            Column::make('TIN', 'business.tin')
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->businessLocation->name}";
+                }),
+            Column::make('Tax Type', 'taxtype.name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Branch Name', 'businessLocation.name')
+            Column::make('Financial Month', 'financialMonth.name')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return "{$row->financialMonth->name} {$row->financialMonth->year->code}";
+                }),
             Column::make('Total VAT', 'total_amount_due')
                 ->sortable()
                 ->format(function ($value, $row) {

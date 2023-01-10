@@ -117,7 +117,7 @@ class ZanMalipoInternalService
         $payload = [
             'bill_id' => $bill->id,
             'reason' => $cancellationReason,
-            'staff_id' => Auth::id()
+            'staff_id' => Auth::id() ?? 0
         ];
 
         $curl = curl_init();
@@ -163,7 +163,7 @@ class ZanMalipoInternalService
         $payload = [
             'bill_id' => $bill->id,
             'expire_date' => $expireDate,
-            'staff_id' => Auth::id()
+            'staff_id' => Auth::id() ?? 0
         ];
 
         $curl = curl_init();

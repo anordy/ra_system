@@ -3,52 +3,36 @@
 @section('title', 'View Debt')
 
 @section('content')
+
     <div class="d-flex justify-content-end pb-2">
-        <a class="btn btn-info" href="{{route('debts.returns.index')}}">
+        @if (!$assessment->rollback && count($assessment->penalties) > 0)
+            <a href="{{ route('debts.rollback.assessment', encrypt($assessment->id)) }}"
+                class="btn btn-info btn-sm text-white" style="color: white !important;"><i
+                    class="bi bi-arrow-left-right text-white"></i>
+                Rollback Penalty & Interest
+            </a>
+        @endif
+        <a class="btn btn-info" href="{{ route('debts.returns.index') }}">
             <i class="bi bi-arrow-return-left mr-2"></i>
             Back
         </a>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <div>
-                <h6 class="text-uppercase mt-2 ml-2">{{ $assessment->taxtype->name ?? '' }} Debt
-                <hr>
-            </div>
 
-            <nav class="nav nav-tabs mt-0 border-top-0">
-                <a href="#tab1" class="nav-item nav-link font-weight-bold active">Debt Details</a>
-                <a href="#tab3" class="nav-item nav-link font-weight-bold">Penalties</a>
-                <a href="#tab4" class="nav-item nav-link font-weight-bold">Waiver Details</a>
-            </nav>
+    <nav class="nav nav-tabs mt-0 border-top-0">
+        <a href="#tab1" class="nav-item nav-link active">Debt Details</a>
+        <a href="#tab2" class="nav-item nav-link">Business Information</a>
+        <a href="#tab3" class="nav-item nav-link">Waiver Details</a>
+    </nav>
 
-            <div class="tab-content px-2 card pt-3 pb-2">
-                <div class="card-tools">
-                    @if (!$assessment->rollback && count($assessment->penalties) > 0)
-                        <a href="{{ route('debts.rollback.assessment', encrypt($assessment->id)) }}"
-                            class="btn btn-info btn-sm text-white" style="color: white !important;"><i
-                                class="bi bi-arrow-left-right text-white"></i>
-                            Rollback Penalty & Interest
-                        </a>
-                    @endif
-                    {{-- @if (($tax_return->recoveryMeasure->status ?? '') != 'unassigned' && $tax_return->return_category == 'overdue')
-                        <a href="{{ route('debts.debt.recovery', encrypt($tax_return->id)) }}"
-                            class="btn btn-info btn-sm text-white" style="color: white !important;"><i
-                                class="fa fa-plus text-white"></i>
-                            Assign Recovery Measure
-                        </a>
-                    @endif --}}
-                </div>
-                <div id="tab1" class="tab-pane fade active show m-4">
-                    @include('debts.assessments.details', ['assessment' => $assessment])
-                </div>
-                <div id="tab3" class="tab-pane fade m-4">
-                    <livewire:debt.debt-penalties :penalties="$assessment->penalties ?? []" />
-                </div>
-                <div id="tab4" class="tab-pane fade  m-4">
-                    @include('debts.assessments.waiver-details', ['assessment' => $assessment])
-                </div>
-            </div>
+    <div class="tab-content px-2 card pt-3 pb-2">
+        <div id="tab1" class="tab-pane fade active show m-4">
+            @include('debts.assessments.details', ['assessment' => $assessment])
+        </div>
+        <div id="tab2" class="tab-pane fade m-4">
+            @include('debts.assessments.business_info', ['assessment' => $assessment])
+        </div>
+        <div id="tab3" class="tab-pane fade  m-4">
+            @include('debts.assessments.waiver-details', ['assessment' => $assessment])
         </div>
     </div>
 

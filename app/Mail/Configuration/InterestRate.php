@@ -30,6 +30,6 @@ class InterestRate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.configurations.interest-rate')->subject("ZRB Current System Interest Rate Is Not configured");
+        return $this->markdown('emails.configurations.interest-rate')->subject("ZRB - ZIDRAS Interest Rate Is Not Configured");
     }
 }

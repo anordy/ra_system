@@ -28,6 +28,10 @@ class WithholdingAgent extends Model implements Auditable
         return $this->belongsTo(Region::class, 'region_id');
     }
 
+    public function street() {
+        return $this->belongsTo(Street::class, 'street_id');
+    }
+
     public function latestResponsiblePerson() {
         return $this->hasOne(WaResponsiblePerson::class)->latest();
     }

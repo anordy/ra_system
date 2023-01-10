@@ -18,7 +18,7 @@ class CreateDualControlHistoryTable extends Migration
             $table->string('controllable_type');
             $table->unsignedBigInteger('controllable_id');
             $table->unsignedBigInteger('dual_control_id');
-            $table->string('status');
+            $table->string('action');
             $table->timestamp('approved_at')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->string('comment')->nullable();

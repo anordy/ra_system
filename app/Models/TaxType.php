@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Returns\Vat\VatReturn;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -60,5 +61,41 @@ class TaxType extends Model implements Auditable
 
     public function scopeMain($query){
         $query->where('category', 'main');
+    }
+
+    public function getTzsDailyPaymentsAttribute()
+    {
+        return ZmPayment::leftJoin('zm_bills','zm_payments.zm_bill_id','zm_bills.id')
+                ->where('zm_payments.currency','TZS')
+                ->whereDate('zm_payments.trx_time', Carbon::today())
+                ->where('zm_bills.tax_type_id',$this->id)
+                ->sum('zm_payments.paid_amount');
+    }
+
+    public function getUsdDailyPaymentsAttribute()
+    {
+        return ZmPayment::leftJoin('zm_bills','zm_payments.zm_bill_id','zm_bills.id')
+                ->where('zm_payments.currency','USD')
+                ->whereDate('zm_payments.trx_time', Carbon::today())
+                ->where('zm_bills.tax_type_id',$this->id)
+                ->sum('zm_payments.paid_amount');
+    }
+
+    public function getTzsMonthlyPaymentsAttribute()
+    {
+        return ZmPayment::leftJoin('zm_bills','zm_payments.zm_bill_id','zm_bills.id')
+                ->where('zm_payments.currency','TZS')
+                ->whereBetween('zm_payments.trx_time', [Carbon::today()->firstOfMonth(),Carbon::today()->endOfDay()])
+                ->where('zm_bills.tax_type_id',$this->id)
+                ->sum('zm_payments.paid_amount');
+    }
+
+    public function getusdMonthlyPaymentsAttribute()
+    {
+        return ZmPayment::leftJoin('zm_bills','zm_payments.zm_bill_id','zm_bills.id')
+                ->where('zm_payments.currency','USD')
+                ->whereBetween('zm_payments.trx_time', [Carbon::today()->firstOfMonth(),Carbon::today()->endOfDay()])
+                ->where('zm_bills.tax_type_id',$this->id)
+                ->sum('zm_payments.paid_amount');
     }
 }

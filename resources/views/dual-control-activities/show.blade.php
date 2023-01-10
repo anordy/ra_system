@@ -84,9 +84,10 @@
                         @include('dual-control-activities.details.consultant-fee')
                     @elseif ($result->controllable_type === \App\Models\DualControl::FINANCIAL_YEAR)
                         @include('dual-control-activities.details.financial-year')
-                    @elseif ($result->controllable_type === \App\Models\DualControl::FINANCIAL_MONTH ||
-                        $result->controllable_type === \App\Models\DualControl::SEVEN_FINANCIAL_MONTH)
+                    @elseif ($result->controllable_type === \App\Models\DualControl::FINANCIAL_MONTH)
                         @include('dual-control-activities.details.financial-month')
+                    @elseif ($result->controllable_type === \App\Models\DualControl::SEVEN_FINANCIAL_MONTH)
+                        @include('dual-control-activities.details.seven-days-financial-month')
                     @elseif ($result->controllable_type === \App\Models\DualControl::ZRBBANKACCOUNT)
                         @include('dual-control-activities.details.zrb-bank-account')
                     @elseif ($result->controllable_type === \App\Models\DualControl::COUNTRY)
@@ -114,7 +115,7 @@
                     </div>
                 </div>
                 <div id="tab2" class="tab-pane fade p-2">
-                    <livewire:settings.dual-control-activity.activity-table status="pending"/>
+                    <livewire:settings.dual-control-activity.history-table  dualControlId="{{ encrypt($result->id) }}"/>
                 </div>
 
             </div>
