@@ -1,14 +1,15 @@
 <?php
 
-use App\Models\ApprovalLevel;
-use App\Models\BusinessTaxTypeChange;
-use App\Models\District;
-use App\Models\EducationLevel;
-use App\Models\Region;
+use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Region;
+use App\Models\District;
+use App\Models\ApprovalLevel;
+use App\Models\EducationLevel;
 use App\Models\UserApprovalLevel;
 use Illuminate\Support\Facades\Auth;
+use App\Models\BusinessTaxTypeChange;
 
 function getOperators($owner, $operator_type, $actors)
 {
@@ -148,4 +149,9 @@ function getFormattedTinNo($getter){
     }
 
     return '';
+}
+
+function formatDate($date)
+{
+    return Carbon::parse($date)->format('d M Y H:i:s');
 }

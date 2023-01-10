@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Workflow;
 use Illuminate\Database\Seeder;
 
-class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
+class WorkflowKYCDetailsAmendmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,14 +14,15 @@ class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION';
+        //
+        $name = 'KYC_DETAILS_AMENDMENT_VERIFICATION';
         $type = 'workflow';
         $marking_store = [
             'type' => 'multiple_state',
             'property' => ['marking']
         ];
         $initial_marking = 'apply';
-        $supports = ['App\Models\TaxpayerAmendmentRequest'];
+        $supports = ['App\Models\KycAmendmentRequest'];
         $places =  [
             'apply' => [
                 'owner' => 'staff',
@@ -44,6 +45,7 @@ class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
                 'operators' => []
             ],
         ];
+
         $transitions = [
             'application_submitted' => [
                 'from' => 'apply',
@@ -68,8 +70,8 @@ class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
         ];
 
         Workflow::updateOrCreate([
-            'code' => 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION',
-            'summary' => 'Taxpayer Details Amendment Verification Workflow',
+            'code' => 'kyc_details_amendment_verification',
+            'summary' => 'KYC Details Amendment Verification Workflow',
             'name' => $name,
             'type' => $type,
             'initial_marking' => $initial_marking,
