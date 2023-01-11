@@ -30,7 +30,7 @@ class TaxpayersTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Taxpayer::query()->with('country', 'region')
+        return Taxpayer::query()->with('country', 'region','street')
             ->orderBy('taxpayers.id', 'desc');
     }
 
@@ -54,7 +54,7 @@ class TaxpayersTable extends DataTableComponent
             Column::make('Nationality', 'country_id')
                 ->format(fn ($value, $row) => $row->country->nationality ?? ''),
             Column::make('Location', 'region.name'),
-            Column::make('Street', 'street'),
+            Column::make('Street', 'street.name'),
             Column::make('Action', 'id')->view('taxpayers.actions')
         ];
     }

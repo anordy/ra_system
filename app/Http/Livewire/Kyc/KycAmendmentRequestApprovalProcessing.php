@@ -8,6 +8,7 @@ use App\Models\KYC;
 use App\Models\KycAmendmentRequest;
 use App\Traits\VerificationTrait;
 use App\Traits\WorkflowProcesssingTrait;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;

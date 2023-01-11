@@ -139,7 +139,7 @@ class EnrollFingerprint extends Component
                 'last_name' => $data['last_name'],
                 'password' => $data['password'],
                 'physical_address' => $data['physical_address'],
-                'street' => $data['street'],
+                'street_id' => $data['street_id'],
                 'email' => $data['email'],
                 'mobile' => $data['mobile'],
                 'alt_mobile' => $data['alt_mobile'],
