@@ -36,4 +36,12 @@ class Region extends Model implements Auditable
     public function activeDistricts(){
         return $this->hasMany(District::class)->where('is_approved', DualControl::APPROVE)->select('id', 'name');
     }
+
+    public function disricts(){
+        return $this->hasMany(District::class);
+    }
+
+    public function scopeApproved($query){
+        return $query->where('is_approved', true);
+    }
 }
