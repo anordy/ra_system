@@ -24,8 +24,8 @@ return [
 
     // API SERVER CREDENTIALS
     'api_url' => env('API_SERVER_URL'),
-    'api_server_username' => 'immigration',
-    'api_server_password' => 'password',
+    'api_server_username' => env('API_SERVER_USERNAME'),
+    'api_server_password' => env('API_SERVER_PASSWORD'),
 
     // DIP(Data Integrity Protection) Service
     'verification' => [
