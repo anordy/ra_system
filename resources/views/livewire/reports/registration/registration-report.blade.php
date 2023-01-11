@@ -202,26 +202,25 @@
             </div>
             @endif
 
-        </div>
-    </div>
-
-    <!-- Show more filters -->
-    <div>
-        <div class="row">
+            <!-- Show more filters -->
             <div class="col-md-4 form-group">
-                <button class="btn btn-primary btn-xs ml-2 mt-4" wire:click="toggleFilters">
+                <button class="btn btn-outline-primary btn-xs ml-2 mt-4" wire:click="toggleFilters">
 
                     @if ($showMoreFilters)
                     <i class="bi bi-filter mr-3"></i>
                     Hide More filters
                     @else
                     <i class="bi bi-filter"></i>
-                    Show more Filters
+                    More Filters...
                     @endif
                 </button>
             </div>
+
         </div>
     </div>
+
+    
+ 
 
 
     @if ($showMoreFilters)
@@ -355,20 +354,18 @@
 
     <div class="row mt-3">
         <div class="col-md-12 d-flex justify-content-end">
-            <div x-data>
-                <button class="btn btn-warning ml-2" wire:click="preview">
-                    <i class="bi bi-eye-fill"></i>
-                    Preview Report
-                </button>
-            </div>
+            <button class="btn btn-primary ml-2" wire:click="preview" wire:loading.attr="disabled">
+                <i class="bi bi-funnel ml-1" wire:loading.remove wire:target="priview"></i>
+                <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="priview"></i>
+                Search
+            </button>
             @if ($hasData)
-            <button class="btn btn-success ml-2" wire:click="exportExcel " wire:loading.attr="disabled">
+            <button class="btn btn-success ml-2" wire:click="exportExcel" wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>
-                <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
-                    wire:target="exportExcel"></i>
+                <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="exportExcel"></i>
                 Export to Excel
             </button>
-            <button class="btn btn-success ml-2" wire:click="exportPdf" wire:loading.attr="disabled">
+            <button class="btn btn-info ml-2" wire:click="exportPdf" wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-pdf ml-1" wire:loading.remove wire:target="exportPdf"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="exportPdf"></i>
                 Export to Pdf
