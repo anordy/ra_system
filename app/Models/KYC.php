@@ -20,6 +20,10 @@ class KYC extends Model implements Auditable
         return $this->belongsTo(Region::class);
     }
 
+    public function street(){
+        return $this->belongsTo(Street::class);
+    }
+
     public function country(){
         return $this->belongsTo(Country::class);
     }
