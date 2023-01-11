@@ -71,7 +71,7 @@ class KycAmendmentRequestTable extends DataTableComponent
                 ->searchable(),
             Column::make('Nationality', 'kyc.country_id')
                 ->format(function ($value, $row) {
-                    return Country::find($value)->value('nationality') ?? '';
+                    return Country::find($value)->nationality ?? '';
                 }),
             Column::make('Region', 'kyc.region_id')
                 ->format(function ($value, $row) {
