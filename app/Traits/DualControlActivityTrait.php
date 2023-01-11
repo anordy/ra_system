@@ -119,6 +119,9 @@ trait DualControlActivityTrait
             case DualControl::Business_File_Type:
                 return 'Business File Type';
                 break;
+            case DualControl::API_USER:
+                return 'API User';
+                break;
 
             default:
                 abort(404);

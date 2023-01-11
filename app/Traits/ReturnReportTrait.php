@@ -38,9 +38,11 @@ trait ReturnReportTrait
 
         if ($parameters['type'] == 'Filing') {
             if ($parameters['filing_report_type'] == 'On-Time-Filings') {
-                $returns = $model->where('tax_returns.filing_due_date', '>=', 'tax_returns.created_at');
+                // $returns = $model->where('tax_returns.filing_due_date', '>=', 'tax_returns.created_at');
+                $returns = $model->whereRaw("tax_returns.filing_due_date - CAST(tax_returns.created_at) >= 0"); // This determines if the filing date is less than filing due date
             } elseif ($parameters['filing_report_type'] == 'Late-Filings') {
-                $returns = $model->where('tax_returns.filing_due_date', '<', 'tax_returns.created_at');
+                // $returns = $model->where('tax_returns.filing_due_date', '<', 'tax_returns.created_at');
+                $returns = $model->whereRaw("tax_returns.created_at - CAST(tax_returns.filing_due_date as date) > 0"); // This determines if the filing date is greater than filing due date
             } elseif ($parameters['filing_report_type'] == 'All-Filings') {
                 $returns = $model;
             } elseif ($parameters['filing_report_type'] == 'Tax-Claims') {
