@@ -42,4 +42,17 @@ class KYC extends Model implements Auditable
     public function fullname(){
         return $this->first_name.' '. $this->middle_name .' '. $this->last_name;
     }
+
+    public function amendments(){
+        return $this->hasMany(KycAmendmentRequest::class, 'kyc_id');
+    }
+
+    public function checkPendingAmendment(){
+        foreach ($this->amendments()->get() as $amendment){
+            if ($amendment['status'] == KycAmendmentRequest::PENDING){
+                return true;
+            }
+        }
+        return false;
+    }
 }

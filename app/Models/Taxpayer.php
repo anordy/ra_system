@@ -149,4 +149,17 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
     {
         return $this->morphMany(PasswordHistory::class, 'user');
     }
+
+    public function amendments(){
+        return $this->hasMany(TaxpayerAmendmentRequest::class, 'taxpayer_id');
+    }
+
+    public function checkPendingAmendment(){
+        foreach ($this->amendments()->get() as $amendment){
+            if ($amendment['status'] == TaxpayerAmendmentRequest::PENDING){
+                return true;
+            }
+        }
+        return false;
+    }
 }
