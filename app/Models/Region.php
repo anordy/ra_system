@@ -32,4 +32,8 @@ class Region extends Model implements Auditable
     {
         $this->hasMany(LandLease::class,'region_id');
     }
+
+    public function activeDistricts(){
+        return $this->hasMany(District::class)->where('is_approved', DualControl::APPROVE)->select('id', 'name');
+    }
 }

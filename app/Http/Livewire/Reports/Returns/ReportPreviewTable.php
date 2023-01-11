@@ -26,8 +26,7 @@ class ReportPreviewTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $mnos = $this->getRecords($this->parameters);
-        return $mnos;
+        return $this->getRecords($this->parameters);
     }
 
     public function configure(): void
