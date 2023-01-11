@@ -2,7 +2,7 @@
 <table style="border-collapse:collapse;">
     <thead>
     <tr>
-        <th style="text-align:center;" colspan="11" height="70px">
+        <th style="text-align:center;" colspan="12" height="70px">
             <strong>ZANZIBAR REVENUE BOARD</strong><br>
 
             <strong>{{ $title }}</strong><br>

@@ -108,7 +108,7 @@ class WardSeeder extends Seeder
         }
 
 
-        $mjiniWards = ["Kilimahewa Bondeni","Kilimahewa Juu","Amani","Kwa Wazee","Maruhubi","Mwembemakumbi","Masumbani","Banko","Karakana","Chumbuni","Kwaalinatu","Matarumbeta","Kidongo Chekundu","Jang'ombe","Urusi","Mnazimmoja","Kisiwandui","Kikwajuni Bondeni","Kisimamajongoo","Kikwajuni Juu","Mwembeladu","Rahaleo","Mwembeshauri","Miembeni","Muembemadema","Mikunguni","Kwaalimsha","Kwahani","Muungano","Sebleni","Saateni","Shaurimoyo","Mapinduzi","Mkele","Mboriborini","Kwamtipura","Sogea","Nyerere","Kwamtumwajeni","Meya","Magomeni","Shangani","Kiponda","Malindi","Mchangani Mjini","Mkunazini","Vikokotoni","Muembetanga","Mlandege","Gulioni","Mitiulaya","Makadara","Kilimani","Migombani","Kwa binti amrani","Mpendae"];
+        $mjiniWards = ["Kilimahewa Bondeni","Kilimahewa Juu","Amani","Kwa Wazee","Maruhubi","Mwembemakumbi","Masumbani","Banko","Karakana","Chumbuni","Kwaalinatu","Matarumbeta","Kidongo Chekundu","Jang'ombe","Urusi","Mnazimmoja","Kisiwandui","Kikwajuni Bondeni","Kisima Majongoo","Kikwajuni Juu","Mwembeladu","Rahaleo","Mwembeshauri","Miembeni","Muembemadema","Mikunguni","Kwaalimsha","Kwahani","Muungano","Sebleni","Saateni","Shaurimoyo","Mapinduzi","Mkele","Mboriborini","Kwamtipura","Sogea","Nyerere","Kwamtumwajeni","Meya","Magomeni","Shangani","Kiponda","Malindi","Mchangani Mjini","Mkunazini","Vikokotoni","Muembetanga","Mlandege","Gulioni","Mitiulaya","Makadara","Kilimani","Migombani","Kwa binti amrani","Mpendae"];
         $mjiniID = District::where('name', 'Mjini')->value('id');
 
         foreach ($mjiniWards as $name) {

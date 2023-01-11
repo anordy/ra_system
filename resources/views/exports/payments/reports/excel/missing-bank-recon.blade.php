@@ -2,7 +2,7 @@
 <table style="border-collapse:collapse;">
     <thead>
     <tr>
-        <th style="text-align:center;" colspan="12" height="70px">
+        <th style="text-align:center;" colspan="13" height="70px">
             <strong>ZANZIBAR REVENUE BOARD</strong><br>
 
             <strong>{{ $title }}</strong><br>
@@ -33,6 +33,9 @@
         </th>
         <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
             <strong>Paid Amount</strong>
+        </th>
+        <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+            <strong>Currency</strong>
         </th>
         <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
             <strong>Payment Ref</strong>
@@ -74,6 +77,9 @@
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->credit_amount ?? '-' }}
+            </td>
+            <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
+                {{ $record->currency ?? '-' }}
             </td>
             <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 {{ $record->payment_ref ?? '-' }}
