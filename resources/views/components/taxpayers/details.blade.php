@@ -22,12 +22,20 @@
         <p class="my-1">{{ $kyc->country->nationality }}</p>
     </div>
     <div class="col-md-4 mb-3">
-        <span class="font-weight-bold text-uppercase">Location</span>
-        <p class="my-1">{{ $kyc->region->name }}</p>
+        <span class="font-weight-bold text-uppercase">Region</span>
+        <p class="my-1">{{ $kyc->region->name ?? 'N/A'}}</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <span class="font-weight-bold text-uppercase">District</span>
+        <p class="my-1">{{ $kyc->district->name ?? 'N/A'}}</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <span class="font-weight-bold text-uppercase">Ward</span>
+        <p class="my-1">{{ $kyc->ward->name ?? 'N/A'}}</p>
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Street</span>
-        <p class="my-1">{{ $kyc->street->name }}</p>
+        <p class="my-1">{{ $kyc->street->name ?? 'N/A' }}</p>
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Physical Address</span>

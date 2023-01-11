@@ -35,6 +35,22 @@
                     <span class="font-weight-bold text-uppercase">Nationality</span>
                     <p class="my-1">{{ $taxPayer->country->nationality }}</p>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Region</span>
+                    <p class="my-1">{{ $taxPayer->region->name ?? 'N/A'}}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">District</span>
+                    <p class="my-1">{{ $taxPayer->district->name ?? 'N/A'}}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Ward</span>
+                    <p class="my-1">{{ $taxPayer->ward->name ?? 'N/A'}}</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <span class="font-weight-bold text-uppercase">Street</span>
+                    <p class="my-1">{{ $taxPayer->street->name ?? 'N/A' }}</p>
+                </div>
             </div>
             <hr />
             <div class="row">
