@@ -69,7 +69,7 @@ class DetailsAmendmentRequestTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Nationality', 'taxpayer.country_id')
-                ->format(fn ($value, $row) => Country::find($value)->value('nationality') ?? ''),
+                ->format(fn ($value, $row) => Country::find($value)->nationality ?? ''),
             Column::make('Region', 'taxpayer.region_id')
                 ->format(function ($value, $row) {
                     return Region::find($value)->value('name') ?? '';
