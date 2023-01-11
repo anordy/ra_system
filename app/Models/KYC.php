@@ -15,17 +15,24 @@ class KYC extends Model implements Auditable
 
     protected $guarded = [];
 
+    public function country(){
+        return $this->belongsTo(Country::class);
+    }
 
     public function region(){
         return $this->belongsTo(Region::class);
     }
 
-    public function street(){
-        return $this->belongsTo(Street::class);
+    public function district(){
+        return $this->belongsTo(District::class);
     }
 
-    public function country(){
-        return $this->belongsTo(Country::class);
+    public function ward(){
+        return $this->belongsTo(Ward::class);
+    }
+
+    public function street(){
+        return $this->belongsTo(Street::class);
     }
 
     public function identification(){

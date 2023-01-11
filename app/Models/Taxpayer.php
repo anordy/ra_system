@@ -81,6 +81,12 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
     public function region(){
         return $this->belongsTo(Region::class);
     }
+    public function district(){
+        return $this->belongsTo(District::class);
+    }
+    public function ward(){
+        return $this->belongsTo(Ward::class);
+    }
 
     public function street(){
         return $this->belongsTo(Street::class);
