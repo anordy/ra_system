@@ -46,7 +46,7 @@ class ReturnReport extends Component
     public $payment_report_type;
     public $range_start;
     public $range_end;
-    public $vat_type = 'All-VAT-Returns';
+    public $vat_type;
     public $showMoreFilters = false;
     public $startMonth;
     public $endMonth;
@@ -114,9 +114,6 @@ class ReturnReport extends Component
         //toggle filter
         $this->showMoreFilters = false;
 
-        //data
-        $this->parameters = $this->getParameters();
-        $this->previewReport($this->parameters);
     }
 
     public function updated($propertyName)
@@ -177,6 +174,7 @@ class ReturnReport extends Component
             return;
         };
         $this->parameters = $this->getParameters();
+        // dd($this->parameters);
         $this->previewReport($this->parameters);
     }
 
