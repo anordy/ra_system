@@ -13,6 +13,9 @@ class ZrbBankAccount extends Model implements Auditable
 
     protected $guarded = [];
 
+    public const TRANSFER_ACCOUNT = 'Transfer Account';
+    public const NORMAL_ACCOUNT = 'Normal Account';
+
     public function bank(){
         return $this->belongsTo(Bank::class, 'bank_id');
     }

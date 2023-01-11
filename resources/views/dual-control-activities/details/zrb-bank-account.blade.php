@@ -117,6 +117,30 @@
                     @endif
                 </tr>
                 <tr>
+                    <th>Account Type</th>
+                    <td>
+                        <p class="my-1">
+                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->is_tranfer ?? 'N/A' : $old_values->is_tranfer ?? 'N/A' }}
+                        </p>
+                    </td>
+                    @if ($new_values)
+                        <td>
+                            @if($new_values->is_transfer == true)
+                                {{ \App\Models\ZrbBankAccount::TRANSFER_ACCOUNT }}
+                            @elseif($new_values->is_transfer == false)
+                                {{ \App\Models\ZrbBankAccount::NORMAL_ACCOUNT }}
+                            @endif
+                        </td>
+                        @if (compareDualControlValues(
+                            $result->action != \App\Models\DualControl::EDIT ? $data->is_tranfer ?? 'N/A' : $old_values->is_transfer ?? 'N/A',
+                            $new_values->is_tranfer ?? 'N/A'))
+                            <td class="table-success">NOT CHANGED</td>
+                        @else
+                            <td class="table-danger">CHANGED</td>
+                        @endif
+                    @endif
+                </tr>
+                <tr>
                     <th>Currency</th>
                     <td>
                         <p class="my-1">

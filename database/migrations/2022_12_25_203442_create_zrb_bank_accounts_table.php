@@ -24,6 +24,7 @@ class CreateZrbBankAccountsTable extends Migration
             $table->string('currency_iso');
             $table->string('is_approved')->default(0);
             $table->boolean('is_updated')->default(0);
+            $table->boolean('is_transfer')->default(1);
             $table->softDeletes();
             $table->timestamps();
         });
