@@ -44,7 +44,7 @@ class RegistrationsController extends Controller
         if (!Gate::allows('kyc_view')) {
             abort(403);
         }
-        $kyc = KYC::findOrFail(decrypt($kycId));
+        $kyc = KYC::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrFail(decrypt($kycId));
         return view('taxpayers.registrations.enroll-fingerprint', compact('kyc'));
     }
 

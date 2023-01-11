@@ -53,6 +53,9 @@ class DetailsAmendmentRequestAddModal extends Component
         $this->ward = $this->taxpayer->ward_id;
         $this->street = $this->taxpayer->street_id;
         $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+        $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+        $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+        $this->streets = Street::where('ward_id', $this->ward)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
 
         $this->old_values = [
             'first_name' => $this->first_name,
