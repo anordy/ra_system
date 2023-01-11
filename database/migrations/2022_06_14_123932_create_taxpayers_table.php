@@ -42,6 +42,8 @@ class CreateTaxpayersTable extends Migration
             $table->string('alt_mobile')->nullable();
 
             $table->unsignedBigInteger('region_id')->nullable();
+            $table->unsignedBigInteger('district_id')->nullable();
+            $table->unsignedBigInteger('ward_id')->nullable();
             $table->unsignedBigInteger('street_id')->nullable();
 
             $table->boolean('is_citizen');
