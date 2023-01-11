@@ -115,13 +115,16 @@
         @if (empty($kyc->authorities_verified_at))
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-end">
-                    <button class="btn btn-danger ml-1" wire:click="rejectIncomingData" wire:loading.attr="disabled">
+                    <button class="btn btn-danger ml-2" wire:click="rejectIncomingData" wire:loading.attr="disabled">
                         <i class="bi bi-x-lg ml-1" wire:loading.remove wire:target="rejectIncomingData"></i>
                         <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                             wire:target="rejectIncomingData"></i>
                         Reject
                     </button>
-                    <button class="btn btn-success ml-1" wire:click="acceptIncomingData" wire:loading.attr="disabled">
+                    <button class="btn btn-primary rounded-0 btn-sm ml-2" onclick="Livewire.emit('showModal', 'kyc.kyc-amendment-request-add-modal', {{$kyc->id}})">
+                        <i class="bi bi-pen mr-1"></i> Amend Kyc Details
+                    </button>
+                    <button class="btn btn-success ml-2" wire:click="acceptIncomingData" wire:loading.attr="disabled">
                         <i class="bi bi-check-lg ml-1" wire:loading.remove wire:target="acceptIncomingData"></i>
                         <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                             wire:target="acceptIncomingData"></i>
