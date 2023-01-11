@@ -25,7 +25,7 @@ class UserChangePasswordModal extends Component
     protected function rules()
     {
         return [
-            'password' => ['required', 'confirmed', 'min:10', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', 'confirmed', 'min:8', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
         ];
     }
 
