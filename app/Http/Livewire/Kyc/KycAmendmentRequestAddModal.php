@@ -55,7 +55,6 @@ class KycAmendmentRequestAddModal extends Component
         $this->last_name = $this->kyc->last_name;
         $this->email = $this->kyc->email;
         $this->mobile = $this->kyc->mobile;
-        $this->street = $this->kyc->street;
         $this->alt_mobile = $this->kyc->alt_mobile;
         $this->physical_address = $this->kyc->physical_address;
         $this->is_citizen = $this->kyc->is_citizen;
@@ -65,6 +64,8 @@ class KycAmendmentRequestAddModal extends Component
         $this->nationality = $this->kyc->country_id;
         $this->zanid = $this->kyc->zanid_no;
         $this->region = $this->kyc->region_id;
+        $this->district = $this->kyc->district_id;
+        $this->ward = $this->kyc->ward_id;
         $this->street = $this->kyc->street_id;
         $this->id_type = $this->kyc->id_type;
         $this->countries = DB::table('countries')->select('id', 'nationality')->where('name', '!=', 'Tanzania')->get();

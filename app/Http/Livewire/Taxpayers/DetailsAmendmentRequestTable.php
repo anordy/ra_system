@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Taxpayers;
 
 use App\Models\Country;
+use App\Models\Region;
+use App\Models\Street;
 use App\Models\TaxpayerAmendmentRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -68,7 +70,14 @@ class DetailsAmendmentRequestTable extends DataTableComponent
                 ->searchable(),
             Column::make('Nationality', 'taxpayer.country_id')
                 ->format(fn ($value, $row) => Country::find($value)->value('nationality') ?? ''),
-            Column::make('Street', 'taxpayer.street'),
+            Column::make('Region', 'taxpayer.region_id')
+                ->format(function ($value, $row) {
+                    return Region::find($value)->value('name') ?? '';
+                }),
+            Column::make('Street', 'taxpayer.street_id')
+                ->format(function ($value, $row) {
+                    return Street::find($value)->value('name') ?? '';
+                }),
             Column::make('Action', 'id')
                 ->view('taxpayers.amendments.includes.actions'),
         ];
