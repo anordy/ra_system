@@ -7,10 +7,8 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Carbon\Carbon;
 
-
-class BankReconExport implements FromView, WithEvents, ShouldAutoSize
+class MissingBankReconExport implements FromView, WithEvents, ShouldAutoSize
 {
 
     public $records;
@@ -57,6 +55,6 @@ class BankReconExport implements FromView, WithEvents, ShouldAutoSize
     {
         $records = $this->records;
         $title = $this->title;
-        return view('exports.payments.reports.excel.bank-recon', compact('records', 'title'));
+        return view('exports.payments.reports.excel.missing-bank-recon', compact('records', 'title'));
     }
 }

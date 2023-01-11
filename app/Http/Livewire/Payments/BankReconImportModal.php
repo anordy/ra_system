@@ -30,7 +30,8 @@ class BankReconImportModal extends Component
     protected $messages = [
         'reconFile.required' => 'Please provide a file to import.',
         'reconFile.mimes' => 'The file must be a valid csv, xls or xlsx.',
-        'currency.required' => 'Please specify currency to import as.'
+        'currency.required' => 'Please specify currency to import as.',
+        'currency.in' => 'Selected currency is invalid, acceptable currencies include USD and TZS.'
     ];
 
     public function downloadTemplate(){

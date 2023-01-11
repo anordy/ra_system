@@ -10,18 +10,30 @@
             </div>
         @enderror
     </div>
-    <div class="flex-grow-1 form-group">
+    <div class="flex-grow-1 form-group mr-3">
         <label class="d-flex justify-content-between font-weight-bold">
             <span>End Date</span>
         </label>
         <input type="date" min="{{ $range_start ?? $today }}"  max="{{$today }}" class="form-control" wire:model="range_end">
         @error('range_end')
-            <div class="text-danger">
-                {{ $message }}
-            </div>
+        <div class="text-danger">
+            {{ $message }}
+        </div>
         @enderror
     </div>
-
+    <div class="flex-grow-1 form-group">
+        <label class="font-weight-bold">Currency</label>
+        <select class="form-control @error('currency') is-invalid @enderror" wire:model="currency" >
+            <option value="all">All</option>
+            <option>USD</option>
+            <option>TZS</option>
+        </select>
+        @error('currency')
+        <div class="text-danger">
+            {{ $message }}
+        </div>
+        @enderror
+    </div>
     <div class="d-flex align-items-end pb-3">
         <div class="col-md-12 d-flex justify-content-end">
             <button class="btn btn-primary mr-2" wire:click="search" wire:loading.attr="disabled">
@@ -49,7 +61,7 @@
 
     @if ($hasData)
         <div class="col-md-12 mt-3">
-            @livewire('payments.bank-recon-table', ['parameters' => $parameters])
+            <livewire:payments.bank-recon-table :parameters="$parameters" key="{{ now() }}" />
         </div>
     @endif
 </div>

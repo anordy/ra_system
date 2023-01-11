@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Paid Amount</span>
-                    <p class="my-1">{{ number_format($recon->credit_amount, 2) }} TZS</p>
+                    <p class="my-1">{{ number_format($recon->credit_amount, 2) }} {{ $recon->currency }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Payer Name</span>

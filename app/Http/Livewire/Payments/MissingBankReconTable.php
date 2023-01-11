@@ -16,21 +16,20 @@ class MissingBankReconTable extends DataTableComponent
     public $parameters = [];
 
     public function mount($parameters){
-        if (count($parameters)){
-            $this->parameters = $parameters;
-        } else {
-            $this->parameters = [
-                'range_start' => Carbon::today()->startOfDay()->toDateTimeString(),
-                'range_end' => Carbon::today()->endOfDay()->toDateTimeString()
-            ];
-        }
+        $this->parameters = $parameters;
     }
 
     public function builder(): Builder
     {
-        return MissingBankRecon::query()
+        $query = MissingBankRecon::query()
             ->whereBetween('created_at', [$this->parameters['range_start'], $this->parameters['range_end']])
             ->orderBy('created_at', 'desc');
+
+        if ($this->parameters['currency'] != 'all'){
+            $query->where('currency', $this->parameters['currency']);
+        }
+
+        return $query;
     }
 
     public function configure(): void
