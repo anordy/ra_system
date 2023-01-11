@@ -1,19 +1,18 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Lumen\Auth\Authorizable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Services\Verification\PayloadInterface;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class ApiUser extends Model
+class ApiUser extends Model implements PayloadInterface, Auditable
 {
-    use HasFactory;
-
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
     /**
      * The attributes that are mass assignable.
      *
@@ -51,16 +50,6 @@ class ApiUser extends Model
     {
         return [];
     }
-use App\Services\Verification\PayloadInterface;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use OwenIt\Auditing\Contracts\Auditable;
-
-class ApiUser extends Model implements PayloadInterface, Auditable
-{
-    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
-    protected $guarded = [];
 
 
     public static function getPayloadColumns(): array
