@@ -48,6 +48,7 @@ class DualControl extends Model implements Auditable
     public const EDUCATION = EducationLevel::class;
     public const Business_File_Type = BusinessFileType::class;
     public const TAXTYPE = TaxType::class;
+    public const API_USER = ApiUser::class;
 
     //Messages
     public const SUCCESS_MESSAGE = 'Data successfully submitted, Please wait for checker to approve';
