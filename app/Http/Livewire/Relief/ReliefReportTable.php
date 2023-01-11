@@ -21,7 +21,7 @@ class ReliefReportTable extends DataTableComponent
 
     public function mount($payload)
     {
-        $data = json_decode(decrypt($payload),true);
+        $data = json_decode(decrypt($payload), true);
         $this->dates = $data['dates'];
         $this->parameters = $data['parameters'];
     }
@@ -37,126 +37,68 @@ class ReliefReportTable extends DataTableComponent
             $relief = Relief::query()->whereBetween('reliefs.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('reliefs.created_at', 'asc');
         }
 
-        if($parameters['reportType']=='project'){
-            if($parameters['sectionId']=='all'){
+        if ($parameters['reportType'] == 'project') {
+            if ($parameters['sectionId'] == 'all') {
                 $relief->whereNotNull('reliefs.project_id');
-            }else{
-                $relief->where('reliefs.project_id',$parameters['sectionId']);
-                if($parameters['projectId']=='all'){
-                    $relief->where('reliefs.project_id',$parameters['sectionId'])
-                            ->whereNotNull('reliefs.project_list_id');
-                }else{
-                    $relief->where('reliefs.project_id',$parameters['sectionId'])
-                            ->where('reliefs.project_list_id',$parameters['projectId']);
+            } else {
+                $relief->where('reliefs.project_id', $parameters['sectionId']);
+                if ($parameters['projectId'] == 'all') {
+                    $relief->where('reliefs.project_id', $parameters['sectionId'])
+                        ->whereNotNull('reliefs.project_list_id');
+                } else {
+                    $relief->where('reliefs.project_id', $parameters['sectionId'])
+                        ->where('reliefs.project_list_id', $parameters['projectId']);
                 }
-            } 
-        }elseif($parameters['reportType']=='supplier'){
-            if($parameters['supplierId']=='all'){
+            }
+        } elseif ($parameters['reportType'] == 'supplier') {
+            if ($parameters['supplierId'] == 'all') {
                 $relief->whereNotNull('reliefs.business_id');
-            }else{
-                $relief->where('reliefs.business_id',$parameters['supplierId']);
-                if($parameters['locationId']=='all'){
-                    $relief->where('reliefs.business_id',$parameters['supplierId'])
-                            ->whereNotNull('reliefs.location_id');
-                }else{
-                    $relief->where('reliefs.business_id',$parameters['supplierId'])
-                            ->where('reliefs.location_id',$parameters['locationId']);
+            } else {
+                $relief->where('reliefs.business_id', $parameters['supplierId']);
+                if ($parameters['locationId'] == 'all') {
+                    $relief->where('reliefs.business_id', $parameters['supplierId'])
+                        ->whereNotNull('reliefs.location_id');
+                } else {
+                    $relief->where('reliefs.business_id', $parameters['supplierId'])
+                        ->where('reliefs.location_id', $parameters['locationId']);
                 }
-            } 
-        }elseif($parameters['reportType']=='sponsor'){
-            if($parameters['id']=='all'){
-                $relief->whereHas('project',function(Builder $query){
+            }
+        } elseif ($parameters['reportType'] == 'sponsor') {
+            if ($parameters['id'] == 'all') {
+                $relief->whereHas('project', function (Builder $query) {
                     $query->whereNotNull('relief_sponsor_id');
                 });
-            }elseif($parameters['id']=='without'){
-                $relief->whereHas('project',function(Builder $query){
+            } elseif ($parameters['id'] == 'without') {
+                $relief->whereHas('project', function (Builder $query) {
                     $query->whereNull('relief_sponsor_id');
                 });
-            }else{
-                $relief->whereHas('project',function(Builder $query) use ($parameters) {
+            } else {
+                $relief->whereHas('project', function (Builder $query) use ($parameters) {
                     $query->where('relief_sponsor_id', $parameters['id']);
                 });
             }
-        }elseif($parameters['reportType']=='ministry'){
-            if($parameters['id']=='all'){
-                $relief->whereHas('project',function(Builder $query){
+        } elseif ($parameters['reportType'] == 'ministry') {
+            if ($parameters['id'] == 'all') {
+                $relief->whereHas('project', function (Builder $query) {
                     $query->whereNotNull('ministry_id');
                 });
-            }elseif($parameters['id']=='without'){
-                $relief->whereHas('project',function(Builder $query){
+            } elseif ($parameters['id'] == 'without') {
+                $relief->whereHas('project', function (Builder $query) {
                     $query->whereNull('ministry_id');
                 });
-            }else{
-                $relief->whereHas('project',function(Builder $query) use ($parameters) {
+            } else {
+                $relief->whereHas('project', function (Builder $query) use ($parameters) {
                     $query->where('ministry_id', $parameters['id']);
                 });
             }
         }
         return $relief;
-        // $dates = $this->dates;
-        // if ($dates == []) {
-        //     $relief = Relief::query()->orderBy('reliefs.created_at', 'asc');
-        // } elseif ($dates['startDate'] == null || $dates['endDate'] == null) {
-        //     $relief = Relief::query()->orderBy('reliefs.created_at', 'asc');
-        // } else {
-        //     $relief = Relief::query()->whereBetween('reliefs.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('reliefs.created_at', 'asc');
-        // }
-
-        
-
-        // if ($this->parameters == []) {
-        //     return $relief;
-        // } else {
-        //     $relief->select('reliefs.*')
-        //         ->leftJoin('business_locations', 'reliefs.location_id', 'business_locations.id')
-        //         ->leftJoin('relief_project_lists', 'relief_project_lists.id', 'project_list_id')
-        //         ->leftJoin('relief_sponsors', 'relief_sponsors.id', 'relief_project_lists.relief_sponsor_id')
-        //         ->leftJoin('relief_ministries', 'relief_ministries.id', 'relief_project_lists.ministry_id');
-
-        //     // dd($this->parameters);
-        //     //get supplier (if not all)
-        //     if ($this->parameters['supplierId'] != 'All') {
-        //         $relief->where('business_locations.id', $this->parameters['supplierId']);
-        //     }
-
-        //     //get relief with no ministry
-        //     if ($this->parameters['includeNonMinistry']) {
-        //         if(count($this->parameters['ministries'] ??[]) > 0){
-        //             $relief->whereNull('relief_project_lists.ministry_id')
-        //                 ->orWhereIn('relief_project_lists.ministry_id',  $this->parameters['ministries'] ?? []);
-        //         }else{
-        //             $relief->where('relief_project_lists.ministry_id', null);
-        //         }                   
-        //     }
-
-        //     if(count($this->parameters['ministries'] ??[]) > 0){
-        //         $relief->whereIn('relief_project_lists.ministry_id',  $this->parameters['ministries'] ?? []);
-        //     }
-
-        //     if ($this->parameters['includeNonSponsor']) {
-
-        //         if(count($this->parameters['sponsors'] ??[]) > 0){
-        //             $relief->whereNull('relief_project_lists.relief_sponsor_id')
-        //                 ->orWhereIn('relief_project_lists.relief_sponsor_id',  $this->parameters['sponsors'] ?? []);
-        //         }else{
-        //             $relief->where('relief_project_lists.relief_sponsor_id', null);
-        //         }                 
-                
-        //     } 
-            
-        //     if(count($this->parameters['sponsors'] ??[]) > 0){
-        //         $relief->whereIn('relief_project_lists.relief_sponsor_id', $this->parameters['sponsors'] ?? []);
-        //     }
-
-        //     return $relief;
-        // }
     }
 
     public function refreshTable($dates, $parameters)
     {
         $this->dates = $dates;
         $this->parameters = $parameters;
-        // $this->emitTo('relief.relief-report-summary', 'refreshSummary', $dates);
         $this->builder();
     }
 
@@ -168,7 +110,7 @@ class ReliefReportTable extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-        $this->setAdditionalSelects(['reliefs.id', 'reliefs.project_id', 'reliefs.project_list_id', 'reliefs.location_id', 'reliefs.created_by', 'reliefs.created_at']);
+        $this->setAdditionalSelects(['reliefs.project_id', 'reliefs.project_list_id', 'reliefs.location_id', 'reliefs.created_by', 'reliefs.created_at']);
     }
 
     public function columns(): array
@@ -177,12 +119,11 @@ class ReliefReportTable extends DataTableComponent
             Column::make("Project", "project.name")
                 ->searchable()
                 ->sortable(),
-            Column::make("Project Description", "project.description")
-                ->searchable()
+            Column::make("Project Description")
+                ->label(fn ($row) => $row->project->description ?? '')
                 ->sortable(),
-            Column::make("Project Section", "projectSection.name")
-                ->searchable()
-                ->sortable(),
+            Column::make("Project Section")
+                ->label(fn ($row) => $row->projectSection->name ?? ''),
             Column::make("VAT amount", "vat_amount")
                 ->format(function ($value, $row) {
                     return number_format($value, 1);
@@ -196,7 +137,7 @@ class ReliefReportTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("Relieved Rate", "rate")
-                ->format(function ($value, $row) {
+                ->format(function ($value) {
                     return number_format($value, 1) . '%';
                 })
                 ->searchable()
@@ -207,21 +148,19 @@ class ReliefReportTable extends DataTableComponent
             Column::make("Supplier Location", "location.name")
                 ->searchable()
                 ->sortable(),
-            Column::make("Ministry", "project.ministry.name")
-                ->searchable()
-                ->sortable(),
-            Column::make("Sponsor", "project.sponsor.name")
-                ->searchable()
-                ->sortable(),
+            Column::make("Ministry")
+                ->label(fn ($row) => $row->project->ministry->name ?? ''),
+            Column::make("Sponsor")
+                ->label(fn ($row) => $row->project->sponsor->name ?? ''),
             Column::make("Created By", "created_by")
-                ->format(function ($value, $row) {
+                ->label(function ($row) {
                     return $row->createdBy->fname . ' ' . $row->createdBy->lname;
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make("Created At", "created_at")
-                ->format(function ($value, $row) {
-                    return date('d/m/Y', strtotime($value));
+            Column::make("Created At")
+                ->label(function ($row) {
+                    return date('d/m/Y', strtotime($row->created_at));
                 })
                 ->searchable()
                 ->sortable(),
@@ -230,11 +169,9 @@ class ReliefReportTable extends DataTableComponent
 
     public function getSponsorName($id)
     {
-
     }
 
     public function getMinistry()
     {
-
     }
 }
