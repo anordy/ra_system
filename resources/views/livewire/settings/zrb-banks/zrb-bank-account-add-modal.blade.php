@@ -60,6 +60,17 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Bank Account Type</label>
+                        <select type="text" class="form-control" wire:model.defer="is_transfer" id="is_transfer">
+                            <option>---Select Type---</option>
+                            <option value="1">Transfer Account</option>
+                            <option value="0">Normal Account</option>
+                        </select>
+                        @error('is_transfer')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

@@ -49,15 +49,26 @@
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Currency</label>
+                        <label class="control-label">Currency </label>
                         <select type="text" class="form-control" wire:model.defer="currency" id="currency">
                                 <option>---Select Currency---</option>
                                 @foreach ($currencies as $currency)
-                                <option {{($currency->id == $zrbBankAccount->currency_id) ? 'selected' : ''}} value="{{ $currency }}">{{ $currency->iso }}</option>
-                            @endforeach
+                                    <option {{$zrbBankAccount['currency_id'] == $currency->id ? 'selected' : ''}} value="{{ $currency }}">{{ $currency->iso }} </option>
+                                @endforeach
                         </select>
                         @error('currency')
                             <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label">Bank Account Type</label>
+                        <select type="text" class="form-control" wire:model.defer="is_transfer" id="is_transfer">
+                            <option>---Select Type---</option>
+                            <option {{$zrbBankAccount['is_transfer'] == true ? 'selected' : '' }} value="1">Transfer Account</option>
+                            <option {{$zrbBankAccount['is_transfer'] == false ? 'selected' : '' }} value="0">Normal Account</option>
+                        </select>
+                        @error('is_transfer')
+                        <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>

@@ -26,7 +26,6 @@ class ZRBBankAccountSeeder extends Seeder
         ];
 
         foreach ($bankAccounts as $bankAccount) {
-            // dd($bankAccount);
             ZrbBankAccount::updateOrCreate($bankAccount);
         }
     }
