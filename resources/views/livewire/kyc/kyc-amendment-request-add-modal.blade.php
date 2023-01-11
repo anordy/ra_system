@@ -51,14 +51,50 @@
                         @enderror
                     </div>
                     <div class="form-group col-md-4">
-                        <label>Location  *</label>
-                        <select class="form-control @error('region') is-invalid @enderror" wire:model.defer="region">
+                        <label>Region  *</label>
+                        <select class="form-control @error('region') is-invalid @enderror" wire:model.lazy="region">
                             <option></option>
-                            @foreach ($regions as $region)
-                                <option value="{{ $region->id }}">{{ $region->name }}</option>
+                            @foreach ($regions as $regionObject)
+                                <option {{ $regionObject->id == $region ? 'selected' : '' }} value="{{ $regionObject->id }}">{{ $regionObject->name }}</option>
                             @endforeach
                         </select>
                         @error('region')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>District  *</label>
+                        <select class="form-control @error('district') is-invalid @enderror" wire:model.lazy="district">
+                            <option></option>
+                            @foreach ($districts as $districtObject)
+                                <option {{ $districtObject->id == $district ? 'selected' : '' }} value="{{ $districtObject->id }}">{{ $districtObject->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('district')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Ward  *</label>
+                        <select class="form-control @error('ward') is-invalid @enderror" wire:model.lazy="ward">
+                            <option></option>
+                            @foreach ($wards as $wardObject)
+                                <option {{ $wardObject->id == $ward ? 'selected' : '' }} value="{{ $wardObject->id }}">{{ $wardObject->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('ward')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Street *</label>
+                        <select class="form-control @error('street') is-invalid @enderror" wire:model.lazy="street">
+                            <option></option>
+                            @foreach ($streets as $streetObject)
+                                <option {{ $streetObject->id == $street ? 'selected' : '' }} value="{{ $streetObject->id }}">{{ $streetObject->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('street')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -70,13 +106,6 @@
                         @enderror
                     </div>
                     <div class="form-group col-lg-4">
-                        <label class="control-label">Street</label>
-                        <input type="text" class="form-control" wire:model.defer="street" id="street">
-                        @error('street')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group col-lg-6">
                         <label>Are you a citizen ?  *</label>
                         <select class="form-control @error('is_citizen') is-invalid @enderror" wire:model.lazy="is_citizen" id="is_citizen">
                             <option value="" selected>Choose Citizenship</option>

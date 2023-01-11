@@ -19,8 +19,7 @@ class TaxpayersController extends Controller
         if (!Gate::allows('taxpayer_view')) {
             abort(403);
         }
-        $taxPayer = Taxpayer::findOrFail(decrypt($taxPayerId));
-
+        $taxPayer = Taxpayer::with('region:id,name', 'district:id,name', 'ward:id,name', 'street:id,name')->findOrFail(decrypt($taxPayerId));
         return view('taxpayers.show', compact('taxPayer'));
     }
 }

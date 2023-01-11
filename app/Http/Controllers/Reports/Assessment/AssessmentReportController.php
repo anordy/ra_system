@@ -34,11 +34,21 @@ class AssessmentReportController extends Controller
         }
 
         if ($parameters['year'] == 'all') {
-            $fileName = $tax_type->name . '_' . 'Assessments' . '.pdf';
-            $title    = 'Notice of Assessments' . ' For ' . $tax_type->name;
+            if ($tax_type == 'All') {
+                $fileName = $tax_type . '_' . 'Assessments' . '.pdf';
+                $title = 'Notice of Assessments' . ' For ' . $tax_type;
+            } else {
+                $fileName = $tax_type->name . '_' . 'Assessments' . '.pdf';
+                $title = 'Notice of Assessments' . ' For ' . $tax_type->name;
+            }
         } else {
-            $fileName = $tax_type->name . '_' . 'Assessments' . ' - ' . $parameters['year'] . '.pdf';
-            $title    = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
+            if ($tax_type == 'All') {
+                $fileName = $tax_type . '_' . 'Assessments' . ' - ' . $parameters['year'] . '.pdf';
+                $title = 'Assessments' . ' For ' . $tax_type . '-' . $parameters['year'];
+            } else {
+                $fileName = $tax_type->name . '_' . 'Assessments' . ' - ' . $parameters['year'] . '.pdf';
+                $title = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
+            }
         }
         $records = $records->get();
         $pdf     = PDF::loadView('exports.assessments.reports.pdf.assessment', compact('records', 'title', 'parameters'));

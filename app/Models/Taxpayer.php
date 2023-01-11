@@ -81,6 +81,12 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
     public function region(){
         return $this->belongsTo(Region::class);
     }
+    public function district(){
+        return $this->belongsTo(District::class);
+    }
+    public function ward(){
+        return $this->belongsTo(Ward::class);
+    }
 
     public function street(){
         return $this->belongsTo(Street::class);
@@ -142,5 +148,18 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
     public function passwordHistories()
     {
         return $this->morphMany(PasswordHistory::class, 'user');
+    }
+
+    public function amendments(){
+        return $this->hasMany(TaxpayerAmendmentRequest::class, 'taxpayer_id');
+    }
+
+    public function checkPendingAmendment(){
+        foreach ($this->amendments()->get() as $amendment){
+            if ($amendment['status'] == TaxpayerAmendmentRequest::PENDING){
+                return true;
+            }
+        }
+        return false;
     }
 }

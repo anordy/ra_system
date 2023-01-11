@@ -33,6 +33,8 @@ class AssessmentReport extends Component
     public $type;
     public $filing_report_type;
     public $payment_report_type;
+    public $startMonth;
+    public $endMonth;
 
     protected function rules()
     {
@@ -84,11 +86,22 @@ class AssessmentReport extends Component
         }
 
         if ($parameters['year'] == 'all') {
-            $fileName = $tax_type->name . '_' . 'Assessments' . '.xlsx';
-            $title = 'Notice of Assessments' . ' For ' . $tax_type->name;
+            if ($tax_type == 'All') {
+                $fileName = $tax_type . '_' . 'Assessments' . '.xlsx';
+                $title = 'Notice of Assessments' . ' For ' . $tax_type;
+            } else {
+                $fileName = $tax_type->name . '_' . 'Assessments' . '.xlsx';
+                $title = 'Notice of Assessments' . ' For ' . $tax_type->name;
+            }
+           
         } else {
-            $fileName = $tax_type->name . '_' . 'Assessments' . ' - ' . $parameters['year'] . '.xlsx';
-            $title = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
+            if ($tax_type == 'All') {
+                $fileName = $tax_type . '_' . 'Assessments' . ' - ' . $parameters['year'] . '.xlsx';
+                $title = 'Assessments' . ' For ' . $tax_type . '-' . $parameters['year'];
+            } else {
+                $fileName = $tax_type->name . '_' . 'Assessments' . ' - ' . $parameters['year'] . '.xlsx';
+                $title = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
+            }
         }
         $this->alert('success', 'Exporting Excel File');
         return Excel::download(new AssessmentReportExport($records, $title, $parameters), $fileName);

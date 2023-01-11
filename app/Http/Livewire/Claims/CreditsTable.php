@@ -42,8 +42,6 @@ class CreditsTable extends DataTableComponent
                 }),
             Column::make("Mobile", "business.mobile")
                 ->sortable(),
-//            Column::make('Status', 'status')
-//                ->view('claims.includes.status'),
             Column::make('Action', 'id')
                 ->view('claims.credits.includes.actions'),
         ];
