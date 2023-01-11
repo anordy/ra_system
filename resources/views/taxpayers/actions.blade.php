@@ -4,7 +4,7 @@
 
 @if($row->checkPendingAmendment() == false)
     <button class="m-1 btn btn-outline-success rounded-0 btn-sm" onclick="Livewire.emit('showModal', 'taxpayers.details-amendment-request-add-modal', {{$row->id}})">
-        <i class="bi bi-pen mr-1"></i> Ammendment Request
+        <i class="bi bi-pen mr-1"></i> Amendment Request
     </button>
 @else
     <span class="m-1 badge badge-warning py-1 px-2"
