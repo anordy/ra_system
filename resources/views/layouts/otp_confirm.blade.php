@@ -1,4 +1,9 @@
 @extends('layouts.login')
+
+@section('title')
+    OTP Verification
+@endsection
+
 @section('styles')
     <style nonce="custom_style">
         .card-body-margin {

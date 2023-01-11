@@ -77,7 +77,7 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Street</span>
-                    <p class="my-1">{{ $taxPayer->street }}</p>
+                    <p class="my-1">{{ $taxPayer->street->name }}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Physical Address</span>

@@ -27,7 +27,7 @@ class RegistrationsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return KYC::query()->with('country', 'region');
+        return KYC::query()->with('country', 'region','street');
     }
 
     public function columns(): array
@@ -47,7 +47,7 @@ class RegistrationsTable extends DataTableComponent
             Column::make('Email Address', 'email'),
             Column::make('Nationality', 'country.nationality'),
             Column::make('Location', 'region.name'),
-            Column::make('Street', 'street'),
+            Column::make('Street', 'street.name'),
             Column::make('Action', 'id')->view('taxpayers.registrations.actions')
         ];
     }

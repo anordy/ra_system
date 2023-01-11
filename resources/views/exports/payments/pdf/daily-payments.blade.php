@@ -16,101 +16,87 @@
             text-align: center
         }
 
-
-        .bg-gray{
-            background-color: rgb(186, 186, 186);
+        .column{
+            border-collapse:collapse;
+            border: 1px solid black;
         }
 
         .table {
             width: 100%;
             background: transparent;
+            border: 1px solid black;
+            border-collapse: collapse;
         }
 
-        .p-10{
+        .tableHead {
+            background-color: rgb(182, 193, 208);
+            color: rgb(0, 0, 0);
+
+        }
+
+        .p-10 {
             padding-bottom: 10px;
             padding-top: 10px;
         }
 
-        .border-bottom{
-            border-bottom: 1px solid black;
-        }
-        .border-dark{
-            color: black;
-        }
-        .text-left{
+        .text-left {
             text-align: left;
         }
-        .text-right{
+
+        .text-right {
             text-align: right;
         }
     </style>
 </head>
 
-<body style="font-size: 8pt">
-    <table style="width:100%">
+
+<body style="font-size: 9pt">
+    <table style="width:100%;">
         <thead>
             <tr>
-                <th style="text-align:center;" colspan="8">
+                <th style="text-align:center;" colspan="3">
                     <strong>ZANZIBAR REVENUE BOARD</strong><br>
+                        @if ($vars['range_start'] == date('Y-m-d'))
+                        Collections on <span> {{ date('d-M-Y') }} </span>
+                        @else
+                        Collections From
+                        <span> {{ date('d-M-Y',strtotime($vars['range_start'])) }} </span>
+                        to
+                        <span> {{ date('d-M-Y',strtotime($vars['range_end'])) }} </span>
+                        @endif
                 </th>
             </tr>
         </thead>
     </table>
+    <br>
 
     <table class="table">
-        <thead class="border-bottom border-dark">
-            <tr class="text-center">
-                <td colspan="8">{{ now()->firstOfMonth()->format('d/m/Y') }} to {{ now()->format('d/m/Y') }}</th>
-            </tr>
+        <thead class="tableHead">
             <tr>
-                <th colspan="8" class="p-10"><strong>Provisional Daily Receipts</strong></th>
-            </tr>
-            <tr class="bg-gray p-10">
-                <th></th>
-                <th colspan="2" class="text-center">Today's Collections</th>
-                <th colspan="2" class=""></th>
-                <th colspan="2" class="text-center">Collection to Date</th>
-                <th></th>
-            </tr>
-            <tr style="padding-top:20px; padding-bottom:20px">
-                <td class="text-left">Source</td>
-                <td class="text-right">Shilings</td>
-                <td class="text-right">Dollars</td>
-                <td class=""></td>
-                <td class=""></td>
-                <td class="text-right">Shilings</td>
-                <td class="text-right">Dollars</td>
-                <td class="text-left"></td>
+                <th class="text-left column">Source</th>
+                <th class="text-right column">Shilings</th>
+                <th class="text-right column">Dollars</th>
             </tr>
         </thead>
-        <tbody class="border-bottom">
-            @foreach ($vars['taxTypes'] as $row)
-                <tr>
-                    <td class="text-left">{{ $row->name }}</td>
-                    <td class="text-right">{{ number_format($row->tzsDailyPayments,2) }}</td>
-                    <td class="text-right">{{ number_format($row->usdDailyPayments,2) }}</td>
-                    <td class="text-right"></td>
-                    <td class="text-right"></td>
-                    <td class="text-right">{{ number_format($row->tzsMonthlyPayments,2) }}</td>
-                    <td class="text-right">{{ number_format($row->usdMonthlyPayments,2) }}</td>
-                    <td class="text-right"></td>
-                </tr>
+        <tbody>
+            @foreach ($taxTypes as $row)
+            <tr>
+                <td class="text-left column">{{ $row->name }}</td>
+                <td class="text-right column">{{ number_format($row->getTotalPaymentsPerCurrency('TZS',$vars['range_start'],$vars['range_end']),2)
+                    }}</td>
+                <td class="text-right column">{{ number_format($row->getTotalPaymentsPerCurrency('USD',$vars['range_start'],$vars['range_end']),2)
+                    }}</td>
+            </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <th class="text-left"></th>
-                <th class="text-right">{{ number_format($vars['todayTzsTotalCollection'],2) }}</th>
-                <th class="text-right">{{ number_format($vars['todayUsdTotalCollection'],2) }}</th>
-                <th class="text-left"></th>
-                <th class="text-left"></th>
-                <th class="text-right">{{ number_format($vars['monthTzsTotalCollection'],2) }}</th>
-                <th class="text-right">{{ number_format($vars['monthUsdTotalCollection'],2) }}</th>
-                <th class="text-left"></th>
+                <th class="text-left column">Total</th>
+                <th class="text-right column">{{ number_format($vars['tzsTotalCollection'],2) }}</th>
+                <th class="text-right column">{{ number_format($vars['usdTotalCollection'],2) }}</th>
             </tr>
         </tfoot>
     </table>
 </body>
-
 
 </html>

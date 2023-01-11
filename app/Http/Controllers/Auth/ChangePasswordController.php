@@ -16,7 +16,7 @@ class ChangePasswordController extends Controller
 
     public function index()
     {
-        return view('auth.passwords.change' , ['expired_message' => Auth::user()->pass_expired_on <= Carbon::now() ? 'Your password has expired. Please reset!. Note that you cannot use your previous two passwords when creating a new password!' : '']);
+        return view('auth.passwords.change' , ['expired_message' => Auth::user()->pass_expired_on <= Carbon::now() ? 'Your password has expired. Please reset!. Note that you cannot use any of your previous passwords when creating a new password!' : '']);
     }
 
     public function updatePassword(Request $request)
