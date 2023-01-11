@@ -961,6 +961,12 @@
                         </li>
                     @endcan
 
+                        @can('setting-api-user-view')
+                            <li class="{{ request()->is('settings/api-users*') ? 'active' : '' }}">
+                                <a href="{{ route('settings.api-users.index') }}">API User</a>
+                            </li>
+                        @endcan
+
                 </ul>
             </li>
         @endcan

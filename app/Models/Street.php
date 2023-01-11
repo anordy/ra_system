@@ -15,4 +15,12 @@ class Street extends Model
     public function ward(){
         return $this->belongsTo(Ward::class);
     }
+
+    public function taxpayer(){
+        return $this->hasMany(Taxpayer::class);
+    }
+
+    public function kyc(){
+        return $this->hasMany(KYC::class);
+    }
 }

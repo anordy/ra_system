@@ -104,6 +104,8 @@
                         @include('dual-control-activities.details.exchange-rate')
                     @elseif ($result->controllable_type === \App\Models\DualControl::EDUCATION)
                         @include('dual-control-activities.details.education-level')
+                    @elseif ($result->controllable_type === \App\Models\DualControl::API_USER)
+                        @include('dual-control-activities.details.api-users')
                     @endif
 
                     <div class="d-flex justify-content-end">

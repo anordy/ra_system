@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Region;
 use App\Models\TaxAgent;
 use App\Models\Taxpayer;
 use Carbon\Carbon;
@@ -26,7 +27,7 @@ class TaxpayersTableSeeder extends Seeder
             'mobile' => '0700000000',
             'region_id' => 1,
             'physical_address' => 'P.O.Box 887, Unguja, Zanzibar.',
-            'street' => 'Main Street',
+            'street_id' => 1,
             'is_citizen' => true,
             'is_first_login' => false,
             'id_type' => '1',
@@ -47,7 +48,7 @@ class TaxpayersTableSeeder extends Seeder
             'mobile' => '0700000001',
             'region_id' => 1,
             'physical_address' => 'P.O.Box 887, Unguja, Zanzibar.',
-            'street' => 'Main Street',
+            'street_id' => 1,
             'is_citizen' => true,
             'is_first_login' => false,
             'id_type' => '1',
@@ -70,7 +71,7 @@ class TaxpayersTableSeeder extends Seeder
             'alt_mobile' => '0754555555',
             'region_id' => 1,
             'physical_address' => 'P.O.Box 887, Unguja, Zanzibar.',
-            'street' => 'Main Street',
+            'street_id' => 1,
             'is_citizen' => true,
             'is_first_login' => false,
             'id_type' => '1',

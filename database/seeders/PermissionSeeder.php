@@ -312,6 +312,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'kyc-amendment-request-add', 'sys_module_id' => 18],
             ['name' => 'kyc-amendment-request-edit', 'sys_module_id' => 18],
             ['name' => 'kyc-amendment-request-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-api-user-view', 'sys_module_id' => 18],
+            ['name' => 'setting-api-user-add', 'sys_module_id' => 18],
+            ['name' => 'setting-api-user-edit', 'sys_module_id' => 18],
             
 
             # System

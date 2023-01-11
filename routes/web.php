@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\Setting\ApiUserController;
 use App\Http\Controllers\StreetController;
 use App\Http\Controllers\Reports\Payments\PaymentReportController;
 use Illuminate\Support\Facades\Auth;
@@ -205,6 +206,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/transaction-fees', TransactionFeeController::class);
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
+
+        Route::get('/api-users', [ApiUserController::class, 'index'])->name('api-users.index');
 
     });
 
