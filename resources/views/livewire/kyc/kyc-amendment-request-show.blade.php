@@ -78,7 +78,7 @@
                         @endif
                     </tr>
                     <tr>
-                        <th>Altenatine Phone Number</th>
+                        <th>Alternative Phone Number</th>
                         <td>{{ $old_values->alt_mobile }}</td>
                         <td>{{ $new_values->alt_mobile }}</td>
                         @if ($old_values->alt_mobile == $new_values->alt_mobile)
@@ -98,10 +98,43 @@
                         @endif
                     </tr>
                     <tr>
+                        <th>Region</th>
+                        <td>{{ \App\Models\Region::find($old_values->region_id)->name }}</td>
+                        <td>{{ \App\Models\Region::find($new_values->region_id)->name }}</td>
+                        @if ($old_values->region_id == $new_values->region_id)
+                            <td class="table-primary">Unchanged</td>
+                        @else
+                            <td class="table-success">Changed</td>
+
+                        @endif
+                    </tr>
+                    <tr>
+                        <th>District</th>
+                        <td>{{ \App\Models\District::find($old_values->district_id)->name ?? 'N/A' }}</td>
+                        <td>{{ \App\Models\District::find($new_values->district_id)->name ?? 'N/A' }}</td>
+                        @if ($old_values->district_id == $new_values->district_id)
+                            <td class="table-primary">Unchanged</td>
+                        @else
+                            <td class="table-success">Changed</td>
+
+                        @endif
+                    </tr>
+                    <tr>
+                        <th>Ward</th>
+                        <td>{{ \App\Models\Ward::find($old_values->ward_id)->name ?? 'N/A' }}</td>
+                        <td>{{ \App\Models\Ward::find($new_values->ward_id)->name ?? 'N/A' }}</td>
+                        @if ($old_values->ward_id == $new_values->ward_id)
+                            <td class="table-primary">Unchanged</td>
+                        @else
+                            <td class="table-success">Changed</td>
+
+                        @endif
+                    </tr>
+                    <tr>
                         <th>Street</th>
-                        <td>{{ $old_values->street }}</td>
-                        <td>{{ $new_values->street }}</td>
-                        @if ($old_values->street == $new_values->street)
+                        <td>{{ \App\Models\Street::find($old_values->street_id)->name ?? 'N/A' }}</td>
+                        <td>{{ \App\Models\Street::find($new_values->street_id)->name ?? 'N/A' }}</td>
+                        @if ($old_values->street_id == $new_values->street_id)
                             <td class="table-primary">Unchanged</td>
                         @else
                             <td class="table-success">Changed</td>

@@ -6,10 +6,12 @@ use App\Events\SendMail;
 use App\Events\SendSms;
 use App\Models\Country;
 use App\Models\District;
+use App\Models\DualControl;
 use App\Models\IDType;
 use App\Models\KYC;
 use App\Models\KycAmendmentRequest;
 use App\Models\Region;
+use App\Models\Street;
 use App\Models\Ward;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Facades\DB;
@@ -34,13 +36,15 @@ class KycAmendmentRequestAddModal extends Component
     public $is_citizen;
     public $nida;
     public $countries;
-    public $street;
     public $passportNo;
     public $permitNumber;
     public $nationality;
     public $id_type;
     public $zanid;
-    public $region, $regions;
+    public $region, $regions=[];
+    public $district, $districts=[];
+    public $ward, $wards=[];
+    public $street, $streets=[];
 
     public function mount($id)
     {
@@ -51,7 +55,6 @@ class KycAmendmentRequestAddModal extends Component
         $this->last_name = $this->kyc->last_name;
         $this->email = $this->kyc->email;
         $this->mobile = $this->kyc->mobile;
-        $this->street = $this->kyc->street;
         $this->alt_mobile = $this->kyc->alt_mobile;
         $this->physical_address = $this->kyc->physical_address;
         $this->is_citizen = $this->kyc->is_citizen;
@@ -61,9 +64,12 @@ class KycAmendmentRequestAddModal extends Component
         $this->nationality = $this->kyc->country_id;
         $this->zanid = $this->kyc->zanid_no;
         $this->region = $this->kyc->region_id;
+        $this->district = $this->kyc->district_id;
+        $this->ward = $this->kyc->ward_id;
+        $this->street = $this->kyc->street_id;
         $this->id_type = $this->kyc->id_type;
         $this->countries = DB::table('countries')->select('id', 'nationality')->where('name', '!=', 'Tanzania')->get();
-        $this->regions = Region::all();
+        $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
 
         $this->old_values = [
             'first_name' => $this->first_name,
@@ -73,8 +79,10 @@ class KycAmendmentRequestAddModal extends Component
             'mobile' => $this->mobile,
             'alt_mobile' => $this->alt_mobile,
             'physical_address' => $this->physical_address,
-            'street' => $this->street,
             'region_id' => $this->region,
+            'district_id' => $this->district,
+            'ward_id' => $this->ward,
+            'street_id' => $this->street,
             'is_citizen' => $this->is_citizen,
             'nida_no' => $this->nida,
             'zanid_no' => $this->zanid,
@@ -83,6 +91,24 @@ class KycAmendmentRequestAddModal extends Component
             'country_id' => $this->nationality,
             'id_type' => $this->id_type,
         ];
+    }
+
+    public function updated($propertyName)
+    {
+        if ($propertyName === 'region') {
+            $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->reset('district','ward','wards','street','streets');
+        }
+
+        if ($propertyName === 'district') {
+            $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->reset('ward','streets','street');
+        }
+
+        if ($propertyName === 'ward') {
+            $this->streets = Street::where('ward_id', $this->ward)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->reset('street');
+        }
     }
 
     public function render()
@@ -97,16 +123,19 @@ class KycAmendmentRequestAddModal extends Component
             'first_name' => 'required',
             'middle_name' => 'nullable',
             'last_name' => 'required',
-            'email' => 'nullable:email|unique:taxpayers,email,' . $this->kyc->id . ',id',
-            'mobile' => 'required|unique:taxpayers,mobile,'. $this->kyc->id . ',id|size:10',
+            'email' => 'nullable:email|unique:kycs,email,' . $this->kyc->id . ',id',
+            'mobile' => 'required|unique:kycs,mobile,'. $this->kyc->id . ',id|size:10',
             'alt_mobile' => 'nullable|size:10',
             'physical_address' => 'required',
+            'region' => 'required',
+            'district' => 'required',
+            'ward' => 'required',
             'street' => 'required',
-            'nida' => 'exclude_if:is_citizen,0|required_without:zanid|nullable|digits:20|unique:kycs,nida_no|unique:taxpayers,nida_no',
-            'zanid' => 'exclude_if:is_citizen,0|required_without:nida|nullable|digits:9|unique:kycs,zanid_no|unique:taxpayers,zanid_no',
+            'nida' => 'exclude_if:is_citizen,0|required_without:zanid|nullable|digits:20|unique:kycs,nida_no,' . $this->kyc->id . ',id|unique:taxpayers,nida_no',
+            'zanid' => 'exclude_if:is_citizen,0|required_without:nida|nullable|digits:9|unique:kycs,zanid_no,' . $this->kyc->id . ',id|unique:taxpayers,zanid_no',
             'nationality' => 'required_if:is_citizen,0',
-            'passportNo' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:kycs,passport_no|unique:taxpayers,passport_no|digits_between:8,15',
-            'permitNumber' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:taxpayers,permit_number|string|min:10|max:20',
+            'passportNo' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:kycs,passport_no,' . $this->kyc->id . ',id|unique:taxpayers,passport_no|digits_between:8,15',
+            'permitNumber' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:taxpayers,permit_number,' . $this->kyc->id . ',id|string|min:10|max:20',
             'nida.required_without' => 'Please provide your NIDA number',
             'zanid.required_without' => 'Please provide your ZANID number',
         ];
@@ -124,10 +153,12 @@ class KycAmendmentRequestAddModal extends Component
                 'mobile' => $this->mobile,
                 'alt_mobile' => $this->alt_mobile,
                 'physical_address' => $this->physical_address,
-                'street' => $this->street,
+                'region_id' => $this->region,
+                'district_id' => $this->district,
+                'ward_id' => $this->ward,
+                'street_id' => $this->street,
                 'is_citizen' => $this->is_citizen,
                 'country_id' => $this->nationality,
-                'region_id' => $this->region,
                 'nida_no' => $this->nida,
                 'zanid_no' => $this->zanid,
                 'id_type' => $this->id_type,

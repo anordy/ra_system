@@ -4,8 +4,13 @@ namespace App\Http\Livewire\Taxpayers;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Models\District;
+use App\Models\DualControl;
+use App\Models\Region;
+use App\Models\Street;
 use App\Models\Taxpayer;
 use App\Models\TaxpayerAmendmentRequest;
+use App\Models\Ward;
 use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +32,10 @@ class DetailsAmendmentRequestAddModal extends Component
     public $alt_mobile;
     public $physical_address;
     public $old_values;
+    public $region, $regions=[];
+    public $district, $districts=[];
+    public $ward, $wards=[];
+    public $street, $streets=[];
 
     public function mount($id)
     {
@@ -39,6 +48,11 @@ class DetailsAmendmentRequestAddModal extends Component
         $this->mobile = $this->taxpayer->mobile;
         $this->alt_mobile = $this->taxpayer->alt_mobile;
         $this->physical_address = $this->taxpayer->physical_address;
+        $this->region = $this->taxpayer->region_id;
+        $this->district = $this->taxpayer->district_id;
+        $this->ward = $this->taxpayer->ward_id;
+        $this->street = $this->taxpayer->street_id;
+        $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
 
         $this->old_values = [
             'first_name' => $this->first_name,
@@ -48,7 +62,29 @@ class DetailsAmendmentRequestAddModal extends Component
             'mobile' => $this->mobile,
             'alt_mobile' => $this->alt_mobile,
             'physical_address' => $this->physical_address,
+            'region_id' => $this->region,
+            'district_id' => $this->district,
+            'ward_id' => $this->ward,
+            'street_id' => $this->street,
         ];
+    }
+
+    public function updated($propertyName)
+    {
+        if ($propertyName === 'region') {
+            $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->reset('district','ward','wards','street','streets');
+        }
+
+        if ($propertyName === 'district') {
+            $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->reset('ward','streets','street');
+        }
+
+        if ($propertyName === 'ward') {
+            $this->streets = Street::where('ward_id', $this->ward)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
+            $this->reset('street');
+        }
     }
 
     public function render()
@@ -67,6 +103,10 @@ class DetailsAmendmentRequestAddModal extends Component
             'mobile' => 'required|unique:taxpayers,mobile,'. $this->taxpayer->id . ',id|size:10',
             'alt_mobile' => 'nullable|size:10',
             'physical_address' => 'required',
+            'region' => 'required',
+            'district' => 'required',
+            'ward' => 'required',
+            'street' => 'required',
         ];
     }
     public function submit()
@@ -82,6 +122,10 @@ class DetailsAmendmentRequestAddModal extends Component
                 'mobile' => $this->mobile,
                 'alt_mobile' => $this->alt_mobile,
                 'physical_address' => $this->physical_address,
+                'region_id' => $this->region,
+                'district_id' => $this->district,
+                'ward_id' => $this->ward,
+                'street_id' => $this->street,
             ];
 
             $taxpayer_amendment = TaxpayerAmendmentRequest::create([
