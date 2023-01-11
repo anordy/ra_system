@@ -2,11 +2,13 @@
 
 namespace App\Traits;
 
+use App\Enum\PaymentStatus;
 use App\Exports\ReturnReportExport;
 use App\Models\Returns\TaxReturn;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\Constant\Periodic\Payments;
 
 trait ReturnReportTrait
 {
@@ -38,29 +40,31 @@ trait ReturnReportTrait
 
         if ($parameters['type'] == 'Filing') {
             if ($parameters['filing_report_type'] == 'On-Time-Filings') {
-                // $returns = $model->where('tax_returns.filing_due_date', '>=', 'tax_returns.created_at');
-                $returns = $model->whereRaw("tax_returns.filing_due_date - CAST(tax_returns.created_at) >= 0"); // This determines if the filing date is less than filing due date
+                $returns = $model->whereRaw("CAST(tax_returns.filing_due_date as date) - CAST(tax_returns.created_at as date) >= 0"); 
+
             } elseif ($parameters['filing_report_type'] == 'Late-Filings') {
-                // $returns = $model->where('tax_returns.filing_due_date', '<', 'tax_returns.created_at');
-                $returns = $model->whereRaw("tax_returns.created_at - CAST(tax_returns.filing_due_date as date) > 0"); // This determines if the filing date is greater than filing due date
+                $returns = $model->whereRaw("CAST(tax_returns.created_at as date) - CAST(tax_returns.filing_due_date as date) > 0"); 
+
             } elseif ($parameters['filing_report_type'] == 'All-Filings') {
                 $returns = $model;
             } elseif ($parameters['filing_report_type'] == 'Tax-Claims') {
                 $returns = $model->where('tax_returns.has_claim', true);
+                
             } elseif ($parameters['filing_report_type'] == 'Nill-Returns') {
                 $returns = $model->where('tax_returns.is_nill', true);
             }
         } elseif ($parameters['type'] == 'Payment') {
             if ($parameters['payment_report_type'] == 'On-Time-Paid-Returns') {
-                $returns = $model->whereNotNull('tax_returns.paid_at');
-                $returns = $returns->where('tax_returns.payment_due_date', '>=', 'tax_returns.paid_at');
+                $returns = $model->whereRaw("CAST(tax_returns.payment_due_date as date) - CAST(tax_returns.paid_at as date) >= 0");
+
             } elseif ($parameters['payment_report_type'] == 'Late-Paid-Returns') {
-                $returns = $model->whereNotNull('tax_returns.paid_at');
-                $returns = $returns->where('tax_returns.payment_due_date', '<', 'tax_returns.paid_at',);
+                $returns = $model->where('tax_returns.payment_status','complete')->whereRaw("CAST(tax_returns.paid_at as date) - CAST(tax_returns.payment_due_date as date) > 0");
+
             } elseif ($parameters['payment_report_type'] == 'Unpaid-Returns') {
-                $returns = $model->whereNull('tax_returns.paid_at');
+                $returns = $model->where('tax_returns.payment_status','!=','complete');
+
             } elseif ($parameters['payment_report_type'] == 'All-Paid-Returns') {
-                $returns = $model->whereNotNull('tax_returns.paid_at');
+                $returns = $model->where('tax_returns.payment_status','complete');
             }
         }
 
