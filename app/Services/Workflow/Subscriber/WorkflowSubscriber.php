@@ -303,7 +303,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION') {
                 $hrefClient = 'taxpayers-amendment.index';
                 $hrefAdmin = 'taxpayers-amendment.index';
-            } elseif ($placeName == 'KYC_DETAILS_AMENDMENT_VERIFICATION') {
+            } elseif ($placeName == 'kyc_details_amendment_verification') {
                 $hrefClient = 'kycs-amendment.index';
                 $hrefAdmin = 'kycs-amendment.index';
             }
