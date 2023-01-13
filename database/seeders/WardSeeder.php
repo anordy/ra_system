@@ -120,7 +120,7 @@ class WardSeeder extends Seeder
         }
 
 
-        $magharibiAWards = ["Sharifu Msa","Mtoni","Mwanyanya","Kwa Goa","Kibweni","Bububu ","Kijichi","Mbuzini","Chemchem","Dole","Kizimbani","Mfenesini","Mwakaje","Bumbwisudi","Kama","Chuini","Kihinani","Kikaangoni","Mto Pepo","Munduli","Uholanzi","Welezo ","Hawaii","Michikichini","Mtofaani ","Mtoni Kidatu","Mtoni Chemchem","Masingini","Kianga","Muembemchomeke","Mwera"];
+        $magharibiAWards = ["Sharifu Msa","Mtoni","Mwanyanya","Kwa Goa","Kibweni","Bububu","Kijichi","Mbuzini","Chemchem","Dole","Kizimbani","Mfenesini","Mwakaje","Bumbwisudi","Kama","Chuini","Kihinani","Kikaangoni","Mto Pepo","Munduli","Uholanzi","Welezo ","Hawaii","Michikichini","Mtofaani","Mtoni Kidatu","Mtoni Chemchem","Masingini","Kianga","Muembemchomeke","Mwera"];
         $magharibiAID = District::where('name', 'Magharibi A')->value('id');
 
         foreach ($magharibiAWards as $name) {
@@ -132,7 +132,7 @@ class WardSeeder extends Seeder
         }
         
 
-        $magharibiBWards = ["Tomondo ","Kisauni","Maungani","Kombeni","Nyamanzi","Dimani","Bweleo","Fumba","Mambosasa","Chunga","Fuoni Migombani","Fuoni Kipungani","Uwandani","Kibondeni","Kiembesamaki","Mbweni","Kwa Mchina","Mombasa","Michungwani","Chukwani","Shakani","Magogoni ","Jitimai","Sokoni","Mikarafuuni","Mwanakwerekwe","Melinne ","Taveta","Muembe Majogoo","Pangawe ","Kinuni ","Mnarani","Uzi ","Kijitoupele",];
+        $magharibiBWards = ["Tomondo","Kisauni","Maungani","Kombeni","Nyamanzi","Dimani","Bweleo","Fumba","Mambosasa","Chunga","Fuoni Migombani","Fuoni Kipungani","Uwandani","Kibondeni","Kiembesamaki","Mbweni","Kwa Mchina","Mombasa","Michungwani","Chukwani","Kiembe Samaki","Shakani","Magogoni","Jitimai","Sokoni","Mikarafuuni","Mwanakwerekwe","Melinne","Taveta","Muembe Majogoo","Pangawe","Kinuni","Mnarani","Uzi","Kijitoupele",];
         $magharibiBID = District::where('name', 'Magharibi B')->value('id');
 
         foreach ($magharibiBWards as $name) {
