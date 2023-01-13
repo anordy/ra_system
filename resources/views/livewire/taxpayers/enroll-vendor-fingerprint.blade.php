@@ -4,8 +4,7 @@
             Taxpayer Details
         </button>
         @if ((empty($kyc->nida_verified_at) && !empty($kyc->zanid_verified_at)) ||
-            !empty($kyc->zanid_verified_at) ||
-            !empty($kyc->passport_verified_at))
+            !empty($kyc->zanid_verified_at) || empty($kyc->passport_verified_at))
             <button class="tab-item {{ $selectedStep === 'biometric' ? 'active' : '' }}"
                 wire:click="changeStep('biometric')">
                 Biometric Enrollment
