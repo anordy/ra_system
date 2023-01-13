@@ -70,6 +70,9 @@ class BpraVerification extends Component
             if ($this->bpraResponse['businessData']['reg_number']) {
                 $this->business->bpra_no = $this->bpraResponse['businessData']['reg_number'];
             }
+            if ($this->bpraResponse['businessData']['entity_name']) {
+                $this->business->trading_name = $this->bpraResponse['businessData']['entity_name'];
+            }
             $this->business->authorities_verified_at = Carbon::now();
             $this->business->bpra_verification_status = BusinessStatus::APPROVED;
             $this->business->save();

@@ -22,6 +22,7 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
         'password',
         'remember_token',
         'ci_payload',
+        'pass_expired_on'
     ];
 
     public static function getPayloadColumns(): array
