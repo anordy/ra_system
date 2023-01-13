@@ -147,7 +147,6 @@ class TaxInvestigationApprovalProcessing extends Component
                     'workingsReport' => [new RequiredIf($this->hasAssessment == "1"), 'nullable'],
                     'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
                     'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
-                    'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
                 ]
             );
 
