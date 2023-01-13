@@ -42,7 +42,7 @@ class ExtensionRequestApprovalProcessing extends Component
     {
         if ($this->checkTransition('debt_manager')) {
             $this->validate([
-                'extendTo' => ['required'],
+                'extendTo' => ['required', 'date'],
             ]);
         }
 
