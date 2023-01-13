@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="card-body">
-            @livewire('relief.relief-project-list-table',['id' => $project->id])
+            @livewire('relief.relief-project-list-table',['id' => encrypt($project->id)])
         </div>
     </div>
 @endsection
