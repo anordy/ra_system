@@ -16,7 +16,6 @@ class CreateVatReturnSupplierDetailsTable extends Migration
         Schema::create('vat_return_supplier_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('vat_return_id');
-            $table->string('taxpayer_zin_number');
             $table->string('supplier_zin_number');
             $table->string('tax_invoice_number');
             $table->timestamp('date_of_tax_invoice');
