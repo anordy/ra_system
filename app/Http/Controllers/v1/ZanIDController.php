@@ -23,7 +23,7 @@ class ZanIDController extends Controller
         $zanid_endpoint = config('modulesconfig.api_url') . '/zanid-internal/lookup';
         $access_token = (new ApiAuthenticationService)->getAccessToken();
 
-        if ($access_token == 0) {
+        if ($access_token == null) {
             return ['data' => null, 'msg' => 'Gateway Timed Out', 'code' => 504];
         } else {
             $authorization = "Authorization: Bearer ". $access_token;
