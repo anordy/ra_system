@@ -36,7 +36,7 @@ class TooManyLoginAttempts implements ShouldQueue
     {
         if ($this->payload['email']) {
             Mail::to($this->payload['email'])->send(new TooManyLoginAttemptsMAIL($this->payload));
-        } elseif ($this->payload['phone']) {
+        } else {
             Log::error("User Information MAIL: { $this->payload['email'] } Invalid Email");
         }
     }
