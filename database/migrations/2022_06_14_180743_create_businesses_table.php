@@ -24,6 +24,7 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('currency_id');
 
             $table->string('name');
+            $table->string('trading_name')->nullable();
             $table->string('tin');
             $table->string('previous_zno')->nullable();
             $table->string('reg_no')->nullable();

@@ -32,7 +32,7 @@ class RegionSeeder extends Seeder
                 'location' => 'pemba',
             ],
             [
-                'name' => 'Mjini Magharibi',
+                'name' => 'Mjini',
                 'location' => 'unguja',
             ],
         ];

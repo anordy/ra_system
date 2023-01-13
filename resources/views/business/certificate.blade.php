@@ -108,9 +108,9 @@
         @if ($location->is_headquarter == 0)
             <div class="watermark">Branch Copy</div>
         @endif
-        @if ($location->business->category->short_name == \App\Models\BusinessCategory::SOLE && $location->business->bpra_no)
+        @if ($location->business->category->short_name == \App\Models\BusinessCategory::SOLE && $location->business->trading_name)
             <span class="embed sole-owner">{{ $location->business->responsiblePerson->fullname ?? '' }}</span>
-            <span class="embed trading-as">T/A {{ $location->business->name ?? '' }}</span>
+            <span class="embed trading-as">T/A {{ $location->business->trading_name ?? '' }}</span>
         @else
             <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
         @endif
