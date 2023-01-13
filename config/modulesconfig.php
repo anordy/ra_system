@@ -29,12 +29,12 @@ return [
 
     // DIP(Data Integrity Protection) Service
     'verification' => [
-        'server_auth_url' => env('VERIFICATION_SERVER_AUTH_URL'),
-        'server_sign_url' => env('VERIFICATION_SERVER_SIGN_URL'),
-        'server_verify_url' => env('VERIFICATION_SERVER_VERIFY_URL'),
-        'server_username' => env('VERIFICATION_SERVER_USERNAME'),
-        'server_password' => env('VERIFICATION_SERVER_PASSWORD'),
-        'server_token' => env('VERIFICATION_SERVER_TOKEN')
+        'server_auth_url' => secEnv('VERIFICATION_SERVER_AUTH_URL'),
+        'server_sign_url' => secEnv('VERIFICATION_SERVER_SIGN_URL'),
+        'server_verify_url' => secEnv('VERIFICATION_SERVER_VERIFY_URL'),
+        'server_username' => secEnv('VERIFICATION_SERVER_USERNAME'),
+        'server_password' => secEnv('VERIFICATION_SERVER_PASSWORD'),
+        'server_token' => secEnv('VERIFICATION_SERVER_TOKEN')
     ]
 ]
 ?>
