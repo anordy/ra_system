@@ -28,6 +28,7 @@ class BusinessSeeder extends Seeder
             "currency_id" => 1,
             "taxpayer_id" => 1,
             "name" => "Goodman Enterprises",
+            "trading_name" => "Goodman Enterprises Co. LTD 2023",
             "tin" => "543980345",
             "reg_no" => "12345",
             "owner_designation" => "Director General",
