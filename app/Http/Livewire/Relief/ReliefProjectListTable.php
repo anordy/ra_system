@@ -17,7 +17,7 @@ class ReliefProjectListTable extends DataTableComponent
     public function mount($id)
     {
 //        todo: encrypt id
-        $this->projectSectionId = $id;
+        $this->projectSectionId = encrypt($id);
     }
 
     public function builder(): Builder
