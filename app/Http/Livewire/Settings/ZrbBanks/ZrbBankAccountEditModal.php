@@ -30,11 +30,13 @@ class ZrbBankAccountEditModal extends Component
     public $banks;
     public $currencies;
     public $old_values;
+    public $is_transfer;
 
     protected $rules = [
         'account_name' => 'required',
         'branch_name' => 'required',
         'swift_code' => 'required',
+        'is_transfer' => 'required',
         'account_number' => 'required|numeric|digits_between:9,20',
         'currency' => 'required',
     ];
@@ -44,6 +46,7 @@ class ZrbBankAccountEditModal extends Component
         'account_name.required' => 'Account name is required.',
         'branch_name.required' => 'Branch name is required.',
         'swift_code.required' => 'Swift code is required.',
+        'is_transfer.required' => 'Bank account type is required.',
         'account_number.required' => 'Account number is required.',
         'currency.required' => 'currency is required.',
     ];
@@ -55,12 +58,14 @@ class ZrbBankAccountEditModal extends Component
         $this->branch_name = $this->zrbBankAccount->branch_name;
         $this->swift_code = $this->zrbBankAccount->swift_code;
         $this->account_number = $this->zrbBankAccount->account_number;
+        $this->is_transfer = $this->zrbBankAccount->is_transfer;
 
         $this->old_values = [
             'bank_id' => $this->bank_id,
             'account_name' => $this->account_name,
             'branch_name' => $this->branch_name,
             'swift_code' => $this->swift_code,
+            'is_transfer' => $this->is_transfer,
             'account_number' => $this->account_number,
             'currency_id' => $this->zrbBankAccount->id,
             'currency_iso' => $this->zrbBankAccount->currency_iso,
@@ -85,6 +90,7 @@ class ZrbBankAccountEditModal extends Component
                 'account_name' => $this->account_name,
                 'branch_name' => $this->branch_name,
                 'swift_code' => $this->swift_code,
+                'is_transfer' => $this->is_transfer,
                 'account_number' => $this->account_number,
                 'currency_id' => $currency->id,
                 'currency_iso' => $currency->iso,

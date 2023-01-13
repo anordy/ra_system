@@ -16,7 +16,7 @@ class ReliefList extends DataTableComponent
     public function builder(): builder
     {
         //order by created_at desc 
-        return Relief::orderBy('reliefs.updated_at', 'desc');
+        return Relief::with('business', 'location')->orderBy('reliefs.updated_at', 'desc');
     }
 
     public function configure(): void
@@ -26,7 +26,7 @@ class ReliefList extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['reliefs.business_id', 'reliefs.location_id', 'project_id', 'project_list_id','reliefs.status', 'reliefs.id']);
+        $this->setAdditionalSelects(['business_id', 'location_id', 'project_id', 'project_list_id']);
     }
 
     public function columns(): array
@@ -35,7 +35,7 @@ class ReliefList extends DataTableComponent
             Column::make("Business", "business.name")
                 ->searchable(),
             Column::make("Location", "location.name")
-                ->searchable(),
+                ->label(fn($row) => $row->location->name ?? ''),
             Column::make("Amount", "total_amount")
                 ->format(function ($value) {
                     return number_format($value, 1);
@@ -71,7 +71,8 @@ class ReliefList extends DataTableComponent
                     return date('d/m/Y', strtotime($value));
                 })
                 ->searchable(),
-            Column::make("Status", "id")->view("relief.includes.relief-status"),
+            Column::make("Status")
+                ->label(fn ($row) => view("relief.includes.relief-status", compact('row'))),
             Column::make("Actions", "id")->view("relief.includes.actions"),
         ];
     }

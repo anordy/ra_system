@@ -33,4 +33,8 @@ class District extends Model implements Auditable
     public function landLeases(){
         $this->hasMany(LandLease::class,'district_id');
     }
+
+    public function scopeApproved($query){
+        return $query->where('is_approved', true);
+    }
 }

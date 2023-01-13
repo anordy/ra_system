@@ -18,11 +18,10 @@ class KycAmendmentRequestShow extends Component
     public function mount($id){
         $this->amendmentRequest = KycAmendmentRequest::findOrFail(decrypt($id));
         $this->createdBy = User::findorFail($this->amendmentRequest->created_by)->fullname();
-        $this->old_values = json_decode($this->amendmentRequest->old_values);
         $this->taxpayer_id = $this->amendmentRequest->taxpayer_id;
+        $this->old_values = json_decode($this->amendmentRequest->old_values);
         $this->new_values = json_decode($this->amendmentRequest->new_values);
-//        dd($this->old_values->is_citizen);
-
+//        dd($this->new_values, $this->old_values);
     }
     public function render()
     {

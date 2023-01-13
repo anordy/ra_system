@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Kyc;
 
 use App\Models\Country;
 use App\Models\KycAmendmentRequest;
+use App\Models\Region;
+use App\Models\Street;
 use App\Models\TaxpayerAmendmentRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -69,9 +71,16 @@ class KycAmendmentRequestTable extends DataTableComponent
                 ->searchable(),
             Column::make('Nationality', 'kyc.country_id')
                 ->format(function ($value, $row) {
-                    return Country::find($value)->value('nationality') ?? '';
+                    return Country::find($value)->nationality ?? '';
                 }),
-            Column::make('Street', 'kyc.street'),
+            Column::make('Region', 'kyc.region_id')
+                ->format(function ($value, $row) {
+                    return Region::find($value)->value('name') ?? '';
+                }),
+            Column::make('Street', 'kyc.street_id')
+                ->format(function ($value, $row) {
+                    return Street::find($value)->value('name') ?? '';
+                }),
             Column::make('Action', 'id')
                 ->view('kyc.amendments.includes.actions'),
         ];

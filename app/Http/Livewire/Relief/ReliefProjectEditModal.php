@@ -29,7 +29,7 @@ class ReliefProjectEditModal extends Component
     public function mount($id)
     {
 //        todo: encrypt id
-        $data = reliefProject::find($id);
+        $data = ReliefProject::find(decrypt($id));
         $this->reliefProjectSection = $data;
         $this->name = $data->name;
         $this->description = $data->description;

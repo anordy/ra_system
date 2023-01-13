@@ -66,6 +66,12 @@ class ZrbBankAccountTable extends DataTableComponent
             Column::make('Currency', 'currency_iso')
                 ->sortable()
                 ->searchable(),
+            Column::make('Account Type', 'is_transfer')
+                ->format(function ($value) {
+                        return view('settings.zrb-bank-accounts.includes.account-type', ['value' => $value]);
+                })
+                ->sortable()
+                ->searchable(),
             Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
                     if ($value == 0) {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Payments;
 
-use App\Exports\BankReconExport;
+use App\Exports\MissingBankReconExport;
 use App\Models\MissingBankRecon;
 use App\Traits\ReconReportTrait;
 use Carbon\Carbon;
@@ -17,9 +17,10 @@ class MissingBankReconFilter extends Component
 
     public $range_start;
     public $range_end;
+    public $currency = 'all';
     public $today;
     public $hasData=false;
-    public $parameters =[];
+    public $parameters = [];
 
     public function mount(){
         $this->today = date('Y-m-d');
@@ -29,19 +30,28 @@ class MissingBankReconFilter extends Component
         $this->parameters = [
             'range_start' =>  Carbon::today()->startOfDay()->toDateTimeString(),
             'range_end' => Carbon::today()->endOfDay()->toDateTimeString(),
+            'currency' => $this->currency
         ];
 
         // Try and fetch data from today
-        $this->hasData = MissingBankRecon::whereBetween('created_at', [
+        $query = MissingBankRecon::query()
+            ->whereBetween('created_at', [
                 Carbon::today()->startOfDay()->toDateTimeString(),
                 Carbon::today()->endOfDay()->toDateTimeString()
-            ])->exists();
+            ]);
+
+        if ($this->currency != 'all'){
+            $query->where('currency', $this->currency);
+        }
+
+        $this->hasData = $query->exists();
     }
 
     protected function rules(){
         return [
             'range_start' => 'required',
             'range_end' =>   'required',
+            'currency' => 'required'
         ];
     }
 
@@ -49,30 +59,41 @@ class MissingBankReconFilter extends Component
         $this->validate();
         $this->parameters['range_start'] =Carbon::parse($this->range_start)->startOfDay()->toDatetimeString();
         $this->parameters['range_end'] = Carbon::parse($this->range_end)->endOfDay()->toDatetimeString();
+        $this->parameters['currency'] = $this->currency;
 
-        $recons = MissingBankRecon::whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()]);
+        $recons = MissingBankRecon::query()
+            ->whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()]);
 
-        if(!$recons){
-            $this->hasData = false;
-            $this->alert('error','No record found');
-        }else{
-            $this->hasData = true;
+        if ($this->currency != 'all'){
+            $recons->where('currency', $this->currency);
         }
 
+        if($recons->count()) {
+            $this->hasData = true;
+            return;
+        }
+
+        $this->hasData = false;
+        $this->alert('error','No record found');
     }
 
     public function exportExcel(){
         $this->validate();
-        $records = MissingBankRecon::whereBetween('created_at', [
+        $query = MissingBankRecon::query()
+            ->whereBetween('created_at', [
                 Carbon::today()->startOfDay()->toDateTimeString(),
                 Carbon::today()->endOfDay()->toDateTimeString()
-            ])->get();
+            ]);
 
-        $fileName = 'bank-recon-report-'.time().'.xlsx';
-        $title    = 'For missing bank recons created between '.$this->parameters['range_start'].' and '.$this->parameters['range_end'];
+        if ($this->currency != 'all'){
+            $query->where('currency', $this->currency);
+        }
 
-        $this->alert('success', 'Exporting Excel File');
-        return Excel::download(new BankReconExport($records, $title), $fileName);
+        $fileName = 'missing-bank-recon-report-'.time().'.xlsx';
+        $title    = 'For missing bank recons created between '.Carbon::parse($this->parameters['range_start'])->toDayDateTimeString().' and '.Carbon::parse($this->parameters['range_end'])->toDayDateTimeString();
+
+        $this->alert('success', 'Exporting Excel File...');
+        return Excel::download(new MissingBankReconExport($query->get(), $title), $fileName);
     }
 
     public function render()

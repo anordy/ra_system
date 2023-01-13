@@ -24,9 +24,11 @@ class StreetTableSeeder extends Seeder implements ToModel, WithHeadingRow, WithV
     public function run()
     {
         try {
-            $this->import(public_path('imports/UNGUJA-STREETS.xlsx'));
+            $this->import(public_path('imports/STREETS.csv'));
         } catch (ValidationException $exception){
             foreach ($exception->failures() as $error) {
+                Log::error($error->values());
+                Log::error($error->attribute());
                 Log::error('Error at row ' . $error->row() . '. ' . $error->errors()[0]);
             }
         }
