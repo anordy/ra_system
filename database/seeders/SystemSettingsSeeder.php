@@ -57,7 +57,7 @@ class SystemSettingsSeeder extends Seeder
                 'name' => 'Decay Minutes',
                 'code' => 'login-decay-minutes',
                 'description' => 'Maximum duration before user allowed to login again',
-                'value' => '2',
+                'value' => '60',
                 'unit' => 'minutes',
                 'is_approved' => 1
             ],
