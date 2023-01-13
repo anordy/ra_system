@@ -10,7 +10,7 @@
                     <div class="row m-4">
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Staff Name</span>
-                            <p class="my-1">{{ $audit->user->fname }} {{ $audit->user->lname }}</p>
+                            <p class="my-1">{{ $audit->user->fname ?? '' }} {{ $audit->user->lname ?? '' }}</p>
                         </div>
                         <div class="col-md-4 mb-3">
                             <span class="font-weight-bold text-uppercase">Event Performed</span>

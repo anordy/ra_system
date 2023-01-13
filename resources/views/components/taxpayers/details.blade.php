@@ -48,6 +48,7 @@
     <livewire:taxpayers.details.zanid :kyc="$kyc" />
 @endif
 
-@if ($kyc->id_type == 3)
+{{-- TODO: Allow this when immigration api has been integrated --}}
+{{-- @if ($kyc->id_type == 3)
     <livewire:taxpayers.details.passport :kyc="$kyc" />
-@endif
+@endif --}}
