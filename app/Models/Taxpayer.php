@@ -31,7 +31,15 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
             'id',
             'email',
             'mobile',
-            'status'
+            'status',
+            'nida_no',
+            'zanid_no',
+            'passport_no',
+            'permit_number',
+            'nida_verified_at',
+            'zanid_verified_at',
+            'passport_verified_at',
+            'biometric_verified_at',
         ];
     }
 
