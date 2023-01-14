@@ -27,7 +27,12 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
 
     public static function getPayloadColumns(): array
     {
-        return ['id', 'email', 'phone', 'status'];
+        return [
+            'id',
+            'email',
+            'mobile',
+            'status'
+        ];
     }
 
     public static function getTableName(): string
