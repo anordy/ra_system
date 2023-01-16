@@ -17,7 +17,7 @@ class CreateBusinessHotelsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('location_id');
-            $table->string('business_reg_no')->nullable(); // If business is not owned by the current user TODO: replace with business id ? 😃
+            $table->string('business_reg_no')->nullable();
             $table->string('company_name')->nullable();
             $table->string('management_company')->nullable();
             $table->string('hotel_location');
