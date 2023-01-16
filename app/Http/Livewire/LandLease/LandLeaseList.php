@@ -14,7 +14,6 @@ class LandLeaseList extends DataTableComponent
     //create builder function
     public function builder(): builder
     {
-        // return LandLease::where('created_by', auth()->user()->id);
         return LandLease::query();
     }
 
@@ -41,7 +40,7 @@ class LandLeaseList extends DataTableComponent
                             return $this->getBusinessName($row->business_location_id);
                         } else {
                             if ($row->is_registered == 1) {
-                                return $this->getApplicantName($row->taxpayer_id);
+                                return $this->getApplicantName(encrypt($row->taxpayer_id));
                             } else {
                                 return $row->name;
                             }
@@ -87,7 +86,7 @@ class LandLeaseList extends DataTableComponent
 
     public function getApplicantName($id)
     {
-        $taxpayer = Taxpayer::find($id); // todo: encrypt id
+        $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
