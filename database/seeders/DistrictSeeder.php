@@ -27,7 +27,7 @@ class DistrictSeeder extends Seeder
                 $districts = ['Kati','Kusini'];
             } else if($region->name == 'Kusini Pemba') {
                 $districts = ['Chakechake', 'Mkoani'];
-            } else if($region->name == 'Mjini Magharibi') {
+            } else if($region->name == 'Mjini') {
                 $districts = ['Mjini', 'Magharibi A', 'Magharibi B'];
             }
 

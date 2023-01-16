@@ -41,8 +41,8 @@ class BusinessInvestigationAddModal extends Component
             'tax_type_ids' => 'required',
             'intension' => 'required',
             'scope' => 'required',
-            'period_from' => 'required',
-            'period_to' => 'required',
+            'period_from' => 'required|date',
+            'period_to' => 'required|date|after:period_from',
         ];
     }
 

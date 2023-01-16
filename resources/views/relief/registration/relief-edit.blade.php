@@ -3,5 +3,5 @@
 @section('title', 'Edit Relief')
 
 @section('content')
-    @livewire('relief.relief-edit', ['enc_id' => $id])
+    @livewire('relief.relief-edit', ['enc_id' => encrypt($id)])
 @endsection

@@ -9,6 +9,7 @@ use App\Models\IDType;
 use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
+use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,7 @@ use Livewire\Component;
 
 class EnrollFingerprint extends Component
 {
-    use KYCTrait, LivewireAlert;
+    use KYCTrait, LivewireAlert, VerificationTrait;
 
     public $kyc;
     public $error;
@@ -36,7 +37,8 @@ class EnrollFingerprint extends Component
 
     public function mount()
     {
-        if ($this->kyc->zanid_verified_at || $this->kyc->passport_verified_at || empty($this->kyc->nida_verified_at)) {
+        // Allow unverified passport and nida number
+        if ($this->kyc->zanid_verified_at || empty($this->kyc->passport_verified_at) || empty($this->kyc->nida_verified_at)) {
             $this->userVerified = true;
         } else {
             $this->userVerified = false;
@@ -100,10 +102,11 @@ class EnrollFingerprint extends Component
                 return;
             }
         } else if ($this->kyc->identification->name == IDType::PASSPORT) {
-            if($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
-                $this->alert('error', 'User Passport Number not verified by authorities');
-                return;
-            }
+            // TODO: Allow this when immigration api has been integrated
+            // if($kyc->is_citizen == '0' && (isNullOrEmpty($kyc->passport_verified_at))) {
+            //     $this->alert('error', 'User Passport Number not verified by authorities');
+            //     return;
+            // }
         } else if ($this->kyc->identification->name == IDType::NIDA) {
             // TODO: Check nida when nida api has been integrated
         } 
@@ -140,6 +143,8 @@ class EnrollFingerprint extends Component
                 'password' => $data['password'],
                 'physical_address' => $data['physical_address'],
                 'street_id' => $data['street_id'],
+                'district_id' => $data['district_id'],
+                'ward_id' => $data['ward_id'],
                 'email' => $data['email'],
                 'mobile' => $data['mobile'],
                 'alt_mobile' => $data['alt_mobile'],
@@ -148,8 +153,11 @@ class EnrollFingerprint extends Component
                 'country_id' => $data['country_id'],
                 'extra_id_number' => $data['extra_id_number'],
             ]);
+
             $taxpayer->generateReferenceNo();
 
+            // sign taxpayer
+            $this->sign($taxpayer);
 
             // todo: this should before sending the email/Sms
             if ($taxpayer) {
@@ -158,6 +166,7 @@ class EnrollFingerprint extends Component
                 session()->flash("error", "Couldn't verify user.");
                 throw new \Exception("Couldn't verify user");
             }
+
             DB::commit();
 
             // Send email and password for OTP

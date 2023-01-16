@@ -72,16 +72,10 @@
                         <p class="my-1">{{ $taxPayer->passport_no }}</p>
                     </div>
                 @endif
-                @if ($taxPayer->work_permit)
+                @if ($taxPayer->permit_number)
                     <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Residence Permit</span>
-                        <p class="my-1">{{ $taxPayer->work_permit }}</p>
-                    </div>
-                @endif
-                @if ($taxPayer->residence_permit)
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Work Permit</span>
-                        <p class="my-1">{{ $taxPayer->residence_permit }}</p>
+                        <span class="font-weight-bold text-uppercase">Permit Number</span>
+                        <p class="my-1">{{ $taxPayer->permit_number }}</p>
                     </div>
                 @endif
             </div>
