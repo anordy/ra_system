@@ -14,6 +14,7 @@ class VerificationFilter extends Component
     public $year;
     public $from;
     public $to;
+    public $period;
 
     public function mount($tablename)
     {
