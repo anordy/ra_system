@@ -35,7 +35,7 @@ class ApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
-        $this->renew = RenewTaxAgentRequest::find($this->subject->id);
+        $this->renew = RenewTaxAgentRequest::findOrFail($this->subject->id);
     }
 
 
@@ -60,6 +60,10 @@ class ApprovalProcessing extends Component
             $amount = $fee->amount;
             $used_currency = $fee->currency;
             $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
+            if ($tax_type == null) {
+                $this->alert('error', 'The tax type does not exist');
+                return;
+            }
             $billitems = [
                 [
                     'billable_id' => $this->renew->id,
