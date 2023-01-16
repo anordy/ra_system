@@ -39,7 +39,7 @@ class ReliefProjectListEditModal extends Component
 //        todo: encrypt id
         $this->ministries = ReliefMinistry::all();
         $this->sponsors = ReliefSponsor::all();
-        $data = ReliefProjectList::find($id);
+        $data = ReliefProjectList::find(decrypt($id));
         $this->project = $data;
         $this->name = $data->name;
         $this->description = $data->description;

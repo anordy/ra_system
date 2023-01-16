@@ -9,6 +9,7 @@ use App\Models\IDType;
 use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Traits\Taxpayer\KYCTrait;
+use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,7 @@ use Livewire\Component;
 
 class EnrollFingerprint extends Component
 {
-    use KYCTrait, LivewireAlert;
+    use KYCTrait, LivewireAlert, VerificationTrait;
 
     public $kyc;
     public $error;
@@ -152,8 +153,11 @@ class EnrollFingerprint extends Component
                 'country_id' => $data['country_id'],
                 'extra_id_number' => $data['extra_id_number'],
             ]);
+
             $taxpayer->generateReferenceNo();
 
+            // sign taxpayer
+            $this->sign($taxpayer);
 
             // todo: this should before sending the email/Sms
             if ($taxpayer) {
@@ -162,6 +166,7 @@ class EnrollFingerprint extends Component
                 session()->flash("error", "Couldn't verify user.");
                 throw new \Exception("Couldn't verify user");
             }
+
             DB::commit();
 
             // Send email and password for OTP

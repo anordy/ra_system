@@ -25,7 +25,7 @@ trait VerificationTrait{
             $stringData .= $object->{$column};
         }
 
-        Log::channel('verification')->info('Attempting to verify an instance.', ['instance' => $stringData]);
+        Log::channel('verification')->info('Attempting to verify an instance.');
 
 
         try {
@@ -39,6 +39,8 @@ trait VerificationTrait{
                     'payload' => base64_encode($stringData),
                     'signature' => $object->ci_payload
                 ]);
+
+            Log::info(json_decode($result, true)['verification'] ? 'Complete' : 'Failed');
 
             $result = json_decode($result, true)['verification'] == 'true';
 
@@ -68,7 +70,7 @@ trait VerificationTrait{
         foreach ($object::getPayloadColumns() as $column){
             $stringData .= $object->{$column};
         }
-        Log::channel('verification')->info('Attempting to verify an instance.', ['instance' => $stringData]);
+        Log::channel('verification')->info('Attempting to sign an instance.');
 
         try {
             // Get token
@@ -80,6 +82,8 @@ trait VerificationTrait{
             $result = Http::withToken($token)
                 ->withOptions(['verify' => false])
                 ->post($url, ['payload' => base64_encode($stringData)]);
+
+            Log::channel('verification')->info(json_decode($result, true)['signature'] ? 'Complete' : 'Failed');
 
             return $object->update(['ci_payload' => json_decode($result, true)['signature']]) == 1;
         } catch (\Exception $exception){

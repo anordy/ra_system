@@ -30,7 +30,7 @@ class ReliefMinistriesEditModal extends Component
     public function mount($id)
     {
 //        todo: encrypt id
-        $data = ReliefMinistry::find($id);
+        $data = ReliefMinistry::findorFail(decrypt($id));
         $this->reliefProjectSection = $data;
         $this->name = $data->name;
         $this->type = $data->type;

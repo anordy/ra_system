@@ -5,6 +5,7 @@ namespace App\Console\Commands\Env;
 use Illuminate\Console\Command;
 use App\Services\EncryptEnv\Action\Encrypt;
 use Illuminate\Encryption\Encrypter;
+use Illuminate\Support\Facades\App;
 
 class EncryptEnvValues extends Command
 {
@@ -76,14 +77,47 @@ class EncryptEnvValues extends Command
             return false;
 
         } else {
-            $this->info('Done!');
+            $this->info('Encryption complete.');
             if ($generated_key) {
-                $this->info('');
-                $this->info('Your new generated CONFIGKEY is: '.$configkey."\n");
-                $this->warn('DO NOT lose this key if you want to use the encrypted config values you just encrypted.');
+                $this->info("Your new generated CONFIGKEY is: $configkey, your .env file was update with this key.");
+                $this->writeNewEnvironmentFileWith($configkey);
+                $this->warn('DO NOT lose this key if you want to use the encrypted config values you just encrypted!');
             }
 
             return true;
         }
+    }
+
+    /**
+     * Write a new environment file with the given key.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    protected function writeNewEnvironmentFileWith($key)
+    {
+        if (env('CONFIGKEY')){
+            file_put_contents(App::environmentFile(), preg_replace(
+                    $this->keyReplacementPattern(),
+                    'CONFIGKEY='.$key,
+                    file_get_contents(App::environmentFile())
+                ));
+        } else {
+            $contents = file_get_contents(App::environmentFile());
+            $contents .= "\nCONFIGKEY=.$key";
+            file_put_contents(App::environmentFile(), $contents);
+        }
+    }
+
+    /**
+     * Get a regex pattern that will match env APP_KEY with any random key.
+     *
+     * @return string
+     */
+    protected function keyReplacementPattern(): string
+    {
+        $escaped = preg_quote('='.config('app.configkey'), '/');
+
+        return "/^CONFIGKEY{$escaped}/m";
     }
 }

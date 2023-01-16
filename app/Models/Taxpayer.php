@@ -27,7 +27,20 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
 
     public static function getPayloadColumns(): array
     {
-        return ['id', 'email', 'phone', 'status'];
+        return [
+            'id',
+            'email',
+            'mobile',
+            'status',
+            'nida_no',
+            'zanid_no',
+            'passport_no',
+            'permit_number',
+            'nida_verified_at',
+            'zanid_verified_at',
+            'passport_verified_at',
+            'biometric_verified_at',
+        ];
     }
 
     public static function getTableName(): string

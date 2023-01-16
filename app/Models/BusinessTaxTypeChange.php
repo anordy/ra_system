@@ -14,6 +14,10 @@ class BusinessTaxTypeChange extends Model implements Auditable
 
     protected $guarded = [];
 
+    protected $casts = [
+        'effective_date' => 'datetime'
+    ];
+
     public function business() {
         return $this->belongsTo(Business::class, 'business_id');
     }
