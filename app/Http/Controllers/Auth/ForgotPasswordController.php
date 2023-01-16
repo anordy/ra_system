@@ -31,6 +31,12 @@ class ForgotPasswordController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => __('Credentials does not match our records'),
+            ]);
+        }
+
         if($user->accountLocked()){
             throw ValidationException::withMessages([
                 'email' => __('Your Account has been locked out. Please contact your admin to unlock your account'),
