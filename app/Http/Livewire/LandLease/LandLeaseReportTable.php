@@ -73,10 +73,10 @@ class LandLeaseReportTable extends DataTableComponent
                 ->format(
                     function ($value, $row) {
                         if ($row->category == 'business') {
-                            return $this->getBusinessName($row->business_location_id);
+                            return $this->getBusinessName(encrypt($row->business_location_id));
                         } else {
                             if ($row->is_registered == 1) {
-                                return $this->getApplicantName($row->taxpayer_id);
+                                return $this->getApplicantName(encrypt($row->taxpayer_id));
                             } else {
                                 return $row->name;
                             }
@@ -94,10 +94,10 @@ class LandLeaseReportTable extends DataTableComponent
                 ->format(
                     function ($value, $row) {
                         if ($row->category == 'business') {
-                            return $this->getBusinessZin($row->business_location_id);
+                            return $this->getBusinessZin(encrypt($row->business_location_id));
                         } else {
                             if ($row->is_registered == 1) {
-                                return $this->getApplicantNo($row->taxpayer_id);
+                                return $this->getApplicantNo(encrypt($row->taxpayer_id));
                             } else {
                                 return $row->name;
                             }
@@ -161,27 +161,27 @@ class LandLeaseReportTable extends DataTableComponent
 
     public function getApplicantName($id)
     {
-        $taxpayer = Taxpayer::find($id); // todo: encrypt id
+        $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
     public function getBusinessName($id)
     {
-        $businessLocation = BusinessLocation::find($id); // todo: encrypt id
+        $businessLocation = BusinessLocation::find(decrypt($id)); // todo: encrypt id
 
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 
     public function getApplicantNo($id)
     {
-        $taxpayer = Taxpayer::find($id); // todo: encrypt id
+        $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
 
         return $taxpayer->reference_no;
     }
 
     public function getBusinessZin($id)
     {
-        $businessLocation = BusinessLocation::find($id); // todo: encrypt id
+        $businessLocation = BusinessLocation::find(decrypt($id)); // todo: encrypt id
 
         return $businessLocation->zin;
     }
