@@ -46,7 +46,7 @@ class ApprovalProcessing extends Component
             return;
         }
         $feeType = 'Renewal Fee';
-        // todo: check if queried objects exist
+        // TODO: check if queried objects exist
         $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
             ->where('category', $feeType)->where('is_citizen', $this->renew->tax_agent->taxpayer->is_citizen)->first();
         if ($fee == null) {
