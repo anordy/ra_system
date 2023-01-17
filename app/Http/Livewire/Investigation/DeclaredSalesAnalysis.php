@@ -46,6 +46,8 @@ class DeclaredSalesAnalysis extends Component
     public $headersMmTransfer;
     public $headersPetroleum;
     public $withoutPurchases = false;
+    public $start_date;
+    public $end_date;
 
     public function mount($investigation, $tax_type_id, $location_id)
     {
@@ -149,7 +151,6 @@ class DeclaredSalesAnalysis extends Component
     protected function lumpSum()
     {
         $yearReturnGroup = LumpSumReturn::select('total_amount_due', 'installment', 'quarter_name', 'payment_quarters as return_months', 'total_amount_due_with_penalties', 'quarter as quarter', 'financial_years.name as year')
-            ->leftJoin('financial_months', 'financial_months.id', 'lump_sum_returns.financial_month_id')
             ->leftJoin('lump_sum_payments', 'lump_sum_payments.business_id', 'lump_sum_returns.business_id')
             ->leftJoin('financial_years', 'financial_years.id', 'lump_sum_returns.financial_year_id')
             ->get()->groupBy(['year', 'quarter']);
@@ -420,23 +421,21 @@ class DeclaredSalesAnalysis extends Component
                 $itemValue = [
                     'quarter' => $keyMonth,
                 ];
-                $amountDue = 0;
-                $amountDueWithPenalties = 0;
-                $quatersName = '';
+
                 foreach ($returnItems as $keyItem => $item) {
                     $installment = $item['installment'];
                     $quatersName = $item['quarter_name'];
                     $amountDue = $item['total_amount_due'];
                     $amountDueWithPenalties = $item['total_amount_due_with_penalties'];
                     $totalPenalties = $amountDueWithPenalties - $amountDue;
-                }
 
-                $itemValue['installment'] = $installment;
-                $itemValue['quarter_name'] = $quatersName;
-                $itemValue['amountWithPenalties'] = $amountDueWithPenalties;
-                $itemValue['principalAmount'] = $amountDue;
-                $itemValue['Penalties'] = $totalPenalties;
-                $quarterData[] = $itemValue;
+                    $itemValue['installment'] = $installment;
+                    $itemValue['quarter_name'] = $quatersName;
+                    $itemValue['amountWithPenalties'] = $amountDueWithPenalties;
+                    $itemValue['principalAmount'] = $amountDue;
+                    $itemValue['Penalties'] = $totalPenalties;
+                    $quarterData[] = $itemValue;
+                }
             }
             $yearData[$keyYear] = $quarterData;
         }
