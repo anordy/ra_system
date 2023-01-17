@@ -33,11 +33,11 @@ class LandLeaseList extends DataTableComponent
             Column::make("DP Number", "dp_number")
                 ->searchable()
                 ->sortable(),
-            Column::make("Name", "status")
+            Column::make("Name", "business_location_id")
                 ->format(
                     function ($value, $row) {
                         if ($row->category == 'business') {
-                            return $this->getBusinessName($row->business_location_id);
+                            return $this->getBusinessName($value);
                         } else {
                             if ($row->is_registered == 1) {
                                 return $this->getApplicantName(encrypt($row->taxpayer_id));
