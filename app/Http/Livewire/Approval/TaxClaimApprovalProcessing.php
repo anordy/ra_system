@@ -136,7 +136,7 @@ class TaxClaimApprovalProcessing extends Component
             DB::beginTransaction();
 
             try {
-                $reportPath = $this->assessmentReport->store('tax-claims');
+                $reportPath = $this->assessmentReport->store('tax-claims', 'local');
 
                 $assessment = TaxClaimAssessment::create([
                     'claim_id' => $this->subject->id,
