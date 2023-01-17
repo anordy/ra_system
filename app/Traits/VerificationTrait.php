@@ -9,10 +9,8 @@ use App\Models\VerificationsLog;
 use App\Models\ZmBill;
 use App\Services\Verification\AuthenticationService;
 use App\Services\Verification\PayloadInterface;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use PHPUnit\Exception;
 
 trait VerificationTrait{
 

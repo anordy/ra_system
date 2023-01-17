@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Approval;
 
+use App\Traits\VerificationTrait;
 use Exception;
 use Carbon\Carbon;
 use App\Events\SendSms;
@@ -22,7 +23,7 @@ use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ReturnDebtWaiverApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, LivewireAlert, VerificationTrait;
     public $modelId;
     public $debt;
     public $modelName;
@@ -101,6 +102,10 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                         'interest_amount' => $this->interestAmount ?? 0,
                     ]);
 
+                    if (!$this->verify($this->debt)){
+                        throw new Exception('Could not verify tax return, please contact your administrator.');
+                    }
+
                     $this->debt->update([
                         'penalty' => $this->penaltyAmountDue,
                         'interest' => $this->interestAmountDue,
@@ -108,6 +113,8 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                         'outstanding_amount' => $this->total,
                         'application_status' => 'waiver',
                     ]);
+
+                    $this->sign($this->debt);
 
                     $this->subject->status = WaiverStatus::APPROVED;
                     $this->subject->save();
