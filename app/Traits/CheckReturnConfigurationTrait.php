@@ -161,7 +161,7 @@ trait CheckReturnConfigurationTrait
                 if (config('database.default') == 'mysql') {
 
                     $currencyRate = ExchangeRate::query()
-                        ->where('exchange_date', '=', Carbon::now()->toDateString())
+                        ->whereMonth('exchange_date', '=', Carbon::now()->month)
                         ->where('currency', $currency->iso)->first();
                 } else {
                     $currencyRate = ExchangeRate::where('currency', $currency->iso)
