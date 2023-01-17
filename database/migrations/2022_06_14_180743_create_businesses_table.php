@@ -55,7 +55,6 @@ class CreateBusinessesTable extends Migration
             $table->unsignedBigInteger('isiic_iii')->nullable();
             $table->unsignedBigInteger('isiic_iv')->nullable();
 
-            // TODO: Remove use approval instead
             $table->timestamp('verified_at')->nullable();
             $table->softDeletes();
             $table->timestamps();

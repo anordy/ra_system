@@ -334,7 +334,6 @@ class StampDutyItemsSeeder extends Seeder
                 'liable_to' => 'The person executing'
             ],
             [
-                // TODO: Validate with authorities
                 'description' => 'Receipt or Bill of Sale composition agreement under this Act',
                 'rate_type' => 'percent',
                 'rate' => 3,
