@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Events\SendMail;
 use App\Http\Controllers\Controller;
+use App\Models\DualControl;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\UserOtp;
@@ -21,7 +22,7 @@ class LoginController extends Controller
     use AuthenticatesUsers, VerificationTrait;
 
     protected $maxAttempts;
-    protected $decayMinutes = 2;
+    protected $decayMinutes;
 
 
     public function __construct()
@@ -79,13 +80,13 @@ class LoginController extends Controller
                 ]);
             }
 
-            if (!$this->verify($user)) {
-                Auth::logout();
-                $request->session()->flush();
-                throw ValidationException::withMessages([
-                    $this->username() =>  "Your account could not be verified, please contact system administrator.",
-                ]);
-            }
+//            if (!$this->verify($user)) {
+//                Auth::logout();
+//                $request->session()->flush();
+//                throw ValidationException::withMessages([
+//                    $this->username() =>  "Your account could not be verified, please contact system administrator.",
+//                ]);
+//            }
 
             if ($user->is_approved == 0) {
                 Auth::logout();
@@ -127,7 +128,7 @@ class LoginController extends Controller
 
     protected function hasTooManyLoginAttempts($user)
     {
-        $this->maxAttempts = SystemSetting::where('code', SystemSetting::MAXIMUM_NUMBER_OF_ATTEMPTS)->value('value');
+        $this->maxAttempts = SystemSetting::where('code', SystemSetting::MAXIMUM_NUMBER_OF_ATTEMPTS)->where('is_approved', DualControl::APPROVE)->value('value');
         if ($user->auth_attempt >= $this->maxAttempts) {
             return true;
         }

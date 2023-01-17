@@ -7,7 +7,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h5 class="text-uppercase">System Setting Category Management</h5>
+            <h5 class="text-uppercase">System Setting Management</h5>
             <div class="card-tools">
                 @can('system-setting-add')
                     @if (approvalLevel(Auth::user()->level_id, 'Maker'))
