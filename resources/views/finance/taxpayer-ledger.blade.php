@@ -119,10 +119,7 @@
                         <span class="font-weight-bold text-uppercase">Place of Business</span>
                         <p class="my-1">{{ $business->place_of_business }}</p>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <span class="font-weight-bold text-uppercase">Physical Address</span>
-                        <p class="my-1">{{ $business->physical_address }}</p>
-                    </div>
+                
                     <div class="col-md-4 mb-3">
                         <span class="font-weight-bold text-uppercase">Type of Business Activities</span>
                         <p class="my-1">{{ $business->activityType->name }}</p>

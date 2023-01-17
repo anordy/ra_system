@@ -30,9 +30,6 @@ class VerifyReturn
             return $next($request);
         }
 
-        // TODO: Try return next from here and see what happens
-        //return $next($request);
-
         // Flag suspect of fraud, could be done from trait.
         $return->update(['is_suspected' => 1]);
 

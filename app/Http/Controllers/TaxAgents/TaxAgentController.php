@@ -43,7 +43,7 @@ class TaxAgentController extends Controller
             abort(403);
         }
         $id = Crypt::decrypt($id); // todo: suggestion: unless you want the value, better pass encrypted
-        $agent = TaxAgent::query()->findOrfail($id); // todo: handle exception 404-customize to have action fallback
+        $agent = TaxAgent::findOrFail($id); // todo: handle exception 404-customize to have action fallback
         return view('taxagents.active-agent-show', compact('agent', 'id'));
     }
 
@@ -54,18 +54,15 @@ class TaxAgentController extends Controller
             abort(403);
         }
         $id = decrypt($id);
-        $taxagent = TaxAgent::with('taxpayer')->find($id);
-        if ($taxagent->is_first_application == 1)
-        {
+        $taxagent = TaxAgent::with('taxpayer')->findOrFail($id);
+        if ($taxagent->is_first_application == 1) {
             $start_date = $taxagent->app_first_date;
             $end_date = $taxagent->app_expire_date;
             $start = date('d', strtotime($start_date));
             $end = date('d', strtotime($end_date));
             $diff = Carbon::create($end_date)->diffInYears($start_date);
 
-        }
-        else
-        {
+        } else {
             $renew = $taxagent->request->first();
             $start_date = $renew->renew_first_date;
             $end_date = $renew->renew_expire_date;
@@ -81,7 +78,7 @@ class TaxAgentController extends Controller
 
         $code = 'Name: ' . $taxagent->taxpayer->fullName . ", " .
             'Location: ' . $taxagent->district->name . ', ' . $taxagent->region->name . ", " .
-            'Period: ' . $diff.' '.$word .
+            'Period: ' . $diff . ' ' . $word .
             'From: ' . "{$start_date}" . ", " .
             'To: ' . "{$end_date}" . ", " .
             'https://uat.ubx.co.tz:8888/zrb_client/public/login';
@@ -119,7 +116,7 @@ class TaxAgentController extends Controller
             abort(403);
         }
         $id = Crypt::decrypt($id);
-        $agent = TaxAgent::query()->findOrfail($id);
+        $agent = TaxAgent::findOrFail($id);
 
         return view('taxagents.request-agent-show', compact('agent', 'id'));
     }
@@ -130,12 +127,15 @@ class TaxAgentController extends Controller
             abort(403);
         }
         $id = Crypt::decrypt($id);
-        $agent = TaxAgent::query()->findOrfail($id); // todo: handle exception
-        $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen')
+        $agent = TaxAgent::findOrFail($id); // todo: handle exception
+        $fee = TaPaymentConfiguration::select('id', 'amount', 'category', 'is_citizen')
             ->where('category', 'Registration Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->first();
+        if ($fee == null) {
+            abort(404);
+        }
         return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
     }
 
@@ -153,23 +153,25 @@ class TaxAgentController extends Controller
             abort(403);
         }
         $id = decrypt($id);
-        $renew = RenewTaxAgentRequest::query()->findOrFail($id);
+        $renew = RenewTaxAgentRequest::findOrFail($id);
         $agent = $renew->tax_agent;
-        $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'is_citizen')
+        $fee = TaPaymentConfiguration::select('id', 'amount', 'category', 'is_citizen')
             ->where('category', 'Renewal Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->first();
+        if ($fee == null) {
+            abort(404);
+        }
         return view('taxagents.renew.show', compact('renew', 'fee'));
     }
 
     public function viewConsultantRenewRequests($id)
     {
         $requests = RenewTaxAgentRequest::where('tax_agent_id', decrypt($id))->orderByDesc('id')->get();
-        $agent = TaxAgent::query()->findOrfail(decrypt($id));
-        if (!empty($agent))
-        {
-            $consultant = $agent->taxpayer->first_name.' '.$agent->taxpayer->middle_name.' '.$agent->taxpayer->last_name;
+        $agent = TaxAgent::findOrFail(decrypt($id));
+        if (!empty($agent)) {
+            $consultant = $agent->taxpayer->first_name . ' ' . $agent->taxpayer->middle_name . ' ' . $agent->taxpayer->last_name;
         }
         return view('taxagents.consultant-renew-requests.index', compact('requests', 'consultant', 'id'));
     }

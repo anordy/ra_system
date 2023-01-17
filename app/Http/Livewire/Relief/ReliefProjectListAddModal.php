@@ -57,7 +57,7 @@ class ReliefProjectListAddModal extends Component
         $this->validate();
         $government_notice_path = null;
         if ($this->government_notice_path) {
-            $government_notice_path = $this->government_notice_path->store('relief');
+            $government_notice_path = $this->government_notice_path->store('relief', 'local');
         }
 
         try {
