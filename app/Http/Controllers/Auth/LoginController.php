@@ -80,13 +80,13 @@ class LoginController extends Controller
                 ]);
             }
 
-            if (!$this->verify($user)) {
-                Auth::logout();
-                $request->session()->flush();
-                throw ValidationException::withMessages([
-                    $this->username() =>  "Your account could not be verified, please contact system administrator.",
-                ]);
-            }
+//            if (!$this->verify($user)) {
+//                Auth::logout();
+//                $request->session()->flush();
+//                throw ValidationException::withMessages([
+//                    $this->username() =>  "Your account could not be verified, please contact system administrator.",
+//                ]);
+//            }
 
             if ($user->is_approved == 0) {
                 Auth::logout();
