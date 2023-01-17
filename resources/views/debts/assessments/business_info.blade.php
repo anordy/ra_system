@@ -71,10 +71,7 @@
         <span class="font-weight-bold text-uppercase">Place of Business</span>
         <p class="my-1">{{ $assessment->business->place_of_business }}</p>
     </div>
-    <div class="col-md-4 mb-3">
-        <span class="font-weight-bold text-uppercase">Physical Address</span>
-        <p class="my-1">{{ $assessment->business->physical_address ?? 'N/A' }}</p>
-    </div>
+  
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Date of Commencing Business</span>
         <p class="my-1">{{ $assessment->business->date_of_commencing }}</p>

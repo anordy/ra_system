@@ -325,23 +325,23 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 if (key($placesCurrent) == 'completed') {
                     if ($event->getSubject()->taxpayer) {
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                            $title = $notificationName,
-                            $message = 'Your request has been approved successfully.',
-                            $href = $hrefClient ?? null,
-                            $hrefText = 'View',
-                            $hrefParameters = null,
-                            $owner = 'taxpayer'
+                            $notificationName,
+                            'Your request has been approved successfully.',
+                            $hrefClient ?? null,
+                            'View',
+                            null,
+                            'taxpayer'
                         ));
                     }
                 } elseif (key($placesCurrent) == 'rejected') {
                     if ($event->getSubject()->taxpayer) {
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                            $title = $notificationName,
-                            $message = 'Your request has been rejected .',
-                            $href = $hrefClient ?? null,
-                            $hrefText = 'View',
-                            $hrefParameters = null,
-                            $owner = 'taxpayer',
+                            $notificationName,
+                            'Your request has been rejected .',
+                            $hrefClient ?? null,
+                            'View',
+                            null,
+                            'taxpayer',
                         ));
                     }
                 }
@@ -349,7 +349,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                 if ($places['owner'] == 'staff') {
 
                     $task = $subject->pinstance;
-                    
+
                     $actors = json_decode($task->operators);
                     if (gettype($actors) != "array") {
                         $actors = [];
@@ -358,10 +358,10 @@ class WorkflowSubscriber implements EventSubscriberInterface
                         $users = User::whereIn('role_id', $actors)->get();
                         foreach ($users as $u) {
                             $u->notify(new DatabaseNotification(
-                                $title = $notificationName,
-                                $message = 'You have a request to review',
-                                $href = $hrefAdmin ?? null,
-                                $hrefText = 'view'
+                                $notificationName,
+                                'You have a request to review',
+                                $hrefAdmin ?? null,
+                                'view'
                             ));
                         }
                     }
