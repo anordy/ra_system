@@ -91,7 +91,7 @@ class DeclaredSalesAnalysis extends Component
                 $this->airport();
                 break;
 
-            case TaxType::SEA_SERVICE_TRANSPORT_CHARGE:
+            case TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE:
                 $this->sea();
                 break;
         }

@@ -14,6 +14,7 @@ use App\Notifications\DatabaseNotification;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;

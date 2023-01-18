@@ -2,15 +2,18 @@
 
 namespace App\Traits;
 
-use App\Jobs\RepostBillSignature;
-use App\Jobs\RepostReturnSignature;
-use App\Models\Returns\TaxReturn;
-use App\Models\VerificationsLog;
 use App\Models\ZmBill;
 use App\Services\Verification\AuthenticationService;
 use App\Services\Verification\PayloadInterface;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use PHPUnit\Exception;
+use App\Events\SendMail;
+use App\Models\VerificationsLog;
+use App\Jobs\RepostBillSignature;
+use App\Models\Returns\TaxReturn;
+use Illuminate\Support\Facades\DB;
+use App\Jobs\RepostReturnSignature;
 
 trait VerificationTrait{
 
@@ -46,11 +49,13 @@ trait VerificationTrait{
                 $object->update(['failed_verification' => true]);
 
                 //  Save to failed verifications
-               VerificationsLog::create([
+               $verification = VerificationsLog::create([
                     'table' => $object->getTableName(),
                     'row_id' => $object->id,
                     'data' => json_encode($object)
                 ]);
+                
+                event(new SendMail('failed-verification', $verification));
 
                 return false;
             }
