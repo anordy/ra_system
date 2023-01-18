@@ -27,20 +27,20 @@
             right: 20px;
         }
         .business-name {
-            font-size: 1.15em;
-            top: 33.5%;
+            font-size: 1.8em;
+            top: 32.3%;
         }
         .taxpayer-name {
             font-size: 1.6em;
             top: 41%;
         }
         .sole-owner {
-            font-size: 1.2em;
-            top: 32.5%;
+            font-size: 1.6em;
+            top: 31.2%;
         }
         .trading-as {
             font-size: 0.8em;
-            top: 34.9%;
+            top: 34.3%;
         }
         .reg-no {
             font-size: 1.5em;
@@ -108,9 +108,9 @@
         @if ($location->is_headquarter == 0)
             <div class="watermark">Branch Copy</div>
         @endif
-        @if ($location->business->category->short_name == \App\Models\BusinessCategory::SOLE && $location->business->bpra_no)
+        @if ($location->business->category->short_name == \App\Models\BusinessCategory::SOLE && $location->business->trading_name)
             <span class="embed sole-owner">{{ $location->business->responsiblePerson->fullname ?? '' }}</span>
-            <span class="embed trading-as">T/A {{ $location->business->name ?? '' }}</span>
+            <span class="embed trading-as">T/A {{ $location->business->trading_name ?? '' }}</span>
         @else
             <span class="embed business-name">{{ $location->business->name ?? '' }}</span>
         @endif

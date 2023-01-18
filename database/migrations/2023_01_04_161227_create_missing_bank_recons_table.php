@@ -30,9 +30,10 @@ class CreateMissingBankReconsTable extends Migration
 
             $table->decimal('debit_amount', 38, 2)->nullable();
             $table->decimal('credit_amount', 38, 2)->nullable();
+            $table->string('currency', 5);
             $table->decimal('current_balance', 38, 2);
-            $table->decimal('dr_cr')->nullable();
-            $table->decimal('doc_num')->nullable();
+            $table->string('dr_cr')->nullable();
+            $table->string('doc_num')->nullable();
 
             $table->timestamps();
         });

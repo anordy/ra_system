@@ -60,7 +60,7 @@
                             @enderror
                         @endif
                         @if ($natureOfAttachment === 'Setting')
-                            <label class="control-label">Setting Out Ammend</label>
+                            <label class="control-label">Setting Out Amend</label>
                             <input type="file" class="form-control  @error('settingReport') is-invalid @enderror"
                                 wire:model.lazy="settingReport">
                             @error('settingReport')

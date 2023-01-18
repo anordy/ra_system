@@ -97,11 +97,9 @@ use App\Http\Controllers\Reports\Debts\DebtReportController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
-use App\Http\Controllers\Returns\Queries\NonFilersController;
 use App\Http\Controllers\TaxClearance\TaxClearanceController;
 use App\Http\Controllers\Assesments\WaiverObjectionController;
 use App\Http\Controllers\Reports\Claims\ClaimReportController;
-use App\Http\Controllers\Returns\Queries\NilReturnsController;
 use App\Http\Controllers\Business\BusinessUpdateFileController;
 use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Setting\DualControlActivityController;
@@ -395,10 +393,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/sales-purchases/show/{id}', [SalesPurchasesController::class, 'show'])->name('sales-purchases.show');
         Route::get('/all-credit-returns', [AllCreditReturnsController::class, 'index'])->name('all-credit-returns');
         Route::get('/all-credit-returns/show/{id}/{return_id}/{sales}', [AllCreditReturnsController::class, 'show'])->name('all-credit-returns.show');
-        Route::get('/non-filers', [NonFilersController::class, 'index'])->name('non-filers');
-        Route::get('/non-filers/show/{id}', [NonFilersController::class, 'show'])->name('non-filers.show');
-        Route::get('/nil-returns', [NilReturnsController::class, 'index'])->name('nil-returns');
-        Route::get('/nil-returns/show/{id}', [NilReturnsController::class, 'show'])->name('nil-returns.show');
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
@@ -609,10 +603,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
             ->name('internal-search-wo')->where('type', 'plate-number|chassis');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
-        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove
-        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove
-        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove
-        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove
+        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove on production
+        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove on production
+        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove on production
+        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove on production
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {

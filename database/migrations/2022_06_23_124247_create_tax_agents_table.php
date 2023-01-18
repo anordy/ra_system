@@ -21,6 +21,7 @@ class CreateTaxAgentsTable extends Migration
 			$table->unsignedBigInteger('district_id');
 			$table->unsignedBigInteger('region_id');
             $table->unsignedBigInteger('ward_id');
+            $table->unsignedBigInteger('street_id')->nullable();
 			$table->string('reference_no', '35')->nullable();
 			$table->string('emp_status');
 			$table->string('emp_letter')->nullable();

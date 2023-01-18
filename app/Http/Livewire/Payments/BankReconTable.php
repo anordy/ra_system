@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Payments;
 
 use App\Models\BankRecon;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -16,21 +15,20 @@ class BankReconTable extends DataTableComponent
     public $parameters = [];
 
     public function mount($parameters){
-        if (count($parameters)){
-            $this->parameters = $parameters;
-        } else {
-            $this->parameters = [
-                'range_start' => Carbon::today()->startOfDay()->toDateTimeString(),
-                'range_end' => Carbon::today()->endOfDay()->toDateTimeString()
-            ];
-        }
+        $this->parameters = $parameters;
     }
 
     public function builder(): Builder
     {
-        return BankRecon::query()
+        $query = BankRecon::query()
             ->whereBetween('created_at', [$this->parameters['range_start'], $this->parameters['range_end']])
             ->orderBy('created_at', 'desc');
+
+        if ($this->parameters['currency'] != 'all'){
+            $query->where('currency', $this->parameters['currency']);
+        }
+
+        return $query;
     }
 
     public function configure(): void
@@ -65,6 +63,9 @@ class BankReconTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     return number_format($value, 2);
                 }),
+            Column::make('Currency', 'currency')
+                ->sortable()
+                ->searchable(),
             Column::make('Transaction Type', 'transaction_type')
                 ->searchable()
                 ->sortable(),

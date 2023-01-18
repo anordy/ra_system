@@ -42,8 +42,12 @@ class ExtensionRequestApprovalProcessing extends Component
     {
         if ($this->checkTransition('debt_manager')) {
             $this->validate([
-                'extendTo' => ['required'],
-            ]);
+                'extendTo' => [
+                    'required',
+                    'date',
+                    'after:'. $this->subject->extensible->curr_payment_due_date,
+                    'before:'. Carbon::make($this->subject->extensible->curr_payment_due_date)->addYear()->toDateTimeString()
+            ]]);
         }
 
         DB::beginTransaction();

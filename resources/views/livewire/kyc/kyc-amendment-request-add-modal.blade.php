@@ -88,7 +88,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label>Street *</label>
-                        <select class="form-control @error('street') is-invalid @enderror" wire:model.lazy="street">
+                        <select class="form-control @error('street') is-invalid @enderror" wire:model.defer="street">
                             <option></option>
                             @foreach ($streets as $streetObject)
                                 <option {{ $streetObject->id == $street ? 'selected' : '' }} value="{{ $streetObject->id }}">{{ $streetObject->name }}</option>

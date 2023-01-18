@@ -13,7 +13,7 @@ class ReliefItemsTable extends DataTableComponent
 
     public function mount($id)
     {
-        $this->reliefId = $id;
+        $this->reliefId = decrypt($id);
     }
 
     public function builder(): builder

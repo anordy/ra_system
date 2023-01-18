@@ -32,10 +32,10 @@ return [
 
         'local' => [
             'driver' => 'sftp',
-            'host' => env('SFTP_HOST'),
-            'username' => env('SFTP_USERNAME'),
-            'port' => env('SFTP_PORT'),
-            'privateKey' => env('SFTP_PRIVATE_KEY'),
+            'host' => secEnv('SFTP_HOST'),
+            'username' => secEnv('SFTP_USERNAME'),
+            'port' => secEnv('SFTP_PORT'),
+            'privateKey' => secEnv('SFTP_PRIVATE_KEY'),
             'root' => 'uploads/',
         ],
 

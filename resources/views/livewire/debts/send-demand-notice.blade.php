@@ -68,16 +68,6 @@
         </div>
     @endif
 
-    {{-- <livewire:debt.demand-notice.demand-notice-table debtId="{{ $debt->id }}" /> --}}
-
-
-    {{-- <div class="modal-footer p-2 m-0">
-        <a href="{{ route('debts.debt.showOverdue', encrypt($debt->id)) }}" type="button" class="btn btn-danger">Cancel</a>
-        <button type="button" class="btn btn-primary"
-            wire:click="send()">Send Demand Notice</button>
-    </div> --}}
-
-
 </div>
 
 </div>

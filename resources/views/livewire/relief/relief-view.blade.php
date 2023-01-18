@@ -66,7 +66,7 @@
                 Relief Items
             </div>
             <div class="pt-1"></div>
-            @livewire('relief.relief-items-table', ['id' => $relief->id])
+            @livewire('relief.relief-items-table', ['id' => encrypt($relief->id)])
 
             @if ($relief->reliefAttachments->count()>0)
             <div class="pt-5"></div>

@@ -68,9 +68,8 @@ class KycAmendmentRequestAddModal extends Component
         $this->ward = $this->kyc->ward_id;
         $this->street = $this->kyc->street_id;
         $this->id_type = $this->kyc->id_type;
-        $this->countries = Country::select('id', 'nationality')->where('name', '!=', 'Tanzania')->get();
+        $this->countries = Country::select('id', 'nationality')->where('name', '!=', 'Tanzania')->where('is_approved', DualControl::APPROVE)->get();
         $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
-//        dd($this->countries->toArray());
         $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
         $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
         $this->streets = Street::where('ward_id', $this->ward)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();

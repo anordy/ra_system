@@ -54,7 +54,7 @@ class LandLeaseReportTable extends DataTableComponent
             'class'   => 'table-bordered table-sm',
         ]);
 
-        $this->setAdditionalSelects(['land_leases.name', 'land_leases.phone', 'is_registered', 'taxpayer_id', 'land_leases.created_at', 'land_leases.business_location_id']);
+        $this->setAdditionalSelects(['is_registered', 'business_location_id']);
     }
 
     public function columns(): array
@@ -72,11 +72,12 @@ class LandLeaseReportTable extends DataTableComponent
             Column::make('Name', 'category')
                 ->format(
                     function ($value, $row) {
-                        if ($row->category == 'business') {
-                            return $this->getBusinessName($row->business_location_id);
+
+                        if ($row['category'] == 'business') {
+                            return $this->getBusinessName(encrypt($row->business_location_id));
                         } else {
                             if ($row->is_registered == 1) {
-                                return $this->getApplicantName($row->taxpayer_id);
+                                return $this->getApplicantName(encrypt($row->taxpayer_id));
                             } else {
                                 return $row->name;
                             }
@@ -84,20 +85,20 @@ class LandLeaseReportTable extends DataTableComponent
                     }
                 )
                 ->sortable(),
-            Column::make('Applicant Type', 'category')
-                ->format(function ($value) {
-                    return ucwords($value);
+            Column::make('Applicant Type', 'updated_at')
+                ->format(function ($value, $row) {
+                    return ucwords($row['category']);
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make('ZRB No./ Zin No.', 'id')
+            Column::make('ZRB No./ Zin No.', 'name')
                 ->format(
                     function ($value, $row) {
                         if ($row->category == 'business') {
-                            return $this->getBusinessZin($row->business_location_id);
+                            return $this->getBusinessZin(encrypt($row->business_location_id));
                         } else {
                             if ($row->is_registered == 1) {
-                                return $this->getApplicantNo($row->taxpayer_id);
+                                return $this->getApplicantNo(encrypt($row->taxpayer_id));
                             } else {
                                 return $row->name;
                             }
@@ -106,7 +107,7 @@ class LandLeaseReportTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make('Applicant Type', 'id')->view('land-lease.includes.applicant-status'),
+            Column::make('Applicant Type', 'email')->view('land-lease.includes.applicant-status'),
             Column::make('Commence Date', 'commence_date')
                 ->format(function ($value, $row) {
                     return date('d/m/Y', strtotime($value));
@@ -114,13 +115,11 @@ class LandLeaseReportTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Payment Month', 'payment_month')
-                ->searchable()
-                ->sortable(),
-            Column::make('Payment Amount (USD)', 'payment_amount')
+            Column::make('Payment Month(USD)', 'payment_month')
                 ->format(function ($value, $row) {
-                    return number_format($value);
+                    return $value;
                 })
+                ->searchable()
                 ->sortable(),
             Column::make('Review Shedule', 'review_schedule')
                 ->format(function ($value, $row) {
@@ -128,7 +127,7 @@ class LandLeaseReportTable extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make('Contact Person', 'id')
+            Column::make('Contact Person', 'taxpayer_id')
                 ->format(
                     function ($value, $row) {
                         if ($row->is_registered == 1) {
@@ -141,7 +140,7 @@ class LandLeaseReportTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make('Phone Number', 'id')
+            Column::make('Phone Number', 'phone')
                 ->format(
                     function ($value, $row) {
                         if ($row->is_registered == 1) {
@@ -161,27 +160,27 @@ class LandLeaseReportTable extends DataTableComponent
 
     public function getApplicantName($id)
     {
-        $taxpayer = Taxpayer::find($id); // todo: encrypt id
+        $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
     public function getBusinessName($id)
     {
-        $businessLocation = BusinessLocation::find($id); // todo: encrypt id
+        $businessLocation = BusinessLocation::find(decrypt($id)); // todo: encrypt id
 
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 
     public function getApplicantNo($id)
     {
-        $taxpayer = Taxpayer::find($id); // todo: encrypt id
+        $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
 
         return $taxpayer->reference_no;
     }
 
     public function getBusinessZin($id)
     {
-        $businessLocation = BusinessLocation::find($id); // todo: encrypt id
+        $businessLocation = BusinessLocation::find(decrypt($id)); // todo: encrypt id
 
         return $businessLocation->zin;
     }

@@ -23,4 +23,8 @@ class Street extends Model
     public function kyc(){
         return $this->hasMany(KYC::class);
     }
+
+    public function scopeApproved($query){
+        return $query->where('is_approved', true);
+    }
 }
