@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Payments;
 use App\Enum\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\BankRecon;
+use App\Models\TaxType;
 use App\Models\ZmBill;
 use App\Models\ZmPayment;
 use App\Models\ZmRecon;
@@ -118,5 +119,21 @@ class PaymentsController extends Controller
 
     public function dailyPayments(){
         return view('payments.daily-payments');
+    }
+
+    public function dailyPaymentsPerTaxType($payload){
+        $data = json_decode(decrypt($payload),true);
+        $data['today'] = date('Y-m-d');
+        $data['tax_type'] = TaxType::find($data['tax_type_id']);
+        $data['totalTzs'] = $data['tax_type']->getTotalPaymentsPerCurrency('TZS', $data['range_start'], $data['range_end']);
+        $data['totalUsd'] = $data['tax_type']->getTotalPaymentsPerCurrency('USD', $data['range_start'], $data['range_end']);
+        $start = Carbon::parse($data['range_start'])->startOfDay()->toDateTimeString();
+        $end = Carbon::parse($data['range_end'])->endOfDay()->toDateTimeString();
+        $data['payments'] = ZmPayment::leftJoin('zm_bills', 'zm_payments.zm_bill_id', 'zm_bills.id')
+            ->whereBetween('zm_payments.trx_time', [$start, $end])
+            ->where('zm_bills.tax_type_id', $data['tax_type_id'])
+            ->get();
+
+        return view('payments.daily-payments-tax-type',compact('data'));
     }
 }

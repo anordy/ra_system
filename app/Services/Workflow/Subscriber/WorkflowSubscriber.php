@@ -225,7 +225,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
                 if (key($places) == 'rejected') {
-                    $subject->status = TaxAgentStatus::REJECTED;
+                    $subject->status = TaxAgentStatus::CORRECTION;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
             } elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
@@ -234,7 +234,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
                 if (key($places) == 'rejected') {
-                    $subject->status = TaxAgentStatus::REJECTED;
+                    $subject->status = TaxAgentStatus::CORRECTION;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
             } elseif ($placeName == 'BUSINESS_REGISTRATION') {

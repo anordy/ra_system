@@ -128,14 +128,12 @@ class TaxAgentController extends Controller
         }
         $id = Crypt::decrypt($id);
         $agent = TaxAgent::findOrFail($id); // todo: handle exception
+        //checking for null for the query below has been handled on UI
         $fee = TaPaymentConfiguration::select('id', 'amount', 'category', 'is_citizen')
             ->where('category', 'Registration Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->first();
-        if ($fee == null) {
-            abort(404);
-        }
         return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
     }
 
@@ -155,14 +153,13 @@ class TaxAgentController extends Controller
         $id = decrypt($id);
         $renew = RenewTaxAgentRequest::findOrFail($id);
         $agent = $renew->tax_agent;
+        //checking for null for the query below has been handled on UI
         $fee = TaPaymentConfiguration::select('id', 'amount', 'category', 'is_citizen')
             ->where('category', 'Renewal Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->first();
-        if ($fee == null) {
-            abort(404);
-        }
+
         return view('taxagents.renew.show', compact('renew', 'fee'));
     }
 
