@@ -33,7 +33,7 @@ class SeaportReturnTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        $tax = TaxType::where('code', TaxType::SEA_SERVICE_TRANSPORT_CHARGE)->first();
+        $tax = TaxType::where('code', TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE)->first();
 
         $filter = (new PortReturn)->newQuery();
 

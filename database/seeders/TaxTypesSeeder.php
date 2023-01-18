@@ -24,7 +24,11 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Banks, Financial Institutions and Others Excise Duty', 'code' => TaxType::EXCISE_DUTY_BFO]);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Petroleum Levy', 'code' => TaxType::PETROLEUM]);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Airport Service & Safety Fee', 'code' => TaxType::AIRPORT_SERVICE_SAFETY_FEE]);
-        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Sea Port Service & Transport Charge', 'code' => TaxType::SEA_SERVICE_TRANSPORT_CHARGE]);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Airport Service charge', 'code' => TaxType::AIRPORT_SERVICE_CHARGE, 'category' => 'other']);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Airport Safety Fee', 'code' => TaxType::AIRPORT_SAFETY_FEE, 'category' => 'other']);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Sea Port Service & Transport Charge', 'code' => TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE]);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Sea Port Transport Charge', 'code' => TaxType::SEAPORT_TRANSPORT_CHARGE, 'category' => 'other']);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Sea Port Service', 'code' => TaxType::SEAPORT_SERVICE_CHARGE, 'category' => 'other']);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Tax Consultant Licences', 'code' => TaxType::TAX_CONSULTANT, 'category' => 'other']);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Stamp Duty Composition', 'code' => TaxType::STAMP_DUTY]);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Stamp Duty Lumpsum', 'code' => TaxType::LUMPSUM_PAYMENT]);
