@@ -563,6 +563,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/missing-bank-recons', [PaymentsController::class, 'missingBankRecon'])->name('bank-recon.missing');
         Route::get('/recon-reports/index', [PaymentsController::class, 'reconReport'])->name('recon-reports.index');
         Route::get('/daily-payments/index', [PaymentsController::class, 'dailyPayments'])->name('daily-payments.index');
+        Route::get('/daily-payments/{taxTypeId}', [PaymentsController::class, 'dailyPaymentsPerTaxType'])->name('daily-payments.tax-type');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 
