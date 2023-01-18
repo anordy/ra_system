@@ -25,7 +25,9 @@ class TaxType extends Model implements Auditable
     public const EXCISE_DUTY_BFO = 'excise-duty-bfo';
     public const PETROLEUM = 'petroleum-levy';
     public const AIRPORT_SERVICE_SAFETY_FEE = 'airport-service-safety-fee';
-    public const SEA_SERVICE_TRANSPORT_CHARGE = 'sea-service-transport-charge';
+    public const AIRPORT_SERVICE_CHARGE = 'airport-service-charge';
+    public const SEAPORT_SERVICE_TRANSPORT_CHARGE = 'seaport-service-transport-charge';
+    public const SEAPORT_SERVICE_CHARGE = 'seaport-service-charge';
     public const TAX_CONSULTANT = 'tax-consultant';
     public const STAMP_DUTY = 'stamp-duty';
     public const LUMPSUM_PAYMENT = 'lumpsum-payment';
