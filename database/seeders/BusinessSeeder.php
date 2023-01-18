@@ -28,6 +28,7 @@ class BusinessSeeder extends Seeder
             "currency_id" => 1,
             "taxpayer_id" => 1,
             "name" => "Goodman Enterprises",
+            "trading_name" => "Goodman Enterprises Co. LTD 2023",
             "tin" => "543980345",
             "reg_no" => "12345",
             "owner_designation" => "Director General",
@@ -44,7 +45,8 @@ class BusinessSeeder extends Seeder
             "isiic_ii" => 62,
             "isiic_iii" => 45,
             "isiic_iv" => 32,
-            "verified_at" => "2022-01-01"
+            "verified_at" => "2022-01-01",
+            "previous_zno" => 'Z8898933'
         ];
 
         $location = [

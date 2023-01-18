@@ -14,7 +14,7 @@ class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
      */
     public function run()
     {
-        $name = 'taxpayer_details_amendment_verification';
+        $name = 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION';
         $type = 'workflow';
         $marking_store = [
             'type' => 'multiple_state',
@@ -68,7 +68,7 @@ class WorkflowTaxpayerDetailsAmendmentSeeder extends Seeder
         ];
 
         Workflow::updateOrCreate([
-            'code' => 'taxpayer_details_amendment_verification',
+            'code' => 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION',
             'summary' => 'Taxpayer Details Amendment Verification Workflow',
             'name' => $name,
             'type' => $type,

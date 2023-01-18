@@ -30,6 +30,7 @@ class InstallmentRequestApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $installmentPhases;
+    public $taxTypes;
 
     public $task;
 

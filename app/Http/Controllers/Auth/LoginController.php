@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Events\SendMail;
 use App\Http\Controllers\Controller;
+use App\Models\DualControl;
+use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\UserOtp;
 use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,8 +21,8 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers, VerificationTrait;
 
-    protected $maxAttempts = 3;
-    protected $decayMinutes = 2;
+    protected $maxAttempts;
+    protected $decayMinutes;
 
 
     public function __construct()
@@ -71,20 +74,23 @@ class LoginController extends Controller
 
             if ($user->status == 0) {
                 Auth::logout();
+                $request->session()->flush();
                 throw ValidationException::withMessages([
                     $this->username() =>  "Your account is locked, Please contact your admin to unlock your account",
                 ]);
             }
 
-            if (!$this->verify($user)) {
-                Auth::logout();
-                throw ValidationException::withMessages([
-                    $this->username() =>  "Your account could not be verified, please contact system administrator.",
-                ]);
-            }
+//            if (!$this->verify($user)) {
+//                Auth::logout();
+//                $request->session()->flush();
+//                throw ValidationException::withMessages([
+//                    $this->username() =>  "Your account could not be verified, please contact system administrator.",
+//                ]);
+//            }
 
             if ($user->is_approved == 0) {
                 Auth::logout();
+                $request->session()->flush();
                 throw ValidationException::withMessages([
                     $this->username() =>  "Your account has not been approved, please contact system administrator.",
                 ]);
@@ -122,6 +128,7 @@ class LoginController extends Controller
 
     protected function hasTooManyLoginAttempts($user)
     {
+        $this->maxAttempts = SystemSetting::where('code', SystemSetting::MAXIMUM_NUMBER_OF_ATTEMPTS)->where('is_approved', DualControl::APPROVE)->value('value');
         if ($user->auth_attempt >= $this->maxAttempts) {
             return true;
         }
@@ -136,7 +143,7 @@ class LoginController extends Controller
         $user->save();
         $this->limiter()->hit(
             $this->throttleKey($request),
-            $this->decayMinutes() * 60
+            $this->decayMinutes() * 60 //pull configured value for decay minutes from system_settings table
         );
     }
 
@@ -158,5 +165,21 @@ class LoginController extends Controller
         $user->auth_attempt = 0;
         $user->save();
         $this->limiter()->clear($this->throttleKey($request));
+    }
+
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+        $request->session()->flush();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 204)
+            : redirect('/');
     }
 }

@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Email Address</span>
-        <p class="my-1">{{ $kyc->email }}</p>
+        <p class="my-1">{{ $kyc->email ?? 'N/A' }}</p>
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Mobile</span>
@@ -22,12 +22,20 @@
         <p class="my-1">{{ $kyc->country->nationality }}</p>
     </div>
     <div class="col-md-4 mb-3">
-        <span class="font-weight-bold text-uppercase">Location</span>
-        <p class="my-1">{{ $kyc->region->name }}</p>
+        <span class="font-weight-bold text-uppercase">Region</span>
+        <p class="my-1">{{ $kyc->region->name ?? 'N/A'}}</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <span class="font-weight-bold text-uppercase">District</span>
+        <p class="my-1">{{ $kyc->district->name ?? 'N/A'}}</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <span class="font-weight-bold text-uppercase">Ward</span>
+        <p class="my-1">{{ $kyc->ward->name ?? 'N/A'}}</p>
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Street</span>
-        <p class="my-1">{{ $kyc->street }}</p>
+        <p class="my-1">{{ $kyc->street->name ?? 'N/A' }}</p>
     </div>
     <div class="col-md-4 mb-3">
         <span class="font-weight-bold text-uppercase">Physical Address</span>
@@ -40,6 +48,7 @@
     <livewire:taxpayers.details.zanid :kyc="$kyc" />
 @endif
 
-@if ($kyc->id_type == 3)
+{{-- TODO: Allow this when immigration api has been integrated --}}
+{{-- @if ($kyc->id_type == 3)
     <livewire:taxpayers.details.passport :kyc="$kyc" />
-@endif
+@endif --}}

@@ -46,6 +46,8 @@ class DeclaredSalesAnalysis extends Component
     public $headersMmTransfer;
     public $headersPetroleum;
     public $withoutPurchases = false;
+    public $start_date;
+    public $end_date;
 
     public function mount($audit, $tax_type_id, $location_id)
     {
@@ -89,7 +91,7 @@ class DeclaredSalesAnalysis extends Component
                 $this->airport();
                 break;
 
-            case TaxType::SEA_SERVICE_TRANSPORT_CHARGE:
+            case TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE:
                 $this->sea();
                 break;
         }
@@ -149,7 +151,6 @@ class DeclaredSalesAnalysis extends Component
     protected function lumpSum()
     {
         $yearReturnGroup = LumpSumReturn::select('total_amount_due', 'installment', 'quarter_name', 'payment_quarters as return_months', 'total_amount_due_with_penalties', 'quarter as quarter', 'financial_years.name as year')
-            ->leftJoin('financial_months', 'financial_months.id', 'lump_sum_returns.financial_month_id')
             ->leftJoin('lump_sum_payments', 'lump_sum_payments.business_id', 'lump_sum_returns.business_id')
             ->leftJoin('financial_years', 'financial_years.id', 'lump_sum_returns.financial_year_id')
             ->get()->groupBy(['year', 'quarter']);
@@ -207,7 +208,7 @@ class DeclaredSalesAnalysis extends Component
         $headers = PortConfig::whereIn('code', array('NFSP', 'NLTM', 'ITTM', 'NLZNZ', 'ITZNZ', 'NSUS', 'NSTZ'))
             ->get()->pluck('name');
 
-        $yearReturnGroup = PortReturnItem::select('port_configs.code','port_configs.currency', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
+        $yearReturnGroup = PortReturnItem::select('port_configs.code', 'port_configs.currency', 'port_return_items.value', 'port_return_items.vat', 'financial_months.name as month', 'financial_years.name as year')
             ->leftJoin('port_configs', 'port_configs.id', 'port_return_items.config_id')
             ->leftJoin('port_returns', 'port_returns.id', 'port_return_items.return_id')
             ->leftJoin('financial_months', 'financial_months.id', 'port_returns.financial_month_id')
@@ -376,9 +377,9 @@ class DeclaredSalesAnalysis extends Component
 
         return $yearData;
     }
- 
-    
-         protected function formatDataArrayPort($yearReturnGroup)
+
+
+    protected function formatDataArrayPort($yearReturnGroup)
     {
         $yearData = [];
 
@@ -422,23 +423,21 @@ class DeclaredSalesAnalysis extends Component
                 $itemValue = [
                     'quarter' => $keyMonth,
                 ];
-                $amountDue = 0;
-                $amountDueWithPenalties = 0;
-                $quatersName = '';
+
                 foreach ($returnItems as $keyItem => $item) {
                     $installment = $item['installment'];
                     $quatersName = $item['quarter_name'];
                     $amountDue = $item['total_amount_due'];
                     $amountDueWithPenalties = $item['total_amount_due_with_penalties'];
                     $totalPenalties = $amountDueWithPenalties - $amountDue;
-                }
 
-                $itemValue['installment'] = $installment;
-                $itemValue['quarter_name'] = $quatersName;
-                $itemValue['amountWithPenalties'] = $amountDueWithPenalties;
-                $itemValue['principalAmount'] = $amountDue;
-                $itemValue['Penalties'] = $totalPenalties;
-                $quarterData[] = $itemValue;
+                    $itemValue['installment'] = $installment;
+                    $itemValue['quarter_name'] = $quatersName;
+                    $itemValue['amountWithPenalties'] = $amountDueWithPenalties;
+                    $itemValue['principalAmount'] = $amountDue;
+                    $itemValue['Penalties'] = $totalPenalties;
+                    $quarterData[] = $itemValue;
+                }
             }
             $yearData[$keyYear] = $quarterData;
         }

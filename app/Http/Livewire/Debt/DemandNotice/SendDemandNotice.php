@@ -20,7 +20,7 @@ class SendDemandNotice extends Component
 
     public function mount($debtId)
     {
-        $this->debt = Debt::findOrFail($debtId);
+        $this->debt = Debt::findOrFail(decrypt($debtId));
     }
 
     public function send()

@@ -13,6 +13,7 @@ use Livewire\Component;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 use App\Traits\ReturnReportTrait;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReturnReport extends Component
@@ -40,12 +41,12 @@ class ReturnReport extends Component
     public $semiAnnual;
     public $tax_type_id = 'all';
     public $tax_type_code = 'all';
-    public $type;
+    public $type = 'Filing';
     public $filing_report_type = 'All-Filings';
     public $payment_report_type;
     public $range_start;
     public $range_end;
-    public $vat_type = 'All-VAT-Returns';
+    public $vat_type;
     public $showMoreFilters = false;
     public $startMonth;
     public $endMonth;
@@ -112,6 +113,7 @@ class ReturnReport extends Component
 
         //toggle filter
         $this->showMoreFilters = false;
+
     }
 
     public function updated($propertyName)
@@ -172,6 +174,7 @@ class ReturnReport extends Component
             return;
         };
         $this->parameters = $this->getParameters();
+        // dd($this->parameters);
         $this->previewReport($this->parameters);
     }
 
@@ -231,7 +234,7 @@ class ReturnReport extends Component
                 'end' => date('Y-m-d 23:59:59', strtotime($this->range_end)),
             ];
         } elseif ($this->month) {
-            $date = \Carbon\Carbon::parse($this->year . "-" . $this->month . "-01");
+            $date = Carbon::parse($this->year . "-" . $this->month . "-01");
             $start = $date->startOfMonth()->format('Y-m-d H:i:s');
             $end = $date->endOfMonth()->format('Y-m-d H:i:s');
             $from = $date->startOfMonth()->format('Y-m-d');
@@ -252,8 +255,8 @@ class ReturnReport extends Component
                 $this->endMonth = 12;
             }
 
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
-            $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
+            $startDate = Carbon::parse($this->year . "-" . $this->startMonth . "-01");
+            $endDate = Carbon::parse($this->year . "-" . $this->endMonth . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
             $from = $startDate->format('Y-m-d');
@@ -267,16 +270,16 @@ class ReturnReport extends Component
                 $this->startMonth = 7;
                 $this->endMonth = 12;
             }
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . $this->startMonth . "-01");
-            $endDate = \Carbon\Carbon::parse($this->year . "-" . $this->endMonth . "-01");
+            $startDate = Carbon::parse($this->year . "-" . $this->startMonth . "-01");
+            $endDate = Carbon::parse($this->year . "-" . $this->endMonth . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
             $from = $startDate->format('Y-m-d');
             $to = $endDate->format('Y-m-d');
             return ['startDate' => $start, 'endDate' => $end, 'from' => $from, 'to' => $to];
         } else {
-            $startDate = \Carbon\Carbon::parse($this->year . "-" . "01" . "-01");
-            $endDate = \Carbon\Carbon::parse($this->year . "-" . "12" . "-01");
+            $startDate = Carbon::parse($this->year . "-" . "01" . "-01");
+            $endDate = Carbon::parse($this->year . "-" . "12" . "-01");
             $start = $startDate->startOfMonth()->format('Y-m-d H:i:s');
             $end = $endDate->endOfMonth()->format('Y-m-d H:i:s');
             $from = $startDate->format('Y-m-d');

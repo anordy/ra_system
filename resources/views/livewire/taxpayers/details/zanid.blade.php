@@ -29,7 +29,7 @@
 
     @if ($is_verified_triggered && $zanid_data['data'] != null)
         <hr>
-        <div class="row mx-4">
+        <div class="row">
             <div class="col-md-11">
                 <table class="table table-striped table-sm">
                     <label class="font-weight-bold text-uppercase">Zan ID Data Verification</label>
@@ -51,6 +51,16 @@
                             @endif
                         </tr>
                         <tr>
+                            <th>MIDDLE NAME</th>
+                            <td>{{ strtoupper($kyc->middle_name) }}</td>
+                            <td>{{ ucfirst(($zanid_data['data']['PRSN_MIDLE_NAME']) ?? 'N/A') }}</td>
+                            @if ($this->compareProperties($kyc->middle_name, $zanid_data['data']['PRSN_MIDLE_NAME']))
+                                <td class="table-succes">{{ $matchesText }}</td>
+                            @else
+                                <td class="table-danger">{{ $notValidText }}</td>
+                            @endif
+                        </tr>
+                        <tr>
                             <th>LAST NAME</th>
                             <td>{{ strtoupper($kyc->last_name) }}</td>
                             <td>{{ $zanid_data['data']['PRSN_LAST_NAME'] }}</td>
@@ -65,7 +75,7 @@
             </div>
         </div>
         <br>
-        <div class="row mx-4">
+        <div class="row">
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">ZAN ID NO</span>
                 <p class="my-1">{{ $kyc->zanid_no }}</p>
@@ -105,13 +115,16 @@
         @if (empty($kyc->authorities_verified_at))
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-end">
-                    <button class="btn btn-danger ml-1" wire:click="rejectIncomingData" wire:loading.attr="disabled">
+                    <button class="btn btn-danger ml-2" wire:click="rejectIncomingData" wire:loading.attr="disabled">
                         <i class="bi bi-x-lg ml-1" wire:loading.remove wire:target="rejectIncomingData"></i>
                         <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                             wire:target="rejectIncomingData"></i>
                         Reject
                     </button>
-                    <button class="btn btn-success ml-1" wire:click="acceptIncomingData" wire:loading.attr="disabled">
+                    <button class="btn btn-primary rounded-0 btn-sm ml-2" onclick="Livewire.emit('showModal', 'kyc.kyc-amendment-request-add-modal', {{$kyc->id}})">
+                        <i class="bi bi-pen mr-1"></i> Amend Kyc Details
+                    </button>
+                    <button class="btn btn-success ml-2" wire:click="acceptIncomingData" wire:loading.attr="disabled">
                         <i class="bi bi-check-lg ml-1" wire:loading.remove wire:target="acceptIncomingData"></i>
                         <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                             wire:target="acceptIncomingData"></i>

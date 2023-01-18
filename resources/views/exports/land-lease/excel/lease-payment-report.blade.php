@@ -166,7 +166,7 @@
                 </td>
                 <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                     @if ($leasePayment->landLease->category == 'business')
-                        {{ $leasePayment->landLease->businessLocation->business->physical_address }}
+                        {{ $leasePayment->landLease->businessLocation->physical_address ?? '' }}
                     @else
                         {{ $leasePayment->landLease->is_registered == 1 ? $leasePayment->landLease->taxpayer->physical_address : $leasePayment->landLease->address }}
                     @endif

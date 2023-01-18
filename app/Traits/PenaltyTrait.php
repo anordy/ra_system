@@ -155,15 +155,13 @@ trait PenaltyTrait
         // check if 12, add year, get first month
         if($financialMonth->number === 12){
             $year = FinancialYear::where('code', $financialMonth->year->code + 1);
-            // TODO: First or fail
             $month = FinancialMonth::where('number', 1)
                 ->where('financial_year_id', $year->id)
-                ->first();
+                ->firstOrFail();
         } else {
-            // TODO: First or fail
             $month = FinancialMonth::where('financial_year_id', $financialMonth->financial_year_id)
                 ->where('number', $financialMonth->number + 1)
-                ->first();
+                ->firstOrFail();
         }
         
         $date = $this->getDateFromFinancialMonth($month);

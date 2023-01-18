@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Enum\ApplicationStep;
 use App\Enum\ReturnCategory;
-use App\Models\Debts\Debt;
 use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
@@ -77,36 +76,36 @@ class DailyDebtCalculateCommand extends Command
 
         foreach ($tax_returns as $tax_return) {
             DB::beginTransaction();
-            try {
-                /**
-                 * Mark return process as debt if days_passed is less than 30
-                 * 1. return_category from normal to debt
-                 * 2. application_step from filing to debt
-                 */
-                if ($tax_return->days_passed < 60) {
-                    $tax_return->update([
-                        'return_category' => ReturnCategory::DEBT,
-                        'application_step' => ApplicationStep::DEBT
-                    ]);
-                    $tax_return->return->update(['return_category' => ReturnCategory::DEBT]);
-                } else {
+                try {
                     /**
-                     * Mark return process as overdue if days_passed is greater than 30 days (Meaning 30 days as debt and another 30 days makes it an overdue)
-                     * 1. return_category from debt to overdue
-                     * 2. application_step from debt to overdue
+                     * Mark return process as debt if days_passed is less than 30
+                     * 1. return_category from normal to debt
+                     * 2. application_step from filing to debt
                      */
-                    $tax_return->update([
-                        'return_category' => ReturnCategory::OVERDUE,
-                        'application_step' => ApplicationStep::OVERDUE
-                    ]);
-                    $tax_return->return->update(['return_category' => ReturnCategory::OVERDUE]);
+                    if ($tax_return->days_passed < 60) {
+                        $tax_return->update([
+                            'return_category' => ReturnCategory::DEBT,
+                            'application_step' => ApplicationStep::DEBT
+                        ]);
+                        $tax_return->return->update(['return_category' => ReturnCategory::DEBT]);
+                    } else {
+                        /**
+                         * Mark return process as overdue if days_passed is greater than 30 days (Meaning 30 days as debt and another 30 days makes it an overdue)
+                         * 1. return_category from debt to overdue
+                         * 2. application_step from debt to overdue
+                         */
+                        $tax_return->update([
+                            'return_category' => ReturnCategory::OVERDUE,
+                            'application_step' => ApplicationStep::OVERDUE
+                        ]);
+                        $tax_return->return->update(['return_category' => ReturnCategory::OVERDUE]);
+                    }
+                    DB::commit();
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Log::channel('dailyJobs')->info('Daily Debt calculation process ended with error');
+                    Log::channel('dailyJobs')->error($e);
                 }
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                Log::channel('dailyJobs')->info('Daily Debt calculation process ended with error');
-                Log::channel('dailyJobs')->error($e);
-            }
         }
 
         Log::channel('dailyJobs')->info("Daily Debt collection for financial month " . $financialMonth->name . " with due date " . $financialMonth->due_date . " process ended");

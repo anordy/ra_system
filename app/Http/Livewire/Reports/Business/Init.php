@@ -151,6 +151,18 @@ class Init extends Component
 
         //toggle filter
         $this->showMoreFilters = false;
+
+        //initialize data
+        $this->selectReportType();
+        $this->extraFilters();
+        $records = $this->getBusinessBuilder($this->parameters);
+        if($records->get()->count()<1){
+            $this->hasData = false;
+            $this->alert('error','No Data Found for selected options');
+            return;
+        }else{
+            $this->hasData = true;
+        }
     }
 
     public function updated($propertyName)

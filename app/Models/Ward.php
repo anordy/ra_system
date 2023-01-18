@@ -21,4 +21,16 @@ class Ward extends Model implements Auditable
     {
         $this->hasMany(LandLease::class,'ward_id');
     }
+
+    public function activeStreets(){
+        return $this->hasMany(Street::class)->where('is_approved', DualControl::APPROVE)->select('id', 'name');
+    }
+
+    public function streets(){
+        return $this->hasMany(Street::class);
+    }
+
+    public function scopeApproved($query){
+        return $query->where('is_approved', true);
+    }
 }

@@ -31,12 +31,15 @@ class CreateKYCSTable extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('physical_address');
-            $table->string('street');
+
             $table->string('email')->unique()->nullable();
             $table->string('mobile')->unique();
             $table->string('alt_mobile')->nullable();
 
             $table->unsignedBigInteger('region_id')->nullable();
+            $table->unsignedBigInteger('district_id')->nullable();
+            $table->unsignedBigInteger('ward_id')->nullable();
+            $table->unsignedBigInteger('street_id')->nullable();
 
             $table->bigInteger('verified_by')->nullable();
 
@@ -49,7 +52,6 @@ class CreateKYCSTable extends Migration
             // Biometric Enrolled
             $table->timestamp('biometric_verified_at')->nullable();
 
-            $table->softDeletes();
             $table->timestamps();
         });
     }

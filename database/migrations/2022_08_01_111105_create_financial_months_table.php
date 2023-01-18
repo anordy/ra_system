@@ -21,6 +21,7 @@ class CreateFinancialMonthsTable extends Migration
             $table->timestamp('due_date');
             $table->timestamp('lumpsum_due_date')->nullable();
             $table->boolean('is_approved')->default(0);
+            $table->boolean('is_updated')->default(0);
             $table->timestamps();
         });
     }

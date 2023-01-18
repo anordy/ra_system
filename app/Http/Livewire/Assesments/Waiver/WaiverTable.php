@@ -54,8 +54,6 @@ class WaiverTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            // Column::make("Id", "id")
-            //     ->sortable(),
             Column::make("Business Name", "business.name")
                 ->sortable()
                 ->searchable(),

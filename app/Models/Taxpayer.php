@@ -22,11 +22,25 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
         'password',
         'remember_token',
         'ci_payload',
+        'pass_expired_on'
     ];
 
     public static function getPayloadColumns(): array
     {
-        return ['id', 'email', 'phone', 'status'];
+        return [
+            'id',
+            'email',
+            'mobile',
+            'status',
+            'nida_no',
+            'zanid_no',
+            'passport_no',
+            'permit_number',
+            'nida_verified_at',
+            'zanid_verified_at',
+            'passport_verified_at',
+            'biometric_verified_at',
+        ];
     }
 
     public static function getTableName(): string
@@ -80,6 +94,16 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
 
     public function region(){
         return $this->belongsTo(Region::class);
+    }
+    public function district(){
+        return $this->belongsTo(District::class);
+    }
+    public function ward(){
+        return $this->belongsTo(Ward::class);
+    }
+
+    public function street(){
+        return $this->belongsTo(Street::class);
     }
 
     public function getLocationAttribute(){
@@ -138,5 +162,18 @@ class Taxpayer extends Model implements Auditable, PayloadInterface
     public function passwordHistories()
     {
         return $this->morphMany(PasswordHistory::class, 'user');
+    }
+
+    public function amendments(){
+        return $this->hasMany(TaxpayerAmendmentRequest::class, 'taxpayer_id');
+    }
+
+    public function checkPendingAmendment(){
+        foreach ($this->amendments()->get() as $amendment){
+            if ($amendment['status'] == TaxpayerAmendmentRequest::PENDING){
+                return true;
+            }
+        }
+        return false;
     }
 }

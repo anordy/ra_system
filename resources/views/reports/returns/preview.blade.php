@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Report preview')
+@section('title','Return Report preview')
 
 @section('content')
 <div class="d-flex justify-content-start mb-3">

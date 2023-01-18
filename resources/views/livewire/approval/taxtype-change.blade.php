@@ -39,7 +39,7 @@
             @if ($taxchange->effective_date)
                 <tr>
                     <th style="width: 30%">Effective Date</th>
-                    <td>{{ $taxchange->effective_date }}</td>
+                    <td>{{ $taxchange->effective_date->toFormattedDateString() }}</td>
                 </tr>
             @endif
             <tr>

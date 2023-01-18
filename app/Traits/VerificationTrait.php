@@ -2,17 +2,18 @@
 
 namespace App\Traits;
 
-use App\Jobs\RepostBillSignature;
-use App\Jobs\RepostReturnSignature;
-use App\Models\Returns\TaxReturn;
-use App\Models\VerificationsLog;
 use App\Models\ZmBill;
-use App\Services\Verification\AuthenticationService;
-use App\Services\Verification\PayloadInterface;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use PHPUnit\Exception;
+use App\Events\SendMail;
+use App\Models\VerificationsLog;
+use App\Jobs\RepostBillSignature;
+use App\Models\Returns\TaxReturn;
+use Illuminate\Support\Facades\DB;
+use App\Jobs\RepostReturnSignature;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use App\Services\Verification\PayloadInterface;
+use App\Services\Verification\AuthenticationService;
 
 trait VerificationTrait{
 
@@ -25,7 +26,7 @@ trait VerificationTrait{
             $stringData .= $object->{$column};
         }
 
-        Log::channel('verification')->info('Attempting to verify an instance.', ['instance' => $stringData]);
+        Log::channel('verification')->info('Attempting to verify an instance.');
 
 
         try {
@@ -40,16 +41,20 @@ trait VerificationTrait{
                     'signature' => $object->ci_payload
                 ]);
 
+            Log::info(json_decode($result, true)['verification'] ? 'Complete' : 'Failed');
+
             $result = json_decode($result, true)['verification'] == 'true';
 
             if (!$result){
                 $object->update(['failed_verification' => true]);
 
                 //  Save to failed verifications
-               VerificationsLog::create([
+               $verification = VerificationsLog::create([
                     'table' => $object->getTableName(),
                     'row_id' => $object->id
                 ]);
+                
+                event(new SendMail('failed-verification', $verification));
 
                 return false;
             }
@@ -68,7 +73,7 @@ trait VerificationTrait{
         foreach ($object::getPayloadColumns() as $column){
             $stringData .= $object->{$column};
         }
-        Log::channel('verification')->info('Attempting to verify an instance.', ['instance' => $stringData]);
+        Log::channel('verification')->info('Attempting to sign an instance.');
 
         try {
             // Get token
@@ -80,6 +85,8 @@ trait VerificationTrait{
             $result = Http::withToken($token)
                 ->withOptions(['verify' => false])
                 ->post($url, ['payload' => base64_encode($stringData)]);
+
+            Log::channel('verification')->info(json_decode($result, true)['signature'] ? 'Complete' : 'Failed');
 
             return $object->update(['ci_payload' => json_decode($result, true)['signature']]) == 1;
         } catch (\Exception $exception){

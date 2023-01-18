@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DisputePreviewTable extends DataTableComponent
 {
-    use LivewireAlert ,DisputeReportTrait;
+    use LivewireAlert, DisputeReportTrait;
 
     public $parameters;
 
@@ -35,7 +35,7 @@ class DisputePreviewTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['disputes.business_id', 'disputes.location_id',  'disputes.created_at','disputes.tax_in_dispute','disputes.tax_not_in_dispute','disputes.tax_deposit' ]);
+        $this->setAdditionalSelects(['business_id', 'location_id', 'disputes.tax_in_dispute', 'disputes.tax_not_in_dispute', 'disputes.tax_deposit']);
     }
 
     public function columns(): array
@@ -46,50 +46,84 @@ class DisputePreviewTable extends DataTableComponent
                     return date('d/m/Y', strtotime($value));
                 })
                 ->searchable()
-                ->sortable()
-                ->hideIf(true),
-            Column::make("Taxpayer", "business_id")
-                ->format(
-                    function ($value, $row) {
-                        return $row->business->owner_designation;
+                ->sortable(),
+            Column::make("Business Name")
+                ->label(
+                    function ($row) {
+                        return $row->business->name;
                     }
                 )
                 ->searchable()
                 ->sortable(),
-            // Column::make("Business Location", "location_id")
-            //     ->format(
-            //         function ($value, $row) {
-            //             return $row->location->name;
-            //         }
-            //     )
-            //     ->searchable()
-            //     ->sortable(),
-           
-            Column::make("Tax In Dispute", "id")
-                ->format(
-                    function ($value, $row) {
-                        return number_format($row->tax_in_dispute,2);
+            Column::make("Business Location")
+                ->label(
+                    function ($row) {
+                        return $row->location->name ?? '';
                     }
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make("Tax not in Dispute", "id")
-                ->format(
-                    function ($value, $row) {
-                        return number_format($row->tax_not_in_dispute,2);
+            Column::make("All Debt")
+                ->label(
+                    function ($row) {
+                        $debt = $row->principal_amount + $row->penalty_amount + $row->interest_amount;
+                        return number_format($debt, 2);
                     }
                 )
                 ->searchable()
                 ->sortable(),
-               Column::make("Tax Deposit", "id")
-                ->format(
-                    function ($value, $row) {
-                        return number_format($row->tax_in_deposit,2);
+            Column::make("Principal Amount")
+                ->label(
+                    function ($row) {
+                        return number_format($row->principal_amount, 2);
                     }
                 )
                 ->searchable()
                 ->sortable(),
-                 
+            Column::make("Pelnaty & Interest")
+                ->label(
+                    function ($row) {
+                        $debt = $row->penalty_amount + $row->interest_amount;
+                        return number_format($debt, 2);
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+            Column::make("OutStanding Amount")
+                ->label(
+                    function ($row) {
+                        return number_format($row->outstanding_amount, 2);
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+
+
+            Column::make("Tax In Dispute")
+                ->label(
+                    function ($row) {
+                        return number_format($row->tax_in_dispute, 2);
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+            Column::make("Tax not in Dispute")
+                ->label(
+                    function ($row) {
+                        return number_format($row->tax_not_in_dispute, 2);
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+            Column::make("Tax Deposit")
+                ->label(
+                    function ($row) {
+                        return number_format($row->tax_in_deposit, 2);
+                    }
+                )
+                ->searchable()
+                ->sortable(),
+
         ];
     }
 }

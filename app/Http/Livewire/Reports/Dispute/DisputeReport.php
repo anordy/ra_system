@@ -35,6 +35,8 @@ class DisputeReport extends Component
     public $type;
     public $filing_report_type;
     public $payment_report_type;
+    public $startMonth;
+    public $endMonth;
 
     protected function rules()
     {

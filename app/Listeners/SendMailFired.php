@@ -48,6 +48,7 @@ use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackMAIL;
 use App\Jobs\Taxpayer\TaxpayerAmendmentNotification;
 use App\Jobs\Taxpayer\TaxpayerAmendmentNotificationEmail;
 use App\Jobs\User\SendRegistrationEmail;
+use App\Jobs\Verification\SendFailedVerificationMail;
 
 class SendMailFired
 {
@@ -188,6 +189,8 @@ class SendMailFired
             TaxpayerAmendmentNotificationEmail::dispatch($event->tokenId);
         } else if ($event->service === 'too-many-login-attempts'){
             TooManyLoginAttempts::dispatch($event->tokenId);
+        } else if ($event->service === 'failed-verification'){
+            SendFailedVerificationMail::dispatch($event->tokenId);
         }
     }
 }

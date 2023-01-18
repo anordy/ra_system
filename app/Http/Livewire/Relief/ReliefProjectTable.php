@@ -39,21 +39,15 @@ class ReliefProjectTable extends DataTableComponent
                 ->sortable(),
             Column::make("Description", "description")
                 ->sortable(),
-            Column::make('Configure Projects', 'id')
-                ->view('relief.project.includes.project-actions'),
-            // Column::make('Action', 'id')
-            //     ->format(fn($value) => <<< HTML
-            //         <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'relief.relief-project-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
-            //         <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
-            //     HTML)
-            //     ->html(true),
-            Column::make("Actions","id")->view("relief.project.includes.actions"),
+            Column::make('Configure Projects')
+                ->label(fn ($row) => view('relief.project.includes.project-actions', compact('row'))),
+            Column::make("Actions", "id")->view("relief.project.includes.actions"),
         ];
     }
 
     public function delete($id)
     {
-        $projectSection = ReliefProject::find($id);
+        $projectSection = ReliefProject::find(decrypt($id));
         //check if ministry has been used in relief project list and if so, prevent deletion
         if ($projectSection->reliefProjects()->count() > 0) {
             $this->alert('error', 'Cannot delete project section. Project section is used in Project.');

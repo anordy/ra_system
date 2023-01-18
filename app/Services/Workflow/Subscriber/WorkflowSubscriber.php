@@ -219,32 +219,25 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     $subject->app_status = DisputeStatus::REJECTED;
                     $subject->approved_on = Carbon::now()->toDateTimeString();
                 }
-
-            }
-            elseif ($placeName == 'TAX_CONSULTANT_VERIFICATION') {
+            } elseif ($placeName == 'TAX_CONSULTANT_VERIFICATION') {
                 if (key($places) == 'completed') {
                     $subject->status = TaxAgentStatus::APPROVED;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
                 if (key($places) == 'rejected') {
-                    $subject->status = TaxAgentStatus::REJECTED;
+                    $subject->status = TaxAgentStatus::CORRECTION;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
-
-            }
-
-            elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
+            } elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
                 if (key($places) == 'completed') {
                     $subject->status = TaxAgentStatus::APPROVED;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
                 if (key($places) == 'rejected') {
-                    $subject->status = TaxAgentStatus::REJECTED;
+                    $subject->status = TaxAgentStatus::CORRECTION;
                     $subject->approved_at = Carbon::now()->toDateTimeString();
                 }
-
-            }
-            elseif ($placeName == 'BUSINESS_REGISTRATION') {
+            } elseif ($placeName == 'BUSINESS_REGISTRATION') {
                 if (key($places) == 'correct_application') {
                     event(new SendSms('business-registration-correction', $subject->id, ['message' => $context['comment']]));
                     event(new SendMail('business-registration-correction', $subject->id, ['message' => $context['comment']]));
@@ -276,11 +269,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
     public function announceEvent(Event $event)
     {
         try {
-            $user = auth()->user();
             $subject = $event->getSubject();
             $marking = $event->getMarking();
             $placesCurrent = $marking->getPlaces();
-            $transition = $event->getTransition();
 
             $places = $placesCurrent[key($placesCurrent)];
 
@@ -309,6 +300,12 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'DEBT_WAIVER') {
                 $hrefClient = 'debts.waiver.index';
                 $hrefAdmin = 'debts.waivers.index';
+            } elseif ($placeName == 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION') {
+                $hrefClient = 'taxpayers-amendment.index';
+                $hrefAdmin = 'taxpayers-amendment.index';
+            } elseif ($placeName == 'kyc_details_amendment_verification') {
+                $hrefClient = 'kycs-amendment.index';
+                $hrefAdmin = 'kycs-amendment.index';
             }
 
             if ($placeName == 'TAX_RETURN_VERIFICATION') {
@@ -326,35 +323,45 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
             } else {
                 if (key($placesCurrent) == 'completed') {
-                    $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                        $subject = $notificationName,
-                        $message = 'Your request has been approved successfully.',
-                        $href = $hrefClient ?? null,
-                        $hrefText = 'View',
-                        $hrefParameters = null,
-                        $owner = 'taxpayer'
-                    ));
+                    if ($event->getSubject()->taxpayer) {
+                        $event->getSubject()->taxpayer->notify(new DatabaseNotification(
+                            $notificationName,
+                            'Your request has been approved successfully.',
+                            $hrefClient ?? null,
+                            'View',
+                            null,
+                            'taxpayer'
+                        ));
+                    }
                 } elseif (key($placesCurrent) == 'rejected') {
-                    $event->getSubject()->taxpayer->notify(new DatabaseNotification(
-                        $subject = $notificationName,
-                        $message = 'Your request has been rejected .',
-                        $href = $hrefClient ?? null,
-                        $hrefText = 'View',
-                        $hrefParameters = null,
-                        $owner = 'taxpayer',
-                    ));
+                    if ($event->getSubject()->taxpayer) {
+                        $event->getSubject()->taxpayer->notify(new DatabaseNotification(
+                            $notificationName,
+                            'Your request has been rejected .',
+                            $hrefClient ?? null,
+                            'View',
+                            null,
+                            'taxpayer',
+                        ));
+                    }
                 }
 
                 if ($places['owner'] == 'staff') {
-                    $operators = $places['operators'];
+
+                    $task = $subject->pinstance;
+
+                    $actors = json_decode($task->operators);
+                    if (gettype($actors) != "array") {
+                        $actors = [];
+                    }
                     if ($places['operator_type'] == 'role') {
-                        $users = User::whereIn('role_id', $operators)->get();
+                        $users = User::whereIn('role_id', $actors)->get();
                         foreach ($users as $u) {
                             $u->notify(new DatabaseNotification(
-                                $subject = $notificationName,
-                                $message = 'You have a business to review',
-                                $href = $hrefAdmin ?? null,
-                                $hrefText = 'view'
+                                $notificationName,
+                                'You have a request to review',
+                                $hrefAdmin ?? null,
+                                'view'
                             ));
                         }
                     }

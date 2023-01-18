@@ -14,6 +14,7 @@ use App\Notifications\DatabaseNotification;
 use App\Traits\PaymentsTrait;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -35,7 +36,7 @@ class ApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
-        $this->renew = RenewTaxAgentRequest::find($this->subject->id);
+        $this->renew = RenewTaxAgentRequest::findOrFail($this->subject->id);
     }
 
 
@@ -46,7 +47,7 @@ class ApprovalProcessing extends Component
             return;
         }
         $feeType = 'Renewal Fee';
-        // todo: check if queried objects exist
+        // TODO: check if queried objects exist
         $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
             ->where('category', $feeType)->where('is_citizen', $this->renew->tax_agent->taxpayer->is_citizen)->first();
         if ($fee == null) {
@@ -60,6 +61,10 @@ class ApprovalProcessing extends Component
             $amount = $fee->amount;
             $used_currency = $fee->currency;
             $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
+            if ($tax_type == null) {
+                $this->alert('error', 'The tax type does not exist');
+                return;
+            }
             $billitems = [
                 [
                     'billable_id' => $this->renew->id,

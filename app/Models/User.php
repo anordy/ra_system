@@ -27,6 +27,10 @@ class User extends Authenticatable implements PayloadInterface, Auditable
         'password',
         'remember_token',
         'ci_payload',
+        'auth_attempt',
+        'pass_expired_on',
+        'failed_verification',
+        'is_first_login',
         'auth_attempt'
     ];
 

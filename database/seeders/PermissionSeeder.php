@@ -112,7 +112,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'debt-management-stamp-duty-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-lumpsum-payment-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-electronic-money-transaction-view', 'sys_module_id' => 14],
-            ['name' => 'debt-management-sea-service-transport-charge-view', 'sys_module_id' => 14],
+            ['name' => 'debt-management-seaport-service-transport-charge-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-airport-service-safety-fee-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-excise-duty-bfo-view', 'sys_module_id' => 14],
             ['name' => 'debt-management-excise-duty-mno-view', 'sys_module_id' => 14],
@@ -307,6 +307,15 @@ class PermissionSeeder extends Seeder
             ['name' => 'taxpayer-amendment-request-edit', 'sys_module_id' => 18],
             ['name' => 'taxpayer-amendment-request-delete', 'sys_module_id' => 18],
 
+            ['name' => 'all-kyc-amendment-requests-view', 'sys_module_id' => 18],
+            ['name' => 'kyc-amendment-request-view', 'sys_module_id' => 18],
+            ['name' => 'kyc-amendment-request-add', 'sys_module_id' => 18],
+            ['name' => 'kyc-amendment-request-edit', 'sys_module_id' => 18],
+            ['name' => 'kyc-amendment-request-delete', 'sys_module_id' => 18],
+
+            ['name' => 'setting-api-user-view', 'sys_module_id' => 18],
+            ['name' => 'setting-api-user-add', 'sys_module_id' => 18],
+            ['name' => 'setting-api-user-edit', 'sys_module_id' => 18],
             
 
             # System

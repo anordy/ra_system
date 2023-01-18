@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\Setting\ApiUserController;
 use App\Http\Controllers\StreetController;
 use App\Http\Controllers\Reports\Payments\PaymentReportController;
 use Illuminate\Support\Facades\Auth;
@@ -96,11 +97,9 @@ use App\Http\Controllers\Reports\Debts\DebtReportController;
 use App\Http\Controllers\Relief\ReliefApplicationsController;
 use App\Http\Controllers\Relief\ReliefRegistrationController;
 use App\Http\Controllers\Returns\Hotel\HotelReturnController;
-use App\Http\Controllers\Returns\Queries\NonFilersController;
 use App\Http\Controllers\TaxClearance\TaxClearanceController;
 use App\Http\Controllers\Assesments\WaiverObjectionController;
 use App\Http\Controllers\Reports\Claims\ClaimReportController;
-use App\Http\Controllers\Returns\Queries\NilReturnsController;
 use App\Http\Controllers\Business\BusinessUpdateFileController;
 use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Setting\DualControlActivityController;
@@ -135,6 +134,7 @@ use App\Http\Controllers\Verification\TaxVerificationAssessmentController;
 use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
+use App\Http\Controllers\KYC\KycAmendmentRequestController;
 
 Auth::routes();
 
@@ -205,6 +205,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
 
         Route::get('/approval-levels', [ApprovalLevelController::class, 'index'])->name('approval-levels.index');
 
+        Route::get('/api-users', [ApiUserController::class, 'index'])->name('api-users.index');
+
     });
 
     Route::get('/bill_invoice/pdf/{id}', [QRCodeGeneratorController::class, 'invoice'])->name('bill.invoice');
@@ -237,6 +239,11 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::prefix('taxpayers-amendment')->as('taxpayers-amendment.')->group(function () {
         Route::get('view/all', [AmendmentRequestController::class, 'index'])->name('index');
         Route::get('view/{id}', [AmendmentRequestController::class, 'show'])->name('show');
+    });
+
+    Route::prefix('kycs-amendment')->as('kycs-amendment.')->group(function () {
+        Route::get('view/all', [KycAmendmentRequestController::class, 'index'])->name('index');
+        Route::get('view/{id}', [KycAmendmentRequestController::class, 'show'])->name('show');
     });
 
     Route::resource('taxpayers', TaxpayersController::class);
@@ -386,10 +393,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/sales-purchases/show/{id}', [SalesPurchasesController::class, 'show'])->name('sales-purchases.show');
         Route::get('/all-credit-returns', [AllCreditReturnsController::class, 'index'])->name('all-credit-returns');
         Route::get('/all-credit-returns/show/{id}/{return_id}/{sales}', [AllCreditReturnsController::class, 'show'])->name('all-credit-returns.show');
-        Route::get('/non-filers', [NonFilersController::class, 'index'])->name('non-filers');
-        Route::get('/non-filers/show/{id}', [NonFilersController::class, 'show'])->name('non-filers.show');
-        Route::get('/nil-returns', [NilReturnsController::class, 'index'])->name('nil-returns');
-        Route::get('/nil-returns/show/{id}', [NilReturnsController::class, 'show'])->name('nil-returns.show');
     });
 
     Route::name('reliefs.')->prefix('reliefs')->group(function () {
@@ -492,6 +495,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/returns', [ReturnDebtController::class, 'index'])->name('returns.index');
         Route::get('/returns/recovery-measure/{debtId}', [ReturnDebtController::class, 'recovery'])->name('debt.recovery');
         Route::get('/returns/show/{debtId}', [ReturnDebtController::class, 'show'])->name('return.show');
+        Route::get('/returns/file/{fileId}', [ReturnDebtController::class, 'getAttachment'])->name('return.file');
         Route::get('/returns/overdue/show/{debtId}', [ReturnDebtController::class, 'showOverdue'])->name('return.showOverdue');
         Route::get('/demand-notice/view/{demandNoticeId}', [ReturnDebtController::class, 'showReturnDemandNotice'])->name('demandNotice');
 
@@ -501,6 +505,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         // Assessment debts
         Route::get('/assessments', [AssessmentDebtController::class, 'index'])->name('assessments.index');
         Route::get('/assesments/show/{assessment_id}', [AssessmentDebtController::class, 'show'])->name('assessment.show');
+        Route::get('/assesments/file/{fileId}', [AssessmentDebtController::class, 'getAttachment'])->name('assessment.file');
         Route::get('/assessment/waiver/show/{assessment_id}', [AssessmentDebtController::class, 'showWaiver'])->name('assessment.waiver.show');
         Route::get('/assessments/waiver/show/{waiverId}', [AssessmentDebtController::class, 'approval'])->name('assessments.waivers.approval');
 
@@ -558,6 +563,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/missing-bank-recons', [PaymentsController::class, 'missingBankRecon'])->name('bank-recon.missing');
         Route::get('/recon-reports/index', [PaymentsController::class, 'reconReport'])->name('recon-reports.index');
         Route::get('/daily-payments/index', [PaymentsController::class, 'dailyPayments'])->name('daily-payments.index');
+        Route::get('/daily-payments/{taxTypeId}', [PaymentsController::class, 'dailyPaymentsPerTaxType'])->name('daily-payments.tax-type');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 
@@ -597,10 +603,10 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/written-off-chassis-search/{type}/{number}', [WrittenOffVehiclesController::class, 'search'])
             ->name('internal-search-wo')->where('type', 'plate-number|chassis');
         Route::get('/files/{path}', [MotorVehicleRegistrationController::class, 'showFile'])->name('files');
-        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove
-        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove
-        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove
-        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove
+        Route::get('/sp-rg/{id}', [MotorVehicleRegistrationController::class, 'simulatePayment']); //todo: remove on production
+        Route::get('/sp-rc/{id}', [RegistrationChangeController::class, 'simulatePayment']); //todo: remove on production
+        Route::get('/sp-dr/{id}', [DeRegistrationController::class, 'simulatePayment']); //todo: remove on production
+        Route::get('/sp-ot/{id}', [OwnershipTransferController::class, 'simulatePayment']); //todo: remove on production
     });
 
     Route::prefix('drivers-license')->as('drivers-license.')->group(function () {

@@ -35,7 +35,7 @@ trait DualControlActivityTrait
 
         $result = DualControl::updateOrCreate($payload);
 
-        $this->updateHistory($model, $modelId, $result->id,  'pending', null );
+        $this->updateHistory($model, $modelId, $result->id,  $action, null );
         $data = $model::findOrFail($modelId);
         if ($action == DualControl::EDIT || $action == DualControl::DELETE) {
             $data->update(['is_updated' => DualControl::NOT_APPROVED]);
@@ -119,6 +119,9 @@ trait DualControlActivityTrait
             case DualControl::Business_File_Type:
                 return 'Business File Type';
                 break;
+            case DualControl::API_USER:
+                return 'API User';
+                break;
 
             default:
                 abort(404);
@@ -176,10 +179,7 @@ trait DualControlActivityTrait
             if ($status == DualControl::APPROVE) {
                 
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
-
                 $update->update($payload);
-
-
                 if ($data->controllable_type == DUalControl::USER) {
                     $message = 'We are writing to inform you that some of your ZRB staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                     $this->sendEmailToUser($update, $message);
@@ -221,7 +221,7 @@ trait DualControlActivityTrait
         $controllable_type,
         $controllable_id,
         $dual_control_id,
-        $status,
+        $action,
         $comment
 
     )
@@ -232,7 +232,7 @@ trait DualControlActivityTrait
             'dual_control_id' => $dual_control_id,
             'approved_at' => now(),
             'approved_by' => Auth::id(),
-            'status' => $status,
+            'action' => $action,
             'comment' => $comment,
         ];
         DualControlHistory::create($payload);

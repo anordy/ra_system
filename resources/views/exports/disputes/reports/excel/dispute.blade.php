@@ -24,7 +24,7 @@
                     <strong>S/N</strong>
                 </th>
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                    <strong>Taxpayer</strong>
+                    <strong>Bussiness Name</strong>
                 </th>
                
                 <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
@@ -50,7 +50,7 @@
                         {{ $index + 1 }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                        {{ $record->business->owner_designation ?? '-' }}
+                        {{ $record->business->name ?? '-' }}
                     </td>
                     <td style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                         {{ $record->category ?? '-' }}

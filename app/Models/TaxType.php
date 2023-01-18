@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Returns\Vat\VatReturn;
+use App\Traits\DailyPaymentTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class TaxType extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
+    use DailyPaymentTrait;
 
     public const VAT = 'vat';
     public const HOTEL = 'hotel-levy';
@@ -23,7 +25,9 @@ class TaxType extends Model implements Auditable
     public const EXCISE_DUTY_BFO = 'excise-duty-bfo';
     public const PETROLEUM = 'petroleum-levy';
     public const AIRPORT_SERVICE_SAFETY_FEE = 'airport-service-safety-fee';
-    public const SEA_SERVICE_TRANSPORT_CHARGE = 'sea-service-transport-charge';
+    public const AIRPORT_SERVICE_CHARGE = 'airport-service-charge';
+    public const SEAPORT_SERVICE_TRANSPORT_CHARGE = 'seaport-service-transport-charge';
+    public const SEAPORT_SERVICE_CHARGE = 'seaport-service-charge';
     public const TAX_CONSULTANT = 'tax-consultant';
     public const STAMP_DUTY = 'stamp-duty';
     public const LUMPSUM_PAYMENT = 'lumpsum-payment';
@@ -63,39 +67,7 @@ class TaxType extends Model implements Auditable
         $query->where('category', 'main');
     }
 
-    public function getTzsDailyPaymentsAttribute()
-    {
-        return ZmPayment::leftJoin('zm_bills','zm_payments.zm_bill_id','zm_bills.id')
-                ->where('zm_payments.currency','TZS')
-                ->whereDate('zm_payments.trx_time', Carbon::today())
-                ->where('zm_bills.tax_type_id',$this->id)
-                ->sum('zm_payments.paid_amount');
-    }
-
-    public function getUsdDailyPaymentsAttribute()
-    {
-        return ZmPayment::leftJoin('zm_bills','zm_payments.zm_bill_id','zm_bills.id')
-                ->where('zm_payments.currency','USD')
-                ->whereDate('zm_payments.trx_time', Carbon::today())
-                ->where('zm_bills.tax_type_id',$this->id)
-                ->sum('zm_payments.paid_amount');
-    }
-
-    public function getTzsMonthlyPaymentsAttribute()
-    {
-        return ZmPayment::leftJoin('zm_bills','zm_payments.zm_bill_id','zm_bills.id')
-                ->where('zm_payments.currency','TZS')
-                ->whereBetween('zm_payments.trx_time', [Carbon::today()->firstOfMonth(),Carbon::today()->endOfDay()])
-                ->where('zm_bills.tax_type_id',$this->id)
-                ->sum('zm_payments.paid_amount');
-    }
-
-    public function getusdMonthlyPaymentsAttribute()
-    {
-        return ZmPayment::leftJoin('zm_bills','zm_payments.zm_bill_id','zm_bills.id')
-                ->where('zm_payments.currency','USD')
-                ->whereBetween('zm_payments.trx_time', [Carbon::today()->firstOfMonth(),Carbon::today()->endOfDay()])
-                ->where('zm_bills.tax_type_id',$this->id)
-                ->sum('zm_payments.paid_amount');
+    public function getTotalPaymentsPerCurrency($currency, $range_start, $range_end){
+        return $this->getTotalCollectionPerTaxTypeAndCurrency($this->id,$currency, $range_start, $range_end);
     }
 }

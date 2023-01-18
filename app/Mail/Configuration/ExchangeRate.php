@@ -30,6 +30,6 @@ class ExchangeRate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.configurations.exchange-rate')->subject("ZRB Current System Todays Exchange Rate Is Not configured");;
+        return $this->markdown('emails.configurations.exchange-rate')->subject("ZRB - ZIDRAS Exchange Rate Is Not Configured");
     }
 }

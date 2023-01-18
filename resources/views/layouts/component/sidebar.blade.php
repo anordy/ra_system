@@ -22,11 +22,11 @@
         </li>
 
         @can('taxpayer-management')
-            <li class="{{ request()->is('taxpayers*') ? 'active' : '' }}">
+            <li class="{{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'active' : '' }}">
                 <a href="#taxpayersMenu" data-toggle="collapse"
-                    aria-expanded="{{ request()->is('taxpayers*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers
+                    aria-expanded="{{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'true' : 'false' }}" class="dropdown-toggle">Taxpayers
                     Management</a>
-                <ul class="collapse list-unstyled {{ request()->is('taxpayers*') ? 'show' : '' }}" id="taxpayersMenu">
+                <ul class="collapse list-unstyled {{ request()->is('taxpayers*') || request()->is('kycs-amendment*') ? 'show' : '' }}" id="taxpayersMenu">
                     @can('taxpayer_view')
                         <li class="{{ request()->is('taxpayers/taxpayer*') ? 'active' : '' }}">
                             <a href="{{ route('taxpayers.taxpayer.index') }}">Taxpayers</a>
@@ -40,6 +40,11 @@
                     @can('kyc_view')
                         <li class="{{ request()->is('taxpayers/registrations*') ? 'active' : '' }}">
                             <a href="{{ route('taxpayers.registrations.index') }}">KYC</a>
+                        </li>
+                    @endcan
+                    @can('all-kyc-amendment-requests-view')
+                        <li class="{{ request()->is('kycs-amendment*') ? 'active' : '' }}">
+                            <a href="{{ route('kycs-amendment.index') }}">KYC Amendments</a>
                         </li>
                     @endcan
                 </ul>
@@ -614,15 +619,6 @@
                     Return Queries
                 </a>
                 <ul class="collapse list-unstyled {{ request()->is('queries*') ? 'show' : '' }}" id="queriesSubmenu">
-
-                    {{-- <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}"> --}}
-                    {{-- <a href="{{ route('queries.nil-returns') }}">Nil Returns</a> --}}
-                    {{-- </li> --}}
-
-                    {{--                    <li class="{{ request()->is('queries/non-filers*') ? 'active' : '' }}"> --}}
-                    {{--                        <a href="{{ route('queries.non-filers') }}">Non Filers</a> --}}
-                    {{--                    </li> --}}
-
                     <li class="{{ request()->is('queries/sales-purchases*') ? 'active' : '' }}">
                         <a href="{{ route('queries.sales-purchases') }}">Sales Vs Purchases</a>
                     </li>
@@ -956,6 +952,12 @@
                         </li>
                     @endcan
 
+                        @can('setting-api-user-view')
+                            <li class="{{ request()->is('settings/api-users*') ? 'active' : '' }}">
+                                <a href="{{ route('settings.api-users.index') }}">API User</a>
+                            </li>
+                        @endcan
+
                 </ul>
             </li>
         @endcan
@@ -982,9 +984,9 @@
                         {{--                    @endcan --}}
 
                         {{--                    @can('setting-dual-control-activities') --}}
-                        <li class="{{ request()->is('system/dual-control-configure/*') ? 'active' : '' }}">
-                            <a href="{{ route('system.dual-control-activities.configure') }}">Dual Control Configure</a>
-                        </li>
+{{--                        <li class="{{ request()->is('system/dual-control-configure/*') ? 'active' : '' }}">--}}
+{{--                            <a href="{{ route('system.dual-control-activities.configure') }}">Dual Control Configure</a>--}}
+{{--                        </li>--}}
                         {{--                    @endcan --}}
                     {{-- @can('system-all-pdfs-view')
                         <li class="{{ request()->is('system/workflow*') ? 'active' : '' }}">

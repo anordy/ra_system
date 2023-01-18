@@ -30,7 +30,7 @@ class ReliefProjectListAddModal extends Component
     public function mount($id)
     {
 //        todo: encrypt id
-        $this->project_id = $id;
+        $this->project_id = decrypt($id);
 
         $this->ministries = ReliefMinistry::all();
         $this->sponsors = ReliefSponsor::all();
@@ -57,7 +57,7 @@ class ReliefProjectListAddModal extends Component
         $this->validate();
         $government_notice_path = null;
         if ($this->government_notice_path) {
-            $government_notice_path = $this->government_notice_path->store('relief');
+            $government_notice_path = $this->government_notice_path->store('relief', 'local');
         }
 
         try {

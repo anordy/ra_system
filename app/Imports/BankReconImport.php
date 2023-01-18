@@ -16,6 +16,11 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 
 class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, SkipsEmptyRows
 {
+    private $currency;
+
+    public function __construct($currency){
+        $this->currency = $currency;
+    }
     public function model(array $row): BankRecon
     {
         Log::info('Importing');
@@ -47,7 +52,10 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
 
                     // Compare control No's and save only if exists;
                     if(ZmBill::where('control_number', $exploded[3])->exists()){
-                        $recon = BankRecon::create([
+                        $recon = BankRecon::updateOrCreate([
+                            'control_no' => $exploded[3],
+                            'payment_ref' => $exploded[4],
+                        ], [
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -61,9 +69,13 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     } else {
-                        MissingBankRecon::create([
+                        MissingBankRecon::updateOrCreate([
+                            'control_no' => $exploded[3],
+                            'payment_ref' => $exploded[4],
+                        ],[
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -77,6 +89,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     }
                     continue;
@@ -88,7 +101,10 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                     // Index 3 => Reference No
 
                     if(ZmBill::where('control_number', $exploded[1])->exists()) {
-                        $recon = BankRecon::create([
+                        $recon = BankRecon::updateOrCreate([
+                            'control_no' => $exploded[1],
+                            'payment_ref' => $exploded[3],
+                        ],[
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -102,9 +118,13 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     } else {
-                        MissingBankRecon::create([
+                        MissingBankRecon::updateOrCreate([
+                            'control_no' => $exploded[1],
+                            'payment_ref' => $exploded[3],
+                        ],[
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -118,6 +138,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     }
                     continue;
@@ -145,7 +166,10 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                     }
 
                     if(ZmBill::where('control_number', $exploded[1])->exists()) {
-                        $recon = BankRecon::create([
+                        $recon = BankRecon::updateOrCreate([
+                            'control_no' => $exploded[1],
+                            'payment_ref' => $index3[0],
+                        ],[
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -160,9 +184,13 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     } else {
-                        MissingBankRecon::create([
+                        MissingBankRecon::updateOrCreate([
+                            'control_no' => $exploded[1],
+                            'payment_ref' => $index3[0],
+                        ],[
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -177,6 +205,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     }
                     continue;
@@ -192,8 +221,11 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                 // Index 1 => Control No
                 // Index 3 => Ref No substr(4)
                 if (count($exploded) == 4){
-                    if(ZmBill::where('control_number', $exploded[3])->exists()) {
-                        $recon = BankRecon::create([
+                    if(ZmBill::where('control_number', $exploded[1])->exists()) {
+                        $recon = BankRecon::updateOrCreate([
+                            'control_no' => $exploded[1],
+                            'payment_ref' => substr($exploded[3], 4),
+                        ],[
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -206,9 +238,13 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     } else {
-                        MissingBankRecon::create([
+                        MissingBankRecon::updateOrCreate([
+                            'control_no' => $exploded[1],
+                            'payment_ref' => substr($exploded[3], 4),
+                        ],[
                             'transaction_date' => Carbon::createFromFormat('d/m/Y', $row['transaction_date'])->toDateString(),
                             'actual_transaction_date' => Carbon::createFromFormat('d/m/Y', $row['actual_transaction_date'])->toDateString(),
                             'value_date' => Carbon::createFromFormat('d/m/Y', $row['value_date'])->toDateString(),
@@ -221,6 +257,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
                             'current_balance' => floatval(str_replace(',', '', $row['current_balance'])),
                             'dr_cr' => $row['drcr'],
                             'doc_num' => $row['doc_num'],
+                            'currency' => $this->currency
                         ]);
                     }
                     continue;
@@ -262,7 +299,7 @@ class BankReconImport implements ToCollection, WithHeadingRow, WithValidation, S
         ];
     }
 
-    public function reconcile(BankRecon $recon){
+    private function reconcile(BankRecon $recon){
         if (!$recon->bill){
             // Update to indicate recon not found.
             $recon->update([

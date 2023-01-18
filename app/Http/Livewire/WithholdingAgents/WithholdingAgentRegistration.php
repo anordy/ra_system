@@ -38,7 +38,7 @@ class WithholdingAgentRegistration extends Component
     public $business;
 
     protected $rules = [
-        'tin' => 'required|integer|digits_between:8,10',
+        'tin' => 'required|numeric|digits:9',
         'institution_name' => 'required',
         'institution_place' => 'required',
         'email' => 'required|email|unique:withholding_agents,email',

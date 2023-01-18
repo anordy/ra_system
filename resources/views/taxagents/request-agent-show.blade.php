@@ -17,11 +17,7 @@
         <div class="card-body">
             @include('taxagents.includes.show')
         </div>
-        <div class="d-flex justify-content-end p-2">
-            @if ($agent->status == 'verified' && $agent->bill->status == \App\Models\PaymentStatus::PAID)
-                <livewire:tax-agent.actions :taxagent=$agent></livewire:tax-agent.actions>
-            @endif
-        </div>
+
     </div>
 
 @endsection
