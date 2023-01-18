@@ -48,7 +48,8 @@ trait VerificationTrait{
                 //  Save to failed verifications
                VerificationsLog::create([
                     'table' => $object->getTableName(),
-                    'row_id' => $object->id
+                    'row_id' => $object->id,
+                    'data' => json_encode($object)
                 ]);
 
                 return false;
@@ -68,6 +69,7 @@ trait VerificationTrait{
         foreach ($object::getPayloadColumns() as $column){
             $stringData .= $object->{$column};
         }
+
         Log::channel('verification')->info('Attempting to sign an instance.');
 
         try {

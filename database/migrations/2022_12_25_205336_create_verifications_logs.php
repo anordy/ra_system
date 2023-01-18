@@ -17,6 +17,7 @@ class CreateVerificationsLogs extends Migration
             $table->id();
             $table->string('table');
             $table->unsignedBigInteger('row_id');
+            $table->string('data', 4000);
             $table->timestamps();
         });
     }
