@@ -28,52 +28,44 @@ class VerificationProgressRequestsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-
+        $this->setAdditionalSelects('pinstance_type', 'user_type');
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['taxpayer_id']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
-            Column::make('Business Category', 'pinstance.category.name')
-                ->label(fn($row) => $row->pinstance->category->name ?? 'N/A')
+//            Column::make('pinstance_id', 'pinstance_id')->hideIf(true),
+            Column::make('Taxpayer', 'pinstance.id')
+                ->label(fn($row) => $row->pinstance->taxpayer->first_name.' '. $row->pinstance->taxpayer->middle_name.' '. $row->pinstance->taxpayer->last_name?? '')
                 ->sortable()
                 ->searchable(),
-            Column::make('Business Type', 'pinstance.business_type')
-                ->label(fn($row) => strtoupper($row->pinstance->business_type ?? 'N/A'))
+            Column::make('TIN', 'pinstance.tin_no')
+                ->label(fn($row) => $row->pinstance->tin_no)
                 ->sortable()
                 ->searchable(),
-            Column::make('Business Name', 'pinstance.name')
-                ->label(fn($row) => $row->pinstance->name ?? 'N/A')
+            Column::make('District', 'pinstance.district')
+                ->label(fn($row) => $row->pinstance->district->name ?? 'N/A')
                 ->sortable()
                 ->searchable(),
-            Column::make('TIN', 'pinstance.tin')
-                ->label(fn($row) => $row->pinstance->tin ?? '')
-                ->sortable()
-                ->searchable(),
-            Column::make('Buss. Reg. No.', 'pinstance.reg_no')
-                ->label(fn($row) => $row->pinstance->reg_no ?? 'N/A')
-                ->sortable()
-                ->searchable(),
-            Column::make('Mobile', 'pinstance_type')
-                ->label(fn($row) => $row->pinstance->mobile ?? '')
+            Column::make('Region', 'pinstance.region')
+                ->label(fn($row) => $row->pinstance->region->name ?? '')
                 ->sortable()
                 ->searchable(),
             Column::make('From State', 'from_place')
-                ->format(fn($value) => strtoupper($value))
+                ->format(fn($value) => str_replace('_', ' ', strtoupper($value)))
                 ->sortable()
                 ->searchable(),
             Column::make('Current State', 'to_place')
-                ->format(fn($value) => strtoupper($value))
+                ->format(fn($value) => str_replace('_', ' ', strtoupper($value)))
                 ->sortable()
                 ->searchable(),
-            Column::make('Status', 'status')->view('taxagents.includes.status'),
-            Column::make('Action', 'id')->view('taxagents.includes.verAction'),
+            Column::make('Status', 'status')
+            ->searchable()->sortable(),
+            Column::make('Action', 'pinstance_id')->view('taxagents.includes.verAction'),
         ];
     }
 }

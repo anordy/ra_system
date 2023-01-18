@@ -19,7 +19,7 @@
         <div class="row mx-1">
             <div class="col-md-3  flex-grow-1 form-group">
                 <label class="d-flex justify-content-between font-weight-bold">Start Date</label>
-                <input type="date" max="{{ $today }}" class="form-control" wire:model.defer="range_start">
+                <input type="date" max="{{ $today }}" class="form-control" wire:model="range_start">
                 @error('range_start')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -27,7 +27,7 @@
             <div class="col-md-3 flex-grow-1 form-group">
                 <label class="d-flex justify-content-between font-weight-bold">End Date</label>
                 <input type="date" min="{{ $range_start ?? $today }}" max="{{$today }}" class="form-control"
-                    wire:model.defer="range_end">
+                    wire:model="range_end">
                 @error('range_end')
                 <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -49,7 +49,7 @@
                 <table class="table table-condensed table-bordered">
                     <thead class="border-bottom border-dark">
                         <tr>
-                            <th colspan="3" class="text-center bg-secondary">
+                            <th colspan="4" class="text-center bg-secondary">
                                 @if ($range_start == $today)
                                 <span class="text-success">Today's Collections ({{ date('d-M-Y',strtotime($today))}})</span>
                                 @else
@@ -64,6 +64,7 @@
                             <th class="text-left">Source</th>
                             <th>Shilings</th>
                             <th>Dollars</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody class="border-bottom border-dark text-right">
@@ -73,11 +74,12 @@
                                 <td class="text-left">{{ $row->name }}</td>
                                 <td>{{ number_format($row->getTotalPaymentsPerCurrency('TZS',$range_start,$range_end),2) }}</td>
                                 <td>{{ number_format($row->getTotalPaymentsPerCurrency('USD',$range_start,$range_end),2) }}</td>
+                                <td class="text-center"><a class="btn btn-outline-success" href="{{ route('payments.daily-payments.tax-type',encrypt(json_encode(['tax_type_id'=>$row->id,'range_start'=>$range_start,'range_end'=>$range_end]))) }}">Expore</a></td>
                             </tr>
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="3" class="text-center text-info">No Data available</td>
+                                <td colspan="4" class="text-center text-info">No Data available</td>
                             </tr>
                         @endif
                     </tbody>
@@ -86,6 +88,7 @@
                             <th class="text-left">Total</th>
                             <th>{{ number_format($vars['tzsTotalCollection'],2) }}</th>
                             <th>{{ number_format($vars['usdTotalCollection'],2) }}</th>
+                            <th class="bg-secondary"></th>
                         </tr>
                     </tfoot>
                 </table>

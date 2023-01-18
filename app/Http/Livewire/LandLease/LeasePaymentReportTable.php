@@ -66,7 +66,7 @@ class LeasePaymentReportTable extends DataTableComponent
             $model = clone $model->where('lease_payments.taxpayer_id', $taxpayer_id);
         }
 
-        return $model->orderBy('lease_payments.created_at', 'asc');
+        return $model->with('landLease', 'financialYear')->orderBy('lease_payments.created_at', 'asc');
     }
 
     public function refreshTable($parameter)
@@ -82,6 +82,7 @@ class LeasePaymentReportTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setAdditionalSelects(['land_lease_id']);
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -92,11 +93,16 @@ class LeasePaymentReportTable extends DataTableComponent
     {
         return [
             Column::make('DP Number', 'landLease.dp_number')
+                ->format(function ($value, $row) {
+                    $column = 'landlease.dp_number';
+                    return $row[$column];
+                })
                 ->searchable()
                 ->sortable(),
-            Column::make('Name', 'landLease.id')
+            Column::make('Name', 'id')
                 ->format(function ($value, $row) {
-                    $landLease = LandLease::select('category', 'business_location_id', 'taxpayer_id', 'name')->find($value);
+                    $column = 'landlease.id';
+                    $landLease = LandLease::select('category', 'business_location_id', 'taxpayer_id', 'name')->find($row[$column]);
                     if ($landLease->category == 'business') {
                         return $this->getBusinessName($landLease->business_location_id);
                     } else {
@@ -108,46 +114,51 @@ class LeasePaymentReportTable extends DataTableComponent
                     }
                 })
                 ->sortable(),
-            Column::make('Payment Year', 'financialYear.code')
+            Column::make('Payment Year', 'financialyear.code')
                 ->format(function ($value, $row) {
-                    return $value;
+                    $column = 'financialyear.code';
+                    return $row[$column];
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make('Payment Month', 'landLease.payment_month')
+            Column::make('Payment Month', 'landlease.payment_month')
+                ->format(function ($value, $row) {
+                    $column = 'landlease.payment_month';
+                    return $row[$column];
+                })
                 ->searchable()
                 ->sortable(),
-            Column::make('Applicant Type', 'landLease.category')
-                ->format(function ($value) {
-                    return ucwords($value);
+            Column::make('Applicant Type', 'landlease.category')
+                ->format(function ($value, $row) {
+                    return ucwords($row['landlease.category']);
                 })
                 ->searchable()
                 ->sortable(),
             Column::make('Status', 'status')->view('land-lease.includes.lease-payment-status'),
-            Column::make('Payment Amount (USD)', 'landLease.payment_amount')
+            Column::make('Payment Amount (USD)', 'landlease.payment_amount')
                 ->format(function ($value, $row) {
-                    return number_format($value, 2);
+                    return number_format($row['landlease.payment_amount'], 2);
                 })
                 ->sortable(),
             Column::make('Total Amount (USD)', 'total_amount_with_penalties')
                 ->format(function ($value, $row) {
-                    return number_format($value, 2);
+                    return number_format($row['total_amount_with_penalties'], 2);
                 })
                 ->sortable(),
             Column::make('Total Penalties (USD)', 'penalty')
                 ->format(function ($value, $row) {
-                    return number_format($value, 2);
+                    return number_format($row['penalty'], 2);
                 })
                 ->sortable(),
             Column::make('Outstanding_amount (USD)', 'outstanding_amount')
                 ->format(function ($value, $row) {
-                    return number_format($value, 2);
+                    return number_format($row['outstanding_amount'], 2);
                 })
                 ->sortable(),
-            Column::make('Contact Person', 'landLease.id')
+            Column::make('Contact Person', 'landlease.created_at')
                 ->format(
                     function ($value, $row) {
-                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'name')->find($value);
+                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'name')->find($row['landlease.id']);
                         if ($landLease->is_registered == 1) {
                             $taxpayer = Taxpayer::select('first_name', 'last_name')->find($landLease->taxpayer_id);
                             return $taxpayer->first_name .' '. $taxpayer->last_name;
@@ -158,10 +169,10 @@ class LeasePaymentReportTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make('Phone Number', 'landLease.id')
+            Column::make('Phone Number', 'landLease.updated_at')
                 ->format(
                     function ($value, $row) {
-                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'phone')->find($value);
+                        $landLease = LandLease::select('is_registered', 'taxpayer_id', 'phone')->find($row['landlease.id']);
                         if ($landLease->is_registered == 1) {
                             $taxpayer = Taxpayer::select('mobile')->find($landLease->taxpayer_id);
                             return $taxpayer->mobile;
@@ -172,7 +183,7 @@ class LeasePaymentReportTable extends DataTableComponent
                 )
                 ->searchable()
                 ->sortable(),
-            Column::make('Actions', 'id')->view('land-lease.includes.actions'),
+            Column::make('Actions', 'landlease.id')->view('land-lease.includes.actions'),
         ];
     }
 
