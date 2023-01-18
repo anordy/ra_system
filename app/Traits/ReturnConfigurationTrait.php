@@ -53,7 +53,7 @@ trait ReturnConfigurationTrait
                 return $model;
 
             case TaxType::AIRPORT_SERVICE_SAFETY_FEE:
-            case TaxType::SEA_SERVICE_TRANSPORT_CHARGE:
+            case TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE:
                 $model = PortConfig::class;
                 return $model;
 

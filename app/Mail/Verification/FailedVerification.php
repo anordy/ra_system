@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Mail\Configuration;
+namespace App\Mail\Verification;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ExchangeRate extends Mailable
+class FailedVerification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,6 +30,6 @@ class ExchangeRate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.configurations.exchange-rate')->subject("ZRB - ZIDRAS Exchange Rate Is Not Configured");
+        return $this->markdown('emails.verification.failed_verification')->subject("ZRB - ZIDRAS Failed Verification");
     }
 }
