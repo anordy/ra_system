@@ -43,7 +43,7 @@ class PrintController extends Controller
                 $returnView = 'print.returns.includes.petroleum';
                 break;
             case TaxType::AIRPORT_SERVICE_SAFETY_FEE:
-            case TaxType::SEA_SERVICE_TRANSPORT_CHARGE:
+            case TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE:
                 $return_ = PortReturn::where('parent', $taxReturn->return->id)->first();
                 $pdf = PDF::loadView('print.returns.port', ['return' => $taxReturn->return, 'return_' => $return_]);
                 $pdf->setPaper('a4', 'portrait');

@@ -13,7 +13,7 @@
         @include('investigation.approval.return-details.lumpsum')
     @elseif ($taxType->code == App\Models\TaxType::AIRPORT_SERVICE_SAFETY_FEE)
         @include('investigation.approval.return-details.air_port')
-    @elseif ($taxType->code == App\Models\TaxType::SEA_SERVICE_TRANSPORT_CHARGE)
+    @elseif ($taxType->code == App\Models\TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE)
         @include('investigation.approval.return-details.sea_port')
     @endif
 @else
