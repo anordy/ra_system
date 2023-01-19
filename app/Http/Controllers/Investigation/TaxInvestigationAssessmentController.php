@@ -16,7 +16,7 @@ class TaxInvestigationAssessmentController extends Controller
     }
 
     public function show($id){
-        $investigation = TaxInvestigation::with('assessment', 'officers')->find(decrypt($id));
+        $investigation = TaxInvestigation::with('assessment', 'officers')->findOrFail(decrypt($id));
         $viewRender = "";
         return view('investigation.approval.preview', compact('investigation', 'viewRender'));
 

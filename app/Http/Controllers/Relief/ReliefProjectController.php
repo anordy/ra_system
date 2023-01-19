@@ -23,7 +23,7 @@ class ReliefProjectController extends Controller
         if (!Gate::allows('relief-projects-edit')) {
             abort(403);
         }
-        $project = ReliefProject::find(decrypt($id));
+        $project = ReliefProject::findOrFail(decrypt($id));
         return view('relief.project_list.index', compact('project'));
     }
 }

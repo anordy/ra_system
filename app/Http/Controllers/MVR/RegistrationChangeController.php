@@ -40,7 +40,7 @@ class RegistrationChangeController extends Controller
     {
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
-        $change_req = MvrRegistrationChangeRequest::query()->find($id);
+        $change_req = MvrRegistrationChangeRequest::query()->findOrFail($id);
         $motor_vehicle = $change_req->current_registration->motor_vehicle;
         return view('mvr.reg-change-req-show', compact('motor_vehicle', 'change_req'));
     }
@@ -59,7 +59,7 @@ class RegistrationChangeController extends Controller
         Gate::authorize('mvr_approve_registration_change');
         $id = decrypt($id);
         //Generate control number
-        $change_req = MvrRegistrationChangeRequest::query()->find($id);
+        $change_req = MvrRegistrationChangeRequest::query()->findOrFail($id);
         $fee_type = MvrFeeType::query()->firstOrCreate(['type' => MvrFeeType::TYPE_CHANGE_REGISTRATION]);
 
         $fee = MvrFee::query()->where([
@@ -144,7 +144,7 @@ class RegistrationChangeController extends Controller
         Gate::authorize('mvr_approve_registration_change');
         $id = decrypt($id);
         $change_req = MvrRegistrationChangeRequest::query()
-            ->find($id);
+            ->findOrFail($id);
 
         $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_GENERATED]);
 
@@ -169,7 +169,7 @@ class RegistrationChangeController extends Controller
             ) {
                 //In this case we do not need to insert a new registration
                 $mvr_id = $change_req->current_registration->id;
-                MvrMotorVehicleRegistration::query()->find($mvr_id)->update([
+                MvrMotorVehicleRegistration::query()->findOrFail($mvr_id)->update([
                     'mvr_registration_type_id' => $reg_type->id,
                     'mvr_plate_number_status_id' => $plate_status->id
                 ]);

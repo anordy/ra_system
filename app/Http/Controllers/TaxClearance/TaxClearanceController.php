@@ -203,7 +203,7 @@ class TaxClearanceController extends Controller
     public function certificate($clearanceId)
     {
         $taxClearanceRequestId = decrypt($clearanceId);
-        $taxClearanceRequest = TaxClearanceRequest::find($taxClearanceRequestId);
+        $taxClearanceRequest = TaxClearanceRequest::findOrFail($taxClearanceRequestId);
 
         $location = $taxClearanceRequest->businessLocation;
 

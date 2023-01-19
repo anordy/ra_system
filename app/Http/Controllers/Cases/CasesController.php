@@ -29,13 +29,13 @@ class CasesController extends Controller
 
     public function show($id){
         $id = decrypt($id);
-        $case = LegalCase::query()->find($id);
+        $case = LegalCase::query()->findOrFail($id);
         return view('cases.cases-show',compact('case'));
     }
 
     public function appealShow($id){
         $id = decrypt($id);
-        $appeal = CaseAppeal::query()->find($id);
+        $appeal = CaseAppeal::query()->findOrFail($id);
         $case = $appeal->case;
         return view('cases.appeal-show',compact('case', 'appeal'));
     }

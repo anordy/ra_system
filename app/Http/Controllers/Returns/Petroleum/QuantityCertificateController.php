@@ -31,7 +31,7 @@ class QuantityCertificateController extends Controller
 
     public function edit($id)
     {
-        $certificate =QuantityCertificate::with('business')->find(decrypt($id));
+        $certificate =QuantityCertificate::with('business')->findOrFail(decrypt($id));
 
         if(($certificate->status ?? '') == 'filled'){
             abort(403);
@@ -52,9 +52,9 @@ class QuantityCertificateController extends Controller
 
     public function certificate($id)
     {
-        $data = QuantityCertificate::with('business')->find(decrypt($id));
+        $data = QuantityCertificate::with('business')->findOrFail(decrypt($id));
 
-        $certificate = QuantityCertificate::with('business')->find(decrypt($id));
+        $certificate = QuantityCertificate::with('business')->findOrFail(decrypt($id));
 
         if(($certificate->status ?? '') == 'filled'){
             abort(403);
