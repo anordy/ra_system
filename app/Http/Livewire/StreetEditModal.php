@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\District;
 use App\Models\DualControl;
 use App\Models\Region;
+use App\Models\Role;
 use App\Models\Street;
 use App\Models\Ward;
 use App\Traits\DualControlActivityTrait;
@@ -40,17 +41,26 @@ class StreetEditModal extends Component
     public function mount($id)
     {
         $this->regions = Region::select('id', 'name')->get();
-        $this->street = Street::find($id);
-        $this->name = $this->street->name;
-        $this->ward_id = $this->street->ward->id;
-        $this->district_id = $this->street->ward->district_id;
-        $this->region_id = $this->street->ward->district->region->id;
-        $this->districts = District::where('region_id', $this->region_id)->select('id', 'name')->get();
-        $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name')->get();
-        $this->old_values = [
-            'name' => $this->name,
-            'ward_id' => $this->ward_id,
-        ];
+        $this->street = Street::find(decrypt($id));
+        if (!empty($this->street))
+        {
+            $this->name = $this->street->name;
+            $this->ward_id = $this->street->ward->id;
+            $this->district_id = $this->street->ward->district_id;
+            $this->region_id = $this->street->ward->district->region->id;
+            $this->districts = District::where('region_id', $this->region_id)->select('id', 'name')->get();
+            $this->wards = Ward::where('district_id', $this->district_id)->select('id', 'name')->get();
+            $this->old_values = [
+                'name' => $this->name,
+                'ward_id' => $this->ward_id,
+            ];
+
+        }
+        else{
+            Log::error('No result is found, Invalid id');
+            abort(404);
+        }
+
     }
 
     public function updated($propertyName)

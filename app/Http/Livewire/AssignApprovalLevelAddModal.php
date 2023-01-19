@@ -26,7 +26,12 @@ class AssignApprovalLevelAddModal extends Component
     public function mount($user_id)
     {
         $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
-        $this->user = User::find($user_id);
+        $this->user = User::find(decrypt($user_id));
+        if (empty($this->user))
+        {
+            Log::error('No result is found, Invalid id');
+            abort(404);
+        }
     }
 
     public function rules()

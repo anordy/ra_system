@@ -33,20 +33,25 @@ class EditTypeModal extends Component
 
     public function mount($id)
     {
-        $this->type= BusinessFileType::find($id);
-        $this->name = $this->type->name;
-        $this->short_name = $this->type->short_name;
-        $this->description = $this->type->description;
-        $this->is_required = $this->type->is_required;
-        $this->business_category = $this->type->business_type;
-        $this->old_values = [
-            'name' => $this->name,
-            'short_name' => $this->short_name,
-            'description' => $this->description,
-            'is_required' => $this->is_required,
-            'business_type' => $this->business_category,
-            'file_type' => 'pdf'
-        ];
+        $this->type = BusinessFileType::find(decrypt($id));
+        if (!empty($this->type)) {
+            $this->name = $this->type->name;
+            $this->short_name = $this->type->short_name;
+            $this->description = $this->type->description;
+            $this->is_required = $this->type->is_required;
+            $this->business_category = $this->type->business_type;
+            $this->old_values = [
+                'name' => $this->name,
+                'short_name' => $this->short_name,
+                'description' => $this->description,
+                'is_required' => $this->is_required,
+                'business_type' => $this->business_category,
+                'file_type' => 'pdf'
+            ];
+        } else {
+            Log::error('No result is found, Invalid id');
+            abort(404);
+        }
 
     }
 

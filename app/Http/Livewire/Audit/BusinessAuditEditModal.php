@@ -51,7 +51,7 @@ class BusinessAuditEditModal extends Component
     public function businessChange($id)
     {
         if ($this->business_id) {
-            $this->selectedBusiness = Business::with('locations')->find($id);
+            $this->selectedBusiness = Business::with('locations')->find(decrypt($id));
             $this->taxTypes         = $this->selectedBusiness->taxTypes;
             $this->locations        = $this->selectedBusiness->locations;
         } else {
@@ -65,7 +65,7 @@ class BusinessAuditEditModal extends Component
         $this->validate();
         try {
             TaxAudit::create([
-                'business_id' => $this->business_id,
+                'business_id' => decrypt($this->business_id),
                 'location_id' => $this->location_id,
                 'tax_type_id' => $this->tax_type_id,
                 'intension' => $this->intension,

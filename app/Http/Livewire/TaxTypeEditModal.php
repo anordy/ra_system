@@ -31,14 +31,20 @@ class TaxTypeEditModal extends Component
 
     public function mount($id)
     {
-        $this->taxType = TaxType::find($id);
-        $this->name =  $this->taxType->name;
-        $this->gfs_code =  $this->taxType->gfs_code;
+        $this->taxType = TaxType::find(decrypt($id));
+        if (!empty($this->taxType))
+        {
+            $this->name =  $this->taxType->name;
+            $this->gfs_code =  $this->taxType->gfs_code;
 
-        $this->old_values = [
-            'name' => $this->name,
-            'gfs_code' => $this->gfs_code
-        ];
+            $this->old_values = [
+                'name' => $this->name,
+                'gfs_code' => $this->gfs_code
+            ];
+        }
+        Log::error('No result is found, Invalid id');
+        abort(404);
+
     }
 
     public function submit()

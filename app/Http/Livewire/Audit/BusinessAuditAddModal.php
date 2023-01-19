@@ -54,9 +54,13 @@ class BusinessAuditAddModal extends Component
     public function businessChange($id)
     {
         if ($this->business_id) {
-            $this->selectedBusiness = Business::with('locations')->find($id);
-            $this->taxTypes         = $this->selectedBusiness->taxTypes;
-            $this->locations        = $this->selectedBusiness->locations;
+            $this->selectedBusiness = Business::with('locations')->find(decrypt($id));
+            if (!empty($this->selectedBusiness))
+            {
+                $this->taxTypes         = $this->selectedBusiness->taxTypes;
+                $this->locations        = $this->selectedBusiness->locations;
+            }
+
         } else {
             $this->reset('taxTypes', 'locations');
         }
@@ -65,11 +69,16 @@ class BusinessAuditAddModal extends Component
 
     public function submit()
     {
-        $check = TaxAudit::where('business_id', $this->business_id)
+        $check = TaxAudit::where('business_id', decrypt($this->business_id))
             ->where('location_id', $this->location_ids)
             ->where('tax_type_id', $this->tax_type_ids)
             ->whereIn('status', ['draft', 'pending'])
             ->first();
+
+//        if (empty($check))
+//        {
+//            $this->alert('error', 'The ');
+//        }
 
         if ($check) {
             $this->validate(
@@ -81,7 +90,7 @@ class BusinessAuditAddModal extends Component
         DB::beginTransaction();
         try {
             $taxAudit = TaxAudit::create([
-                'business_id' => $this->business_id,
+                'business_id' => decrypt($this->business_id),
                 'location_id' => count($this->location_ids) <= 1 ? $this->location_ids[0] : 0,
                 'tax_type_id' => count($this->tax_type_ids) <= 1 ? $this->tax_type_ids[0] : 0,
                 'intension' => $this->intension,

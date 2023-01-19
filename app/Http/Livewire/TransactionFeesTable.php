@@ -3,8 +3,10 @@
 namespace App\Http\Livewire;
 
 use App\Models\Audit;
+use App\Models\DualControl;
 use App\Models\TransactionFee;
 use App\Models\User;
+use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +17,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TransactionFeesTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use LivewireAlert, DualControlActivityTrait;
 
     protected $model = TransactionFee::class;
 
@@ -62,38 +64,52 @@ class TransactionFeesTable extends DataTableComponent
             Column::make('Created At', 'created_at')
                 ->sortable()
                 ->searchable(),
-            Column::make("Status", "is_approved")
-                ->sortable()->searchable()->format(function ($value) {
-                if ($value == 0) {
-                    return <<< HTML
-                        <span class="text-danger" >Not Approved </span>
-                    HTML;
-                } elseif ($value == 1) {
-                    return <<< HTML
-                        <span class="text-success" >Approved </span>
-                    HTML;
-                } elseif ($value == 2) {
-                    return <<< HTML
-                        <span class="text-danger" >Rejected </span>
-                    HTML;
-                }
-            })->html(true),
+            Column::make('Approval Status', 'is_approved')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Approved</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
+                        HTML;
+                    }
+                    elseif ($value == 2) {
+                        return <<< HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
+                        HTML;
+                    }
+
+                })->html(),
+            Column::make('Edit Status', 'is_updated')
+                ->format(function ($value, $row) {
+                    if ($value == 0) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-warning p-2" >Not Updated</span>
+                        HTML;
+                    } elseif ($value == 1) {
+                        return <<<HTML
+                            <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Updated</span>
+                        HTML;
+                    }
+                })
+                ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-                    $approve = '';
-                    $reject = '';
+                    $id = "'" . encrypt($value) . "'";
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-transaction-fees-edit') && approvalLevel(Auth::user()->level_id, 'maker')) {
+                        if (Gate::allows('setting-transaction-fees-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<< HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal',$id)"><i class="fa fa-edit"></i> </button>
                             HTML;
                         }
 
                         if (Gate::allows('setting-transaction-fees-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<< HTML
-                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
                             HTML;
                         }
                     }
@@ -127,88 +143,27 @@ class TransactionFeesTable extends DataTableComponent
 
     public function confirmed($value)
     {
-        try {
             $data = (object) $value['data'];
-            TransactionFee::find($data->id)->delete();
-            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
-        } catch (Exception $e) {
-            report($e);
-            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
-        }
+            $fee = TransactionFee::find(decrypt($data->id));
+            if (empty($fee))
+            {
+                $this->alert('error', 'The selected transaction fee is not found', ['timer' => 4000]);
+                return;
+            }
+            if ($fee->is_approved == DualControl::NOT_APPROVED) {
+                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                return;
+            }
+            try {
+                $this->triggerDualControl(get_class($fee), $fee->id, DualControl::DELETE, 'deleting tax type');
+                DB::commit();
+                $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+                return;
+            } catch (Exception $e) {
+                DB::rollBack();
+                report($e);
+                $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            }
     }
 
-       public function approve($id)
-    {
-        $this->alert('warning', 'Are you sure you want to approve this fee ?', [
-            'position' => 'center',
-            'toast' => false,
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Approve',
-            'onConfirmed' => 'toggleApproval',
-            'showCancelButton' => true,
-            'cancelButtonText' => 'Cancel',
-            'timer' => null,
-            'data' => [
-                'id' => $id,
-            ],
-
-        ]);
-    }
-
-    public function toggleApproval($value)
-    {
-        DB::beginTransaction();
-        try {
-            $data = (object)$value['data'];
-            $fee = TransactionFee::find($data->id);
-            $fee->is_approved = 1;
-            $fee->save();
-            $this->triggerAudit(EgaFee::class, Audit::ACTIVATED, 'ega_fee', $fee->id, ['status' => 0], ['status' => 1]);
-            DB::commit();
-            $this->alert('success', 'Ega fee successfully approved');
-            return redirect()->route('settings.fee-configurations.ega-fee');
-        } catch (Exception $e) {
-            DB::rollBack();
-            report($e);
-            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
-        }
-    }
-
-    public function reject($id)
-    {
-        $this->alert('warning', 'Are you sure you want to reject this fee ?', [
-            'position' => 'center',
-            'toast' => false,
-            'showConfirmButton' => true,
-            'confirmButtonText' => 'Reject',
-            'onConfirmed' => 'toggleReject',
-            'showCancelButton' => true,
-            'cancelButtonText' => 'Cancel',
-            'timer' => null,
-            'data' => [
-                'id' => $id,
-            ],
-
-        ]);
-    }
-
-    public function toggleReject($value)
-    {
-        DB::beginTransaction();
-        try {
-            $data = (object)$value['data'];
-            $fee = TransactionFee::find($data->id);
-            $fee->is_approved = 2;
-            $fee->save();
-            $this->triggerAudit(EkaTatuFee::class, Audit::ACTIVATED, 'ega_fee', $fee->id, ['status' => 0], ['status' => 2]);
-            DB::commit();
-            $this->alert('success', 'Ega fee successfully rejected');
-            return redirect()->route('settings.fee-configurations.ega-fee');
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            report($e);
-            $this->alert('warning', 'Something went wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
-        }
-    }
 }

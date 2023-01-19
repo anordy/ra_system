@@ -122,42 +122,6 @@
                                     <td class="table-success">Changed</td>
                                 @endif
                             </tr>
-                            <tr>
-                                <th>Physical Address</th>
-                                <td>{{ $old_values->business_information->physical_address }}</td>
-                                <td>{{ $new_values->business_information->physical_address }}</td>
-                                @if ($old_values->business_information->physical_address == $new_values->business_information->physical_address)
-                                    <td class="table-primary">Unchanged</td>
-                                @else
-                                    <td class="table-success">Changed</td>
-                                @endif
-                            </tr>
-                            {{-- <tr>
-                            <th>Date of Commencing</th>
-                            <td>{{ $old_values->business_information->date_of_commencing }}</td>
-                            <td>{{ $new_values->business_information->date_of_commencing }}</td>
-                        </tr>
-                        <tr>
-                            <th>Pre Estimated Turnover</th>
-                            <td>{{ $old_values->business_information->pre_estimated_turnover }}</td>
-                            <td>{{ $new_values->business_information->pre_estimated_turnover }}</td>
-                        </tr>
-                        <tr>
-                            <th>Post Estimated Turnover</th>
-                            <td>{{ $old_values->business_information->post_estimated_turnover }}</td>
-                            <td>{{ $new_values->business_information->post_estimated_turnover }}</td>
-                        </tr>
-                        <tr>
-                            <th>Goods and Services Types</th>
-                            <td>{{ $old_values->business_information->goods_and_services_types }}</td>
-                            <td>{{ $new_values->business_information->goods_and_services_types }}</td>
-                        </tr>
-                        <tr>
-                            <th>Goods and Services Examples</th>
-                            <td>{{ $old_values->business_information->goods_and_services_example }}</td>
-                            <td>{{ $new_values->business_information->goods_and_services_example }}</td>
-                        </tr> --}}
-
                         </tbody>
                     </table>
                     <br>

@@ -14,7 +14,7 @@
                             wire:change="businessChange($event.target.value)">
                             <option value="">Select Business</option>
                             @foreach ($business as $row)
-                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                <option value="{{ encrypt($row->id) }}">{{ $row->name }}</option>
                             @endforeach
                         </select>
                         @error('business_id')

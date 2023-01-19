@@ -62,15 +62,24 @@ class RoleEditModal extends Component
 
     public function mount($id)
     {
-        $this->role = Role::find($id);
-        $this->name = $this->role->name;
-        $this->report_to = $this->role->report_to;
+        $this->role = Role::find(decrypt($id));
+        if (!empty($this->role))
+        {
+            $this->name = $this->role->name;
+            $this->report_to = $this->role->report_to;
 
-        $this->old_values = [
-            'name' => $this->name,
-            'report_to' => $this->report_to,
-        ];
-        $this->roles = Role::all();
+            $this->old_values = [
+                'name' => $this->name,
+                'report_to' => $this->report_to,
+            ];
+
+            $this->roles = Role::all();
+
+        }
+        else{
+            Log::error('No result is found, Invalid id');
+            abort(404);
+        }
     }
 
     public function render()
