@@ -44,7 +44,7 @@ class PrintController extends Controller
                 break;
             case TaxType::AIRPORT_SERVICE_SAFETY_FEE:
             case TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE:
-                $return_ = PortReturn::where('parent', $taxReturn->return->id)->first();
+                $return_ = PortReturn::where('parent', $taxReturn->return->id)->firstOrFail();
                 $pdf = PDF::loadView('print.returns.port', ['return' => $taxReturn->return, 'return_' => $return_]);
                 $pdf->setPaper('a4', 'portrait');
                 $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);

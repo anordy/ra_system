@@ -101,7 +101,7 @@ class QualifiedTaxTypeController extends Controller
 
         $changed = BusinessTaxTypeChange::query()
             ->where('business_id', $return->business_id)
-            ->where('from_tax_type_id', $tax_type_id)->first();
+            ->where('from_tax_type_id', $tax_type_id)->firstOrFail();
 
         $currency = $this->getCurrency($return->business_id, $return->tax_type_id);
 
@@ -111,7 +111,7 @@ class QualifiedTaxTypeController extends Controller
     public function getCurrency($business_id, $tax_type_id)
     {
         $result = BusinessTaxType::where('business_id', $business_id)
-            ->where('tax_type_id', $tax_type_id)->first();
+            ->where('tax_type_id', $tax_type_id)->firstOrFail();
         $currency = $result->currency;
         return $currency;
 
