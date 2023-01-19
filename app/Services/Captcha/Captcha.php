@@ -26,10 +26,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 
-/**
- * Class Captcha
- * @package Mews\Captcha
- */
+
 class Captcha
 {
     /**

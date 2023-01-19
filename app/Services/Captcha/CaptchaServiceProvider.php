@@ -4,10 +4,7 @@ namespace App\Services\Captcha;
 
 use Illuminate\Support\ServiceProvider;
 
-/**
- * Class CaptchaServiceProvider
- * @package Mews\Captcha
- */
+
 class CaptchaServiceProvider extends ServiceProvider
 {
     /**
