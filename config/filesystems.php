@@ -31,12 +31,13 @@ return [
     'disks' => [
 
         'local' => [
-            'driver' => 'sftp',
-            'host' => secEnv('SFTP_HOST'),
-            'username' => secEnv('SFTP_USERNAME'),
-            'port' => secEnv('SFTP_PORT'),
-            'privateKey' => secEnv('SFTP_PRIVATE_KEY'),
-            'root' => 'uploads/',
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
+
+        'local-admin' => [
+            'driver' => 'local',
+            'root' => storage_path('./../../zrb_admin/storage/app'),
         ],
 
         'public' => [
@@ -56,13 +57,6 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
-
-        'sftp' => [
-            'driver' => 'sftp',
-            'host' => env('SFTP_HOST'),
-            'username' => env('SFTP_USERNAME'),
-            'privateKey' => env('SFTP_PRIVATE_KEY'),
-        ]
 
     ],
 
