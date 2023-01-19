@@ -31,7 +31,7 @@ class KycAmendmentRequestTable extends DataTableComponent
             'default' => true,
             'class' => 'table-bordered table-sm',
         ]);
-        $this->setAdditionalSelects(['kyc_amendment_requests.status']);
+        $this->setAdditionalSelects(['kyc_amendment_requests.status', 'kyc_amendment_requests.new_values']);
 
     }
 
@@ -64,22 +64,25 @@ class KycAmendmentRequestTable extends DataTableComponent
             Column::make('Name', 'kyc_id')
                 ->format(
                     function($value, $row){
-                        return $row->kyc->fullname();
+                        return $row->kyc ? $row->kyc->fullname() : json_decode($row['new_values'], true)['first_name'] .' '. json_decode($row['new_values'], true)['middle_name'] .' '. json_decode($row['new_values'], true)['last_name'];
                     }
                 )
                 ->sortable()
                 ->searchable(),
             Column::make('Nationality', 'kyc.country_id')
                 ->format(function ($value, $row) {
-                    return Country::find($value)->nationality ?? '';
+                    $id = $value ?? json_decode($row['new_values'], true)['country_id'];
+                    return Country::find($id)->nationality ?? '';
                 }),
             Column::make('Region', 'kyc.region_id')
                 ->format(function ($value, $row) {
-                    return Region::find($value)->value('name') ?? '';
+                    $id = $value ?? json_decode($row['new_values'], true)['region_id'];
+                    return Region::find($id)->value('name') ?? '';
                 }),
             Column::make('Street', 'kyc.street_id')
                 ->format(function ($value, $row) {
-                    return Street::find($value)->value('name') ?? '';
+                    $id = $value ?? json_decode($row['new_values'], true)['street_id'];
+                    return Street::find($id)->value('name') ?? '';
                 }),
             Column::make('Action', 'id')
                 ->view('kyc.amendments.includes.actions'),
