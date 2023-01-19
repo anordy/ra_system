@@ -30,7 +30,7 @@ class MnoReturnController extends Controller
 
     public function show($id)
     {
-        $return = MnoReturn::find(decrypt($id));
+        $return = MnoReturn::findOrFail(decrypt($id));
         $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
         return view('returns.excise-duty.mno.show', compact('return'));
     }

@@ -118,11 +118,8 @@ class ReturnDebtController extends Controller
 
     public function getAttachment($fileId)
     {
-        $file = DebtWaiverAttachment::find(decrypt($fileId));
-        if ($file) {
-            return Storage::response($file->file_path);
-        }
-        return abort(404);
+        $file = DebtWaiverAttachment::findOrFail(decrypt($fileId));
+        return Storage::response($file->file_path);
     }
     
 }

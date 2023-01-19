@@ -36,7 +36,7 @@ class BusinessController extends Controller
         if (!Gate::allows('taxtype-change-request-view')) {
             abort(403);
         }
-        $taxchange = BusinessTaxTypeChange::with('business')->find(decrypt($id));
+        $taxchange = BusinessTaxTypeChange::with('business')->findOrFail(decrypt($id));
         return view('business.taxtypes.show', ['taxchange' => $taxchange]);
     }
 

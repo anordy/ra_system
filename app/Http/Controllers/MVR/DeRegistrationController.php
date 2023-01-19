@@ -39,7 +39,7 @@ class DeRegistrationController extends Controller
     {
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
-        $request = MvrDeRegistrationRequest::query()->find($id);
+        $request = MvrDeRegistrationRequest::query()->findOrFail($id);
         $motor_vehicle = $request->motor_vehicle;
         return view('mvr.de-registration-req-show', compact('motor_vehicle', 'request'));
     }
@@ -67,12 +67,12 @@ class DeRegistrationController extends Controller
     {
         $id = decrypt($id);
         //Generate control number
-        $request = MvrDeRegistrationRequest::query()->find($id);
+        $request = MvrDeRegistrationRequest::query()->findOrFail($id);
         $fee_type = MvrFeeType::query()->firstOrCreate(['type' => 'De-Registration']);
         $fee = MvrFee::query()->where([
             'mvr_registration_type_id' => $request->motor_vehicle->current_registration->mvr_registration_type_id,
             'mvr_fee_type_id' => $fee_type->id,
-        ])->first();
+        ])->firstOrFail();
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected registration type (de-registration) is not configured");
@@ -82,7 +82,7 @@ class DeRegistrationController extends Controller
         $amount = $fee->amount;
 
         try {
-            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,
@@ -146,7 +146,7 @@ class DeRegistrationController extends Controller
     {
         $id = decrypt($id);
         //Generate control number
-        $request = MvrDeRegistrationRequest::query()->find($id);
+        $request = MvrDeRegistrationRequest::query()->findOrFail($id);
 
         $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_REJECTED])->id]);
         event(new SendSms('mvr-de-registration-approval', $request->id));
@@ -160,7 +160,7 @@ class DeRegistrationController extends Controller
     public function simulatePayment($id)
     {
         $id = decrypt($id);
-        $request = MvrDeRegistrationRequest::query()->find($id);
+        $request = MvrDeRegistrationRequest::query()->findOrFail($id);
 
         $plate_status = MvrPlateNumberStatus::query()->firstOrCreate(['name' => MvrPlateNumberStatus::STATUS_RETIRED]);
         try {

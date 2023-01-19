@@ -31,7 +31,7 @@ class DisputeReportController extends Controller
             $tax_type_name = 'All';
 
         } else {
-            $tax_type_name = TaxType::find($parameters['tax_type_id'])->name;
+            $tax_type_name = TaxType::findOrFail($parameters['tax_type_id'])->name;
         }
 
         if ($parameters['year'] == 'all') {

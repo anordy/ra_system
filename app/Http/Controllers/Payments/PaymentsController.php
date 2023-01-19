@@ -124,7 +124,7 @@ class PaymentsController extends Controller
     public function dailyPaymentsPerTaxType($payload){
         $data = json_decode(decrypt($payload),true);
         $data['today'] = date('Y-m-d');
-        $data['tax_type'] = TaxType::find($data['tax_type_id']);
+        $data['tax_type'] = TaxType::findOrFail($data['tax_type_id']);
         $data['totalTzs'] = $data['tax_type']->getTotalPaymentsPerCurrency('TZS', $data['range_start'], $data['range_end']);
         $data['totalUsd'] = $data['tax_type']->getTotalPaymentsPerCurrency('USD', $data['range_start'], $data['range_end']);
         $start = Carbon::parse($data['range_start'])->startOfDay()->toDateTimeString();
