@@ -72,7 +72,7 @@ class DeRegistrationController extends Controller
         $fee = MvrFee::query()->where([
             'mvr_registration_type_id' => $request->motor_vehicle->current_registration->mvr_registration_type_id,
             'mvr_fee_type_id' => $fee_type->id,
-        ])->firstOrFail();
+        ])->first();
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected registration type (de-registration) is not configured");

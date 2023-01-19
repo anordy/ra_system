@@ -65,7 +65,7 @@ class RegistrationChangeController extends Controller
         $fee = MvrFee::query()->where([
             'mvr_registration_type_id' => $change_req->requested_registration_type_id,
             'mvr_fee_type_id' => $fee_type->id,
-        ])->firstOrFail();
+        ])->first();
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected registration type (change) is not configured");

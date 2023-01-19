@@ -61,7 +61,7 @@ class OwnershipTransferController extends Controller
         $request = MvrOwnershipTransfer::query()->findOrFail($id);
         $fee = MvrTransferFee::query()
             ->where(['mvr_transfer_category_id' => $request->mvr_transfer_category_id])
-            ->firstOrFail();
+            ->first();
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected transfer category is not configured");
