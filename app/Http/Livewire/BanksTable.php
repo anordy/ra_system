@@ -45,6 +45,7 @@ class BanksTable extends DataTableComponent
                 ->searchable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -69,6 +70,7 @@ class BanksTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-bank-delete')) {
             abort(403);
         }
@@ -93,7 +95,7 @@ class BanksTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            Bank::find($data->id)->delete();
+            Bank::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

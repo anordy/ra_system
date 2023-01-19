@@ -17,7 +17,7 @@ class AuditViewModal extends Component
 
     public function mount($id)
     {
-        $this->audit = Audit::find($id);
+        $this->audit = Audit::findOrFail(decrypt($id));
         $this->old_values = $this->audit->old_values;
         $this->new_values = $this->audit->new_values;
     }

@@ -30,7 +30,8 @@ class EducationLevelEditModal extends Component
 
     public function mount($id)
     {
-        $this->level = EducationLevel::find($id);
+        $id = decrypt($id);
+        $this->level = EducationLevel::findOrFail($id);
         $this->name = $this->level->name;
         $this->old_values = [
             'name' => $this->name,

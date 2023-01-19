@@ -87,6 +87,7 @@ class CountryTable extends DataTableComponent
                 ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -112,6 +113,7 @@ class CountryTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-country-delete')) {
             abort(403);
         }
@@ -136,7 +138,7 @@ class CountryTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $country = Country::find($data->id);
+            $country = Country::findOrFail($data->id);
             if ($country->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;

@@ -32,8 +32,9 @@ class ISIC3EditModal extends Component
 
     public function mount($id)
     {
+        $id = decrypt($id);
         $this->isic2s = ISIC2::all();
-        $data = ISIC3::find($id);
+        $data = ISIC3::findOrFail($id);
         $this->isic3 = $data;
         $this->code = $data->code;
         $this->description = $data->description;

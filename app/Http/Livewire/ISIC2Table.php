@@ -22,17 +22,15 @@ class ISIC2Table extends DataTableComponent
             'class' => 'table-bordered table-sm',
         ]);
 
-        $this->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex) {
+        $this->setTdAttributes(function (Column $column, $row, $columnIndex, $rowIndex) {
             if ($column->isField('id')) {
-              return [
-                'style' => 'width: 20%;',
-              ];
+                return [
+                    'style' => 'width: 20%;',
+                ];
             }
-        
+
             return [];
-          });
-
-
+        });
     }
 
     protected $listeners = [
@@ -53,6 +51,7 @@ class ISIC2Table extends DataTableComponent
                 ->searchable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -77,6 +76,7 @@ class ISIC2Table extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,

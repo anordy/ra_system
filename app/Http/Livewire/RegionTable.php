@@ -95,6 +95,7 @@ class RegionTable extends DataTableComponent
                 ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -119,6 +120,7 @@ class RegionTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-region-add')) {
             abort(403);
         }
@@ -143,7 +145,7 @@ class RegionTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $region = Region::find($data->id);
+            $region = Region::findOrFail($data->id);
             if ($region->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;

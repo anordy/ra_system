@@ -51,6 +51,7 @@ class ISIC3Table extends DataTableComponent
                 ->searchable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -75,6 +76,7 @@ class ISIC3Table extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-isic-level-three-delete')) {
             abort(403);
         }
@@ -99,7 +101,7 @@ class ISIC3Table extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            ISIC3::find($data->id)->delete();
+            ISIC3::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
