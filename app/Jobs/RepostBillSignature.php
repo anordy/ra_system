@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\ZmBill;
 use App\Traits\VerificationTrait;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,9 +21,9 @@ class RepostBillSignature implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($bill)
+    public function __construct(ZmBill $bill)
     {
-        $this->return = $bill;
+        $this->bill = $bill;
         $this->onQueue('verification');
     }
 
@@ -34,8 +34,8 @@ class RepostBillSignature implements ShouldQueue
      */
     public function handle()
     {
-        if (!$this->sign($this->return)){
-            dispatch(new RepostReturnSignature($this->return));
+        if (!$this->sign($this->bill)){
+            dispatch(new RepostBillSignature($this->bill));
         }
     }
 }

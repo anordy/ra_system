@@ -3,6 +3,10 @@
 namespace App\Traits;
 
 use App\Models\ZmBill;
+use App\Services\Verification\AuthenticationService;
+use App\Services\Verification\PayloadInterface;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use PHPUnit\Exception;
 use App\Events\SendMail;
 use App\Models\VerificationsLog;
@@ -10,10 +14,6 @@ use App\Jobs\RepostBillSignature;
 use App\Models\Returns\TaxReturn;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\RepostReturnSignature;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use App\Services\Verification\PayloadInterface;
-use App\Services\Verification\AuthenticationService;
 
 trait VerificationTrait{
 
@@ -51,7 +51,8 @@ trait VerificationTrait{
                 //  Save to failed verifications
                $verification = VerificationsLog::create([
                     'table' => $object->getTableName(),
-                    'row_id' => $object->id
+                    'row_id' => $object->id,
+                    'data' => json_encode($object)
                 ]);
                 
                 event(new SendMail('failed-verification', $verification));
@@ -73,6 +74,7 @@ trait VerificationTrait{
         foreach ($object::getPayloadColumns() as $column){
             $stringData .= $object->{$column};
         }
+
         Log::channel('verification')->info('Attempting to sign an instance.');
 
         try {

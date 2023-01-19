@@ -25,10 +25,12 @@ class ZmBill extends Model implements Auditable, PayloadInterface
         return [
             'id',
             'tax_type_id',
+            'bill_id',
             'amount',
             'currency',
             'exchange_rate',
-            'payer_id'
+            'payer_id',
+            'status'
         ];
     }
 

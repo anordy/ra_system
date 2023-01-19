@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Roles
+    Countries
 @endsection
 
 @section('content')

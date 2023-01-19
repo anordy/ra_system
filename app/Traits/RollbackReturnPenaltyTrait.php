@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 trait RollbackReturnPenaltyTrait
 {
 
+    use VerificationTrait;
+
     /**
      * Rollback latest return calculated penalty accumulated through a daily scheduled job.
      * 
@@ -55,6 +57,10 @@ trait RollbackReturnPenaltyTrait
 
             DB::beginTransaction();
             try {
+                if (!$this->verify($tax_return)){
+                    throw new Exception('Verification failed for tax return, please contact system admin.');
+                }
+
                 // Get the second last debt penalty, if we have two penalties get the first one
                 if (count($tax_return->penalties) > 2) {
                     $second_last_debt_penalty = $tax_return->penalties->skip(1)->first();
@@ -89,6 +95,9 @@ trait RollbackReturnPenaltyTrait
                     $tax_return->return->save();
                     $tax_return->save();
                 }
+
+                $this->sign($tax_return);
+
                 // If return has one debt penalty soft delete it and update the tax_return with original return figure, mark it as paid, update main tax return status to paid
                 $rollback = DebtRollback::create([
                     'debt_id' => $tax_return->id,

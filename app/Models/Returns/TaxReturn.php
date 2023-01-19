@@ -127,14 +127,17 @@ class TaxReturn extends Model implements PayloadInterface
 
     public static function getPayloadColumns(): array
     {
-        return ['id',
+        return [
+            'id',
             'business_id',
             'location_id',
-            'total_amount',
+            'total_amount', // Debt, Waiver, Rollback
+            //'outstanding_amount', // Installment, extension, debt(job)
             'principal',
-            'interest',
-            'penalty',
-            'currency'
+            'interest', // Debt, Waiver, Rollback
+            'penalty', // Debt , Waiver, Rollback
+            'currency',
+            //'curr_payment_due_date', // Installment, extension, debt(job)
         ];
     }
 
