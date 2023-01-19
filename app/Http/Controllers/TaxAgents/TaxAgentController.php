@@ -63,7 +63,7 @@ class TaxAgentController extends Controller
             $diff = Carbon::create($end_date)->diffInYears($start_date);
 
         } else {
-            $renew = $taxagent->request->first();
+            $renew = $taxagent->request->firstOrFail();
             $start_date = $renew->renew_first_date;
             $end_date = $renew->renew_expire_date;
             $start = date('d', strtotime($start_date));
@@ -133,7 +133,7 @@ class TaxAgentController extends Controller
             ->where('category', 'Registration Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
-            ->first();
+            ->firstOrFail();
         return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
     }
 
@@ -158,7 +158,7 @@ class TaxAgentController extends Controller
             ->where('category', 'Renewal Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
-            ->first();
+            ->firstOrFail();
 
         return view('taxagents.renew.show', compact('renew', 'fee'));
     }

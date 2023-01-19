@@ -41,7 +41,7 @@ class TwoFactorAuthController extends Controller
 
         $otp = UserOtp::where('user_id', $user->id)
             ->where('user_type', get_class($user))
-            ->first();
+            ->firstOrFail();
 
         if ($otp == null) {
             return redirect()->back()->withErrors('Token supplied does not exits');

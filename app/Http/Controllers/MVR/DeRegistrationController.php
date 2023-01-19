@@ -72,7 +72,7 @@ class DeRegistrationController extends Controller
         $fee = MvrFee::query()->where([
             'mvr_registration_type_id' => $request->motor_vehicle->current_registration->mvr_registration_type_id,
             'mvr_fee_type_id' => $fee_type->id,
-        ])->first();
+        ])->firstOrFail();
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected registration type (de-registration) is not configured");
@@ -82,7 +82,7 @@ class DeRegistrationController extends Controller
         $amount = $fee->amount;
 
         try {
-            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,

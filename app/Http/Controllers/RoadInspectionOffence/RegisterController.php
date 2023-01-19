@@ -42,7 +42,7 @@ class RegisterController extends Controller
         $id = decrypt($id);
         $register = RioRegister::query()->findOrFail($id);
         $mvr = $register->motor_vehicle_registration;
-        $license = $register->drivers_license_owner->drivers_licenses()->latest()->first();
+        $license = $register->drivers_license_owner->drivers_licenses()->latest()->firstOrFail();
 
         return view('road-inspection-offence.register-show',compact('mvr','license','register'));
     }

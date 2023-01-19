@@ -65,7 +65,7 @@ class RegistrationChangeController extends Controller
         $fee = MvrFee::query()->where([
             'mvr_registration_type_id' => $change_req->requested_registration_type_id,
             'mvr_fee_type_id' => $fee_type->id,
-        ])->first();
+        ])->firstOrFail();
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected registration type (change) is not configured");
@@ -77,7 +77,7 @@ class RegistrationChangeController extends Controller
 
         try {
             DB::beginTransaction();
-            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             $bill = ZmCore::createBill(
                 $change_req->id,
                 get_class($change_req),

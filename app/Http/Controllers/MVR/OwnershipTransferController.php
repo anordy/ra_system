@@ -61,7 +61,7 @@ class OwnershipTransferController extends Controller
         $request = MvrOwnershipTransfer::query()->findOrFail($id);
         $fee = MvrTransferFee::query()
             ->where(['mvr_transfer_category_id' => $request->mvr_transfer_category_id])
-            ->first();
+            ->firstOrFail();
 
         if (empty($fee)) {
             session()->flash('error', "Fee for selected transfer category is not configured");
@@ -71,7 +71,7 @@ class OwnershipTransferController extends Controller
         $amount = $fee->amount;
         $gfs_code = $fee->gfs_code;
         try {
-            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,
