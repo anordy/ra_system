@@ -68,7 +68,10 @@ class DistrictEditModal extends Component
 
         $id = decrypt($id);
         $this->regions = Region::all();
-        $this->district = District::findOrFail($id);
+        $this->district = District::find($id);
+        if(is_null($this->district)){
+            abort(404);
+        }
         $this->name = $this->district->name;
         $this->region_id = $this->district->region_id;
         $this->old_values = [
