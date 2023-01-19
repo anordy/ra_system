@@ -78,7 +78,8 @@ class UpdateInstallmentState extends Command
 
             $installment->installable->update([
                 'application_status' => ApplicationStatus::NORMAL,
-                'payment_method' => PaymentMethod::FULL
+                'payment_method' => PaymentMethod::FULL,
+                'curr_payment_due_date' => $installment->getNextPaymentDate()
             ]);
         }
 

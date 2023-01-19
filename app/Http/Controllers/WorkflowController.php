@@ -14,7 +14,7 @@ class WorkflowController extends Controller
 
     public function show($id)
     {
-        $workflow = Workflow::find(decrypt($id));
+        $workflow = Workflow::findOrFail(decrypt($id));
 
         return view('workflow.config', compact('workflow'));
     }

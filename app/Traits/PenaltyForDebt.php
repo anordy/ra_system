@@ -17,7 +17,7 @@ use App\Models\TaxAssessments\TaxAssessment;
 
 class PenaltyForDebt
 {
-    use ExchangeRateTrait;
+    use ExchangeRateTrait, VerificationTrait;
 
     public static function getTotalPenalties($debtId, $date, $taxAmount, $period)
     {
@@ -133,13 +133,19 @@ class PenaltyForDebt
                 'currency' => $tax_return->currency,
                 'currency_rate_in_tz' => ExchangeRateTrait::getExchangeRate($tax_return->currency)
             ]);
-    
+
+            if (!(new PenaltyForDebt)->verify($tax_return)){
+                throw new Exception('Verification failed for tax return, please contact your system administrator for help.');
+            }
+
             $tax_return->penalty = $tax_return->penalty + $tax_return->penalties->sum('late_payment');
             $tax_return->interest = $tax_return->interest + $tax_return->penalties->sum('rate_amount');
             $tax_return->curr_payment_due_date = $end_date;
             $tax_return->total_amount = round($penaltableAmount, 2);
             $tax_return->outstanding_amount = round($penaltableAmount, 2);
             $tax_return->save();
+
+            (new PenaltyForDebt)->sign($tax_return);
 
             self::recordReturnDebtState($tax_return, $previous_debt_penalty_id, $debtPenalty->id);
 

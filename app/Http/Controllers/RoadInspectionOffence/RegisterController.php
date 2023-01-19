@@ -32,7 +32,7 @@ class RegisterController extends Controller
 
     public function removeRestriction($id){
         $id = decrypt($id);
-        $register = RioRegister::query()->find($id);
+        $register = RioRegister::query()->findOrFail($id);
         $register->update(['block_status'=>'REMOVED','block_removed_at'=>Carbon::now(),'block_removed_by'=>auth()->user()->id]);
         $register->save();
         return redirect()->route('rio.register.show',encrypt($id));
@@ -40,7 +40,7 @@ class RegisterController extends Controller
 
     public function show($id){
         $id = decrypt($id);
-        $register = RioRegister::query()->find($id);
+        $register = RioRegister::query()->findOrFail($id);
         $mvr = $register->motor_vehicle_registration;
         $license = $register->drivers_license_owner->drivers_licenses()->latest()->first();
 

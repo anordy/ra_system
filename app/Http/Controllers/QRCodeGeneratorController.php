@@ -18,7 +18,7 @@ class QRCodeGeneratorController extends Controller
 {
     public function invoice($id, Request $request)
     {
-        $bill = ZmBill::with('user')->find(decrypt($id));
+        $bill = ZmBill::with('user')->findOrFail(decrypt($id));
         $name = $bill->user->full_name ?? '';
 
         $code = '{"opType":"2","shortCode":"001001","billReference":"' . $bill->control_number . '","amount":"' .
@@ -54,8 +54,8 @@ class QRCodeGeneratorController extends Controller
 
     public function transfer($billId, $bankAccountId)
     {
-        $bill = ZmBill::find(decrypt($billId));
-        $bankAccount = ZrbBankAccount::find(decrypt($bankAccountId));
+        $bill = ZmBill::findOrFail(decrypt($billId));
+        $bankAccount = ZrbBankAccount::findOrFail(decrypt($bankAccountId));
         $name = $bill->payer_name;
         $code = '{"opType":"'.$bill->payment_option.'","shortCode":"001001","billReference":"' . $bill->control_number . '","amount":"' .
             $bill->amount . '","billCcy":'.$bill->currency.',"billExprDt":"' . $bill->expire . '","billPayOpt":"1",
@@ -85,7 +85,7 @@ class QRCodeGeneratorController extends Controller
 
     public function receipt($id)
     {
-        $bill = ZmBill::find(decrypt($id));
+        $bill = ZmBill::findOrFail(decrypt($id));
         $pdf = PDF::loadView('zanMalipo.pdf.receipt', compact('bill'));
         // return $pdf;
         return $pdf->download('ZanMalipo_receipt_' . time() . '.pdf');

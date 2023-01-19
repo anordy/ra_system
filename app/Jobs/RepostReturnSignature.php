@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Returns\TaxReturn;
 use App\Traits\VerificationTrait;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +21,7 @@ class RepostReturnSignature implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($return)
+    public function __construct(TaxReturn $return)
     {
         $this->return = $return;
     }

@@ -30,7 +30,7 @@ class AssessmentReportController extends Controller
         if ($parameters['tax_type_id'] == 'all') {
             $tax_type = 'All';
         } else {
-            $tax_type = TaxType::find($parameters['tax_type_id']);
+            $tax_type = TaxType::findOrFail($parameters['tax_type_id']);
         }
 
         if ($parameters['year'] == 'all') {

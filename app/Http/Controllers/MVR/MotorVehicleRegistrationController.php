@@ -41,7 +41,7 @@ class MotorVehicleRegistrationController extends Controller
      */
     public function show($id){
         $id = decrypt($id);
-        $motor_vehicle = MvrMotorVehicle::query()->find($id);
+        $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
         return view('mvr.show',compact('motor_vehicle'));
     }
 
@@ -73,7 +73,7 @@ class MotorVehicleRegistrationController extends Controller
             $status = MvrRegistrationStatus::query()
                 ->firstOrCreate(['name'=>MvrRegistrationStatus::STATUS_PLATE_NUMBER_PRINTING]);
             $mv =  MvrMotorVehicle::query()
-                ->find($id);
+                ->findOrFail($id);
             $mv->update([
                     'mvr_registration_status_id'=>$status->id
                 ]);
@@ -107,7 +107,7 @@ class MotorVehicleRegistrationController extends Controller
 
     public function printCertificateOfWorth($id){
         $id = decrypt($id);
-        $motor_vehicle = MvrMotorVehicle::query()->find($id);
+        $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
 
         header('Content-Type: application/pdf' );
 
@@ -118,7 +118,7 @@ class MotorVehicleRegistrationController extends Controller
 
     public function registrationCertificate($id){
         $id = decrypt($id);
-        $motor_vehicle = MvrMotorVehicle::query()->find($id);
+        $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
 
         header('Content-Type: application/pdf' );
 
@@ -130,7 +130,7 @@ class MotorVehicleRegistrationController extends Controller
 
     public function deRegistrationCertificate($id){
         $id = decrypt($id);
-        $motor_vehicle = MvrMotorVehicle::query()->find($id);
+        $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
         $request = MvrDeRegistrationRequest::query()
             ->where(['mvr_request_status_id'=>MvrRequestStatus::query()->where(['name'=>MvrRequestStatus::STATUS_RC_ACCEPTED])->first()->id,'mvr_motor_vehicle_id'=>$id])
         ->first();
