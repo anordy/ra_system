@@ -50,6 +50,7 @@ class ISIC1Table extends DataTableComponent
                 ->searchable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -74,6 +75,7 @@ class ISIC1Table extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
@@ -94,7 +96,7 @@ class ISIC1Table extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            ISIC1::find($data->id)->delete();
+            ISIC1::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

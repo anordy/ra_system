@@ -397,7 +397,7 @@ class ZanMalipoController extends Controller
                 $updateLeasePayment->save();
 
                 if ($updateLeasePayment->debt) {
-                    $updateDebt = LandLeaseDebt::find($updateLeasePayment->debt->id);
+                    $updateDebt = LandLeaseDebt::findOrFail($updateLeasePayment->debt->id);
                     $updateDebt->status = LeaseStatus::COMPLETE;
                     $updateDebt->outstanding_amount = $updateLeasePayment->outstanding_amount;
                     $updateDebt->save();

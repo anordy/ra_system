@@ -26,8 +26,8 @@ class DisputeController extends Controller
     public function approval($waiverId)
     {
         $dispute = Dispute::findOrFail(decrypt($waiverId));
-        $assesment = TaxAssessment::find($dispute->assesment_id);
-        $business = Business::find($dispute->business_id);
+        $assesment = TaxAssessment::findOrFail($dispute->assesment_id);;
+        $business = Business::findOrFail($dispute->business_id);
         $files = DisputeAttachment::where('dispute_id', $dispute->id)->get();
         return view('assesments.dispute.approval', compact('dispute', 'files', 'business', 'assesment'));
     }

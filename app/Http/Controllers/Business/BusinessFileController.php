@@ -65,8 +65,8 @@ class BusinessFileController extends Controller
         }
         $locationId = decrypt($locationId);
         $taxTypeId = decrypt($taxTypeId);
-        $location = BusinessLocation::with('business', 'business.taxpayer')->find($locationId);
-        $tax = TaxType::find($taxTypeId);
+        $location = BusinessLocation::with('business', 'business.taxpayer')->findOrFail($locationId);
+        $tax = TaxType::findOrFail($taxTypeId);
         $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
 
         $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);

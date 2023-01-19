@@ -39,7 +39,7 @@ class OwnershipTransferController extends Controller
     {
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
-        $request = MvrOwnershipTransfer::query()->find($id);
+        $request = MvrOwnershipTransfer::query()->findOrFail($id);
         $motor_vehicle = $request->motor_vehicle;
         return view('mvr.ownership-transfer-show', compact('motor_vehicle', 'request'));
     }
@@ -58,7 +58,7 @@ class OwnershipTransferController extends Controller
     {
         $id = decrypt($id);
         //Generate control number
-        $request = MvrOwnershipTransfer::query()->find($id);
+        $request = MvrOwnershipTransfer::query()->findOrFail($id);
         $fee = MvrTransferFee::query()
             ->where(['mvr_transfer_category_id' => $request->mvr_transfer_category_id])
             ->first();
@@ -71,7 +71,7 @@ class OwnershipTransferController extends Controller
         $amount = $fee->amount;
         $gfs_code = $fee->gfs_code;
         try {
-            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,
@@ -135,7 +135,7 @@ class OwnershipTransferController extends Controller
     {
         $id = decrypt($id);
         //Generate control number
-        $request = MvrOwnershipTransfer::query()->find($id);
+        $request = MvrOwnershipTransfer::query()->findOrFail($id);
 
         $request->update(['mvr_request_status_id' => MvrRequestStatus::query()->firstOrCreate(['name' => MvrRequestStatus::STATUS_RC_REJECTED])->id]);
         session()->flash('warning', 'Request has been rejected');
@@ -149,7 +149,7 @@ class OwnershipTransferController extends Controller
     public function simulatePayment($id)
     {
         $id = decrypt($id);
-        $request = MvrOwnershipTransfer::query()->find($id);
+        $request = MvrOwnershipTransfer::query()->findOrFail($id);
         try {
             DB::beginTransaction();
             $bill = $request->get_latest_bill();

@@ -56,7 +56,7 @@ class TaxClearanceController extends Controller
         $taxClearance = TaxClearanceRequest::where('id', $request_id)
             ->with('businessLocation')
             ->with('businessLocation.business')
-            ->first();
+            ->firstOrFail();
 
 
         $tax_return_debts = TaxReturn::where('location_id', $taxClearance->business_location_id)
@@ -103,7 +103,7 @@ class TaxClearanceController extends Controller
         $taxClearance = TaxClearanceRequest::where('id', $request_id)
             ->with('businessLocation')
             ->with('businessLocation.business')
-            ->first();
+            ->firstOrFail();
 
 
         $tax_return_debts = TaxReturn::where('location_id', $taxClearance->business_location_id)
@@ -203,7 +203,7 @@ class TaxClearanceController extends Controller
     public function certificate($clearanceId)
     {
         $taxClearanceRequestId = decrypt($clearanceId);
-        $taxClearanceRequest = TaxClearanceRequest::find($taxClearanceRequestId);
+        $taxClearanceRequest = TaxClearanceRequest::findOrFail($taxClearanceRequestId);
 
         $location = $taxClearanceRequest->businessLocation;
 

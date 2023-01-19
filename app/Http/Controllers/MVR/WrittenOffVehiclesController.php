@@ -40,7 +40,7 @@ class WrittenOffVehiclesController extends Controller
     public function show($id){
         $id = decrypt($id);
         /** @var MvrRegistrationChangeRequest $change_req */
-        $change_req = MvrRegistrationChangeRequest::query()->find($id);
+        $change_req = MvrRegistrationChangeRequest::query()->findOrFail($id);
         $motor_vehicle =$change_req->current_registration->motor_vehicle;
         return view('mvr.reg-change-req-show',compact('motor_vehicle','change_req'));
     }

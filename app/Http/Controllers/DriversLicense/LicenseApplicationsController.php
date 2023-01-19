@@ -43,7 +43,7 @@ class LicenseApplicationsController extends Controller
     public function show($id)
     {
         $id = decrypt($id);
-        $application = DlLicenseApplication::query()->find($id);
+        $application = DlLicenseApplication::query()->findOrFail($id);
         $title = ['fresh' => 'New License Application', 'renew' => 'License Renewal Application', 'duplicate' => 'License Duplicate Application'][strtolower($application->type)];
         return view('driver-license.license-applications-show', compact('application', 'title'));
     }
@@ -51,7 +51,7 @@ class LicenseApplicationsController extends Controller
     public function simulatePayment($id)
     {
         $id = decrypt($id);
-        $application = DlLicenseApplication::query()->find($id);
+        $application = DlLicenseApplication::query()->findOrFail($id);
         try {
             DB::beginTransaction();
             if (strtolower($application->type) == 'fresh' || strtolower($application->type) == 'renew') {
@@ -61,7 +61,7 @@ class LicenseApplicationsController extends Controller
                 $latest_license = DlDriversLicense::query()
                     ->where(['dl_drivers_license_owner_id' => $application->dl_drivers_license_owner_id])
                     ->latest()
-                    ->first();
+                    ->firstOrFail();
                 /** @var DlDriversLicense $license */
                 $latest_license->update(['status' => DlDriversLicense::STATUS_DAMAGED_OR_LOST]);
                 $latest_license->save();
@@ -79,7 +79,7 @@ class LicenseApplicationsController extends Controller
                 $latest_license = DlDriversLicense::query()
                     ->where(['dl_drivers_license_owner_id' => $application->dl_drivers_license_owner_id])
                     ->latest()
-                    ->first();
+                    ->firstOrFail();
                 foreach ($latest_license->drivers_license_classes as $class) {
                     DlDriversLicenseClass::query()->create(
                         [
@@ -103,7 +103,7 @@ class LicenseApplicationsController extends Controller
     public function printed($id)
     {
         $id = decrypt($id);
-        $application = DlLicenseApplication::query()->find($id);
+        $application = DlLicenseApplication::query()->findOrFail($id);
         try {
             $application->dl_application_status_id =  DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_COMPLETED])->id;
             $application->save();
@@ -117,7 +117,7 @@ class LicenseApplicationsController extends Controller
     public function license($id)
     {
         $id = decrypt($id);
-        $license = DlDriversLicense::query()->find($id);
+        $license = DlDriversLicense::query()->findOrFail($id);
 
         header('Content-Type: application/pdf');
 
@@ -151,7 +151,7 @@ class LicenseApplicationsController extends Controller
 
 
     public function showLicense($id){
-        $license = DlDriversLicense::query()->find(decrypt($id));
+        $license = DlDriversLicense::query()->findOrFail(decrypt($id));
         return view('driver-license.licenses-show',compact('license'));
     }
 

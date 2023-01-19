@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Enum\PaymentStatus;
 use App\Exports\ReturnReportExport;
 use App\Models\Returns\TaxReturn;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -86,15 +87,9 @@ trait ReturnReportTrait
 
     public function getSelectedRecords($returns, $parameters)
     {
-        $dates = $parameters['dates'];
-        if ($dates == []) {
-            return $returns->orderBy('tax_returns.created_at', 'asc');
-        }
-        if ($dates['startDate'] == null || $dates['endDate'] == null) {
-            return $returns->orderBy('tax_returns.created_at', 'asc');
-        }
-
-        return $returns->whereBetween('tax_returns.created_at', [$dates['startDate'], $dates['endDate']])->orderBy('tax_returns.created_at', 'asc');
+        $start = Carbon::parse($parameters['range_start'])->startOfDay()->toDateTimeString();
+        $end = Carbon::parse($parameters['range_end'])->startOfDay()->toDateTimeString();
+        return $returns->whereBetween('tax_returns.created_at', [$start, $end])->orderBy('tax_returns.created_at', 'asc');
     }
 
     public function exportExcelReport($parameters)

@@ -28,7 +28,6 @@ use App\Http\Controllers\ISIC3Controller;
 use App\Http\Controllers\ISIC4Controller;
 use App\Http\Controllers\AllPdfController;
 use App\Http\Controllers\RegionController;
-use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\TaxTypeController;
 use App\Http\Controllers\DistrictController;
@@ -101,6 +100,7 @@ use App\Http\Controllers\TaxClearance\TaxClearanceController;
 use App\Http\Controllers\Assesments\WaiverObjectionController;
 use App\Http\Controllers\Reports\Claims\ClaimReportController;
 use App\Http\Controllers\Business\BusinessUpdateFileController;
+use App\Http\Controllers\Captcha\CaptchaController;
 use App\Http\Controllers\Relief\ReliefGenerateReportController;
 use App\Http\Controllers\Setting\DualControlActivityController;
 use App\Http\Controllers\MVR\MotorVehicleRegistrationController;
@@ -141,6 +141,7 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
+Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get');
 
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');

@@ -42,7 +42,7 @@ class ReliefGenerateReportController extends Controller
                 $relief->whereNotNull('reliefs.project_id');
             } else {
                 $relief->where('reliefs.project_id', $parameters['sectionId']);
-                $projectSections[] = ReliefProject::find($parameters['sectionId']);
+                $projectSections[] = ReliefProject::findOrFail($parameters['sectionId']);
                 if ($parameters['projectId'] == 'all') {
                     $relief->where('reliefs.project_id', $parameters['sectionId'])
                         ->whereNotNull('reliefs.project_list_id');
@@ -97,7 +97,7 @@ class ReliefGenerateReportController extends Controller
             $projectSections = [];
             $total = 0;
             foreach ($projectGroups as $projectId => $projectRecords) {
-                $project = ReliefProjectList::find($projectId);
+                $project = ReliefProjectList::findOrFail($projectId);
                 $sum = $this->calculateIndexSum($projectRecords->toArray(), 'relieved_amount');
                 $total += $sum;
                 if (array_key_exists($project->project_id, $projectSections)) {
@@ -199,7 +199,7 @@ class ReliefGenerateReportController extends Controller
         $projectSections = [];
         $total = 0;
         foreach ($projectGroups as $projectId => $projectRecords) {
-            $project = ReliefProjectList::find($projectId);
+            $project = ReliefProjectList::findOrFail($projectId);
             $sum = $this->calculateIndexSum($projectRecords->toArray(), 'relieved_amount');
             $total += $sum;
             if (array_key_exists($project->project_id, $projectSections)) {
