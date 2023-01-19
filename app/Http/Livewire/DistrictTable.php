@@ -84,6 +84,7 @@ class DistrictTable extends DataTableComponent
                 ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -109,6 +110,7 @@ class DistrictTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-district-delete')) {
             abort(403);
         }
@@ -133,7 +135,7 @@ class DistrictTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $district = District::find($data->id);
+            $district = District::findOrFail($data->id);
             if ($district->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;

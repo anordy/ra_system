@@ -64,7 +64,8 @@ class RegionEditModal extends Component
 
     public function mount($id)
     {
-        $this->region = Region::find($id);
+        $id = decrypt($id);
+        $this->region = Region::findOrFail($id);
         $this->name = $this->region->name;
         $this->location = $this->region->location;
         $this->old_values = [

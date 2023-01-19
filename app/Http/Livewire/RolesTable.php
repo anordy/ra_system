@@ -93,6 +93,7 @@ class RolesTable extends DataTableComponent
                 ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
                     if ($row->is_approved == 1) {
@@ -116,6 +117,7 @@ class RolesTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-role-delete')) {
             abort(403);
         }
@@ -140,7 +142,7 @@ class RolesTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            $role = Role::find($data->id);
+            $role = Role::findOrFail($data->id);
             if ($role->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', 'The updated module has not been approved already');
                 return;

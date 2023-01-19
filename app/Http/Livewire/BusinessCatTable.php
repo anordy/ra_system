@@ -49,6 +49,7 @@ class BusinessCatTable extends DataTableComponent
                 ->format(function ($value){
                     $edit = '';
                     $delete = '';
+                    $value = "'".encrypt($value)."'";
 
                     if (Gate::allows('setting-business-category-edit')) {
                         $edit = <<< HTML
@@ -71,6 +72,7 @@ class BusinessCatTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-business-category-delete')) {
             abort(403);
         }
@@ -95,7 +97,7 @@ class BusinessCatTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            BusinessCategory::find($data->id)->delete();
+            BusinessCategory::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

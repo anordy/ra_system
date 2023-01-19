@@ -25,7 +25,8 @@ class BusinessCatEditModal extends Component
 
     public function mount($id)
     {
-        $data = BusinessCategory::find($id);
+        $id = decrypt($id);
+        $data = BusinessCategory::findorFail($id);
         $this->businessCategory = $data;
         $this->name = $data->name;
     }

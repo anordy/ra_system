@@ -91,6 +91,7 @@ class EducationLevelTable extends DataTableComponent
                 ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value){
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -115,6 +116,7 @@ class EducationLevelTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-education-level-delete')) {
             abort(403);
         }
@@ -140,7 +142,7 @@ class EducationLevelTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $education = EducationLevel::find($data->id);
+            $education = EducationLevel::findOrFail($data->id);
             $this->triggerDualControl(get_class($education), $education->id, DualControl::DELETE, 'deleting education level');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);

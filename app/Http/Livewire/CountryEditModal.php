@@ -61,6 +61,7 @@ class CountryEditModal extends Component
 
     public function mount($id)
     {
+        $id = decrypt($id);
         $this->country = Country::find($id);
         $this->code = $this->country->code;
         $this->name = $this->country->name;
