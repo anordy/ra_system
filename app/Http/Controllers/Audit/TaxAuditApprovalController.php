@@ -22,13 +22,13 @@ class TaxAuditApprovalController extends Controller
     public function edit($id)
     {
 
-        $audit = TaxAudit::find(decrypt($id));
+        $audit = TaxAudit::findOrFail(decrypt($id));
         return view('audit.approval.approval', compact('audit'));
     }
 
     public function show($id)
     {
-        $audit = TaxAudit::with('assessment', 'officers', 'business')->find(decrypt($id));
+        $audit = TaxAudit::with('assessment', 'officers', 'business')->findOrFail(decrypt($id));
         return view('audit.preview', compact('audit'));
     }
 }

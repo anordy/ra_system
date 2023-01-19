@@ -25,7 +25,7 @@ class TaxVerificationVerifiedController extends Controller
 
     public function show($id)
     {
-        $verification = TaxVerification::with('assessment', 'officers')->find(decrypt($id));
+        $verification = TaxVerification::with('assessment', 'officers')->findOrFail(decrypt($id));
 
         $return = $verification->taxReturn;
         if ($return instanceof PetroleumReturn) {

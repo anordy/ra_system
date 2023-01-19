@@ -15,7 +15,7 @@ class TaxAgentFileController extends Controller
     public function getAgentFile($agentId, $type)
     {
 
-        $agent = TaxAgent::find($agentId);
+        $agent = TaxAgent::findOrFail($agentId);
         if ($type == 'csv') {
             return Storage::disk('local')->response($agent->cv);
         }
@@ -41,7 +41,7 @@ class TaxAgentFileController extends Controller
     public function getAgentAcademicFile($agentId, $type)
     {
 
-        $academics = TaxAgentAcademicQualification::find($agentId);
+        $academics = TaxAgentAcademicQualification::findOrFail($agentId);
         if ($type == 'academic_certificate') {
             return Storage::disk('local')->response($academics->certificate);
         }
@@ -55,7 +55,7 @@ class TaxAgentFileController extends Controller
 
     public function getAgentProfessionalFile($agentId, $type)
     {
-        $pro = TaxAgentProfessionals::find($agentId);
+        $pro = TaxAgentProfessionals::findOrFail($agentId);
         if ($type == 'pro_certificate') {
             return Storage::disk('local')->response($pro->attachment);
         }
@@ -66,7 +66,7 @@ class TaxAgentFileController extends Controller
     public function getAgentTrainingFile($agentId, $type)
     {
 
-        $training = TaxAgentTrainingExperience::find($agentId);
+        $training = TaxAgentTrainingExperience::findOrFail($agentId);
         if ($type == 'tra_certificate') {
             return Storage::disk('local')->response($training->attachment);
         }

@@ -20,7 +20,7 @@ class BranchController extends Controller
             abort(403);
         }
 //        todo: select required columns to improve performance - (suggestion)
-        $location = BusinessLocation::with('business')->find(decrypt($locationId));
+        $location = BusinessLocation::with('business')->findOrFail(decrypt($locationId));
         $business = $location->business;
         return view('business.branches.show', compact('location', 'business'));
     }
