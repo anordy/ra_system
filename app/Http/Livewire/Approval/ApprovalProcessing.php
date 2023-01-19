@@ -184,124 +184,142 @@ class ApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
-            
-            $this->subject->isiic_i   = $this->isiic_i ?? null;
-            $this->subject->isiic_ii  = $this->isiic_ii ?? null;
-            $this->subject->isiic_iii = $this->isiic_iii ?? null;
-            $this->subject->isiic_iv  = $this->isiic_iv ?? null;
 
-            $this->validate([
-                'isiic_i'                        => 'required',
-                'isiic_ii'                       => 'required',
-                'isiic_iii'                      => 'required',
-                'isiic_iv'                       => 'required',
-                'selectedTaxTypes'               => 'required',
-                'selectedTaxTypes.*.currency'    => 'required',
-                'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
-                'selectedTaxRegion'              => 'required|exists:tax_regions,id',
-            ], [
-                'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
-                'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
-                'selectedTaxTypes.*.currency.required'    => 'Currency is required',
-            ]);
+            try {
+                $this->subject->isiic_i = $this->isiic_i ?? null;
+                $this->subject->isiic_ii = $this->isiic_ii ?? null;
+                $this->subject->isiic_iii = $this->isiic_iii ?? null;
+                $this->subject->isiic_iv = $this->isiic_iv ?? null;
 
-//            todo: customize a fall back action
-            $business = Business::find($this->subject->id);
+                $this->validate([
+                    'isiic_i' => 'required',
+                    'isiic_ii' => 'required',
+                    'isiic_iii' => 'required',
+                    'isiic_iv' => 'required',
+                    'selectedTaxTypes' => 'required',
+                    'selectedTaxTypes.*.currency' => 'required',
+                    'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
+                    'selectedTaxRegion' => 'required|exists:tax_regions,id',
+                ], [
+                    'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
+                    'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
+                    'selectedTaxTypes.*.currency.required' => 'Currency is required',
+                ]);
 
-            if($business == null){
-                $this->alert('error', 'Business information does not exist');
+                $business = Business::findOrFail($this->subject->id);
+
+                DB::beginTransaction();
+
+                $business->is_business_lto = $this->isBusinessLTO;
+
+                if ($this->isBusinessElectric == true) {
+                    $business->business_type = BusinessType::ELECTRICITY;
+                }
+
+                $business->save();
+                $business->headquarter->tax_region_id = $this->selectedTaxRegion;
+                $business->headquarter->save();
+                $business->taxTypes()->detach();
+
+                if ($this->showLumpsumOptions == true) {
+                    $currency = Arr::pluck($this->selectedTaxTypes, 'currency');
+                    $annualEstimate = Arr::pluck($this->selectedTaxTypes, 'annual_estimate');
+                    $quarters = Arr::pluck($this->selectedTaxTypes, 'quarters');
+
+                    $this->validate(
+                        [
+                            'selectedTaxTypes.*.annual_estimate' => 'required|integer',
+                            'selectedTaxTypes.*.quarters' => 'required|integer|between:1,12',
+                        ],
+                        [
+                            'selectedTaxTypes.*.annual_estimate.required' => 'Annual estimation is required',
+                            'selectedTaxTypes.*.annual_estimate.integer' => 'Please enter the valid Annual Estimate',
+                            'selectedTaxTypes.*.quarters.required' => 'Please enter the valid payment Quaters',
+                            'selectedTaxTypes.*.quarters.between' => 'Please enter Quaters between 1 to 12',
+                        ]
+                    );
+
+                    DB::table('lump_sum_payments')->insert([
+                        'filed_by_id' => auth()->user()->id,
+                        'business_id' => $this->subject->id,
+                        'business_location_id' => $business->id,
+                        'annual_estimate' => $annualEstimate[0],
+                        'payment_quarters' => $quarters[0],
+                        'currency' => $currency[0],
+                    ]);
+                }
+
+                foreach ($this->selectedTaxTypes as $type) {
+                    DB::table('business_tax_type')->insert([
+                        'business_id' => $business->id,
+                        'tax_type_id' => $type['tax_type_id'],
+                        'currency' => $type['currency'],
+                        'created_at' => Carbon::now(),
+                        'status' => 'current-used'
+                    ]);
+                }
+
+                DB::commit();
+            } catch (Exception $exception){
+                DB::rollBack();
+                Log::error($exception);
+                $this->alert('error', 'Something went wrong, please contact the administrator for help');
                 return;
-            }
-
-            $business->is_business_lto = $this->isBusinessLTO;
-
-            if ($this->isBusinessElectric == true) {
-                $business->business_type = BusinessType::ELECTRICITY;
-            }
-
-//            todo: with all the database insertions i suggest wrapping the logics in transaction
-            $business->save();
-            $business->headquarter->tax_region_id = $this->selectedTaxRegion;
-            $business->headquarter->save();
-            $business->taxTypes()->detach();
-
-            if ($this->showLumpsumOptions == true) {
-                $currency        = Arr::pluck($this->selectedTaxTypes, 'currency');
-                $annualEstimate  = Arr::pluck($this->selectedTaxTypes, 'annual_estimate');
-                $quarters        = Arr::pluck($this->selectedTaxTypes, 'quarters');
-
-                $this->validate(
-                    [
-                        'selectedTaxTypes.*.annual_estimate'    => 'required|integer',
-                        'selectedTaxTypes.*.quarters'           => 'required|integer|between:1,12',
-                    ],
-                    [
-                        'selectedTaxTypes.*.annual_estimate.required'   => 'Annual estimation is required',
-                        'selectedTaxTypes.*.annual_estimate.integer'    => 'Please enter the valid Annual Estimate',
-                        'selectedTaxTypes.*.quarters.required'          => 'Please enter the valid payment Quaters',
-                        'selectedTaxTypes.*.quarters.between'           => 'Please enter Quaters between 1 to 12',
-                    ]
-                );
-
-                DB::table('lump_sum_payments')->insert([
-                    'filed_by_id'         => auth()->user()->id,
-                    'business_id'         => $this->subject->id,
-                    'business_location_id' => $business->id,
-                    'annual_estimate'     => $annualEstimate[0],
-                    'payment_quarters'    => $quarters[0],
-                    'currency'            => $currency[0],
-                ]);
-            }
-
-            foreach ($this->selectedTaxTypes as $type) {
-                DB::table('business_tax_type')->insert([
-                    'business_id' => $business->id,
-                    'tax_type_id' => $type['tax_type_id'],
-                    'currency'    => $type['currency'],
-                    'created_at'  => Carbon::now(),
-                    'status' => 'current-used'
-                ]);
             }
         }
 
         if ($this->checkTransition('director_of_trai_review')) {
-            $location = BusinessLocation::where('business_id', $this->subject->id)
-                ->where('is_headquarter', true)
-                ->firstOrFail();
-            $lumpsum = LumpSumPayment::where('business_id', $this->subject->id)
-                ->latest()
-                ->first();
+            try {
+                DB::beginTransaction();
 
-            if ($lumpsum != null) {
-                $lumpsum->update(['business_location_id' => $location->id]);
-            }
+                $location = BusinessLocation::where('business_id', $this->subject->id)
+                    ->where('is_headquarter', true)
+                    ->firstOrFail();
+                $lumpsum = LumpSumPayment::where('business_id', $this->subject->id)
+                    ->latest()
+                    ->first();
 
-            if ($location->ztnGeneration()) {
+                if ($lumpsum != null) {
+                    $lumpsum->update(['business_location_id' => $location->id]);
+                }
 
-                if (!$location->generateZ()) {
+                if ($location->ztnGeneration()) {
+
+                    if (!$location->generateZ()) {
+                        $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+                        return;
+                    }
+                } else {
                     $this->alert('error', 'Something went wrong, please contact the administrator for help.');
                     return;
                 }
-            } else {
-                $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+
+                if (!$location->business->taxTypes->where('code', 'vat')->isEmpty()) {
+                    $location->generateVrn();
+                }
+
+                $location->status = BusinessStatus::APPROVED;
+                $location->approved_on = Carbon::now()->toDateTimeString();
+                $location->save();
+
+                $this->subject->verified_at = Carbon::now()->toDateTimeString();
+                $this->subject->status = BusinessStatus::APPROVED;
+
+                DB::commit();
+            } catch (Exception $exception){
+                DB::rollBack();
+                Log::error($exception);
+                $this->alert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
-
-            if (!$location->business->taxTypes->where('code', 'vat')->isEmpty()) {
-                $location->generateVrn();
-            }
-
-            $location->status = BusinessStatus::APPROVED;
-            $location->approved_on = Carbon::now()->toDateTimeString();
-            $location->save();
-
-            $this->subject->verified_at = Carbon::now()->toDateTimeString();
-            $this->subject->status = BusinessStatus::APPROVED;
         }
 
         try {
+            DB::beginTransaction();
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong, please contact the administrator for help');
             return;
