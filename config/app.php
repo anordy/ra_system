@@ -167,10 +167,11 @@ return [
         /*
          * Package Service Providers...
          */
-        Mews\Captcha\CaptchaServiceProvider::class,
         \Eddytim\Auditlog\AuditLogServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
         Yajra\Oci8\Oci8ServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+
 
         /*
          * Application Service Providers...
@@ -181,7 +182,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\PermissionServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
+        App\Services\Captcha\CaptchaServiceProvider::class,
 
 
     ],
@@ -237,7 +238,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Captcha' => Mews\Captcha\Facades\Captcha::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],

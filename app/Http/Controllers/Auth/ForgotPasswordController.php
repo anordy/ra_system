@@ -29,7 +29,7 @@ class ForgotPasswordController extends Controller
     {
         $this->validateEmail($request);
 
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = User::where('email', $request->email)->first();
 
         if (!$user) {
             throw ValidationException::withMessages([
