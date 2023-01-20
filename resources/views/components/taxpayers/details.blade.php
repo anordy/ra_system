@@ -44,11 +44,11 @@
 </div>
 
 
-@if ($kyc->id_type == 2 or $kyc->id_type == 4)
+@if ($kyc->identification->name == \App\Models\IDType::ZANID or $kyc->identification->name == \App\Models\IDType::NIDA_ZANID)
     <livewire:taxpayers.details.zanid :kyc="$kyc" />
 @endif
 
 {{-- TODO: Allow this when immigration api has been integrated --}}
-{{-- @if ($kyc->id_type == 3)
+@if ($kyc->identification->name == \App\Models\IDType::PASSPORT)
     <livewire:taxpayers.details.passport :kyc="$kyc" />
-@endif --}}
+@endif

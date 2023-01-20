@@ -142,7 +142,7 @@ class ReliefRegistrations extends Component
                     $reliefDocument = ReliefAttachment::create([
                         'relief_id' => $relief->id,
                         'file_path' => $documentPath,
-                        'file_name' => $attachment['name'], // todo: do not store original file name (security concerns), sanitize or use a unique ID
+                        'file_name' => $attachment['name'],
                     ]);
                 }
             }
