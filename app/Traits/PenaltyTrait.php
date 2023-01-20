@@ -142,7 +142,7 @@ trait PenaltyTrait
         }
 
         // If not, Check date of commence
-        $date = BusinessLocation::find($locationId)->business->date_of_commencing;
+        $date = BusinessLocation::find($locationId)->business->effective_date;
         $financialYear = FinancialYear::where('code', $date->year)->first();
         $financialMonth = FinancialMonth::where('financial_year_id', $financialYear->id)
                                 ->where('number', $date->month)

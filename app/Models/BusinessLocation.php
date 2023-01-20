@@ -22,6 +22,7 @@ class BusinessLocation extends Model implements Auditable
 
     protected $casts = [
         'date_of_commencing' => 'datetime',
+        'effective_date' => 'datetime'
     ];
 
     public function business(){

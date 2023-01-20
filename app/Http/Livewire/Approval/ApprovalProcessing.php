@@ -38,7 +38,7 @@ class ApprovalProcessing extends Component
     public $taxTypes;
     public $selectedTaxTypes = [];
     public $taxRegions;
-    public $selectedTaxRegion;
+    public $selectedTaxRegion, $effectiveDate;
     public $isBusinessElectric = false;
     public $isBusinessLTO = false;
 
@@ -198,6 +198,7 @@ class ApprovalProcessing extends Component
                     'selectedTaxTypes.*.currency' => 'required',
                     'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
                     'selectedTaxRegion' => 'required|exists:tax_regions,id',
+                    'effectiveDate' => 'required'
                 ], [
                     'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
                     'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
@@ -216,6 +217,7 @@ class ApprovalProcessing extends Component
 
                 $business->save();
                 $business->headquarter->tax_region_id = $this->selectedTaxRegion;
+                $business->headquarter->effective_date = $this->effectiveDate;
                 $business->headquarter->save();
                 $business->taxTypes()->detach();
 

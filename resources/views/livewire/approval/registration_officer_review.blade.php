@@ -88,6 +88,19 @@
                         @enderror
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="effectiveDate">Effective Date</label>
+                        <input id="effectiveDate" type="date" class="form-control @error('effectiveDate') is-invalid @enderror"
+                                wire:model="effectiveDate" required />
+                        @error('effectiveDate')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
             </div>
         </div>
     </div>
