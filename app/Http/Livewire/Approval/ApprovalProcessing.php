@@ -57,7 +57,6 @@ class ApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
-//        todo: encrypt modelID
         $this->modelName = $modelName;
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
@@ -134,18 +133,17 @@ class ApprovalProcessing extends Component
             // Pluck id
             $this->Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
 
-//            todo: if id is the only property needed, i suggest selecting it in a query to optimize performance
             // Get lumpsum ID
-            $lumpSumId = TaxType::query()->where('code', TaxType::LUMPSUM_PAYMENT)->first()->id;
+            $lumpSumId = TaxType::query()->select('id')->where('code', TaxType::LUMPSUM_PAYMENT)->first()->id;
 
             // Get vat ID
-            $vatId = TaxType::query()->where('code', TaxType::VAT)->first()->id;
+            $vatId = TaxType::query()->select('id')->where('code', TaxType::VAT)->first()->id;
 
             // Get vat ID
-            $hotelId = TaxType::query()->where('code', TaxType::HOTEL)->first()->id;
+            $hotelId = TaxType::query()->select('id')->where('code', TaxType::HOTEL)->first()->id;
 
             // Get stamp ID
-            $stampId = TaxType::query()->where('code', TaxType::STAMP_DUTY)->first()->id;
+            $stampId = TaxType::query()->select('id')->where('code', TaxType::STAMP_DUTY)->first()->id;
 
             //adding IDs to array
             $this->exceptionOne = [$vatId, $hotelId];
