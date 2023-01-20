@@ -323,7 +323,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             } elseif ($placeName == 'RENEW_TAX_CONSULTANT_VERIFICATION') {
             } else {
                 if (key($placesCurrent) == 'completed') {
-                    if ($event->getSubject()->taxpayer) {
+                    if ($event->getSubject()->taxpayer || $placeName == 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION') {
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
                             $notificationName,
                             'Your request has been approved successfully.',
@@ -334,7 +334,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                         ));
                     }
                 } elseif (key($placesCurrent) == 'rejected') {
-                    if ($event->getSubject()->taxpayer) {
+                    if ($event->getSubject()->taxpayer || $placeName == 'TAXPAYER_DETAILS_AMENDMENT_VERIFICATION') {
                         $event->getSubject()->taxpayer->notify(new DatabaseNotification(
                             $notificationName,
                             'Your request has been rejected .',
