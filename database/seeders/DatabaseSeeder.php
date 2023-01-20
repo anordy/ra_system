@@ -101,5 +101,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowKYCDetailsAmendmentSeeder::class);
         $this->call(StreetTableSeeder::class);
         $this->call(SubSysModuleSeeder::class);
+        $this->call(ApiUserTableSeeder::class);
     }
 }

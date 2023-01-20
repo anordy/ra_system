@@ -22,6 +22,7 @@ class BranchesApprovalProcessing extends Component
     public $comments;
     public $taxRegions;
     public $selectedTaxRegion;
+    public $effectiveDate;
 
     public function mount($modelName, $modelId)
     {
@@ -36,8 +37,12 @@ class BranchesApprovalProcessing extends Component
         $transition = $transition['data']['transition'];
 
         if ($this->checkTransition('registration_officer_review')) {
-            $this->validate(['selectedTaxRegion' => 'required']);
+            $this->validate([
+                'selectedTaxRegion' => 'required',
+                'effectiveDate' => 'required'
+            ]);
             $this->subject->tax_region_id = $this->selectedTaxRegion;
+            $this->subject->effective_date = $this->effectiveDate;
             $this->subject->vrn = $this->subject->business->vrn;
             $this->subject->save();
         }

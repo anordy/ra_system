@@ -120,7 +120,6 @@ trait SevenDaysPenaltyTrait
         // Check last return w/ Status
         if($return = $ReturnClass::where('business_location_id', $locationId)->latest()->first()){
             if($return->status === 'complete'){
-
                 return self::checkNextViableReturnMonth($return->financialMonth);
             } else {
                 return $return->financialMonth;
@@ -128,7 +127,7 @@ trait SevenDaysPenaltyTrait
         }
 
         // If not, Check date of commence
-        $date = BusinessLocation::find($locationId)->business->date_of_commencing;
+        $date = BusinessLocation::find($locationId)->business->effective_date;
 
         $financialYear = FinancialYear::where('code', $date->year)->first();
         $financialMonth = SevenDaysFinancialMonth::where('financial_year_id', $financialYear->id)

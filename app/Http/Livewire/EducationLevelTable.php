@@ -142,7 +142,10 @@ class EducationLevelTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $education = EducationLevel::findOrFail($data->id);
+            $education = EducationLevel::find($data->id);
+            if(is_null($education)){
+                abort(404);
+            }
             $this->triggerDualControl(get_class($education), $education->id, DualControl::DELETE, 'deleting education level');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);

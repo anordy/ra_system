@@ -145,7 +145,10 @@ class RegionTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $region = Region::findOrFail($data->id);
+            $region = Region::find($data->id);
+            if(is_null($region)){
+                abort(404);
+            }
             if ($region->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;

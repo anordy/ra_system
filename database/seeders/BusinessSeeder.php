@@ -69,6 +69,7 @@ class BusinessSeeder extends Seeder
             "tax_region_id" => 1,
             "zin" => 1,
             "date_of_commencing" => "2022-01-01",
+            "effective_date" => "2022-01-01",
             "pre_estimated_turnover" => 1200000,
             "post_estimated_turnover" => 340000,
             "approved_on"=> Carbon::now()
@@ -94,6 +95,7 @@ class BusinessSeeder extends Seeder
             "tax_region_id" => 2,
             "zin" => 123,
             "date_of_commencing" => "2022-07-01",
+            "effective_date" => "2022-07-01",
             "pre_estimated_turnover" => 45000000,
             "post_estimated_turnover" => 20000000,
             "approved_on"=> Carbon::now()

@@ -152,7 +152,10 @@ class ExchangeRateTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $country = ExchangeRate::findOrFail($data->id);
+            $country = ExchangeRate::find($data->id);
+            if(is_null($country)){
+                abort(404);
+            }
             $this->triggerDualControl(get_class($country), $country->id, DualControl::DELETE, 'deleting exchange rate');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);

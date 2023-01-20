@@ -63,6 +63,9 @@ class CountryEditModal extends Component
     {
         $id = decrypt($id);
         $this->country = Country::find($id);
+        if(is_null($this->country)){
+            abort(404);
+        }
         $this->code = $this->country->code;
         $this->name = $this->country->name;
         $this->nationality = $this->country->nationality;

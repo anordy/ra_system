@@ -27,7 +27,10 @@ class BankEditModal extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $data = Bank::findOrFail($id);
+        $data = Bank::find($id);
+        if(is_null($data)){
+            abort(404);
+        }
         $this->bank = $data;
         $this->name = $data->name;
     }

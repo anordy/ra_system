@@ -28,7 +28,10 @@ class ISIC1EditModal extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $data = ISIC1::findOrFail($id);
+        $data = ISIC1::find($id);
+        if(is_null($data)){
+            abort(404);
+        }
         $this->isic1 = $data;
         $this->code = $data->code;
         $this->description = $data->description;
