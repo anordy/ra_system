@@ -95,7 +95,11 @@ class BanksTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            Bank::findOrFail($data->id)->delete();
+            $bank = Bank::find($data->id);
+            if(is_null($bank)){
+                abort(404);
+            }
+            $bank->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

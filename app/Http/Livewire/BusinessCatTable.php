@@ -97,7 +97,11 @@ class BusinessCatTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            BusinessCategory::findOrFail($data->id)->delete();
+            $businesscat = BusinessCategory::find($data->id);
+            if(is_null($businesscat)){
+                abort(404);
+            }
+            $businesscat->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

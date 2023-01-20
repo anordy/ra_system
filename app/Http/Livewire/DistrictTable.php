@@ -135,7 +135,10 @@ class DistrictTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $district = District::findOrFail($data->id);
+            $district = District::find($data->id);
+            if(is_null($district)){
+                abort(404);
+            }
             if ($district->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;

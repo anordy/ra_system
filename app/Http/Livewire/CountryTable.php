@@ -138,7 +138,10 @@ class CountryTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $country = Country::findOrFail($data->id);
+            $country = Country::find($data->id);
+            if(is_null($country)){
+                abort(404);
+            }
             if ($country->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;
