@@ -25,6 +25,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->unsignedBigInteger('ward_id');
             $table->unsignedBigInteger('street_id');
             $table->timestamp('date_of_commencing');
+            $table->timestamp('effective_date')->nullable();
             $table->string('latitude');
             $table->string('longitude');
             $table->enum('nature_of_possession',['Owned','Rented']);

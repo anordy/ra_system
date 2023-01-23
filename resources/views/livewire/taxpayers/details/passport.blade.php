@@ -22,7 +22,7 @@
         @endif
     </div>
 
-    @if ($passport)
+    @if ($is_verified_triggered && $passport['data'] != null)
         <hr>
         <div class="row">
             <div class="col-md-11">
@@ -38,8 +38,8 @@
                         <tr>
                             <th>FIRST NAME</th>
                             <td>{{ strtoupper($kyc->first_name) }}</td>
-                            <td>{{ ucfirst($passport['FirstName']) }}</td>
-                            @if ($this->compareProperties($kyc->first_name, $passport['FirstName']))
+                            <td>{{ ucfirst($passport['data']['FirstName']) }}</td>
+                            @if ($this->compareProperties($kyc->first_name, $passport['data']['FirstName']))
                                 <td class="table-succes">{{ $matchesText }}</td>
                             @else
                                 <td class="table-danger">{{ $notValidText }}</td>
@@ -48,8 +48,8 @@
                         <tr>
                             <th>MIDDLE NAME</th>
                             <td>{{ strtoupper($kyc->middle_name) }}</td>
-                            <td>{{ $passport['MiddleName'] }}</td>
-                            @if ($this->compareProperties($kyc->middle_name, $passport['MiddleName']))
+                            <td>{{ $passport['data']['MiddleName'] }}</td>
+                            @if ($this->compareProperties($kyc->middle_name, $passport['data']['MiddleName']))
                                 <td class="table-succes">{{ $matchesText }}</td>
                             @else
                                 <td class="table-danger">{{ $notValidText }}</td>
@@ -58,8 +58,8 @@
                         <tr>
                             <th>LAST NAME</th>
                             <td>{{ strtoupper($kyc->last_name) }}</td>
-                            <td>{{ $passport['SurName'] }}</td>
-                            @if ($this->compareProperties($kyc->last_name, $passport['SurName']))
+                            <td>{{ $passport['data']['SurName'] }}</td>
+                            @if ($this->compareProperties($kyc->last_name, $passport['data']['SurName']))
                                 <td class="table-success">{{ $matchesText }}</td>
                             @else
                                 <td class="table-danger">{{ $notValidText }}</td>
@@ -68,8 +68,8 @@
                         <tr>
                             <th>NATIONALITY</th>
                             <td>{{ strtoupper($kyc->country->nationality) }}</td>
-                            <td>{{ $passport['PresentNationality'] }}</td>
-                            @if ($this->compareProperties($kyc->country->nationality, $passport['PresentNationality']))
+                            <td>{{ $passport['data']['PresentNationality'] }}</td>
+                            @if ($this->compareProperties($kyc->country->nationality, $passport['data']['PresentNationality']))
                                 <td class="table-success">{{ $matchesText }}</td>
                             @else
                                 <td class="table-danger">{{ $notValidText }}</td>
@@ -83,50 +83,50 @@
         <div class="row">
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Full Name</span>
-                <p class="my-1">{{ "{$passport['FirstName']} {$passport['MiddleName']} {$passport['SurName']}" }}</p>
+                <p class="my-1">{{ "{$passport['data']['FirstName']} {$passport['data']['MiddleName']} {$passport['data']['SurName']}" }}</p>
             </div>
-            @if ($passport['OtherNames'])
+            @if ($passport['data']['OtherNames'])
                 <div class="col-md-4 mb-3">
                     <span class="font-weight-bold text-uppercase">Other Names</span>
-                    <p class="my-1">{{ $passport['OtherNames'] }}</p>
+                    <p class="my-1">{{ $passport['data']['OtherNames'] }}</p>
                 </div>
             @endif
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Date of Birth</span>
-                <p class="my-1">{{ \Carbon\Carbon::parse($passport['BirthDate'])->format('d/m/Y') }}</p>
+                <p class="my-1">{{ \Carbon\Carbon::parse($passport['data']['BirthDate'])->format('d/m/Y') }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Marital Status</span>
-                <p class="my-1">{{ $passport['MaritalStatus'] }}</p>
+                <p class="my-1">{{ $passport['data']['MaritalStatus'] }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Present Nationality</span>
-                <p class="my-1">{{ $passport['PresentNationality'] }}</p>
+                <p class="my-1">{{ $passport['data']['PresentNationality'] }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Company Name</span>
-                <p class="my-1">{{ $passport['CompanyName'] ?? 'N/A' }}</p>
+                <p class="my-1">{{ $passport['data']['CompanyName'] ?? 'N/A' }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Passport Type</span>
-                <p class="my-1">{{ $passport['PassportType'] }}</p>
+                <p class="my-1">{{ $passport['data']['PassportType'] }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Issued Country</span>
-                <p class="my-1">{{ $passport['IssuedCountry'] }}</p>
+                <p class="my-1">{{ $passport['data']['IssuedCountry'] }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Passport Issued Date</span>
-                <p class="my-1">{{ \Carbon\Carbon::parse($passport['IssuedDate'])->format('d/m/Y') }}</p>
+                <p class="my-1">{{ \Carbon\Carbon::parse($passport['data']['IssuedDate'])->format('d/m/Y') }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Passport Expiry Date</span>
-                <p class="my-1">{{ \Carbon\Carbon::parse($passport['ExpiryDate'])->format('d/m/Y') }}</p>
+                <p class="my-1">{{ \Carbon\Carbon::parse($passport['data']['ExpiryDate'])->format('d/m/Y') }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Passport Status</span>
                 <p class="my-1">
-                    @if (\Carbon\Carbon::now()->greaterThan($passport['ExpiryDate']))
+                    @if (\Carbon\Carbon::now()->greaterThan($passport['data']['ExpiryDate']))
                         <span class="badge badge-danger">Expired</span>
                     @else
                         <span class="badge badge-success">Active</span>
@@ -137,20 +137,20 @@
         <div class="row">
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Residence Permit Type</span>
-                <p class="my-1">{{ $passport['ResidencePermitType'] }}</p>
+                <p class="my-1">{{ $passport['data']['ResidencePermitType'] }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Residence Issued Date</span>
-                <p class="my-1">{{ \Carbon\Carbon::parse($passport['ResidenceIssuedDate'])->format('d/m/Y') }}</p>
+                <p class="my-1">{{ \Carbon\Carbon::parse($passport['data']['ResidenceIssuedDate'])->format('d/m/Y') }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Residence Expire Date</span>
-                <p class="my-1">{{ \Carbon\Carbon::parse($passport['ResidenceExpireDate'])->format('d/m/Y') }}</p>
+                <p class="my-1">{{ \Carbon\Carbon::parse($passport['data']['ResidenceExpireDate'])->format('d/m/Y') }}</p>
             </div>
             <div class="col-md-4 mb-3">
                 <span class="font-weight-bold text-uppercase">Residence Permit Status</span>
                 <p class="my-1">
-                    @if (\Carbon\Carbon::now()->greaterThan($passport['ResidenceExpireDate']))
+                    @if (\Carbon\Carbon::now()->greaterThan($passport['data']['ResidenceExpireDate']))
                         <span class="badge badge-danger">Expired</span>
                     @else
                         <span class="badge badge-success">Active</span>
@@ -180,6 +180,19 @@
             </div>
         </div>
         @endif
+    @elseif($is_verified_triggered && $passport['data'] == null)
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="row">
+            <div class="col-md-4">
+                <span class="font-weight-bold text-uppercase">Error Code</span>
+                <p class="my-1">{{ $passport['code'] ?? '' }}</p>
+            </div>
+            <div class="col-md-4">
+                <span class="font-weight-bold text-uppercase">Message</span>
+                <p class="my-1">{{ $passport['msg'] ?? '' }}</p>
+            </div>
+        </div>
+    </div>
     @endif
 </div>
 </div>

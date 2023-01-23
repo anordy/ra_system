@@ -2,53 +2,53 @@
 
 namespace App\Listeners;
 
-use App\Jobs\User\TooManyLoginAttempts;
-use App\Models\UserOtp;
 use App\Events\SendMail;
-use App\Models\Business;
-use App\Models\Taxpayer;
-use App\Jobs\SendOTPEmail;
-use App\Models\WaResponsiblePerson;
-use App\Jobs\Debt\SendDebtBalanceMail;
-use App\Jobs\Audit\SendEmailToTaxPayer;
-use App\Jobs\SendTaxAgentApprovalEmail;
-use App\Jobs\Taxpayer\SendKycRejectMail;
-use App\Jobs\Taxpayer\SendRegistrationMail;
-use App\Jobs\Business\Taxtype\SendTaxTypeMail;
-use App\Jobs\Business\SendBusinessApprovedMail;
-use App\Jobs\Configuration\SendPenaltyRateEmail;
-use App\Jobs\Business\SendBusinessCorrectionMail;
-use App\Jobs\Configuration\SendInterestRateEmail;
 use App\Jobs\audit\AuditApprovedNotificationEmail;
 use App\Jobs\Audit\ExitPreliminaryEmailToTaxPayer;
-use App\Jobs\Configuration\SendFinancialYearEmail;
-use App\Jobs\Configuration\SendFinancialMonthEmail;
-use App\Jobs\SendWithholdingAgentRegistrationEmail;
+use App\Jobs\Audit\SendEmailToTaxPayer;
 use App\Jobs\Business\Branch\SendBranchApprovedMail;
+use App\Jobs\Business\Branch\SendBranchCorrectionMail;
+use App\Jobs\Business\SendBusinessApprovedMail;
+use App\Jobs\Business\SendBusinessClosureApprovedMail;
+use App\Jobs\Business\SendBusinessClosureCorrectionMail;
+use App\Jobs\Business\SendBusinessClosureRejectedMail;
+use App\Jobs\Business\SendBusinessCorrectionMail;
+use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
+use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
+use App\Jobs\Business\SendBusinessDeregisterRejectedMail;
+use App\Jobs\Business\Taxtype\SendTaxTypeMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateApprovalMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
+use App\Jobs\Business\Updates\SendBusinessUpdateRejectedMail;
+use App\Jobs\Configuration\SendExchangeRateEmail;
+use App\Jobs\Configuration\SendFinancialMonthEmail;
+use App\Jobs\Configuration\SendFinancialYearEmail;
+use App\Jobs\Configuration\SendInterestRateEmail;
+use App\Jobs\Configuration\SendPenaltyRateEmail;
+use App\Jobs\Debt\SendDebtBalanceMail;
 use App\Jobs\Debt\Waiver\SendDebtWaiverApprovalMail;
 use App\Jobs\Debt\Waiver\SendDebtWaiverRejectedMail;
-use App\Jobs\Business\Branch\SendBranchCorrectionMail;
-use App\Jobs\Business\SendBusinessClosureApprovedMail;
-use App\Jobs\Business\SendBusinessClosureRejectedMail;
-use App\Jobs\Business\SendBusinessClosureCorrectionMail;
+use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
+use App\Jobs\DualControl\User\UserInformationUpdateMAIL;
+use App\Jobs\SendOTPEmail;
+use App\Jobs\SendTaxAgentApprovalEmail;
+use App\Jobs\SendWithholdingAgentRegistrationEmail;
+use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackMAIL;
 use App\Jobs\TaxClearance\SendTaxClearanceApprovedEmail;
 use App\Jobs\TaxClearance\SendTaxClearanceRejectedEmail;
-use App\Jobs\Business\SendBusinessDeregisterApprovedMail;
-use App\Jobs\Business\SendBusinessDeregisterRejectedMail;
-use App\Jobs\Business\SendBusinessDeregisterCorrectionMail;
-use App\Jobs\Business\Updates\SendBusinessUpdateApprovalMail;
-use App\Jobs\Business\Updates\SendBusinessUpdateRejectedMail;
-use App\Jobs\Business\Updates\SendBusinessUpdateCorrectionMail;
-use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
-use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
-use App\Jobs\Business\Updates\SendBusinessUpdateApprovalConsultantMail;
-use App\Jobs\Configuration\SendExchangeRateEmail;
-use App\Jobs\DualControl\User\UserInformationUpdateMAIL;
-use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackMAIL;
+use App\Jobs\Taxpayer\SendKycRejectMail;
+use App\Jobs\Taxpayer\SendRegistrationMail;
 use App\Jobs\Taxpayer\TaxpayerAmendmentNotification;
 use App\Jobs\Taxpayer\TaxpayerAmendmentNotificationEmail;
+use App\Jobs\TaxVerification\SendAssessmentReportEmailToTaxPayer;
 use App\Jobs\User\SendRegistrationEmail;
+use App\Jobs\User\TooManyLoginAttempts;
 use App\Jobs\Verification\SendFailedVerificationMail;
+use App\Models\Business;
+use App\Models\Taxpayer;
+use App\Models\UserOtp;
+use App\Models\WaResponsiblePerson;
 
 class SendMailFired
 {
@@ -65,7 +65,7 @@ class SendMailFired
     /**
      * Handle the event.
      *
-     * @param  \App\Events\SendMail  $event
+     * @param SendMail $event
      * @return void()
      */
     public function handle(SendMail $event)

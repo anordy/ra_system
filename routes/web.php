@@ -136,7 +136,7 @@ use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
 use App\Http\Controllers\KYC\KycAmendmentRequestController;
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/', [HomeController::class, 'index']);
 
