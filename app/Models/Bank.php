@@ -12,7 +12,7 @@ class Bank extends Model implements Auditable
 
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','full_name'];
 
     public function zrbBankAccounts(){
         return $this->hasMany(ZrbBankAccount::class);

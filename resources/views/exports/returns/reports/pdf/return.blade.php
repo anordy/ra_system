@@ -62,10 +62,8 @@
                     {{-- <strong>{{ $title }}</strong><br> --}}
                     <strong>Report of {{ $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] :
                         $parameters['payment_report_type'] }} for {{ $parameters['tax_type_name'] }} </strong><br>
-                    @if ($parameters['dates']['startDate'] != null)
-                    <strong>From {{ date("M, d Y", strtotime($parameters['dates']['from'])) }} To {{ date("M, d Y",
-                        strtotime($parameters['dates']['to'])) }} </strong><br>
-                    @endif
+                    <strong>From {{ date("M, d Y", strtotime($parameters['range_start'])) }} To {{ date("M, d Y",
+                        strtotime($parameters['range_end'])) }} </strong><br>
 
                     <strong>Tax Regions :
                         @foreach ($parameters['tax_regions'] as $t=>$id)

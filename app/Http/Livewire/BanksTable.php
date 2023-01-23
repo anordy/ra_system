@@ -43,6 +43,9 @@ class BanksTable extends DataTableComponent
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Full Name', 'full_name')
+                ->sortable()
+                ->searchable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
                     $value = "'".encrypt($value)."'";
@@ -70,11 +73,12 @@ class BanksTable extends DataTableComponent
 
     public function delete($id)
     {
-        $id = decrypt($id);
         if (!Gate::allows('setting-bank-delete')) {
             abort(403);
         }
 
+        $id = decrypt($id);
+        
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,

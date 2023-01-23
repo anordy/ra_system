@@ -15,12 +15,14 @@ class BankEditModal extends Component
     use LivewireAlert;
 
     public $name;
+    public $full_name;
     public $bank;
 
     protected function rules()
     {
         return [
             'name' => 'required|unique:banks,name,'.$this->bank->id.',id',
+            'full_name' => 'required|unique:banks,full_name,'.$this->bank->id.',id',
         ];
     }
 
@@ -33,6 +35,7 @@ class BankEditModal extends Component
         }
         $this->bank = $data;
         $this->name = $data->name;
+        $this->full_name = $data->full_name;
     }
 
     public function submit()
@@ -45,6 +48,7 @@ class BankEditModal extends Component
         try {
             $this->bank->update([
                 'name' => $this->name,
+                'full_name' => $this->full_name,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

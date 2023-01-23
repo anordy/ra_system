@@ -14,11 +14,13 @@ class BankAddModal extends Component
     use LivewireAlert;
 
     public $name;
+    public $full_name;
 
     protected function rules()
     {
         return [
             'name' => 'required|unique:banks,name',
+            'full_name' => 'required|unique:banks,full_name',
         ];
     }
 
@@ -30,11 +32,14 @@ class BankAddModal extends Component
         }
 
         $this->validate();
-
+        
         try{
             Bank::create([
                 'name' => $this->name,
+                'full_name' => $this->full_name,
             ]);
+
+            dd('added');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             Log::error($e);

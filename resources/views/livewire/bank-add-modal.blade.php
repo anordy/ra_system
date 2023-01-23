@@ -15,6 +15,13 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label" for="full_name">Full Name</label>
+                        <input type="text" class="form-control" wire:model.defer="full_name" id="full_name">
+                        @error('full_name')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
