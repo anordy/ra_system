@@ -55,7 +55,7 @@ class BranchesTable extends DataTableComponent
             Column::make("Branch Name", "name")
                 ->format(function ($value, $row) {
                    return $row->is_headquarter === 1 ? "Head Quarters" :"{$row->name}";
-                })->html(true),
+                }),
             Column::make("Region", "region.name")
                 ->searchable(),
             Column::make("District", "district.name")

@@ -26,9 +26,9 @@ class CountryAddModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|min:2|unique:countries',
-            'name' => 'required|min:2|unique:countries',
-            'nationality' => 'required|min:2|unique:countries',
+            'code' => 'required|strip_tag|min:2|unique:countries',
+            'name' => 'required|strip_tag|min:2|unique:countries',
+            'nationality' => 'required|strip_tag|min:2|unique:countries',
         ];
     }
 
