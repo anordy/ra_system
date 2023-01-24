@@ -27,7 +27,7 @@ class BranchesApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = decrypt($modelId); // todo: encrypt id
+        $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
         $this->taxRegions = TaxRegion::all();
     }
@@ -38,8 +38,8 @@ class BranchesApprovalProcessing extends Component
 
         if ($this->checkTransition('registration_officer_review')) {
             $this->validate([
-                'selectedTaxRegion' => 'required',
-                'effectiveDate' => 'required'
+                'selectedTaxRegion' => 'required|strip_tag',
+                'effectiveDate' => 'required|strip_tag'
             ]);
             $this->subject->tax_region_id = $this->selectedTaxRegion;
             $this->subject->effective_date = $this->effectiveDate;
@@ -92,7 +92,7 @@ class BranchesApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
 
-        $this->validate(['comments' => 'required']);
+        $this->validate(['comments' => 'required|strip_tag']);
 
         $notification_payload = [
             'branch' => $this->subject,

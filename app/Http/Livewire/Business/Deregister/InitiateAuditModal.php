@@ -41,13 +41,13 @@ class InitiateAuditModal extends Component
     protected function rules()
     {
         return [
-            'business_id' => 'required',
+            'business_id' => 'required|numeric|exists:businesses,id',
             'location_ids' => 'required',
             'tax_type_ids' => 'required',
-            'intension' => 'required',
-            'scope' => 'required',
+            'intension' => 'required|strip_tag',
+            'scope' => 'required|strip_tag',
             'period_from' => 'required|date',
-            'period_to' => 'required|after:period_from',
+            'period_to' => 'required|date|after:period_from',
         ];
     }
 
@@ -78,7 +78,7 @@ class InitiateAuditModal extends Component
 
         if ($check) {
             $this->validate(
-                ['business_id' => 'required'],
+                ['business_id' => 'required|numeric'],
                 ['business_id.email' => 'Business with the given tax type is already on auditing']
             );
         }

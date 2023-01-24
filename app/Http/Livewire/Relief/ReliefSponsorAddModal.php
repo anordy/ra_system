@@ -20,8 +20,8 @@ class ReliefSponsorAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_sponsors,name',
-            'acronym' => 'required|unique:relief_sponsors,name',
+            'name' => 'required|unique:relief_sponsors,name|strip_tag',
+            'acronym' => 'required|unique:relief_sponsors,name|strip_tag',
         ];
     }
 

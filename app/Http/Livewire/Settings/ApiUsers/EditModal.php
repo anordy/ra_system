@@ -42,7 +42,7 @@ class EditModal extends Component
     protected function rules()
     {
         return [
-            'app_name' => 'required|max:50|min:2',
+            'app_name' => 'required|max:50|min:2|strip_tag',
             'app_url' => 'required|max:100|min:2',
             'username' => 'required|string',
         ];

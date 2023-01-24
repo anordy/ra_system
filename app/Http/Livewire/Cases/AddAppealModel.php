@@ -28,9 +28,9 @@ class AddAppealModel extends Component
     {
         return [
             'date' => 'required|date',
-            'comment' => 'required',
-            'appeal_number' => 'required',
-            'court_level_id' => 'required',
+            'comment' => 'required|strip_tag',
+            'appeal_number' => 'required|strip_tag',
+            'court_level_id' => 'required|numeric',
         ];
     }
 

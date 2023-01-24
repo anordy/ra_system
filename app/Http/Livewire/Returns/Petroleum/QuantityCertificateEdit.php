@@ -35,9 +35,9 @@ class QuantityCertificateEdit extends Component
     protected function rules()
     {
         return [
-            'ship' => 'required',
-            'port' => 'required',
-            'voyage_no' => 'nullable',
+            'ship' => 'required|strip_tag',
+            'port' => 'required|strip_tag',
+            'voyage_no' => 'nullable|strip_tag',
             'ascertained' => 'required|date',
             'location' => [
                 'required',

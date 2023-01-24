@@ -26,8 +26,8 @@ class CloseCaseModel extends Component
     {
         return [
             'date' => 'required|date',
-            'comment' => 'required',
-            'outcome_id' => 'required',
+            'comment' => 'required|strip_tag',
+            'outcome_id' => 'required|numeric',
         ];
     }
 

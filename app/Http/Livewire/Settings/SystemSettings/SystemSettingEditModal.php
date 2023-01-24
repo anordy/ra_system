@@ -27,8 +27,8 @@ class SystemSettingEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required',
-            'unit' => 'required',
+            'name' => 'required|strip_tag',
+            'unit' => 'required|strip_tag',
             'value' => 'required|numeric',
             'system_setting_category' => 'required',
         ];

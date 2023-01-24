@@ -50,8 +50,8 @@ class CreateModal extends Component
     }
 
     protected $rules = [
-        'currency' => 'required',
-        'effective_date' => 'required',
+        'currency' => 'required|strip_tag',
+        'effective_date' => 'required|strip_tag',
     ];
     protected $messages = [
         'currency.required' => 'This field is required',

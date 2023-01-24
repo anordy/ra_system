@@ -125,10 +125,10 @@ class TaxAuditApprovalProcessing extends Component
             $this->validate(
                 [
                     'periodFrom' => 'required|date',
-                    'periodTo' => 'required|after:periodFrom',
-                    'auditingDate' => 'required|after:today',
-                    'intension' => 'required',
-                    'scope' => 'required',
+                    'periodTo' => 'required|date|after:periodFrom',
+                    'auditingDate' => 'required|date|after:today',
+                    'intension' => 'required|strip_tag',
+                    'scope' => 'required|strip_tag',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],
                     'teamMember' => ['required',  new NotIn([$this->teamLeader])],
                 ],
@@ -477,7 +477,7 @@ class TaxAuditApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         try {

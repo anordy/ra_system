@@ -28,9 +28,9 @@ class RegisterCase extends Component
     {
         return [
             'date' => 'required|date',
-            'comment' => 'required',
-            'case_number' => 'required',
-            'court' => 'required',
+            'comment' => 'required|strip_tag',
+            'case_number' => 'required|strip_tag',
+            'court' => 'required|strip_tag',
         ];
     }
 

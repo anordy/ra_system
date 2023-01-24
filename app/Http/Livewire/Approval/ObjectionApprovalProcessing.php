@@ -266,7 +266,7 @@ class ObjectionApprovalProcessing extends Component
         $transition = $transition['data']['transition'];
 
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         DB::beginTransaction();

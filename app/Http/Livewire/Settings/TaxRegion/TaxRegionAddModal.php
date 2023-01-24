@@ -18,8 +18,8 @@ class TaxRegionAddModal extends Component
     protected function rules()
     {
         return [
-            'prefix' => 'required|unique:tax_regions,prefix|digits:2',
-            'name' => 'required|unique:tax_regions,name',
+            'prefix' => 'required|unique:tax_regions,prefix|digits:2|strip_tag',
+            'name' => 'required|unique:tax_regions,name|strip_tag',
         ];
     }
 

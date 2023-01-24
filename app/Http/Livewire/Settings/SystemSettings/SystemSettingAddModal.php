@@ -27,11 +27,11 @@ class SystemSettingAddModal extends Component
     public $categories;
 
     protected $rules = [
-        'name' => 'required',
-        'code' => 'required',
-        'value' => 'required',
-        'unit' => 'required',
-        'description' => 'required',
+        'name' => 'required|strip_tag',
+        'code' => 'required|strip_tag',
+        'value' => 'required|strip_tag',
+        'unit' => 'required|strip_tag',
+        'description' => 'required|strip_tag',
     ];
 
     protected $messages = [

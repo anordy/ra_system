@@ -123,26 +123,33 @@ class KycAmendmentRequestAddModal extends Component
     protected function rules()
     {
         return  [
-            'first_name' => 'required',
-            'middle_name' => 'nullable',
-            'last_name' => 'required',
+            'first_name' => 'required|strip_tag',
+            'middle_name' => 'nullable|strip_tag',
+            'last_name' => 'required|strip_tag',
             'email' => 'nullable:email|unique:kycs,email,' . $this->kyc->id . ',id',
             'mobile' => 'required|unique:kycs,mobile,'. $this->kyc->id . ',id|size:10',
             'alt_mobile' => 'nullable|size:10',
             'physical_address' => 'required',
-            'region' => 'required',
-            'district' => 'required',
-            'ward' => 'required',
-            'street' => 'required',
+            'region' => 'required|numeric|exists:regions,id',
+            'district' => 'required|numeric|exists:districts,id',
+            'ward' => 'required|numeric|exists:wards,id',
+            'street' => 'required|numeric|exists:streets,id',
             'nida' => 'exclude_if:is_citizen,0|required_without:zanid|nullable|digits:20|unique:kycs,nida_no,' . $this->kyc->id . ',id|unique:taxpayers,nida_no',
             'zanid' => 'exclude_if:is_citizen,0|required_without:nida|nullable|digits:9|unique:kycs,zanid_no,' . $this->kyc->id . ',id|unique:taxpayers,zanid_no',
             'nationality' => 'required_if:is_citizen,0',
             'passportNo' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:kycs,passport_no,' . $this->kyc->id . ',id|unique:taxpayers,passport_no|digits_between:8,15',
             'permitNumber' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:taxpayers,permit_number,' . $this->kyc->id . ',id|string|min:10|max:20',
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
             'nida.required_without' => 'Please provide your NIDA number',
             'zanid.required_without' => 'Please provide your ZANID number',
         ];
     }
+
     public function submit()
     {
         $this->validate();

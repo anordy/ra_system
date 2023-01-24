@@ -32,8 +32,8 @@ class RatesModal extends Component
 	public function submit()
 	{
 		$validate = $this->validate([
-		  'service_code'=>'required',
-		  'cat_code'=>'required',
+		  'service_code'=>'required|strip_tag',
+		  'cat_code'=>'required|strip_tag',
 		  'rate'=>'required|numeric'
 		],
 		  [

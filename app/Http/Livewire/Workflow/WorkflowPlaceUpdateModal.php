@@ -48,9 +48,9 @@ class WorkflowPlaceUpdateModal extends Component
     protected function rules()
     {
         return [
-            'operator_type' => 'in:user,role',
-            'role_id' => 'nullable',
-            'user_id' => 'nullable',
+            'operator_type' => 'in:user,role|strip_tag',
+            'role_id' => 'nullable|numeric',
+            'user_id' => 'nullable|numeric',
         ];
     }
 

@@ -81,7 +81,7 @@ class ClosureApprovalProcessing extends Component
     public function reject($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['comments' => 'required']);
+        $this->validate(['comments' => 'required|strip_tag']);
 
         try {
 

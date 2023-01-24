@@ -190,15 +190,15 @@ class ApprovalProcessing extends Component
                 $this->subject->isiic_iv = $this->isiic_iv ?? null;
 
                 $this->validate([
-                    'isiic_i' => 'required',
-                    'isiic_ii' => 'required',
-                    'isiic_iii' => 'required',
-                    'isiic_iv' => 'required',
+                    'isiic_i' => 'required|numeric|exists:isic1s,id',
+                    'isiic_ii' => 'required|numeric|exists:isic2s,id',
+                    'isiic_iii' => 'required|numeric|exists:isic3s,id',
+                    'isiic_iv' => 'required|numeric|exists:isic4s,id',
                     'selectedTaxTypes' => 'required',
                     'selectedTaxTypes.*.currency' => 'required',
                     'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
                     'selectedTaxRegion' => 'required|exists:tax_regions,id',
-                    'effectiveDate' => 'required'
+                    'effectiveDate' => 'required|strip_tag'
                 ], [
                     'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
                     'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
@@ -332,7 +332,7 @@ class ApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         try {

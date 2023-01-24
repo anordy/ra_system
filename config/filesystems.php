@@ -33,8 +33,9 @@ return [
         'local' => [
             'driver' => 'sftp',
             'host' => secEnv('SFTP_HOST'),
-            'username' => secEnv('SFTP_USERNAME', 22),
+            'username' => secEnv('SFTP_USERNAME'),
             'password' => secEnv('SFTP_PASSWORD'),
+            'port' => secEnv('SFTP_PORT', 22),
             'root' => secEnv('SFTP_ROOT'),
         ],
 

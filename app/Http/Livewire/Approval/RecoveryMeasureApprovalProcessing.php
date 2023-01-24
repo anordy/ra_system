@@ -61,7 +61,7 @@ class RecoveryMeasureApprovalProcessing extends Component
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['recovery_measures' => 'required']);
+        $this->validate(['recovery_measures' => 'required|strip_tag']);
         DB::beginTransaction();
         try {
 

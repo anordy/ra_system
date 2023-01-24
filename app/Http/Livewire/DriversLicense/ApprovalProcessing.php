@@ -32,7 +32,7 @@ class ApprovalProcessing extends Component
 
     public function approve($transition)
     {
-        $this->validate(['comments' => 'required', 'duration_id' => 'required'], ['duration_id.required' => 'You must select License Duration to approve']);
+        $this->validate(['comments' => 'required|strip_tag', 'duration_id' => 'required|numeric'], ['duration_id.required' => 'You must select License Duration to approve']);
 
         DB::beginTransaction();
 
@@ -74,7 +74,7 @@ class ApprovalProcessing extends Component
 
     public function reject($transition)
     {
-        $this->validate(['comments' => 'required']);
+        $this->validate(['comments' => 'required|strip_tag']);
         $operators = [];
         if ($this->checkTransition('application_filled_incorrect')) {
             $operators = [1, 2, 3];

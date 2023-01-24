@@ -22,8 +22,8 @@ class ReliefMinistriesEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_ministries,name,'.$this->reliefProjectSection->id.',id',
-            'type' => 'required',
+            'name' => 'required|unique:relief_ministries,name,'.$this->reliefProjectSection->id.',id|strip_tag',
+            'type' => 'required|strip_tag',
         ];
     }
 

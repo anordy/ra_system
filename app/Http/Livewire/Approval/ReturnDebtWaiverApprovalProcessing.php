@@ -222,7 +222,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             abort(403);
         }
         $this->validate([
-            'comments' => 'required',
+            'comments' => 'required|strip_tag',
         ]);
         try {
             if ($this->checkTransition('application_filled_incorrect')) {

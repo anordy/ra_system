@@ -36,13 +36,13 @@ class BusinessAuditAddModal extends Component
     protected function rules()
     {
         return [
-            'business_id' => 'required',
-            'location_ids' => 'required',
+            'business_id' => 'required|numeric|exists:businesses,id',
+            'location_ids' => 'required|numeric|exists:business_locations,id',
             'tax_type_ids' => 'required',
-            'intension' => 'required',
-            'scope' => 'required',
+            'intension' => 'required|strip_tag',
+            'scope' => 'required|strip_tag',
             'period_from' => 'required|date',
-            'period_to' => 'required|after:period_from',
+            'period_to' => 'required|date|after:period_from',
         ];
     }
 

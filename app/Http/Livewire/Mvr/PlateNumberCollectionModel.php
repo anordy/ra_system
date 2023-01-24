@@ -34,8 +34,8 @@ class PlateNumberCollectionModel extends Component
     protected function rules()
     {
         return [
-            'collector_phone' => 'required|between:9,15',
-            'collector_name' => 'required',
+            'collector_phone' => 'required|digits_between:9,15',
+            'collector_name' => 'required|strip_tag',
             'collection_date' => 'required|date|before_or_equal:today',
         ];
     }

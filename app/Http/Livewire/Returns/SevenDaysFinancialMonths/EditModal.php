@@ -43,9 +43,9 @@ class EditModal extends Component
     public function rules()
     {
         return [
-            'year' => 'required',
-            'month_number' => 'required',
-            'day' => 'required'
+            'year' => 'required|strip_tag',
+            'month_number' => 'required|strip_tag',
+            'day' => 'required|strip_tag'
         ];
     }
 

@@ -45,18 +45,18 @@ class WithholdingAgentEditModal extends Component
 
     protected $rules = [
         'tin' => 'required|numeric|digits:9',
-        'institution_name' => 'required',
-        'institution_place' => 'required',
+        'institution_name' => 'required|strip_tag',
+        'institution_place' => 'required|strip_tag',
         'email' => 'required|email',
         'mobile' => 'required|digits_between:10,10',
-        'address' => 'required',
-        'region_id' => 'required',
-        'district_id' => 'required',
-        'ward_id' => 'required',
-        'street_id' => 'required',
-        'date_of_commencing' => 'required',
+        'address' => 'required|strip_tag',
+        'region_id' => 'required|numeric',
+        'district_id' => 'required|numeric',
+        'ward_id' => 'required|numeric',
+        'street_id' => 'required|numeric',
+        'date_of_commencing' => 'required|strip_tag',
         'alt_mobile' => 'nullable|digits_between:10,10',
-        'fax' => 'nullable'
+        'fax' => 'nullable|strip_tag'
     ];
 
     public function mount($id)

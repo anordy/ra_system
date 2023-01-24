@@ -28,8 +28,8 @@ class AddStampDutyModal extends Component
 
     protected $rules = [
         'financial_year' => 'required',
-        'name' => 'required',
-        'code' => 'nullable',
+        'name' => 'required|strip_tag',
+        'code' => 'nullable|strip_tag',
         'rate_type' => 'required',
         'rate' => 'required',
         'is_active' => 'required',

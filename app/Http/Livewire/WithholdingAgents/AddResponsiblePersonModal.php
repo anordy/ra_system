@@ -27,9 +27,9 @@ class AddResponsiblePersonModal extends Component
     protected function rules()
     {
         return [
-            'responsible_person_id' => 'required',
-            'title' => 'required',
-            'position' => 'required'
+            'responsible_person_id' => 'required|strip_tag',
+            'title' => 'required|strip_tag',
+            'position' => 'required|strip_tag'
         ];
     }
 

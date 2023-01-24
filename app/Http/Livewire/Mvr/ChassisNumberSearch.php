@@ -21,7 +21,7 @@ class ChassisNumberSearch extends Component
     protected function rules()
     {
         return [
-            'chassis_number' => 'required',
+            'chassis_number' => 'required|strip_tag',
         ];
     }
 

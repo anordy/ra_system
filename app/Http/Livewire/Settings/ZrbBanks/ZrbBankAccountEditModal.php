@@ -33,12 +33,12 @@ class ZrbBankAccountEditModal extends Component
     public $is_transfer;
 
     protected $rules = [
-        'account_name' => 'required',
-        'branch_name' => 'required',
-        'swift_code' => 'required',
+        'account_name' => 'required|strip_tag',
+        'branch_name' => 'required|strip_tag',
+        'swift_code' => 'required|strip_tag',
         'is_transfer' => 'required',
         'account_number' => 'required|numeric|digits_between:9,20',
-        'currency' => 'required',
+        'currency' => 'required|strip_tag',
     ];
 
     protected $messages = [

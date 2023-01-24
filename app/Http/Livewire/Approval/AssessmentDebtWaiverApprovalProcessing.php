@@ -87,8 +87,8 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         if ($this->checkTransition('crdm_complete')) {
             if (!$this->forwardToCommisioner) {
                 $this->validate([
-                    'interestPercent' => 'required',
-                    'penaltyPercent' => 'required',
+                    'interestPercent' => 'required|numeric',
+                    'penaltyPercent' => 'required|numeric',
                 ]);
                 DB::beginTransaction();
                 try {
@@ -143,8 +143,8 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
 
         if ($this->checkTransition('commissioner_complete')) {
             $this->validate([
-                'interestPercent' => 'required',
-                'penaltyPercent' => 'required',
+                'interestPercent' => 'required|numeric',
+                'penaltyPercent' => 'required|numeric',
             ]);
             DB::beginTransaction();
             try {
@@ -213,7 +213,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             abort(403);
         }
         $this->validate([
-            'comments' => 'required',
+            'comments' => 'required|strip_tag',
         ]);
         try {
             if ($this->checkTransition('application_filled_incorrect')) {

@@ -17,7 +17,7 @@ class TransferFormGenerator extends Component
     }
 
     protected $rules = [
-        'bankAccountId' => 'required',
+        'bankAccountId' => 'required|strip_tag',
     ];
 
     protected $messages = [

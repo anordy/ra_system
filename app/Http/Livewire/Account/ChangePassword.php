@@ -19,6 +19,7 @@ class ChangePassword extends Component
     protected function rules() {
         return [
             'new_password' => [
+                'strip_tag',
                 'required',
                 'string',
                 'min:8',             // must be at least 8 characters in length

@@ -82,7 +82,7 @@ class TaxClearenceApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required',
+            'comments' => 'required|strip_tag',
         ]);
 
         try {

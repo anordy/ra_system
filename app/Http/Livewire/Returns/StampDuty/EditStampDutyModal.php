@@ -20,9 +20,9 @@ class EditStampDutyModal extends Component
     public $categories;
 
     protected $rules = [
-        'name' => 'required',
-        'short_name' => 'required',
-        'description' => 'nullable',
+        'name' => 'required|strip_tag',
+        'short_name' => 'required|strip_tag',
+        'description' => 'nullable|strip_tag',
         'is_required' => 'required',
         'business_category' => 'required',
     ];

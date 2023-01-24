@@ -28,9 +28,9 @@ class ReliefProjectListEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_project_lists,name,'.$this->project->id.',id',
-            'description' => 'required',
-            'rate' => 'required|numeric|min:0|max:100',
+            'name' => 'required|unique:relief_project_lists,name,'.$this->project->id.',id|strip_tag',
+            'description' => 'required|strip_tag',
+            'rate' => 'required|numeric|min:0|max:100|strip_tag',
         ];
     }
 

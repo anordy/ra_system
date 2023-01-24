@@ -125,8 +125,8 @@ class TaxInvestigationApprovalProcessing extends Component
         if ($this->checkTransition('assign_officers')) {
             $this->validate(
                 [
-                    'intension' => 'required',
-                    'scope' => 'required',
+                    'intension' => 'required|strip_tag',
+                    'scope' => 'required|strip_tag',
                     'periodFrom' => 'required|date',
                     'periodTo' => 'required|after:periodFrom',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],
@@ -400,7 +400,7 @@ class TaxInvestigationApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         try {

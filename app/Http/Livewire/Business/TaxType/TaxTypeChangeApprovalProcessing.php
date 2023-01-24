@@ -52,9 +52,9 @@ class TaxTypeChangeApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'effective_date' => 'required', 
+            'effective_date' => 'required|strip_tag',
             'to_tax_type_currency' => 'required', 
-            'to_tax_type_id' => 'required'
+            'to_tax_type_id' => 'required|numeric'
         ]);
 
         if ($this->to_tax_type_id == $this->from_tax_type_id) {
@@ -92,7 +92,7 @@ class TaxTypeChangeApprovalProcessing extends Component
     public function reject($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['comments' => 'required']);
+        $this->validate(['comments' => 'required|strip_tag']);
         try {
             if ($this->checkTransition('registration_manager_reject')) {
                 $this->subject->status = BusinessStatus::REJECTED;

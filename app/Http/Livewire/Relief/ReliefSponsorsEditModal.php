@@ -22,8 +22,8 @@ class ReliefSponsorsEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_ministries,name,'.$this->reliefSponsor->id.',id',
-            'acronym' => 'required',
+            'name' => 'required|unique:relief_ministries,name,'.$this->reliefSponsor->id.',id|strip_tag',
+            'acronym' => 'required|strip_tag',
         ];
     }
 

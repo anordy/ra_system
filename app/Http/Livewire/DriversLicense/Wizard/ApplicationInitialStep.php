@@ -24,9 +24,9 @@ class ApplicationInitialStep extends StepComponent
     public $width = 33;
 
     protected $rules = [
-        'type' => 'required',
+        'type' => 'required|strip_tag',
         'number' => 'required|numeric|min:1',
-        'taxpayer_id' => 'required|min:1',
+        'taxpayer_id' => 'required|min:1|strip_tag',
     ];
 
     protected $messages = [

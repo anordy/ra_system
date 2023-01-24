@@ -54,7 +54,7 @@ class UploadInspectionReport extends Component
         return [
             'inspection_report'=>'required|mimes:pdf',
             'inspection_date'=>'required|date|before_or_equal:today',
-            'mileage'=>'required|Numeric',
+            'mileage'=>'required|numeric',
         ];
     }
 

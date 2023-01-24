@@ -20,8 +20,8 @@ class SystemSettingCategoryAddModal extends Component
     public $description;
 
     protected $rules = [
-        'name' => 'required',
-        'description' => 'required',
+        'name' => 'required|strip_tag',
+        'description' => 'required|strip_tag',
     ];
 
     protected $messages = [

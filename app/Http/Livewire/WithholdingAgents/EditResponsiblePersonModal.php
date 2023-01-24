@@ -25,7 +25,7 @@ class EditResponsiblePersonModal extends Component
     protected function rules()
     {
         return [
-            'responsible_person_id' => 'required',
+            'responsible_person_id' => 'required|strip_tag',
         ];
     }
 

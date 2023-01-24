@@ -42,7 +42,7 @@ class DisputeReport extends Component
     {
         return [
             'tax_type_id' => 'required',
-            'year' => 'required',
+            'year' => 'required|strip_tag',
             'period' => 'required',
             'period' => $this->year != 'all' ? 'required' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',

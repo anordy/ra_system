@@ -22,8 +22,8 @@ class PaymentFilter extends Component
     public $range_end;
 
     protected $rules = [
-        'range_start' => 'required',
-        'range_end' => 'required'
+        'range_start' => 'required|strip_tag',
+        'range_end' => 'required|strip_tag'
     ];
 
     public function mount($tablename)

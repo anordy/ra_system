@@ -99,17 +99,17 @@ class DetailsAmendmentRequestAddModal extends Component
     protected function rules()
     {
         return  [
-            'first_name' => 'required',
-            'middle_name' => 'nullable',
-            'last_name' => 'required',
-            'email' => 'nullable:email|unique:taxpayers,email,' . $this->taxpayer->id . ',id',
+            'first_name' => 'required|strip_tag',
+            'middle_name' => 'nullable|strip_tag',
+            'last_name' => 'required|strip_tag',
+            'email' => 'nullable|email|unique:taxpayers,email,' . $this->taxpayer->id . ',id',
             'mobile' => 'required|unique:taxpayers,mobile,'. $this->taxpayer->id . ',id|size:10',
             'alt_mobile' => 'nullable|size:10',
             'physical_address' => 'required',
-            'region' => 'required',
-            'district' => 'required',
-            'ward' => 'required',
-            'street' => 'required',
+            'region' => 'required|numeric',
+            'district' => 'required|numeric',
+            'ward' => 'required|numeric',
+            'street' => 'required|strip_tag',
         ];
     }
     public function submit()

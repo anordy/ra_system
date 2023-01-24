@@ -102,10 +102,10 @@ class ReliefEdit extends Component
     protected function rules()
     {
         return [
-            'supplier' => 'required',
-            'supplierLocation' => 'required',
-            'projectSection' => 'required',
-            'project' => 'required',
+            'supplier' => 'required|strip_tag',
+            'supplierLocation' => 'required|strip_tag',
+            'projectSection' => 'required|strip_tag',
+            'project' => 'required|strip_tag',
             'items.*.name' => 'required',
             'items.*.quantity' => 'required|numeric',
             'items.*.costPerItem' => 'required|numeric',

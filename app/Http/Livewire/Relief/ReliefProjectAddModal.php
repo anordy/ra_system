@@ -22,7 +22,7 @@ class ReliefProjectAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|strip_tag',
             'description' => 'nullable',
         ];
     }

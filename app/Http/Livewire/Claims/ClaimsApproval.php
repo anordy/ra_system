@@ -16,8 +16,8 @@ class ClaimsApproval extends Component {
     public $claim;
 
     protected $rules = [
-        'paymentType' => 'required',
-        'installmentCount' => 'required_if:paymentType,installment'
+        'paymentType' => 'required|strip_tag',
+        'installmentCount' => 'required_if:paymentType,installment|strip_tag'
     ];
 
     public function deny(){
