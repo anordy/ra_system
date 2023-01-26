@@ -19,7 +19,7 @@ class EducationLevelAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:education_levels,name',
+            'name' => 'required|strip_tag|unique:education_levels,name',
         ];
     }
     public function submit()

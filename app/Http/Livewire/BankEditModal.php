@@ -21,8 +21,8 @@ class BankEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:banks,name,'.$this->bank->id.',id',
-            'full_name' => 'required|unique:banks,full_name,'.$this->bank->id.',id',
+            'name' => 'required|strip_tag|unique:banks,name,'.$this->bank->id.',id',
+            'full_name' => 'required|strip_tag|unique:banks,full_name,'.$this->bank->id.',id',
         ];
     }
 

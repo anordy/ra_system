@@ -24,8 +24,8 @@ class ISIC2EditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|unique:isic1s,code,'.$this->isic2->id.',id',
-            'description' => 'required',
+            'code' => 'required|strip_tag|unique:isic1s,code,'.$this->isic2->id.',id',
+            'description' => 'required|strip_tag',
             'isic1_id' => 'required',
         ];
     }

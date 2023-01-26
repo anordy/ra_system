@@ -24,7 +24,7 @@ class EducationLevelEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:education_levels,name,'.$this->level->id.',id',
+            'name' => 'required|strip_tag|unique:education_levels,name,'.$this->level->id.',id',
         ];
     }
 

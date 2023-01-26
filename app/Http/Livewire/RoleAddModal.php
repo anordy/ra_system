@@ -30,8 +30,8 @@ class RoleAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:roles',
-            'report_to' => 'nullable|unique:roles',
+            'name' => 'required|strip_tag|unique:roles',
+            'report_to' => 'nullable|strip_tag|unique:roles',
         ];
     }
 

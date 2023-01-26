@@ -26,8 +26,8 @@ class RoleEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required',
-            'report_to' => 'nullable',
+            'name' => 'required|strip_tag',
+            'report_to' => 'nullable|strip_tag',
         ];
     }
 
