@@ -30,6 +30,6 @@ class PenaltyRate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.configurations.penalty-rate')->subject("ZRB - ZIDRAS Penalty Rate Is Not configured");
+        return $this->markdown('emails.configurations.penalty-rate')->subject("ZRA - ZIDRAS Penalty Rate Is Not configured");
     }
 }

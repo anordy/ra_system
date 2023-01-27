@@ -29,7 +29,7 @@
                 <strong>Applicant Category</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>ZRB No/ Zin No.</strong>
+                <strong>ZRA No/ Zin No.</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Applicant Type</strong>

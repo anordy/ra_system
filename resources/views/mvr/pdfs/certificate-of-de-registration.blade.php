@@ -80,7 +80,7 @@
         </div>
         <div style="float: right">
             <div class="title1">
-                Bodi ya Mapato Zanzibar
+                Mamlaka ya Mapato Zanzibar
             </div>
             <div style="text-align: right; padding-right: 16px">
                 Date: {{\Carbon\Carbon::parse($request->certificate_date)->format('d M,Y')}}
