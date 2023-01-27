@@ -19,8 +19,8 @@ class BankAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:banks,name',
-            'full_name' => 'required|unique:banks,full_name',
+            'name' => 'required|strip_tag|unique:banks,name',
+            'full_name' => 'required|strip_tag|unique:banks,full_name',
         ];
     }
 
@@ -39,7 +39,6 @@ class BankAddModal extends Component
                 'full_name' => $this->full_name,
             ]);
 
-            dd('added');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             Log::error($e);

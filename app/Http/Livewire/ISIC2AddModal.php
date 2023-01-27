@@ -24,8 +24,8 @@ class ISIC2AddModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|unique:isic2s,code',
-            'description' => 'required',
+            'code' => 'required|strip_tag|unique:isic2s,code',
+            'description' => 'required|strip_tag',
             'isic1_id' => 'required',
         ];
     }

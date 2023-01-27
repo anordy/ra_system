@@ -20,8 +20,8 @@ class ISIC1EditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|unique:isic1s,code,'.$this->isic1->id.',id',
-            'description' => 'required'
+            'code' => 'required|strip_tag|unique:isic1s,code,'.$this->isic1->id.',id',
+            'description' => 'required|strip_tag'
         ];
     }
 
