@@ -30,7 +30,7 @@ class WardEditModal extends Component
     protected $rules = [
         'region_id' => 'required',
         'district_id' => 'required',
-        'name' => 'required',
+        'name' => 'required|strip_tag',
     ];
 
     public function mount($id)

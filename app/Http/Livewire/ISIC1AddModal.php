@@ -21,8 +21,8 @@ class ISIC1AddModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|unique:isic1s,code',
-            'description' => 'required',
+            'code' => 'required|strip_tag|unique:isic1s,code',
+            'description' => 'required|strip_tag',
         ];
     }
 

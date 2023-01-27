@@ -26,9 +26,9 @@ class CountryEditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|min:2|unique:countries,code,'.$this->country->id.',id',
-            'name' => 'required|min:2|unique:countries,name,'.$this->country->id.',id',
-            'nationality' => 'required|min:2|unique:countries,nationality,'.$this->country->id.',id',
+            'code' => 'required|strip_tag|min:2|unique:countries,code,'.$this->country->id.',id',
+            'name' => 'required|strip_tag|min:2|unique:countries,name,'.$this->country->id.',id',
+            'nationality' => 'required|strip_tag|min:2|unique:countries,nationality,'.$this->country->id.',id',
         ];
     }
 

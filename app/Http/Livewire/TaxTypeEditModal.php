@@ -24,8 +24,8 @@ class TaxTypeEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:tax_types,name,'.$this->taxType->id.',id',
-            'gfs_code' => 'required'
+            'name' => 'required|strip_tag|unique:tax_types,name,'.$this->taxType->id.',id',
+            'gfs_code' => 'required|numeric'
         ];
     }
 

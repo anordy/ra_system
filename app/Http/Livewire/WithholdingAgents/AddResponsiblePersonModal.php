@@ -35,7 +35,7 @@ class AddResponsiblePersonModal extends Component
 
     public function mount($id)
     {   
-        $this->withholding_agent_id = decrypt($id); // todo: encrypt id
+        $this->withholding_agent_id = decrypt($id);
         $waasigned = WaResponsiblePerson::distinct()->pluck('responsible_person_id');
         $this->responsible_persons = Taxpayer::whereNotIn('id', $waasigned)->get();
     }

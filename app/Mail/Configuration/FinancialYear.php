@@ -30,6 +30,6 @@ class FinancialYear extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.configurations.financial_year')->subject("ZRB - ZIDRAS Financial Year Is Not configured");
+        return $this->markdown('emails.configurations.financial_year')->subject("ZRA - ZIDRAS Financial Year Is Not configured");
     }
 }

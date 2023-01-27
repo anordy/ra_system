@@ -28,7 +28,7 @@ class DistrictAddModal extends Component
     {
         return [
             'region_id' => 'required|exists:regions,id',
-            'name' => 'required|min:2|unique:districts',
+            'name' => 'required|strip_tag|min:2|unique:districts',
         ];
     }
 

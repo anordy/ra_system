@@ -29,7 +29,7 @@ class DistrictEditModal extends Component
     {
         return [
             'region_id' => 'required|exists:regions,id',
-            'name' => 'required|min:2|unique:regions,name,' . $this->district->id . ',id',
+            'name' => 'required|strip_tag|min:2|unique:regions,name,' . $this->district->id . ',id',
         ];
     }
 

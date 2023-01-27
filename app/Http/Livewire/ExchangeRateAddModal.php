@@ -27,9 +27,9 @@ class ExchangeRateAddModal extends Component
     {
         return [
             'currency' => 'required|min:2|unique:exchange_rates',
-            'mean' => 'required',
-            'spot_buying' => 'required',
-            'spot_selling' => 'required',
+            'mean' => 'required|numeric',
+            'spot_buying' => 'required|numeric',
+            'spot_selling' => 'required|numeric',
             'exchange_date' => 'required|date',
         ];
     }

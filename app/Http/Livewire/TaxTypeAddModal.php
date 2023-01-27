@@ -23,7 +23,7 @@ class TaxTypeAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:tax_types',
+            'name' => 'required|unique:tax_types|strip_tag',
         ];
     }
 
