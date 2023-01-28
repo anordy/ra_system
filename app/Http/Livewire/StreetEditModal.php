@@ -41,6 +41,9 @@ class StreetEditModal extends Component
     {
         $this->regions = Region::select('id', 'name')->get();
         $this->street = Street::find($id);
+        if(is_null($this->street)){
+            abort(404);
+        }
         $this->name = $this->street->name;
         $this->ward_id = $this->street->ward->id;
         $this->district_id = $this->street->ward->district_id;

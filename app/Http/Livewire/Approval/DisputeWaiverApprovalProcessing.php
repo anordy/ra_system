@@ -42,7 +42,13 @@ class DisputeWaiverApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->dispute = Dispute::find($this->modelId);
+        if(is_null($this->dispute)){
+            abort(404);
+        }
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+        if(is_null($this->assessment)){
+            abort(404);
+        }
         $this->penalty = $this->assessment->penalty_amount;
         $this->interest = $this->assessment->interest_amount;
         $this->principal = $this->assessment->principal_amount;

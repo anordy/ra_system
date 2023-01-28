@@ -110,7 +110,7 @@ class ApprovalProcessing extends Component
             $this->agent->generateReferenceNo();
 
             $taxpayer = Taxpayer::find($this->agent->taxpayer_id);// todo: check if object exists
-            if (empty($taxpayer)) {
+            if (is_null($taxpayer)) {
                 $this->alert('error', 'This taxpayer does not exist');
                 return;
             }

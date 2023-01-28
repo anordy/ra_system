@@ -73,7 +73,11 @@ class ReliefExport implements FromView, WithEvents, ShouldAutoSize
                 $relief->whereNotNull('reliefs.project_id');
             } else {
                 $relief->where('reliefs.project_id', $parameters['sectionId']);
-                $projectSections[] = ReliefProject::find($parameters['sectionId']);
+                $reliefProject= ReliefProject::find($parameters['sectionId']);
+                if(is_null($reliefProject)){
+                    abort(404);
+                }
+                $projectSections[] = $reliefProject;
                 if ($parameters['projectId'] == 'all') {
                     $relief->where('reliefs.project_id', $parameters['sectionId'])
                         ->whereNotNull('reliefs.project_list_id');
@@ -129,6 +133,9 @@ class ReliefExport implements FromView, WithEvents, ShouldAutoSize
             $total = 0;
             foreach ($projectGroups as $projectId => $projectRecords) {
                 $project = ReliefProjectList::find($projectId);
+                if(is_null($project)){
+                    abort(404);
+                }
                 $sum = $this->calculateIndexSum($projectRecords->toArray(),'relieved_amount');
                 $total+=$sum;
                 if(array_key_exists($project->project_id, $projectSections)){

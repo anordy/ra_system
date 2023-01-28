@@ -127,6 +127,9 @@ class PenaltyRatesTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $rate = PenaltyRate::find(decrypt($data->id));
+            if(is_null($rate)){
+                abort(404);
+            }
             $this->triggerDualControl(get_class($rate), $rate->id, DualControl::DELETE, 'deleting penalty rate');
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             return;

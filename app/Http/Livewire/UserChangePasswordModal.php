@@ -53,6 +53,9 @@ class UserChangePasswordModal extends Component
     public function mount($id)
     {
         $user = User::find($id);
+        if(is_null($user)){
+            abort(404);
+        }
         $this->user = $user;
     }
 

@@ -46,7 +46,7 @@ class LicenseApplicationsTable extends DataTableComponent
     {
         return [
             Column::make("Applicants Name", "taxpayer_id")
-                ->format(fn($id)=>Taxpayer::query()->find($id)->fullname())
+                ->format(fn($id)=>Taxpayer::query()->find($id)->fullname() ?? 'N/A')
                 ->sortable(),
             Column::make("Applicants TIN", "taxpayer.tin")
                 ->sortable(),

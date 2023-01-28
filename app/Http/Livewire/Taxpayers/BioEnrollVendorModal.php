@@ -36,6 +36,9 @@ class BioEnrollVendorModal extends Component
     {
 //        todo: encrypt ID
         $this->kyc = KYC::find(decrypt($kyc));
+        if(is_null($this->kyc)){
+            abort(404);
+        }
         $this->finger = $finger;
         $this->hand = $hand;
 

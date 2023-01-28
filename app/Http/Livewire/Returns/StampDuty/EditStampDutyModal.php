@@ -30,6 +30,9 @@ class EditStampDutyModal extends Component
     public function mount($id)
     {
         $type = BusinessFileType::find($id);
+        if(is_null($this->type)){
+            abort(404);
+        }
         $this->type = $type;
         $this->name = $type->name;
         $this->short_name = $type->short_name;

@@ -182,6 +182,9 @@ class TaxClaimApprovalProcessing extends Component
             $credit->save();
 
             $claim = TaxClaim::query()->find($this->subject->id);
+            if(is_null($claim)){
+                abort(404);
+            }
             $taxpayer = $claim->taxpayer;
             
             $taxpayer->notify(new DatabaseNotification(
@@ -242,6 +245,9 @@ class TaxClaimApprovalProcessing extends Component
         }
 
         $claim = TaxClaim::query()->find($this->subject->id);
+        if(is_null($claim)){
+            abort(404);
+        }
         $taxpayer = $claim->taxpayer;
 
         $emailPayload = [

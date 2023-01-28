@@ -132,6 +132,9 @@ class LandLeaseReportTable extends DataTableComponent
                     function ($value, $row) {
                         if ($row->is_registered == 1) {
                             $taxpayer = Taxpayer::find($row->taxpayer_id);
+                            if(is_null($taxpayer)){
+                                abort(404);
+                            }
                             return $taxpayer->first_name .' '. $taxpayer->last_name;
                         } else {
                             return $row->name;
@@ -145,6 +148,9 @@ class LandLeaseReportTable extends DataTableComponent
                     function ($value, $row) {
                         if ($row->is_registered == 1) {
                             $taxpayer = Taxpayer::find($row->taxpayer_id);
+                            if(is_null($taxpayer)){
+                                abort(404);
+                            }
                             return $taxpayer->mobile;
                         } else {
                             return $row->phone;
@@ -161,27 +167,36 @@ class LandLeaseReportTable extends DataTableComponent
     public function getApplicantName($id)
     {
         $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
+        if(is_null($taxpayer)){
+            abort(404);
+        }
         return $taxpayer->first_name . ' ' . $taxpayer->last_name;
     }
 
     public function getBusinessName($id)
     {
         $businessLocation = BusinessLocation::find(decrypt($id)); // todo: encrypt id
-
+        if(is_null($businessLocation)){
+            abort(404);
+        }
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 
     public function getApplicantNo($id)
     {
         $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
-
+        if(is_null($taxpayer)){
+            abort(404);
+        }
         return $taxpayer->reference_no;
     }
 
     public function getBusinessZin($id)
     {
         $businessLocation = BusinessLocation::find(decrypt($id)); // todo: encrypt id
-
+        if(is_null($businessLocation)){
+            abort(404);
+        }
         return $businessLocation->zin;
     }
 }
