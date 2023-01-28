@@ -29,7 +29,7 @@
                 @foreach($business->locations as $location)
                     <div class="tab-pane fade p-3 {{ $loop->first ? 'show active' : '' }}" id="{{ strtolower(str_replace(' ', '-', $location->name)) }}" role="tabpanel"
                          aria-labelledby="{{ strtolower(str_replace(' ', '-', $location->name)) }}-tab">
-                        <livewire:business.location-returns-summary :locationId="$location->id" />
+                        <livewire:business.location-returns-summary locationId="{{ encrypt($location->id) }}" />
                         <livewire:business.location-returns-table location_id="{{$location->id}}" />
                     </div>
                 @endforeach

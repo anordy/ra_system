@@ -6,7 +6,7 @@
         <div>
             @if ($can_initiate_audit && !$deregister->audit)
                 <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'business.deregister.initiate-audit-modal', {{ $deregister_id }})">
+                    onclick="Livewire.emit('showModal', 'business.deregister.initiate-audit-modal', {{ encrypt($deregister_id) }})">
                     <i class="fa fa-plus-circle"></i>
                     Initiate Audit
                 </button>

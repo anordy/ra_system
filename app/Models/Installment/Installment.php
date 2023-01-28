@@ -73,7 +73,7 @@ class Installment extends Model implements Auditable
             return false;
         }
 
-        return $this->installment_from->addMonths($this->items()->where('status', BillStatus::COMPLETE)->count() + 1);
+        return $this->installment_from->addDays(30 * ($this->items()->where('status', BillStatus::COMPLETE)->count() + 1));
     }
 
     public function files(){

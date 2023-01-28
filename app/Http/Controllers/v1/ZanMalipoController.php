@@ -191,8 +191,6 @@ class ZanMalipoController extends Controller
             //Update Lease Payment
             $this->updateLeasePayment($bill);
 
-            //TODO: we should send sms to customer here to notify payment reception
-
             return $this->ackResp('gepgPmtSpInfoAck', '7101');
         } catch (\Throwable $ex) {
             Log::error('GEPG CALLBACK Error: ' . $ex . "\n");

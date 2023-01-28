@@ -82,7 +82,7 @@ class InstallmentPayment extends Component
             $createdby_type = get_class(Auth::user());
             $createdby_id   = Auth::id();
             $payer_id       = $payer->id;
-            $expire_date    = Carbon::now()->addMonth()->toDateTimeString();
+            $expire_date    = Carbon::now()->addDays(30)->endOfDay()->toDateTimeString();
             $billableId     = $item->id;
             $billableType   = get_class($item);
 

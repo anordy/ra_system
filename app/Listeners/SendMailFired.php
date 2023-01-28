@@ -70,7 +70,7 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
+        if(!config('app.env') == 'local'){
             return true;
         }
         if($event->service == 'otp'){

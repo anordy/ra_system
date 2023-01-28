@@ -94,6 +94,7 @@ class StreetTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
+                    $value = encrypt($value);
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-street-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML

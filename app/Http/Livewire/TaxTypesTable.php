@@ -82,6 +82,7 @@ class TaxTypesTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
+                    $value = encrypt($value);
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-tax-type-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit =  <<< HTML

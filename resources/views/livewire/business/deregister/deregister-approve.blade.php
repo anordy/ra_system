@@ -66,15 +66,15 @@
 
                 @if ($deregister->deregistration_type === 'all')
                     @livewire('business.deregister.tax-liability', [
-                        'business_id' => $deregister->business_id,
+                        'business_id' => encrypt($deregister->business_id),
                         'location_id' => null,
-                        'deregister_id' => $deregister->id,
+                        'deregister_id' => encrypt($deregister->id),
                     ])
                 @else
                     @livewire('business.deregister.tax-liability', [
                         'business_id' => null,
-                        'location_id' => $deregister->location_id,
-                        'deregister_id' => $deregister->id,
+                        'location_id' => encrypt($deregister->location_id),
+                        'deregister_id' => encrypt($deregister->id),
                     ])
                 @endif
 
