@@ -38,6 +38,9 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->debt_waiver = DebtWaiver::find($this->modelId);
+        if(is_null($this->debt_waiver)){
+            abort(404);
+        }
         $this->debt = $this->debt_waiver->debt;
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $this->modelId);

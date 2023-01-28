@@ -96,6 +96,9 @@ class UserEditModal extends Component
     {
         $this->roles = Role::all();
         $user = User::find($id);
+        if(is_null($user)){
+            abort(404);
+        }
         $this->user = $user;
         $this->levels = ApprovalLevel::select('id', 'name')->get();
         $this->fname = $user->fname;

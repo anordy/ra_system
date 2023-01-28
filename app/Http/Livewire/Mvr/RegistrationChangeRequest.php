@@ -59,7 +59,9 @@ class RegistrationChangeRequest extends Component
     {
         $this->validate();
         $mv = MvrMotorVehicle::query()->find($this->motor_vehicle_id);
-
+        if(is_null($mv)){
+            abort(404);
+        }
         try {
             DB::beginTransaction();
             $change_req = MvrRegistrationChangeRequest::query()->create([

@@ -125,6 +125,9 @@ class QuantityCertificateAdd extends Component
             
             $certificateNumber = 'COQ-'.$location->zin.$certificate->id;
             $certificateUpdate = QuantityCertificate::find($certificate->id);
+            if(is_null($certificateUpdate)){
+                abort(404);
+            }
             $certificateUpdate->certificate_no = $certificateNumber;
             $certificateUpdate->save();
 

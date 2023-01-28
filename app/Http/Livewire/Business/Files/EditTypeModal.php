@@ -34,6 +34,9 @@ class EditTypeModal extends Component
     public function mount($id)
     {
         $this->type= BusinessFileType::find($id);
+        if(is_null($this->type)){
+            abort(404);
+        }
         $this->name = $this->type->name;
         $this->short_name = $this->type->short_name;
         $this->description = $this->type->description;

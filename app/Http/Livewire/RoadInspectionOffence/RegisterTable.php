@@ -33,7 +33,7 @@ class RegisterTable extends DataTableComponent
     {
         return [
             Column::make("Driver Name", "drivers_license_owner.taxpayer_id")
-                ->format(fn($taxpayer_id)=>Taxpayer::query()->find($taxpayer_id)->fullname())
+                ->format(fn($taxpayer_id)=>Taxpayer::query()->find($taxpayer_id)->fullname() ?? 'N/A')
                 ->sortable(),
             Column::make("Plate Number", "motor_vehicle_registration.plate_number")
                 ->sortable(),

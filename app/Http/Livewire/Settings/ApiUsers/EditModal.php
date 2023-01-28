@@ -29,6 +29,9 @@ class EditModal extends Component
     public function mount($id)
     {
         $this->user = ApiUser::find($id);
+        if(is_null($this->user)){
+            abort(404);
+        }
         $this->app_name = $this->user->app_name;
         $this->app_url = $this->user->app_url;
         $this->username = $this->user->username;

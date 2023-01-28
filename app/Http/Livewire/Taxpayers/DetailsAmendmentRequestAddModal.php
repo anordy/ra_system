@@ -40,6 +40,9 @@ class DetailsAmendmentRequestAddModal extends Component
     public function mount($id)
     {
         $this->taxpayer = Taxpayer::find($id);
+        if(is_null($this->taxpayer)){
+            abort(404);
+        }
         $this->taxpayer_id = $this->taxpayer->id;
         $this->first_name = $this->taxpayer->first_name;
         $this->middle_name = $this->taxpayer->middle_name;

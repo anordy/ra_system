@@ -64,7 +64,9 @@ class DeregisterApprovalProcessing extends Component
 
                 if ($this->subject->deregistration_type == 'all') {
                     $business = Business::find($this->subject->business_id);
-
+                    if(is_null($business)){
+                        abort(404);
+                    }
                     $business->update([
                         'status' => BusinessStatus::DEREGISTERED
                     ]);

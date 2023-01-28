@@ -364,8 +364,14 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->subject->tax_type_id == 0) {
             if ($this->subject->assessment->assessment_type == TaxAudit::class ) {
                 $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxAuditTaxTypeNames();
+                if(is_null($taxType)){
+                    abort(404);
+                }
             } else if ($this->subject->assessment->assessment_type == TaxInvestigation::class ) {
                 $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxInvestigationTaxTypeNames();
+                if(is_null($taxType)){
+                    abort(404);
+                }
             }    
         } else {
             $taxType = $this->subject->taxType;

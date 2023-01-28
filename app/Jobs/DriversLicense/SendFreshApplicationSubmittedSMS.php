@@ -33,9 +33,11 @@ class SendFreshApplicationSubmittedSMS implements ShouldQueue
     public function handle()
     {
         $application = DlLicenseApplication::query()->find($this->payload);
-        $sms_controller = new SMSController;
-        $source = config('modulesconfig.smsheader');
-        $customer_message = "Your Competence ID is {$application->competence_number}; Please visit ZRB for taking picture and collecting driving license card";
-        $sms_controller->sendSMS($application->taxpayer->mobile, $source, $customer_message);
+        if($application){
+            $sms_controller = new SMSController;
+            $source = config('modulesconfig.smsheader');
+            $customer_message = "Your Competence ID is {$application->competence_number}; Please visit ZRB for taking picture and collecting driving license card";
+            $sms_controller->sendSMS($application->taxpayer->mobile, $source, $customer_message);
+        }
     }
 }

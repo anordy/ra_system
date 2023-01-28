@@ -242,6 +242,9 @@ class UsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
+            if(is_null($user)){
+                abort(404);
+            }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', 'The updated module has not been approved already');
                 return;
@@ -267,7 +270,9 @@ class UsersTable extends DataTableComponent
     {
         $data = (object) $value['data'];
         $user = User::find($data->id);
-
+        if(is_null($user)){
+            abort(404);
+        }
         event(new SendSms('user_add', $user->id));
         event(new SendMail('user_add', $user->id));
 
@@ -280,6 +285,9 @@ class UsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
+            if(is_null($user)){
+                abort(404);
+            }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', 'The updated module has not been approved already');
                 return;

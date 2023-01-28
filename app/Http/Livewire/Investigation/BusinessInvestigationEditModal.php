@@ -52,6 +52,9 @@ class BusinessInvestigationEditModal extends Component
     {
         if ($this->business_id) {
             $this->selectedBusiness = Business::with('locations')->find($id);
+            if(is_null($this->selectedBusiness)){
+                abort(404);
+            }
             $this->taxTypes         = $this->selectedBusiness->taxTypes;
             $this->locations        = $this->selectedBusiness->locations;
         } else {

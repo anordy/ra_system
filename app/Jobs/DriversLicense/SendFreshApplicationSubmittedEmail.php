@@ -37,7 +37,7 @@ class SendFreshApplicationSubmittedEmail implements ShouldQueue
     {
         $application = DlLicenseApplication::query()->find($this->application_id);
 
-        if ($application->taxpayer->email) {
+        if (!is_null($application) && $application->taxpayer->email) {
             Mail::to($application->taxpayer->email)->send(new class($application) extends Mailable
             {
                 use Queueable, SerializesModels;
