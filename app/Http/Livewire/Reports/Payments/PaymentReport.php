@@ -117,7 +117,7 @@ class PaymentReport extends Component
     {
         if ($propertyName == 'tax_type_id') {
             if ($this->tax_type_id != 'all') {
-                $this->tax_type_code = TaxType::find($this->tax_type_id)->code;
+                $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
                 if(is_null($this->tax_type_code)){
                     abort(404);
                 }

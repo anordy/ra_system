@@ -30,6 +30,9 @@ class ReliefSponsorsEditModal extends Component
     public function mount($id)
     {
         $data = ReliefSponsor::find($id);
+        if (is_null($data)){
+            abort(404, 'Sponsor not found');
+        }
         $this->reliefSponsor = $data;
         $this->name = $data->name;
         $this->acronym = $data->acronym;

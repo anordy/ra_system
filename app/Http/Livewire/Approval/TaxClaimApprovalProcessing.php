@@ -177,11 +177,11 @@ class TaxClaimApprovalProcessing extends Component
         if ($this->checkTransition('accepted')) {
             $this->subject->status = TaxClaimStatus::APPROVED;
             $this->subject->save();
-            $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
+            $credit = TaxCredit::where('claim_id', $this->subject->id)->firstOrFail();
             $credit->status = TaxClaimStatus::APPROVED;
             $credit->save();
 
-            $claim = TaxClaim::query()->find($this->subject->id);
+            $claim = TaxClaim::query()->findOrFail($this->subject->id);
             if(is_null($claim)){
                 abort(404);
             }
@@ -244,7 +244,7 @@ class TaxClaimApprovalProcessing extends Component
             return;
         }
 
-        $claim = TaxClaim::query()->find($this->subject->id);
+        $claim = TaxClaim::query()->findOrFail($this->subject->id);
         if(is_null($claim)){
             abort(404);
         }

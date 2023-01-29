@@ -39,7 +39,7 @@ class InstallmentPayment extends Component
                 $this->installment->getNextPaymentDate()->toDateTimeString()
             ])
             ->where('status', '!=', BillStatus::COMPLETE)
-            ->first();
+            ->first(); // Null value is checked from view.
     }
 
     public function refresh(){
@@ -50,7 +50,7 @@ class InstallmentPayment extends Component
                 $this->installment->getNextPaymentDate()->toDateTimeString()
             ])
             ->where('status', '!=', BillStatus::COMPLETE)
-            ->first();
+            ->first(); // Null value is checked from view.
     }
 
     public function generateItem(){

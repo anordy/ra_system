@@ -280,7 +280,7 @@ class ZanMalipoController extends Controller
             $assessmentBillItems = $bill->bill_items->pluck('billable_type')->toArray();
             if ($bill->billable_type == TaxAssessment::class && in_array(Dispute::class, $assessmentBillItems)) {
                 if ($bill->paidAmount() >= $bill->amount) {
-                    $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->first()->billable;
+                    $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->firstOrFail()->billable;
                     $assessment = $bill->billable;
                     if ($assessment->app_status == TaxAssessmentStatus::WAIVER_AND_OBJECTION) {
 

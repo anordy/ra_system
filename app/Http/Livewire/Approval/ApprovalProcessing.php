@@ -134,16 +134,16 @@ class ApprovalProcessing extends Component
             $this->Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
 
             // Get lumpsum ID
-            $lumpSumId = TaxType::query()->select('id')->where('code', TaxType::LUMPSUM_PAYMENT)->first()->id;
+            $lumpSumId = TaxType::query()->select('id')->where('code', TaxType::LUMPSUM_PAYMENT)->firstOrFail()->id;
 
             // Get vat ID
-            $vatId = TaxType::query()->select('id')->where('code', TaxType::VAT)->first()->id;
+            $vatId = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
             // Get vat ID
-            $hotelId = TaxType::query()->select('id')->where('code', TaxType::HOTEL)->first()->id;
+            $hotelId = TaxType::query()->select('id')->where('code', TaxType::HOTEL)->firstOrFail()->id;
 
             // Get stamp ID
-            $stampId = TaxType::query()->select('id')->where('code', TaxType::STAMP_DUTY)->first()->id;
+            $stampId = TaxType::query()->select('id')->where('code', TaxType::STAMP_DUTY)->firstOrFail()->id;
 
             //adding IDs to array
             $this->exceptionOne = [$vatId, $hotelId];

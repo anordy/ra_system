@@ -33,10 +33,12 @@ class AddReturnConfig extends Component
     public function mount()
     {
         $this->year = FinancialYear::query()->where('code', date('Y'))->first();
+        if (is_null($this->year)){
+            abort(404, 'Financial year not found.');
+        }
         $this->currencies = Currency::all();
         $code = $this->getTaxTypeCode($this->taxtype_id);
         $this->model = $this->getConfigModel($code);
-
     }
 
     public function updated($property)
@@ -92,7 +94,7 @@ class AddReturnConfig extends Component
 
         DB::beginTransaction();
         try {
-            $this->order = $this->model::query()->select('order')->orderByDesc('id')->first();
+            $this->order = $this->model::query()->select('order')->orderByDesc('id')->firstOrFail();
             if ($this->code == TaxType::VAT)
             {
                 $payload = [

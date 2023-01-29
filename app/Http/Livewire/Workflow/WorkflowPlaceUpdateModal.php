@@ -28,6 +28,9 @@ class WorkflowPlaceUpdateModal extends Component
     public function mount($workflow, $placeName)
     {
         $this->workflow = Workflow::find($workflow);
+        if (is_null($this->workflow)){
+            abort(404, 'Workflow not found');
+        }
         $places = json_decode($this->workflow->places, true);
         $this->place = $places[$placeName];
         $this->name = $placeName;

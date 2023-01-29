@@ -30,7 +30,13 @@ class FinancialMonthsTable extends DataTableComponent
         $day = date('Y-m-d');
         $day = date('F', strtotime($day));
         $year = FinancialYear::query()->where('code',date('Y'))->first();
+        if (is_null($year)){
+            abort(404, 'Financial year not found.');
+        }
         $today = FinancialMonth::query()->where('financial_year_id', $year->id)->where('name', $day)->first();
+        if (is_null($today)){
+            abort(404, 'Financial year not found');
+        }
         $this->today = $today->id;
         return FinancialMonth::query()->orderBy('financial_months.id', 'desc');
     }

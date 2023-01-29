@@ -188,8 +188,8 @@ class ReliefRegistrations extends Component
             if ($this->supplier == "") {
                 $this->optionSupplierLocations = null;
             } else {
-//                todo: select only the columns you need
-                $this->optionSupplierLocations = Business::find($this->supplier)->locations;
+                $business = Business::select('id')->findOrFail($this->supplier);
+                $this->optionSupplierLocations = $business->locations;
                 $this->supplierLocation = $this->optionSupplierLocations->first()->id;
             }
         }
@@ -210,7 +210,7 @@ class ReliefRegistrations extends Component
             if ($this->project == '') {
                 $this->rate = null;
             } else {
-                $this->rate = ReliefProjectList::find($this->project)->rate;
+                $this->rate = ReliefProjectList::findOrFail($this->project)->rate;
             }
             $this->calculateTotal();
         }

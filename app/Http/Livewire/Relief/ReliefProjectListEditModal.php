@@ -36,10 +36,12 @@ class ReliefProjectListEditModal extends Component
 
     public function mount($id)
     {
-//        todo: encrypt id
         $this->ministries = ReliefMinistry::all();
         $this->sponsors = ReliefSponsor::all();
         $data = ReliefProjectList::find(decrypt($id));
+        if (is_null($data)){
+            abort(404, 'Relief Project List not found');
+        }
         $this->project = $data;
         $this->name = $data->name;
         $this->description = $data->description;

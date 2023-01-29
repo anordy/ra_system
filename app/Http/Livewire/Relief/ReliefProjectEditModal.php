@@ -28,8 +28,10 @@ class ReliefProjectEditModal extends Component
 
     public function mount($id)
     {
-//        todo: encrypt id
         $data = ReliefProject::find(decrypt($id));
+        if (is_null($data)){
+            abort(404, 'Relief project not found.');
+        }
         $this->reliefProjectSection = $data;
         $this->name = $data->name;
         $this->description = $data->description;
