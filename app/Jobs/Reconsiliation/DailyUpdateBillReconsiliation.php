@@ -56,7 +56,7 @@ class DailyUpdateBillReconsiliation implements ShouldQueue
                 try {
                     DB::beginTransaction();
                     foreach ($bills as $bill) {
-                        $reconTrans = ZmReconTran::where('BillCtrNum', $bill->control_number)->first();
+                        $reconTrans = ZmReconTran::where('BillCtrNum', $bill->control_number)->firstOrFail();
 
                         ZmPayment::query()->insert([
                             'zm_bill_id' => $bill->id,

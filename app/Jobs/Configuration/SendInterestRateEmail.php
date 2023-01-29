@@ -37,14 +37,18 @@ class SendInterestRateEmail implements ShouldQueue
     {
         // Send email to administrators
         $admin_role = Role::where('name', 'Administrator')->get()->first();
-        $administrators = User::where('role_id', $admin_role->id)->get();
 
-        if (count($administrators) > 0) {
-            foreach ($administrators as $admin) {
-                if ($admin->email) {
-                    Mail::to($admin->email)->send(new InterestRate($this->payload));
+        if ($admin_role) {
+            $administrators = User::where('role_id', $admin_role->id)->get();
+
+            if (count($administrators) > 0) {
+                foreach ($administrators as $admin) {
+                    if ($admin->email) {
+                        Mail::to($admin->email)->send(new InterestRate($this->payload));
+                    }
                 }
             }
         }
+
     }
 }

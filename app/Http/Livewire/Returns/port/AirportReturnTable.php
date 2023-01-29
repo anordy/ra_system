@@ -34,6 +34,9 @@ class AirportReturnTable extends DataTableComponent
     public function builder(): Builder
     {
         $tax  = TaxType::where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->first();
+        if (!$tax) {
+            abort(404);
+        }
 
         $filter      = (new PortReturn)->newQuery();
         $returnTable = PortReturn::getTableName();

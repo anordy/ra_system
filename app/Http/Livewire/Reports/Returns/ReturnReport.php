@@ -103,7 +103,7 @@ class ReturnReport extends Component
     {
         if ($propertyName == 'tax_type_id') {
             if($this->tax_type_id != 'all'){
-                $this->tax_type_code = TaxType::find($this->tax_type_id)->code;
+                $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
             }else{
                 $this->tax_type_code = 'all';
             }
@@ -167,8 +167,8 @@ class ReturnReport extends Component
     {
         return [
             'tax_type_id' => $this->tax_type_id ?? 'all',
-            'tax_type_code' => $this->tax_type_id == 'all' ? 'all' : TaxType::find($this->tax_type_id)->code,
-            'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns' : TaxType::find($this->tax_type_id)->name,
+            'tax_type_code' => $this->tax_type_id == 'all' ? 'all' : TaxType::findOrFail($this->tax_type_id)->code,
+            'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns' : TaxType::findOrFail($this->tax_type_id)->name,
             'vat_type' => $this->vat_type,
             'type' => $this->type,
             'filing_report_type' => $this->filing_report_type,

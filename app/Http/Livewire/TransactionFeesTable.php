@@ -57,7 +57,7 @@ class TransactionFeesTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Created By', 'created_by')
-                ->format(fn($id) => User::query()->find($id)->fullname())
+                ->format(fn($id) => User::query()->find($id)->fullname() ?? 'N/A')
                 ->sortable(),
             Column::make('Created At', 'created_at')
                 ->sortable()
@@ -130,7 +130,7 @@ class TransactionFeesTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TransactionFee::find($data->id)->delete();
+            TransactionFee::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
@@ -198,7 +198,7 @@ class TransactionFeesTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object)$value['data'];
-            $fee = TransactionFee::find($data->id);
+            $fee = TransactionFee::findOrFail($data->id);
             $fee->is_approved = 2;
             $fee->save();
             $this->triggerAudit(EkaTatuFee::class, Audit::ACTIVATED, 'ega_fee', $fee->id, ['status' => 0], ['status' => 2]);

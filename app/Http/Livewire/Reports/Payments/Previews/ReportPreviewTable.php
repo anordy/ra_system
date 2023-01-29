@@ -16,12 +16,10 @@ class ReportPreviewTable extends DataTableComponent
     use LivewireAlert, ReturnReportTrait;
 
     public $parameters;
-    public $lumpsump;
 
     public function mount($parameters)
     {
         $this->parameters = $parameters;
-        $this->lumpsump = TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->first();
     }
 
     public function builder(): Builder

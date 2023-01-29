@@ -63,7 +63,7 @@ trait RollbackReturnPenaltyTrait
 
                 // Get the second last debt penalty, if we have two penalties get the first one
                 if (count($tax_return->penalties) > 2) {
-                    $second_last_debt_penalty = $tax_return->penalties->skip(1)->first();
+                    $second_last_debt_penalty = $tax_return->penalties->skip(1)->firstOrFail();
                     $tax_return->penalty = floatval($second_last_debt_penalty->penalty_amount) - floatval($second_last_debt_penalty->rate_amount);
                     $tax_return->interest = $second_last_debt_penalty->rate_amount;
                     $tax_return->outstanding_amount = 0;
@@ -74,7 +74,7 @@ trait RollbackReturnPenaltyTrait
                     $tax_return->return->save();
                     $tax_return->save();
                 } else if (count($tax_return->penalties) == 2) {
-                    $second_last_debt_penalty = $tax_return->penalties->first();
+                    $second_last_debt_penalty = $tax_return->penalties->firstOrFail();
                     $tax_return->penalty = floatval($second_last_debt_penalty->penalty_amount) - floatval($second_last_debt_penalty->rate_amount);
                     $tax_return->interest = $second_last_debt_penalty->rate_amount;
                     $tax_return->outstanding_amount = 0;
@@ -152,7 +152,7 @@ trait RollbackReturnPenaltyTrait
             try {
                 // Get the second last debt penalty, if we have two penalties get the first one
                 if (count($assessment->penalties) > 2) {
-                    $second_last_debt_penalty = $assessment->penalties->skip(1)->first();
+                    $second_last_debt_penalty = $assessment->penalties->skip(1)->firstOrFail();
                     $assessment->penalty_amount = floatval($second_last_debt_penalty->penalty_amount) - floatval($second_last_debt_penalty->rate_amount);
                     $assessment->interest_amount = $second_last_debt_penalty->rate_amount;
                     $assessment->outstanding_amount = 0;
@@ -162,7 +162,7 @@ trait RollbackReturnPenaltyTrait
                     $assessment->payment_status = ReturnStatus::COMPLETE;
                     $assessment->save();
                 } else if (count($assessment->penalties) == 2) {
-                    $second_last_debt_penalty = $assessment->penalties->first();
+                    $second_last_debt_penalty = $assessment->penalties->firstOrFail();
                     $assessment->penalty_amount = floatval($second_last_debt_penalty->penalty_amount) - floatval($second_last_debt_penalty->rate_amount);
                     $assessment->interest_amount = $second_last_debt_penalty->rate_amount;
                     $assessment->outstanding_amount = 0;

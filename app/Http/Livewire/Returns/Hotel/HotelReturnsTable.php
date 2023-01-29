@@ -37,6 +37,9 @@ class HotelReturnsTable extends DataTableComponent
     public function builder(): Builder
     {
         $tax    = TaxType::where('code', TaxType::HOTEL)->first();
+        if (!$tax) {
+            abort(404);
+        }
         $filter = (new HotelReturn)->newQuery();
 
         $returnTable = HotelReturn::getTableName();

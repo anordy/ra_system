@@ -74,7 +74,7 @@ trait PaymentsTrait
     public function generateControlNo($return, $billItems)
     {
         $taxpayer = $return->taxpayer;
-        $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->first();
+        $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->firstOrFail();
         $exchange_rate = $this->getExchangeRate($tax_type->currency);
 
         $payer_type     = get_class($taxpayer);
@@ -167,7 +167,7 @@ trait PaymentsTrait
     public function landLeaseGenerateControlNo($leasePayment, $billItems)
     {
         $taxpayer      = $leasePayment->taxpayer;
-        $tax_type      = TaxType::where('code', 'land-lease')->first();
+        $tax_type      = TaxType::where('code', TaxType::LAND_LEASE)->firstOrFail();
         $exchange_rate  = $this->getExchangeRate('USD');
 
         $payer_type     = get_class($taxpayer);
@@ -247,7 +247,7 @@ trait PaymentsTrait
         if ($minFee <= $amount) {
             $fee = $transactionFee->fee;
         } else {
-            $fee = TransactionFee::where('minimum_amount', '<=', $amount)->where('maximum_amount', '>=', $amount)->pluck('fee')->first();
+            $fee = TransactionFee::where('minimum_amount', '<=', $amount)->where('maximum_amount', '>=', $amount)->pluck('fee')->firstOrFail();
             $fee = $fee * $amount;
         }
         
@@ -296,8 +296,6 @@ trait PaymentsTrait
 
     public function generateDebtControlNo($debt)
     {
-        $taxTypes = TaxType::all();
-
         $tax_type = TaxType::findOrFail($debt->tax_type_id);
 
         if ($debt->principal > 0) {
@@ -319,8 +317,8 @@ trait PaymentsTrait
                 'use_item_ref_on_pay' => 'N',
                 'amount'              => $debt->penalty,
                 'currency'            => $debt->currency,
-                'gfs_code'            => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::PENALTY)->first()->id,
+                'gfs_code'            => $tax_type->gfs_code,
+                'tax_type_id'         => $tax_type->id,
             ];
         }
 
@@ -331,8 +329,8 @@ trait PaymentsTrait
                 'use_item_ref_on_pay' => 'N',
                 'amount'              => $debt->interest,
                 'currency'            => $debt->currency,
-                'gfs_code'            => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::INTEREST)->first()->id,
+                'gfs_code'            => $tax_type->gfs_code,
+                'tax_type_id'         => $tax_type->id,
             ];
         }
 
@@ -390,8 +388,6 @@ trait PaymentsTrait
 
     public function generateAssessmentDebtControlNo($debt)
     {
-        $taxTypes = TaxType::all();
-
         $tax_type = TaxType::findOrFail($debt->tax_type_id);
 
         if ($debt->principal_amount > 0) {
@@ -413,8 +409,8 @@ trait PaymentsTrait
                 'use_item_ref_on_pay' => 'N',
                 'amount'              => $debt->penalty_amount,
                 'currency'            => $debt->currency,
-                'gfs_code'            => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::PENALTY)->first()->id,
+                'gfs_code'            => $tax_type->gfs_code,
+                'tax_type_id'         => $tax_type->id,
             ];
         }
 
@@ -425,8 +421,8 @@ trait PaymentsTrait
                 'use_item_ref_on_pay' => 'N',
                 'amount'              => $debt->interest_amount,
                 'currency'            => $debt->currency,
-                'gfs_code'            => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::INTEREST)->first()->id,
+                'gfs_code'            => $tax_type->gfs_code,
+                'tax_type_id'         => $tax_type->id,
             ];
         }
 
@@ -484,8 +480,6 @@ trait PaymentsTrait
 
     public function generateWaivedAssessmentDisputeControlNo($assessment)
     {
-        $taxTypes = TaxType::all();
-
         $tax_type = TaxType::findOrFail($assessment->tax_type_id);
 
         if ($assessment->principal_amount > 0) {
@@ -507,8 +501,8 @@ trait PaymentsTrait
                 'use_item_ref_on_pay' => 'N',
                 'amount'              => $assessment->penalty_amount,
                 'currency'            => $assessment->currency,
-                'gfs_code'            => $taxTypes->where('code', TaxType::PENALTY)->first()->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::PENALTY)->first()->id,
+                'gfs_code'            => $tax_type->gfs_code,
+                'tax_type_id'         => $tax_type->id,
             ];
         }
 
@@ -519,8 +513,8 @@ trait PaymentsTrait
                 'use_item_ref_on_pay' => 'N',
                 'amount'              => $assessment->interest_amount,
                 'currency'            => $assessment->currency,
-                'gfs_code'            => $taxTypes->where('code', TaxType::INTEREST)->first()->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::INTEREST)->first()->id,
+                'gfs_code'            => $tax_type->gfs_code,
+                'tax_type_id'         => $tax_type->id,
             ];
         }
 
@@ -588,7 +582,7 @@ trait PaymentsTrait
     public function generateTaxAgentRegControlNo($agent, $billitems, $used_currency)
     {
         $rate = $this->getExchangeRate($used_currency);
-        $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
+        $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->firstOrFail();
 
         $taxpayer = $agent->taxpayer;
         $payer_type = get_class($taxpayer);
@@ -642,7 +636,7 @@ trait PaymentsTrait
     public function generateTaxAgentRenewControlNo($req, $billitems, $used_currency)
     {
         $rate = $this->getExchangeRate($used_currency);
-        $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
+        $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->firstOrFail();
 
         $taxpayer = $req->tax_agent->taxpayer;
         $payer_type = get_class($taxpayer);

@@ -316,8 +316,8 @@ class TaxInvestigationApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->principalAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'investigation')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'investigation')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'investigation')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
@@ -325,8 +325,8 @@ class TaxInvestigationApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->interestAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'interest')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
@@ -334,8 +334,8 @@ class TaxInvestigationApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->penaltyAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
                 ]
             ];
 
@@ -359,7 +359,7 @@ class TaxInvestigationApprovalProcessing extends Component
             $zmBill = ZmCore::createBill(
                 $billableId,
                 $billableType,
-                $this->taxTypes->where('code', 'investigation')->first()->id,
+                $this->taxTypes->where('code', 'investigation')->firstOrFail()->id,
                 $payer_id,
                 $payer_type,
                 $payer_name,

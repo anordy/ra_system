@@ -141,7 +141,7 @@ class TaxAuditInitiateTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TaxAudit::find($data->id)->delete();
+            TaxAudit::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

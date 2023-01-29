@@ -41,7 +41,7 @@ class SendRegistrationEmail implements ShouldQueue
      */
     public function handle()
     {
-        $user = User::find($this->payload);
+        $user = User::findOrFail($this->payload);
         $code = Str::random(8);
         $user->password = Hash::make($code);
         $user->save();

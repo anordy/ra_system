@@ -34,7 +34,7 @@ class AddReturnConfig extends Component
     {
         $this->year = FinancialYear::query()->where('code', date('Y'))->first();
         $this->currencies = Currency::all();
-        $code = $this->getTaxTypeCode($this->taxtype_id);
+        $code = $this->getTaxTypeCode(decrypt($this->taxtype_id));
         $this->model = $this->getConfigModel($code);
 
     }

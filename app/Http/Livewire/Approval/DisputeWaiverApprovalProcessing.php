@@ -35,7 +35,7 @@ class DisputeWaiverApprovalProcessing extends Component
     public $penaltyPercent, $penaltyAmount, $penaltyAmountDue, $interestAmountDue;
     public $interestPercent, $interestAmount, $dispute, $assesment, $total, $principal_amount_due;
     public $natureOfAttachment, $noticeReport, $settingReport;
-    public $principal, $penalty, $interest;
+    public $principal, $penalty, $interest, $assessment;
 
     public function mount($modelName, $modelId)
     {
@@ -87,7 +87,6 @@ class DisputeWaiverApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $taxType = $this->subject->taxType;
-        $this->taxTypes = TaxType::where('code', 'disputes')->first();
 
         if ($this->checkTransition('objection_manager_review')) {
 
@@ -102,7 +101,7 @@ class DisputeWaiverApprovalProcessing extends Component
                 $disputeReport = $this->disputeReport->store('waiver_report', 'local');
             }
 
-            $dispute = Dispute::find($this->modelId);
+            $dispute = Dispute::findOrFail($this->modelId);
 
             DB::beginTransaction();
             try {

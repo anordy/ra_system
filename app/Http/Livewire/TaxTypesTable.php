@@ -129,7 +129,7 @@ class TaxTypesTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TaxType::find($data->id)->delete();
+            TaxType::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

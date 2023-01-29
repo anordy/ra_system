@@ -76,7 +76,7 @@ class ReliefProjectListTable extends DataTableComponent
 
     public function delete($id)
     {
-        $projectList = ReliefProjectList::find($id);
+        $projectList = ReliefProjectList::findOrFail($id);
         //check if ministry has been used in relief project list and if so, prevent deletion
         if ($projectList->reliefs()->count()>0) {
             $this->alert('error', 'Cannot delete project. Project is used in Relief.');

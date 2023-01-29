@@ -20,6 +20,7 @@ class UserChangePasswordModal extends Component
     public $password;
     public $password_confirmation;
     public $passwordStrength = 0;
+    public $user;
 
 
     protected function rules()

@@ -23,7 +23,7 @@ class PenaltyForDebt
     {
         $penaltableAmount = 0;
 
-        $year = FinancialYear::where('code', $date->year)->first();
+        $year = FinancialYear::where('code', $date->year)->firstOrFail();
         $interestRate = InterestRate::where('year', $year->code)->firstOrFail()->rate;
         $latePaymentAfterRate = PenaltyRate::where('financial_year_id', $year->id)
             ->where('code', 'LPA')
@@ -59,7 +59,7 @@ class PenaltyForDebt
 
         $endDate = DebtPenalty::where('debt_id', $debtId)
             ->latest()
-            ->first()->end_date;
+            ->firstOrFail()->end_date;
 
         return [$endDate, $totalAmount];
     }

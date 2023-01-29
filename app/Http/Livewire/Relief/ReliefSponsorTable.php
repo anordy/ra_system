@@ -53,7 +53,7 @@ class ReliefSponsorTable extends DataTableComponent
         if(!Gate::allows('relief-sponsors-delete')){
             abort(403);
         }
-        $sponsors = ReliefSponsor::find($id);
+        $sponsors = ReliefSponsor::findOrFail($id);
 
         if ($sponsors->projectLists()->count()>0) {
             $this->alert('error', 'Cannot delete Sponsor. its used in one of created project.');
