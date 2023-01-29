@@ -43,6 +43,9 @@ class NotificationsTable extends Component
     public function read($notification)
     {
         $notification = Notification::find($notification['id']);
+        if(is_null($notification)){
+            abort(404);
+        }
         $data = $notification->data;
         try {
             DB::beginTransaction();

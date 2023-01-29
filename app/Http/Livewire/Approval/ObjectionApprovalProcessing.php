@@ -43,6 +43,9 @@ class ObjectionApprovalProcessing extends Component
         $this->dispute = Dispute::find($this->modelId);
         $this->principal = $this->dispute->tax_in_dispute;
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+        if(is_null($this->assessment)){
+            abort(404);
+        }
         $this->penalty = $this->assessment->penalty_amount;
         $this->interest = $this->assessment->interest_amount;
         $this->taxTypes = TaxType::where('code', 'disputes')->first();
@@ -122,7 +125,9 @@ class ObjectionApprovalProcessing extends Component
             }
 
             $dispute = Dispute::find($this->modelId);
-
+            if(is_null($dispute)){
+                abort(404);
+            }
             DB::beginTransaction();
             try {
 

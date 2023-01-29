@@ -19,6 +19,9 @@ class ReturnPayment extends Component
 
     public function refresh(){
         $this->return = get_class($this->return)::find($this->return->id);
+        if(is_null($this->return)){
+            abort(404);
+        }
     }
 
     public function regenerate(){

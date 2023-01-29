@@ -37,6 +37,9 @@ class TaxClearenceApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->tax_clearence = TaxClearanceRequest::find($this->modelId);
+        if(is_null($this->tax_clearence)){
+            abort(404);
+        }
         $this->taxTypes = TaxType::all();
         $this->registerWorkflow($modelName, $this->modelId);
     }

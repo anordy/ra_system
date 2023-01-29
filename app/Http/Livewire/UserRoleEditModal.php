@@ -20,11 +20,6 @@ class UserRoleEditModal extends Component
     use LivewireAlert, DualControlActivityTrait;
 
     public $roles = [];
-    // public $fname;
-    // public $lname;
-    // public $phone;
-    // public $gender = '';
-    // public $email;
     public $role = '';
     public $user;
     public $old_values;
@@ -32,9 +27,11 @@ class UserRoleEditModal extends Component
     public function mount($id)
     {
         $this->roles = Role::all();
-        $user = User::find($id);
-        $this->user = $user;
-        $this->role = $user->role_id;
+        $this->user = User::find(decrypt($id));
+        if (is_null($this->user)){
+            abort(404, 'User not found');
+        }
+        $this->role = $this->user->role_id;
         $this->old_values = [
             'role_id' => $this->role,
             'fname' => $this->user->fname,

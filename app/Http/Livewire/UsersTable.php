@@ -124,6 +124,7 @@ class UsersTable extends DataTableComponent
                     $changePwd = '';
                     $delete = '';
                     $mail = '';
+                    $value = encrypt($value);
 
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker') ) {
@@ -159,10 +160,11 @@ class UsersTable extends DataTableComponent
 
             Column::make('Role Action', 'role.id')
                 ->format(function ($value, $row) {
+                    $value = encrypt($row->id);
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-change-role')) {
                             return <<< HTML
-                                        <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $row->id)"><i class="fa fa-user-tag"></i> </button>
+                                        <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $value)"><i class="fa fa-user-tag"></i> </button>
                                     HTML;
                         }
                     }
@@ -240,6 +242,9 @@ class UsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
+            if(is_null($user)){
+                abort(404);
+            }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', 'The updated module has not been approved already');
                 return;
@@ -265,7 +270,9 @@ class UsersTable extends DataTableComponent
     {
         $data = (object) $value['data'];
         $user = User::find($data->id);
-
+        if(is_null($user)){
+            abort(404);
+        }
         event(new SendSms('user_add', $user->id));
         event(new SendMail('user_add', $user->id));
 
@@ -278,6 +285,9 @@ class UsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = User::find($data->id);
+            if(is_null($user)){
+                abort(404);
+            }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', 'The updated module has not been approved already');
                 return;

@@ -27,6 +27,9 @@ class LandLeaseView extends Component
     public function mount($enc_id)
     {
         $this->landLease = LandLease::find(decrypt($enc_id));
+        if(is_null($this->landLease)){
+            abort(404);
+        }
         $this->taxType = TaxType::where('code', TaxType::LAND_LEASE)->first();
     }
 

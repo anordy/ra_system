@@ -9,6 +9,9 @@ class MainRegion extends Model
 {
     protected $guarded = [];
     use HasFactory;
+
+    public const UNG = 'UNG';
+    public const PMB = 'PMB';
     protected $table = 'main_regions';
 
     protected $fillable = [

@@ -25,7 +25,7 @@ class LandLeasePayment extends Component
 
     public function refresh(){
         $landLease = get_class($this->landLease)::find($this->landLease->id);
-        if (!$landLease){
+        if (is_null($landLease)){
             session()->flash('error', 'Land Lease not found.');
             return redirect()->route('land-lease.taxpayer.list');
         }
@@ -45,6 +45,9 @@ class LandLeasePayment extends Component
         if ($response){
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             $this->leasePayment = get_class($this->leasePayment)::find($this->leasePayment->id);
+            if(is_null($this->leasePayment)){
+                abort(404);
+            }
         } else {
             $this->alert('error', 'Control number could not be generated, please try again later.');
         }

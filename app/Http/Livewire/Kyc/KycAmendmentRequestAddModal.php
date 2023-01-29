@@ -49,6 +49,9 @@ class KycAmendmentRequestAddModal extends Component
     public function mount($id)
     {
         $this->kyc = KYC::find($id);
+        if(is_null($this->kyc)){
+            abort(404);
+        }
         $this->kyc_id = $this->kyc->id;
         $this->first_name = $this->kyc->first_name;
         $this->middle_name = $this->kyc->middle_name;

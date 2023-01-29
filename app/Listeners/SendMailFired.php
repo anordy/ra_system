@@ -70,31 +70,49 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
+        if(!config('app.env') == 'local'){
             return true;
         }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
+            if(is_null($token)){
+                abort(404);
+            }
             SendOTPEmail::dispatch($event->extra['code'], $token->user->email, $token->user->fullname());
         } else if ($event->service == 'withholding_agent_registration') {
             /** TokenId is withholding agent history is */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);
+            if(is_null($withholding_agent)){
+                abort(404);
+            }
             SendWithholdingAgentRegistrationEmail::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->withholdingAgent->institution_name, $withholding_agent->taxpayer->email);
         } else if ($event->service === 'taxpayer-registration'){
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
+            if(is_null($taxpayer)){
+                abort(404);
+            }
             SendRegistrationMail::dispatch($taxpayer, $event->extra['code']);
         } else if ($event->service === 'business-registration-approved'){
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
+            if(is_null($business)){
+                abort(404);
+            }
             SendBusinessApprovedMail::dispatch($business, $business->taxpayer);
         } else if ($event->service === 'business-registration-correction'){
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
+            if(is_null($business)){
+                abort(404);
+            }
             SendBusinessCorrectionMail::dispatch($business, $business->taxpayer, $event->extra['message']);
         }
         else if ($event->service == 'tax-agent-registration-approval') {
 	        $taxpayer = Taxpayer::find($event->tokenId);
+            if(is_null($taxpayer)){
+                abort(404);
+            }
 			$fullname = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
 			$email = $taxpayer->email;
 	        $status = $taxpayer->taxagent->status;

@@ -130,6 +130,9 @@ class InterestRatesTable extends DataTableComponent
         try {
             $data = (object)$value['data'];
             $rate = InterestRate::find($data->id);
+            if(is_null($rate)){
+                abort(404);
+            }
             $this->triggerDualControl(get_class($rate), $rate->id, DualControl::DELETE, 'deleting interest rate');
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;

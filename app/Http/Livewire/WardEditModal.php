@@ -37,6 +37,9 @@ class WardEditModal extends Component
     {
         $this->regions = Region::select('id', 'name')->get();
         $this->ward = Ward::find($id);
+        if(is_null($this->ward)){
+            abort(404);
+        }
         $this->name = $this->ward->name;
         $this->district_id = $this->ward->district_id;
         $this->region_id = $this->ward->district->region->id;

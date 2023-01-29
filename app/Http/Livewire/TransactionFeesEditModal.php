@@ -37,6 +37,9 @@ class TransactionFeesEditModal extends Component
     public function mount($id)
     {
         $data = TransactionFee::find($id);
+        if(is_null($data)){
+            abort(404);
+        }
         $this->min_amount = $data->minimum_amount;
         $this->max_amount = $data->maximum_amount ?? null;
         $this->fee = $data->fee;

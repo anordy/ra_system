@@ -81,6 +81,9 @@ class LandLeasePenaltyJob extends Command
                 $total_amount_with_penalties = $this->calculateLeasePenalties($leasePayment, $paymentFinancialMonthDueDate, $penaltyIteration);
                 
                 $updateLeasePayment = LeasePayment::find($leasePayment->id);
+                if(is_null($updateLeasePayment)){
+                    abort(404);
+                }
                 $updateLeasePayment->penalty = $leasePayment->totalPenalties();
                 $updateLeasePayment->total_amount_with_penalties = $total_amount_with_penalties;
                 $updateLeasePayment->outstanding_amount = $total_amount_with_penalties;
@@ -90,6 +93,9 @@ class LandLeasePenaltyJob extends Command
                 if($leasePayment->debt){
 
                     $updateDebt = LandLeaseDebt::find($leasePayment->debt->id);
+                    if(is_null($updateDebt)){
+                        abort(404);
+                    }
                     $updateDebt->penalty = $updateLeasePayment->penalty;
                     $updateDebt->total_amount = $updateLeasePayment->total_amount_with_penalties;
                     $updateDebt->outstanding_amount = $updateLeasePayment->outstanding_amount;

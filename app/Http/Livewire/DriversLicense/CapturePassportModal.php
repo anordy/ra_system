@@ -52,6 +52,9 @@ class CapturePassportModal extends Component
             DB::beginTransaction();
             $this->photo_path = $this->photo->storeAs('dl_passport', "dl-passport-{$this->application_id}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->photo->extension());
             $dla =  DlLicenseApplication::query()->find($this->application_id);
+            if(is_null($dla)){
+                abort(404);
+            }
             $dla->update([
                 'photo_path'=>$this->photo_path,
                 'dl_application_status_id'=>DlApplicationStatus::query()->firstOrCreate(['name'=>DlApplicationStatus::STATUS_LICENSE_PRINTING])->id,

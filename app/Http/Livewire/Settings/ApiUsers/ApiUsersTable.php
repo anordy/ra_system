@@ -146,6 +146,9 @@ class ApiUsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = ApiUser::find($data->id);
+            if(is_null($user)){
+                abort(404);
+            }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', 'The updated module has not been approved already');
                 return;

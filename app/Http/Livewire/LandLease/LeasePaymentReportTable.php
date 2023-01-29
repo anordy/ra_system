@@ -103,6 +103,9 @@ class LeasePaymentReportTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $column = 'landlease.id';
                     $landLease = LandLease::select('category', 'business_location_id', 'taxpayer_id', 'name')->find($row[$column]);
+                    if(is_null($landLease)){
+                        return 'N/A';
+                    }
                     if ($landLease->category == 'business') {
                         return $this->getBusinessName($landLease->business_location_id);
                     } else {
@@ -159,8 +162,14 @@ class LeasePaymentReportTable extends DataTableComponent
                 ->format(
                     function ($value, $row) {
                         $landLease = LandLease::select('is_registered', 'taxpayer_id', 'name')->find($row['landlease.id']);
+                        if(is_null($landLease)){
+                            return 'N/A';
+                        }
                         if ($landLease->is_registered == 1) {
                             $taxpayer = Taxpayer::select('first_name', 'last_name')->find($landLease->taxpayer_id);
+                            if(is_null($taxpayer)){
+                                abort(404);
+                            }
                             return $taxpayer->first_name .' '. $taxpayer->last_name;
                         } else {
                             return $landLease->name;

@@ -32,6 +32,19 @@ class TaxLiability extends Component
 
     public function mount($business_id, $location_id, $deregister_id)
     {
+        // Expecting null values
+        if ($business_id){
+            $business_id = decrypt($business_id);
+        }
+
+        if ($location_id){
+            $location_id = decrypt($location_id);
+        }
+
+        if ($deregister_id){
+            $deregister_id = decrypt($deregister_id);
+        }
+
         $this->business_id = $business_id;
         $this->location_id = $location_id;
         $this->deregister_id = $deregister_id;

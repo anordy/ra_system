@@ -63,7 +63,9 @@ class TaxpayersTable extends DataTableComponent
     {
         $data = (object) $value['data'];
         $taxpayer = Taxpayer::find($data->id);
-
+        if(is_null($taxpayer)){
+            abort(404);
+        }
         $permitted_chars = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ!@#%';
         $password = substr(str_shuffle($permitted_chars), 0, 8);
         $taxpayer->password = Hash::make($password);

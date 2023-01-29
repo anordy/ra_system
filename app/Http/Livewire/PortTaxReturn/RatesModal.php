@@ -62,6 +62,9 @@ class RatesModal extends Component
 				$exist_created_by = $check->created_by;
 
 				$result = PortTaxConfigRate::find($rate_id);
+                if(is_null($result)){
+                    abort(404);
+                }
 				$result->rate = $this->rate;
 				$result->updated_at = now();
 				$result->save();

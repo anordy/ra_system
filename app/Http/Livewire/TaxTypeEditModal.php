@@ -31,7 +31,10 @@ class TaxTypeEditModal extends Component
 
     public function mount($id)
     {
-        $this->taxType = TaxType::find($id);
+        $this->taxType = TaxType::find(decrypt($id));
+        if (is_null($this->taxType)){
+            abort(404, 'Taxtype not found.');
+        }
         $this->name =  $this->taxType->name;
         $this->gfs_code =  $this->taxType->gfs_code;
 

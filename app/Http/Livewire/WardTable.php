@@ -136,6 +136,9 @@ class WardTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $ward = Ward::find($data->id);
+            if(is_null($ward)){
+                abort(404);
+            }
             if ($ward->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;

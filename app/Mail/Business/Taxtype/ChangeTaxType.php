@@ -50,6 +50,9 @@ class ChangeTaxType extends Mailable
                 if ($location->status == 'approved') {
                     $taxTypeId = $this->payload['tax_change']->to_tax_type_id;
                     $tax = TaxType::find($taxTypeId);
+                    if(is_null($tax)){
+                        abort(404);
+                    }
                     $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
 
                     $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
