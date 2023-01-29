@@ -28,12 +28,12 @@ class RecoveryMeasureApprovalProcessing extends Component
     public $comments;
     public $initializedRecMeasure;
 
-    public function mount($debt)
+    public function mount($debtId, $modelName)
     {
-        $this->debtId = $debt->id;
+        $this->debtId = decrypt($debtId);
         $this->recovery_measure_categories = RecoveryMeasureCategory::all();
-        $this->debt = $debt;
-        $this->modelName = get_class($debt);
+        $this->debt = $modelName::findOrFail($this->debtId);
+        $this->modelName = $modelName;
 
         $this->initializedRecMeasure = RecoveryMeasure::where('debt_id', $this->debtId)
                 ->where('debt_type', $this->modelName)
@@ -61,7 +61,7 @@ class RecoveryMeasureApprovalProcessing extends Component
     public function approve($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['recovery_measures' => 'required|strip_tag']);
+        $this->validate(['recovery_measures' => 'required']);
         DB::beginTransaction();
         try {
 

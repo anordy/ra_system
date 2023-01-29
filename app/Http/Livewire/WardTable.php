@@ -91,8 +91,9 @@ class WardTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
+                    $value = "'".encrypt($value)."'";
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-ward-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
+                        if (Gate::allows('setting-ward-edit')  && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
                                 <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                             HTML;
@@ -111,6 +112,7 @@ class WardTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-ward-delete')) {
             abort(403);
         }
@@ -136,7 +138,7 @@ class WardTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $ward = Ward::find($data->id);
-            if(is_null($ward)){
+            if (is_null($ward)) {
                 abort(404);
             }
             if ($ward->is_approved == DualControl::NOT_APPROVED) {

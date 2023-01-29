@@ -15,7 +15,7 @@ class AssignRecoveryMeasure extends Component
 
     public function mount($debtId)
     {
-        $this->debt = TaxReturn::findOrFail($debtId);
+        $this->debt = TaxReturn::findOrFail(decrypt($debtId));
     }
 
     public function render()

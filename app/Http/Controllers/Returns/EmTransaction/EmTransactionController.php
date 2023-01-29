@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Returns\EmTransaction;
 
 use App\Http\Controllers\Controller;
-use App\Models\Returns\EmTransactionPenalty;
 use App\Models\Returns\EmTransactionReturn;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;

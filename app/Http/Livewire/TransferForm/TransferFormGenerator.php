@@ -9,11 +9,12 @@ class TransferFormGenerator extends Component
 {
     public $zrbBankAccounts;
     public $billType;
+    public $billId;
     public $bankAccountId;
 
     public function mount($currency, $billId) {
         $this->zrbBankAccounts = ZrbBankAccount::select('id', 'bank_id')->with('bank')->where('currency_iso', $currency)->where('is_approved', 1)->get();   
-        $this->billId = $billId;
+        $this->billId = decrypt($billId);
     }
 
     protected $rules = [

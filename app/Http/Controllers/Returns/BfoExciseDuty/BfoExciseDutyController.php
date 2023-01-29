@@ -3,14 +3,9 @@
 namespace App\Http\Controllers\Returns\BfoExciseDuty;
 
 use App\Http\Controllers\Controller;
-use App\Models\BusinessStatus;
-use App\Models\Returns\BFO\BfoPenalty;
 use App\Models\Returns\BFO\BfoReturn;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class BfoExciseDutyController extends Controller

@@ -3,25 +3,18 @@
 namespace App\Http\Livewire\Installment;
 
 use App\Enum\BillStatus;
-use App\Enum\InstallmentRequestStatus;
-use App\Models\ExchangeRate;
 use App\Models\Installment\InstallmentItem;
-use App\Models\Installment\InstallmentRequest;
 use App\Models\TaxType;
-use App\Models\ZmBill;
 use App\Services\ZanMalipo\ZmCore;
 use App\Traits\ExchangeRateTrait;
 use App\Traits\PaymentsTrait;
-use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
-use function GuzzleHttp\Promise\inspect;
 
 class InstallmentPayment extends Component
 {
@@ -86,7 +79,7 @@ class InstallmentPayment extends Component
             $billableId     = $item->id;
             $billableType   = get_class($item);
 
-            $taxType = TaxType::where('code', TaxType::DEBTS)->firstOrFail();
+            $taxType = TaxType::findOrFail($this->installment->tax_type_id);
 
             $billItems[] = [
                 'billable_id' => $item->id,

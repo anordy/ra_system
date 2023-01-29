@@ -31,7 +31,7 @@ class InterestRateEditModal extends Component
 
     public function mount($id)
     {
-        $data = InterestRate::find($id);
+        $data = InterestRate::find(decrypt($id));
         if(is_null($data)){
             abort(404);
         }

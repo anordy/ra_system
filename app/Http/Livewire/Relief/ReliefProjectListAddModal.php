@@ -29,7 +29,6 @@ class ReliefProjectListAddModal extends Component
 
     public function mount($id)
     {
-//        todo: encrypt id
         $this->project_id = decrypt($id);
 
         $this->ministries = ReliefMinistry::all();
