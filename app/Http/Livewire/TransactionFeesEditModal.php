@@ -36,7 +36,7 @@ class TransactionFeesEditModal extends Component
 
     public function mount($id)
     {
-        $data = TransactionFee::find($id);
+        $data = TransactionFee::find(decrypt($id));
         if(is_null($data)){
             abort(404);
         }

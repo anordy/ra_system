@@ -127,12 +127,12 @@ trait SevenDaysPenaltyTrait
         }
 
         // If not, Check date of commence
-        $date = BusinessLocation::find($locationId)->business->effective_date;
+        $date = BusinessLocation::findOrFail($locationId)->business->effective_date;
 
-        $financialYear = FinancialYear::where('code', $date->year)->first();
+        $financialYear = FinancialYear::where('code', $date->year)->firstOrFail();
         $financialMonth = SevenDaysFinancialMonth::where('financial_year_id', $financialYear->id)
             ->where('number', $date->month)
-            ->first();
+            ->firstOrFail();
 
         return self::checkNextViableReturnMonth($financialMonth);
 
@@ -146,12 +146,12 @@ trait SevenDaysPenaltyTrait
             // TODO: First or fail
             $month = SevenDaysFinancialMonth::where('number', 1)
                 ->where('financial_year_id', $year->id)
-                ->first();
+                ->firstOrFail();
         } else {
             // TODO: First or fail
             $month = SevenDaysFinancialMonth::where('financial_year_id', $financialMonth->financial_year_id)
                 ->where('number', $financialMonth->number + 1)
-                ->first();
+                ->firstOrFail();
         }
 
         $date = self::getDateFromFinancialMonth($month);

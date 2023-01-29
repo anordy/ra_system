@@ -33,7 +33,7 @@ class EditTypeModal extends Component
 
     public function mount($id)
     {
-        $this->type= BusinessFileType::find($id);
+        $this->type= BusinessFileType::find(decrypt($id));
         if(is_null($this->type)){
             abort(404);
         }

@@ -86,8 +86,9 @@ class TransactionFeesTable extends DataTableComponent
                     $reject = '';
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-transaction-fees-edit') && approvalLevel(Auth::user()->level_id, 'maker')) {
+                            $id = encrypt($value);
                             $edit = <<< HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal', $id)"><i class="fa fa-edit"></i> </button>
                             HTML;
                         }
 

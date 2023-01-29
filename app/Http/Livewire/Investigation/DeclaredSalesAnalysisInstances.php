@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Investigation;
 
+use App\Models\Investigation\TaxInvestigation;
 use App\Models\Investigation\TaxInvestigationLocation;
 use App\Models\Investigation\TaxInvestigationTaxType;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -15,9 +16,12 @@ class DeclaredSalesAnalysisInstances extends Component
     public $locations;
     public $taxTypes;
 
-    public function mount($investigation)
+    public function mount($investigationId)
     {
-
+        $investigation = TaxInvestigation::find(decrypt($investigationId));
+        if (is_null($investigation)){
+            abort(404);
+        }
         $this->investigation = $investigation;
         $this->locations = $investigation->businessLocations;
         $this->taxTypes = $investigation->taxTypes;

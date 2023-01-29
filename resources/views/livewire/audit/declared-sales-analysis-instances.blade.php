@@ -39,7 +39,7 @@
                                     <div id="collapseTaxType-{{ $location->id }}-{{ $taxType->id }}" class="collapse" aria-labelledby="headingTwo"
                                         data-parent="#accordionInstance">
                                         <div class="card-body">
-                                            @livewire('audit.declared-sales-analysis', ['audit' => $audit, 'tax_type_id' => $taxType->id, 'location_id' => $location->id])
+                                            @livewire('audit.declared-sales-analysis', ['auditId' => encrypt($audit->id), 'tax_type_id' => encrypt($taxType->id), 'location_id' => encrypt($location->id)])
                                         </div>
                                     </div>
                                 </div>

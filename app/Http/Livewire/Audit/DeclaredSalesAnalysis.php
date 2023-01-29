@@ -21,6 +21,7 @@ use App\Models\Returns\StampDuty\StampDutyConfig;
 use App\Models\Returns\StampDuty\StampDutyReturnItem;
 use App\Models\Returns\Vat\VatReturnConfig;
 use App\Models\Returns\Vat\VatReturnItem;
+use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxType;
 use Carbon\Carbon;
 use DateTime;
@@ -49,10 +50,14 @@ class DeclaredSalesAnalysis extends Component
     public $start_date;
     public $end_date;
 
-    public function mount($audit, $tax_type_id, $location_id)
+    public function mount($auditId, $tax_type_id, $location_id)
     {
-        $this->taxType = $audit->taxTypes->firstWhere('id', $tax_type_id);
-        $this->branch = $audit->businessLocations->firstWhere('id', $location_id);
+        $audit = TaxAudit::find(decrypt($auditId));
+        if (is_null($audit)){
+            abort(404);
+        }
+        $this->taxType = $audit->taxTypes->firstWhere('id', decrypt($tax_type_id));
+        $this->branch = $audit->businessLocations->firstWhere('id', decrypt($location_id));
         $this->start_date = $this->validateDate($audit->period_from) ? $audit->period_from : Carbon::now();
         $this->end_date = $this->validateDate($audit->period_to) ? $audit->period_to : Carbon::now();
 

@@ -254,7 +254,7 @@
                 </table>
             </div>
 
-            @livewire('kyc.kyc-amendment-request-approval-processing', ['modelName' => 'App\Models\KycAmendmentRequest', 'modelId' => encrypt($amendmentRequest->id), 'amendmentRequest' => $amendmentRequest])
+            @livewire('kyc.kyc-amendment-request-approval-processing', ['modelName' => 'App\Models\KycAmendmentRequest', 'modelId' => encrypt($amendmentRequest->id)])
         </div>
         <div id="tab2" class="tab-pane fade p-4">
             <livewire:approval.approval-history-table modelName='App\Models\KycAmendmentRequest'
