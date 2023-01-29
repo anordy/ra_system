@@ -65,7 +65,6 @@ class AddResponsiblePersonModal extends Component
     {
         $this->search_triggered = true;
 
-//        todo: select only the columns you need
         $taxpayer = Taxpayer::query()->where(['reference_no' => $this->reference_no])->first();
 
         if (!empty($taxpayer)) {

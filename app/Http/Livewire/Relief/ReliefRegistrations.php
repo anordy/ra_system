@@ -188,7 +188,6 @@ class ReliefRegistrations extends Component
             if ($this->supplier == "") {
                 $this->optionSupplierLocations = null;
             } else {
-//                todo: select only the columns you need
                 $this->optionSupplierLocations = Business::find($this->supplier)->locations;
                 $supplierLocation = $this->optionSupplierLocations->first();
                 if (is_null($supplierLocation)){
