@@ -24,8 +24,9 @@ class KycAmendmentRequestApprovalProcessing extends Component
     public $business;
     public $consultant;
 
-    public function mount($modelName, $modelId, $amendmentRequest)
+    public function mount($modelName, $modelId)
     {
+        $amendmentRequest = KycAmendmentRequest::find(decrypt($modelId));
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->amendmentRequest = $amendmentRequest;

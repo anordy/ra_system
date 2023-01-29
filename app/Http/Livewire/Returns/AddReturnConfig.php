@@ -37,7 +37,7 @@ class AddReturnConfig extends Component
             abort(404, 'Financial year not found.');
         }
         $this->currencies = Currency::all();
-        $code = $this->getTaxTypeCode($this->taxtype_id);
+        $code = $this->getTaxTypeCode(decrypt($this->taxtype_id));
         $this->model = $this->getConfigModel($code);
     }
 

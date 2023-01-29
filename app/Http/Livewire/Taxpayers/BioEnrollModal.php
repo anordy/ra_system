@@ -34,7 +34,6 @@ class BioEnrollModal extends Component
 
     public function mount($kyc, $hand, $finger)
     {
-//        todo: encrypt ID
         $this->kyc = KYC::find(decrypt($kyc));
         if(is_null($this->kyc)){
             abort(404);

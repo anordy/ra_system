@@ -41,6 +41,9 @@ class ReliefReportSummary extends Component
             }else{
                 $relief->where('reliefs.project_id',$parameters['sectionId']);
                 $projectSections[] = ReliefProject::find($parameters['sectionId']);
+                if (is_null($projectSections[])) {
+                    abort(404);
+                }
                 if($parameters['projectId']=='all'){
                     $relief->where('reliefs.project_id',$parameters['sectionId'])
                             ->whereNotNull('reliefs.project_list_id');

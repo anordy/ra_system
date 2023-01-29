@@ -17,6 +17,9 @@ class ReliefView extends Component
     public function mount($enc_id)
     {
         $this->relief = Relief::find(decrypt($enc_id));
+        if (is_null($this->relief)) {
+            abort(404);
+        }
     }
     
     public function render()

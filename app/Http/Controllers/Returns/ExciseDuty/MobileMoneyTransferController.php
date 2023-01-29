@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Returns\ExciseDuty;
 
 use App\Http\Controllers\Controller;
-use App\Models\Returns\MmTransferPenalty;
 use App\Models\Returns\MmTransferReturn;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class MobileMoneyTransferController extends Controller

@@ -12,10 +12,7 @@ trait DebtReportTrait
 {
     public function getRecords($parameters)
     {
-        if ($parameters['report_type'] == 'all') {
-            // TODO: Combine tax return & tax assessment debts
-            $model = TaxReturn::query();
-        } else if ($parameters['report_type'] == 'Waiver') {
+        if ($parameters['report_type'] == 'Waiver') {
             $model = DebtWaiver::query();
         } else if ($parameters['report_type'] == 'Assessments') {
             $model = TaxAssessment::query();

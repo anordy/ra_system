@@ -2,14 +2,10 @@
 
 namespace App\Traits;
 
-use App\Enum\PaymentStatus;
 use App\Exports\ReturnReportExport;
 use App\Models\Returns\TaxReturn;
 use Carbon\Carbon;
-use Exception;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\Constant\Periodic\Payments;
 
 trait ReturnReportTrait
 {

@@ -63,7 +63,10 @@ class RoleEditModal extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $this->role = Role::findOrFail($id);
+        $this->role = Role::find($id);
+        if (is_null($this->role)) {
+            abort(404);
+        }
         $this->name = $this->role->name;
         $this->report_to = $this->role->report_to;
 

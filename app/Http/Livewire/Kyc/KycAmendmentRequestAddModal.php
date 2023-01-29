@@ -2,22 +2,23 @@
 
 namespace App\Http\Livewire\Kyc;
 
-use App\Events\SendMail;
-use App\Events\SendSms;
-use App\Models\Country;
-use App\Models\District;
-use App\Models\DualControl;
-use App\Models\IDType;
+use Exception;
 use App\Models\KYC;
-use App\Models\KycAmendmentRequest;
+use App\Models\Ward;
+use App\Models\IDType;
 use App\Models\Region;
 use App\Models\Street;
-use App\Models\Ward;
-use App\Traits\WorkflowProcesssingTrait;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Events\SendSms;
+use App\Models\Country;
 use Livewire\Component;
+use App\Events\SendMail;
+use App\Models\District;
+use App\Models\DualControl;
+use Illuminate\Support\Facades\DB;
+use App\Models\KycAmendmentRequest;
+use Illuminate\Support\Facades\Log;
+use App\Traits\WorkflowProcesssingTrait;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class KycAmendmentRequestAddModal extends Component
 {
@@ -48,7 +49,7 @@ class KycAmendmentRequestAddModal extends Component
 
     public function mount($id)
     {
-        $this->kyc = KYC::find($id);
+        $this->kyc = KYC::find(decrypt($id));
         if(is_null($this->kyc)){
             abort(404);
         }
@@ -181,26 +182,26 @@ class KycAmendmentRequestAddModal extends Component
 
             if ($this->is_citizen) {
                 if ($this->nida && $this->zanid) {
-                    $idType = IDType::where('name', IDType::NIDA_ZANID)->first()->id;
+                    $idType = IDType::where('name', IDType::NIDA_ZANID)->firstOrFail()->id;
                     $new_values['zanid_no'] = $this->zanid;
                     $new_values['nida_no'] = $this->nida;
                 }
 
                 if ($this->nida && !$this->zanid) {
-                    $idType = IDType::where('name', IDType::NIDA)->first()->id;
+                    $idType = IDType::where('name', IDType::NIDA)->firstOrFail()->id;
                     $new_values['nida_no'] = $this->nida;
                 }
 
                 if (!$this->nida && $this->zanid) {
-                    $idType = IDType::where('name', IDType::ZANID)->first()->id;
+                    $idType = IDType::where('name', IDType::ZANID)->firstOrFail()->id;
                     $new_values['zanid_no'] = $this->zanid;
                 }
 
-                $countryId = Country::where('nationality', 'Tanzanian')->first()->id;
+                $countryId = Country::where('nationality', 'Tanzanian')->firstOrFail()->id;
                 $new_values['id_type'] = $idType;
                 $new_values['country_id'] = $countryId;
             } else {
-                $idType = IDType::where('name', IDType::PASSPORT)->first()->id;
+                $idType = IDType::where('name', IDType::PASSPORT)->firstOrFail()->id;
                 $new_values['id_type'] = $idType; // Get Tanzania ID
                 $new_values['passport_no'] = $this->passportNo;
                 $new_values['permit_number'] = $this->permitNumber;

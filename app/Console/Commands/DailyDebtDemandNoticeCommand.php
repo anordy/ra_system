@@ -53,7 +53,7 @@ class DailyDebtDemandNoticeCommand extends Command
     {
         Log::channel('dailyJobs')->info("Daily Demand notice for tax returns");
 
-        // TODO: Improve this query
+        // Get tax return which are only in debt step, after 3 demand notices are sent the returns category becomes overdue by which demand notice is not sent
         $debts = TaxReturn::with('demandNotices')->where('return_category', ReturnCategory::DEBT)
             ->get();
 
@@ -89,7 +89,7 @@ class DailyDebtDemandNoticeCommand extends Command
     {
         Log::channel('dailyJobs')->info("Daily Demand notice for tax returns");
 
-        // TODO: Improve this query
+        // Get tax assessments which are only in debt step, after 3 demand notices are sent the assessment step becomes overdue by which no demand notice is not sent
         $debts = TaxAssessment::with('demandNotices')->where('assessment_step', ReturnCategory::DEBT)
             ->get();
 

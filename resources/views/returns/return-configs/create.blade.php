@@ -15,7 +15,7 @@
         </div>
         <div class="card-body">
 
-            <livewire:returns.add-return-config code="{{$code}}" taxtype_id="{{$taxtype_id}}"/>
+            <livewire:returns.add-return-config code="{{$code}}" taxtype_id="{{ encrypt($taxtype_id) }}"/>
         </div>
     </div>
 @endsection

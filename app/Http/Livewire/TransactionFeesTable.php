@@ -57,7 +57,7 @@ class TransactionFeesTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Created By', 'created_by')
-                ->format(fn($id) => User::query()->find($id)->fullname())
+                ->format(fn($id) => User::query()->find($id)->fullname() ?? 'N/A')
                 ->sortable(),
             Column::make('Created At', 'created_at')
                 ->sortable()
@@ -86,8 +86,9 @@ class TransactionFeesTable extends DataTableComponent
                     $reject = '';
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-transaction-fees-edit') && approvalLevel(Auth::user()->level_id, 'maker')) {
+                            $id = encrypt($value);
                             $edit = <<< HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'transaction-fees-edit-modal', $id)"><i class="fa fa-edit"></i> </button>
                             HTML;
                         }
 
@@ -129,7 +130,7 @@ class TransactionFeesTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TransactionFee::find($data->id)->delete();
+            TransactionFee::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
@@ -197,7 +198,7 @@ class TransactionFeesTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object)$value['data'];
-            $fee = TransactionFee::find($data->id);
+            $fee = TransactionFee::findOrFail($data->id);
             $fee->is_approved = 2;
             $fee->save();
             $this->triggerAudit(EkaTatuFee::class, Audit::ACTIVATED, 'ega_fee', $fee->id, ['status' => 0], ['status' => 2]);

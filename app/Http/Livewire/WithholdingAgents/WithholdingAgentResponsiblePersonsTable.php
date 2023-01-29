@@ -19,7 +19,6 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 
     public function mount($id)
     {
-//        todo: encrypt id
         $this->withholding_agent_id = decrypt($id);
     }
 
@@ -100,7 +99,6 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
-//        todo: encrypt id && select only columns that's needed
         $responsible_person = WaResponsiblePerson::select('status')->findOrFail(decrypt($id));
         $status = $responsible_person->status == WaResponsiblePerson::ACTIVE ? 'Deactivate' : 'Activate';
         $this->alert('warning', "Are you sure you want to {$status} ?", [
@@ -125,7 +123,6 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         if (!Gate::allows('withholding-agents-registration')) {
             abort(403);
         }
-//        todo: select only columns that's needed - suggestion
         try {
             $data = (object) $value['data'];
             $responsible_person = WaResponsiblePerson::select('id','status')->findOrFail(decrypt($data->id));

@@ -95,7 +95,7 @@ class UserEditModal extends Component
     public function mount($id)
     {
         $this->roles = Role::all();
-        $user = User::find($id);
+        $user = User::find(decrypt($id));
         if(is_null($user)){
             abort(404);
         }

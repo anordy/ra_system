@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Investigation;
 
+use App\Models\Investigation\TaxInvestigation;
 use App\Models\Returns\BFO\BfoConfig;
 use App\Models\Returns\BFO\BfoReturnItems;
 use App\Models\Returns\EmTransactionConfig;
@@ -49,10 +50,14 @@ class DeclaredSalesAnalysis extends Component
     public $start_date;
     public $end_date;
 
-    public function mount($investigation, $tax_type_id, $location_id)
+    public function mount($investigationId, $tax_type_id, $location_id)
     {
-        $this->taxType = $investigation->taxTypes->firstWhere('id', $tax_type_id);
-        $this->branch = $investigation->businessLocations->firstWhere('id', $location_id);
+        $investigation = TaxInvestigation::find(decrypt($investigationId));
+        if (is_null($investigation)){
+            abort(404);
+        }
+        $this->taxType = $investigation->taxTypes->firstWhere('id', decrypt($tax_type_id));
+        $this->branch = $investigation->businessLocations->firstWhere('id', decrypt($location_id));
         $this->start_date = $this->validateDate($investigation->period_from) ? $investigation->period_from : Carbon::now();
         $this->end_date = $this->validateDate($investigation->period_to) ? $investigation->period_to : Carbon::now();
 

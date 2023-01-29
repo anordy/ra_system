@@ -153,5 +153,5 @@ function getFormattedTinNo($getter){
 
 function formatDate($date)
 {
-    return Carbon::parse($date)->format('d M Y H:i:s');
+    return Carbon::parse($date)->format('d M Y');
 }

@@ -21,7 +21,6 @@ class KycAmendmentRequestShow extends Component
         $this->taxpayer_id = $this->amendmentRequest->taxpayer_id;
         $this->old_values = json_decode($this->amendmentRequest->old_values);
         $this->new_values = json_decode($this->amendmentRequest->new_values);
-//        dd($this->new_values, $this->old_values);
     }
     public function render()
     {

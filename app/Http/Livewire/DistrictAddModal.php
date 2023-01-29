@@ -34,7 +34,7 @@ class DistrictAddModal extends Component
 
     public function mount()
     {
-        $this->regions = Region::where('is_approved',1)->get();
+        $this->regions = Region::where('is_approved', DualControl::APPROVE)->get();
     }
 
 

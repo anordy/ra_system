@@ -25,6 +25,9 @@ class SeaPortCardOne extends Component
     public function mount()
     {
         $tax = TaxType::where('code', TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE)->first();
+        if (!$tax) {
+            abort(404);
+        }
 
         $returnTable = PortReturn::getTableName();
         $filter      = (new PortReturn())->newQuery();

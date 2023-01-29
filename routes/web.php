@@ -48,7 +48,6 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\QRCodeGeneratorController;
-use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\Finances\FinanceController;
 use App\Http\Controllers\WithholdingAgentController;
@@ -214,9 +213,6 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::get('bill_transfer/pdf/{billId}/{bankAccountId}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
     Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
-    Route::name('returns.')->prefix('returns')->group(function () {
-        Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
-    });
     Route::name('verification.')->prefix('verification')->group(function () {
         Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
     });

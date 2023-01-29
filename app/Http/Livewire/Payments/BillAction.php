@@ -58,7 +58,7 @@ class BillAction extends Component
     public function refresh()
     {
         // $this->bill = ZmBill::where('control_number', $this->control_number)->latest()->first();
-        $this->bill_change = ZmBillChange::where('zm_bill_id', $this->bill->id)->latest()->first();
+        $this->bill_change = ZmBillChange::where('zm_bill_id', $this->bill->id)->latest()->firstOrFail();
     }
 
 

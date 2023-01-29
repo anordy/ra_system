@@ -32,6 +32,9 @@ class HotelCardTwo extends Component
         $returnTable   = HotelReturn::getTableName();
         $hotel         = (new HotelReturn())->newQuery();
         $taxType       = TaxType::where('code', TaxType::HOTEL)->first();
+        if (!$taxType) {
+            abort(404);
+        }
         $filter        = $hotel->where('tax_type_id', $taxType->id);
 
         $filter  = $this->dataFilter($filter, $this->data, $returnTable);

@@ -188,9 +188,12 @@ class ReliefRegistrations extends Component
             if ($this->supplier == "") {
                 $this->optionSupplierLocations = null;
             } else {
-                $business = Business::select('id')->findOrFail($this->supplier);
-                $this->optionSupplierLocations = $business->locations;
-                $this->supplierLocation = $this->optionSupplierLocations->first()->id;
+                $this->optionSupplierLocations = Business::select('id')->find($this->supplier)->locations;
+                $supplierLocation = $this->optionSupplierLocations->first();
+                if (is_null($supplierLocation)){
+                    abort(404);
+                }
+                $this->supplierLocation = $supplierLocation->id;
             }
         }
 
@@ -200,8 +203,16 @@ class ReliefRegistrations extends Component
                 $this->rate = null;
             } else {
                 $this->optionProjects = ReliefProjectList::where('project_id', $this->projectSection)->get();
-                $this->project = $this->optionProjects->first()->id;
-                $this->rate = $this->optionProjects->first()->rate;
+                $project = $this->optionProjects->firstOrFail();
+                if (is_null($project)){
+                    abort(404);
+                }
+                $this->project = $project->id;
+                $projectRate = $this->optionProjects->firstOrFail();
+                if (is_null($projectRate)){
+                    abort(404);
+                }
+                $this->rate = $projectRate->rate;
             }
             $this->calculateTotal();
         }
@@ -220,7 +231,6 @@ class ReliefRegistrations extends Component
     {
         $this->items[] = [
             'name' => '',
-            // 'description' => '',
             'quantity' => '',
             'unit' => '',
             'costPerItem' => '',

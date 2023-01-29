@@ -311,17 +311,21 @@ class TaxAuditApprovalProcessing extends Component
 
                 if ($deregister) {
                     $auditManagerRole = Role::where('name', 'Audit Manager')->get()->first();
-                    $auditManager = User::where('role_id', $auditManagerRole->id)->get()->first();
 
-                    if ($auditManager) {
-                        $auditManager->notify(new DatabaseNotification(
-                            $subject = "{$deregister->business->name} audit has been completed",
-                            $message = "{$deregister->business->name} audit for deregistration has been completed",
-                            $href = 'business.viewDeregistration',
-                            $hrefText = 'View',
-                            $hrefParameters = $deregister->id
-                        ));
+                    if ($auditManagerRole) {
+                        $auditManager = User::where('role_id', $auditManagerRole->id)->get()->first();
+
+                        if ($auditManager) {
+                            $auditManager->notify(new DatabaseNotification(
+                                $subject = "{$deregister->business->name} audit has been completed",
+                                $message = "{$deregister->business->name} audit for deregistration has been completed",
+                                $href = 'business.viewDeregistration',
+                                $hrefText = 'View',
+                                $hrefParameters = $deregister->id
+                            ));
+                        }
                     }
+
                 }
             }
 
@@ -387,8 +391,8 @@ class TaxAuditApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->principalAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'audit')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'audit')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'audit')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'audit')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
@@ -396,8 +400,8 @@ class TaxAuditApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->interestAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'interest')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
@@ -405,8 +409,8 @@ class TaxAuditApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->penaltyAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
                 ]
             ];
 

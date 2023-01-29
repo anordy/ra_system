@@ -256,8 +256,8 @@ class TaxVerificationApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->principalAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'verification')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'verification')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'verification')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'verification')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
@@ -265,8 +265,8 @@ class TaxVerificationApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->interestAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'interest')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
@@ -274,8 +274,8 @@ class TaxVerificationApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->penaltyAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
                 ]
             ];
 
@@ -295,7 +295,7 @@ class TaxVerificationApprovalProcessing extends Component
             $expire_date = Carbon::now()->addDays(30)->toDateTimeString();
             $billableId = $assessment->id;
             $billableType = get_class($assessment);
-            $taxType = $this->taxTypes->where('code', 'verification')->first()->id;
+            $taxType = $this->taxTypes->where('code', 'verification')->firstOrFail()->id;
 
             $zmBill = ZmCore::createBill(
                 $billableId,

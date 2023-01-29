@@ -26,7 +26,10 @@ class AssignApprovalLevelAddModal extends Component
     public function mount($user_id)
     {
         $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
-        $this->user = User::find($user_id);
+        $this->user = User::find(decrypt($user_id));
+        if(is_null($this->user)){
+            abort(404);
+        }
     }
 
     public function rules()
@@ -38,10 +41,6 @@ class AssignApprovalLevelAddModal extends Component
 
     public function submit()
     {
-//        if (!Gate::allows('setting-role-assign-approval-level'))
-//        {
-//            abort(403);
-//        }
         $this->validate();
         if ($this->user->is_approved != 1) {
             $this->alert('error', 'The selected user is not approved');

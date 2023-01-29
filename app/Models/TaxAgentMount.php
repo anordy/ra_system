@@ -10,10 +10,10 @@ class TaxAgentMount extends Model
     use HasFactory;
 
 	public static function getTaxAgentDetails($value,$agent, $academics, $professionals,$trainings ){
-		$agent = TaxAgent::find($value);
-		$academics = TaxAgent::find($value)->academics;
-		$professionals = TaxAgent::find($value)->professionals;
-		$trainings = TaxAgent::find($value)->trainings;
+		$agent = TaxAgent::findOrFail($value);
+		$academics = TaxAgent::findOrFail($value)->academics;
+		$professionals = TaxAgent::findOrFail($value)->professionals;
+		$trainings = TaxAgent::findOrFail($value)->trainings;
 
 	}
 }

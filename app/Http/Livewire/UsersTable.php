@@ -81,8 +81,9 @@ class UsersTable extends DataTableComponent
             Column::make('Configuration', 'created_at')
                 ->format(function ($value, $row) {
                     if (Gate::allows('setting-role-assign-permission')) {
+                        $id = encrypt($row->id);
                         return  <<< HTML
-                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'assign-approval-level-add-modal',$row->id)"><i class="fas fa-cog mr-2"></i>Add Level</button>
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'assign-approval-level-add-modal', $id)"><i class="fas fa-cog mr-2"></i>Add Level</button>
                         HTML;
                     }
                 })->html(true),
@@ -128,8 +129,9 @@ class UsersTable extends DataTableComponent
 
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker') ) {
+                            $id = encrypt($value);
                             $edit = <<< HTML
-                                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'user-edit-modal', $id)"><i class="fa fa-edit"></i> </button>
                                     HTML;
                         }
                     }

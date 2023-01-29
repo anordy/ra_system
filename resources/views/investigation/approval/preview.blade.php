@@ -144,9 +144,9 @@
         </div>
         <div class="tab-pane fade card p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
-                @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation, 'tax_type_id' => $investigation->tax_type_id, 'location_id' => $investigation->location_id])
+                @livewire('investigation.declared-sales-analysis', ['investigationId' => encrypt($investigation->id), 'tax_type_id' => encrypt($investigation->tax_type_id), 'location_id' => encrypt($investigation->location_id)])
             @else
-                @livewire('investigation.declared-sales-analysis-instances', ['investigation' => $investigation])
+                @livewire('investigation.declared-sales-analysis-instances', ['investigationId' => encrypt($investigation->id)])
             @endif
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">

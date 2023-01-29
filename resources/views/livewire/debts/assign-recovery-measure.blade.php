@@ -68,5 +68,5 @@
         </div>
     @endif
 
-    @livewire('approval.recovery-measure-approval-processing', ['debt' => $debt])
+    @livewire('approval.recovery-measure-approval-processing', ['debtId' => encrypt($debt->id), 'modelName' => get_class($debt)])
 </div>
