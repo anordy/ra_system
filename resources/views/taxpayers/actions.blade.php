@@ -3,7 +3,7 @@
 </a>
 
 @if($row->checkPendingAmendment() == false)
-    <button class="m-1 btn btn-outline-success rounded-0 btn-sm" onclick="Livewire.emit('showModal', 'taxpayers.details-amendment-request-add-modal', {{$row->id}})">
+    <button class="m-1 btn btn-outline-success rounded-0 btn-sm" onclick="Livewire.emit('showModal', 'taxpayers.details-amendment-request-add-modal', '{{  encrypt($row->id) }}')">
         <i class="bi bi-pen mr-1"></i> Amendment Request
     </button>
 @else

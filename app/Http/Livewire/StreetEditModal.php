@@ -40,9 +40,9 @@ class StreetEditModal extends Component
     public function mount($id)
     {
         $this->regions = Region::select('id', 'name')->get();
-        $this->street = Street::find($id);
-        if(is_null($this->street)){
-            abort(404);
+        $this->street = Street::find(decrypt($id));
+        if (!$this->street){
+            abort(404, 'Street not found.');
         }
         $this->name = $this->street->name;
         $this->ward_id = $this->street->ward->id;

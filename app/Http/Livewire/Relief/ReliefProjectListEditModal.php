@@ -36,7 +36,6 @@ class ReliefProjectListEditModal extends Component
 
     public function mount($id)
     {
-//        todo: encrypt id
         $this->ministries = ReliefMinistry::all();
         $this->sponsors = ReliefSponsor::all();
         $data = ReliefProjectList::find(decrypt($id));

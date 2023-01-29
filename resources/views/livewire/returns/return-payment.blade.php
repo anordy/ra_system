@@ -26,7 +26,7 @@
                         </a>
                     </p>
                     <button class="btn btn-secondary btn-sm py-1 w-75 font-weight-bold"
-                        onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{$return->latestBill->currency}}', '{{$return->latestBill->id}}')">
+                        onclick="Livewire.emit('showModal', 'transfer-form.transfer-form-generator', '{{$return->latestBill->currency}}', '{{  encrypt($return->latestBill->id) }}')">
                         <i class="bi bi-file-earmark-text"></i>
                         Get Transfer Form
                     </button>

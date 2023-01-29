@@ -125,6 +125,7 @@ class UsersTable extends DataTableComponent
                     $changePwd = '';
                     $delete = '';
                     $mail = '';
+                    $value = encrypt($value);
 
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker') ) {
@@ -161,10 +162,11 @@ class UsersTable extends DataTableComponent
 
             Column::make('Role Action', 'role.id')
                 ->format(function ($value, $row) {
+                    $value = encrypt($row->id);
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-change-role')) {
                             return <<< HTML
-                                        <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $row->id)"><i class="fa fa-user-tag"></i> </button>
+                                        <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'user-role-edit-modal', $value)"><i class="fa fa-user-tag"></i> </button>
                                     HTML;
                         }
                     }

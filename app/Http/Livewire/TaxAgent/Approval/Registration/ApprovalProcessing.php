@@ -38,7 +38,6 @@ class ApprovalProcessing extends Component
 
     public function mount($modelName, $modelId)
     {
-//        todo: encrypt modelID
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);

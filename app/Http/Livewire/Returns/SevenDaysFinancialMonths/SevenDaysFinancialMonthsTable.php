@@ -83,6 +83,7 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $extend = '';
+                    $value = "'".encrypt($value)."'";
                     if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $edit = <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>

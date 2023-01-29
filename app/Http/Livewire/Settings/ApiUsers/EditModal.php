@@ -28,7 +28,7 @@ class EditModal extends Component
 
     public function mount($id)
     {
-        $this->user = ApiUser::find($id);
+        $this->user = ApiUser::find(decrypt($id));
         if(is_null($this->user)){
             abort(404);
         }

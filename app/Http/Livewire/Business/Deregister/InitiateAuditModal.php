@@ -53,7 +53,10 @@ class InitiateAuditModal extends Component
 
     public function mount($deregister_id)
     {
-        $this->deregister = BusinessDeregistration::findOrFail($deregister_id);
+        $this->deregister = BusinessDeregistration::find(decrypt($deregister_id));
+        if (is_null($this->deregister)){
+            abort(404, 'Business de-registration not found.');
+        }
         $this->business_id = $this->deregister->business_id;
         $this->business = $this->deregister->business;
         $this->locations = $this->business->locations;

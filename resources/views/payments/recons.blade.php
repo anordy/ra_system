@@ -9,7 +9,7 @@
 
     <div class="card rounded-0">
         <div class="card-body m-4 p-2">
-            <livewire:payments.recon-table recon_id="{{ $recon->id }}" />
+            <livewire:payments.recon-table recon_id="{{ encrypt($recon->id) }}" />
         </div>
     </div>
 @endsection

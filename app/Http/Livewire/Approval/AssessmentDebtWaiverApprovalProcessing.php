@@ -38,7 +38,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->debt_waiver = DebtWaiver::find($this->modelId);
-        if(is_null($this->debt_waiver)){
+        if (is_null($this->debt_waiver)) {
             abort(404);
         }
         $this->debt = $this->debt_waiver->debt;
@@ -221,8 +221,6 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = WaiverStatus::CORRECTION;
-                // event(new SendSms('business-registration-correction', $this->subject->id));
-                // event(new SendMail('business-registration-correction', $this->subject->id));
             }
 
             if ($this->checkTransition('crdm_reject')) {

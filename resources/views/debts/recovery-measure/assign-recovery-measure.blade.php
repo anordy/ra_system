@@ -11,7 +11,7 @@
     </nav>
     <div class="tab-content px-2 card pt-3 pb-2">
         <div id="tab1" class="tab-pane fade active show m-4">
-            @livewire('debt.recovery-measure.assign-recovery-measure', ['debtId' => $debtId])
+            @livewire('debt.recovery-measure.assign-recovery-measure', ['debtId' => encrypt($debtId)])
         </div>
         <div id="tab2" class="tab-pane fade m-4">
             <livewire:approval.approval-history-table modelName='App\Models\Debts\RecoveryMeasure'

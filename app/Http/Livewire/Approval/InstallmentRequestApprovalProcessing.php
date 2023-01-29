@@ -66,7 +66,7 @@ class InstallmentRequestApprovalProcessing extends Component
 
             if ($this->checkTransition('debt_manager')) {
                 $this->subject->installment_from = $this->subject->installable->curr_payment_due_date;
-                $this->subject->installment_to = Carbon::make($this->subject->installable->curr_payment_due_date)->addMonths($this->installmentPhases);
+                $this->subject->installment_to = Carbon::make($this->subject->installable->curr_payment_due_date)->addDays(30 * $this->installmentPhases);
                 $this->subject->installment_count = $this->installmentPhases;
                 $this->subject->save();
             }

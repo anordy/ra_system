@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Settings\InterestRate;
 
 use App\Models\DualControl;
-use App\Models\Role;
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use App\Models\InterestRate;
@@ -89,6 +88,7 @@ class InterestRatesTable extends DataTableComponent
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
                     $button = '';
+                    $value = "'".encrypt($value)."'";
                     if ($row->is_approved == 1) {
                         if (approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $button = <<< HTML
@@ -106,6 +106,7 @@ class InterestRatesTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-interest-rate-delete')) {
             abort(403);
         }
