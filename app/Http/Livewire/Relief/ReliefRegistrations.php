@@ -190,7 +190,11 @@ class ReliefRegistrations extends Component
             } else {
 //                todo: select only the columns you need
                 $this->optionSupplierLocations = Business::find($this->supplier)->locations;
-                $this->supplierLocation = $this->optionSupplierLocations->first()->id;
+                $supplierLocation = $this->optionSupplierLocations->first();
+                if (is_null($supplierLocation)){
+                    abort(404);
+                }
+                $this->supplierLocation = $supplierLocation->id;
             }
         }
 
@@ -200,8 +204,16 @@ class ReliefRegistrations extends Component
                 $this->rate = null;
             } else {
                 $this->optionProjects = ReliefProjectList::where('project_id', $this->projectSection)->get();
-                $this->project = $this->optionProjects->first()->id;
-                $this->rate = $this->optionProjects->first()->rate;
+                $project = $this->optionProjects->firstOrFail();
+                if (is_null($project)){
+                    abort(404);
+                }
+                $this->project = $project->id;
+                $projectRate = $this->optionProjects->firstOrFail();
+                if (is_null($projectRate)){
+                    abort(404);
+                }
+                $this->rate = $projectRate->rate;
             }
             $this->calculateTotal();
         }
@@ -210,7 +222,7 @@ class ReliefRegistrations extends Component
             if ($this->project == '') {
                 $this->rate = null;
             } else {
-                $this->rate = ReliefProjectList::find($this->project)->rate;
+                $this->rate = ReliefProjectList::findOrFail($this->project)->rate;
             }
             $this->calculateTotal();
         }
@@ -220,7 +232,6 @@ class ReliefRegistrations extends Component
     {
         $this->items[] = [
             'name' => '',
-            // 'description' => '',
             'quantity' => '',
             'unit' => '',
             'costPerItem' => '',

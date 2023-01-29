@@ -19,6 +19,9 @@ class WorkflowConfig extends Component
     public function mount($id)
     {
         $workflow = Workflow::find(decrypt($id));
+        if (is_null($workflow)){
+            abort(404);
+        }
         $this->workflow = $workflow;
         $this->transitions = json_decode($workflow->transitions, true);
         $this->places = json_decode($workflow->places, true);

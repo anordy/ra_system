@@ -54,7 +54,12 @@ class GenerateReport extends Component
         $this->semiAnnual = "1st-Semi-Annual";
 
         //get options for years
-        $optionStartYear = intval(FinancialYear::first()->code);
+        $financialYearCode = FinancialYear::first();
+        if(is_null($financialYearCode)){
+            abort(404);
+        }
+        $financialYearCode->code;
+        $optionStartYear = intval($financialYearCode);
         $this->optionYears = range($optionStartYear, date('Y'));
 
         //add All to year options

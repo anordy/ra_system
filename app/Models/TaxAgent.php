@@ -19,6 +19,10 @@ class TaxAgent extends Model implements Auditable
 
 	protected $guarded = [];
 
+    public static function findOrFail($value)
+    {
+    }
+
     public function generateReferenceNo(){
         if ($this->reference_no){
             return true;

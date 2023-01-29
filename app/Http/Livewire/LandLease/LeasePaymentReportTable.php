@@ -184,6 +184,9 @@ class LeasePaymentReportTable extends DataTableComponent
                         $landLease = LandLease::select('is_registered', 'taxpayer_id', 'phone')->find($row['landlease.id']);
                         if ($landLease->is_registered == 1) {
                             $taxpayer = Taxpayer::select('mobile')->find($landLease->taxpayer_id);
+                            if (is_null($taxpayer)){
+                                return 'N/A';
+                            }
                             return $taxpayer->mobile;
                         } else {
                             return $landLease->phone;
@@ -206,20 +209,27 @@ class LeasePaymentReportTable extends DataTableComponent
     public function getBusinessName($id)
     {
         $businessLocation = BusinessLocation::find($id);
-
+        if (is_null($businessLocation)){
+            return 'N/A';
+        }
         return $businessLocation->business->name . ' | ' . $businessLocation->name;
     }
 
     public function getApplicantNo($id)
     {
         $taxpayer = Taxpayer::find($id);
-
+        if (is_null($taxpayer)){
+            return 'N/A';
+        }
         return $taxpayer->reference_no;
     }
 
     public function getBusinessZin($id)
     {
         $businessLocation = BusinessLocation::find($id);
+        if (is_null($businessLocation)){
+            return 'N/A';
+        }
         return $businessLocation->zin;
     }
 }

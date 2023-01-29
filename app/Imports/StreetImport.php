@@ -29,7 +29,7 @@ class StreetImport implements ToModel, WithHeadingRow, WithValidation, SkipsEmpt
     public function model(array $row)
     {
         return new Street([
-            'ward_id' => Ward::where('name', $row['shehia'])->first()->id,
+            'ward_id' => Ward::where('name', $row['shehia'])->firstOrFail()->id,
             'name' => $row['kijijimtaa'],
             'is_approved' => true
         ]);

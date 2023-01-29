@@ -27,11 +27,11 @@ class InstallmentItemsTable extends DataTableComponent
         return [
             Column::make('Payment Ref', 'id')
                 ->format(function($value, $row){
-                    return $row->bill->bill_payments->first()->pay_ref_id;
+                    return $row->bill->bill_payments->first()->pay_ref_id ?? 'N/A';
                 }),
             Column::make('PSP Receipt No', 'id')
                 ->format(function($value, $row){
-                    return $row->bill->bill_payments->first()->psp_receipt_number;
+                    return $row->bill->bill_payments->first()->psp_receipt_number ?? 'N/A';
                 }),
             Column::make('Paid Amount', 'amount')
                 ->format(function ($value, $row){
