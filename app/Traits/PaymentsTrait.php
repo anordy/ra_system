@@ -7,9 +7,11 @@ use App\Enum\LeaseStatus;
 use App\Enum\PaymentStatus;
 use App\Models\BillingStatus;
 use App\Models\BusinessTaxType;
+use App\Models\BusinessType;
 use App\Models\ExchangeRate;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Returns\ReturnStatus;
+use App\Models\Returns\Vat\SubVat;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgentApproval;
 use App\Models\TaxAgentStatus;
@@ -297,6 +299,11 @@ trait PaymentsTrait
     public function generateDebtControlNo($debt)
     {
         $tax_type = TaxType::findOrFail($debt->tax_type_id);
+        $taxTypes = TaxType::all();
+
+        if ($tax_type->code == TaxType::VAT) {
+            $tax_type = SubVat::findOrFail($debt->tax_type_id);
+        }
 
         if ($debt->principal > 0) {
             $billItems[] = [
@@ -306,7 +313,7 @@ trait PaymentsTrait
                 'amount'              => $debt->principal,
                 'currency'            => $debt->currency,
                 'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
+                'tax_type_id'         => $debt->tax_type_id,
             ];
         }
 
@@ -318,7 +325,7 @@ trait PaymentsTrait
                 'amount'              => $debt->penalty,
                 'currency'            => $debt->currency,
                 'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
+                'tax_type_id'         => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id,
             ];
         }
 
@@ -330,7 +337,7 @@ trait PaymentsTrait
                 'amount'              => $debt->interest,
                 'currency'            => $debt->currency,
                 'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
+                'tax_type_id'         => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id,
             ];
         }
 
@@ -389,6 +396,13 @@ trait PaymentsTrait
     public function generateAssessmentDebtControlNo($debt)
     {
         $tax_type = TaxType::findOrFail($debt->tax_type_id);
+        $taxTypes = TaxType::all();
+
+        // If business tax type is of VAT take sub vat
+        if ($tax_type->code == TaxType::VAT) {
+            $businessTax = BusinessType::where('business_id', $debt->business_id)->where('tax_type_id', $debt->tax_type_id)->firstOrFail();
+            $tax_type = SubVat::findOrFail($businessTax);
+        }
 
         if ($debt->principal_amount > 0) {
             $billItems[] = [
@@ -398,7 +412,7 @@ trait PaymentsTrait
                 'amount'              => $debt->principal_amount,
                 'currency'            => $debt->currency,
                 'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
+                'tax_type_id'         => $debt->tax_type_id,
             ];
         }
 
@@ -410,7 +424,7 @@ trait PaymentsTrait
                 'amount'              => $debt->penalty_amount,
                 'currency'            => $debt->currency,
                 'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
+                'tax_type_id'         => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id,
             ];
         }
 
@@ -422,7 +436,7 @@ trait PaymentsTrait
                 'amount'              => $debt->interest_amount,
                 'currency'            => $debt->currency,
                 'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $tax_type->id,
+                'tax_type_id'         => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id,
             ];
         }
 

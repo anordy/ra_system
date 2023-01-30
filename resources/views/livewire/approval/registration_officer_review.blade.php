@@ -181,6 +181,25 @@
                             </div>
                         </div>
 
+                        @if ($showSubVatOptions === true)
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="form-label">VAT Category Type</label>
+                                    <select
+                                    class="form-control @error("sub_vat_id") is-invalid @enderror"
+                                    wire:model="sub_vat_id">
+                                        <option value="" selected disabled>--Select---</option>
+                                        @foreach ($subVatOptions as $sub)
+                                            <option value="{{ $sub->id }}">{{ $sub->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @error("sub_vat_id")
+                                    <span class="text-danger error">{{ $message }}</span>
+                                @enderror
+                                </div>
+                            </div>
+                        @endif
+
                         @if ($showLumpsumOptions === true)
                             <div class="col-md-5">
                                 <div class="form-group">
@@ -233,7 +252,7 @@
                     @endforeach
                 </div>
             </div>
-            @if ($showLumpsumOptions === false)
+            @if (!$showSubVatOptions && !$showLumpsumOptions)
                 <div class="card-footer">
                     <button class="btn text-white btn-info" wire:click.prevent="addTaxtype()">
                         <i class="bi bi-plus-square-fill"></i>

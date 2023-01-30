@@ -50,17 +50,11 @@ class WithholdingAgent extends Model implements Auditable
             switch ($this->region->location){
                 case Region::UNGUJA:
                     $ztn_number = $ztn_number . '05';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->get();
-                    if (is_null($mainRegion)){
-                        abort(404);
-                    }
+                    $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->firstOrFail();
                     break;
                 case Region::PEMBA:
                     $ztn_number = $ztn_number . '06';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::PMB)->get();
-                    if (is_null($mainRegion)){
-                        abort(404);
-                    }
+                    $mainRegion = MainRegion::where('prefix', MainRegion::PMB)->firstOrFail();
                     break;
                 default:
                     Log::error("Invalid Main Region selected!");
