@@ -61,7 +61,7 @@ class LicenseApplicationsController extends Controller
                 $latest_license = DlDriversLicense::query()
                     ->where(['dl_drivers_license_owner_id' => $application->dl_drivers_license_owner_id])
                     ->latest()
-                    ->first();
+                    ->firstOrFail();
                 /** @var DlDriversLicense $license */
                 $latest_license->update(['status' => DlDriversLicense::STATUS_DAMAGED_OR_LOST]);
                 $latest_license->save();
@@ -79,7 +79,7 @@ class LicenseApplicationsController extends Controller
                 $latest_license = DlDriversLicense::query()
                     ->where(['dl_drivers_license_owner_id' => $application->dl_drivers_license_owner_id])
                     ->latest()
-                    ->first();
+                    ->firstOrFail();
                 foreach ($latest_license->drivers_license_classes as $class) {
                     DlDriversLicenseClass::query()->create(
                         [

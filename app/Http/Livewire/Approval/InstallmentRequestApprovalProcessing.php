@@ -130,7 +130,7 @@ class InstallmentRequestApprovalProcessing extends Component
             DB::beginTransaction();
 
             if ($this->checkTransition('rejected')) {
-                $this->subject->status = ExtensionRequestStatus::REJECTED;
+                $this->subject->status = InstallmentStatus::REJECTED;
                 $this->subject->save();
             }
 

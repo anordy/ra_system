@@ -77,7 +77,7 @@ class RegistrationChangeController extends Controller
 
         try {
             DB::beginTransaction();
-            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             $bill = ZmCore::createBill(
                 $change_req->id,
                 get_class($change_req),

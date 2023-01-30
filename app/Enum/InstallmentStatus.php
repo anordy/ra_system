@@ -9,6 +9,7 @@ class InstallmentStatus implements Status
     public const ACTIVE = 'active';
     public const COMPLETE = 'complete';
     public const CANCELLED = 'cancelled';
+    public const REJECTED = 'rejected';
 
     static function getConstants(): array
     {

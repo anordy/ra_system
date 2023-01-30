@@ -71,7 +71,7 @@ class OwnershipTransferController extends Controller
         $amount = $fee->amount;
         $gfs_code = $fee->gfs_code;
         try {
-            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->first();
+            $taxType = TaxType::where('code', TaxType::PUBLIC_SERVICE)->firstOrFail();
             DB::beginTransaction();
             $bill = ZmCore::createBill(
                 $request->id,

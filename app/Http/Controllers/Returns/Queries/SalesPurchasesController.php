@@ -34,7 +34,7 @@ class SalesPurchasesController extends Controller
     public function show($id)
     {
         $id = decrypt($id);
-        $return = SalePurchase::query()->where('id',$id)->first();
+        $return = SalePurchase::query()->where('id',$id)->firstOrFail();
         return view('returns.queries.sales-purchases.show', compact('return'));
     }
 

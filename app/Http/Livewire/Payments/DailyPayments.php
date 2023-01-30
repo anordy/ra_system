@@ -50,7 +50,6 @@ class DailyPayments extends Component
         try{
             $fileName = 'daily_payments_' . now()->format('d-m-Y') . '.pdf';
             $pdf = PDF::loadView('exports.payments.pdf.daily-payments', ['vars'=>$this->vars,'taxTypes'=>$this->taxTypes]);
-            $pdf->setPaper('a4', 'landscape');
             $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
 
             return response()->streamDownload(

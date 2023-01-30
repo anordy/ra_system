@@ -61,7 +61,8 @@ class ExchangeRateEditModal extends Component
 
     public function mount($id)
     {
-        $this->exchange_rate = ExchangeRate::find($id);
+        $id = decrypt($id);
+        $this->exchange_rate = ExchangeRate::findOrFail($id);
         $this->spot_buying = $this->exchange_rate->spot_buying;
         $this->spot_selling = $this->exchange_rate->spot_selling;
         $this->mean = $this->exchange_rate->mean;

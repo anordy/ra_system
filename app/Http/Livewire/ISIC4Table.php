@@ -51,6 +51,7 @@ class ISIC4Table extends DataTableComponent
                 ->searchable(),
             Column::make('Action', 'id')
                 ->format(function ($value) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
 
@@ -75,6 +76,7 @@ class ISIC4Table extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-isic-level-four-edit')) {
             abort(403);
         }
@@ -99,7 +101,7 @@ class ISIC4Table extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            ISIC4::find($data->id)->delete();
+            ISIC4::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

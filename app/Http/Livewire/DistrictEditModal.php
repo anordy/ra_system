@@ -50,6 +50,7 @@ class DistrictEditModal extends Component
                 'name' => $this->name,
                 'region_id' => $this->region_id,
             ];
+
             $this->triggerDualControl(get_class($this->district), $this->district->id, DualControl::EDIT, 'editing district '.$this->district->name.'', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
@@ -65,9 +66,9 @@ class DistrictEditModal extends Component
     public function mount($id)
     {
 
+        $id = decrypt($id);
         $this->regions = Region::all();
-
-        $this->district = District::find($id);
+        $this->district = District::findOrFail($id);
         $this->name = $this->district->name;
         $this->region_id = $this->district->region_id;
         $this->old_values = [

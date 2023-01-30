@@ -102,6 +102,7 @@ class ExchangeRateTable extends DataTableComponent
             Column::make('Action', 'id')
                 ->format(
                     function ($value) {
+                        $value = "'".encrypt($value)."'";
                         $edit = '';
                         $delete = '';
 
@@ -126,6 +127,7 @@ class ExchangeRateTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-exchange-rate-delete')) {
             abort(403);
         }
@@ -150,7 +152,7 @@ class ExchangeRateTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $country = ExchangeRate::find($data->id);
+            $country = ExchangeRate::findOrFail($data->id);
             $this->triggerDualControl(get_class($country), $country->id, DualControl::DELETE, 'deleting exchange rate');
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);

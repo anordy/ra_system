@@ -54,7 +54,8 @@ class RoleAssignPermissionModal extends Component
 
     public function mount($id)
     {
-        $this->role = Role::find($id);
+        $id = decrypt($id);
+        $this->role = Role::findOrFail($id);
         $this->selectedPermissions = $this->role->permissions->pluck('id')->toArray();
         $this->modules = SysModule::all();
         $this->permissions = Permission::all();

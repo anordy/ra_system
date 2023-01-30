@@ -133,7 +133,7 @@ class MotorVehicleRegistrationController extends Controller
         $motor_vehicle = MvrMotorVehicle::query()->findOrFail($id);
         $request = MvrDeRegistrationRequest::query()
             ->where(['mvr_request_status_id'=>MvrRequestStatus::query()->where(['name'=>MvrRequestStatus::STATUS_RC_ACCEPTED])->first()->id,'mvr_motor_vehicle_id'=>$id])
-        ->first();
+        ->firstOrFail();
 
         header('Content-Type: application/pdf' );
 
