@@ -45,14 +45,13 @@
                                 {{ session()->get('error') }}
                             </div>
                         @endif
-                        <form method="POST" action="{{ route('login') }}" novalidate autocomplete="off">
+                        <form method="POST" action="{{ route('login') }}" autocomplete="off">
                             @csrf
                             <div class="mt-2">
                                 <div class="form-group">
                                     <label class="form-label" for="email">Email Address</label>
                                     <input type="text" class="form-control  @error('email') is-invalid @enderror"
-                                        name="email" value="{{ old('email') }}" required autocomplete="email"
-                                        autofocus />
+                                        name="email" value="{{ old('email') }}" required autofocus />
                                     <div class="invalid-feedback">
                                         @error('email')
                                             {{ $message }}
@@ -63,7 +62,7 @@
                                 <div class="form-group">
                                     <label class="form-label" for="typePasswordX">Password</label>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                        name="password" required autocomplete="current-password" />
+                                        name="password" required/>
                                     <div class="invalid-feedback">
                                         @error('password')
                                             {{ $message }}
@@ -84,8 +83,7 @@
                                 </div>
                                 <div class="form-group">
                                     <input type="text" id="captcha"
-                                        class="form-control @error('captcha') is-invalid @enderror" name="captcha" required
-                                        autofocus />
+                                        class="form-control @error('captcha') is-invalid @enderror" name="captcha" required />
                                     <div class="invalid-feedback">
                                         @error('captcha')
                                             {{ $message }}

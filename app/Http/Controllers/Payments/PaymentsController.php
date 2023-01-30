@@ -136,4 +136,8 @@ class PaymentsController extends Controller
 
         return view('payments.daily-payments-tax-type',compact('data'));
     }
+
+    public function egaCharges(){
+        return view('payments.ega-charges');
+    }
 }

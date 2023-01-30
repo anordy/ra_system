@@ -142,7 +142,6 @@ class ReturnReport extends Component
             return;
         };
         $this->parameters = $this->getParameters();
-        // dd($this->parameters);
         $this->previewReport($this->parameters);
     }
 
