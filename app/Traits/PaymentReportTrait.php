@@ -19,6 +19,8 @@ use App\Models\Returns\TaxReturn;
 use App\Models\Returns\Vat\VatReturn;
 use App\Models\TaxAgent;
 use App\Models\ZmBill;
+use App\Models\ZmEgaCharge;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
 trait PaymentReportTrait
@@ -124,5 +126,41 @@ trait PaymentReportTrait
             EmTransactionReturn::class,
         ];
         return $models;
+    }
+
+    public function getEgaChargesQuery($range_start, $range_end, $currency, $payment_status, $charges_type)
+    {
+        $query = ZmEgaCharge::join('zm_bills', 'zm_ega_charges.zm_bill_id', 'zm_bills.id')->whereBetween('zm_ega_charges.created_at', [
+            Carbon::parse($range_start)->startOfDay()->toDateTimeString(),
+            Carbon::parse($range_end)->endOfDay()->toDateTimeString()
+        ]);
+
+        if ($currency != 'all') {
+            $query->where('zm_ega_charges.currency', $currency);
+        }
+
+        if ($payment_status != 'all') {
+            switch ($payment_status) {
+                case 'paid':
+                    $query->where('zm_bills.paid_amount', '>', 0);
+                    break;
+                case 'unpaid':
+                    $query->where('zm_bills.paid_amount', '<=', 0);
+                    break;
+            }
+        }
+
+        if ($charges_type != 'all') {
+            switch ($charges_type) {
+                case 'charges-included':
+                    $query->where('zm_ega_charges.ega_charges_included', true);
+                    break;
+                case 'charges-excluded':
+                    $query->where('zm_ega_charges.ega_charges_included', false);
+                    break;
+            }
+        }
+
+        return $query;
     }
 }

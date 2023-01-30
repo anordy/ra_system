@@ -16,7 +16,7 @@ class TaxTypeChangeApprove extends Component
 
     public function mount($taxchangeId)
     {
-        $taxchange = BusinessTaxTypeChange::find($taxchangeId);
+        $taxchange = BusinessTaxTypeChange::find(decrypt($taxchangeId));
         if (is_null($taxchange)){
             abort(404);
         }

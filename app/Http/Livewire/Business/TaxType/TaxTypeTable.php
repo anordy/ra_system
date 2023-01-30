@@ -37,6 +37,8 @@ class TaxTypeTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
 
+        $this->setAdditionalSelects(['to_sub_vat_id']);
+
         $this->setTableWrapperAttributes([
             'default' => true,
             'class' => 'table-bordered table-sm',
@@ -56,7 +58,11 @@ class TaxTypeTable extends DataTableComponent
             Column::make("To Tax Type", "to_tax_type_id")
                 ->searchable()
                 ->format(function ($value, $row) {
-                    return $row->toTax->name;
+                    if ($row->toTax->code == 'vat') {
+                        return $row->subvat->name;
+                    } else {
+                        return $row->toTax->name;
+                    }
                 }),
             Column::make("Date of Request", "created_at")
                 ->format(function ($value, $row) {

@@ -77,4 +77,8 @@ class ZmBill extends Model implements Auditable, PayloadInterface
     {
         return $this->belongsTo(TaxType::class);
     }
+
+    public function egaCharges(){
+        return $this->hasOne(ZmEgaCharge::class);
+    }
 }

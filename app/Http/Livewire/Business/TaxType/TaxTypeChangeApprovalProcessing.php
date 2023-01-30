@@ -8,12 +8,11 @@ use App\Events\SendSms;
 use App\Models\TaxType;
 use Livewire\Component;
 use App\Events\SendMail;
-use App\Models\Business;
 use App\Models\BusinessStatus;
-use App\Models\BusinessTaxType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\BusinessTaxTypeChange;
+use App\Models\Returns\Vat\SubVat;
 use App\Traits\WorkflowProcesssingTrait;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -33,18 +32,42 @@ class TaxTypeChangeApprovalProcessing extends Component
     public $to_tax_type_currency;
     public $effective_date;
     public $today;
+    public $subVatOptions = [];
+    public $showSubVatOptions = false;
+    public $sub_vat_id;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
-        $this->taxchange = BusinessTaxTypeChange::findOrFail($this->modelId);
+        $this->taxchange = BusinessTaxTypeChange::find($this->modelId);
+        if (is_null($this->taxchange)) {
+            abort(404);
+        }
         $this->to_tax_type_id = $this->taxchange->to_tax_type_id;
         $this->from_tax_type_id = $this->taxchange->from_tax_type_id;
         $this->to_tax_type_currency = $this->taxchange->to_tax_type_currency;
         $this->taxTypes   = TaxType::select('id', 'name')->where('category', 'main')->get();
         $this->today = Carbon::today()->addDay()->format('Y-m-d');
+
+        if ($this->taxchange->toTax->code == TaxType::VAT) {
+            $this->subVatOptions = SubVat::all();
+            $this->showSubVatOptions = true;
+        }
+    }
+
+    public function updated($property)
+    {
+        if ($property === 'to_tax_type_id') { 
+            $taxType = TaxType::findOrFail($this->to_tax_type_id);
+            if ($taxType->code == TaxType::VAT) {
+                $this->showSubVatOptions = true;
+            } else {
+                $this->showSubVatOptions = false;
+            }
+        }
+
     }
 
 
@@ -62,12 +85,19 @@ class TaxTypeChangeApprovalProcessing extends Component
             return;
         }
 
+        if ($this->showSubVatOptions) {
+            $this->validate([
+                'sub_vat_id' => 'required'
+            ]);
+        }
+
         DB::beginTransaction();
         try {
             if ($this->checkTransition('registration_manager_review')) {
 
                 $this->subject->status = BusinessStatus::APPROVED;
                 $this->subject->effective_date = $this->effective_date;
+                $this->subject->to_sub_vat_id = $this->sub_vat_id;
                 $this->subject->approved_on = Carbon::now()->toDateTimeString();
 
                 $notification_payload = [

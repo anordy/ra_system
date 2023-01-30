@@ -12,12 +12,13 @@ use App\Models\Debts\DebtWaiver;
 use App\Models\Debts\DebtPenalty;
 use App\Models\Debts\DebtRollback;
 use App\Models\Debts\DemandNotice;
+use App\Models\Returns\Vat\SubVat;
 use App\Models\Debts\RecoveryMeasure;
 use App\Models\Installment\Installment;
-use App\Services\Verification\PayloadInterface;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Extension\ExtensionRequest;
 use App\Models\Installment\InstallmentRequest;
+use App\Services\Verification\PayloadInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaxReturn extends Model implements PayloadInterface
@@ -37,6 +38,10 @@ class TaxReturn extends Model implements PayloadInterface
     public function taxtype()
     {
         return $this->belongsTo(TaxType::class, 'tax_type_id');
+    }
+
+    public function subvat() {
+        return $this->belongsTo(SubVat::class, 'sub_vat_id');
     }
 
     public function taxpayer()

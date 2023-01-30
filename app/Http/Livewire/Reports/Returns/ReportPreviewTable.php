@@ -15,11 +15,12 @@ class ReportPreviewTable extends DataTableComponent
 {
     use LivewireAlert, ReturnReportTrait;
 
-    public $parameters;
+    public $parameters, $lumpsump;
 
     public function mount($parameters)
     {
         $this->parameters = $parameters;
+        $this->lumpsump = TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->first();
     }
 
     public function builder(): Builder
@@ -64,10 +65,10 @@ class ReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("Reporting Month")
-                ->searchable()
-                ->sortable()
-                ->label(fn($row) => $row->tax_type_id == $this->lumpsump->id ? LumpSumReturn::where('id', $row->return_id)->first()->quarter_name : $row->financialMonth->name ?? ''),
+            // Column::make("Reporting Month")
+            //     ->searchable()
+            //     ->sortable()
+            //     ->label(fn($row) => $row->tax_type_id == $this->lumpsump->id ? LumpSumReturn::where('id', $row->return_id)->first()->quarter_name : $row->financialMonth->name ?? ''),
 
             Column::make("Filed By")
                 ->searchable()

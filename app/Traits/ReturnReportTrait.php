@@ -18,26 +18,17 @@ trait ReturnReportTrait
                 ->leftJoin('vat_returns', 'vat_returns.id', 'tax_returns.return_id')
                 ->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
 
-            switch ($parameters['vat_type']) {
-                case 'All-VAT-Returns':
-                    break;
-                case 'Hotel-VAT-Returns':
-                    $model->where('vat_returns.business_type', 'hotel');
-                    break;
-                case 'Electricity-VAT-Returns':
-                    $model->where('vat_returns.business_type', 'electricity');
-                    break;
-                case 'Local-VAT-Returns':
-                    $model->where('vat_returns.business_type', 'other');
-                    break;
+            if ($parameters['vat_type'] != 'All') {
+                $model->where('tax_returns.sub_vat_id', $parameters['vat_type']);
             }
+
         } else {
             $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
         }
 
         if ($parameters['type'] == 'Filing') {
             if ($parameters['filing_report_type'] == 'On-Time-Filings') {
-                $returns = $model->whereRaw("CAST(tax_returns.filing_due_date as date) - CAST(tax_returns.created_at as date) >= 0"); 
+                $returns = $model->whereRaw("CAST(tax_returns.filing_due_date as date) - CAST(tax_returns.created_at as date) >= 0");
 
             } elseif ($parameters['filing_report_type'] == 'Late-Filings') {
                 $returns = $model->whereRaw("CAST(tax_returns.created_at as date) - CAST(tax_returns.filing_due_date as date) > 0"); 
@@ -83,9 +74,11 @@ trait ReturnReportTrait
 
     public function getSelectedRecords($returns, $parameters)
     {
-        $start = Carbon::parse($parameters['range_start'])->startOfDay()->toDateTimeString();
-        $end = Carbon::parse($parameters['range_end'])->startOfDay()->toDateTimeString();
-        return $returns->whereBetween('tax_returns.created_at', [$start, $end])->orderBy('tax_returns.created_at', 'asc');
+        $start = Carbon::parse($parameters['range_start'])->startOfDay();
+        $end = Carbon::parse($parameters['range_end'])->startOfDay();
+        $returns->whereDate('tax_returns.created_at','>=', $start);
+        $returns->whereDate('tax_returns.created_at','<=', $end)->orderBy('tax_returns.created_at', 'asc');
+        return $returns;
     }
 
     public function exportExcelReport($parameters)
@@ -96,13 +89,8 @@ trait ReturnReportTrait
             return;
         }
 
-        if ($parameters['year'] == 'all') {
-            $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . '.xlsx';
-            $title    = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'];
-        } else {
-            $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . ' - ' . $parameters['year'] . '.xlsx';
-            $title    = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'] . ' ' . $parameters['year'];
-        }
+        $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . ' - ' . '.xlsx';
+        $title    = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'];
         $this->alert('success', 'Exporting Excel File');
         return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
     }
