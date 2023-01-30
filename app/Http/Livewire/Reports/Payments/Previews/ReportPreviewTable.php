@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Reports\Payments\Previews;
 
 use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;

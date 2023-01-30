@@ -18,19 +18,10 @@ trait ReturnReportTrait
                 ->leftJoin('vat_returns', 'vat_returns.id', 'tax_returns.return_id')
                 ->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
 
-            switch ($parameters['vat_type']) {
-                case 'All-VAT-Returns':
-                    break;
-                case 'Hotel-VAT-Returns':
-                    $model->where('vat_returns.business_type', 'hotel');
-                    break;
-                case 'Electricity-VAT-Returns':
-                    $model->where('vat_returns.business_type', 'electricity');
-                    break;
-                case 'Local-VAT-Returns':
-                    $model->where('vat_returns.business_type', 'other');
-                    break;
+            if ($parameters['vat_type'] != 'All') {
+                $model->where('tax_returns.sub_vat_id', $parameters['vat_type']);
             }
+
         } else {
             $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
         }

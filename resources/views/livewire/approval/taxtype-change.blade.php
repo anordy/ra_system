@@ -12,8 +12,13 @@
                         {{ $taxchange->from_tax_type_currency ?? '' }}</span><br>
                 </td>
                 <td>
+                    @if ($taxchange->toTax->code == 'vat')
+                        {{ $taxchange->subvat->name }}
+                    @else
                     <span style="font-size: 13px">{{ $taxchange->toTax->name }} -
                         {{ $taxchange->to_tax_type_currency ?? '' }}</span><br>
+                    @endif
+
                 </td>
                 <td class="@if ($taxchange->from_tax_type_id != $taxchange->to_tax_type_id) table-success @endif">
                     @if ($taxchange->from_tax_type_id == $taxchange->to_tax_type_id)
@@ -79,6 +84,24 @@
                     @enderror
                 </div>
             </div>
+            @if ($showSubVatOptions === true)
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">VAT Category Type</label>
+                        <select
+                        class="form-control @error("sub_vat_id") is-invalid @enderror"
+                        wire:model="sub_vat_id">
+                            <option value="" selected disabled>--Select---</option>
+                            @foreach ($subVatOptions as $sub)
+                                <option value="{{ $sub->id }}">{{ $sub->name }}</option>
+                            @endforeach
+                        </select>
+                    @error("sub_vat_id")
+                        <span class="text-danger error">{{ $message }}</span>
+                    @enderror
+                    </div>
+                </div>
+            @endif
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="form-label">To Tax Type Currency</label>

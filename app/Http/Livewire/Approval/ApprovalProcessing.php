@@ -14,6 +14,7 @@ use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\LumpSumPayment;
+use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Traits\WorkflowProcesssingTrait;
@@ -47,13 +48,17 @@ class ApprovalProcessing extends Component
     public $isiiciiiList = [];
     public $isiicivList  = [];
 
+    public $subVatOptions = [];
+
     public $showLumpsumOptions = false;
+    public $showSubVatOptions = false;
 
     public $Ids, $exceptionOne, $exceptionTwo;
 
     public $directors;
     public $shareholders;
     public $shares;
+    public $sub_vat_id;
 
     public function mount($modelName, $modelId)
     {
@@ -162,6 +167,13 @@ class ApprovalProcessing extends Component
             } else {
                 $this->showLumpsumOptions = false;
             }
+
+            if (in_array($vatId, $this->Ids)) {
+                $this->subVatOptions  = SubVat::select('id', 'name')->where('is_approved', 1)->get();
+                $this->showSubVatOptions = true;
+            } else {
+                $this->showSubVatOptions = false;
+            }
         }
     }
 
@@ -182,7 +194,6 @@ class ApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
-
             try {
                 $this->subject->isiic_i = $this->isiic_i ?? null;
                 $this->subject->isiic_ii = $this->isiic_ii ?? null;
@@ -201,7 +212,7 @@ class ApprovalProcessing extends Component
                     'effectiveDate' => 'required|strip_tag'
                 ], [
                     'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
-                    'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
+                    'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is required',
                     'selectedTaxTypes.*.currency.required' => 'Currency is required',
                 ]);
 
@@ -249,10 +260,17 @@ class ApprovalProcessing extends Component
                     ]);
                 }
 
+                if ($this->showSubVatOptions == true) {
+                    $this->validate([
+                        'sub_vat_id' => 'required'
+                    ]);
+                }
+
                 foreach ($this->selectedTaxTypes as $type) {
                     DB::table('business_tax_type')->insert([
                         'business_id' => $business->id,
                         'tax_type_id' => $type['tax_type_id'],
+                        'sub_vat_id' => $this->sub_vat_id ?? null,
                         'currency' => $type['currency'],
                         'created_at' => Carbon::now(),
                         'status' => 'current-used'

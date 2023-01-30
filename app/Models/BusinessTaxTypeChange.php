@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxType;
 use App\Traits\WorkflowTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -32,5 +33,9 @@ class BusinessTaxTypeChange extends Model implements Auditable
 
     public function toTax() {
         return $this->belongsTo(TaxType::class, 'to_tax_type_id');
+    }
+
+    public function subvat() {
+        return $this->belongsTo(SubVat::class, 'to_sub_vat_id');
     }
 }
