@@ -4,7 +4,7 @@ namespace App\Enum;
 
 use ReflectionClass;
 
-class BankReconStatus implements Status
+class InvoiceReconStatus implements Status
 {
     const PENDING = 'pending';
     const AMOUNT_MISMATCH = 'amount-mismatch';
