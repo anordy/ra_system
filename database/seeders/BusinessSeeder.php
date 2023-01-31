@@ -117,10 +117,14 @@ class BusinessSeeder extends Seeder
             $business->locations()->create($location_two);
             $business->banks()->create($bank);
 
-            $taxTypes = TaxType::where('category', 'main')->pluck('id')->toArray();
+            $taxTypes = TaxType::select('id', 'code')->where('category', 'main')->get();
 
             foreach ($taxTypes as $tax) {
-                BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax, "currency" => "TZS"]);
+                if ($tax->code == TaxType::VAT) {
+                    BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax->id, "currency" => "TZS", "sub_vat_id" =>  2]);
+                } else {
+                    BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax->id, "currency" => "TZS"]);
+                }
             }
 
             DB::commit();

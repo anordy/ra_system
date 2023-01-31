@@ -62,7 +62,7 @@
                                     <td>{{ number_format($penalty['late_payment'], 2) }}
                                         <strong>{{ $penalty->currency }}</strong>
                                     </td>
-                                    <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
                                     <td>{{ number_format($penalty['rate_amount'], 2) }}
                                         <strong>{{ $penalty->currency }}</strong>
                                     </td>
@@ -84,7 +84,7 @@
                                     <td>{{ number_format($penalty['late_payment'], 2) }}
                                         <strong>{{ $penalty->currency }}</strong>
                                     </td>
-                                    <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
                                     <td>{{ number_format($penalty['rate_amount'], 2) }}
                                         <strong>{{ $penalty->currency }}</strong>
                                     </td>
@@ -131,7 +131,7 @@
                                     <td>{{ number_format($penalty['late_payment'], 2) }}
                                         <strong>{{ $penalty->currency }}</strong>
                                     </td>
-                                    <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
                                     <td>{{ number_format($penalty['rate_amount'], 2) }}
                                         <strong>{{ $penalty->currency }}</strong>
                                     </td>
