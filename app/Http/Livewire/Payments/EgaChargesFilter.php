@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Payments;
 
+use App\Exports\EgaChargesExport;
 use App\Models\ZmEgaCharge;
 use App\Traits\PaymentReportTrait;
 use Carbon\Carbon;
@@ -49,7 +50,13 @@ class EgaChargesFilter extends Component
 
     public function exportExcel(){
         $this->getData();
-        
+        $fileName = 'ega_charges' . now()->format('d-m-Y') . '.xlsx';
+        $title = 'Ega Charges';
+        $records = $this->getEgaChargesQuery($this->range_start,$this->range_end,$this->currency,$this->payment_status,$this->charges_type)->get();
+        $parameters = $this->parameters;
+        $this->alert('success', 'Exporting Excel File');
+        return Excel::download(new EgaChargesExport($records,$title,$parameters), $fileName);
+
     }
 
     public function getParameters(){
