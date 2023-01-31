@@ -375,7 +375,7 @@
                                             <th>Late Payment Amount</th>
                                             <th>Interest Rate</th>
                                             <th>Interest Amount</th>
-                                            <th>Penalty Amount</th>
+                                            <th>Payable Amount</th>
                                         </tr>
                                         </thead>
 
