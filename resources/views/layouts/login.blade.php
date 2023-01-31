@@ -26,6 +26,10 @@
             margin: 0 auto;
             padding-top: 40px;
         }
+
+        .invalid-feedback{
+            white-space: nowrap;overflow: scroll
+        }
     </style>
     @yield('styles')
 </head>
