@@ -70,41 +70,21 @@
                             </p>
                         </div>
 
-                        <div class="col-md-3 mb-2">
-                            <span class="font-weight-bold text-uppercase">Renew Payment</span>
-                            <p>
-                                @if ($renew->bill != null)
-                                    @if ($renew->bill->status == 'paid')
-                                        <span style=" background: #72DC3559; color: #319e0a; font-size: 85%"
-                                              class="badge badge-success p-2">Paid</span>
-                                    @else
-                                        <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
-                                              class="badge badge-danger p-2">Not Paid</span>
-                                    @endif
-                                @else
-                                    <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
-                                          class="badge badge-danger p-2">Not Paid</span>
-                                @endif
-                            </p>
-                        </div>
-
-
-
                     </div>
-                    @if(empty($fee))
+                    @if(empty($duration))
                         <div class="mx-1 p-2">
                             <div class="row py-2 alert alert-danger rounded-0 shadow-sm border-danger">
                                 <div class="col-md-6">
                                     <span class="font-weight-bold text-uppercase">Notice</span>
-                                    <p class="my-1">Please kindly add renew fee before approving any
+                                    <p class="my-1">Please kindly add duration for consultant renew before approving any
                                         request</p>
                                 </div>
                                 <div class="col-md-6">
                                     <span class="font-weight-bold text-uppercase">Action</span>
                                     <p class="my-1">
-                                        <a class="btn btn-primary" href="{{ route('settings.tax-consultant-fee') }}">
+                                        <a class="btn btn-primary" href="{{ route('settings.tax-consultant-duration') }}">
                                             <i class="bi bi-plus-square-fill mr-2"></i>
-                                            Add Fee
+                                            Add Duration
                                         </a>
                                     </p>
                                 </div>

@@ -75,7 +75,7 @@ trait CheckReturnConfigurationTrait
                     event(new SendSms('financial-year', $payload));
                 }
             } else {
-                $filingFinancialMonth = $financialMonth->number + 1;
+                $filingFinancialMonth = $financialMonth->number;
                 $filingFinancialYearId = $financialMonth->financial_year_id;
                 $month = FinancialMonth::where('financial_year_id', $filingFinancialYearId)
                     ->where('number', $filingFinancialMonth)

@@ -48,6 +48,7 @@ use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Business\BranchController;
 use App\Http\Controllers\Debt\ReturnDebtController;
 use App\Http\Controllers\QRCodeGeneratorController;
+use App\Http\Controllers\Returns\SettingController;
 use App\Http\Controllers\BusinessCategoryController;
 use App\Http\Controllers\Finances\FinanceController;
 use App\Http\Controllers\WithholdingAgentController;
@@ -135,7 +136,7 @@ use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
 use App\Http\Controllers\KYC\KycAmendmentRequestController;
 
-Auth::routes(['register' => false]);
+Auth::routes();
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -198,7 +199,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
         });
 
-        Route::get('/tax-consultant-fee', [TaxAgentController::class, 'fee'])->name('tax-consultant-fee');
+        Route::get('/tax-consultant-duration', [TaxAgentController::class, 'duration'])->name('tax-consultant-duration');
 
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
         Route::resource('/transaction-fees', TransactionFeeController::class);
@@ -213,6 +214,9 @@ Route::middleware(['2fa', 'auth'])->group(function () {
     Route::get('bill_transfer/pdf/{billId}/{bankAccountId}', [QRCodeGeneratorController::class, 'transfer'])->name('bill.transfer');
     Route::get('bill_receipt/pdf/{id}', [QRCodeGeneratorController::class, 'receipt'])->name('bill.receipt');
 
+    Route::name('returns.')->prefix('returns')->group(function () {
+        Route::get('/stamp-duty', [SettingController::class, 'getStampDutySettings'])->name('stamp-duty');
+    });
     Route::name('verification.')->prefix('verification')->group(function () {
         Route::get('tin/{business}', [VerificationController::class, 'tin'])->name('tin');
     });

@@ -112,67 +112,7 @@
                             @endif
 
                         </div>
-                        <div class="col-md-3 mb-2">
-                            <span class="font-weight-bold text-uppercase">Registration Payment</span><br>
 
-                            <p>@if(!empty($agent->bill))
-                                    @if ($agent->bill->status == \App\Models\PaymentStatus::PAID)
-                                        <span class="badge badge-success py-1 px-2"
-                                              style="border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"><i
-                                                    class="bi bi-check-circle-fill mr-1"></i>Paid</span>
-                                    @elseif($agent->bill->status == \App\Models\PaymentStatus::PENDING)
-                                        <span class="badge badge-danger py-1 px-2"
-                                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
-                                                    class="bi bi-clock-history mr-1"></i>Not Paid</span>
-                                    @elseif($agent->bill->status == \App\Models\PaymentStatus::PARTIALLY)
-                                        <span style="font-weight: 900; color: #319e0a; font-size: 85%">Partially Paid</span>
-                                    @elseif($agent->bill->status == \App\Models\PaymentStatus::CANCELLED)
-                                        <span class="badge badge-danger py-1 px-2"
-                                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
-                                                    class="bi bi-x-circle-fill mr-1"></i>Canceled</span>
-                                    @else
-                                        <span class="badge badge-danger py-1 px-2"
-                                              style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
-                                                    class="bi bi-x-circle-fill mr-1"></i>Failed</span>
-                                    @endif
-                                @else
-                                    <span class="badge badge-danger py-1 px-2"
-                                          style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%">
-                            <i class="bi bi-x-circle-fill mr-1"></i>
-                            Not Paid
-                        </span>
-                                @endif
-                            </p>
-
-                        </div>
-
-                        @if(!empty($agent->request->first()))
-                            <div class="col-md-3 mb-2">
-                                <span class="font-weight-bold text-uppercase">Renew Payment</span><br>
-                                <p>
-                                    @if ($agent->request->first()->bills->first() != null)
-                                        @if ($agent->request->first()->bills->first()->status == 'paid')
-                                            <span style=" border-radius: 1rem; background: #72DC3559; color: #319e0a; font-size: 85%"
-                                                  class="badge badge-success py-1 px-2">
-                                        <i class="bi bi-check-circle-fill mr-1"></i>
-                                        Paid
-                                    </span>
-                                        @else
-                                            <span style=" border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"
-                                                  class="badge badge-danger py-1 px-2">
-                                        <i class="bi bi-x-circle-fill mr-1"></i>
-                                        Not Paid
-                                    </span>
-                                        @endif
-                                    @else
-                                        <span style=" border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"
-                                              class="badge badge-danger py-1 px-2">
-                                    <i class="bi bi-x-circle-fill mr-1"></i>
-                                    Not Paid</span>
-                                    @endif
-                                </p>
-                            </div>
-                        @endif
                     </div>
                 </div>
                 <div class="tab-pane p-2" id="academic" role="tabpanel" aria-labelledby="academic-tab">
@@ -346,7 +286,7 @@
                                 </a>
                             </div>
                             @if($agent->emp_letter != null)
-                            <div class="col-md-3">
+                                <div class="col-md-3">
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'emp_letter']) }}">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
@@ -354,10 +294,10 @@
                                             Employer Letter
                                         </div>
                                     </a>
-                            </div>
+                                </div>
                             @endif
                             @if($agent->approval_letter != null)
-                            <div class="col-md-3">
+                                <div class="col-md-3">
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'approval_letter']) }}">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
@@ -365,7 +305,7 @@
                                             Approval Letter
                                         </div>
                                     </a>
-                            </div>
+                                </div>
                             @endif
                         </div>
                     </div>

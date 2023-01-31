@@ -36,7 +36,7 @@
                             <th>Late Payment Amount</th>
                             <th>Interest Rate</th>
                             <th>Interest Amount</th>
-                            <th>Penalty Amount</th>
+                            <th>Payable Amount</th>
                         </tr>
                     </thead>
 
@@ -48,7 +48,7 @@
                                     <td>{{ number_format($penalty['tax_amount'], 2) }}</td>
                                     <td>{{ number_format($penalty['late_filing'], 2) }}</td>
                                     <td>{{ number_format($penalty['late_payment'], 2) }}</td>
-                                    <td>{{ number_format($penalty['rate_percentage'], 2) }}</td>
+                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
                                     <td>{{ number_format($penalty['rate_amount'], 2) }}</td>
                                     <td>{{ number_format($penalty['penalty_amount'], 2) }}</td>
                                 </tr>
