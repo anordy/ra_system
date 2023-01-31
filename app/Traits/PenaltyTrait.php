@@ -160,7 +160,7 @@ trait PenaltyTrait
                 ->firstOrFail();
         } else {
             $month = FinancialMonth::where('financial_year_id', $financialMonth->financial_year_id)
-                ->where('number', $financialMonth->number)
+                ->where('number', $financialMonth->number + 1)
                 ->firstOrFail();
         }
         
