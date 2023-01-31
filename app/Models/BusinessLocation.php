@@ -79,6 +79,7 @@ class BusinessLocation extends Model implements Auditable
 
             $region = $this->taxRegion;
 
+
             $s = $s . $region->prefix;
 
             // Append random no from table
@@ -155,17 +156,11 @@ class BusinessLocation extends Model implements Auditable
             switch ($this->region->location){
                 case Region::UNGUJA:
                     $vrn = $vrn . '07';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->get();
-                    if (is_null($mainRegion)){
-                        abort(404);
-                    }
+                    $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->firstOrFail();
                     break;
                 case Region::PEMBA:
                     $vrn = $vrn . '08';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::PMB)->get();
-                    if (is_null($mainRegion)){
-                        abort(404);
-                    }
+                    $mainRegion = MainRegion::where('prefix', MainRegion::PMB)->firstOrFail();
                     break;
                 default:
                     abort(404);
@@ -219,17 +214,11 @@ class BusinessLocation extends Model implements Auditable
             switch ($this->region->location){
                 case Region::UNGUJA:
                     $ztn_number = $ztn_number . '05';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->get();
-                    if (is_null($mainRegion)){
-                        abort(404);
-                    }
+                    $mainRegion = MainRegion::where('prefix', MainRegion::UNG)->firstOrFail();
                     break;
                 case Region::PEMBA:
                     $ztn_number = $ztn_number . '06';
-                    $mainRegion = MainRegion::where('prefix', MainRegion::PMB)->get();
-                    if (is_null($mainRegion)){
-                        abort(404);
-                    }
+                    $mainRegion = MainRegion::where('prefix', MainRegion::PMB)->firstOrFail();
                     break;
                 default:
                     Log::error("Invalid Main Region selected!");
@@ -240,6 +229,7 @@ class BusinessLocation extends Model implements Auditable
             $ztn_number = $ztn_number . Carbon::now()->format('y');
 
             $taxRegion = $this->taxRegion;
+
             $value = $mainRegion->registration_count + 1;
 
             //Append Number 000001 - 999999

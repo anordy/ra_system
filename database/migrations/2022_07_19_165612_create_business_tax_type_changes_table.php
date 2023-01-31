@@ -17,8 +17,8 @@ class CreateBusinessTaxTypeChangesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('taxpayer_id');
-            $table->string('from_tax_type_id');
-            $table->string('to_tax_type_id');
+            $table->unsignedBigInteger('from_tax_type_id');
+            $table->unsignedBigInteger('to_tax_type_id');
             $table->string('from_tax_type_currency');
             $table->string('to_tax_type_currency');
             $table->longText('reason')->nullable();

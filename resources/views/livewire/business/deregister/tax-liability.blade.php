@@ -76,7 +76,7 @@
                                             <th>Location</th>
                                             <th>Tax Type</th>
                                             <th>Principal Amount</th>
-                                            <th>Penalty Amount</th>
+                                            <th>Payable Amount</th>
                                             <th>Interest Amount</th>
                                             <th>Total Debt</th>
                                         </tr>
@@ -308,7 +308,7 @@
                                             <th>Tax Type</th>
                                             <th>Year</th>
                                             <th>Principal Amount</th>
-                                            <th>Penalty Amount</th>
+                                            <th>Payable Amount</th>
                                             <th>Total Debt</th>
                                         </tr>
                                     </thead>

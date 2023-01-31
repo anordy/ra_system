@@ -21,13 +21,8 @@ class ReturnReportController extends Controller
         $parameters = json_decode(decrypt($parameters), true);
         $records = $this->getRecords($parameters);
     
-        if($parameters['year']=='all'){
-            $fileName = $parameters['tax_type_name'].'_'.$parameters['filing_report_type'].'.pdf';
-            $title = $parameters['filing_report_type'].' For '.$parameters['tax_type_name'];
-        }else{
-            $fileName = $parameters['tax_type_name'].'_'.$parameters['filing_report_type'].' - '.$parameters['year'].'.pdf';
-            $title = $parameters['filing_report_type'].' For '.$parameters['tax_type_name'].' '.$parameters['year'];
-        } 
+        $fileName = $parameters['tax_type_name'].'_'.$parameters['filing_report_type'].'.pdf';
+        $title = $parameters['filing_report_type'].' For '.$parameters['tax_type_name'];
         $records = $records->get(); 
         $pdf = PDF::loadView('exports.returns.reports.pdf.return', compact('records', 'title', 'parameters'));
         $pdf->setPaper('a4', 'landscape');

@@ -640,8 +640,7 @@
                         <li class="{{ request()->is('payments/daily-payments*') ? 'active' : '' }}">
                             <a href="{{ route('payments.daily-payments.index') }}">Daily Payments</a>
                         </li>
-                    @endcan
-                    @can('manage-payments-view')
+
                         <li class="{{ request()->is('payments/pending*') ? 'active' : '' }}">
                             <a href="{{ route('payments.pending') }}">Pending Payments</a>
                         </li>
@@ -669,10 +668,13 @@
                         <li class="{{ request()->is('payments/missing-bank-recon*') ? 'active' : '' }}">
                             <a href="{{ route('payments.bank-recon.missing') }}">Missing Bank Recons</a>
                         </li>
-                    @endcan
-                    @can('manage-payments-view')
+
                         <li class="{{ request()->is('payments/recon-reports/index*') ? 'active' : '' }}">
                             <a href="{{ route('payments.recon-reports.index') }}">Reconciliations Report</a>
+                        </li>
+
+                        <li class="{{ request()->is('payments/ega-charges*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.ega-charges.index') }}">eGA Charges</a>
                         </li>
                     @endcan
                 </ul>
