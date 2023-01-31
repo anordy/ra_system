@@ -25,7 +25,7 @@
                                 <td>{{ $penalty['return_quater'] }}</td>
                                 <td>{{ number_format($penalty['tax_amount'], 2) }}</td>
                                 <td>{{ number_format($penalty['late_payment'], 2) }}</td>
-                                <td>{{ number_format($penalty['rate_percentage'], 2) }}</td>
+                                <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
                                 <td>{{ number_format($penalty['rate_amount'], 2) }}</td>
                                 <td>{{ number_format($penalty['penalty_amount'], 2) }}</td>
                             </tr>

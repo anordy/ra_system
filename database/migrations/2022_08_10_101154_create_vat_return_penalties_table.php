@@ -23,7 +23,7 @@ class CreateVatReturnPenaltiesTable extends Migration
             $table->decimal('tax_amount', 20, 2);
             $table->decimal('late_filing', 20, 2);
             $table->decimal('late_payment', 20, 2);
-            $table->decimal('rate_percentage', 20, 2);
+            $table->decimal('rate_percentage', 8, 4);
             $table->decimal('rate_amount', 20, 2);
             $table->decimal('penalty_amount', 20, 2);
             $table->timestamp('start_date');

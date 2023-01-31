@@ -19,7 +19,7 @@ class CreateLeasePaymentPenaltiesTable extends Migration
             $table->unsignedBigInteger('lease_payment_id');
             $table->enum('currency', Currencies::getConstants())->default('USD');
             $table->decimal('tax_amount', 20, 2);
-            $table->decimal('rate_percentage', 20, 2);
+            $table->decimal('rate_percentage', 8, 4);
             $table->decimal('penalty_amount', 20, 2);
             $table->decimal('total_amount', 20, 2);
             $table->timestamp('start_date');
