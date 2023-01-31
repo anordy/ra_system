@@ -22,7 +22,6 @@ class TaPaymentConfiguration extends Model implements Auditable, PayloadInterfac
             'id',
             'category',
             'duration',
-            'amount'
         ];
     }
 

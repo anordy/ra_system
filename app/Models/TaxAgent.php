@@ -15,13 +15,9 @@ class TaxAgent extends Model implements Auditable
 {
     use Notifiable, HasFactory, WorkflowTrait , \OwenIt\Auditing\Auditable;
 
-	protected $table = 'tax_agents';
+    protected $table = 'tax_agents';
 
-	protected $guarded = [];
-
-    public static function findOrFail($value)
-    {
-    }
+    protected $guarded = [];
 
     public function generateReferenceNo(){
         if ($this->reference_no){
@@ -63,37 +59,37 @@ class TaxAgent extends Model implements Auditable
         }
     }
 
-	public function academics() {
-		return $this->hasMany('App\Models\TaxAgentAcademicQualification');
-	}
-	public function professionals()
-	{
-		return $this->hasMany('App\Models\TaxAgentProfessionals');
-	}
+    public function academics() {
+        return $this->hasMany('App\Models\TaxAgentAcademicQualification');
+    }
+    public function professionals()
+    {
+        return $this->hasMany('App\Models\TaxAgentProfessionals');
+    }
 
-	public function trainings()
-	{
-		return $this->hasMany('App\Models\TaxAgentTrainingExperience');
-	}
+    public function trainings()
+    {
+        return $this->hasMany('App\Models\TaxAgentTrainingExperience');
+    }
 
-	public function request()
-	{
-		return $this->hasMany(RenewTaxAgentRequest::class)->latest();
-	}
+    public function request()
+    {
+        return $this->hasMany(RenewTaxAgentRequest::class)->latest();
+    }
 
     public function approval()
     {
         return $this->hasMany(TaxAgentApproval::class, 'tax_agent_id');
     }
 
-	// Scopes
-	public function scopeApproved($query){
-		return $query->where('status', TaxAgentStatus::APPROVED);
-	}
+    // Scopes
+    public function scopeApproved($query){
+        return $query->where('status', TaxAgentStatus::APPROVED);
+    }
 
-	public function scopePending($query){
-		return $query->where('status', TaxAgentStatus::PENDING);
-	}
+    public function scopePending($query){
+        return $query->where('status', TaxAgentStatus::PENDING);
+    }
 
     public function bills(){
         return $this->morphMany(ZmBill::class, 'billable');

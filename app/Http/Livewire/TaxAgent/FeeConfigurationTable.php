@@ -36,11 +36,6 @@ class FeeConfigurationTable extends DataTableComponent
                 ->sortable()->searchable(),
             Column::make("duration", "duration")
                 ->format(fn($value) => $value . ' years '),
-            Column::make('Amount', 'amount')
-                ->format(fn($value) => number_format($value, '2', '.', ','))
-                ->html()->searchable(),
-            Column::make("Currency", "currency")
-                ->sortable()->searchable(),
             Column::make("Nationality", "is_citizen")
                 ->view('taxagents.includes.no_of_days'),
             Column::make('Approval Status', 'is_approved')

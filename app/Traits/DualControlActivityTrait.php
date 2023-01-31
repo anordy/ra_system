@@ -57,8 +57,8 @@ trait DualControlActivityTrait
                 return 'Role';
                 break;
 
-            case DualControl::CONSULTANT_FEE:
-                return 'Tax Consultant Fee';
+            case DualControl::CONSULTANT_DURATION:
+                return 'Tax Consultant Duration';
                 break;
             case DualControl::SYSTEM_SETTING_CONFIG:
                 return 'System Setting Configuration';
