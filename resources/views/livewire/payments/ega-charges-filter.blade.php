@@ -21,6 +21,7 @@
                 <option value="unpaid">Unpaid</option>
             </select>
         </div>
+        
         <div class="col-md-4 form-group">
             <label for="payment_status" class="d-flex justify-content-between'">
                 <span>Charge Type</span>
@@ -70,7 +71,7 @@
 
             @if($hasData)
             <button class="btn btn-success ml-2" wire:click="exportExcel" wire:loading.attr="disabled">
-                <i class="fas fa-file-xlxs ml-1" wire:loading.remove wire:target="exportExcel"></i>
+                <i class="bi bi-filetype-xls ml-2" wire:loading.remove wire:target="exportExcel"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                     wire:target="exportExcel"></i>
                 Export to Excel
@@ -79,10 +80,10 @@
         </div>
     </div>
 
-    @if ($hasData)
+    {{-- @if ($hasData) --}}
     <div class="col-md-12 mt-3">
         <livewire:payments.ega-charges-table :parameters="$parameters" key="{{ now() }}" />
     </div>
-    @endif
+    {{-- @endif --}}
 
 </div>

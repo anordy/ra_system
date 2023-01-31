@@ -676,6 +676,9 @@
                         <li class="{{ request()->is('payments/ega-charges*') ? 'active' : '' }}">
                             <a href="{{ route('payments.ega-charges.index') }}">eGA Charges</a>
                         </li>
+                        <li class="{{ request()->is('payments/departmental-reports*') ? 'active' : '' }}">
+                            <a href="{{ route('payments.departmental-reports.index') }}">Departmental Reports</a>
+                        </li>
                     @endcan
                 </ul>
             </li>

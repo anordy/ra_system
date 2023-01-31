@@ -140,4 +140,8 @@ class PaymentsController extends Controller
     public function egaCharges(){
         return view('payments.ega-charges');
     }
+
+    public function departmentalReports(){
+        return view('payments.departmental-reports');
+    }
 }
