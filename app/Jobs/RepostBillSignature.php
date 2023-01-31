@@ -14,6 +14,8 @@ class RepostBillSignature implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, VerificationTrait;
 
+    public $tries = 0;
+    public $backoff = 10;
     public $bill;
 
     /**
@@ -35,6 +37,7 @@ class RepostBillSignature implements ShouldQueue
     public function handle()
     {
         if (!$this->sign($this->bill)){
+            $this->fail();
             dispatch(new RepostBillSignature($this->bill));
         }
     }
