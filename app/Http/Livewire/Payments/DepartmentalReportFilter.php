@@ -69,8 +69,8 @@ class DepartmentalReportFilter extends Component
         $this->range_start = $this->today;
         $this->range_end = $this->today;
         $this->optionTaxTypes = TaxType::where('category', 'main')->get();
-        //$this->optionsReportTypes = ['large-taxpayer' => 'Large Taxpayer Department', 'domestic-taxes' => 'Domestic Taxes Department', 'non-tax-revenue' => 'Non-Tax Revenue Department', 'pemba' => 'Pemba'];
-        $this->optionsReportTypes = ['large-taxpayer' => 'Large Taxpayer Department', 'domestic-taxes' => 'Domestic Taxes Department', 'pemba' => 'Pemba'];
+        $this->optionsReportTypes = ['large-taxpayer' => 'Large Taxpayer Department', 'domestic-taxes' => 'Domestic Taxes Department', 'non-tax-revenue' => 'Non-Tax Revenue Department', 'pemba' => 'Pemba'];
+        // $this->optionsReportTypes = ['large-taxpayer' => 'Large Taxpayer Department', 'domestic-taxes' => 'Domestic Taxes Department', 'pemba' => 'Pemba'];
         $this->optionTaxTypeOthers = TaxType::whereIn('code', ['land-lease', 'airport-service-charge', 'road-license-fee', 'airport-service-charge', 'seaport-service-charge', 'seaport-transport-charge'])->get();
         //extra filters
         $this->optionTaxRegions = TaxRegion::pluck('name', 'id')->toArray();
@@ -135,15 +135,7 @@ class DepartmentalReportFilter extends Component
             return;
         };
         $this->parameters = $this->getParameters();
-        $records = $this->getRecords($this->parameters)->get();
-    }
-
-    //export pdf report
-    public function exportPdf()
-    {
-        $this->validate();
-        $this->parameters = $this->getParameters();
-        $this->exportPdfReport($this->parameters);
+        // $records = $this->getRecords($this->parameters)->get();
     }
 
     //export excel report

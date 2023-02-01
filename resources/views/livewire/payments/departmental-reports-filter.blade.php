@@ -128,7 +128,7 @@
 
 
     <!-- tax region -->
-    @if($department_type == 'domestic-taxes')
+    @if($department_type == 'domestic-taxes' || $department_type == 'pemba')
     <div>
         <div class="row pt-4">
             <div class="col-12">

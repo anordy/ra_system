@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Exports\ReturnReportExport;
+use App\Models\Region;
 use App\Models\Returns\TaxReturn;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,21 +18,28 @@ trait DepartmentalReportTrait
                 ->join('tax_types', 'tax_types.id', 'tax_returns.tax_type_id')
                 ->where('tax_types.category', 'other');
             if ($parameters['non_tax_type_id'] == 'all') {
+                //get all non-revenue-taxes
                 $model->whereIn('tax_types.code', ['land-lease', 'airport-service-charge', 'road-license-fee', 'airport-service-charge', 'seaport-service-charge', 'seaport-transport-charge']);
             } else {
+                //get non-revenue-taxes by given type
                 $model->where('tax_types.code', $parameters['non_tax_type_code']);
             }
         } else {
+            //get all returns associsted with main tax types
             $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')
                 ->join('tax_types', 'tax_types.id', 'tax_returns.tax_type_id')
                 ->where('tax_types.category', 'main');
             if ($parameters['tax_type_id'] != 'all') {
+                //check if selected tax-type is vat
                 if ($parameters['tax_type_code'] == 'vat') {
+                    //if it is vat, join tax-returns table with vat_returns table
                     $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')
                         ->leftJoin('vat_returns', 'vat_returns.id', 'tax_returns.return_id')
                         ->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
 
+                        //if subvat type is not all
                     if ($parameters['vat_type'] != 'All') {
+                        //get returns for a given subvat selected
                         $model->where('tax_returns.sub_vat_id', $parameters['vat_type']);
                     }
                 } 
@@ -52,6 +60,15 @@ trait DepartmentalReportTrait
         if ($parameters['department_type'] == 'domestic-taxes') {
             $model->where('businesses.is_business_lto', false);
         }
+
+        //check if department-type is pemba
+        if ($parameters['department_type'] == 'pemba') {
+            if($parameters['region'] == 'all'){
+                $pembaRegions = Region::select('id', 'name')->where('location', 'pemba')->pluck('id')->toArray();
+                $model->whereIn('business_locations.region_id', $pembaRegions);
+            }
+        }
+
 
         if ($parameters['payment_status'] != 'all') {
             //get all paid returns
@@ -96,42 +113,18 @@ trait DepartmentalReportTrait
         return $returns;
     }
 
-    // public function exportExcelReport($parameters)
-    // {
-    //     $records = $this->getRecords($parameters);
-    //     if ($records->count() < 1) {
-    //         $this->alert('error', 'No Records Found in the selected criteria');
-    //         return;
-    //     }
+    public function exportExcelReport($parameters)
+    {
+        $records = $this->getRecords($parameters);
+        if ($records->count() < 1) {
+            $this->alert('error', 'No Records Found in the selected criteria');
+            return;
+        }
 
-    //     $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . ' - ' . '.xlsx';
-    //     $title    = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'];
-    //     $this->alert('success', 'Exporting Excel File');
-    //     return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
-    // }
+        // $fileName = $parameters['deparmental_report'] .'.xlsx';
+        // $title    = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'];
+        // $this->alert('success', 'Exporting Excel File');
+        // return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
+    }
 
-    // public function exportPdfReport($parameters)
-    // {
-    //     $records = $this->getRecords($parameters);
-    //     if ($records->count() < 1) {
-    //         $this->alert('error', 'No Records Found in the selected criteria');
-
-    //         return;
-    //     }
-    //     $this->alert('success', 'Exporting Pdf File');
-
-    //     return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
-    // }
-
-    // public function previewReport($parameters)
-    // {
-    //     $records = $this->getRecords($parameters);
-    //     if ($records->count() < 1) {
-    //         $this->hasData = false;
-    //         $this->alert('error', 'No Records Found in the selected criteria');
-    //         return;
-    //     }else{
-    //         $this->hasData = true;
-    //     }
-    // }
 }

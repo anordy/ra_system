@@ -63,8 +63,7 @@ class DepartmentReportsTable extends DataTableComponent
 
             Column::make("Currency",'currency')
                 ->searchable()
-                ->sortable()
-                 ->label(fn($row) => $row->currency ?? ''),
+                ->sortable(),
 
             Column::make("Principal Amount",'principal')
                 ->searchable()
@@ -114,7 +113,7 @@ class DepartmentReportsTable extends DataTableComponent
             Column::make("Payment Status", "paid_at")
                 ->searchable()
                 ->sortable()
-                ->view('reports.returns.includes.payment-status'),
+                ->view('reports.payments.includes.departmental-payment-status'),
         ];
     }
 }
