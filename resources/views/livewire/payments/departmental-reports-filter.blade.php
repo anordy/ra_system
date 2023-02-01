@@ -207,12 +207,6 @@
                     wire:target="exportExcel"></i>
                 Export to Excel
             </button>
-
-            <button class="btn btn-info ml-2" wire:click="exportPdf" wire:loading.attr="disabled">
-                <i class="fas fa-file-pdf ml-1" wire:loading.remove wire:target="exportPdf"></i>
-                <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="exportPdf"></i>
-                Export to Pdf
-            </button>
             @endif
         </div>
     </div>

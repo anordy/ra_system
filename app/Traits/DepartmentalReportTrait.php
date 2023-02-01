@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Exports\DepartmentalReportExport;
 use App\Exports\ReturnReportExport;
 use App\Models\Region;
 use App\Models\Returns\TaxReturn;
@@ -121,10 +122,10 @@ trait DepartmentalReportTrait
             return;
         }
 
-        // $fileName = $parameters['deparmental_report'] .'.xlsx';
-        // $title    = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'];
-        // $this->alert('success', 'Exporting Excel File');
-        // return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
+        $fileName = $parameters['department_type'] .'.xlsx';
+        $title    = $parameters['department_type'];
+        $this->alert('success', 'Exporting Excel File');
+        return Excel::download(new DepartmentalReportExport($records, $title, $parameters), $fileName);
     }
 
 }

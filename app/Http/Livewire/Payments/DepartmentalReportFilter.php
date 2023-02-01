@@ -135,7 +135,12 @@ class DepartmentalReportFilter extends Component
             return;
         };
         $this->parameters = $this->getParameters();
-        // $records = $this->getRecords($this->parameters)->get();
+        $records = $this->getRecords($this->parameters)->get();
+        if($records->count() > 0){
+            $this->hasData = true;
+        }else{
+            $this->hasData = false;
+        }
     }
 
     //export excel report
