@@ -14,7 +14,7 @@ class RepostReturnSignature implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, VerificationTrait;
 
-    public $tries = 0;
+    public $tries = 1;
     public $backoff = 10;
     public $return;
 

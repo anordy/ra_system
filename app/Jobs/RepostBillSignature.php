@@ -14,7 +14,7 @@ class RepostBillSignature implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, VerificationTrait;
 
-    public $tries = 0;
+    public $tries = 1;
     public $backoff = 10;
     public $bill;
 
@@ -26,7 +26,6 @@ class RepostBillSignature implements ShouldQueue
     public function __construct(ZmBill $bill)
     {
         $this->bill = $bill;
-        $this->onQueue('verification');
     }
 
     /**
