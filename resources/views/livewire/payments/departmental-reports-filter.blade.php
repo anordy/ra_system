@@ -39,18 +39,18 @@
 
         @if ($department_type == 'non-tax-revenue')
         <div class="col-md-4 form-group">
-            <label for="non_tax_type_id" class="d-flex justify-content-between'">
-                <span>Tax Type</span>
+            <label for="non_tax_revenue_selected" class="d-flex justify-content-between'">
+                <span>Non Tax Revenue Type</span>
             </label>
-            <select name="non_tax_type_id" id="non_tax_type_id" wire:model="non_tax_type_id"
-                class="form-control {{ $errors->has('non_tax_type_id') ? 'is-invalid' : '' }}">
+            <select name="non_tax_revenue_selected" id="non_tax_revenue_selected" wire:model="non_tax_revenue_selected"
+                class="form-control {{ $errors->has('non_tax_revenue_selected') ? 'is-invalid' : '' }}">
                 <option value="all">All</option>
-                @foreach ($optionTaxTypeOthers as $taxType)
-                <option value={{ $taxType->id }}>
-                    {{ $taxType->name }}</option>
+                @foreach ($optionTaxTypeOthers as $key => $value)
+                <option value={{ $key }}>
+                    {{ $value }}</option>
                 @endforeach
             </select>
-            @error('non_tax_type_id')
+            @error('non_tax_revenue_selected')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>
@@ -195,11 +195,11 @@
 
     <div class="row mt-3">
         <div class="col-md-12 d-flex justify-content-end">
-            <button class="btn btn-primary ml-2" wire:click="preview" wire:loading.attr="disabled">
+            {{-- <button class="btn btn-primary ml-2" wire:click="preview" wire:loading.attr="disabled">
                 <i class="bi bi-funnel ml-1" wire:loading.remove wire:target="preview"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="preview"></i>
                 Search
-            </button>
+            </button> --}}
             @if ($hasData)
             <button class="btn btn-success ml-2" wire:click="exportExcel" wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>

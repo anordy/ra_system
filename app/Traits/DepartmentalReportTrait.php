@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use App\Exports\DepartmentalReportExport;
-use App\Exports\ReturnReportExport;
 use App\Models\Region;
 use App\Models\Returns\TaxReturn;
 use Carbon\Carbon;
@@ -13,23 +12,27 @@ trait DepartmentalReportTrait
 {
     public function getRecords($parameters)
     {
-        // dd($parameters);
         if ($parameters['department_type'] == 'non-tax-revenue') {
-            $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')
-                ->join('tax_types', 'tax_types.id', 'tax_returns.tax_type_id')
-                ->where('tax_types.category', 'other');
-            if ($parameters['non_tax_type_id'] == 'all') {
-                //get all non-revenue-taxes
-                $model->whereIn('tax_types.code', ['land-lease', 'airport-service-charge', 'road-license-fee', 'airport-service-charge', 'seaport-service-charge', 'seaport-transport-charge']);
-            } else {
-                //get non-revenue-taxes by given type
-                $model->where('tax_types.code', $parameters['non_tax_type_code']);
+            $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id');
+
+            if($parameters['non_tax_revenue_selected'] == 'all'){
+                foreach ($parameters['non_tax_revenue_ids'] as $id) {
+                    if (TaxReturn::where("$id", '>', 0)->exists()) {
+                        $model->where('tax_returns.' . $id, '>', 0);
+                    }
+                }
             }
+
+            if ($parameters['non_tax_revenue_selected'] != 'all') {
+                $column = $parameters['non_tax_revenue_selected'];
+                $model->where('tax_returns.' . $column, '>', 0);
+            }
+
+            // dd($model->get(['tax_returns.airport_service_charge', 'tax_returns.seaport_service_charge', 'tax_returns.airport_safety_fee', 'tax_returns.seaport_transport_charge', 'tax_returns.road_license_fee']));
         } else {
             //get all returns associsted with main tax types
             $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id')
-                ->join('tax_types', 'tax_types.id', 'tax_returns.tax_type_id')
-                ->where('tax_types.category', 'main');
+                ->join('tax_types', 'tax_types.id', 'tax_returns.tax_type_id');
             if ($parameters['tax_type_id'] != 'all') {
                 //check if selected tax-type is vat
                 if ($parameters['tax_type_code'] == 'vat') {
@@ -38,13 +41,13 @@ trait DepartmentalReportTrait
                         ->leftJoin('vat_returns', 'vat_returns.id', 'tax_returns.return_id')
                         ->where('tax_returns.tax_type_id', $parameters['tax_type_id']);
 
-                        //if subvat type is not all
+                    //if subvat type is not all
                     if ($parameters['vat_type'] != 'All') {
                         //get returns for a given subvat selected
                         $model->where('tax_returns.sub_vat_id', $parameters['vat_type']);
                     }
-                } 
-            }else {
+                }
+            } else {
                 $model = TaxReturn::leftJoin('business_locations', 'tax_returns.location_id', 'business_locations.id');
             }
         }
@@ -64,7 +67,7 @@ trait DepartmentalReportTrait
 
         //check if department-type is pemba
         if ($parameters['department_type'] == 'pemba') {
-            if($parameters['region'] == 'all'){
+            if ($parameters['region'] == 'all') {
                 $pembaRegions = Region::select('id', 'name')->where('location', 'pemba')->pluck('id')->toArray();
                 $model->whereIn('business_locations.region_id', $pembaRegions);
             }
@@ -81,10 +84,10 @@ trait DepartmentalReportTrait
             if ($parameters['payment_status'] == 'unpaid') {
                 $returns = $model->where('tax_returns.payment_status', '!=', 'complete');
             }
-        }else{
+        } else {
             $returns = $model;
         }
-        
+
 
         //get tax regions
         if ($parameters['department_type'] != 'large-taxpayer') {
@@ -122,10 +125,9 @@ trait DepartmentalReportTrait
             return;
         }
 
-        $fileName = $parameters['department_type'] .'.xlsx';
+        $fileName = $parameters['department_type'] . '.xlsx';
         $title    = $parameters['department_type'];
         $this->alert('success', 'Exporting Excel File');
         return Excel::download(new DepartmentalReportExport($records, $title, $parameters), $fileName);
     }
-
 }

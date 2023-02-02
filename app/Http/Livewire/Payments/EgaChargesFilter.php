@@ -43,6 +43,10 @@ class EgaChargesFilter extends Component
         ];
     }
 
+    public function updated($propertyName){
+        $this->search();
+    }
+
     public function search()
     {
         $this->getData();
