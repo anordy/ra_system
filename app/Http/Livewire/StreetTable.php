@@ -94,7 +94,7 @@ class StreetTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-                    $value = encrypt($value);
+                    $value = "'".encrypt($value)."'";
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-street-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
@@ -118,7 +118,7 @@ class StreetTable extends DataTableComponent
         if (!Gate::allows('setting-ward-delete')) {
             abort(403);
         }
-
+        $id = decrypt($id);
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
