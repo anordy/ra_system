@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\Reports\Department\DepartmentalReportController;
 use App\Http\Controllers\Setting\ApiUserController;
 use App\Http\Controllers\StreetController;
 use App\Http\Controllers\Reports\Payments\PaymentReportController;
@@ -458,6 +459,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/payments/returns-preview/{data}', [PaymentReportController::class, 'returnsPreview'])->name('payments.returns-preview');
         Route::get('/payments/consultants-preview/{data}', [PaymentReportController::class, 'consultantsPreview'])->name('payments.consultants-preview');
         Route::get('/payments/download-report-pdf/{data}', [PaymentReportController::class, 'exportPaymentReportPdf'])->name('payments.download.pdf');
+
+        Route::get('/departmental', [DepartmentalReportController::class, 'index'])->name('departmental');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {

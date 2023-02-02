@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Tax Regions Management</h5>
+        <div class="card-header font-weight-bold bg-white text-uppercase">
+            Tax Regions Management
             <div class="card-tools">
                 @can('setting-tax-region-add')
                     @if(approvalLevel(Auth::user()->level_id, 'Maker'))
