@@ -82,14 +82,13 @@ class DailyDebtPenaltyInterest extends Command
                     try {
                         // Generate penalty
                         PenaltyForDebt::generateReturnsPenalty($tax_return);
-
+                        DB::commit();
                         // Cancel previous latest bill if exists
                         if ($tax_return->latestBill) {
                             CancelBill::dispatch($tax_return->latestBill, 'Debt Penalty Increment');
                         }
-
+                        $tax_return = TaxReturn::findOrFail($tax_return->id);
                         GenerateControlNo::dispatch($tax_return);
-                        DB::commit();
                     } catch (Exception $e) {
                         DB::rollBack();
                         Log::error($e);
@@ -129,7 +128,7 @@ class DailyDebtPenaltyInterest extends Command
                     if ($tax_assessment->latestBill) {
                         CancelBill::dispatch($tax_assessment->latestBill, 'Debt Penalty Increment');
                     }
-
+                    $tax_assessment = TaxAssessment::findOrFail($tax_assessment->id);
                     GenerateAssessmentDebtControlNo::dispatch($tax_assessment);
                 } catch (Exception $e) {
                     DB::rollBack();

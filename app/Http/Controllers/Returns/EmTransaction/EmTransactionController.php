@@ -29,7 +29,7 @@ class EmTransactionController extends Controller
     {
         $returnId = decrypt($return_id);
         $return   = EmTransactionReturn::findOrFail($returnId);
-        $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
+        $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
 
         return view('returns.em-transaction.show', compact('return', 'returnId'));
     }

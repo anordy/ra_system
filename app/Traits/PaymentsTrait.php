@@ -299,47 +299,12 @@ trait PaymentsTrait
     public function generateDebtControlNo($debt)
     {
         $tax_type = TaxType::findOrFail($debt->tax_type_id);
-        $taxTypes = TaxType::all();
 
         if ($tax_type->code == TaxType::VAT) {
             $tax_type = SubVat::findOrFail($debt->tax_type_id);
         }
 
-        if ($debt->principal > 0) {
-            $billItems[] = [
-                'billable_id'         => $debt->id,
-                'billable_type'       => get_class($debt),
-                'use_item_ref_on_pay' => 'N',
-                'amount'              => $debt->principal,
-                'currency'            => $debt->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $debt->tax_type_id,
-            ];
-        }
-
-        if ($debt->penalty > 0) {
-            $billItems[] = [
-                'billable_id'         => $debt->id,
-                'billable_type'       => get_class($debt),
-                'use_item_ref_on_pay' => 'N',
-                'amount'              => $debt->penalty,
-                'currency'            => $debt->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id,
-            ];
-        }
-
-        if ($debt->interest > 0) {
-            $billItems[] = [
-                'billable_id'         => $debt->id,
-                'billable_type'       => get_class($debt),
-                'use_item_ref_on_pay' => 'N',
-                'amount'              => $debt->interest,
-                'currency'            => $debt->currency,
-                'gfs_code'            => $tax_type->gfs_code,
-                'tax_type_id'         => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id,
-            ];
-        }
+        $billItems = $this->generateReturnBillItems($debt);
 
         $taxpayer = $debt->business->taxpayer;
 
@@ -593,116 +558,7 @@ trait PaymentsTrait
         }
     }
 
-    public function generateTaxAgentRegControlNo($agent, $billitems, $used_currency)
-    {
-        $rate = $this->getExchangeRate($used_currency);
-        $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->firstOrFail();
-
-        $taxpayer = $agent->taxpayer;
-        $payer_type = get_class($taxpayer);
-        $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-        $payer_email = $taxpayer->email;
-        $payer_phone = $taxpayer->mobile;
-        $description = "Tax Consultant Registration Fee";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-        $currency       = $used_currency;
-        $createdby_type = get_class(Auth::user());
-        $exchange_rate = $rate;
-        $createdby_id = Auth::id();
-        $payer_id = $taxpayer->id;
-        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-        $billableId = $agent->id;
-        $billableType = get_class($agent);
-
-        $zmBill = ZmCore::createBill(
-            $billableId,
-            $billableType,
-            $tax_type->id,
-            $payer_id,
-            $payer_type,
-            $payer_name,
-            $payer_email,
-            $payer_phone,
-            $expire_date,
-            $description,
-            $payment_option,
-            $currency,
-            $exchange_rate,
-            $createdby_id,
-            $createdby_type,
-            $billitems
-        );
-
-        if (config('app.env') != 'local') {
-            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
-        } else {
-            // We are local
-            $agent->status = TaxAgentStatus::VERIFIED;
-            $agent->save();
-            // Simulate successful control no generation
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status       = 'pending';
-            $zmBill->control_number   = rand(2000070001000, 2000070009999);
-            $zmBill->save();
-        }
-    }
-
-    public function generateTaxAgentRenewControlNo($req, $billitems, $used_currency)
-    {
-        $rate = $this->getExchangeRate($used_currency);
-        $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->firstOrFail();
-
-        $taxpayer = $req->tax_agent->taxpayer;
-        $payer_type = get_class($taxpayer);
-        $payer_name = implode(" ", array($taxpayer->first_name, $taxpayer->last_name));
-        $payer_email = $taxpayer->email;
-        $payer_phone = $taxpayer->mobile;
-        $description = "Tax Consultant Renewal Fee";
-        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
-        $currency       = $used_currency;
-        $createdby_type = get_class(Auth::user());
-        $exchange_rate = $rate;
-        $createdby_id = Auth::id();
-        $payer_id = $taxpayer->id;
-        $expire_date = Carbon::now()->addMonth()->toDateTimeString();
-        $billableId = $req->id;
-        $billableType = get_class($req);
-
-        $zmBill = ZmCore::createBill(
-            $billableId,
-            $billableType,
-            $tax_type->id,
-            $payer_id,
-            $payer_type,
-            $payer_name,
-            $payer_email,
-            $payer_phone,
-            $expire_date,
-            $description,
-            $payment_option,
-            $currency,
-            $exchange_rate,
-            $createdby_id,
-            $createdby_type,
-            $billitems
-        );
-
-        if (config('app.env') != 'local') {
-            $sendBill = (new ZanMalipoInternalService)->createBill($zmBill);
-        } else {
-            // We are local
-            $req->status = TaxAgentStatus::VERIFIED;
-            $req->save();
-
-            // Simulate successful control no generation
-            $zmBill->zan_trx_sts_code = ZmResponse::SUCCESS;
-            $zmBill->zan_status       = 'pending';
-            $zmBill->control_number   = rand(2000070001000, 2000070009999);
-            $zmBill->save();
-        }
-    }
-
-        /**
+    /**
      * @param $return
      * @param $billItems
      * @return void
@@ -713,5 +569,150 @@ trait PaymentsTrait
         if (config('app.env') != 'local') {
             $sendBill = (new ZanMalipoInternalService)->createBill($bill);
         }
+    }
+
+    public function generateReturnBillItems($tax_return) {
+        $taxTypes = TaxType::all();
+        $taxType = TaxType::findOrFail($tax_return->tax_type_id);
+
+        // If tax type is VAT use sub_vat tax type & gfs code
+        if ($taxType->code == TaxType::VAT) {
+            $taxType = SubVat::findOrFail($tax_return->sub_vat_id);
+        }
+
+        /**
+         * Port return principal is handled separately
+         */
+        if ($tax_return->return_type != PortReturn::class) {
+            // Principal is the main tax type name
+            if ($tax_return->principal > 0) {
+                $billItems[] = [
+                        'billable_id'         => $tax_return->id,
+                        'billable_type'       => get_class($tax_return),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount'              => $tax_return->principal,
+                        'currency'            => $tax_return->currency,
+                        'gfs_code'            => $taxType->gfs_code,
+                        'tax_type_id'         => $tax_return->tax_type_id,
+                ];
+            }
+        }
+
+        if ($tax_return->penalty > 0) {
+            $billItems[] = [
+                'billable_id' => $tax_return->id,
+                'billable_type' => get_class($tax_return),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $tax_return->penalty,
+                'currency' => $tax_return->currency,
+                'gfs_code' => $taxType->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::PENALTY)->firstOrFail()->id
+            ];
+        }
+        if ($tax_return->interest > 0) {
+            $billItems[] = [
+                'billable_id' => $tax_return->id,
+                'billable_type' => get_class($tax_return),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $tax_return->interest,
+                'currency' => $tax_return->currency,
+                'gfs_code' => $taxType->gfs_code,
+                'tax_type_id' => $taxTypes->where('code', TaxType::INTEREST)->firstOrFail()->id
+            ];
+        }
+        if ($tax_return->infrastructure > 0) {
+            $infraTax = $taxTypes->where('code', TaxType::INFRASTRUCTURE)->firstOrFail();
+            $billItems[] = [
+                'billable_id' => $tax_return->id,
+                'billable_type' => get_class($tax_return),
+                'use_item_ref_on_pay' => 'N',
+                'amount' => $tax_return->infrastructure,
+                'currency' => $tax_return->currency,
+                'gfs_code' => $infraTax->gfs_code,
+                'tax_type_id' => $infraTax->id
+            ];
+        }
+
+        if ($tax_return->return_type == PetroleumReturn::class) {
+                if ($tax_return->rdf_tax > 0) {
+                    $rdfTax = $taxTypes->where('code', TaxType::RDF)->firstOrFail();
+                    $billItems[] = [
+                        'billable_id' => $tax_return->id,
+                        'billable_type' => get_class($tax_return),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $tax_return->rdf_tax,
+                        'currency' => $tax_return->currency,
+                        'gfs_code' => $rdfTax->gfs_code,
+                        'tax_type_id' => $rdfTax->id
+                    ];
+                }
+                if ($tax_return->road_lincence_fee > 0) {
+                    $rlfTax = $taxTypes->where('code', TaxType::ROAD_LICENSE_FEE)->firstOrFail();
+                    $billItems[] = [
+                        'billable_id' => $tax_return->id,
+                        'billable_type' => get_class($tax_return),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $tax_return->road_lincence_fee,
+                        'currency' => $tax_return->currency,
+                        'gfs_code' => $rlfTax->gfs_code,
+                        'tax_type_id' => $rlfTax->id
+                    ];
+                }
+        } elseif ($tax_return->return_type == PortReturn::class) {
+                if ($tax_return->airport_service_charge > 0) {
+                    $airportServiceChargeTax = $taxTypes->where('code', TaxType::AIRPORT_SERVICE_CHARGE)->firstOrFail();
+                    $billItems[] = [
+                        'billable_id' => $tax_return->id,
+                        'billable_type' => get_class($tax_return),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $tax_return->airport_service_charge,
+                        'currency' => $tax_return->currency,
+                        'gfs_code' => $airportServiceChargeTax->gfs_code,
+                        'tax_type_id' => $airportServiceChargeTax->id
+                    ];
+                }
+
+                if ($tax_return->airport_safety_fee > 0) {
+                    $airportSafetyFeeTax = $taxTypes->where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->firstOrFail();
+                    $billItems[] = [
+                        'billable_id' => $tax_return->id,
+                        'billable_type' => get_class($tax_return),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $tax_return->airport_safety_fee,
+                        'currency' => $tax_return->currency,
+                        'gfs_code' => $airportSafetyFeeTax->gfs_code,
+                        'tax_type_id' => $airportSafetyFeeTax->id
+                    ];
+                }
+
+                if ($tax_return->seaport_service_charge > 0) {
+                    $seaportServiceChargeTax = $taxTypes->where('code', TaxType::SEAPORT_SERVICE_CHARGE)->firstOrFail();
+                    $billItems[] = [
+                        'billable_id' => $tax_return->id,
+                        'billable_type' => get_class($tax_return),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $tax_return->seaport_service_charge,
+                        'currency' => $tax_return->currency,
+                        'gfs_code' => $seaportServiceChargeTax->gfs_code,
+                        'tax_type_id' => $seaportServiceChargeTax->id
+                    ];
+                }
+
+                if ($tax_return->seaport_transport_charge > 0) {
+                    $seaportTransportChargeTax = $taxTypes->where('code', TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE)->firstOrFail();
+                    $billItems[] = [
+                        'billable_id' => $tax_return->id,
+                        'billable_type' => get_class($tax_return),
+                        'use_item_ref_on_pay' => 'N',
+                        'amount' => $tax_return->seaport_transport_charge,
+                        'currency' => $tax_return->currency,
+                        'gfs_code' => $seaportTransportChargeTax->gfs_code,
+                        'tax_type_id' => $seaportTransportChargeTax->id
+                    ];
+                }
+
+        }
+
+        return $billItems;
     }
 }
