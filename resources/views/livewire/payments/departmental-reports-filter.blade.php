@@ -195,11 +195,11 @@
 
     <div class="row mt-3">
         <div class="col-md-12 d-flex justify-content-end">
-            <button class="btn btn-primary ml-2" wire:click="preview" wire:loading.attr="disabled">
+            {{-- <button class="btn btn-primary ml-2" wire:click="preview" wire:loading.attr="disabled">
                 <i class="bi bi-funnel ml-1" wire:loading.remove wire:target="preview"></i>
                 <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading wire:target="preview"></i>
                 Search
-            </button>
+            </button> --}}
             @if ($hasData)
             <button class="btn btn-success ml-2" wire:click="exportExcel" wire:loading.attr="disabled">
                 <i class="bi bi-file-earmark-spreadsheet ml-1" wire:loading.remove wire:target="exportExcel"></i>

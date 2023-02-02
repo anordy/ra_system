@@ -123,6 +123,8 @@ class DepartmentalReportFilter extends Component
             }
             $this->ward = 'all';
         }
+
+        $this->preview();
     }
 
     //preview report
