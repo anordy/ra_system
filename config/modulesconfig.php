@@ -22,6 +22,9 @@ return [
     'zm_subspcode' => env('ZAN_MALIPO_SUB_SP_CODE'),
     'sp_code' => 'SP20011',
 
+    // Charges
+    'charges_inclusive' => true,
+
     // API SERVER CREDENTIALS
     'api_url' => env('API_SERVER_URL'),
     'api_server_username' => env('API_SERVER_USERNAME'),
