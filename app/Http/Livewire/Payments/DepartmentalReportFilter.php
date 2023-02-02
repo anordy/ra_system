@@ -29,8 +29,7 @@ class DepartmentalReportFilter extends Component
     public $department_type = 'large-taxpayer';
     public $tax_type_id = 'all';
     public $tax_type_code = 'all';
-    public $non_tax_type_id = 'all';
-    public $non_tax_type_code = 'all';
+    public $non_tax_revenue_selected = 'all';
     public $payment_status='all';
     public $range_start;
     public $range_end;
@@ -70,8 +69,7 @@ class DepartmentalReportFilter extends Component
         $this->range_end = $this->today;
         $this->optionTaxTypes = TaxType::where('category', 'main')->get();
         $this->optionsReportTypes = ['large-taxpayer' => 'Large Taxpayer Department', 'domestic-taxes' => 'Domestic Taxes Department', 'non-tax-revenue' => 'Non-Tax Revenue Department', 'pemba' => 'Pemba'];
-        // $this->optionsReportTypes = ['large-taxpayer' => 'Large Taxpayer Department', 'domestic-taxes' => 'Domestic Taxes Department', 'pemba' => 'Pemba'];
-        $this->optionTaxTypeOthers = TaxType::whereIn('code', ['land-lease', 'airport-service-charge', 'road-license-fee', 'airport-service-charge', 'seaport-service-charge', 'seaport-transport-charge'])->get();
+        $this->optionTaxTypeOthers = ['airport_service_charge'=>'Airport Service Charge', 'road_license_fee'=>'Road License Fee', 'airport_service_charge'=>'Airport Service Charge', 'seaport_service_charge'=>'Seaport Service Charge', 'seaport_transport_charge'=>'Seaport Transport Charge'];
         //extra filters
         $this->optionTaxRegions = TaxRegion::pluck('name', 'id')->toArray();
         $this->selectedTaxReginIds = $this->optionTaxRegions;
@@ -97,7 +95,7 @@ class DepartmentalReportFilter extends Component
 
 
         if ($propertyName == 'tax_type_id') {
-            if ($this->tax_type_id != 'all' && $this->tax_type_id != 'all-non-taxes') {
+            if ($this->tax_type_id != 'all') {
                 $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
 
                 if ($this->tax_type_code == TaxType::VAT) {
@@ -175,19 +173,16 @@ class DepartmentalReportFilter extends Component
             $parameters['tax_type_code'] = 'not-applicable';
             $parameters['tax_type_name'] = 'not-applicable';
 
-            if($this->non_tax_type_id == 'all'){
-                $parameters['non_tax_type_id'] = 'all';
-                $parameters['non_tax_type_code'] = 'all';
-                $parameters['non_tax_type_name'] = 'All Non Tax Types';
+            if($this->non_tax_revenue_selected == 'all'){
+                $parameters['non_tax_revenue_selected'] = 'all';
+                $parameters['non_tax_revenue_ids'] = array_keys($this->optionTaxTypeOthers);
             }else{
-                $parameters['non_tax_type_id'] = $this->non_tax_type_id;
-                $parameters['non_tax_type_code'] = TaxType::findOrFail($this->non_tax_type_id)->code;
-                $parameters['non_tax_type_name'] = TaxType::findOrFail($this->non_tax_type_id)->name;
+                $parameters['non_tax_revenue_selected'] = $this->non_tax_revenue_selected;
+                $parameters['non_tax_revenue_ids'] = 'not-applicable';
             }
         }else{
-            $parameters['non_tax_type_id'] = 'not-applicable';
-            $parameters['non_tax_type_code'] = 'not-applicable';
-            $parameters['non_tax_type_name'] = 'not-applicable';
+            $parameters['non_tax_revenue_selected'] = 'not-applicable';
+            $parameters['non_tax_revenue_ids'] = 'not-applicable';
         }
 
         return $parameters;
