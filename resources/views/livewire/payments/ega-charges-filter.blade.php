@@ -21,7 +21,7 @@
                 <option value="unpaid">Unpaid</option>
             </select>
         </div>
-        
+
         <div class="col-md-4 form-group">
             <label for="payment_status" class="d-flex justify-content-between'">
                 <span>Charge Type</span>
@@ -61,13 +61,13 @@
 
     <div class="row mt-4">
         <div class="col-md-12 d-flex justify-content-end">
-            <div x-data>
+            {{-- <div x-data>
                 <button class="btn btn-primary ml-2" wire:click="search" wire:loading.attr="disabled">
                     <i class="fas fa-filter ml-1" wire:loading.remove wire:target="search"></i>
                     <i class="spinner-border spinner-border-sm ml-1" role="status" wire:loading
                         wire:target="search"></i> Search
                 </button>
-            </div>
+            </div> --}}
 
             @if($hasData)
             <button class="btn btn-success ml-2" wire:click="exportExcel" wire:loading.attr="disabled">

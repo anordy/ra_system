@@ -33,7 +33,7 @@
                 @enderror
             </div>
 
-            <div class="d-flex align-items-end pb-3">
+            {{-- <div class="d-flex align-items-end pb-3">
                 <div class="col-md-12 d-flex justify-content-end">
                     <button class="btn btn-primary mr-2" wire:click="search" wire:loading.attr="disabled">
                         <i class="fas fa-filter mr-2" wire:loading.remove wire:target="search"></i>
@@ -41,7 +41,7 @@
                             wire:target="search"></i> Search
                     </button>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="row mt-3 mx-2">

@@ -38,6 +38,10 @@ class DailyPayments extends Component
         $this->getData();
     }
 
+    public function updated($propertyName){
+        $this->search();
+    }
+
     public function search()
     {
         $this->validate();
