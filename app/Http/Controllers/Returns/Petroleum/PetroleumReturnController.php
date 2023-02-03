@@ -31,7 +31,7 @@ class PetroleumReturnController extends Controller
     {
         $returnId = decrypt($return_id);
         $return   = PetroleumReturn::findOrFail($returnId);
-        $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
+        $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
         return view('returns.petroleum.filing.show', compact('return'));
     }
 
