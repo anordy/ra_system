@@ -9,5 +9,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 class Country extends Model implements Auditable
 {
     use HasFactory, \OwenIt\Auditing\Auditable;
+
+    public const TANZANIA = 'Tanzania';
     protected $guarded = [];
 }
