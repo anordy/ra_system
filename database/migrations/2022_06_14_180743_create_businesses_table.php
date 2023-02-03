@@ -44,6 +44,7 @@ class CreateBusinessesTable extends Migration
 
             // Business LTO (Large Taxpayer)
             $table->boolean('is_business_lto')->default(false);
+            $table->index('is_business_lto');
 
             // Not sure
             $table->timestamp('reg_date')->nullable();

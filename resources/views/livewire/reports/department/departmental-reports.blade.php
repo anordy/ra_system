@@ -1,19 +1,19 @@
 <div>
     <div class="card-header font-weight-bold bg-white text-uppercase">
         Managerial Departmental Reports
-        <div class="card-tools">
-            <button class="btn btn-success mr-2" wire:click="downloadExcel" wire:loading.attr="disabled">
-                <i class="bi bi-file-earmark-excel mr-2" wire:loading.remove wire:target="downloadExcel"></i>
-                <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
-                   wire:target="downloadExcel"></i> Download Excel
-            </button>
+{{--        <div class="card-tools">--}}
+{{--            <button class="btn btn-success mr-2" wire:click="downloadExcel" wire:loading.attr="disabled">--}}
+{{--                <i class="bi bi-file-earmark-excel mr-2" wire:loading.remove wire:target="downloadExcel"></i>--}}
+{{--                <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading--}}
+{{--                   wire:target="downloadExcel"></i> Download Excel--}}
+{{--            </button>--}}
 
-            <button class="btn btn-primary mr-2" wire:click="downloadPdf" wire:loading.attr="disabled">
-                <i class="bi bi-file-pdf mr-2" wire:loading.remove wire:target="downloadPdf"></i>
-                <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
-                   wire:target="downloadPdf"></i> Download Pdf
-            </button>
-        </div>
+{{--            <button class="btn btn-primary mr-2" wire:click="downloadPdf" wire:loading.attr="disabled">--}}
+{{--                <i class="bi bi-file-pdf mr-2" wire:loading.remove wire:target="downloadPdf"></i>--}}
+{{--                <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading--}}
+{{--                   wire:target="downloadPdf"></i> Download Pdf--}}
+{{--            </button>--}}
+{{--        </div>--}}
     </div>
     <div class="card-body px-1">
         <div class="row mx-1">
@@ -40,28 +40,12 @@
                         @endforeach
                     </select>
                     @error('department_type')
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
-                    @enderror
-                </div>
-
-            @elseif($location == 'pemba')
-                <div class="col-md-3 form-group">
-                    <label for="pemba_tax_region" class="font-weight-bold">Tax Region</label>
-                    <select id="pemba_tax_region" name="pemba_tax_region" class="form-control" wire:model="pemba_tax_region">
-                        <option value="all">All</option>
-                        <option value="north">North Pemba</option>
-                        <option value="south">South Pemba</option>
-                    </select>
-                    @error('pemba_tax_region')
-                    <div class="text-danger">
-                        {{ $message }}
-                    </div>
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
                     @enderror
                 </div>
             @endif
-
 
             <div class="col-md-3  flex-grow-1 form-group">
                 <label class="d-flex justify-content-between font-weight-bold">Start Date</label>
@@ -80,15 +64,15 @@
             </div>
 
             <!-- tax region -->
-            @if($department_type == 'domestic-taxes' || $department_type == 'pemba')
+            @if($department_type == 'domestic-taxes' || $location == 'pemba')
                 <div class="col-md-12">
                     <label class="font-weight-bold">Tax Region</label>
                     <div class="row">
-                        @foreach ($optionTaxRegions as $id => $taxRegion)
-                            <div class="col-sm-3 form-group">
+                        @foreach ($taxRegions as $id => $name)
+                            <div class="col-sm-2 form-group">
                                 <label for="tax-region-{{ $id }}">
                                     <input class="mr-2" type="checkbox" wire:model="selectedTaxReginIds.{{ $id }}" id="tax-region-{{ $id }}">
-                                    {{ $taxRegion }}
+                                    {{ $name }}
                                 </label>
                             </div>
                         @endforeach
@@ -96,15 +80,15 @@
                 </div>
             @endif
 
-            <div class="col-md-12 d-flex align-items-end pb-3">
-                <div class="col-md-12 d-flex justify-content-end">
-                    <button class="btn btn-primary mr-2" wire:click="search" wire:loading.attr="disabled">
-                        <i class="fas fa-filter mr-2" wire:loading.remove wire:target="search"></i>
-                        <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
-                            wire:target="search"></i> Search
-                    </button>
-                </div>
-            </div>
+{{--            <div class="col-md-12 d-flex align-items-end pb-3">--}}
+{{--                <div class="col-md-12 d-flex justify-content-end">--}}
+{{--                    <button class="btn btn-primary mr-2" wire:click="search" wire:loading.attr="disabled">--}}
+{{--                        <i class="fas fa-filter mr-2" wire:loading.remove wire:target="search"></i>--}}
+{{--                        <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading--}}
+{{--                            wire:target="search"></i> Search--}}
+{{--                    </button>--}}
+{{--                </div>--}}
+{{--            </div>--}}
         </div>
 
         <div class="row mt-3 mx-2">
@@ -127,32 +111,41 @@
                         <th class="text-left">Source</th>
                         <th>Shilings</th>
                         <th>Dollars</th>
-                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody class="border-bottom border-dark text-right">
-                    @if ($taxTypes->isNotEmpty())
-                        @foreach ($taxTypes as $row)
+                    @if ($nonRevenueTaxTypes->isNotEmpty() && !($department_type == 'domestic-taxes' && $location == 'unguja'))
+                        <tr class="text-center">
+                            <th colspan="3" class="text-uppercase">Non Tax Revenue Department</th>
+                        </tr>
+                        @foreach ($nonRevenueTaxTypes as $row)
                             <tr>
                                 <td class="text-left">{{ $row->name }}</td>
-                                <td>{{ number_format($row->getTotalPaymentsPerCurrency('TZS',$range_start,$range_end),2) }}</td>
-                                <td>{{ number_format($row->getTotalPaymentsPerCurrency('USD',$range_start,$range_end),2) }}</td>
-                                <td class="text-center"><a class="btn btn-outline-success" href="{{ route('payments.daily-payments.tax-type',encrypt(json_encode(['tax_type_id'=>$row->id,'range_start'=>$range_start,'range_end'=>$range_end]))) }}">Expore</a></td>
+                                <td>{{ isset($report['TZS'][$row->id]) ? number_format($report['TZS'][$row->id],2) : '0' }}</td>
+                                <td>{{ isset($report['USD'][$row->id]) ? number_format($report['USD'][$row->id],2) : '0' }}</td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="4" class="text-center text-info">No Data available</td>
+                    @endif
+
+                    @if ($domesticTaxTypes->isNotEmpty()  && !($department_type == 'non-tax-revenue' && $location == 'unguja'))
+                        <tr class="text-center">
+                            <th colspan="3" class="text-uppercase">Domestic Taxes Department</th>
                         </tr>
+                        @foreach ($domesticTaxTypes as $row)
+                            <tr>
+                                <td class="text-left">{{ $row->name }}</td>
+                                <td>{{ isset($report['TZS'][$row->id]) ? number_format($report['TZS'][$row->id],2) : '0' }}</td>
+                                <td>{{ isset($report['USD'][$row->id]) ? number_format($report['USD'][$row->id],2) : '0' }}</td>
+                            </tr>
+                        @endforeach
                     @endif
                     </tbody>
                     <tfoot class="text-right">
-                    <tr>
-                        <th class="text-left">Total</th>
-                        <th>{{ number_format($vars['tzsTotalCollection'],2) }}</th>
-                        <th>{{ number_format($vars['usdTotalCollection'],2) }}</th>
-                        <th class="bg-secondary"></th>
-                    </tr>
+                        <tr>
+                            <th class="text-left">Total</th>
+                            <th>{{ number_format(array_sum($report['TZS'] ?? 0), 2) }}</th>
+                            <th>{{ number_format(array_sum($report['USD'] ?? 0), 2) }}</th>
+                        </tr>
                     </tfoot>
                 </table>
             </div>

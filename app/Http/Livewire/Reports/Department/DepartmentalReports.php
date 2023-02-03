@@ -3,12 +3,18 @@
 namespace App\Http\Livewire\Reports\Department;
 
 use App\Exports\DailyPaymentExport;
+use App\Models\Business;
 use App\Models\Region;
+use App\Models\Returns\TaxReturn;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
+use App\Models\ZmBill;
+use App\Models\ZmPayment;
 use App\Traits\DailyPaymentTrait;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
@@ -38,11 +44,13 @@ class DepartmentalReports extends Component
     public $tax_type_code = 'all';
     public $subVatOptions = [];
     public $vat_type;
-    public $optionTaxTypeOthers = [];
-    public $optionTaxRegions = [];
+    public $nonRevenueTaxTypes = [];
+    public $taxRegions = [];
     public $selectedTaxReginIds = [];
     public $non_tax_revenue_selected = 'all';
-
+    public $domesticTaxTypes = [];
+    public $filteringForLto = false;
+    public $report;
 
     protected $rules =[
         'range_start'=>'required|strip_tag',
@@ -55,19 +63,42 @@ class DepartmentalReports extends Component
         $this->range_start = date('Y-m-d');
         $this->range_end = date('Y-m-d');
 
-        $this->optionsReportTypes = ['large-taxpayer' => 'Large Taxpayer Department', 'domestic-taxes' => 'Domestic Taxes Department', 'non-tax-revenue' => 'Non-Tax Revenue Department'];
+        $this->optionsReportTypes = [
+            'large-taxpayer' => 'Large Taxpayer Department',
+            'domestic-taxes' => 'Domestic Taxes Department',
+            'non-tax-revenue' => 'Non-Tax Revenue Department'
+        ];
+
         $this->optionTaxTypes = TaxType::where('category', 'main')->get();
-        $this->optionTaxTypeOthers = ['airport_service_charge'=>'Airport Service Charge', 'road_license_fee'=>'Road License Fee', 'airport_service_charge'=>'Airport Service Charge', 'seaport_service_charge'=>'Seaport Service Charge', 'seaport_transport_charge'=>'Seaport Transport Charge'];
+        $this->nonRevenueTaxTypes = TaxType::query()
+            ->select(['id', 'name'])
+            ->where('category', 'other')
+            ->whereIn('code', [
+                TaxType::AIRPORT_SERVICE_CHARGE,
+                TaxType::SEAPORT_TRANSPORT_CHARGE,
+                TaxType::AIRPORT_SAFETY_FEE,
+                TaxType::SEAPORT_SERVICE_CHARGE,
+                TaxType::ROAD_LICENSE_FEE,
+                TaxType::INFRASTRUCTURE, TaxType::RDF
+            ])
+            ->get();
 
-        $this->optionTaxRegions = TaxRegion::query()->select('name', 'id')->where('location', Region::UNGUJA)->get()->pluck('name', 'id');
-        $this->selectedTaxReginIds = $this->optionTaxRegions;
+        $this->domesticTaxTypes = TaxType::query()
+            ->select(['id', 'name'])
+            ->where('category', 'main')
+            ->whereNotIn('code', [
+                TaxType::AIRPORT_SERVICE_SAFETY_FEE,
+                TaxType::SEAPORT_SERVICE_TRANSPORT_CHARGE
+            ])
+            ->get();
 
-        $this->getData();
+        $this->taxRegions = TaxRegion::query()->select('name', 'id')->where('location', Region::UNGUJA)->get()->pluck('name', 'id');
+        $this->selectedTaxReginIds = $this->taxRegions;
+
+        $this->getReport();
     }
 
     public function updated($propertyName){
-        $this->search();
-
 
         if ($propertyName == 'tax_type_id') {
             if ($this->tax_type_id != 'all') {
@@ -79,12 +110,43 @@ class DepartmentalReports extends Component
             }
             $this->reset('vat_type');
         }
+
+        if ($propertyName == 'location'){
+            $this->taxRegions = TaxRegion::query()
+                ->select('name', 'id')
+                ->where('location', $this->location)
+                ->get()
+                ->pluck('name', 'id');
+
+            $this->selectedTaxReginIds = $this->taxRegions;
+
+            // LTD
+            if ($this->location == Region::UNGUJA && $this->department_type == 'large-taxpayer'){
+                $this->filteringForLto = true;
+            } else {
+                $this->filteringForLto = false;
+            }
+        }
+
+        if ($propertyName == 'department_type'){
+            $this->selectedTaxReginIds = $this->taxRegions;
+
+            // LTD
+            if ($this->location == Region::UNGUJA && $this->department_type == 'large-taxpayer'){
+                $this->filteringForLto = true;
+            } else {
+                $this->filteringForLto = false;
+            }
+        }
+
+        $this->search();
+
     }
 
     public function search()
     {
         $this->validate();
-        $this->getData();
+        $this->getReport();
     }
 
 
@@ -112,18 +174,94 @@ class DepartmentalReports extends Component
         return Excel::download(new DailyPaymentExport($this->vars,$this->taxTypes,$title), $fileName);
     }
 
+    protected function getReport($currency = 'USD'){
+        $this->report['USD'] = $this->queryData('USD');
+        $this->report['TZS'] = $this->queryData('TZS');
+    }
 
-    public function getData()
-    {
-        $this->taxTypes = $this->getInvolvedTaxTypes($this->range_start,$this->range_end);
+    public function queryData($currency){
+        $taxRegionsIds = array_keys($this->selectedTaxReginIds->toArray());
+        $filteringForLto = $this->filteringForLto;
 
-        $this->vars['tzsTotalCollection'] = $this->getTotalCollectionPerCurrency('TZS',$this->range_start,$this->range_end);
+        $queryDTD = ZmBill::query()
+            ->rightJoin('zm_bill_items', 'zm_bills.id', 'zm_bill_items.zm_bill_id')
+            ->select(['zm_bills.tax_type_id as tax_type_id', DB::raw('sum(zm_bill_items.amount) as item_amount')])
+            ->groupBy(['zm_bills.tax_type_id'])
+            ->whereNotNull(['zm_bill_items.billable_id', 'zm_bill_items.billable_id'])
+            ->whereIn('zm_bills.tax_type_id', $this->domesticTaxTypes->pluck('id'))
+            //     columns
+            ->whereHas('billable', function ($query) use ($taxRegionsIds, $filteringForLto, $currency){
+                $query->whereIn('location_id', $taxRegionsIds);
 
-        $this->vars['usdTotalCollection'] = $this->getTotalCollectionPerCurrency('USD',$this->range_start,$this->range_end);
+                // If filtering for LTO
+                if ($filteringForLto){
+                    $query->whereIn('business_id', Business::query()
+                        ->where('is_business_lto', true)
+                        ->select('id')
+                        ->get()
+                        ->toArray());
+                }
 
-        $this->vars['range_start'] = $this->range_start;
+                // Filter currencies
+                $query->where('currency', $currency);
 
-        $this->vars['range_end'] = $this->range_end;
+                // Filter Dates
+                $query->whereDate('paid_at', '>=', $this->range_start);
+                $query->whereDate('tax_returns.created_at', '<=', $this->range_end);
+            })
+            ->with('billable', 'billable.business');
+
+        $queryNTR = ZmBill::query()
+            ->rightJoin('zm_bill_items', 'zm_bills.id', 'zm_bill_items.zm_bill_id')
+            ->select(['zm_bill_items.tax_type_id as tax_type_id', DB::raw('sum(zm_bill_items.amount) as item_amount')])
+            ->groupBy(['zm_bill_items.tax_type_id'])
+            ->whereNotNull(['zm_bill_items.billable_id', 'zm_bill_items.billable_id'])
+            ->whereIn('zm_bill_items.tax_type_id', $this->nonRevenueTaxTypes->pluck('id'))
+            //     columns
+            ->whereHas('billable', function ($query) use ($taxRegionsIds, $filteringForLto, $currency){
+                $query->whereIn('location_id', $taxRegionsIds);
+
+                // If filtering for LTO
+                if ($filteringForLto){
+                    $query->whereIn('business_id', Business::query()
+                        ->where('is_business_lto', true)
+                        ->select('id')
+                        ->get()
+                        ->toArray());
+                }
+
+                // Filter currency
+                $query->where('currency', $currency);
+
+                // Filter Dates
+                $query->whereDate('paid_at', '>=', $this->range_start);
+                $query->whereDate('tax_returns.created_at', '<=', $this->range_end);
+            })
+            ->with('billable', 'billable.business');
+
+        $report = [];
+
+        foreach ($queryDTD->get() as $item) {
+            $report[$item->tax_type_id] = $item->item_amount;
+        }
+
+        foreach ($queryNTR->get() as $item) {
+            $report[$item->tax_type_id] = $item->item_amount;
+        }
+
+        return $report;
+    }
+    protected function getInvolvedTaxes($starts, $ends, $location, $regions, $department){
+        $this->start = Carbon::parse($starts)->startOfDay()->toDateTimeString();
+        $this->end = Carbon::parse($ends)->endOfDay()->toDateTimeString();
+
+        $query = TaxType::whereIn('id', function ($query) {
+            $query->select('zm_bills.tax_type_id')
+                ->from('zm_payments')
+                ->leftJoin('zm_bills', 'zm_payments.zm_bill_id', 'zm_bills.id')
+                ->whereBetween('zm_payments.trx_time', [$this->start, $this->end])
+                ->distinct();
+        })->query();
     }
 
     public function render()
