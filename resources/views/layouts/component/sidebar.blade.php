@@ -586,8 +586,11 @@
                         <li class="{{ request()->is('reports/returns*') ? 'active' : '' }}">
                             <a href="{{ route('reports.returns') }}">Return Reports</a>
                         </li>
+                        <li class="{{ request()->is('reports/departmental*') ? 'active' : '' }}">
+                            <a href="{{ route('reports.departmental') }}">Departmental Reports</a>
+                        </li>
                         <li class="{{ request()->is('reports/assesments*') ? 'active' : '' }}">
-                            <a href="{{ route('reports.assesments') }}">Assesment Reports</a>
+                            <a href="{{ route('reports.assesments') }}">Assessment Reports</a>
                         </li>
                         <li class="{{ request()->is('reports/disputes*') ? 'active' : '' }}">
                             <a href="{{ route('reports.disputes') }}">Dispute Reports</a>
