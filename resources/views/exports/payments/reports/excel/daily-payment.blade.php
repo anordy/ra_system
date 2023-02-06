@@ -21,8 +21,8 @@
     <thead>
         <tr>
             <th style="border-collapse:collapse;border: 1px solid black;"><strong>Source</strong></th>
-            <th style="border-collapse:collapse;border: 1px solid black;text-align:right"><strong>Shilings</strong></th>
-            <th style="border-collapse:collapse;border: 1px solid black;text-align:right"><strong>Dollars</strong></th>
+            <th style="border-collapse:collapse;border: 1px solid black;text-align:right"><strong>TZS</strong></th>
+            <th style="border-collapse:collapse;border: 1px solid black;text-align:right"><strong>USD</strong></th>
         </tr>
     </thead>
     <tbody>

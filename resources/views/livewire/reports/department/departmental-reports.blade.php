@@ -1,19 +1,19 @@
 <div>
     <div class="card-header font-weight-bold bg-white text-uppercase">
         Managerial Departmental Reports
-{{--        <div class="card-tools">--}}
-{{--            <button class="btn btn-success mr-2" wire:click="downloadExcel" wire:loading.attr="disabled">--}}
-{{--                <i class="bi bi-file-earmark-excel mr-2" wire:loading.remove wire:target="downloadExcel"></i>--}}
-{{--                <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading--}}
-{{--                   wire:target="downloadExcel"></i> Download Excel--}}
-{{--            </button>--}}
+        <div class="card-tools">
+            <button class="btn btn-success mr-2" wire:click="exportExcel" wire:loading.attr="disabled">
+                <i class="bi bi-file-earmark-excel mr-2" wire:loading.remove wire:target="exportExcel"></i>
+                <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading
+                   wire:target="exportExcel"></i> Export Excel
+            </button>
 
 {{--            <button class="btn btn-primary mr-2" wire:click="downloadPdf" wire:loading.attr="disabled">--}}
 {{--                <i class="bi bi-file-pdf mr-2" wire:loading.remove wire:target="downloadPdf"></i>--}}
 {{--                <i class="spinner-border spinner-border-sm mr-2" role="status" wire:loading--}}
 {{--                   wire:target="downloadPdf"></i> Download Pdf--}}
 {{--            </button>--}}
-{{--        </div>--}}
+        </div>
     </div>
     <div class="card-body px-1">
         <div class="row mx-1">
@@ -109,12 +109,12 @@
                     </tr>
                     <tr class="text-center">
                         <th class="text-left">Source</th>
-                        <th>Shilings</th>
-                        <th>Dollars</th>
+                        <th>TZS</th>
+                        <th>USD</th>
                     </tr>
                     </thead>
                     <tbody class="border-bottom border-dark text-right">
-                    @if ($nonRevenueTaxTypes->isNotEmpty() && !($department_type == 'domestic-taxes' && $location == 'unguja'))
+                    @if ($nonRevenueTaxTypes->isNotEmpty() && !($department_type == 'domestic-taxes' && $location == \App\Models\Region::UNGUJA))
                         <tr class="text-center">
                             <th colspan="3" class="text-uppercase">Non Tax Revenue Department</th>
                         </tr>
@@ -127,7 +127,7 @@
                         @endforeach
                     @endif
 
-                    @if ($domesticTaxTypes->isNotEmpty()  && !($department_type == 'non-tax-revenue' && $location == 'unguja'))
+                    @if ($domesticTaxTypes->isNotEmpty()  && !($department_type == 'non-tax-revenue' && $location == \App\Models\Region::UNGUJA))
                         <tr class="text-center">
                             <th colspan="3" class="text-uppercase">Domestic Taxes Department</th>
                         </tr>

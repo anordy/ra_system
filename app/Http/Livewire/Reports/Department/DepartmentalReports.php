@@ -2,16 +2,15 @@
 
 namespace App\Http\Livewire\Reports\Department;
 
-use App\Exports\DailyPaymentExport;
+use App\Exports\Departmental\DepartmentalReportExport;
 use App\Models\Business;
 use App\Models\Region;
-use App\Models\Returns\TaxReturn;
 use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Models\ZmBill;
-use App\Models\ZmPayment;
 use App\Traits\DailyPaymentTrait;
+use App\Traits\ManagerialReportTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +22,7 @@ use PDF;
 
 class DepartmentalReports extends Component
 {
-    use LivewireAlert, DailyPaymentTrait;
+    use LivewireAlert, DailyPaymentTrait, ManagerialReportTrait;
 
     public $today;
     public $range_start;
@@ -166,12 +165,17 @@ class DepartmentalReports extends Component
         }
     }
 
-    public function downloadExcel()
+    public function exportExcel()
     {
-        $fileName = 'daily_payments_' . now()->format('d-m-Y') . '.xlsx';
-        $title = 'Daily Receipts Provisional';
+        $fileName = 'departmental_report_' . now()->format('d-m-Y') . '.xlsx';
+        $title = 'Managerial Departmental Report';
         $this->alert('success', 'Exporting Excel File');
-        return Excel::download(new DailyPaymentExport($this->vars,$this->taxTypes,$title), $fileName);
+        return Excel::download(new DepartmentalReportExport($this->report, $title, $this->nonRevenueTaxTypes, $this->domesticTaxTypes, [
+            'range_start' => $this->range_start,
+            'range_end' => $this->range_end,
+            'location' => $this->location,
+            'departmentType' => $this->department_type
+        ]), $fileName);
     }
 
     protected function getReport($currency = 'USD'){
