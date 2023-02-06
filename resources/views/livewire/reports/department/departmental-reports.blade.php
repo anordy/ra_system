@@ -20,6 +20,7 @@
             <div class="col-md-3 form-group">
                 <label for="location" class="font-weight-bold">Location</label>
                 <select id="location" name="location" class="form-control" wire:model="location">
+                    <option value="all">All</option>
                     <option value="unguja">Unguja</option>
                     <option value="pemba">Pemba</option>
                 </select>
