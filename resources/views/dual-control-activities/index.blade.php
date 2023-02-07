@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Activities for dual control</h5>
+        <div class="card-header bg-white font-weight-bold text-uppercase">
+            Activities for dual control
         </div>
 
         <div class="card-body">

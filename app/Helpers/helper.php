@@ -91,9 +91,9 @@ function isNullOrEmpty($value)
     return ($value == null || $value == '');
 }
 
-function approvalLevel($level_id, $level_name)
+function approvalLevel($level_id, $level_name): bool
 {
-    $approval = ApprovalLevel::where('id', $level_id)->where('name', $level_name)->first();
+    $approval = ApprovalLevel::query()->where('id', $level_id)->where('name', $level_name)->first();
     if (!empty($approval)) {
         $level = UserApprovalLevel::where('approval_level_id', $approval->id)
             ->where('user_id', Auth::id())->orderByDesc('id')->first();

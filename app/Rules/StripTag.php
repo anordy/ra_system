@@ -24,8 +24,13 @@ class StripTag implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
+        // Since strip_tags will return false for null values.
+        if (is_null($value)){
+            return true;
+        }
+
         return strip_tags($value) === $value;
     }
 
@@ -45,7 +50,7 @@ class StripTag implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return 'The :attribute must not contain tags.';
     }
