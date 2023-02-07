@@ -142,7 +142,7 @@ Auth::routes(['register'=>false]);
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
-Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get');
+Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get')->name('captcha.get')->middleware('throttle:captcha');
 
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');

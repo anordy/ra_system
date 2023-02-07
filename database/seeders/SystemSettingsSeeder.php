@@ -68,6 +68,15 @@ class SystemSettingsSeeder extends Seeder
             ],
             [
                 'system_setting_category_id' => 3,
+                'name' => 'General Commissioner Name',
+                'code' => 'general-commissioner-name',
+                'description' => 'General Commissioner full name',
+                'value' => 'YUSUPH JUMA MWENDA',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 3,
                 'name' => 'General Commissioner Sign',
                 'code' => 'general-commissioner-sign',
                 'description' => 'General Commissioner sign',
