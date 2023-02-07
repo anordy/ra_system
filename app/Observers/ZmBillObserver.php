@@ -24,7 +24,7 @@ class ZmBillObserver
                 dispatch(new RepostBillSignature($zmBill));
             }
         } catch (Exception $exception){
-            Log::channel('verification')->error($exception->getMessage());
+            Log::channel('verification')->error('Something went wrong, please contact support for assistance.');
             dispatch(new RepostBillSignature($zmBill));
         }
     }
