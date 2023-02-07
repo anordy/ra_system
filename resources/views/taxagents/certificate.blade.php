@@ -106,7 +106,7 @@
             letter-spacing: 2px;
         }
         .commissioner-signature {
-            top: 86%;
+            top: 85%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
@@ -128,7 +128,7 @@
     <span class="endyear">{{date('M Y', strtotime($end_date))}}</span>
     <span class="location">{{$taxagent->district->name.', '.$taxagent->region->name}}</span>
     <span class="commissioner-signature">
-        <img src="{{ public_path()}}/sign/commissioner.png">
+        <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
     </span>
     <div style="overflow: hidden; position:absolute; top: 81%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
         <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">

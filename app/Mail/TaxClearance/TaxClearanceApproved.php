@@ -2,6 +2,7 @@
 
 namespace App\Mail\TaxClearance;
 
+use App\Models\SystemSetting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -33,10 +34,12 @@ class TaxClearanceApproved extends Mailable
     {
         $location = $this->payload[0];
         $taxClearanceRequest = $this->payload[1];
-        
-        $pdf = PDF::loadView('tax-clearance.includes.online-certificate', compact('location', 'taxClearanceRequest'));
+
+        $signaturePath = SystemSetting::where('code', SystemSetting::GENERAL_COMMISSIONER_SIGN)->where('is_approved', 1)->value('value') ?? null;
+
+        $pdf = PDF::loadView('tax-clearance.includes.online-certificate', compact('location', 'taxClearanceRequest', 'signaturePath'));
         $pdf->setPaper('a4', 'portrait');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
         return $this->markdown('emails.taxclearance.taxclearanceapproved')->attachData($pdf->output(), "tax_clearance_certificate.pdf")->subject('Tax Clearance Application');
     }

@@ -81,7 +81,7 @@
         }
 
         .commissioner-signature {
-            top: 86%;
+            top: 85%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
@@ -146,7 +146,7 @@
         {{ $location->date_of_commencing->format('d/m/Y') }}
     </span>
     <span class="commissioner-signature">
-        <img src="{{ public_path() }}/sign/commissioner.png">
+        <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
     </span>
     <div class="qr-code">
         <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">

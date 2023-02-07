@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BusinessFile;
 use App\Models\BusinessLocation;
 use App\Models\BusinessTaxType;
+use App\Models\SystemSetting;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use Endroid\QrCode\Builder\Builder;
@@ -70,6 +71,7 @@ class BusinessFileController extends Controller
         $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
 
         $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
+        $signaturePath = SystemSetting::where('code', SystemSetting::GENERAL_COMMISSIONER_SIGN)->where('is_approved', 1)->value('value') ?? null;
 
         $code = 'ZIN: ' . $location->zin . ", " .
             'Business Name: ' . $location->business->name . ", " .
@@ -94,10 +96,10 @@ class BusinessFileController extends Controller
         header('Content-Type: ' . $result->getMimeType());
 
         $dataUri = $result->getDataUri();
-        
-        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber'));
+
+        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber', 'signaturePath'));
         $pdf->setPaper('a4', 'portrait');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
         return $pdf->stream();
 
