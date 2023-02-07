@@ -112,11 +112,14 @@ class WorkflowSubscriber implements EventSubscriberInterface
             foreach ($places as $key => $place) {
 
                 $operators = json_encode($place['operators']);
+                $original_operators = json_encode($place['operators']);
                 $operator_type = $place['operator_type'];
                 if (array_key_exists('operators', $context) && $context['operators'] != []) {
                     $operators = json_encode($context['operators']);
+                    $original_operators = $operators;
                 } else {
-                    $operator_type = 'user';
+                 
+                    $original_operators = json_encode($place['operators']);
 
                     if ($place['operator_type'] == 'role') {
                         $users = User::whereIn('role_id', $place['operators'])->get();
@@ -140,6 +143,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
                     'to_place' => $key,
                     'owner' => $place['owner'],
                     'operator_type' => $operator_type,
+                    'original_operators' => $original_operators,
                     'operators' => $operators,
                     'approved_on' => Carbon::now()->toDateTimeString(),
                     'user_id' => $user->id ?? null,

@@ -31,6 +31,12 @@ return [
     'disks' => [
 
         'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
+
+
+        'local-admin' => [
             'driver' => 'sftp',
             'host' => secEnv('SFTP_HOST'),
             'username' => secEnv('SFTP_USERNAME'),
