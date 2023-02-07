@@ -10,9 +10,9 @@
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
                         <label class="control-label">Category</label>
-                        <select type="text" class="form-control" wire:model.defer="system_setting_category" id="system_setting_category">
+                        <select type="text" class="form-control" wire:model.lazy="system_setting_category" id="system_setting_category">
+                            <option selected>---Select category---</option>
                             @foreach ($categories as $category)
-                                <option selected>---Select category---</option>
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
@@ -34,9 +34,28 @@
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    @if($certificateSettings)
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Value Type</label>
+                            <div class="d-flex">
+                                <div class="form-check mx-2">
+                                    <input class="form-check-input" type="radio" wire:model.lazy="valueType" value="number" checked>
+                                    <label class="form-check-label" for="exampleRadios1">
+                                        Number
+                                    </label>
+                                </div>
+                                <div class="form-check mx-2">
+                                    <input class="form-check-input" type="radio" wire:model.lazy="valueType" value="file">
+                                    <label class="form-check-label" for="exampleRadios1">
+                                        File
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     <div class="form-group col-lg-12">
                         <label class="control-label">Value</label>
-                        <input type="number" class="form-control" wire:model.defer="value" id="value">
+                        <input type="{{ $valueType }}" class="form-control" wire:model.defer="value" id="value">
                         @error('value')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror

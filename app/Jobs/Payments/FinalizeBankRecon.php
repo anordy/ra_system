@@ -73,7 +73,7 @@ class FinalizeBankRecon implements ShouldQueue
                 ]);
                 $recon->bill->update(['bank_recon_status' => BankReconStatus::FAILED]);
             } catch (\Exception $e){
-                Log::error('Failed to reconcile with error: '. $e->getMessage());
+                Log::error('Failed to reconcile with error, please contact support for assistance.');
             }
         }
     }

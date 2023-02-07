@@ -47,7 +47,7 @@
             top: 61%;
         }
         .commissioner-signature {
-            top: 88%;
+            top: 87%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
@@ -90,7 +90,7 @@
                 {{\Carbon\Carbon::create($taxClearanceRequest->expire_on)->format('d-M-Y')}}
         </span>
         <span class="commissioner-signature">
-                    <img src="{{ public_path()}}/sign/commissioner.png">
+            <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
         </span>
     </body>
 </html>

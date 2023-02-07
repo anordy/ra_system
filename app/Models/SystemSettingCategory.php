@@ -12,6 +12,8 @@ class SystemSettingCategory extends Model implements Auditable
 
     protected $guarded = [];
 
+    public const CERTIFICATESETTINGS_ID = 3;
+
     public function system_settings(){
         return $this->hasMany(SystemSetting::class);
     }

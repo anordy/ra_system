@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src fonts.googleapis.com 'self' 'nonce-custom_style'; script-src 'self' 'nonce-custom_script'; font-src 'self' fonts.gstatic.com; img-src 'self' data: ">
     <title>404 Error Page</title>
     <link rel="stylesheet" href="{{ asset('css/error.css') }}">
 </head>

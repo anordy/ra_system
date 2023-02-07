@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TaxAgents;
 use App\Http\Controllers\Controller;
 use App\Models\DualControl;
 use App\Models\RenewTaxAgentRequest;
+use App\Models\SystemSetting;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
 use Carbon\Carbon;
@@ -102,9 +103,11 @@ class TaxAgentController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'start_date', 'end_date', 'superStart', 'superEnd', 'diff', 'word', 'dataUri'));
+        $signaturePath = SystemSetting::where('code', SystemSetting::GENERAL_COMMISSIONER_SIGN)->where('is_approved', 1)->value('value') ?? null;
+
+        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'start_date', 'end_date', 'superStart', 'superEnd', 'diff', 'word', 'dataUri', 'signaturePath'));
         $pdf->setPaper('a4', 'portrait');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
         return $pdf->stream();
 

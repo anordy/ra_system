@@ -37,7 +37,7 @@ class RollbackAssessment extends Component
                 $this->rollBackLatestAssessmentDebtPenalty($assessment);
                 $this->alert('success', 'Penalty & Interest rolled back successful');
             } catch (Exception $e) {
-                $this->alert('warning', $e->getMessage());
+                $this->alert('warning', 'Something went wrong, please contact support for assistance.');
             }
         }
     }

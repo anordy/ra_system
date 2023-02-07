@@ -2,6 +2,7 @@
 
 namespace App\Mail\Business\Taxtype;
 
+use App\Models\SystemSetting;
 use PDF;
 use App\Models\TaxType;
 use Illuminate\Bus\Queueable;
@@ -81,7 +82,9 @@ class ChangeTaxType extends Mailable
 
                     $dataUri = $result->getDataUri();
 
-                    $pdf = PDF::loadView('business.tax-change-certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber'));
+                    $signaturePath = SystemSetting::where('code', SystemSetting::GENERAL_COMMISSIONER_SIGN)->where('is_approved', 1)->value('value') ?? null;
+
+                    $pdf = PDF::loadView('business.tax-change-certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber', 'signaturePath'));
 
                     $pdf->setPaper('a4', 'portrait');
                     $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
