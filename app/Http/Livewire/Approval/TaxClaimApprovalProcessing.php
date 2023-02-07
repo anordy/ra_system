@@ -215,7 +215,7 @@ class TaxClaimApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', $e->getMessage());
+            $this->alert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
 

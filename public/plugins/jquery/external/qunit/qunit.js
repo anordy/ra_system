@@ -2326,7 +2326,7 @@
       then(function(books){
         // found books
     }).catch(function(reason){
-      // Something went wrong, please contact the administrator for help
+      // something went wrong
     });
     ```
      @method then
@@ -2347,11 +2347,11 @@
     try {
     findAuthor();
     } catch(reason) {
-    // Something went wrong, please contact the administrator for help
+    // something went wrong
     }
     // async with promises
     findAuthor().catch(function(reason){
-    // Something went wrong, please contact the administrator for help
+    // something went wrong
     });
     ```
     @method catch

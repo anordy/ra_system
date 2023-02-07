@@ -74,7 +74,7 @@ class BankReconImportModal extends Component
         catch (\Exception $exception){
             DB::rollBack();
             Log::error($exception);
-            $this->alert('error', $exception->getMessage());
+            $this->alert('error', 'Something went wrong, please contact support for assistance.');
         }
     }
 

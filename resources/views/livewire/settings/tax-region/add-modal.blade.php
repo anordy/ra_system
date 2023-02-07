@@ -2,24 +2,35 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase">Add Tax Region</h5>
+                <h6 class="modal-title text-uppercase">Add Tax Region</h6>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i
                             class="fa fa-times-circle"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row pr-3 pl-3">
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Prefix</label>
+                        <label class="font-weight-bold">Prefix</label>
                         <input type="text" class="form-control" wire:model.lazy="prefix" placeholder="With 2 digits, E.g. 04">
                         @error('prefix')
-                            <small class="text-danger">{{ $message }}</small>
+                            <small class="text-danger mt-1 d-block">{{ $message }}</small>
                         @enderror
                     </div>
                     <div class="form-group col-lg-12">
-                        <label class="control-label">Name</label>
+                        <label class="font-weight-bold">Name</label>
                         <input type="text" class="form-control" wire:model.lazy="name">
                         @error('name')
-                            <small class="text-danger">{{ $message }}</small>
+                            <small class="text-danger mt-1 d-block">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="font-weight-bold">Location</label>
+                        <select wire:model="location" class="form-control">
+                            <option value="">Please choose location.</option>
+                            <option value="{{ \App\Models\Region::UNGUJA }}">Unguja</option>
+                            <option value="{{ \App\Models\Region::PEMBA }}">Pemba</option>
+                        </select>
+                        @error('location')
+                            <small class="text-danger mt-1 d-block">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>

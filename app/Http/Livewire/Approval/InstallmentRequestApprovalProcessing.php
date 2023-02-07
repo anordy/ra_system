@@ -113,7 +113,7 @@ class InstallmentRequestApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', $e->getMessage());
+            $this->alert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
 
