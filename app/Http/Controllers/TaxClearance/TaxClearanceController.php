@@ -18,6 +18,7 @@ use App\Models\Returns\ReturnStatus;
 use App\Models\Returns\StampDuty\StampDutyReturn;
 use App\Models\Returns\TaxReturn;
 use App\Models\Returns\Vat\VatReturn;
+use App\Models\SystemSetting;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxClearanceRequest;
@@ -207,9 +208,11 @@ class TaxClearanceController extends Controller
 
         $location = $taxClearanceRequest->businessLocation;
 
-        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('location', 'taxClearanceRequest'));
+        $signaturePath = SystemSetting::where('code', SystemSetting::GENERAL_COMMISSIONER_SIGN)->where('is_approved', 1)->value('value') ?? null;
+
+        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('location', 'taxClearanceRequest', 'signaturePath'));
         $pdf->setPaper('a4', 'portrait');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
         return $pdf->stream();
     }

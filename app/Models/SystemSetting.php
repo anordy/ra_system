@@ -13,7 +13,8 @@ class SystemSetting extends Model implements Auditable
     const PASSWORD_EXPIRATION_DURATION = 'password-expiration-duration';
     const MAXIMUM_NUMBER_OF_ATTEMPTS = 'max-login-attempts';
     const LOGIN_DECAY_MINUTES = 'login-decay-minutes';
-    
+    const GENERAL_COMMISSIONER_SIGN = 'general-commissioner-sign';
+
     protected $guarded = [];
     
     public function system_setting_category(){

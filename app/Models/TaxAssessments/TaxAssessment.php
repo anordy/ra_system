@@ -113,4 +113,8 @@ class TaxAssessment extends Model implements Auditable
     {
         return $this->morphMany(DemandNotice::class, 'debt');
     }
+
+    public function waiver(){
+        return $this->morphOne(DebtWaiver::class, 'debt');
+    }
 }

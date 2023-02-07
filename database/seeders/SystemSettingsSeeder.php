@@ -26,7 +26,12 @@ class SystemSettingsSeeder extends Seeder
                 'name' => 'Login Settings',
                 'description' => 'all settings related to login attempts, lockouts and others.',
                 'is_approved' => 1
-            ]
+            ],
+            [
+                'name' => 'Certificate Settings',
+                'description' => 'all settings related Certificate variables.',
+                'is_approved' => 1
+            ],
         ];
 
         foreach ($categories as $category) {
@@ -59,6 +64,24 @@ class SystemSettingsSeeder extends Seeder
                 'description' => 'Maximum duration before user allowed to login again',
                 'value' => '60',
                 'unit' => 'minutes',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 3,
+                'name' => 'General Commissioner Name',
+                'code' => 'general-commissioner-name',
+                'description' => 'General Commissioner full name',
+                'value' => 'YUSUPH JUMA MWENDA',
+                'unit' => 'string',
+                'is_approved' => 1
+            ],
+            [
+                'system_setting_category_id' => 3,
+                'name' => 'General Commissioner Sign',
+                'code' => 'general-commissioner-sign',
+                'description' => 'General Commissioner sign',
+                'value' => 'sign/commissioner.png',
+                'unit' => 'file',
                 'is_approved' => 1
             ],
         ];

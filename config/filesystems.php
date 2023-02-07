@@ -22,7 +22,7 @@ return [
     |
     | Here you may configure as many filesystem "disks" as you wish, and you
     | may even configure multiple disks of the same driver. Defaults have
-    | been set up for each driver as an example of the required options.
+    | been setup for each driver as an example of the required options.
     |
     | Supported Drivers: "local", "ftp", "sftp", "s3"
     |
@@ -31,12 +31,13 @@ return [
     'disks' => [
 
         'local' => [
-            'driver' => 'sftp',
-            'host' => secEnv('SFTP_HOST'),
-            'username' => secEnv('SFTP_USERNAME'),
-            'password' => secEnv('SFTP_PASSWORD'),
-            'port' => secEnv('SFTP_PORT', 22),
-            'root' => secEnv('SFTP_ROOT'),
+            'driver' => 'local',
+            'root' => storage_path('app'),
+        ],
+
+        'local-admin' => [
+            'driver' => 'local',
+            'root' => storage_path('./../../zrb_admin/storage/app'),
         ],
 
         'public' => [

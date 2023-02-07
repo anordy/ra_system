@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\SystemSetting;
 use App\Models\WithholdingAgent;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -65,9 +66,11 @@ class WithholdingAgentController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $pdf = PDF::loadView('withholding-agent.certificate', compact('whagent', 'dataUri'));
+        $signaturePath = SystemSetting::where('code', SystemSetting::GENERAL_COMMISSIONER_SIGN)->where('is_approved', 1)->value('value') ?? null;
+
+        $pdf = PDF::loadView('withholding-agent.certificate', compact('whagent', 'dataUri', 'signaturePath'));
         $pdf->setPaper('a4', 'portrait');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
         return $pdf->stream();
   

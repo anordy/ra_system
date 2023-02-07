@@ -76,7 +76,12 @@ class PenaltyForDebt
         if (count($tax_return->return->penalties) > 0) {
             $outstanding_amount = $tax_return->return->penalties->last()->penalty_amount;
         } else {
-            $outstanding_amount = $tax_return->principal;
+            $outstanding_amount = $tax_return->principal + $tax_return->infrastructure;
+        }
+
+        // If return has waiver, use the waived amount as outstanding amount
+        if ($tax_return->waiver) {
+            $outstanding_amount = $tax_return->outstanding_amount;
         }
 
         $curr_payment_due_date = Carbon::create($tax_return->curr_payment_due_date);
@@ -173,6 +178,11 @@ class PenaltyForDebt
             $outstanding_amount = $assessment->penalties->last()->penalty_amount;
         } else {
             $outstanding_amount = $assessment->principal;
+        }
+
+        // If assessment has waiver, use the waived amount as outstanding amount
+        if ($assessment->waiver) {
+            $outstanding_amount = $assessment->outstanding_amount;
         }
 
         $curr_payment_due_date = Carbon::create($assessment->curr_payment_due_date);
