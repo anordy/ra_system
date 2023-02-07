@@ -79,8 +79,6 @@ class ReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
                 
-                // ->label(fn($row) => $row->currency ?? ''),
-
             Column::make("Principal Amount",'principal')
                 ->searchable()
                 ->sortable()
@@ -126,10 +124,10 @@ class ReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("Filing Due Date")
+            Column::make("Filing Due Date", 'filing_due_date')
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => date('M, d Y', strtotime($row->filing_due_date)) ?? ''),
+                ->format(fn($value) =>  $value->toDateString()),
 
             Column::make("Filing Status", "id")
                 ->searchable()

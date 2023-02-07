@@ -20,8 +20,9 @@ class DailyPaymentExport implements FromView, WithEvents, ShouldAutoSize
     /**
      * __construct
      *
-     * @param  mixed $request
-     * @return void
+     * @param $vars
+     * @param $taxTypes
+     * @param $title
      */
     function __construct($vars,$taxTypes, $title)
     {

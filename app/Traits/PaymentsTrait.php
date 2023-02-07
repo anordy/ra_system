@@ -231,6 +231,10 @@ trait PaymentsTrait
      */
     public function getTransactionFee($amount, $currency, $exchangeRate = null)
     {
+        if (!config('modulesconfig.charges_inclusive')){
+            return 0;
+        }
+        
         if ($currency != 'TZS' && (!is_numeric($exchangeRate) || $exchangeRate <= 0)) {
             throw new \Exception('Please provide exchange rate for non TZS currency');
         }
