@@ -36,10 +36,10 @@ class SendBusinessClosureCorrectionSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->closure->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your ZRB business closure for {$this->closure->business->name} requires additional corrections. Please login into your account for more details.";
+        $customer_message = "Your ZRA business closure for {$this->closure->business->name} requires additional corrections. Please login into your account for more details.";
 
         if ($this->closure->location) {
-            $customer_message = "Your ZRB business closure for {$this->closure->business->name}, {$this->closure->location->name} requires additional corrections. Please login into your account for more details.";
+            $customer_message = "Your ZRA business closure for {$this->closure->business->name}, {$this->closure->location->name} requires additional corrections. Please login into your account for more details.";
         }
 
         $sms_controller->sendSMS($send_to, $source, $customer_message);

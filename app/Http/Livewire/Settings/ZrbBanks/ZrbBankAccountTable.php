@@ -138,7 +138,7 @@ class ZrbBankAccountTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($data->id));
-            $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::DELETE, 'deleting zrb bank account');
+            $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::DELETE, 'deleting ZRA bank account');
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             $this->flash(
                 'success',

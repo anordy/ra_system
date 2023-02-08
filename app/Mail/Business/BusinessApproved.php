@@ -35,6 +35,6 @@ class BusinessApproved extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.approved')
-            ->subject("ZRB() Business Registration - " . strtoupper($this->business->name));
+            ->subject("Zanzibar Revenue Authority(ZRA) Business Registration - " . strtoupper($this->business->name));
     }
 }

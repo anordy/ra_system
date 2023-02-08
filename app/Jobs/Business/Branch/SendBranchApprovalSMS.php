@@ -36,7 +36,7 @@ class SendBranchApprovalSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->payload['branch']->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your ZRB new branch registration with name {$this->payload['branch']->name} for business {$this->payload['branch']->business->name} has been approved.";
+        $customer_message = "Your ZRA new branch registration with name {$this->payload['branch']->name} for business {$this->payload['branch']->business->name} has been approved.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

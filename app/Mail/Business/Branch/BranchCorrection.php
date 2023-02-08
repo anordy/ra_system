@@ -30,6 +30,6 @@ class BranchCorrection extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.branch.correction')->subject("ZRB Branch Correction - " . strtoupper($this->payload['branch']->business->name));
+        return $this->markdown('emails.business.branch.correction')->subject("ZRA Branch Correction - " . strtoupper($this->payload['branch']->business->name));
     }
 }

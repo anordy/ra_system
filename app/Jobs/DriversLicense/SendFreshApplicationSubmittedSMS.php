@@ -36,7 +36,7 @@ class SendFreshApplicationSubmittedSMS implements ShouldQueue
         if($application){
             $sms_controller = new SMSController;
             $source = config('modulesconfig.smsheader');
-            $customer_message = "Your Competence ID is {$application->competence_number}; Please visit ZRB for taking picture and collecting driving license card";
+            $customer_message = "Your Competence ID is {$application->competence_number}; Please visit ZRA for taking picture and collecting driving license card";
             $sms_controller->sendSMS($application->taxpayer->mobile, $source, $customer_message);
         }
     }

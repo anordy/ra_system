@@ -1,7 +1,7 @@
 @component('mail::message')
 # Hello {{ $closure->business->taxpayer->first_name }},
 
-Your ZRB temporary business closure for {{ $closure->business->name }} @if ($closure->location)
+Your ZRA temporary business closure for {{ $closure->business->name }} @if ($closure->location)
     , {{ $closure->location->name }}
 @endif requires corrections. 
 
