@@ -80,7 +80,7 @@ class SystemSettingsSeeder extends Seeder
                 'name' => 'General Commissioner Sign',
                 'code' => 'general-commissioner-sign',
                 'description' => 'General Commissioner sign',
-                'value' => 'sign/commissioner.png',
+                'value' => '/sign/commissioner.png',
                 'unit' => 'file',
                 'is_approved' => 1
             ],
