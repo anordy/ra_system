@@ -64,7 +64,7 @@
         <thead>
         <tr>
             <th style="text-align:center;" colspan="15">
-                <p class="zrb">ZANZIBAR REVENUE BOARD</p>
+                <p class="zrb">ZANZIBAR Revenue Authority</p>
                 <strong>{{ $return->taxType->name }} Tax Return</strong><br>
             </th>
         </tr>

@@ -121,7 +121,7 @@
                             wire:target="rejectIncomingData"></i>
                         Reject
                     </button>
-                    <button class="btn btn-primary rounded-0 btn-sm ml-2" onclick="Livewire.emit('showModal', 'kyc.kyc-amendment-request-add-modal', {{ encrypt($kyc->id) }})">
+                    <button class="btn btn-primary rounded-0 btn-sm ml-2" onclick="Livewire.emit('showModal', 'kyc.kyc-amendment-request-add-modal', '{{ encrypt($kyc->id) }}')">
                         <i class="bi bi-pen mr-1"></i> Amend Kyc Details
                     </button>
                     <button class="btn btn-success ml-2" wire:click="acceptIncomingData" wire:loading.attr="disabled">

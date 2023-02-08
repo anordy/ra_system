@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th style="text-align:center;" colspan="15">
-                <strong>ZANZIBAR REVENUE BOARD</strong><br>
+                <strong>ZANZIBAR REVENUE AUTHORITY</strong><br>
                 @if ($parameters['dates']['startDate'] != null)
                 <strong>From {{ date("M, d Y", strtotime($parameters['dates']['from'])) }} To {{ date("M, d Y",
                     strtotime($parameters['dates']['to'])) }} </strong><br>

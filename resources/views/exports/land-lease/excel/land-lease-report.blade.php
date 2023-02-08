@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th style="text-align:center;" colspan="18" height="50">
-                <strong>ZANZIBAR REVENUE BOARD</strong><br>
+                <strong>ZANZIBAR Revenue Authority</strong><br>
                 <strong>Land Leases Report</strong><br>
                 <strong>From {{ $startDate }} To {{ $endDate }} </strong>
             </th>

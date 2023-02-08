@@ -281,7 +281,7 @@
             <div class="body-section">
                 <P>
                     Please take note that the taxes not under this agreement shall be fully paid by due dates. In case
-                    of default the Zanzibar Revenue Board will undertake to recover the total amount due without notice.
+                    of default the Zanzibar Revenue Authority will undertake to recover the total amount due without notice.
                 </P> <br>
                 <P>
                     This agreement is made this ……………………………....... Day of …………… 20 ………...

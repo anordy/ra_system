@@ -2,7 +2,7 @@
     <div class="col-12">
         @can('relief-ministries-edit')
             <button class="btn btn-info btn-sm"
-                onclick="Livewire.emit('showModal', 'relief.relief-ministries-edit-modal',{{encrypt($value)}})"><i class="fa fa-edit"></i>
+                onclick="Livewire.emit('showModal', 'relief.relief-ministries-edit-modal','{{encrypt($value)}}')"><i class="fa fa-edit"></i>
                 Edit
             </button>
         @endcan
