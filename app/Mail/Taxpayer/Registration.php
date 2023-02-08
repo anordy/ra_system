@@ -32,6 +32,6 @@ class Registration extends Mailable
     public function build()
     {
         return $this->markdown('emails.taxpayer.registration')
-            ->subject('ZRB Taxpayer Registration');
+            ->subject('Zanzibar Revenue Authority(ZRA) Taxpayer Registration');
     }
 }

@@ -30,6 +30,6 @@ class BusinessInformationCorrection extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.updates.correction')->subject("ZRB Change of Business Information - " . strtoupper($this->payload['business']->name));
+        return $this->markdown('emails.business.updates.correction')->subject("Zanzibar Revenue Authority(ZRA) Change of Business Information - " . strtoupper($this->payload['business']->name));
     }
 }

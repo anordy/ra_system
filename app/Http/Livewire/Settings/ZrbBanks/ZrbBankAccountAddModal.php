@@ -74,7 +74,7 @@ class ZrbBankAccountAddModal extends Component
                 'created_at' => Carbon::now()
             ]);
             
-            $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::ADD, 'adding zrb bank account');
+            $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::ADD, 'adding ZRA bank account');
             DB::commit();
             $this->alert('success', 'Record added successfully');
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());

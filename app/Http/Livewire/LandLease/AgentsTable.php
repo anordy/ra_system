@@ -36,7 +36,7 @@ class AgentsTable extends DataTableComponent
             Column::make("Name", "taxpayer_id")
                 ->format(fn($value, $row) => $row->taxpayer->fullname())
                 ->sortable(),
-            Column::make("ZRB Ref No.", "taxpayer.reference_no")
+            Column::make("ZRA Ref No.", "taxpayer.reference_no")
                 ->format(function ($value, $row) {
                     return $row->taxpayer->reference_no;
                 })

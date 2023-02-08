@@ -32,6 +32,6 @@ class BusinessDeregisterRejected extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.deregister.rejected')
-            ->subject("ZRB Business De-registration - " . strtoupper($this->deregister->business->name));
+            ->subject("Zanzibar Revenue Authority(ZRA) Business De-registration - " . strtoupper($this->deregister->business->name));
     }
 }

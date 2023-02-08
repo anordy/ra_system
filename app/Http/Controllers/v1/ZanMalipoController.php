@@ -75,7 +75,7 @@ class ZanMalipoController extends Controller
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                 $expireDate = Carbon::parse($bill->expire_date)->format('d M Y H:i:s');
-                $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$expireDate}.";
+                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$expireDate}.";
 
                 if (in_array($bill->billable_type, array_merge(
                     $this->billable,

@@ -36,10 +36,10 @@ class SendBusinessClosureApprovedSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->closure->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "ZRB inform that, your ZRB temporary business closure for {$this->closure->business->name} has been approved. You are required/obliged to submit NIL return to ZRB within the closure period.";
+        $customer_message = "ZRA inform that, your ZRA temporary business closure for {$this->closure->business->name} has been approved. You are required/obliged to submit NIL return to ZRA within the closure period.";
 
         if ($this->closure->location) {
-            $customer_message = "ZRB inform that, your ZRB temporary business closure for {$this->closure->business->name}, {$this->closure->location->name} has been approved. You are required/obliged to submit NIL return to ZRB within the closure period.";
+            $customer_message = "ZRA inform that, your ZRA temporary business closure for {$this->closure->business->name}, {$this->closure->location->name} has been approved. You are required/obliged to submit NIL return to ZRA within the closure period.";
         }
 
         $sms_controller->sendSMS($send_to, $source, $customer_message);
