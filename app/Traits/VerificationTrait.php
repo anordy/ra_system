@@ -2,30 +2,29 @@
 
 namespace App\Traits;
 
+use App\Events\SendMail;
+use App\Jobs\RepostBillSignature;
+use App\Jobs\RepostReturnSignature;
+use App\Models\Returns\TaxReturn;
+use App\Models\VerificationsLog;
 use App\Models\ZmBill;
 use App\Services\Verification\AuthenticationService;
 use App\Services\Verification\PayloadInterface;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use PHPUnit\Exception;
-use App\Events\SendMail;
-use App\Models\VerificationsLog;
-use App\Jobs\RepostBillSignature;
-use App\Models\Returns\TaxReturn;
-use Illuminate\Support\Facades\DB;
-use App\Jobs\RepostReturnSignature;
 
-trait VerificationTrait{
+trait VerificationTrait
+{
 
     public function verify(PayloadInterface $object): bool
     {
-        if(config('app.env') == 'local'){
+        if (config('app.env') == 'local') {
             return true;
         }
 
         $stringData = "";
 
-        foreach ($object::getPayloadColumns() as $column){
+        foreach ($object::getPayloadColumns() as $column) {
             $stringData .= $object->{$column};
         }
 
@@ -48,16 +47,16 @@ trait VerificationTrait{
 
             $result = json_decode($result, true)['verification'] == 'true';
 
-            if (!$result){
+            if (!$result) {
                 $object->update(['failed_verification' => true]);
 
                 //  Save to failed verifications
-               $verification = VerificationsLog::create([
+                $verification = VerificationsLog::create([
                     'table' => $object->getTableName(),
                     'row_id' => $object->id,
                     'data' => json_encode($object)
                 ]);
-                
+
                 event(new SendMail('failed-verification', $verification));
 
                 return false;
@@ -72,13 +71,13 @@ trait VerificationTrait{
 
     public function sign(PayloadInterface $object): bool
     {
-        if(config('app.env') == 'local'){
+        if (config('app.env') == 'local') {
             return true;
         }
 
         $stringData = "";
 
-        foreach ($object::getPayloadColumns() as $column){
+        foreach ($object::getPayloadColumns() as $column) {
             $stringData .= $object->{$column};
         }
 
@@ -98,13 +97,13 @@ trait VerificationTrait{
             Log::channel('verification')->info(json_decode($result, true)['signature'] ? 'Complete' : 'Failed');
 
             return $object->update(['ci_payload' => json_decode($result, true)['signature']]) == 1;
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             Log::error($exception);
             Log::channel('verification')->error($exception);
 
-            if ($object instanceof TaxReturn){
+            if ($object instanceof TaxReturn) {
                 dispatch(new RepostReturnSignature($object));
-            } else if ($object instanceof ZmBill){
+            } else if ($object instanceof ZmBill) {
                 dispatch(new RepostBillSignature($object));
             }
 

@@ -52,7 +52,7 @@
                                     <label class="form-label" for="email">Email Address</label>
                                     <input type="text" class="form-control  @error('email') is-invalid @enderror"
                                         name="email" value="{{ old('email') }}" required autofocus />
-                                    <div class="invalid-feedback">
+                                    <div class="d-block small text-danger mt-1">
                                         @error('email')
                                             {{ $message }}
                                         @enderror
@@ -63,7 +63,7 @@
                                     <label class="form-label" for="typePasswordX">Password</label>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror"
                                         name="password" required/>
-                                    <div class="invalid-feedback">
+                                    <div class="d-block small text-danger mt-1">
                                         @error('password')
                                             {{ $message }}
                                         @enderror
@@ -84,7 +84,7 @@
                                 <div class="form-group">
                                     <input type="text" id="captcha"
                                         class="form-control @error('captcha') is-invalid @enderror" name="captcha" required />
-                                    <div class="invalid-feedback">
+                                    <div class="d-block small text-danger mt-1">
                                         @error('captcha')
                                             {{ $message }}
                                         @enderror
