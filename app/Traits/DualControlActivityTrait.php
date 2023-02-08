@@ -40,7 +40,7 @@ trait DualControlActivityTrait
         if ($action == DualControl::EDIT || $action == DualControl::DELETE) {
             $data->update(['is_updated' => DualControl::NOT_APPROVED]);
             if ($model == DualControl::USER) {
-                $message = 'We are writing to inform you that some of your ZRB staff personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $message = 'We are writing to inform you that some of your ZRA staff personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                 $this->sendEmailToUser($data, $message);
             }
         }
@@ -181,7 +181,7 @@ trait DualControlActivityTrait
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
                 if ($data->controllable_type == DUalControl::USER) {
-                    $message = 'We are writing to inform you that some of your ZRB staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                    $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                     $this->sendEmailToUser($update, $message);
                 }
 

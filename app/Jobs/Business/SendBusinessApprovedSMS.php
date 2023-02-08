@@ -36,7 +36,7 @@ class SendBusinessApprovedSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your ZRB business registration for ". strtoupper($this->business->name) ." has been approved.";
+        $customer_message = "Your ZRA business registration for ". strtoupper($this->business->name) ." has been approved.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

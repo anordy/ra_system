@@ -33,6 +33,6 @@ class BusinessCorrection extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.correction')
-            ->subject("ZRB Business Registration Correction - " . strtoupper($this->business->name));
+            ->subject("Zanzibar Revenue Authority(ZRA) Business Registration Correction - " . strtoupper($this->business->name));
     }
 }

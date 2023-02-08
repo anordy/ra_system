@@ -91,7 +91,7 @@ class LandLeaseReportTable extends DataTableComponent
                 })
                 ->searchable()
                 ->sortable(),
-            Column::make('ZRB No./ Zin No.', 'name')
+            Column::make('ZRA No./ Zin No.', 'name')
                 ->format(
                     function ($value, $row) {
                         if ($row->category == 'business') {

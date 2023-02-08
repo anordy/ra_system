@@ -210,7 +210,7 @@
         <br>
     </div>
     <div class="bottom align-center">
-        <p> Zanzibar Revenue Board &copy; {{ date('Y') }} All Rights Reserved (ZRB)</p>
+        <p> Zanzibar Revenue Board &copy; {{ date('Y') }} All Rights Reserved (ZRA)</p>
     </div>
 </body>
 

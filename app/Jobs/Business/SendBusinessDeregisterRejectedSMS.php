@@ -36,10 +36,10 @@ class SendBusinessDeregisterRejectedSMS implements ShouldQueue
         $send_to = $this->deregister->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
 
-        $customer_message = "Your ZRB business registration for {$this->deregister->business->name} has been rejected. Please login into your account for more details.";
+        $customer_message = "Your ZRA business registration for {$this->deregister->business->name} has been rejected. Please login into your account for more details.";
 
         if ($this->deregister->location) {
-            $customer_message = "Your ZRB business registration for {$this->deregister->business->name}, {$this->deregister->location->name} has been rejected. Please login into your account for more details.";
+            $customer_message = "Your ZRA business registration for {$this->deregister->business->name}, {$this->deregister->location->name} has been rejected. Please login into your account for more details.";
         }
 
         $sms_controller->sendSMS($send_to, $source, $customer_message);

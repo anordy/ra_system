@@ -56,7 +56,7 @@ class VerificationUnpaidApprovalTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('ZRB No', 'location.zin'),
+            Column::make('ZRA No', 'location.zin'),
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location', 'location.name'),

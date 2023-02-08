@@ -31,6 +31,6 @@ class BusinessClosureCorrection extends Mailable
     public function build()
     {
         return $this->markdown('emails.business.closure.correction')
-            ->subject("ZRB Temporary Business Closure- " . strtoupper($this->closure->business->name));
+            ->subject("Zanzibar Revenue Authority(ZRA) Temporary Business Closure- " . strtoupper($this->closure->business->name));
     }
 }

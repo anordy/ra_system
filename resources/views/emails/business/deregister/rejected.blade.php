@@ -1,7 +1,7 @@
 @component('mail::message')
 # Hello {{ $deregister->business->taxpayer->first_name }},
 
-Your ZRB business de-registration for {{ $deregister->business->name }} @if ($deregister->location)
+Your ZRA business de-registration for {{ $deregister->business->name }} @if ($deregister->location)
     , {{ $deregister->location->name }}
 @endif has been rejected.
 

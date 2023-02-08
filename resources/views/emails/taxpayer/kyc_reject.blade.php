@@ -1,7 +1,7 @@
 @component('mail::message')
 # Hello {{ $kyc->first_name }},
 
-Your application for ZRB reference number has been rejected. Please find the comments below and re-apply again.
+Your application for ZRA reference number has been rejected. Please find the comments below and re-apply again.
 
 Application Details
 @component('mail::table')

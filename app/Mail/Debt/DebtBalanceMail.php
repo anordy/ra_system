@@ -30,6 +30,6 @@ class DebtBalanceMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.debt.balance')->subject("ZRB Debt Balance - " . strtoupper($this->payload['debt']->business->name));
+        return $this->markdown('emails.debt.balance')->subject("Zanzibar Revenue Authority(ZRA) Debt Balance - " . strtoupper($this->payload['debt']->business->name));
     }
 }

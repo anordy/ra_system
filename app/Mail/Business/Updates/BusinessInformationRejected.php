@@ -30,6 +30,6 @@ class BusinessInformationRejected extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.updates.rejected')->subject("ZRB Change of Business Information - " . strtoupper($this->payload['business']->name));
+        return $this->markdown('emails.business.updates.rejected')->subject("Zanzibar Revenue Authority(ZRA) Change of Business Information - " . strtoupper($this->payload['business']->name));
     }
 }

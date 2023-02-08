@@ -63,7 +63,7 @@ class DebtDemandNotice extends Mailable
                 $pdf->setPaper('a4', 'portrait');
                 $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         
-                $email = $this->markdown('emails.demand-notice.demand-notice')->subject("ZRB Demand Notice for Debt - " . strtoupper($this->payload['debt']->business->name));
+                $email = $this->markdown('emails.demand-notice.demand-notice')->subject("ZRA Demand Notice for Debt - " . strtoupper($this->payload['debt']->business->name));
                 $email->attachData($pdf->output(), "{$this->payload['debt']->business->name}_demand_notice.pdf");
                 return $email;
             } else if (get_class($debt) === TaxAssessment::class) {
@@ -72,7 +72,7 @@ class DebtDemandNotice extends Mailable
                 $pdf->setPaper('a4', 'portrait');
                 $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
         
-                $email = $this->markdown('emails.demand-notice.demand-notice')->subject("ZRB Demand Notice for Debt - " . strtoupper($this->payload['debt']->business->name));
+                $email = $this->markdown('emails.demand-notice.demand-notice')->subject("ZRA Demand Notice for Debt - " . strtoupper($this->payload['debt']->business->name));
                 $email->attachData($pdf->output(), "{$this->payload['debt']->business->name}_demand_notice.pdf");
                 return $email;
             }

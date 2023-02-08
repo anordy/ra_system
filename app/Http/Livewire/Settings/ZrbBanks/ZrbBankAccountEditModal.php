@@ -95,7 +95,7 @@ class ZrbBankAccountEditModal extends Component
                 'currency_id' => $currency->id,
                 'currency_iso' => $currency->iso,
             ];
-            $this->triggerDualControl(get_class($this->zrbBankAccount), $this->zrbBankAccount->id, DualControl::EDIT, 'editing zrb bank account', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->zrbBankAccount), $this->zrbBankAccount->id, DualControl::EDIT, 'editing ZRA bank account', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>10000]);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());

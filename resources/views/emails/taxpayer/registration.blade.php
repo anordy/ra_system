@@ -1,7 +1,7 @@
 @component('mail::message')
 # Hello {{ $taxpayer->first_name }},
 
-Welcome to ZRB, please use the following details to access your account.
+Welcome to ZRA, please use the following details to access your account.
 
 @component('mail::panel')
 Reference No: **{{ $taxpayer->reference_no }}<br>**
