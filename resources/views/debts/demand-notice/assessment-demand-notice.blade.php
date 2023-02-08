@@ -163,7 +163,7 @@
                     </div>
                 </div>
                 <div class="flex-container">
-                    ZRB NO. <span class="dot">{{ $debt->business->zin }}{{ $debt->location->zin }}</span>
+                    ZRA NO. <span class="dot">{{ $debt->business->zin }}{{ $debt->location->zin }}</span>
                     <div class="txt-area">
                         <textarea name="" id="" cols="30" rows="10"></textarea>
                     </div>

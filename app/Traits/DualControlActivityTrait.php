@@ -88,7 +88,7 @@ trait DualControlActivityTrait
                 break;
 
             case DualControl::ZRBBANKACCOUNT:
-                return 'Zrb Bank Account';
+                return 'ZRA Bank Account';
                 break;
             case DualControl::EXCHANGE_RATE:
                 return 'Exchange Rate';

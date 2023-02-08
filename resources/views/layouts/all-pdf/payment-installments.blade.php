@@ -158,7 +158,7 @@
         <div class="row">
             <div class="head-section">
                 <div class="flex-container ">
-                    <div class="zrb-no">ZRB NO.
+                    <div class="zrb-no">ZRA NO.
                         <table class="table-bordered">
                             <tr>
                                 <td class="table-width">Z</td>
@@ -296,7 +296,7 @@
                 </p><br>
 
                 <div class="header">AND</div><br>
-                <p> For the ZRB</p><br>
+                <p> For the ZRA</p><br>
                 <P>
                     Name:...................................................................
                     Designation: ...........................................................

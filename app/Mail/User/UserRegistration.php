@@ -35,6 +35,6 @@ class UserRegistration extends Mailable
     {
         return $this->markdown('emails.user.user-registration',[
             'url' => 'https://192.231.237.29:8888/zrb_admin/public/login'
-        ])->subject("ZRB Staff Registration");
+        ])->subject("ZRA Staff Registration");
     }
 }
