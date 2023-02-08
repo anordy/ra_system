@@ -73,10 +73,10 @@
                                 <div class="form-group mb-3">
                                     <label class="form-label" for="captcha">Captcha</label>
                                     <div class="row">
-                                        <div class="col-sm-7">
+                                        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">
                                             <span id="captcha_label">{!! captcha_img('flat') !!}</span>
                                         </div>
-                                        <div class="col-sm-5">
+                                        <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
                                             <button type="button" class="btn btn-outline-success ml-2 flex-1"
                                                     id="captchaReload">
                                                 <i class='bi bi-arrow-clockwise mr-1'></i>
