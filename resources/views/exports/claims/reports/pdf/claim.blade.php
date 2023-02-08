@@ -57,7 +57,7 @@
     <thead>
     <tr>
         <th style="text-align:center;" colspan="15">
-            <strong class="zrb">ZANZIBAR REVENUE BOARD</strong><br>
+            <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
             <strong>{{ $title }}</strong><br>
         </th>
     </tr>

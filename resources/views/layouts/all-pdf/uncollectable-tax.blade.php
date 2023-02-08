@@ -206,7 +206,7 @@
                 </div>
             </div>
             <div class="flex-container">
-                <div class="zrb-no">ZRB NO.
+                <div class="zrb-no">ZRA NO.
                     <table class="table-bordered">
                         <tr>
                             <td class="table-width">Z</td>

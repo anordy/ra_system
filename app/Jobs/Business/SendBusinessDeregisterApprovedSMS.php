@@ -36,11 +36,11 @@ class SendBusinessDeregisterApprovedSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->deregister->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "ZRB inform that, you have de-registered {$this->deregister->business->name}
+        $customer_message = "ZRA inform that, you have de-registered {$this->deregister->business->name}
         and no longer an active taxpayer for this business.";
 
         if ($this->deregister->location) {
-            $customer_message = "ZRB inform that, you have de-registered {$this->deregister->business->name}, {$this->deregister->location->name}
+            $customer_message = "ZRA inform that, you have de-registered {$this->deregister->business->name}, {$this->deregister->location->name}
             and no longer an active taxpayer for this business.";
         }
 

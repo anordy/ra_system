@@ -29,6 +29,6 @@ class KycReject extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.taxpayer.kyc_reject')->subject('ZRB Kyc Rejected');;
+        return $this->markdown('emails.taxpayer.kyc_reject')->subject('ZRA Kyc Rejected');;
     }
 }

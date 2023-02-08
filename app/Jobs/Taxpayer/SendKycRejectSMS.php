@@ -35,7 +35,7 @@ class SendKycRejectSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->kyc->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Hello {$this->kyc->first_name}, Your application for zrb reference number has been rejected please re-apply again. Rejection comments: {$this->kyc->comments}";
+        $customer_message = "Hello {$this->kyc->first_name}, Your application for ZRA reference number has been rejected please re-apply again. Rejection comments: {$this->kyc->comments}";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Mail\Taxpayer;
+namespace App\Mail\KYC;
 
-use App\Models\Taxpayer;
+use App\Models\KYC;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,17 +11,16 @@ class Registration extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $taxpayer, $code;
+    public $kyc;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Taxpayer $taxpayer, $code)
+    public function __construct(KYC $kyc)
     {
-        $this->taxpayer = $taxpayer;
-        $this->code = $code;
+        $this->kyc = $kyc;
     }
 
     /**
@@ -31,7 +30,7 @@ class Registration extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.taxpayer.registration')
-            ->subject('Zanzibar Revenue Authority(ZRA) Taxpayer Registration');
+        return $this->markdown('emails.kyc.registration')
+            ->subject('ZRA Taxpayer Registration');
     }
 }

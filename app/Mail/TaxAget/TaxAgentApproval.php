@@ -36,6 +36,6 @@ class TaxAgentApproval extends Mailable
     public function build()
     {
 	    return $this->markdown('emails.tax_agent.approval')
-	      ->subject('ZRB Tax Agent Application');
+	      ->subject('Zanzibar Revenue Authority(ZRA) Tax Agent Application');
     }
 }

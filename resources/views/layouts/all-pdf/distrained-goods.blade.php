@@ -198,7 +198,7 @@
                 <p>This form must be completed in triplicate</p><br>
             </div>
             <div class="copies">
-                <p>Original: ZRB</p><br>
+                <p>Original: ZRA</p><br>
                 <P>1 <sup>st </sup> Copy: Distraint Agent</P><br>
                 <p>2 <sup>nd </sup> Copy: Taxpayer</p>
             </div>

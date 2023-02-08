@@ -255,7 +255,7 @@
         </table>
     </div>
     <div class="bottom align-center" style="font-size: 6px">
-        <p> Zanzibar Revenue Board &copy; {{ date('Y') }} All Rights Reserved (ZRB)</p>
+        <p> Zanzibar Revenue Board &copy; {{ date('Y') }} All Rights Reserved (ZRA)</p>
     </div>
 </body>
 

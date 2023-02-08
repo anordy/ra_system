@@ -1,31 +1,28 @@
 <?php
 
-namespace App\Jobs\Taxpayer;
+namespace App\Jobs;
 
 use App\Http\Controllers\v1\SMSController;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class SendRegistrationSMS implements ShouldQueue
+class SendKYCRegistrationSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $mobile, $code, $reference_no;
+    private $kyc;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($mobile, $reference_no, $code)
+    public function __construct($kyc)
     {
-        $this->mobile = $mobile;
-        $this->reference_no = $reference_no;
-        $this->code = $code;
+        $this->kyc = $kyc;
     }
 
     /**
@@ -36,9 +33,8 @@ class SendRegistrationSMS implements ShouldQueue
     public function handle()
     {
         $sms_controller = new SMSController;
-        $send_to = $this->mobile;
+        $message = "Your application has been accepted, please visit ZRA office for biometric registration (fingerprint) before {$this->kyc->created_at->addMonth()->toFormattedDateString()}";
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Welcome to ZRA, please use the following details to access your account, Reference no: {$this->reference_no} Password: {$this->code}";
-        $sms_controller->sendSMS($send_to, $source, $customer_message);
+        $sms_controller->sendSMS($this->kyc->mobile, $source, $message);
     }
 }

@@ -37,7 +37,7 @@ class SendBusinessCorrectionSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your ZRB business registration for ". strtoupper($this->business->name) ." requires additional correction(s) on {$this->message}. Please login into your account for more details.";
+        $customer_message = "Your ZRA business registration for ". strtoupper($this->business->name) ." requires additional correction(s) on {$this->message}. Please login into your account for more details.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

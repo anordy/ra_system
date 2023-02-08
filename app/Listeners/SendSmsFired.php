@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Jobs\SendKYCRegistrationSMS;
+use App\Models\KYC;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\Business;
@@ -73,7 +75,7 @@ class SendSmsFired
             }
             SendOTPSMS::dispatch($event->extra['code'], $token->user->fullname(), $token->user->phone);
         } else if ($event->service == 'withholding_agent_registration') {
-            /** TokenId is withholding agent id id */
+            /** TokenId is withholding agent id */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);
             if(is_null($withholding_agent)){
                 abort(404);
@@ -86,7 +88,13 @@ class SendSmsFired
                 abort(404);
             }
             SendRegistrationSMS::dispatch($taxpayer->mobile, $taxpayer->reference_no, $event->extra['code']);
-        } else if ($event->service === 'business-registration-approved') {
+        }
+        else if ($event->service == 'kyc-registration'){
+            // token is kyc id
+            $kyc = KYC::find($event->tokenId);
+            SendKYCRegistrationSMS::dispatch($kyc);
+        }
+        else if ($event->service === 'business-registration-approved') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
             if(is_null($business)){

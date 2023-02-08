@@ -35,7 +35,7 @@ class SendBranchCorrectionSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->payload['branch']->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your ZRB branch registration for {$this->payload['branch']->name} has corrections. Please log in to view more information.";
+        $customer_message = "Your ZRA branch registration for {$this->payload['branch']->name} has corrections. Please log in to view more information.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

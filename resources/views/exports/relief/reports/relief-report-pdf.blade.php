@@ -56,7 +56,7 @@
             <thead>
                 <tr>
                     <th style="text-align:center;" colspan="10" >
-                        <strong class="zrb">ZANZIBAR REVENUE BOARD</strong><br>
+                        <strong class="zrb">ZANZIBAR REVENUE AUTHORITY</strong><br>
                         <strong>RELIEF APPLLICATIONS</strong><br>
                         <strong>From {{ $dates['from'] }} To {{ $dates['to'] }}</strong>
                     </th>

@@ -33,6 +33,7 @@ use App\Jobs\DriversLicense\SendFreshApplicationSubmittedEmail;
 use App\Jobs\DualControl\User\UserInformationUpdateMAIL;
 use App\Jobs\SendOTPEmail;
 use App\Jobs\SendTaxAgentApprovalEmail;
+use App\Jobs\SendKYCRegistrationEmail;
 use App\Jobs\SendWithholdingAgentRegistrationEmail;
 use App\Jobs\TaxClaim\SendTaxClaimRequestFeedbackMAIL;
 use App\Jobs\TaxClearance\SendTaxClearanceApprovedEmail;
@@ -46,6 +47,7 @@ use App\Jobs\User\SendRegistrationEmail;
 use App\Jobs\User\TooManyLoginAttempts;
 use App\Jobs\Verification\SendFailedVerificationMail;
 use App\Models\Business;
+use App\Models\KYC;
 use App\Models\Taxpayer;
 use App\Models\UserOtp;
 use App\Models\WaResponsiblePerson;
@@ -93,7 +95,11 @@ class SendMailFired
                 abort(404);
             }
             SendRegistrationMail::dispatch($taxpayer, $event->extra['code']);
-        } else if ($event->service === 'business-registration-approved'){
+        }  else if ($event->service == 'kyc-registration') {
+            $kyc = KYC::find($event->tokenId);
+            SendKYCRegistrationEmail::dispatch($kyc);
+        }
+        else if ($event->service === 'business-registration-approved'){
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
             if(is_null($business)){
