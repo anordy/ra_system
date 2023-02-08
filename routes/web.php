@@ -141,7 +141,7 @@ Auth::routes(['register'=>false]);
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
+Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload')->middleware('throttle:captcha');
 Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get')->name('captcha.get')->middleware('throttle:captcha');
 
 Route::middleware('auth')->group(function () {

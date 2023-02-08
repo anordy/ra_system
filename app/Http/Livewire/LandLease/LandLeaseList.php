@@ -37,7 +37,7 @@ class LandLeaseList extends DataTableComponent
                 ->format(
                     function ($value, $row) {
                         if ($row->category == 'business') {
-                            return $this->getBusinessName($value);
+                            return $this->getBusinessName(encrypt($value));
                         } else {
                             if ($row->is_registered == 1) {
                                 return $this->getApplicantName(encrypt($row->taxpayer_id));
@@ -86,7 +86,7 @@ class LandLeaseList extends DataTableComponent
 
     public function getApplicantName($id)
     {
-        $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
+        $taxpayer = Taxpayer::find(decrypt($id));
         if(is_null($taxpayer)){
             abort(404);
         }
@@ -95,7 +95,7 @@ class LandLeaseList extends DataTableComponent
 
     public function getBusinessName($id)
     {
-        $businessLocation = BusinessLocation::find($id); //todo: to be removed
+        $businessLocation = BusinessLocation::find(decrypt($id));
         if(is_null($businessLocation)){
             abort(404);
         }

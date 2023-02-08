@@ -179,7 +179,7 @@ class ZmCore
      * @return ZmResponse
      * @throws \DOMException
      */
-    public static function sendBill($bill, $generated_by = 'ZRB', $approved_by = 'ZRB'): ZmResponse
+    public static function sendBill($bill, $generated_by = 'ZRA', $approved_by = 'ZRA'): ZmResponse
     {
         if (is_numeric($bill)) {
             $zm_bill = ZmBill::query()->find($bill);

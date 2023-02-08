@@ -166,7 +166,7 @@ class LandLeaseReportTable extends DataTableComponent
 
     public function getApplicantName($id)
     {
-        $taxpayer = Taxpayer::find(decrypt($id)); // todo: encrypt id
+        $taxpayer = Taxpayer::find(decrypt($id));
         if(is_null($taxpayer)){
             abort(404);
         }
@@ -175,7 +175,7 @@ class LandLeaseReportTable extends DataTableComponent
 
     public function getBusinessName($id)
     {
-        $businessLocation = BusinessLocation::find(decrypt($id)); // todo: encrypt id
+        $businessLocation = BusinessLocation::find(decrypt($id));
         if(is_null($businessLocation)){
             abort(404);
         }
