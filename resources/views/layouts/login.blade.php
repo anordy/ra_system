@@ -1,4 +1,4 @@
-d<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -7,7 +7,7 @@ d<!DOCTYPE html>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src fonts.googleapis.com 'self' 'nonce-custom_style'; script-src 'self'  'nonce-custom_script'; font-src 'self' fonts.gstatic.com; img-src 'self' data: ">
     <title>{{ config('app.name', 'ZRA') }} | @yield('title')</title>
-    <link href="{{ asset('plugins/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugins/sweetalert/sweetalert2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugins/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
@@ -40,7 +40,7 @@ d<!DOCTYPE html>
     @yield('content')
 
     <script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('plugins/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('js/alpine.min.js') }}"></script>
     @yield('scripts')
