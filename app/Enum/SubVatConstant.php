@@ -100,6 +100,7 @@ class SubVatConstant implements Status
     public const FINANCIALSERVICES = 'VAT on Financial Services';
     public const IMPORTS = 'VAT on Imports';
     public const REFUND = 'VAT Refund';
+    public const SALT = 'VAT on Salt';
 
     static function getConstants(): array
     {

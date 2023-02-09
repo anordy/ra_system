@@ -31,8 +31,8 @@ class TaxTypesSeeder extends Seeder
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '142203270234', 'name' => 'Sea Port Service', 'code' => TaxType::SEAPORT_SERVICE_CHARGE, 'category' => 'other']);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '116101270007', 'name' => 'Stamp Duty Composition', 'code' => TaxType::STAMP_DUTY]);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '116101270007', 'name' => 'Stamp Duty Lumpsum', 'code' => TaxType::LUMPSUM_PAYMENT]);
-        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Electronic Money Transaction', 'code' => TaxType::ELECTRONIC_MONEY_TRANSACTION]);
-        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '104395', 'name' => 'Mobile Money Transfer', 'code' => TaxType::MOBILE_MONEY_TRANSFER]);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111930001', 'name' => 'Electronic Money Transaction', 'code' => TaxType::ELECTRONIC_MONEY_TRANSACTION]);
+        TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '114111480001', 'name' => 'Mobile Money Transfer', 'code' => TaxType::MOBILE_MONEY_TRANSFER]);
         TaxType::updateOrCreate(['is_approved' => 1, 'name' => 'Penalties', 'code' => TaxType::PENALTY, 'category' => 'other']);
         TaxType::updateOrCreate(['is_approved' => 1, 'name' => 'Interests', 'code' => TaxType::INTEREST, 'category' => 'other']);
         TaxType::updateOrCreate(['is_approved' => 1, 'gfs_code' => '142203270230', 'name' => 'Infrastructure', 'code' => TaxType::INFRASTRUCTURE, 'category' => 'other']);
