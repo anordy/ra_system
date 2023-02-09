@@ -208,9 +208,10 @@ class TaxClearanceController extends Controller
 
         $location = $taxClearanceRequest->businessLocation;
 
-        $signaturePath = SystemSetting::where('code', SystemSetting::GENERAL_COMMISSIONER_SIGN)->where('is_approved', 1)->value('value') ?? null;
+        $signaturePath = SystemSetting::certificatePath();
+        $commissinerFullName = SystemSetting::commissinerFullName();
 
-        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('location', 'taxClearanceRequest', 'signaturePath'));
+        $pdf = PDF::loadView('tax-clearance.includes.certificate', compact('location', 'taxClearanceRequest', 'signaturePath', 'commissinerFullName'));
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 

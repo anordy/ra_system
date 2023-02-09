@@ -72,9 +72,9 @@ class SendMailFired
      */
     public function handle(SendMail $event)
     {
-        if(config('app.env') == 'local'){
-            return true;
-        }
+//        if(config('app.env') == 'local'){
+//            return true;
+//        }
         if($event->service == 'otp'){
             $token = UserOtp::find($event->tokenId);
             if(is_null($token)){

@@ -12,20 +12,6 @@
             margin: -70px;
         }
 
-        .watermark {
-            -webkit-transform: rotate(331deg);
-            -moz-transform: rotate(331deg);
-            -o-transform: rotate(331deg);
-            transform: rotate(331deg);
-            font-size: 6em;
-            color: rgba(255, 5, 5, 0.17);
-            position: absolute;
-            font-family: 'Denk One', sans-serif;
-            text-transform: uppercase;
-            padding-left: 10%;
-            top: 50%;
-        }
-
         .taxpayerName {
             font-size: 1.2em;
             text-align: center;
@@ -106,13 +92,25 @@
             letter-spacing: 2px;
         }
         .commissioner-signature {
-            top: 85%;
+            top: 86%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
             width: 100%;
             padding-left: 70px;
             padding-right: 70px;
+            left: 30px;
+        }
+        .commissioner-name {
+            top: 93%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 20px;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            margin-left: 55px;
             left: 30px;
         }
     </style>
@@ -129,6 +127,9 @@
     <span class="location">{{$taxagent->district->name.', '.$taxagent->region->name}}</span>
     <span class="commissioner-signature">
         <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+    </span>
+    <span class="commissioner-name">
+        {{$commissinerFullName}}
     </span>
     <div style="overflow: hidden; position:absolute; top: 81%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
         <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">

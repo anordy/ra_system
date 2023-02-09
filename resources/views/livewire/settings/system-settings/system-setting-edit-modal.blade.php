@@ -31,7 +31,7 @@
                             <label class="control-label">Value Type</label>
                             <div class="d-flex">
                                 <div class="form-check mx-2">
-                                    <input class="form-check-input" type="radio" wire:model.lazy="valueType" value="number" checked>
+                                    <input class="form-check-input" type="radio" wire:model.lazy="valueType" value="text" checked>
                                     <label class="form-check-label" for="exampleRadios1">
                                         Number
                                     </label>
