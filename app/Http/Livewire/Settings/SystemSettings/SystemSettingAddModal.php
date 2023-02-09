@@ -50,7 +50,7 @@ class SystemSettingAddModal extends Component
 
     public function mount(){
         $this->categories = SystemSettingCategory::select('id', 'name')->get();
-        $this->valueType = 'number';
+        $this->valueType = 'text';
     }
 
     public function updated($property){

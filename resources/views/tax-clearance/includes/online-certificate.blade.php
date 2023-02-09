@@ -47,13 +47,25 @@
             top: 61%;
         }
         .commissioner-signature {
-            top: 87%;
+            top: 88%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
             width: 100%;
             padding-left: 70px;
             padding-right: 70px;
+            left: 30px;
+        }
+        .commissioner-name {
+            top: 95.5%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 20px;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            margin-left: 55px;
             left: 30px;
         }
         .qr-code {
@@ -91,6 +103,9 @@
         </span>
         <span class="commissioner-signature">
             <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+        </span>
+        <span class="commissioner-name">
+            {{$commissinerFullName}}
         </span>
     </body>
 </html>

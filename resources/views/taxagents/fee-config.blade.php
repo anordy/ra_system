@@ -10,10 +10,12 @@
             Duration Configuration
             <div class="card-tools">
                 @can('tax-consultant-fee-configuration-add')
-                    <button class="btn btn-primary btn-sm"
-                            onclick="Livewire.emit('showModal', 'tax-agent-fee-modal')"><i
-                                class="bi bi-plus-circle-fill pr-1"></i> Add Duration
-                    </button>
+                    @if (approvalLevel(Auth::user()->level_id, 'Maker'))
+                        <button class="btn btn-info btn-sm"
+                                onclick="Livewire.emit('showModal', 'tax-agent-fee-modal')"><i
+                                    class="fa fa-plus-circle"></i> Add
+                        </button>
+                    @endif
                 @endcan
 
             </div>

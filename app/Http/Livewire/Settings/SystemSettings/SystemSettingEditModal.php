@@ -67,7 +67,7 @@ class SystemSettingEditModal extends Component
             'value' => $this->value,
             'description' => $this->description,
         ];
-        $this->valueType = $this->unit == 'file' ? 'file' : 'number';
+        $this->valueType = $this->unit == 'file' ? 'file' : 'text';
         $this->certificateSettings = SystemSettingCategory::CERTIFICATESETTINGS_ID == $this->system_setting_category ? true : false;
     }
 

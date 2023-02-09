@@ -14,29 +14,18 @@
             </div>
         </div>
 
-{{--        <div class="card-body">--}}
-{{--            <div class="d-flex justify-content-between p-2">--}}
-{{--                <div>--}}
-{{--                    <a href="{{ route('taxagents.consultant-renew-requests', encrypt($agent->id)) }}" class="btn btn-info">View Renew Requests</a>--}}
-{{--                </div>--}}
-{{--                @if ($agent->status == \App\Models\TaxAgentStatus::APPROVED && $agent->bill->status == \App\Models\PaymentStatus::PAID)--}}
-{{--                    <div class="d-flex justify-content-end">--}}
-{{--                        <a style="background: #f5f9fa; color: #3c5f86;" class="file-item" target="_blank"--}}
-{{--                           href="{{ route('taxagents.certificate', [\Illuminate\Support\Facades\Crypt::encrypt($agent->id)]) }}">--}}
-{{--                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>--}}
-{{--                            <div style="font-weight: 500;" class="ml-1">--}}
-{{--                                Download Certificate--}}
-{{--                            </div>--}}
-{{--                        </a>--}}
-
-{{--                    </div>--}}
-{{--                @endif--}}
-{{--            </div>--}}
-{{--            @include('taxagents.includes.show')--}}
-
-{{--        </div>--}}
-
         <div class="card-body">
+            <div class="d-flex justify-content-end">
+                @if ($agent->status == \App\Models\TaxAgentStatus::APPROVED)
+                    <a style="background: #f5f9fa; color: #3c5f86;" class="file-item" target="_blank"
+                       href="{{ route('taxagents.certificate', [\Illuminate\Support\Facades\Crypt::encrypt($agent->id)]) }}">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div style="font-weight: 500;" class="ml-1">
+                            Download Certificate
+                        </div>
+                    </a>
+                @endif
+            </div>
             <div class="card p-0 m-0">
                 <div class="card-body mt-0 p-2">
                     <nav class="nav nav-tabs mt-0 border-top-0">

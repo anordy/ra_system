@@ -427,18 +427,9 @@
 
         @can('tax-clearance-management')
             <li class="{{ request()->is('tax-clearance*') ? 'active' : '' }}">
-                <a href="#taxClearance" data-toggle="collapse"
-                   aria-expanded="{{ request()->is('/tax-clearance*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                    Tax Clearance Management
+                <a href="{{ route('tax-clearance.index') }}">
+                    Tax Clearance Requests
                 </a>
-                <ul class="collapse list-unstyled {{ request()->is('tax-clearance*') ? 'show' : '' }}"
-                    id="taxClearance">
-                    @can('tax-clearance-view')
-                        <li class="{{ request()->is('tax-clearance/tax-clearance*') ? 'active' : '' }}">
-                            <a href="{{ route('tax-clearance.index') }}">Requests</a>
-                        </li>
-                    @endcan
-                </ul>
             </li>
         @endcan
 
