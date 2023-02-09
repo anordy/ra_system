@@ -38,7 +38,7 @@ class UsersTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return User::orderByDesc('id');
+        return User::query()->orderByDesc('id');
     }
 
     protected $listeners = [
@@ -198,7 +198,6 @@ class UsersTable extends DataTableComponent
 
     public function resendCredential($id)
     {
-  
         $this->alert('warning', 'Are you sure you want to re-send new user credentials ?', [
             'position' => 'center',
             'toast' => false,

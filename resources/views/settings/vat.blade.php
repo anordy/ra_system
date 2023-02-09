@@ -1,17 +1,17 @@
 @extends('layouts.master')
 
 @section('title')
-    Tax Types
+    VAT Tax Types
 @endsection
 
 @section('content')
     <div class="card">
-        <div class="card-header font-weight-bold text-uppercase bg-white">
-            Tax Types
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            VAT Tax Types
         </div>
 
         <div class="card-body">
-            @livewire('tax-types-table')
+            @livewire('sub-vat-tax-types-table')
         </div>
     </div>
 @endsection

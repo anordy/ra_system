@@ -10,8 +10,8 @@
         </a>
     </div>
     <div class="card">
-        <div class="card-header ">
-            <h6 class="text-capitalize">{{$code}} return configurations</h6>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            {{$code}} return configurations
         </div>
         <div class="card-body">
 

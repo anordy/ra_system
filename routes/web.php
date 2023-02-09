@@ -183,6 +183,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::resource('/penalty-rates', PenaltyRateController::class);
         Route::resource('/zrb-bank-accounts', ZrbBankAccountController::class);
+        Route::get('/subvat/taxtypes', [TaxTypeController::class, 'vat'])->name('subvat.taxtypes');
         Route::get('/setting-system-categories/view', [SystemSettingsController::class, 'setting_categories'])->name('setting-system-categories.view');
         Route::get('/system-settings/view', [SystemSettingsController::class, 'system_settings'])->name('system-settings.view');
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');

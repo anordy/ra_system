@@ -51,8 +51,6 @@ class AssessmentDebtController extends Controller
     public function getAttachment($fileId)
     {
         $file = DebtWaiverAttachment::findOrFail(decrypt($fileId));
-        return Storage::response($file->file_path);
+        return Storage::disk('local')->response($file->file_path);
     }
-
-    
 }

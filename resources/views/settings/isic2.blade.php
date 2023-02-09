@@ -6,18 +6,16 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">ISIC LEVLE 2</h5>
-            <div class="card-tools">
+        <div class="card-header font-weight-bold text-uppercase bg-white">
+            ISIC LEVEL 2
+                <div class="card-tools">
                 @can('setting-isic-level-two-add')
-                    <button class="btn btn-info btn-sm"
-                        onclick="Livewire.emit('showModal', 'i-s-i-c2-add-modal')"><i
-                            class="fa fa-plus-circle"></i>
-                        Add</button>
-                        <button class="btn btn-info btn-sm"
-                        onclick="Livewire.emit('showModal', 'i-s-i-c2-import-modal')"><i
-                            class="fa fa-plus-circle"></i>
-                        Import</button>
+                    <button class="btn btn-primary btn-sm" onclick="Livewire.emit('showModal', 'i-s-i-c2-add-modal')">
+                        <i class="bi bi-plus-circle-fill pr-2"></i>Add
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="Livewire.emit('showModal', 'i-s-i-c2-import-modal')">
+                        <i class="bi bi-plus-circle-fill pr-2"></i>Import
+                    </button>
                 @endcan
             </div>
         </div>

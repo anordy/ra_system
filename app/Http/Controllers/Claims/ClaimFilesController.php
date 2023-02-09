@@ -16,7 +16,7 @@ class ClaimFilesController extends Controller
         }
         if ($path) {
             try {
-                return Storage::response(decrypt($path));
+                return Storage::disk('local')->response(decrypt($path));
             } catch (Exception $e) {
                 report($e);
                 abort(404);

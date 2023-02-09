@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Returns\Vat\SubVat;
 use App\Traits\DualControlActivityTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,6 +50,7 @@ class DualControl extends Model implements Auditable
     public const Business_File_Type = BusinessFileType::class;
     public const TAXTYPE = TaxType::class;
     public const API_USER = ApiUser::class;
+    public const VAT_TAX_TYPE = SubVat::class;
 
     //Messages
     public const SUCCESS_MESSAGE = 'Data successfully submitted, Please wait for checker to approve';
