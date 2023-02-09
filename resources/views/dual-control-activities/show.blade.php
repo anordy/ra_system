@@ -106,6 +106,8 @@
                         @include('dual-control-activities.details.education-level')
                     @elseif ($result->controllable_type === \App\Models\DualControl::API_USER)
                         @include('dual-control-activities.details.api-users')
+                    @elseif ($result->controllable_type === \App\Models\DualControl::VAT_TAX_TYPE || $result->controllable_type === \App\Models\DualControl::TAXTYPE)
+                        @include('dual-control-activities.details.tax-type')
                     @endif
 
                     <div class="d-flex justify-content-end">

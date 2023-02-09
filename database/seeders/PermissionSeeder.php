@@ -149,6 +149,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'manage-payments-cancel-bill', 'sys_module_id' => 17],
             ['name' => 'manage-payments-update-bill', 'sys_module_id' => 17],
             ['name' => 'bank-recon-import', 'sys_module_id' => 17],
+            ['name' => 'view-daily-payments', 'sys_module_id' => 17],
+            ['name' => 'view-ega-charges', 'sys_module_id' => 17],
+            ['name' => 'view-departmental-reports', 'sys_module_id' => 17],
+            ['name' => 'view-recon', 'sys_module_id' => 17],
 
             # Setting
             ['name' => 'setting-user-view', 'sys_module_id' => 18],

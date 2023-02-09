@@ -776,6 +776,11 @@
                             <a href="{{ route('settings.taxtypes.index') }}">Tax Types</a>
                         </li>
                     @endcan
+                    @can('setting-tax-type-view')
+                        <li class="{{ request()->is('settings/taxtypes*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.subvat.taxtypes') }}">VAT Tax Types</a>
+                        </li>
+                    @endcan
                     @can('setting-isic-level-one-view')
                         <li class="{{ request()->is('settings/isic1*') ? 'active' : '' }}">
                             <a href="{{ route('settings.isic1.index') }}">ISIC Level 1</a>
@@ -984,13 +989,11 @@
                             <a href="{{ route('system.workflow.index') }}">Workflow Configure</a>
                         </li>
                     @endcan
-
-                    {{--                    @can('setting-dual-control-activities') --}}
-                    <li class="{{ request()->is('system/dual-control-activities/*') ? 'active' : '' }}">
-                        <a href="{{ route('system.dual-control-activities.index') }}">Dual Control Activities</a>
-                    </li>
-                    {{--                    @endcan --}}
-
+                    @can('setting-dual-control-activities-view')
+                        <li class="{{ request()->is('system/dual-control-activities/*') ? 'active' : '' }}">
+                            <a href="{{ route('system.dual-control-activities.index') }}">Dual Control Activities</a>
+                        </li>
+                    @endcan
                     {{--                    @can('setting-dual-control-activities') --}}
                     {{--                        <li class="{{ request()->is('system/dual-control-configure/*') ? 'active' : '' }}">--}}
                     {{--                            <a href="{{ route('system.dual-control-activities.configure') }}">Dual Control Configure</a>--}}

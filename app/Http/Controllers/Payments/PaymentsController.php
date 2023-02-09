@@ -65,7 +65,7 @@ class PaymentsController extends Controller
     }
 
     public function recons($reconId){
-        if (!Gate::allows('manage-payments-view')) {
+        if (!Gate::allows('view-recon')) {
             abort(403);
         }
         $recon = ZmRecon::findOrFail(decrypt($reconId));
@@ -73,16 +73,25 @@ class PaymentsController extends Controller
     }
 
     public function show($paymentId){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
         $bill = ZmBill::with('bill_payments')->findOrFail(decrypt($paymentId));
         return view('payments.show', compact('bill'));
     }
 
     public function viewReconTransaction($transactionId) {
+        if (!Gate::allows('view-recon')) {
+            abort(403);
+        }
         $transaction = ZmReconTran::findOrFail(decrypt($transactionId));
         return view('payments.show-recon-transaction', compact('transaction'));
     }
 
     public function downloadPendingPaymentsPdf($records,$data){
+        if (!Gate::allows('manage-payments-view')) {
+            abort(403);
+        }
         $records = decrypt($records);
         $data = decrypt($data);
 
@@ -97,11 +106,14 @@ class PaymentsController extends Controller
     }
 
     public function bankRecon(){
+        if (!Gate::allows('view-recon')) {
+            abort(403);
+        }
         return view('payments.bank-recons.index');
     }
 
     public function showBankRecon($reconId){
-        if (!Gate::allows('manage-payments-view')) {
+        if (!Gate::allows('view-recon')) {
             abort(403);
         }
 
@@ -110,18 +122,30 @@ class PaymentsController extends Controller
     }
 
     public function missingBankRecon(){
+        if (!Gate::allows('view-recon')) {
+            abort(403);
+        }
         return view('payments.bank-recons.missing-recons');
     }
 
     public function reconReport(){
+        if (!Gate::allows('view-recon')) {
+            abort(403);
+        }
         return view('payments.recon-report-filter');
     }
 
     public function dailyPayments(){
+        if (!Gate::allows('view-daily-payments')) {
+            abort(403);
+        }
         return view('payments.daily-payments');
     }
 
     public function dailyPaymentsPerTaxType($payload){
+        if (!Gate::allows('view-daily-payments')) {
+            abort(403);
+        }
         $data = json_decode(decrypt($payload),true);
         $data['today'] = date('Y-m-d');
         $data['tax_type'] = TaxType::findOrFail($data['tax_type_id']);
@@ -138,10 +162,16 @@ class PaymentsController extends Controller
     }
 
     public function egaCharges(){
+        if (!Gate::allows('view-ega-charges')) {
+            abort(403);
+        }
         return view('payments.ega-charges');
     }
 
     public function departmentalReports(){
+        if (!Gate::allows('view-departmental-reports')) {
+            abort(403);
+        }
         return view('payments.departmental-reports');
     }
 }
