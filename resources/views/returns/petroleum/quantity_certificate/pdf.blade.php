@@ -128,7 +128,7 @@
         <table class="no-border">
             <td align="left" style="width: 30%">
                 <div style="font-size: 12px">
-                    Zanzibar Revenue Board, <br>
+                    Zanzibar Revenue Authority, <br>
                     Head Office, <br>
                     P.O.Box 2072 <br>
                     Tel: 255 24 2230639/233041 <br>
@@ -138,12 +138,12 @@
                 </div>
             </td>
             <td align="center" class="header-title">
-                <img class="header-nembo" src="{{ public_path('/images/logo.jpg') }}" alt="ZRB Logo">
+                <img class="header-nembo" src="{{ public_path('/images/logo.jpg') }}" alt="ZRA Logo">
                 <div style="font-size: 12px">www.zrbrevenue.org</div>
             </td>
             <td align="right" style="width: 30%">
                 <div style="text-align: left; font-size: 12px;">
-                    Zanzibar Revenue Board, <br>
+                    Zanzibar Revenue Authority, <br>
                     Head Office, <br>
                     P.O.Box 2072 <br>
                     Tel: 255 24 2230639/233041 <br>

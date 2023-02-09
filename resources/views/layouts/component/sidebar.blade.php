@@ -956,7 +956,7 @@
                     @endcan
                     @can('zrb-bank-account-view')
                         <li class="{{ request()->is('settings/zrb-bank-accounts*') ? 'active' : '' }}">
-                            <a href="{{ route('settings.zrb-bank-accounts.index') }}">ZRB Bank Accounts</a>
+                            <a href="{{ route('settings.zrb-bank-accounts.index') }}">ZRA Bank Accounts</a>
                         </li>
                     @endcan
 

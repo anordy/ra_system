@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    ZRB Bank Accounts
+    ZRA Bank Accounts
 @endsection
 
 @section('content')

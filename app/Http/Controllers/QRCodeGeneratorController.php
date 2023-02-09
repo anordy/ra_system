@@ -23,7 +23,7 @@ class QRCodeGeneratorController extends Controller
 
         $code = '{"opType":"2","shortCode":"001001","billReference":"' . $bill->control_number . '","amount":"' .
             $bill->amount . '","billCcy":'.$bill->currency.',"billExprDt":"' . $bill->expire . '","billPayOpt":"1",
-            "billRsv01":"ZANZIBAR REVENUE BOARD|' . $name . '"}';
+            "billRsv01":"ZANZIBAR REVENUE AUTHORITY|' . $name . '"}';
 
         $result = Builder::create()
             ->writer(new PngWriter())
@@ -59,7 +59,7 @@ class QRCodeGeneratorController extends Controller
         $name = $bill->payer_name;
         $code = '{"opType":"'.$bill->payment_option.'","shortCode":"001001","billReference":"' . $bill->control_number . '","amount":"' .
             $bill->amount . '","billCcy":'.$bill->currency.',"billExprDt":"' . $bill->expire . '","billPayOpt":"1",
-            "billRsv01":"ZANZIBAR REVENUE BOARD|' . $name . '"}';
+            "billRsv01":"ZANZIBAR REVENUE AUTHORITY|' . $name . '"}';
 
         $result = Builder::create()
             ->writer(new PngWriter())

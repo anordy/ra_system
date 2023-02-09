@@ -44,7 +44,7 @@ class SendRegistrationSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $user->phone_number;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Dear {$user->fname}, You have been registered into ZRB System. Please use credentials below to Log into the system. Email: {$user->email} Password: {$code}";
+        $customer_message = "Dear {$user->fname}, You have been registered into ZRA System. Please use credentials below to Log into the system. Email: {$user->email} Password: {$code}";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

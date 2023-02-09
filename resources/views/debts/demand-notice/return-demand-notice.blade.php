@@ -163,7 +163,7 @@
                     </div>
                 </div>
                 <div class="flex-container">
-                    ZRB NO. <span class="dot">{{ $tax_return->business->zin }}{{ $tax_return->location->zin }}</span>
+                    ZRA NO. <span class="dot">{{ $tax_return->business->zin }}{{ $tax_return->location->zin }}</span>
                     <div class="txt-area">
                         <textarea name="" id="" cols="30" rows="10"></textarea>
                     </div>
@@ -184,7 +184,7 @@
 
                 <P>
                     Examination of your tax account shows that as on <span class="dot">{{ $now }}</span> a balance of {{ $tax_return->currency }}
-                    <span class="dot">{{ number_format($tax_return->outstanding_amount, 2) }}</span> was owing to Zanzibar Revenue Board. This balance is inclusive of
+                    <span class="dot">{{ number_format($tax_return->outstanding_amount, 2) }}</span> was owing to Zanzibar Revenue Authority. This balance is inclusive of
                     penalty, fine and/or fine for failure to pay assessed tax, fine, penalty, interest or raised an
                     objection to any assessment or to appeal within the time allowed under the Zanzibar appeal Act No. 1
                     of

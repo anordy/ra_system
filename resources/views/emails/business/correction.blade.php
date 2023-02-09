@@ -1,7 +1,7 @@
 @component('mail::message')
 # Hello {{ $taxpayer->first_name }},
 
-Your ZRB business registration for {{ $business->name }} requires corrections on the following area,
+Your ZRA business registration for {{ $business->name }} requires corrections on the following area,
 
 @component('mail::panel')
 {{ $message }}

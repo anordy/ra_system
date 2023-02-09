@@ -82,7 +82,7 @@
                 </div>
                 <div class="text-center text-white">
                     ©2022
-                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Board</a>.
+                    <a href="https://www.zanrevenue.org/" class="text-bold" target="_blank">Zanzibar Revenue Authority</a>.
                     All Rights Reserved.
                 </div>
             </div>

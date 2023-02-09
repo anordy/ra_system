@@ -47,8 +47,8 @@ class ZanMalipoInternalService
 
         $payload = [
             'bill_id' => $bill->id,
-            'generated_by' => 'ZRB',
-            'approved_by' => 'ZRB'
+            'generated_by' => 'ZRA',
+            'approved_by' => 'ZRA'
         ];
 
         $curl = curl_init();

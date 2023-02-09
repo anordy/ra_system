@@ -4,7 +4,7 @@
         <h6>Taxpayer & Vessel Information</h6>
         <div class="row">
             <div class="form-group col-lg-6">
-                <label class="control-label">Name of Importer/Market (ZRB No.)</label>
+                <label class="control-label">Name of Importer/Market (ZRA No.)</label>
                 <input type="text" class="form-control @error('location') is-invalid @enderror"
                     wire:model.lazy="location">
                 @error('location')
