@@ -38,7 +38,7 @@ class BusinessFileController extends Controller
 
         // Check who can access the file
         if ($file){
-            return Storage::response($file->location);
+            return Storage::disk('local')->response($file->location);
         }
 
         // If they dont meet requirements, abort
@@ -54,7 +54,7 @@ class BusinessFileController extends Controller
         $taxpayer = Taxpayer::findOrFail(decrypt($taxpayerId));
 
         if ($taxpayer->tin_location){
-            return Storage::response($taxpayer->tin_location);
+            return Storage::disk('local')->response($taxpayer->tin_location);
         }
 
         return abort(404);
