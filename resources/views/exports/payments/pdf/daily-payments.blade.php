@@ -55,7 +55,7 @@
         <thead>
             <tr>
                 <th style="text-align:center;" colspan="3">
-                    <strong>ZANZIBAR REVENUE BOARD</strong><br>
+                    <strong>ZANZIBAR Revenue Authority</strong><br>
                         @if ($vars['range_start'] == date('Y-m-d'))
                         Collections on <span> {{ date('d-M-Y') }} </span>
                         @else

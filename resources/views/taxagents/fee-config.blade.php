@@ -6,13 +6,13 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <div class="text-uppercase font-weight-bold">Duration Configuration</div>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            Duration Configuration
             <div class="card-tools">
                 @can('tax-consultant-fee-configuration-add')
-                    <button class="btn btn-info btn-sm"
+                    <button class="btn btn-primary btn-sm"
                             onclick="Livewire.emit('showModal', 'tax-agent-fee-modal')"><i
-                                class="fa fa-plus-circle"></i> Add
+                                class="bi bi-plus-circle-fill pr-1"></i> Add Duration
                     </button>
                 @endcan
 

@@ -8,7 +8,7 @@
                 <div class="row mx-4 mt-2">
 
                     <div class="col-md-12 form-group">
-                        <label for="reference_no">Responsible person ZRB Reference No.</label>
+                        <label for="reference_no">Responsible person ZRA Reference No.</label>
                         <input type="text" wire:model.lazy="reference_no" name="reference_no" id="reference_no"
                             class="form-control {{ $errors->has('reference_no') ? 'is-invalid' : '' }}">
                         @error('reference_no')

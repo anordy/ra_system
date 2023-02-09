@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Tax Types</h5>
+        <div class="card-header font-weight-bold text-uppercase bg-white">
+            Tax Types
         </div>
 
         <div class="card-body">

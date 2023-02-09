@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th style="text-align:center;" colspan="15">
-                <strong>ZANZIBAR REVENUE BOARD</strong><br>
+                <strong>ZANZIBAR Revenue Authority</strong><br>
                 <strong>Total Number of Records: {{ $records->count() }} </strong>
             </th>
         </tr>

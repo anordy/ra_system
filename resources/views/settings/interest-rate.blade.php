@@ -6,15 +6,14 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Interest Rates</h5>
+        <div class="card-header bg-white font-weight-bold text-uppercase">
+            Interest Rates
             <div class="card-tools">
                 @can('setting-interest-rate-add')
                     @if(approvalLevel(Auth::user()->level_id, 'Maker'))
-                        <button class="btn btn-info btn-sm"
+                        <button class="btn btn-primary btn-sm"
                                 onclick="Livewire.emit('showModal', 'settings.interest-rate.interest-rate-add-modal')">
-                            <i
-                                    class="fa fa-plus-circle"></i>
+                            <i class="bi bi-plus-circle-fill"></i> Add New Rate
                         </button>
                     @endif
                 @endcan

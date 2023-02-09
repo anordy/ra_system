@@ -90,7 +90,7 @@
     <div class="top align-center">
         <img src="{{ public_path() }}/images/logo.jpg" alt="ZRA Logo">
         <span style="margin-top: 8px; display: block">Zanzibar</span>
-        <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">ZANZIBAR REVENUE BOARD
+        <span style="margin-top: 8px; font-weight: bold; font-size: 18px; display: block">ZANZIBAR Revenue Authority
         </span>
         <span style="margin-bottom: 8px;margin-top: 8px; display: block">Government Bill</span>
     </div>

@@ -136,7 +136,7 @@
                             </div>
                             @if ($landLease->is_registered)
                                 <div class="col-md-3 mb-3">
-                                    <span class="font-weight-bold text-uppercase">ZRB reference no.</span>
+                                    <span class="font-weight-bold text-uppercase">ZRA reference no.</span>
                                     <p class="my-1">
                                         {{ $landLease->taxpayer->reference_no }}
                                     </p>

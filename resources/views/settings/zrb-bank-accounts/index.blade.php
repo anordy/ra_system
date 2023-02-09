@@ -1,20 +1,20 @@
 @extends('layouts.master')
 
 @section('title')
-    ZRB Bank Accounts
+    ZRA Bank Accounts
 @endsection
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">ZRB Bank Account Management</h5>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            ZRB Bank Account Management
             <div class="card-tools">
                 @can('zrb-bank-account-add')
                     @if (approvalLevel(Auth::user()->level_id, 'Maker'))
-                        <button class="btn btn-info btn-sm"
+                        <button class="btn btn-primary btn-sm"
                             onclick="Livewire.emit('showModal', 'settings.zrb-banks.zrb-bank-account-add-modal')"><i
-                                class="fa fa-plus-circle"></i>
-                            Add</button>
+                                class="bi bi-plus-circle-fill pr-1"></i>
+                            Add Bank Account</button>
                     @endif
                 @endcan
             </div>

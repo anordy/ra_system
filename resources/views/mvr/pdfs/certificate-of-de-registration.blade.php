@@ -75,7 +75,7 @@
                 <img src="{{public_path()}}/images/logo.jpg">
             </div>
             <div style="display: inline; margin-left: 170px;">
-                Zanzibar Revenue Board
+                Zanzibar Revenue Authority
             </div>
         </div>
         <div style="float: right">
@@ -151,7 +151,7 @@
            Signature
            <br>
            <br>
-           Issued by ZANZIBAR REVENUE BOARD and signed by <strong>{{strtoupper(auth()->user()->fullname())}}</strong>
+           Issued by ZANZIBAR Revenue Authority and signed by <strong>{{strtoupper(auth()->user()->fullname())}}</strong>
 
        </div>
 

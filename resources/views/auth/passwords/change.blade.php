@@ -15,7 +15,7 @@
                             </h6>
                         @else
                             <h6 class="text-info text-center">
-                                Welcome to ZRB, Since this is your first login you need to set
+                                Welcome to ZRA, Since this is your first login you need to set
                                 new password for security purposes
                             </h6>
                         @endif

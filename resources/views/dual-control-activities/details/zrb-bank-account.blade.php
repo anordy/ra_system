@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header font-weight-bold text-uppercase">Zrb Bank Account Details</div>
+    <div class="card-header font-weight-bold text-uppercase">ZRA Bank Account Details</div>
     <div class="card-body">
         <table class="table table-striped table-sm">
             <thead>

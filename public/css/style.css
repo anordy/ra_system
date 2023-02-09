@@ -38,6 +38,7 @@ a:focus {
     display: flex;
     width: 100%;
     align-items: stretch;
+    position: fixed;
 }
 
 #sidebar {
@@ -46,6 +47,19 @@ a:focus {
     background: #97363a;
     color: #fff;
     transition: all 0.3s;
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#sidebar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 #sidebar.active {
@@ -120,6 +134,9 @@ a[data-toggle="collapse"] {
     width: 100%;
     min-height: 100vh;
     transition: all 0.3s;
+    overflow-y: scroll;
+    height: 100vh;
+    /*position: fixed;*/
 }
 
 #content .top-navbar {
