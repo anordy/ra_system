@@ -73,7 +73,7 @@
                         @foreach ($return->items as $item)
                             <tr>
                                 <td>{{ $item->config->name }}</td>
-                                <td>{{ number_format($item->value) }}</td>
+                                <td>{{ number_format($item->value, 2) }}</td>
                                 @if($item->config->rate_applicable)
                                     <td>
                                         {{ $item->config->rate ?? $item->config->rate_usd }}
@@ -82,7 +82,7 @@
                                 @else
                                     <td class="bg-secondary"></td>
                                 @endif
-                                <td>{{ number_format($item->vat) }}</td>
+                                <td>{{ number_format($item->vat, 2) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
