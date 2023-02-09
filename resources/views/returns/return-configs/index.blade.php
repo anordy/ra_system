@@ -14,8 +14,8 @@
         </a>
     </div>
     <div class="card">
-        <div class="card-header ">
-            <h6 class="text-capitalize">{{$code}} return configurations</h6>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            {{$code}} return configurations
 {{--            <div class="card-tools">--}}
 {{--                <a href="{{route('settings.return-config.create', [encrypt($id), encrypt($code)])}}" class="btn btn-info btn-sm"><i class="fa fa-plus-circle"></i>--}}
 {{--                    New Configuration</a>--}}
@@ -67,7 +67,7 @@
                         <td>
                             @can('setting-return-configuration-edit')
                             <a href="{{route('settings.return-config.edit', [encrypt($id), encrypt($code),encrypt($config->id)])}}" class="btn btn-outline-success">
-                                <i class="bi bi-pencil "></i>Edit
+                                <i class="bi bi-pencil pr-1"></i>Edit
                             </a>
                             @endcan
                         </td>

@@ -6,15 +6,15 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">System Setting Category Management</h5>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            System Setting Category Management
             <div class="card-tools">
                 @can('setting-system-category-add')
                     @if (approvalLevel(Auth::user()->level_id, 'Maker'))
-                        <button class="btn btn-info btn-sm"
+                        <button class="btn btn-primary btn-sm"
                             onclick="Livewire.emit('showModal', 'settings.system-settings.system-setting-category-add-modal')"><i
-                                class="fa fa-plus-circle"></i>
-                            Add</button>
+                                class="bi bi-plus-circle-fill pr-1"></i>
+                            Add Category</button>
                     @endif
                 @endcan
             </div>

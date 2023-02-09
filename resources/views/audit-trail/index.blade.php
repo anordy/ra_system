@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <div class="text-uppercase font-weight-bold">System Audit Trail Logs</div>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            System Audit Trail Logs
         </div>
 
         <div class="card-body mt-0 p-2">

@@ -10,8 +10,8 @@
         </a>
     </div>
     <div class="card">
-        <div class="card-header ">
-            <h6 class="text-capitalize">editing {{$code}} return configurations</h6>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            editing {{$code}} return configurations
         </div>
         <div class="card-body">
             <livewire:returns.edit-return-config config_id="{{$config_id}}" taxtype_id="{{$taxtype_id}}"/>

@@ -4,8 +4,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <div class="text-uppercase font-weight-bold">Financial Months Details</div>
+        <div class="card-header font-weight-bold text-uppercase bg-white">
+            Financial Months Details
         </div>
         <div class="card-body">
             <nav class="nav nav-tabs mt-0 border-top-0">
