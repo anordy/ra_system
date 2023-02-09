@@ -122,6 +122,9 @@ trait DualControlActivityTrait
             case DualControl::API_USER:
                 return 'API User';
                 break;
+            case DualControl::VAT_TAX_TYPE:
+                return 'VAT Tax Type';
+                break;
 
             default:
                 abort(404);
