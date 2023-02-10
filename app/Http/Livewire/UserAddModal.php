@@ -40,11 +40,25 @@ class UserAddModal extends Component
     public $levels;
     public $level_id;
     public $isAdmin = false;
+    public $accessLevel = false;
+    public $adminCheck;
 
     public function mount()
     {
         $this->roles = Role::where('is_approved',1)->get();
         $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
+        $this->adminCheck = Role::where('name', Role::ADMINISTRATOR)->value('id');
+    }
+
+    public function updated($property){
+        if ($property == 'role'){
+            if ($this->role == $this->adminCheck){
+                $this->accessLevel = true;
+            } else{
+                $this->accessLevel = false;
+                $this->level_id = null;
+            }
+        }
     }
 
     protected function rules()
@@ -56,7 +70,6 @@ class UserAddModal extends Component
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'level_id' => 'required',
         ];
     }
 
@@ -72,7 +85,6 @@ class UserAddModal extends Component
         }
 
         $this->validate();
-
         //check if the application environment is local or production
         if (config('app.env') == 'local') {
             $this->password = 'password';
