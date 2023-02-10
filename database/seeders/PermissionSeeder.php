@@ -382,6 +382,11 @@ class PermissionSeeder extends Seeder
             # Manage Finances
             ['name' => 'view-taxpayer-ledgers', 'sys_module_id' => 24],
 
+            # Driver's Licence
+            ['name' => 'driver-licences-view', 'sys_module_id' => 25],
+
+            # Motor Vehicle
+            ['name' => 'motor-vehicle-view', 'sys_module_id' => 26],
         ];
 
         foreach ($data as $row) {

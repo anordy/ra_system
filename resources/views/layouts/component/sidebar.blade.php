@@ -485,8 +485,8 @@
                 </li>
             </ul>
         </li>
-
-        <li class="{{ request()->is('mvr*') ? 'active' : '' }}">
+        @can('motor-vehicles-view')
+            <li class="{{ request()->is('mvr*') ? 'active' : '' }}">
             <a href="#mvrSubmenu" data-toggle="collapse"
                aria-expanded="{{ request()->is('mvr*') ? 'true' : 'false' }}" class="dropdown-toggle">Motor Vehicle
                 Registration</a>
@@ -519,8 +519,9 @@
                 </li>
             </ul>
         </li>
-
-        <li class="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'active' : '' }}">
+        @endif
+        @can('driver-licences-view')
+            <li class="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'active' : '' }}">
             <a href="#dlSubmenu" data-toggle="collapse"
                aria-expanded="{{ request()->is('drivers-license*') || request()->is('rio*') ? 'true' : 'false' }}"
                class="dropdown-toggle">Driver's Licenses</a>
@@ -539,7 +540,7 @@
                 </li>
             </ul>
         </li>
-
+        @endif
         @can('land-lease-management')
             <li class="{{ request()->is('land-lease*') ? 'active' : '' }}">
                 <a href="#landLeaseSubmenu" data-toggle="collapse"
