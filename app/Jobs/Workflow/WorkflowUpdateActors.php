@@ -82,8 +82,8 @@ class WorkflowUpdateActors implements ShouldQueue
                     );
                 }
 
-                $task->original_operators = json_decode($place['operators']);
-                $task->operators = json_decode($operators);
+                $task->original_operators = json_encode($place['operators']);
+                $task->operators = json_encode($operators);
                 $task->save();
                 $task->actors()->delete();
                 $task->actors()->saveMany($operators_collection);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Workflow;
 
+use App\Jobs\Workflow\WorkflowUpdateActors;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Workflow;
@@ -78,6 +79,7 @@ class WorkflowPlaceUpdateModal extends Component
         try {
             $this->workflow->places = json_encode($workflowPlaces);
             $this->workflow->save();
+            dispatch( new WorkflowUpdateActors($this->workflow->id, $this->name));
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
