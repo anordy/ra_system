@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
         User::updateOrCreate([
             'fname' => "Mang'erere",
             'lname' => "Mgini",
-            'email' => "juniorshemm@gmail.com",
+            'email' => "Mangerere.Mgini@ubx.co.tz",
             'phone' => '0743317069',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
