@@ -66,7 +66,7 @@ class UserAddModal extends Component
         return [
             'fname' => 'required|min:2|alpha',
             'lname' => 'required|min:2|alpha',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email|ends_with:zanrevenue.org,egaz.go.tz,ubx.co.tz',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
