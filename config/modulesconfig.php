@@ -23,7 +23,7 @@ return [
     'sp_code' => 'SP20011',
 
     // Charges
-    'charges_inclusive' => true,
+    'charges_inclusive' => false,
 
     // API SERVER CREDENTIALS
     'api_url' => env('API_SERVER_URL'),
