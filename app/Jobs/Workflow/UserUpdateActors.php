@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UserUpdateActors implements ShouldQueue
 {
@@ -34,8 +35,10 @@ class UserUpdateActors implements ShouldQueue
      */
     public function handle()
     {
+        Log::info("Sync user to the workflow");
         $user = User::find($this->user_id);
         if ($user == null) {
+            Log::info("Updating the workflow user record not found");
             return;
         }
 
@@ -58,7 +61,7 @@ class UserUpdateActors implements ShouldQueue
                 } elseif ($row->owner == 'staff') {
                     $user_type = User::class;
                 } else {
-                    return;
+                    continue;
                 }
 
                 $data =  new WorkflowTaskOperator([
@@ -69,6 +72,7 @@ class UserUpdateActors implements ShouldQueue
                 ]);
 
                 $data->save();
+                Log::info("Workflow task ". $tasks->id. " user has been updated");
             }
         }
     }

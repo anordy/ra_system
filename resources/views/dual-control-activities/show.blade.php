@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ($result->action_detail === 'editing user role')
+                    @if (str_contains($result->action_detail, 'editing user role'))
                         @include('dual-control-activities.details.user-role')
                     @elseif ($result->controllable_type === \App\Models\DualControl::USER)
                         @include('dual-control-activities.details.user')

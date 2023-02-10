@@ -4,19 +4,10 @@ namespace App\Traits;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Jobs\Workflow\UserUpdateActors;
 use App\Models\DualControl;
 use App\Models\DualControlHistory;
-use App\Models\Role;
-use App\Models\TaPaymentConfiguration;
-use App\Models\TransactionFee;
-use App\Models\User;
-use Exception;
-use Carbon\Carbon;
-use App\Models\Audit;
-use App\Models\SystemSetting;
-use App\Models\SystemSettingCategory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 trait DualControlActivityTrait
 {
@@ -183,9 +174,13 @@ trait DualControlActivityTrait
                 
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
-                if ($data->controllable_type == DUalControl::USER) {
+                if ($data->controllable_type == DualControl::USER) {
                     $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                     $this->sendEmailToUser($update, $message);
+                }
+
+                if(str_contains($data->action_detail, 'editing user role')){
+                    dispatch(new UserUpdateActors($data->controllable_type_id));
                 }
 
             } else {
