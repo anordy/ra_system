@@ -48,7 +48,6 @@
     <livewire:taxpayers.details.zanid :kyc="$kyc" />
 @endif
 
-{{-- TODO: Allow this when immigration api has been integrated --}}
 @if ($kyc->identification->name == \App\Models\IDType::PASSPORT)
     <livewire:taxpayers.details.passport :kyc="$kyc" />
 @endif
