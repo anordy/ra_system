@@ -22,7 +22,7 @@ class BpraVerification extends Component
     public $business;
     public $matchesText = 'Match';
     public $notValidText = 'Mismatch';
-    public $bpraResponse = [];
+    public $bpraResponse;
     public $shareholders;
     public $directors;
     public $shares;
@@ -33,11 +33,11 @@ class BpraVerification extends Component
 
     public function validateBPRANumber()
     {
-        
+        $this->bpraResponse = [];
         $bpraService = new BpraInternalService;
         try {
             $this->bpraResponse = $bpraService->getData($this->business);
-            
+
             if ($this->bpraResponse['businessData']) {
                 $this->requestSuccess = true;
 

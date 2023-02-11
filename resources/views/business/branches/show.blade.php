@@ -138,6 +138,11 @@
                                 <i class="bi bi-check-circle-fill mr-1"></i>
                                 Rejected
                             </span>
+                        @elseif($location->status === \App\Models\BranchStatus::TEMP_CLOSED)
+                            <span class="badge badge-success py-1 px-2"
+                                style="border-radius: 1rem; background: #dc354559; color: #cf1c2d;; font-size: 85%">
+                                {{ __('Closed') }}
+                            </span>
                         @else
                             <span class="font-weight-bold text-info">
                                 <i class="bi bi-clock-history mr-1"></i>
