@@ -22,7 +22,7 @@ class BpraInternalService
             $payload = [
                 'registration_no' => $business->reg_no
             ];
-    
+
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $bpra_internal,
@@ -39,19 +39,30 @@ class BpraInternalService
                     $authorization
                 ),
             ));
-    
+
             $response = curl_exec($curl);
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
+
             if ($statusCode != 200) {
                 curl_close($curl);
-                throw new \Exception($response);
-                return $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                if (json_decode($response)->error_info == 200){
+                    return [
+                        'message' => 'unsuccessful',
+                        'data' => null
+                    ];
+                } else {
+                    Log::error('BPRA Something wrong: '.$response);
+                    return [
+                        'message' => 'failed',
+                        'data' => null
+                    ];
+                }
+
             }
-            
+
             curl_close($curl);
             $res = json_decode($response, true);
-              
+
 
             if ($res) {
 
@@ -82,29 +93,29 @@ class BpraInternalService
                         ];
                     }
 
-                        if ($entityData['list_type'] == 'list_shareholder') {
-                            $shareHolders[] = [
-                                'business_id' => $business->id,
-                                'country' => $entityData['country'],
-                                'birth_date' => $entityData['birth_date'],
-                                'first_name' => $entityData['first_name'],
-                                'middle_name' => $entityData['middle_name'],
-                                'last_name' => $entityData['last_name'],
-                                'gender' => $entityData['gender'],
-                                'nationality' => $entityData['nationality'],
-                                'national_id' => $entityData['national_id'],
-                                'city_name' => $entityData['city_name'],
-                                'zip_code' => $entityData['zip_code'],
-                                'first_line' => $entityData['first_line'],
-                                'second_line' => $entityData['second_line'],
-                                'third_line' => $entityData['third_line'],
-                                'email' => $entityData['email'],
-                                'mob_phone' => $entityData['mob_phone'],
-                                'entity_name' => $entityData['entity_name'],
-                                'full_address' => $entityData['full_address'],
-                                'created_at' => Carbon::now(),
-                            ];
-                        }
+                    if ($entityData['list_type'] == 'list_shareholder') {
+                        $shareHolders[] = [
+                            'business_id' => $business->id,
+                            'country' => $entityData['country'],
+                            'birth_date' => $entityData['birth_date'],
+                            'first_name' => $entityData['first_name'],
+                            'middle_name' => $entityData['middle_name'],
+                            'last_name' => $entityData['last_name'],
+                            'gender' => $entityData['gender'],
+                            'nationality' => $entityData['nationality'],
+                            'national_id' => $entityData['national_id'],
+                            'city_name' => $entityData['city_name'],
+                            'zip_code' => $entityData['zip_code'],
+                            'first_line' => $entityData['first_line'],
+                            'second_line' => $entityData['second_line'],
+                            'third_line' => $entityData['third_line'],
+                            'email' => $entityData['email'],
+                            'mob_phone' => $entityData['mob_phone'],
+                            'entity_name' => $entityData['entity_name'],
+                            'full_address' => $entityData['full_address'],
+                            'created_at' => Carbon::now(),
+                        ];
+                    }
                 }
 
                 $businessData = [
@@ -116,13 +127,13 @@ class BpraInternalService
                     'email' => $res['data']['xml']['EApplication']['group_applicant']['email'],
                 ];
 
-                return [
-                    'businessData' => $businessData, 
-                    'shareHolders' => $shareHolders, 
-                    'directors' => $directors, 
+                $data = [
+                    'businessData' => $businessData,
+                    'shareHolders' => $shareHolders,
+                    'directors' => $directors,
                     'listShareHolderShares' => $listShareHolderShares
                 ];
-                
+
             } else {
 
                 $businessData = [
@@ -133,17 +144,17 @@ class BpraInternalService
                     'mob_phone' => null,
                     'email' => null,
                 ];
-                
-                return [
-                    'businessData' => $businessData, 
-                    'shareHolders' => $shareHolders, 
-                    'directors' => $directors, 
+
+                $data = [
+                    'businessData' => $businessData,
+                    'shareHolders' => $shareHolders,
+                    'directors' => $directors,
                     'listShareHolderShares' => $listShareHolderShares
                 ];
             }
-            
+
         } else {
-            Log::error('Error On Access token Authentication from Api Server!');
+            Log::error('BPRA: Error On Access token Authentication from Api Server!');
 
             $businessData = [
                 'reg_number' => null,
@@ -153,14 +164,12 @@ class BpraInternalService
                 'mob_phone' => null,
                 'email' => null,
             ];
-
-            return [
-                'businessData' => $businessData, 
-                'shareHolders' => $shareHolders, 
-                'directors' => $directors, 
-                'listShareHolderShares' => $listShareHolderShares
-            ];
         }
+
+        return [
+            'message' => 'successful',
+            'data' => $data
+        ];
     }
-    
+
 }
