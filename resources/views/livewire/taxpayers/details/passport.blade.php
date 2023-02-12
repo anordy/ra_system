@@ -9,7 +9,8 @@
             <span class="font-weight-bold text-uppercase">Permit Number</span>
             <p class="my-1">{{ $kyc->permit_number }}</p>
         </div>
-        @if (empty($kyc->passport_verified_at))
+        {{-- TODO: Allow this when immigration integration has been done --}}
+        @if (!empty($kyc->passport_verified_at))
             <div class="col-md-4 mb-3">
                 <button wire:click="validatePassport" wire:loading.attr="disabled" class="btn btn-info btn-sm">
                     <div wire:loading wire:target="validatePassport">

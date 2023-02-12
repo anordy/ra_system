@@ -37,7 +37,7 @@ class SendBusinessUpdateApprovalSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->payload['business']->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "Your request to update business details for {$this->payload['business']->name} has been accepted.";
+        $customer_message = "Your request to update business details for {$this->payload['business']->name} has been approved.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

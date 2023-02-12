@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\v1;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Services\Api\ApiAuthenticationService;
 
@@ -53,7 +54,7 @@ class ZanIDController extends Controller
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if ($statusCode != 200) {
                 curl_close($curl);
-                throw new \Exception($response);
+                return ['data' => null, 'msg' => 'Something went wrong', 'code' => $statusCode];
             }
             curl_close($curl);
             return json_decode($response, true)['data'];
