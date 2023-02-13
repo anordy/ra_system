@@ -51,6 +51,7 @@ class CreateKYCSTable extends Migration
 
             // Biometric Enrolled
             $table->timestamp('biometric_verified_at')->nullable();
+            $table->softDeletes();
 
             $table->timestamps();
         });

@@ -41,6 +41,12 @@
         <span class="font-weight-bold text-uppercase">Physical Address</span>
         <p class="my-1">{{ $kyc->physical_address }}</p>
     </div>
+    @if ($kyc->nida_no)
+        <div class="col-md-4 mb-3">
+            <span class="font-weight-bold text-uppercase">NIDA No</span>
+            <p class="my-1">{{ $kyc->nida_no }}</p>
+        </div>     
+    @endif
 </div>
 
 
@@ -48,7 +54,6 @@
     <livewire:taxpayers.details.zanid :kyc="$kyc" />
 @endif
 
-{{-- TODO: Allow this when immigration api has been integrated --}}
 @if ($kyc->identification->name == \App\Models\IDType::PASSPORT)
     <livewire:taxpayers.details.passport :kyc="$kyc" />
 @endif
