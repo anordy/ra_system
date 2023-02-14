@@ -27,15 +27,15 @@ class BusinessSeeder extends Seeder
             "business_category_id" => 1,
             "currency_id" => 1,
             "taxpayer_id" => 1,
-            "name" => "Goodman Enterprises",
-            "trading_name" => "Goodman Enterprises Co. LTD 2023",
+            "name" => "Test Business",
+            "trading_name" => "Test Business Co. LTD 2023",
             "tin" => "543980345",
             "reg_no" => "12345",
             "owner_designation" => "Director General",
             "mobile" => "0743300900",
             "alt_mobile" => null,
-            "email" => "goodman@mailinator.com",
-            "place_of_business" => "Mazizini",
+            "email" => "test@zanrevenue.com",
+            "place_of_business" => "Main St",
             "goods_and_services_types" => "Food and drinks",
             "goods_and_services_example" => "Azam-cola and Minute maid",
             "is_own_consultant" => 1,
@@ -63,7 +63,7 @@ class BusinessSeeder extends Seeder
             "owner_phone_no" => null,
             "meter_no" => "123443",
             "taxpayer_id" => 1,
-            "name" => "Mazizini Branch",
+            "name" => "Test Branch 1",
             "is_headquarter" => 1,
             "status" => "approved",
             "tax_region_id" => 1,
@@ -89,7 +89,7 @@ class BusinessSeeder extends Seeder
             "owner_phone_no" => null,
             "meter_no" => "900900",
             "taxpayer_id" => 1,
-            "name" => "Stone Town Branch",
+            "name" => "Test Branch 2",
             "is_headquarter" => 0,
             "status" => "approved",
             "tax_region_id" => 2,
@@ -102,10 +102,10 @@ class BusinessSeeder extends Seeder
         ];
 
         $bank = [
-            "bank_id" => 5,
+            "bank_id" => 1,
             "acc_no" => "0124548904",
-            "account_type_id" => 4,
-            "branch" => "Stone Town Branch",
+            "account_type_id" => 1,
+            "branch" => "Test Branch",
             "currency_id" => 1
         ];
 

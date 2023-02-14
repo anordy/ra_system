@@ -1,8 +1,8 @@
 @component('mail::message')
-    # Hello {{$payload['taxpayerName']}},
-    
-    {{ $payload['message'] }}
+# Hello {{$payload['taxpayerName']}},
 
-    Thanks,<br>
-    {{ config('app.name') }}
+{{ $payload['message'] }}
+
+Thanks,<br>
+{{ config('app.name') }}
 @endcomponent

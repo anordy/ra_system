@@ -97,7 +97,7 @@ class Business extends Model implements Auditable
     public function consultants()
     {
         return $this->hasMany(BusinessConsultant::class)
-            ->orderByRaw("FIELD(status, 'approved', 'pending', 'rejected', 'removed')")
+            ->orderByRaw("DECODE (status, 'approved', 'pending', 'rejected', 'removed')")
             ->orderBy('created_at', 'desc')
             ->orderBy('updated_at', 'desc');
     }

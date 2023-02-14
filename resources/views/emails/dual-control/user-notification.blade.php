@@ -1,8 +1,8 @@
 @component('mail::message')
-    # Hello {{$payload['userName']}},
-    
-    {{ $payload['message'] }}
+# Hello {{$payload['userName']}},
 
-    Thanks,<br>
-    {{ config('app.name') }}
+{{ $payload['message'] }}
+
+Thanks,<br>
+{{ config('app.name') }}
 @endcomponent
