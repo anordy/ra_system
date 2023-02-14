@@ -5,7 +5,7 @@ You have been approved to be a tax consultant for {{ $payload['business']->name 
 
 Please login into your account to view more details.
 
-@component('mail::button', ['url' => 'https://uat.ubx.co.tz:8888/zrb_client/public/login', 'color' => 'primary'])
+@component('mail::button', ['url' => 'https://portalzidras.zanrevenue.org/', 'color' => 'primary'])
 Click here to Login
 @endcomponent
 

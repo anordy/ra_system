@@ -22,7 +22,7 @@ class BpraVerification extends Component
     public $business;
     public $matchesText = 'Match';
     public $notValidText = 'Mismatch';
-    public $bpraResponse = [];
+    public $bpraResponse;
     public $shareholders;
     public $directors;
     public $shares;
@@ -33,21 +33,22 @@ class BpraVerification extends Component
 
     public function validateBPRANumber()
     {
-        
+        $this->bpraResponse = [];
         $bpraService = new BpraInternalService;
         try {
-            $this->bpraResponse = $bpraService->getData($this->business);
-            
-            if ($this->bpraResponse['businessData']) {
+            $response = $bpraService->getData($this->business);
+            if ($response['message'] == 'successful') {
                 $this->requestSuccess = true;
-
+                $this->bpraResponse = $response['data'];
                 $this->directors = $this->bpraResponse['directors'];
                 $this->shareholders = $this->bpraResponse['shareHolders'];
                 $this->shares = $this->bpraResponse['listShareHolderShares'];
-            } else {
+            } else if ($response['message'] == 'unsuccessful') {
+                $this->alert('error', 'BPRA Number does not exist!');
+            }else if ($response['message'] = 'unsuccessful') {
                 $this->alert('error', 'Something went wrong, please contact the administrator for help');
             }
-            
+
         } catch (Exception $e) {
             $this->requestSuccess = false;
             DB::rollBack();
@@ -70,25 +71,67 @@ class BpraVerification extends Component
             if ($this->bpraResponse['businessData']['reg_number']) {
                 $this->business->bpra_no = $this->bpraResponse['businessData']['reg_number'];
             }
-            if ($this->bpraResponse['businessData']['entity_name']) {
-                $this->business->trading_name = $this->bpraResponse['businessData']['entity_name'];
+            if ($this->bpraResponse['businessData']['business_name']) {
+                $this->business->trading_name = $this->bpraResponse['businessData']['business_name'];
             }
             $this->business->authorities_verified_at = Carbon::now();
             $this->business->bpra_verification_status = BusinessStatus::APPROVED;
             $this->business->save();
 
             if ($this->directors) {
-                BusinessDirector::insert($this->directors);
+                foreach ($this->directors as $director){
+                    BusinessDirector::create([
+                        'business_id' => $director['business_id'],
+                        'country' => $director['country'],
+                        'birth_date' => $director['birth_date'],
+                        'first_name' => $director['first_name'],
+                        'middle_name' => $director['middle_name'],
+                        'last_name' => $director['last_name'],
+                        'gender' => $director['gender'],
+                        'nationality' => $director['nationality'],
+                        'national_id' => $director['national_id'],
+                        'city_name' => $director['city_name'],
+                        'zip_code' => $director['zip_code'],
+                        'first_line' => $director['first_line'],
+                        'second_line' => $director['second_line'],
+                        'third_line' => $director['third_line'],
+                        'email' => $director['email'],
+                        'mob_phone' => $director['mob_phone'],
+                        'created_at' => $director['created_at'],
+                    ]);
+                }
             }
-            
+
             if ($this->shareholders) {
-                BusinessShareholder::insert($this->shareholders);
+                foreach ($this->shareholders as $shareholder){
+                    BusinessShareholder::create([
+                        'business_id' => $shareholder['business_id'],
+                        'country' => $shareholder['country'],
+                        'birth_date' => $shareholder['birth_date'],
+                        'first_name' => $shareholder['first_name'],
+                        'middle_name' => $shareholder['middle_name'],
+                        'last_name' => $shareholder['last_name'],
+                        'gender' => $shareholder['gender'],
+                        'nationality' => $shareholder['nationality'],
+                        'national_id' => $shareholder['national_id'],
+                        'city_name' => $shareholder['city_name'],
+                        'zip_code' => $shareholder['zip_code'],
+                        'first_line' => $shareholder['first_line'],
+                        'second_line' => $shareholder['second_line'],
+                        'third_line' => $shareholder['third_line'],
+                        'email' => $shareholder['email'],
+                        'mob_phone' => $shareholder['mob_phone'],
+                        'entity_name' => $shareholder['entity_name'],
+                        'full_address' => $shareholder['full_address'],
+                        'created_at' => $shareholder['created_at'],
+                    ]);
+                }
             }
-            
+
             if ($this->shareholders) {
                 foreach ($this->shares as $share) {
                     $shareHolderID = BusinessShareholder::where('national_id', $share['item'])->value('id');
-    
+
                     BusinessShare::create([
                         'business_id' =>$this->business->id,
                         'share_holder_id' =>$shareHolderID,
@@ -101,7 +144,7 @@ class BpraVerification extends Component
                     ]);
                 }
             }
-             
+
             DB::commit();
             $this->alert('success', 'Bpra Verification Completed.');
         } catch (\Throwable $e) {
@@ -116,7 +159,7 @@ class BpraVerification extends Component
             DB::beginTransaction();
             $this->business->bpra_verification_status = BusinessStatus::PBRA_UNVERIFIED;
             $this->business->save();
-             
+
             DB::commit();
             $this->alert('success', 'Continue with provided data successfully.');
         } catch (\Throwable $e) {
