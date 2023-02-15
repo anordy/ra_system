@@ -43,12 +43,11 @@ class TaxAgentController extends Controller
         if (!Gate::allows('active-tax-consultant-view')) {
             abort(403);
         }
-        $id = Crypt::decrypt($id); // todo: suggestion: unless you want the value, better pass encrypted
-        $agent = TaxAgent::findOrFail($id); // todo: handle exception 404-customize to have action fallback
+        $id = Crypt::decrypt($id);
+        $agent = TaxAgent::findOrFail($id);
         return view('taxagents.active-agent-show', compact('agent', 'id'));
     }
 
-//    todo: all finds should check for nullable
     public function certificate($id)
     {
         if (!Gate::allows('active-tax-consultant-view')) {
