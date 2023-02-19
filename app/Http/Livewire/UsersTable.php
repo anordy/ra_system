@@ -161,7 +161,7 @@ class UsersTable extends DataTableComponent
 
             Column::make('Role Action', 'role.id')
                 ->format(function ($value, $row) {
-                    $value = "'".encrypt($value)."'";
+                    $value = "'".encrypt($row->id)."'";
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-user-change-role')) {
                             return <<< HTML

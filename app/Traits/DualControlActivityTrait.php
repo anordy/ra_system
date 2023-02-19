@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 trait DualControlActivityTrait
 {
+    use VerificationTrait;
     public function triggerDualControl($model, $modelId, $action, $action_detail, $old_values = null, $edited_values = null)
     {
         $payload = [
@@ -175,6 +176,7 @@ trait DualControlActivityTrait
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
                 if ($data->controllable_type == DualControl::USER) {
+                    $this->sign($update);
                     $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                     $this->sendEmailToUser($update, $message);
                 }
