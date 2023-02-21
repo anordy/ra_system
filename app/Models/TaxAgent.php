@@ -6,6 +6,7 @@ use App\Traits\WorkflowTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +14,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class TaxAgent extends Model implements Auditable
 {
-    use Notifiable, HasFactory, WorkflowTrait , \OwenIt\Auditing\Auditable;
+    use Notifiable, HasFactory, WorkflowTrait , \OwenIt\Auditing\Auditable, SoftDeletes;
 
     protected $table = 'tax_agents';
 
