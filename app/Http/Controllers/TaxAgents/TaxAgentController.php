@@ -81,7 +81,7 @@ class TaxAgentController extends Controller
             'Period: ' . $diff . ' ' . $word .
             'From: ' . "{$start_date}" . ", " .
             'To: ' . "{$end_date}" . ", " .
-            'https://uat.ubx.co.tz:8888/zrb_client/public/login';
+            'https://portalzidras.zanrevenue.org';
 
         $result = Builder::create()
             ->writer(new PngWriter())

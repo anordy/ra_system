@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Log;
 
 trait PaymentsTrait
 {
-    use ExchangeRateTrait;
+    use ExchangeRateTrait, VerificationTrait;
 
     /**
      * @param ZmBill $bill
@@ -38,6 +38,8 @@ trait PaymentsTrait
      */
     public function regenerateControlNo(ZmBill $bill): bool
     {
+        $this->verify($bill);
+        
         DB::beginTransaction();
 
         try {

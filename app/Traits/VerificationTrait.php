@@ -43,7 +43,7 @@ trait VerificationTrait
                     'signature' => $object->ci_payload
                 ]);
 
-            Log::info(json_decode($result, true)['verification'] ? 'Complete' : 'Failed');
+            Log::channel('verification')->info(json_decode($result, true)['verification'] ? 'Complete' : 'Failed');
 
             $result = json_decode($result, true)['verification'] == 'true';
 

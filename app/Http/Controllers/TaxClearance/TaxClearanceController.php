@@ -23,12 +23,15 @@ use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxClearanceRequest;
 use App\Models\Verification\TaxVerification;
+use App\Traits\VerificationTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use PDF;
 
 class TaxClearanceController extends Controller
 {
+    use VerificationTrait;
+
     public function index()
     {
         if (!Gate::allows('tax-clearance-view')) {
@@ -65,6 +68,11 @@ class TaxClearanceController extends Controller
             ->where('payment_status', '!=', ReturnStatus::COMPLETE)
             ->with('financialMonth:id,name,due_date')
             ->get();
+
+        // Verify Tax Returns/Debts
+        foreach ($tax_return_debts as $return) {
+            $this->verify($return);
+        }
 
         
         $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearance->business_location_id)
@@ -112,6 +120,11 @@ class TaxClearanceController extends Controller
             ->where('payment_status', '!=', ReturnStatus::COMPLETE)
             ->with('financialMonth:id,name,due_date')
             ->get();
+
+        // Verify Tax Returns/Debts
+        foreach ($tax_return_debts as $return) {
+            $this->verify($return);
+        }
 
         $land_lease_debts = LandLeaseDebt::where('business_location_id', $taxClearance->business_location_id)
         ->whereNotIn('status', [LeaseStatus::PAID_PARTIALLY, LeaseStatus::COMPLETE, LeaseStatus::LATE_PAYMENT, LeaseStatus::ON_TIME_PAYMENT, LeaseStatus::IN_ADVANCE_PAYMENT])
