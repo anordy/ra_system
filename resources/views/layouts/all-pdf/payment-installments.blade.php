@@ -147,7 +147,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="{{ public_path() }}/images/logo.jpg" alt="">
+            <img src="{{ public_path() }}/images/logo.png" alt="">
         </div>
         <div>
             <h3>AGREEMENT ON PAYMENT OF TAX BY INSTALLMENTS </h3>

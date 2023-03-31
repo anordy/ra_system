@@ -1,8 +1,8 @@
 <nav id="sidebar" class="mb-3">
     <div class="sidebar-header text-center pb-0">
         <h3 class="mt-2 d-flex justify-content-center align-items-center">
-            <div style="height: 38px; width: 38px; background-color: white; border-radius: 50%" class="mr-3">
-                <img src="{{ asset('images/logo.jpg') }}" class="rounded-circle" height="38px">
+            <div style="height: 38px; width: 38px; border-radius: 50%" class="mr-3">
+                <img style="height: 38px; width: 38px; object-fit: contain;" src="{{ asset('images/logo.png') }}" class="rounded-circle" height="38px">
             </div>
             ZIDRAS
         </h3>

@@ -91,7 +91,7 @@ class TaxAgentController extends Controller
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(207)
             ->margin(0)
-            ->logoPath(public_path('/images/logo.jpg'))
+            ->logoPath(public_path('/images/logo.png'))
             ->logoResizeToHeight(36)
             ->logoResizeToWidth(36)
             ->labelText('')

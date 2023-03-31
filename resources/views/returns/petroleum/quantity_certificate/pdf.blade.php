@@ -121,7 +121,7 @@
 
 <body>
     <div id="watermark">
-        <img src="{{ public_path('/images/logo.jpg') }}" height="100%" width="100%" />
+        <img src="{{ public_path('/images/logo.png') }}" height="100%" width="100%" />
     </div>
 
     <div class="text-center">
@@ -138,7 +138,7 @@
                 </div>
             </td>
             <td align="center" class="header-title">
-                <img class="header-nembo" src="{{ public_path('/images/logo.jpg') }}" alt="ZRA Logo">
+                <img class="header-nembo" src="{{ public_path('/images/logo.png') }}" alt="ZRA Logo">
                 <div style="font-size: 12px">www.zrbrevenue.org</div>
             </td>
             <td align="right" style="width: 30%">
