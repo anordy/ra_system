@@ -33,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (env('APP_ENV') === 'production') {
+            \URL::forceScheme('https');
+        }
+
         Paginator::useBootstrap();
         Livewire::component('modals', Modals::class);
         Livewire::component('drivers-license.wizard.application-initial-step', ApplicationInitialStep::class);
