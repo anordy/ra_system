@@ -2,9 +2,11 @@
 
 return [
     //SMS APIs
-    'smstestapi' => 'http://172.25.27.66:8784/fasthub/opes/messaging/api',
-    'smsliveapi' => '',
-    'smsheader' => 'ZanMalipo',
+    'sms_url' => secEnv('SMS_URL'),
+    'smsheader' => secEnv('SMS_HEADER'),
+    'sms_password' => secEnv('SMS_PASSWORD'),
+    'sms_channel' => secEnv('SMS_CHANNEL'),
+
 
     //BoT Exchange Rates
     'botexapi' => 'https://www.bot.go.tz/services/api/exrates',
@@ -26,9 +28,9 @@ return [
     'charges_inclusive' => false,
 
     // API SERVER CREDENTIALS
-    'api_url' => env('API_SERVER_URL'),
-    'api_server_username' => env('API_SERVER_USERNAME'),
-    'api_server_password' => env('API_SERVER_PASSWORD'),
+    'api_url' => secEnv('API_SERVER_URL'),
+    'api_server_username' => secEnv('API_SERVER_USERNAME'),
+    'api_server_password' => secEnv('API_SERVER_PASSWORD'),
 
     // DIP(Data Integrity Protection) Service
     'verification' => [

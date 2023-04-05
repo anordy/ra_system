@@ -5,6 +5,9 @@ namespace App\Http\Controllers\v1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\ZanMalipo\ZmCore;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class SMSController extends Controller
 {
@@ -27,13 +30,20 @@ class SMSController extends Controller
     }
 
     public function sendSMS($send_to, $source, $customer_message) {
-        $apiURL = config('modulesconfig.smstestapi');
-        $Authorization = "YD5hFDSlN6rRVlyAoPCbmlU1YS4pLm9Xa7HbAQF55Nxdqmp90DFum05t9mJAvnLn";
-
-        $data = [
-            'msisdn' => $send_to,
-            'sender' => $source,
-            'text' => $customer_message,
+        $apiURL = config('modulesconfig.sms_url');
+        
+        $messages[] = [
+            "text" => $customer_message,
+                "msisdn" => ZmCore::formatPhone($send_to),
+                "source" => $source
+        ];
+        
+        $payload = [
+            "channel" => [
+                "channel" => config('modulesconfig.sms_channel'),
+                "password" => config('modulesconfig.sms_password')
+            ],
+            "messages" => $messages
         ];
 
         $curl = curl_init();
@@ -45,7 +55,7 @@ class SMSController extends Controller
             CURLOPT_TIMEOUT => 30000,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($data),
+            CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => array(
                 "accept: application/json",
                 "content-type: application/json",
@@ -53,8 +63,14 @@ class SMSController extends Controller
         ));
 
         $response = curl_exec($curl);
-        $err = curl_error($curl);
+        if (curl_errno($curl)) {
+            $err = curl_error($curl);
+            Log::error($err);
+            curl_close($curl);
+            throw new Exception('SMS sending failed');
+        }
         curl_close($curl);
+        Log::info($response);
         return $response;
     }
 
