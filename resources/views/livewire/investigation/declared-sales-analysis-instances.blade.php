@@ -22,7 +22,7 @@
                                 <div class="card">
                                     <button class="btn collapsed" data-toggle="collapse" data-target="#collapseTaxType-{{ $location->id }}-{{ $taxType->id }}"
                                         aria-expanded="false" aria-controls="collapseTaxType-{{ $location->id }}-{{ $taxType->id }}">
-                                        <div class="card-header h6" style="color: #97363a" id="headingTwo">
+                                        <div class="card-header h6" style="color: #0080c1" id="headingTwo">
                                             <div class="d-flex flex-column">
                                                 <div>
                                                     {{ $taxType->name }}

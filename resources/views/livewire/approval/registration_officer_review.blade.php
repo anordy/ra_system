@@ -147,9 +147,9 @@
         <div class="card">
             <div class="card-header">Tax Type Configurations</div>
             <div class="card-body">
-                <div class="row">
                     @foreach ($selectedTaxTypes as $key => $value)
-                        <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-label">Tax Type</label>
                                 <select
@@ -157,7 +157,7 @@
                                     wire:model="selectedTaxTypes.{{ $key }}.tax_type_id">
                                     <option value="" selected disabled>--Select---</option>
                                     @foreach ($taxTypes as $type)
-                                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                        <option value="{{ $type->id }}" @if ($type->id === $selectedTaxTypes[$key]['tax_type_id']) disabled @endif>{{ $type->name }}</option>
                                     @endforeach
                                 </select>
                                 @error("selectedTaxTypes.{$key}.tax_type_id")
@@ -165,7 +165,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-label">Currency</label>
                                 <select
@@ -181,19 +181,19 @@
                             </div>
                         </div>
 
-                        @if ($showSubVatOptions === true)
-                            <div class="col-md-5">
+                        @if (!empty($selectedTaxTypes[$key]['tax_type_id']) && $selectedTaxTypes[$key]['tax_type_id'] == $vat_id)
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="form-label">VAT Category Type</label>
                                     <select
-                                    class="form-control @error("sub_vat_id") is-invalid @enderror"
-                                    wire:model="sub_vat_id">
+                                    class="form-control @error("selectedTaxTypes.{$key}.sub_vat_id") is-invalid @enderror"
+                                    wire:model="selectedTaxTypes.{{ $key }}.sub_vat_id">
                                         <option value="" selected disabled>--Select---</option>
                                         @foreach ($subVatOptions as $sub)
                                             <option value="{{ $sub->id }}">{{ $sub->name }}</option>
                                         @endforeach
                                     </select>
-                                @error("sub_vat_id")
+                                @error("selectedTaxTypes.{{ $key }}.sub_vat_id")
                                     <span class="text-danger error">{{ $message }}</span>
                                 @enderror
                                 </div>
@@ -241,7 +241,7 @@
                             </div>
                         @endif
 
-                        <div class="col-md-2 d-flex align-items-center">
+                        <div class="d-flex align-items-center">
                             @if ($key > 0)
                                 <button class="btn btn-danger btn-sm"
                                     wire:click.prevent="removeTaxType({{ $key }})">
@@ -249,10 +249,10 @@
                                 </button>
                             @endif
                         </div>
+                    </div>
                     @endforeach
-                </div>
             </div>
-            @if (!$showSubVatOptions && !$showLumpsumOptions)
+            @if (!$showLumpsumOptions)
                 <div class="card-footer">
                     <button class="btn text-white btn-info" wire:click.prevent="addTaxtype()">
                         <i class="bi bi-plus-square-fill"></i>
