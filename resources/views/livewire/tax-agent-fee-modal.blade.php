@@ -25,8 +25,8 @@
                             <label class="control-label">Category</label>
                             <select wire:model.defer="category" name="category" id="category" class="form-control">
                                 <option  value="">select category</option>
-                                <option value="Registration">Registration</option>
-                                <option value="Renewal">Renewal</option>
+                                <option value="Registration Fee">Registration</option>
+                                <option value="Renewal Fee">Renewal</option>
 
                             </select>
                             @error('category')
