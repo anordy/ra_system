@@ -81,9 +81,9 @@ class UserEditModal extends Component
             // Sign User
             $this->sign($this->user);
 
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user ' . $this->user->fullname() . '', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user '.$this->user->fullname().'', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE );
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
@@ -95,28 +95,25 @@ class UserEditModal extends Component
     public function mount($id)
     {
         $this->roles = Role::all();
-        $user = User::find($id);
-        if (!empty($user)) {
-            $this->user = $user;
-            $this->levels = ApprovalLevel::select('id', 'name')->get();
-            $this->fname = $user->fname;
-            $this->level_id = $user->level_id;
-            $this->lname = $user->lname;
-            $this->phone = $user->phone;
-            $this->email = $user->email;
-            $this->gender = $user->gender ?? '';
-            $this->old_values = [
-                'fname' => $this->fname,
-                'lname' => $this->lname,
-                'gender' => $this->gender,
-                'email' => $this->email,
-                'phone' => $this->phone,
-            ];
-        }
-        else{
-            Log::error('No result is found, Invalid id');
+        $user = User::find(decrypt($id));
+        if(is_null($user)){
             abort(404);
         }
+        $this->user = $user;
+        $this->levels = ApprovalLevel::select('id', 'name')->get();
+        $this->fname = $user->fname;
+        $this->level_id = $user->level_id;
+        $this->lname = $user->lname;
+        $this->phone = $user->phone;
+        $this->email = $user->email;
+        $this->gender = $user->gender ?? '';
+        $this->old_values = [
+            'fname' => $this->fname,
+            'lname' => $this->lname,
+            'gender' => $this->gender,
+            'email' => $this->email,
+            'phone' => $this->phone,
+        ];
     }
 
     public function render()

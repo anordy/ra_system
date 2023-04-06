@@ -73,10 +73,10 @@
                                     @foreach ($return->items as $item)
                                     <tr class="{{ $item->config->col_type == 'total' ? 'table-active font-weight-bolder' : ''}}">
                                         <td>{{ $item->config->name ?? 'name' }}</td>
-                                        <td>{{ $item->config->col_type =='total' ? '' : number_format($item->value) }}</td>
+                                        <td>{{ $item->config->col_type =='total' ? '' : number_format($item->value, 2) }}</td>
                                         <td>{{ $item->config->rate_type ?? '' === 'percentage' ? $item->config->rate ?? '' :
                                             $item->config->rate_usd ?? '' }}</td>
-                                        <td>{{ number_format($item->vat) }}</td>
+                                        <td>{{ number_format($item->vat, 2) }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -94,7 +94,7 @@
                                     <th>Late Payment Amount</th>
                                     <th>Interest Rate</th>
                                     <th>Interest Amount</th>
-                                    <th>Penalty Amount</th>
+                                    <th>Payable Amount</th>
                                 </tr>
                             </thead>
 
@@ -112,7 +112,7 @@
                                     <td>{{ number_format($penalty['late_payment'], 2) }}
                                         <strong>{{ $return->currency}}</strong>
                                     </td>
-                                    <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
                                     <td>{{ number_format($penalty['rate_amount'], 2) }}
                                         <strong>{{ $return->currency}}</strong>
                                     </td>

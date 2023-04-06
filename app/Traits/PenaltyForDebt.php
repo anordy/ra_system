@@ -23,7 +23,7 @@ class PenaltyForDebt
     {
         $penaltableAmount = 0;
 
-        $year = FinancialYear::where('code', $date->year)->first();
+        $year = FinancialYear::where('code', $date->year)->firstOrFail();
         $interestRate = InterestRate::where('year', $year->code)->firstOrFail()->rate;
         $latePaymentAfterRate = PenaltyRate::where('financial_year_id', $year->id)
             ->where('code', 'LPA')
@@ -59,7 +59,7 @@ class PenaltyForDebt
 
         $endDate = DebtPenalty::where('debt_id', $debtId)
             ->latest()
-            ->first()->end_date;
+            ->firstOrFail()->end_date;
 
         return [$endDate, $totalAmount];
     }
@@ -70,7 +70,19 @@ class PenaltyForDebt
      */
     public static function generateReturnsPenalty($tax_return)
     {
-        $outstanding_amount = $tax_return->outstanding_amount;
+        // Join return penalties & Debt penalties
+        $tax_return->return->penalties = $tax_return->return->penalties->concat($tax_return->penalties)->sortBy('tax_amount');
+
+        if (count($tax_return->return->penalties) > 0) {
+            $outstanding_amount = $tax_return->return->penalties->last()->penalty_amount;
+        } else {
+            $outstanding_amount = $tax_return->principal + $tax_return->infrastructure;
+        }
+
+        // If return has waiver, use the waived amount as outstanding amount
+        if ($tax_return->waiver) {
+            $outstanding_amount = $tax_return->outstanding_amount;
+        }
 
         $curr_payment_due_date = Carbon::create($tax_return->curr_payment_due_date);
 
@@ -138,8 +150,8 @@ class PenaltyForDebt
                 throw new Exception('Verification failed for tax return, please contact your system administrator for help.');
             }
 
-            $tax_return->penalty = $tax_return->penalty + $tax_return->penalties->sum('late_payment');
-            $tax_return->interest = $tax_return->interest + $tax_return->penalties->sum('rate_amount');
+            $tax_return->penalty = $tax_return->penalty + $debtPenalty->late_payment;
+            $tax_return->interest = $tax_return->interest + $debtPenalty->rate_amount;
             $tax_return->curr_payment_due_date = $end_date;
             $tax_return->total_amount = round($penaltableAmount, 2);
             $tax_return->outstanding_amount = round($penaltableAmount, 2);
@@ -161,6 +173,17 @@ class PenaltyForDebt
     public static function generateAssessmentsPenalty($assessment)
     {
         $outstanding_amount = $assessment->outstanding_amount;
+
+        if (count($assessment->penalties) > 0) {
+            $outstanding_amount = $assessment->penalties->last()->penalty_amount;
+        } else {
+            $outstanding_amount = $assessment->principal;
+        }
+
+        // If assessment has waiver, use the waived amount as outstanding amount
+        if ($assessment->waiver) {
+            $outstanding_amount = $assessment->outstanding_amount;
+        }
 
         $curr_payment_due_date = Carbon::create($assessment->curr_payment_due_date);
 
@@ -214,8 +237,8 @@ class PenaltyForDebt
                 'currency_rate_in_tz' => ExchangeRateTrait::getExchangeRate($assessment->currency)
             ]);
     
-            $assessment->penalty_amount = $assessment->penalty_amount + $assessment->penalties->sum('late_payment');
-            $assessment->interest_amount = $assessment->interest_amount + $assessment->penalties->sum('rate_amount');
+            $assessment->penalty_amount = $assessment->penalty_amount + $debtPenalty->late_payment;
+            $assessment->interest_amount = $assessment->interest_amount + $debtPenalty->rate_amount;
             $assessment->curr_payment_due_date = $end_date;
             $assessment->total_amount = round($penaltableAmount, 2);
             $assessment->outstanding_amount = round($penaltableAmount, 2);

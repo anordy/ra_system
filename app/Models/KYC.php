@@ -9,7 +9,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class KYC extends Model implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory, \OwenIt\Auditing\Auditable, SoftDeletes;
 
     protected $table = 'kycs';
 

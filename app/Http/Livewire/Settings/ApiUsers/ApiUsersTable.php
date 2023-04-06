@@ -104,6 +104,7 @@ class ApiUsersTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
+                    $value = "'".encrypt($value)."'";
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-role-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit =  <<< HTML
@@ -146,6 +147,9 @@ class ApiUsersTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $user = ApiUser::find($data->id);
+            if(is_null($user)){
+                abort(404);
+            }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', 'The updated module has not been approved already');
                 return;

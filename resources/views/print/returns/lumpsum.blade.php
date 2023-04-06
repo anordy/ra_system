@@ -3,7 +3,7 @@
     <title></title>
     <style>
         body {
-            background-image: url("{{ public_path() }}/images/logo.jpg");
+            background-image: url("{{ public_path() }}/images/logo.png");
             background-repeat: no-repeat;
             background-position: center;
             background-size:contain;
@@ -64,7 +64,7 @@
     <thead>
     <tr>
         <th style="text-align:center;" colspan="15">
-            <p class="zrb">ZANZIBAR REVENUE BOARD</p>
+            <p class="zrb">ZANZIBAR REVENUE AUTHORITY</p>
             <strong>{{ $return->taxType->name }} Tax Return</strong><br>
         </th>
     </tr>
@@ -130,7 +130,7 @@
         <th>Late Payment Amount</th>
         <th>Interest Rate</th>
         <th>Interest Amount</th>
-        <th>Penalty Amount</th>
+        <th>Payable Amount</th>
     </tr>
     </thead>
 
@@ -142,7 +142,7 @@
                 <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
                 <td>{{ number_format($penalty['late_filing'], 2) }} <strong>{{ $return->currency}}</strong></td>
                 <td>{{ number_format($penalty['late_payment'], 2) }} <strong>{{ $return->currency}}</strong></td>
-                <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
                 <td>{{ number_format($penalty['rate_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
                 <td>{{ number_format($penalty['penalty_amount'], 2)}} <strong>{{ $return->currency}}</strong></td>
             </tr>

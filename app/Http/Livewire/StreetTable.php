@@ -94,16 +94,16 @@ class StreetTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-                    $id = "'" . encrypt($value) . "'";
+                    $value = "'".encrypt($value)."'";
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-street-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'street-edit-modal',$id)"><i class="fa fa-edit"></i> </button>
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'street-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                             HTML;
                         }
                         if (Gate::allows('setting-street-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<<HTML
-                                <button class="btn btn-danger btn-sm" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                             HTML;
                         }
                     }
@@ -118,7 +118,7 @@ class StreetTable extends DataTableComponent
         if (!Gate::allows('setting-ward-delete')) {
             abort(403);
         }
-
+        $id = decrypt($id);
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
@@ -139,12 +139,7 @@ class StreetTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $street = Street::find(decrypt($data->id));
-            if (empty($street))
-            {
-                $this->alert('error', 'The selected street is not found');
-                return;
-            }
+            $street = Street::find($data->id);
             if ($street->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;

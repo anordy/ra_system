@@ -96,7 +96,11 @@ class ISIC1Table extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            ISIC1::findOrFail($data->id)->delete();
+            $isic1 = ISIC1::find($data->id);
+            if(is_null($isic1)){
+                abort(404);
+            }
+            $isic1->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

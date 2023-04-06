@@ -106,7 +106,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="{{ public_path() }}/images/logo.jpg" alt="">
+            <img src="{{ public_path() }}/images/logo.png" alt="">
         </div>
         <div>
             <P>Revenue and Debt Managment Unit</P>
@@ -122,7 +122,7 @@
                 <thead>
                     <tr>
                         <th class="w-20">Period</th>
-                        <th class="w-20">ZRB NO. </th>
+                        <th class="w-20">ZRA NO. </th>
                         <th class="w-20">Name of Taxpayer </th>
                         <th class="w-20">Total Amount </th>
                         <th class="w-20">Status of Compliance</th>

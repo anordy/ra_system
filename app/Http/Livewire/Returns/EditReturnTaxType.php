@@ -25,8 +25,8 @@ class EditReturnTaxType extends Component
 
 
     protected $rules = [
-        'name' => 'required',
-        'gfs_code' => 'required',
+        'name' => 'required|strip_tag',
+        'gfs_code' => 'required|strip_tag',
     ];
 
     public function mount($taxtype_id)

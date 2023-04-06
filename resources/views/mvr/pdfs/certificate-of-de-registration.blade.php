@@ -72,15 +72,15 @@
     <div class="header">
         <div class="title1" style="float: left">
             <div  class="logo" style="float: left">
-                <img src="{{public_path()}}/images/logo.jpg">
+                <img src="{{public_path()}}/images/logo.png">
             </div>
             <div style="display: inline; margin-left: 170px;">
-                Zanzibar Revenue Board
+                Zanzibar Revenue Authority
             </div>
         </div>
         <div style="float: right">
             <div class="title1">
-                Bodi ya Mapato Zanzibar
+                Mamlaka ya Mapato Zanzibar
             </div>
             <div style="text-align: right; padding-right: 16px">
                 Date: {{\Carbon\Carbon::parse($request->certificate_date)->format('d M,Y')}}
@@ -151,7 +151,7 @@
            Signature
            <br>
            <br>
-           Issued by ZANZIBAR REVENUE BOARD and signed by <strong>{{strtoupper(auth()->user()->fullname())}}</strong>
+           Issued by ZANZIBAR Revenue Authority and signed by <strong>{{strtoupper(auth()->user()->fullname())}}</strong>
 
        </div>
 

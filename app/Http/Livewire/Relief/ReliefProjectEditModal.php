@@ -21,15 +21,17 @@ class ReliefProjectEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_projects,name,'.$this->reliefProjectSection->id.',id',
-            'description' => 'required',
+            'name' => 'required|unique:relief_projects,name,'.$this->reliefProjectSection->id.',id|strip_tag',
+            'description' => 'required|strip_tag',
         ];
     }
 
     public function mount($id)
     {
-//        todo: encrypt id
         $data = ReliefProject::find(decrypt($id));
+        if (is_null($data)){
+            abort(404, 'Relief project not found.');
+        }
         $this->reliefProjectSection = $data;
         $this->name = $data->name;
         $this->description = $data->description;

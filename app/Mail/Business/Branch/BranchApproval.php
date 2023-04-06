@@ -30,6 +30,6 @@ class BranchApproval extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.business.branch.approved')->subject("ZRB Branch Approved - " . strtoupper($this->payload['branch']->business->name));
+        return $this->markdown('emails.business.branch.approved')->subject("ZRA Branch Approved - " . strtoupper($this->payload['branch']->business->name));
     }
 }

@@ -15,8 +15,7 @@ class ReportPreviewTable extends DataTableComponent
 {
     use LivewireAlert, ReturnReportTrait;
 
-    public $parameters;
-    public $lumpsump;
+    public $parameters, $lumpsump;
 
     public function mount($parameters)
     {
@@ -66,10 +65,10 @@ class ReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("Reporting Month")
-                ->searchable()
-                ->sortable()
-                ->label(fn($row) => $row->tax_type_id == $this->lumpsump->id ? LumpSumReturn::where('id', $row->return_id)->first()->quarter_name : $row->financialMonth->name ?? ''),
+            // Column::make("Reporting Month")
+            //     ->searchable()
+            //     ->sortable()
+            //     ->label(fn($row) => $row->tax_type_id == $this->lumpsump->id ? LumpSumReturn::where('id', $row->return_id)->first()->quarter_name : $row->financialMonth->name ?? ''),
 
             Column::make("Filed By")
                 ->searchable()
@@ -80,8 +79,6 @@ class ReportPreviewTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
                 
-                // ->label(fn($row) => $row->currency ?? ''),
-
             Column::make("Principal Amount",'principal')
                 ->searchable()
                 ->sortable()
@@ -127,10 +124,10 @@ class ReportPreviewTable extends DataTableComponent
                     }
                 ),
 
-            Column::make("Filing Due Date")
+            Column::make("Filing Due Date", 'filing_due_date')
                 ->searchable()
                 ->sortable()
-                ->label(fn($row) => date('M, d Y', strtotime($row->filing_due_date)) ?? ''),
+                ->format(fn($value) =>  $value->toDateString()),
 
             Column::make("Filing Status", "id")
                 ->searchable()

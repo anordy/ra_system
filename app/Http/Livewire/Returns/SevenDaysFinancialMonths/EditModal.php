@@ -28,7 +28,7 @@ class EditModal extends Component
     public function mount($id)
     {
         $this->years = FinancialYear::query()->orderByDesc('id')->get();
-        $this->edited_month = SevenDaysFinancialMonth::query()->findOrFail($id);
+        $this->edited_month = SevenDaysFinancialMonth::query()->findOrFail(decrypt($id));
         $this->day = (int)date('m', strtotime($this->edited_month->due_date));
         $this->month_number = $this->edited_month->number;
         $this->year = $this->edited_month->financial_year_id;
@@ -43,9 +43,9 @@ class EditModal extends Component
     public function rules()
     {
         return [
-            'year' => 'required',
-            'month_number' => 'required',
-            'day' => 'required'
+            'year' => 'required|strip_tag',
+            'month_number' => 'required|strip_tag',
+            'day' => 'required|strip_tag'
         ];
     }
 

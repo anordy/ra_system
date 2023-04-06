@@ -34,7 +34,6 @@ class TaxpayerAmendmentNotificationEmail implements ShouldQueue
      */
     public function handle()
     {
-        //
         if ($this->payload['email']) {
             Mail::to($this->payload['email'])->send(new AmendmentNotification($this->payload));
         } else {

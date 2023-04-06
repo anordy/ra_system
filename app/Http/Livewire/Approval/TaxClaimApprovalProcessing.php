@@ -177,11 +177,14 @@ class TaxClaimApprovalProcessing extends Component
         if ($this->checkTransition('accepted')) {
             $this->subject->status = TaxClaimStatus::APPROVED;
             $this->subject->save();
-            $credit = TaxCredit::where('claim_id', $this->subject->id)->first();
+            $credit = TaxCredit::where('claim_id', $this->subject->id)->firstOrFail();
             $credit->status = TaxClaimStatus::APPROVED;
             $credit->save();
 
-            $claim = TaxClaim::query()->find($this->subject->id);
+            $claim = TaxClaim::query()->findOrFail($this->subject->id);
+            if(is_null($claim)){
+                abort(404);
+            }
             $taxpayer = $claim->taxpayer;
             
             $taxpayer->notify(new DatabaseNotification(
@@ -212,7 +215,7 @@ class TaxClaimApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', $e->getMessage());
+            $this->alert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
 
@@ -223,7 +226,7 @@ class TaxClaimApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         if ($this->checkTransition('rejected')) {
@@ -241,7 +244,10 @@ class TaxClaimApprovalProcessing extends Component
             return;
         }
 
-        $claim = TaxClaim::query()->find($this->subject->id);
+        $claim = TaxClaim::query()->findOrFail($this->subject->id);
+        if(is_null($claim)){
+            abort(404);
+        }
         $taxpayer = $claim->taxpayer;
 
         $emailPayload = [

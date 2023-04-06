@@ -35,7 +35,7 @@ class ApproveOwnershipTransfer extends Component
     protected function rules()
     {
         return [
-            'transfer_category_id' => 'required',
+            'transfer_category_id' => 'required|numeric',
         ];
     }
 

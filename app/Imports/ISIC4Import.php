@@ -31,7 +31,7 @@ class ISIC4Import implements ToCollection, WithHeadingRow, WithValidation, Skips
                 if ($validator->fails()) {
                     throw new Exception('Correct the excel');
                 }
-                $isic3Id = ISIC3::where('code',$row['il3_code'])->first()->id;
+                $isic3Id = ISIC3::where('code',$row['il3_code'])->firstOrFail()->id;
                 ISIC4::create([
                     'code' => $row['code'],
                     'description' => $row['description'],

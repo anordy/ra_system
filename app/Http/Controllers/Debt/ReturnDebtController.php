@@ -92,7 +92,7 @@ class ReturnDebtController extends Controller
         }     
         $debtId = decrypt($debtId);
         $tax_return = TaxReturn::findOrFail($debtId);
-        $tax_return->return->penalties = $tax_return->return->penalties->merge($tax_return->penalties)->sortBy('penalty_amount');
+        $tax_return->return->penalties = $tax_return->return->penalties->concat($tax_return->penalties)->sortBy('penalty_amount');
         return view('debts.returns.show', compact('tax_return'));
     }
 
@@ -119,7 +119,7 @@ class ReturnDebtController extends Controller
     public function getAttachment($fileId)
     {
         $file = DebtWaiverAttachment::findOrFail(decrypt($fileId));
-        return Storage::response($file->file_path);
+        return Storage::disk('local')->response($file->file_path);
     }
     
 }

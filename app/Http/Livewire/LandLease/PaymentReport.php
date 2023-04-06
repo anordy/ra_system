@@ -59,6 +59,9 @@ class PaymentReport extends Component
 
         //get options for years
         $optionStartYear = intval(FinancialYear::first()->code);
+        if (!$optionStartYear){
+            abort('404', 'Start year not found.');
+        }
         $this->optionYears = range($optionStartYear, date('Y'));
 
         //add All to year options

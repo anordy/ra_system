@@ -89,7 +89,7 @@
                             <div class="col-md-4 mb-3">
                                 <span class="font-weight-bold text-uppercase">Tax Clearance Pdf</span>
                                 <div class="my-1">
-                                    <a href="{{ route('tax-clearance.certificate', encrypt($taxClearance->id)) }}"
+                                    <a target="_blank" href="{{ route('tax-clearance.certificate', encrypt($taxClearance->id)) }}"
                                         class="btn btn-info btn-sm">
                                         <i class="bi bi-download mr-1"></i>
                                         Download

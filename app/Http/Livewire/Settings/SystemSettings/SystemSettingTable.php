@@ -53,10 +53,11 @@ class SystemSettingTable extends DataTableComponent
                 ->searchable(),
             Column::make('Unit', 'unit')
                 ->format(function ($value, $row) {
-                    return $row->value . ' ' . $row->unit;
+                    return <<<HTML
+                            $row->value  (<span class="font-italic text-muted pr-1"> $row->unit</span>)
+                        HTML;
                 })
-                ->sortable()
-                ->searchable(),
+                ->html(),
             Column::make('Description', 'description')
                 ->sortable()
                 ->searchable(),

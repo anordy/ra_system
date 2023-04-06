@@ -6,7 +6,6 @@
 
     <IfModule mod_headers.c>
         Header set X-XSS-Protection "1; mode=block"
-        Header always append X-Frame-Options SAMEORIGIN
         Header set X-Content-Type-Options nosniff
         Header unset X-Powered-By
     </IfModule>
@@ -37,6 +36,7 @@
     RewriteRule .* - [F]
 
 </IfModule>
+
 <IfModule mod_env.c>
     SetEnv CONFIGKEY "1234567890123456"
 </IfModule>

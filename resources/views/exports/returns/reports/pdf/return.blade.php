@@ -4,7 +4,7 @@
     <title></title>
     <style>
         body {
-            background-image: url("{{ public_path() }}/images/logo.jpg");
+            background-image: url("{{ public_path() }}/images/logo.png");
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -58,14 +58,12 @@
         <thead>
             <tr>
                 <th style="text-align:center;" colspan="15">
-                    <strong>ZANZIBAR REVENUE BOARD</strong><br>
+                    <strong>ZANZIBAR Revenue Authority</strong><br>
                     {{-- <strong>{{ $title }}</strong><br> --}}
                     <strong>Report of {{ $parameters['type'] == 'Filing' ? $parameters['filing_report_type'] :
                         $parameters['payment_report_type'] }} for {{ $parameters['tax_type_name'] }} </strong><br>
-                    @if ($parameters['dates']['startDate'] != null)
-                    <strong>From {{ date("M, d Y", strtotime($parameters['dates']['from'])) }} To {{ date("M, d Y",
-                        strtotime($parameters['dates']['to'])) }} </strong><br>
-                    @endif
+                    <strong>From {{ date("M, d Y", strtotime($parameters['range_start'])) }} To {{ date("M, d Y",
+                        strtotime($parameters['range_end'])) }} </strong><br>
 
                     <strong>Tax Regions :
                         @foreach ($parameters['tax_regions'] as $t=>$id)

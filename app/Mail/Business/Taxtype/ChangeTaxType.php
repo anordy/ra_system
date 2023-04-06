@@ -2,6 +2,7 @@
 
 namespace App\Mail\Business\Taxtype;
 
+use App\Models\SystemSetting;
 use PDF;
 use App\Models\TaxType;
 use Illuminate\Bus\Queueable;
@@ -41,7 +42,7 @@ class ChangeTaxType extends Mailable
     {
         $business_locations = $this->payload['tax_change']->business->locations;
 
-        $email = $this->markdown('emails.business.taxtypes.change')->subject("ZRB Change Tax Type Request - " . strtoupper($this->payload['tax_change']->business->name));
+        $email = $this->markdown('emails.business.taxtypes.change')->subject("Zanzibar Revenue Authority(ZRA) Change Tax Type Request - " . strtoupper($this->payload['tax_change']->business->name));
 
         // $attachments is an array with file paths of attachments
         if (!empty($business_locations)) {
@@ -50,6 +51,9 @@ class ChangeTaxType extends Mailable
                 if ($location->status == 'approved') {
                     $taxTypeId = $this->payload['tax_change']->to_tax_type_id;
                     $tax = TaxType::find($taxTypeId);
+                    if(is_null($tax)){
+                        abort(404);
+                    }
                     $taxType = BusinessTaxType::where('business_id', $location->business->id)->where('tax_type_id', $taxTypeId)->firstOrFail();
 
                     $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
@@ -67,7 +71,7 @@ class ChangeTaxType extends Mailable
                         ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
                         ->size(207)
                         ->margin(0)
-                        ->logoPath(public_path('/images/logo.jpg'))
+                        ->logoPath(public_path('/images/logo.png'))
                         ->logoResizeToHeight(36)
                         ->logoResizeToWidth(36)
                         ->labelText('')
@@ -78,7 +82,10 @@ class ChangeTaxType extends Mailable
 
                     $dataUri = $result->getDataUri();
 
-                    $pdf = PDF::loadView('business.tax-change-certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber'));
+                    $signaturePath = SystemSetting::certificatePath();
+                    $commissinerFullName = SystemSetting::commissinerFullName();
+
+                    $pdf = PDF::loadView('business.tax-change-certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber', 'signaturePath', 'commissinerFullName'));
 
                     $pdf->setPaper('a4', 'portrait');
                     $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);

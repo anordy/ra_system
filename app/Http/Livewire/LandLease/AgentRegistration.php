@@ -100,7 +100,7 @@ class AgentRegistration extends Component
     }
 
     public function lookup(){
-        $this->taxpayer = Taxpayer::query()->where('reference_no',$this->taxpayerRefNo)->first();
+        $this->taxpayer = Taxpayer::query()->where('reference_no',$this->taxpayerRefNo)->firstOrFail();
         $this->lookup_fired = true;
     }
 }

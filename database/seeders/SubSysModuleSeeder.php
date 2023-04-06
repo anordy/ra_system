@@ -37,7 +37,7 @@ class SubSysModuleSeeder extends Seeder
             ['id' => 19, 'code' => 'tax-consultant-fees', 'name' => 'Tax consultant fees', 'sysmodule_id'=>18],
             ['id' => 20, 'code' => 'system-setting-categories', 'name' => 'System setting categories', 'sysmodule_id'=>18],
             ['id' => 21, 'code' => 'system-settings', 'name' => 'System settings', 'sysmodule_id'=>18],
-            ['id' => 22, 'code' => 'zrb-bank-accounts', 'name' => 'ZRB bank accounts', 'sysmodule_id'=>18],
+            ['id' => 22, 'code' => 'zrb-bank-accounts', 'name' => 'ZRA bank accounts', 'sysmodule_id'=>18],
 
         ];
         foreach ($data as $row) {

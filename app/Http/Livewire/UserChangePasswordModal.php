@@ -20,6 +20,7 @@ class UserChangePasswordModal extends Component
     public $password;
     public $password_confirmation;
     public $passwordStrength = 0;
+    public $user;
 
 
     protected function rules()
@@ -52,12 +53,9 @@ class UserChangePasswordModal extends Component
 
     public function mount($id)
     {
-        $user = User::find(decrypt($id));
-        if (!empty($user)) {
-            $this->user = $user;
-        } else {
-            Log::error('No result is found, Invalid id');
-            abort(404);
+        $this->user = User::find(decrypt($id));
+        if (is_null($this->user)){
+            abort(404, 'User not found.');
         }
     }
 

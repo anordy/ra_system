@@ -27,7 +27,8 @@
         @endif
     </div>
 
-    @if ($is_verified_triggered && $zanid_data['data'] != null)
+    @if ($is_verified_triggered && $zanid_data != null)
+        @if ($zanid_data['data'] !== null)
         <hr>
         <div class="row">
             <div class="col-md-11">
@@ -121,7 +122,7 @@
                             wire:target="rejectIncomingData"></i>
                         Reject
                     </button>
-                    <button class="btn btn-primary rounded-0 btn-sm ml-2" onclick="Livewire.emit('showModal', 'kyc.kyc-amendment-request-add-modal', {{$kyc->id}})">
+                    <button class="btn btn-primary rounded-0 btn-sm ml-2" onclick="Livewire.emit('showModal', 'kyc.kyc-amendment-request-add-modal', '{{ encrypt($kyc->id) }}')">
                         <i class="bi bi-pen mr-1"></i> Amend Kyc Details
                     </button>
                     <button class="btn btn-success ml-2" wire:click="acceptIncomingData" wire:loading.attr="disabled">
@@ -133,16 +134,32 @@
                 </div>
             </div>
         @endif
-    @elseif($is_verified_triggered && $zanid_data['data'] == null)
+        @else
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <div class="row">
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Error Code</span>
-                    <p class="my-1">{{ $zanid_data['code'] ?? '' }}</p>
+                    <p class="my-1">{{ $zanid_data['code'] ?? '500' }}</p>
                 </div>
                 <div class="col-md-4">
                     <span class="font-weight-bold text-uppercase">Message</span>
-                    <p class="my-1">{{ $zanid_data['msg'] ?? '' }}</p>
+                    <p class="my-1">{{ $zanid_data['msg'] ?? 'Something went wrong' }}</p>
+                </div>
+            </div>
+        </div>
+        @endif
+    @endif
+
+    @if($is_verified_triggered && $zanid_data == null)
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="font-weight-bold text-uppercase">Error Code</span>
+                    <p class="my-1">{{ $zanid_data['code'] ?? '500' }}</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="font-weight-bold text-uppercase">Message</span>
+                    <p class="my-1">{{ $zanid_data['msg'] ?? 'Something went wrong' }}</p>
                 </div>
             </div>
         </div>

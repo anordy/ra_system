@@ -39,6 +39,8 @@ class SysModuleSeeder extends Seeder
             ['id' => 22, 'code' => 'payment-installment', 'name' => 'Payment By Installment'],
             ['id' => 23, 'code' => 'relief-managements', 'name' => 'Relief Management'],
             ['id' => 24, 'code' => 'finance-management', 'name' => 'Manage Finance'],
+            ['id' => 25, 'code' => 'driver-licence-management', 'name' => 'Manage Driver licencing'],
+            ['id' => 26, 'code' => 'motor-vehicles-management', 'name' => 'Manage Motor Vehicles'],
 
         ];
         foreach ($data as $row) {

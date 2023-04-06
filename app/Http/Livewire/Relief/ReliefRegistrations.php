@@ -85,10 +85,10 @@ class ReliefRegistrations extends Component
     protected function rules()
     {
         return [
-            'supplier' => 'required',
-            'supplierLocation' => 'required',
-            'projectSection' => 'required',
-            'project' => 'required',
+            'supplier' => 'required|strip_tag',
+            'supplierLocation' => 'required|strip_tag',
+            'projectSection' => 'required|strip_tag',
+            'project' => 'required|strip_tag',
             'items.*.name' => 'required',
             // 'items.*.description' => 'required',
             'items.*.quantity' => 'required|numeric',
@@ -142,7 +142,7 @@ class ReliefRegistrations extends Component
                     $reliefDocument = ReliefAttachment::create([
                         'relief_id' => $relief->id,
                         'file_path' => $documentPath,
-                        'file_name' => $attachment['name'], // todo: do not store original file name (security concerns), sanitize or use a unique ID
+                        'file_name' => $attachment['name'],
                     ]);
                 }
             }
@@ -188,9 +188,12 @@ class ReliefRegistrations extends Component
             if ($this->supplier == "") {
                 $this->optionSupplierLocations = null;
             } else {
-//                todo: select only the columns you need
-                $this->optionSupplierLocations = Business::find($this->supplier)->locations;
-                $this->supplierLocation = $this->optionSupplierLocations->first()->id;
+                $this->optionSupplierLocations = Business::select('id')->find($this->supplier)->locations;
+                $supplierLocation = $this->optionSupplierLocations->first();
+                if (is_null($supplierLocation)){
+                    abort(404);
+                }
+                $this->supplierLocation = $supplierLocation->id;
             }
         }
 
@@ -200,8 +203,16 @@ class ReliefRegistrations extends Component
                 $this->rate = null;
             } else {
                 $this->optionProjects = ReliefProjectList::where('project_id', $this->projectSection)->get();
-                $this->project = $this->optionProjects->first()->id;
-                $this->rate = $this->optionProjects->first()->rate;
+                $project = $this->optionProjects->firstOrFail();
+                if (is_null($project)){
+                    abort(404);
+                }
+                $this->project = $project->id;
+                $projectRate = $this->optionProjects->firstOrFail();
+                if (is_null($projectRate)){
+                    abort(404);
+                }
+                $this->rate = $projectRate->rate;
             }
             $this->calculateTotal();
         }
@@ -210,7 +221,7 @@ class ReliefRegistrations extends Component
             if ($this->project == '') {
                 $this->rate = null;
             } else {
-                $this->rate = ReliefProjectList::find($this->project)->rate;
+                $this->rate = ReliefProjectList::findOrFail($this->project)->rate;
             }
             $this->calculateTotal();
         }
@@ -220,7 +231,6 @@ class ReliefRegistrations extends Component
     {
         $this->items[] = [
             'name' => '',
-            // 'description' => '',
             'quantity' => '',
             'unit' => '',
             'costPerItem' => '',

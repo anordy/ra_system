@@ -26,9 +26,9 @@ class CountryEditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|min:2|unique:countries,code,'.$this->country->id.',id',
-            'name' => 'required|min:2|unique:countries,name,'.$this->country->id.',id',
-            'nationality' => 'required|min:2|unique:countries,nationality,'.$this->country->id.',id',
+            'code' => 'required|strip_tag|min:2|unique:countries,code,'.$this->country->id.',id',
+            'name' => 'required|strip_tag|min:2|unique:countries,name,'.$this->country->id.',id',
+            'nationality' => 'required|strip_tag|min:2|unique:countries,nationality,'.$this->country->id.',id',
         ];
     }
 
@@ -63,6 +63,9 @@ class CountryEditModal extends Component
     {
         $id = decrypt($id);
         $this->country = Country::find($id);
+        if(is_null($this->country)){
+            abort(404);
+        }
         $this->code = $this->country->code;
         $this->name = $this->country->name;
         $this->nationality = $this->country->nationality;

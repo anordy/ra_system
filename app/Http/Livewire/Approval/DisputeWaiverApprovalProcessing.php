@@ -35,14 +35,20 @@ class DisputeWaiverApprovalProcessing extends Component
     public $penaltyPercent, $penaltyAmount, $penaltyAmountDue, $interestAmountDue;
     public $interestPercent, $interestAmount, $dispute, $assesment, $total, $principal_amount_due;
     public $natureOfAttachment, $noticeReport, $settingReport;
-    public $principal, $penalty, $interest;
+    public $principal, $penalty, $interest, $assessment;
 
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
         $this->modelId = decrypt($modelId);
         $this->dispute = Dispute::find($this->modelId);
+        if(is_null($this->dispute)){
+            abort(404);
+        }
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+        if(is_null($this->assessment)){
+            abort(404);
+        }
         $this->penalty = $this->assessment->penalty_amount;
         $this->interest = $this->assessment->interest_amount;
         $this->principal = $this->assessment->principal_amount;
@@ -81,7 +87,6 @@ class DisputeWaiverApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $taxType = $this->subject->taxType;
-        $this->taxTypes = TaxType::where('code', 'disputes')->first();
 
         if ($this->checkTransition('objection_manager_review')) {
 
@@ -96,7 +101,7 @@ class DisputeWaiverApprovalProcessing extends Component
                 $disputeReport = $this->disputeReport->store('waiver_report', 'local');
             }
 
-            $dispute = Dispute::find($this->modelId);
+            $dispute = Dispute::findOrFail($this->modelId);
 
             DB::beginTransaction();
             try {
@@ -182,7 +187,7 @@ class DisputeWaiverApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required',
+            'comments' => 'required|strip_tag',
         ]);
 
         try {

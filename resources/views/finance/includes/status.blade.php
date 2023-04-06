@@ -21,7 +21,7 @@
         <span class="badge badge-success py-1 px-2"
             style="border-radius: 1rem; background: #60a5fa; color: #1d4ed8; font-size: 85%">
             <i class="bi bi-check-circle-fill mr-1"></i>
-            Control number generated'
+            Control number generated
         </span>
     @elseif($value == \App\Models\Returns\ReturnStatus::CN_GENERATION_FAILED)
         <span class="badge badge-success py-1 px-2"

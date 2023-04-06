@@ -27,15 +27,15 @@ class BusinessSeeder extends Seeder
             "business_category_id" => 1,
             "currency_id" => 1,
             "taxpayer_id" => 1,
-            "name" => "Goodman Enterprises",
-            "trading_name" => "Goodman Enterprises Co. LTD 2023",
+            "name" => "Test Business",
+            "trading_name" => "Test Business Co. LTD 2023",
             "tin" => "543980345",
             "reg_no" => "12345",
             "owner_designation" => "Director General",
             "mobile" => "0743300900",
             "alt_mobile" => null,
-            "email" => "goodman@mailinator.com",
-            "place_of_business" => "Mazizini",
+            "email" => "test@zanrevenue.com",
+            "place_of_business" => "Main St",
             "goods_and_services_types" => "Food and drinks",
             "goods_and_services_example" => "Azam-cola and Minute maid",
             "is_own_consultant" => 1,
@@ -63,12 +63,13 @@ class BusinessSeeder extends Seeder
             "owner_phone_no" => null,
             "meter_no" => "123443",
             "taxpayer_id" => 1,
-            "name" => "Mazizini Branch",
+            "name" => "Test Branch 1",
             "is_headquarter" => 1,
             "status" => "approved",
             "tax_region_id" => 1,
             "zin" => 1,
             "date_of_commencing" => "2022-01-01",
+            "effective_date" => "2022-01-01",
             "pre_estimated_turnover" => 1200000,
             "post_estimated_turnover" => 340000,
             "approved_on"=> Carbon::now()
@@ -88,22 +89,23 @@ class BusinessSeeder extends Seeder
             "owner_phone_no" => null,
             "meter_no" => "900900",
             "taxpayer_id" => 1,
-            "name" => "Stone Town Branch",
+            "name" => "Test Branch 2",
             "is_headquarter" => 0,
             "status" => "approved",
             "tax_region_id" => 2,
             "zin" => 123,
             "date_of_commencing" => "2022-07-01",
+            "effective_date" => "2022-07-01",
             "pre_estimated_turnover" => 45000000,
             "post_estimated_turnover" => 20000000,
             "approved_on"=> Carbon::now()
         ];
 
         $bank = [
-            "bank_id" => 5,
+            "bank_id" => 1,
             "acc_no" => "0124548904",
-            "account_type_id" => 4,
-            "branch" => "Stone Town Branch",
+            "account_type_id" => 1,
+            "branch" => "Test Branch",
             "currency_id" => 1
         ];
 
@@ -115,10 +117,14 @@ class BusinessSeeder extends Seeder
             $business->locations()->create($location_two);
             $business->banks()->create($bank);
 
-            $taxTypes = TaxType::where('category', 'main')->pluck('id')->toArray();
+            $taxTypes = TaxType::select('id', 'code')->where('category', 'main')->get();
 
             foreach ($taxTypes as $tax) {
-                BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax, "currency" => "TZS"]);
+                if ($tax->code == TaxType::VAT) {
+                    BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax->id, "currency" => "TZS", "sub_vat_id" =>  2]);
+                } else {
+                    BusinessTaxType::create(["business_id" => $business->id,"tax_type_id" => $tax->id, "currency" => "TZS"]);
+                }
             }
 
             DB::commit();

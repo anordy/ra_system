@@ -26,7 +26,7 @@ class ReliefMinistriesAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_ministries,name',
+            'name' => 'required|unique:relief_ministries,name|strip_tag',
             'type' => 'required',
         ];
     }

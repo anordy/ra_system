@@ -31,7 +31,13 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
         $day = date('Y-m-d');
         $day = date('F', strtotime($day));
         $year = FinancialYear::query()->where('code', date('Y'))->first();
+        if (is_null($year)){
+            abort(404, 'Financial year not found');
+        }
         $today = SevenDaysFinancialMonth::query()->where('financial_year_id', $year->id)->where('name', $day)->first();
+        if (is_null($today)){
+            abort(404, 'Financial year not found');
+        }
         $this->today = $today->id;
         return SevenDaysFinancialMonth::query()->orderBy('seven_days_financial_months.id', 'desc');
     }
@@ -83,6 +89,7 @@ class SevenDaysFinancialMonthsTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $extend = '';
+                    $value = "'".encrypt($value)."'";
                     if (Gate::allows('setting-user-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                         $edit = <<< HTML
                                     <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'returns.seven-days-financial-months.edit-modal',$value)"><i class="fa fa-edit"></i> </button>

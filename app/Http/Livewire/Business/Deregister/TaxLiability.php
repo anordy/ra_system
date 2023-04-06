@@ -11,10 +11,12 @@ use App\Models\Returns\TaxReturn;
 use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Verification\TaxVerification;
+use App\Traits\VerificationTrait;
 use Livewire\Component;
 
 class TaxLiability extends Component
 {
+    use VerificationTrait;
 
     public $business_id;
     public $location_id;
@@ -32,6 +34,19 @@ class TaxLiability extends Component
 
     public function mount($business_id, $location_id, $deregister_id)
     {
+        // Expecting null values
+        if ($business_id){
+            $business_id = decrypt($business_id);
+        }
+
+        if ($location_id){
+            $location_id = decrypt($location_id);
+        }
+
+        if ($deregister_id){
+            $deregister_id = decrypt($deregister_id);
+        }
+
         $this->business_id = $business_id;
         $this->location_id = $location_id;
         $this->deregister_id = $deregister_id;
@@ -42,6 +57,11 @@ class TaxLiability extends Component
             ->where('payment_status', '!=', ReturnStatus::COMPLETE)
             ->with('installment')
             ->get();
+        
+        // Verify Tax Returns
+        foreach ($this->return_debts as $return) {
+            $this->verify($return);
+        }
 
         $this->land_lease_debts = LandLeaseDebt::where('business_location_id', $this->location_id)
             ->where('status', '!=', LeaseStatus::COMPLETE)

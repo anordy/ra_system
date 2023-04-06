@@ -75,7 +75,7 @@ class ZanMalipoController extends Controller
             if ($zan_trx_sts_code == 7101 || $zan_trx_sts_code == 7226) {
                 $bill->update(['control_number' => $xml['gepgBillSubResp']['BillTrxInf']['PayCntrNum']]);
                 $expireDate = Carbon::parse($bill->expire_date)->format('d M Y H:i:s');
-                $message = "Your control number for ZRB is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$expireDate}.";
+                $message = "Your control number for ZRA is {$bill->control_number} for {$bill->description}. Please pay TZS {$bill->amount} before {$expireDate}.";
 
                 if (in_array($bill->billable_type, array_merge(
                     $this->billable,
@@ -191,8 +191,6 @@ class ZanMalipoController extends Controller
             //Update Lease Payment
             $this->updateLeasePayment($bill);
 
-            //TODO: we should send sms to customer here to notify payment reception
-
             return $this->ackResp('gepgPmtSpInfoAck', '7101');
         } catch (\Throwable $ex) {
             Log::error('GEPG CALLBACK Error: ' . $ex . "\n");
@@ -282,7 +280,7 @@ class ZanMalipoController extends Controller
             $assessmentBillItems = $bill->bill_items->pluck('billable_type')->toArray();
             if ($bill->billable_type == TaxAssessment::class && in_array(Dispute::class, $assessmentBillItems)) {
                 if ($bill->paidAmount() >= $bill->amount) {
-                    $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->first()->billable;
+                    $dispute = $bill->bill_items()->where('billable_type', Dispute::class)->firstOrFail()->billable;
                     $assessment = $bill->billable;
                     if ($assessment->app_status == TaxAssessmentStatus::WAIVER_AND_OBJECTION) {
 

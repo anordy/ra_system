@@ -27,25 +27,12 @@ class PetroleumReturnController extends Controller
         return view('returns.petroleum.filing.index', compact('tableName', 'cardOne', 'cardTwo'));
     }
 
-    public function create(Request $request)
-    {
-        $location = $request->location;
-        $tax_type = $request->tax_type;
-        $business = $request->business;
-
-        return view('returns.petroleum.filing.filing', compact('location', 'tax_type', 'business'));
-    }
-
     public function show($return_id)
     {
         $returnId = decrypt($return_id);
         $return   = PetroleumReturn::findOrFail($returnId);
-        $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
+        $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
         return view('returns.petroleum.filing.show', compact('return'));
     }
 
-    public function edit($return)
-    {
-        return view('returns.petroleum.filing.edit', compact('return'));
-    }
 }

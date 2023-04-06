@@ -59,24 +59,23 @@ class TaxAuditInitiateTable extends DataTableComponent
             Column::make('TIN', 'business.tin'),
             Column::make('Business Name', 'business.name'),
             Column::make('Business Location')
-                ->label(fn($row) => $row->taxAuditLocationNames()),
+                ->label(fn ($row) => $row->taxAuditLocationNames()),
             Column::make('Tax Types')
-                ->label(fn($row) => $row->taxAuditTaxTypeNames()),
+                ->label(fn ($row) => $row->taxAuditTaxTypeNames()),
             Column::make('Period From', 'period_from')
-                ->format(fn($value) => Carbon::create($value)->format('d-m-Y')),
+                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
             Column::make('Period To', 'period_to')
-                ->format(fn($value) => Carbon::create($value)->format('d-m-Y')),
+                ->format(fn ($value) => Carbon::create($value)->format('d-m-Y')),
             Column::make('Created By', 'created_by_id')
-                ->label(fn($row) => $row->createdBy->full_name ?? ''),
+                ->label(fn ($row) => $row->createdBy->full_name ?? ''),
             Column::make('Created On', 'created_at')
-                ->label(fn($row) => Carbon::create($row->created_at ?? null)->format('d-m-Y')),
+                ->label(fn ($row) => Carbon::create($row->created_at ?? null)->format('d-m-Y')),
             Column::make('Action', 'id')
                 ->format(function ($value) {
                     $url = route('tax_auditing.approvals.show', encrypt($value));
-                    $id = "'" . encrypt($value) . "'";
                     return <<<HTML
-                           <button class="btn btn-info btn-sm" wire:click="approve($id)"><i class="fa fa-check"></i> Initiate Approval</button>
-                           <button class="btn btn-danger btn-sm" wire:click="delete($id)"><i class="fa fa-trash"></i> Delete</button>
+                           <button class="btn btn-info btn-sm" wire:click="approve($value)"><i class="fa fa-check"></i> Initiate Approval</button>
+                           <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> Delete</button>
                            <a href="{$url}" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="right" title="View"> View More </a>
                     HTML;
                 })
@@ -107,12 +106,8 @@ class TaxAuditInitiateTable extends DataTableComponent
     public function initiateApproval($value)
     {
         try {
-            $data = (object)$value['data'];
-            $audit = TaxAudit::find(decrypt($data->id));
-            if (empty($audit)) {
-                $this->alert('error', 'The requested data is not found');
-                return;
-            }
+            $data = (object) $value['data'];
+            $audit = TaxAudit::find($data->id);
             $this->registerWorkflow(get_class($audit), $audit->id);
             $this->doTransition('start', []);
             $audit->status = TaxAuditStatus::PENDING;
@@ -145,13 +140,8 @@ class TaxAuditInitiateTable extends DataTableComponent
     public function confirmed($value)
     {
         try {
-            $data = (object)$value['data'];
-            $audit = TaxAudit::find(decrypt($data->id));
-            if (empty($audit)) {
-                $this->alert('error', 'The requested data is not found');
-                return;
-            }
-            $audit->delete();
+            $data = (object) $value['data'];
+            TaxAudit::findOrFail($data->id)->delete();
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

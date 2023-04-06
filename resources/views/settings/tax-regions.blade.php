@@ -6,15 +6,16 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Tax Regions Management</h5>
+        <div class="card-header font-weight-bold bg-white text-uppercase">
+            Tax Regions Management
             <div class="card-tools">
                 @can('setting-tax-region-add')
                     @if(approvalLevel(Auth::user()->level_id, 'Maker'))
-                    <button class="btn btn-info btn-sm"
-                    onclick="Livewire.emit('showModal', 'settings.tax-region.tax-region-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
-                    Add</button>
+                        <button class="btn btn-primary btn-sm px-3"
+                                onclick="Livewire.emit('showModal', 'settings.tax-region.tax-region-add-modal')">
+                            <i class="fa fa-plus-circle mr-1"></i>
+                            Add tax region
+                        </button>
                     @endif
                 @endcan
             </div>

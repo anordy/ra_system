@@ -68,13 +68,25 @@
             padding-left: 90px;
         }
         .commissioner-signature {
-            top: 86%;
+            top: 85%;
             position: absolute;
             text-transform: uppercase;
             font-weight: bold;
             width: 100%;
             padding-left: 70px;
             padding-right: 70px;
+            left: 30px;
+        }
+        .commissioner-name {
+            top: 93%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 20px;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            margin-left: 55px;
             left: 30px;
         }
         .qr-code {
@@ -127,9 +139,13 @@
         </span>
         <span class="embed commencing-date">
             {{ $location->date_of_commencing->format('d/m/Y') }}
+
         </span>
         <span class="commissioner-signature">
-            <img src="{{ public_path()}}/sign/commissioner.png">
+            <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+        </span>
+        <span class="commissioner-name">
+            {{$commissinerFullName}}
         </span>
         <div class="qr-code">
             <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">

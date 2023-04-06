@@ -286,7 +286,7 @@
                                 </a>
                             </div>
                             @if($agent->emp_letter != null)
-                            <div class="col-md-3">
+                                <div class="col-md-3">
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'emp_letter']) }}">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
@@ -294,10 +294,10 @@
                                             Employer Letter
                                         </div>
                                     </a>
-                            </div>
+                                </div>
                             @endif
                             @if($agent->approval_letter != null)
-                            <div class="col-md-3">
+                                <div class="col-md-3">
                                     <a class="file-item" target="_blank"
                                        href="{{ route('agent.file', [$agent->id, 'approval_letter']) }}">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
@@ -305,7 +305,7 @@
                                             Approval Letter
                                         </div>
                                     </a>
-                            </div>
+                                </div>
                             @endif
                         </div>
                     </div>

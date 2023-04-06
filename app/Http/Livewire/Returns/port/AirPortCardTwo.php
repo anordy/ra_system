@@ -29,6 +29,9 @@ class AirPortCardTwo extends Component
     public function mount()
     {
         $tax  = TaxType::where('code', TaxType::AIRPORT_SERVICE_SAFETY_FEE)->first();
+        if (!$tax) {
+            abort(404);
+        }
 
         $penaltyTable  = PortReturnPenalty::getTableName();
         $returnTable   = PortReturn::getTableName();

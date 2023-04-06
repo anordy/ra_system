@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DistrictSeeder::class);
         $this->call(WardSeeder::class);
         $this->call(TaxTypesSeeder::class);
+        $this->call(SubVatSeeder::class);
         $this->call(TaxpayersTableSeeder::class);
         $this->call(BusinessCategoriesSeeder::class);
         $this->call(EducationLevelSeeder::class);
@@ -101,5 +102,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WorkflowKYCDetailsAmendmentSeeder::class);
         $this->call(StreetTableSeeder::class);
         $this->call(SubSysModuleSeeder::class);
+        $this->call(ApiUserTableSeeder::class);
     }
 }

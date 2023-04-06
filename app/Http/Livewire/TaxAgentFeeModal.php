@@ -46,8 +46,7 @@ class TaxAgentFeeModal extends Component
 
         DB::beginTransaction();
         try {
-            $duration = TaPaymentConfiguration::query()
-                ->where('category', '=', $this->category)
+            $duration = TaPaymentConfiguration::where('category', '=', $this->category)
                 ->where('is_citizen', $this->nationality)
                 ->first();
 
@@ -58,7 +57,7 @@ class TaxAgentFeeModal extends Component
                 'created_by' => Auth::id(),
             ];
             if ($duration == null) {
-                $agent_duration = TaPaymentConfiguration::query()->create($this->new_values);
+                $agent_duration = TaPaymentConfiguration::create($this->new_values);
                 // Get ci_payload
                 if (!$this->sign($agent_duration)) {
                     throw new Exception('Failed to verify consultant duration.');

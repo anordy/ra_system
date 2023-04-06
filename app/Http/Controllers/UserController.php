@@ -16,5 +16,4 @@ class UserController extends Controller
 
         return view('users.index');
     }
-
 }

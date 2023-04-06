@@ -33,11 +33,11 @@ class BusinessInvestigationEditModal extends Component
     protected function rules()
     {
         return [
-            'business_id' => 'required',
-            'location_id' => 'required',
-            'tax_type_id' => 'required',
-            'intension' => 'required',
-            'scope' => 'required',
+            'business_id' => 'required|numeric|exists:businesses,id',
+            'location_id' => 'required|numeric|exists:business_locations,id',
+            'tax_type_id' => 'required|numeric',
+            'intension' => 'required|strip_tag',
+            'scope' => 'required|strip_tag',
             'period_from' => 'required|date',
             'period_to' => 'required|date|after:period_from',
         ];
@@ -52,6 +52,9 @@ class BusinessInvestigationEditModal extends Component
     {
         if ($this->business_id) {
             $this->selectedBusiness = Business::with('locations')->find($id);
+            if(is_null($this->selectedBusiness)){
+                abort(404);
+            }
             $this->taxTypes         = $this->selectedBusiness->taxTypes;
             $this->locations        = $this->selectedBusiness->locations;
         } else {

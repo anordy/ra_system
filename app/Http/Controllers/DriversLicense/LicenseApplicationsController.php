@@ -130,7 +130,7 @@ class LicenseApplicationsController extends Controller
     public function getFile($location){
         if ($location) {
             try {
-                return Storage::response(decrypt($location));
+                return Storage::disk('local')->response(decrypt($location));
             } catch (Exception $e) {
                 report($e);
                 abort(404);

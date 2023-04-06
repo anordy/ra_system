@@ -10,6 +10,7 @@ class Role extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable, SoftDeletes;
 
+    public const ADMINISTRATOR = 'Administrator';
     protected $fillable = [
         'name', 'report_to'
     ];

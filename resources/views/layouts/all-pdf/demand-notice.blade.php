@@ -140,7 +140,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="{{ public_path() }}/images/logo.jpg" alt="">
+            <img src="{{ public_path() }}/images/logo.png" alt="">
         </div>
         <div>
             <h2>DEMAND NOTICE</h2>
@@ -158,7 +158,7 @@
                     </div>
                 </div>
                 <div class="flex-container">
-                    <div class="zrb-no">ZRB NO.
+                    <div class="zrb-no">ZRA NO.
                         <table class="table-bordered">
                             <tr>
                                 <td class="table-width">Z</td>
@@ -196,7 +196,7 @@
 
                 <P>
                     Examination of your tax account shows that as on………………………… a balance of TZS/USD $
-                    …………………………………… was owing to Zanzibar Revenue Board. This balance is inclusive of
+                    …………………………………… was owing to Zanzibar Revenue Authority. This balance is inclusive of
                     penalty, fine and/or fine for failure to pay assessed tax, fine, penalty, interest or raised an
                     objection to any assessment or to appeal within the time allowed under the Zanzibar appeal Act No. 1
                     of

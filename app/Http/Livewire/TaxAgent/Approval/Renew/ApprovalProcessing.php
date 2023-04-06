@@ -37,7 +37,6 @@ class ApprovalProcessing extends Component
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
         $this->renew = RenewTaxAgentRequest::findOrFail($this->subject->id);
-        dd($this->renew);
     }
 
 
@@ -47,7 +46,7 @@ class ApprovalProcessing extends Component
             $this->alert('error', 'Tax Consultant does not exist');
             return;
         }
-        $type = 'Renewal';
+        $type = 'Renewal Fee';
         // TODO: check if queried objects exist
         $duration = TaPaymentConfiguration::query()->select('id', 'category', 'duration', 'is_citizen' )
             ->where('category', $type)->where('is_citizen', $this->renew->tax_agent->taxpayer->is_citizen)->first();

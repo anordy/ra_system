@@ -33,10 +33,10 @@ class DeRegistrationRequest extends Component
     protected function rules()
     {
         return [
-            'reason_id' => 'required',
-            'description' => 'required',
+            'reason_id' => 'required|numeric',
+            'description' => 'required|strip_tag',
             'date_received' => 'required|date',
-            'agent_id' => 'required',
+            'agent_id' => 'required|numeric',
             'inspection_report'=>'required|mimes:pdf'
         ];
     }

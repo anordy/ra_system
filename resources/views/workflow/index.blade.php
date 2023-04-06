@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header p-2 m-0">
-            <h6 class="text-uppercase">Workflow Configurations</h6>
+        <div class="card-header bg-white font-weight-bold text-uppercase">
+            Workflow Configurations
         </div>
 
         <div class="card-body">

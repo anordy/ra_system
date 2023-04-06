@@ -26,8 +26,8 @@ class AddProceedingModel extends Component
     {
         return [
             'date' => 'required|date',
-            'comment' => 'required',
-            'stage_id' => 'required',
+            'comment' => 'required|strip_tag',
+            'stage_id' => 'required|numeric',
         ];
     }
 

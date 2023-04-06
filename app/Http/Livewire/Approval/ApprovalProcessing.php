@@ -14,6 +14,7 @@ use App\Models\ISIC2;
 use App\Models\ISIC3;
 use App\Models\ISIC4;
 use App\Models\LumpSumPayment;
+use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Traits\WorkflowProcesssingTrait;
@@ -38,7 +39,7 @@ class ApprovalProcessing extends Component
     public $taxTypes;
     public $selectedTaxTypes = [];
     public $taxRegions;
-    public $selectedTaxRegion;
+    public $selectedTaxRegion, $effectiveDate;
     public $isBusinessElectric = false;
     public $isBusinessLTO = false;
 
@@ -47,17 +48,20 @@ class ApprovalProcessing extends Component
     public $isiiciiiList = [];
     public $isiicivList  = [];
 
+    public $subVatOptions = [];
+
     public $showLumpsumOptions = false;
+    public $showSubVatOptions = false;
 
     public $Ids, $exceptionOne, $exceptionTwo;
 
     public $directors;
     public $shareholders;
     public $shares;
+    public $sub_vat_id;
 
     public function mount($modelName, $modelId)
     {
-//        todo: encrypt modelID
         $this->modelName = $modelName;
         $this->modelId   = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
@@ -134,18 +138,17 @@ class ApprovalProcessing extends Component
             // Pluck id
             $this->Ids  = Arr::pluck($this->selectedTaxTypes, 'tax_type_id');
 
-//            todo: if id is the only property needed, i suggest selecting it in a query to optimize performance
             // Get lumpsum ID
-            $lumpSumId = TaxType::query()->where('code', TaxType::LUMPSUM_PAYMENT)->first()->id;
+            $lumpSumId = TaxType::query()->select('id')->where('code', TaxType::LUMPSUM_PAYMENT)->firstOrFail()->id;
 
             // Get vat ID
-            $vatId = TaxType::query()->where('code', TaxType::VAT)->first()->id;
+            $vatId = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
             // Get vat ID
-            $hotelId = TaxType::query()->where('code', TaxType::HOTEL)->first()->id;
+            $hotelId = TaxType::query()->select('id')->where('code', TaxType::HOTEL)->firstOrFail()->id;
 
             // Get stamp ID
-            $stampId = TaxType::query()->where('code', TaxType::STAMP_DUTY)->first()->id;
+            $stampId = TaxType::query()->select('id')->where('code', TaxType::STAMP_DUTY)->firstOrFail()->id;
 
             //adding IDs to array
             $this->exceptionOne = [$vatId, $hotelId];
@@ -163,6 +166,13 @@ class ApprovalProcessing extends Component
                 ];
             } else {
                 $this->showLumpsumOptions = false;
+            }
+
+            if (in_array($vatId, $this->Ids)) {
+                $this->subVatOptions  = SubVat::select('id', 'name')->where('is_approved', 1)->get();
+                $this->showSubVatOptions = true;
+            } else {
+                $this->showSubVatOptions = false;
             }
         }
     }
@@ -184,7 +194,6 @@ class ApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
-
             try {
                 $this->subject->isiic_i = $this->isiic_i ?? null;
                 $this->subject->isiic_ii = $this->isiic_ii ?? null;
@@ -192,17 +201,18 @@ class ApprovalProcessing extends Component
                 $this->subject->isiic_iv = $this->isiic_iv ?? null;
 
                 $this->validate([
-                    'isiic_i' => 'required',
-                    'isiic_ii' => 'required',
-                    'isiic_iii' => 'required',
-                    'isiic_iv' => 'required',
+                    'isiic_i' => 'required|numeric|exists:isic1s,id',
+                    'isiic_ii' => 'required|numeric|exists:isic2s,id',
+                    'isiic_iii' => 'required|numeric|exists:isic3s,id',
+                    'isiic_iv' => 'required|numeric|exists:isic4s,id',
                     'selectedTaxTypes' => 'required',
                     'selectedTaxTypes.*.currency' => 'required',
                     'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
                     'selectedTaxRegion' => 'required|exists:tax_regions,id',
+                    'effectiveDate' => 'required|strip_tag'
                 ], [
                     'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
-                    'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is require',
+                    'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is required',
                     'selectedTaxTypes.*.currency.required' => 'Currency is required',
                 ]);
 
@@ -218,6 +228,7 @@ class ApprovalProcessing extends Component
 
                 $business->save();
                 $business->headquarter->tax_region_id = $this->selectedTaxRegion;
+                $business->headquarter->effective_date = $this->effectiveDate;
                 $business->headquarter->save();
                 $business->taxTypes()->detach();
 
@@ -249,10 +260,17 @@ class ApprovalProcessing extends Component
                     ]);
                 }
 
+                if ($this->showSubVatOptions == true) {
+                    $this->validate([
+                        'sub_vat_id' => 'required'
+                    ]);
+                }
+
                 foreach ($this->selectedTaxTypes as $type) {
                     DB::table('business_tax_type')->insert([
                         'business_id' => $business->id,
                         'tax_type_id' => $type['tax_type_id'],
+                        'sub_vat_id' => $this->sub_vat_id ?? null,
                         'currency' => $type['currency'],
                         'created_at' => Carbon::now(),
                         'status' => 'current-used'
@@ -332,7 +350,7 @@ class ApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         try {

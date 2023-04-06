@@ -10,8 +10,8 @@
         </a>
     </div>
     <div class="card">
-        <div class="card-header ">
-            <h6 class="text-capitalize">editing return tax types</h6>
+        <div class="card-header bg-white font-weight-bold text-uppercase">
+            editing return tax types
         </div>
         <div class="card-body">
             <livewire:returns.edit-return-tax-type taxtype_id="{{$id}}"/>

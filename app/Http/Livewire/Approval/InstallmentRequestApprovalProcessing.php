@@ -66,7 +66,7 @@ class InstallmentRequestApprovalProcessing extends Component
 
             if ($this->checkTransition('debt_manager')) {
                 $this->subject->installment_from = $this->subject->installable->curr_payment_due_date;
-                $this->subject->installment_to = Carbon::make($this->subject->installable->curr_payment_due_date)->addMonths($this->installmentPhases);
+                $this->subject->installment_to = Carbon::make($this->subject->installable->curr_payment_due_date)->addDays(30 * $this->installmentPhases);
                 $this->subject->installment_count = $this->installmentPhases;
                 $this->subject->save();
             }
@@ -113,7 +113,7 @@ class InstallmentRequestApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', $e->getMessage());
+            $this->alert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
 
@@ -123,7 +123,7 @@ class InstallmentRequestApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         try {

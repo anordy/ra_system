@@ -31,6 +31,9 @@ class TourCardTwo extends Component
         $penaltyTable  = HotelReturnPenalty::getTableName();
         $returnTable   = HotelReturn::getTableName();
         $taxType       = TaxType::where('code', TaxType::TOUR_OPERATOR)->first();
+        if (!$taxType) {
+            abort(404);
+        }
         $tour          = (new HotelReturn())->newQuery();
         $filter        = $tour->where('tax_type_id', $taxType->id);
 

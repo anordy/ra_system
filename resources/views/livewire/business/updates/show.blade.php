@@ -33,11 +33,6 @@
                                     <td class="table-success">Changed</td>
                                 @endif
                             </tr>
-                            {{-- <tr>
-                            <th>TIN</th>
-                            <td>{{ $old_values->business_information->tin }}</td>
-                            <td>{{ $new_values->business_information->tin }}</td>
-                        </tr> --}}
                             <tr>
                                 <th>Reg No</th>
                                 <td>{{ $old_values->business_information->reg_no ?? 'N/A' }}</td>

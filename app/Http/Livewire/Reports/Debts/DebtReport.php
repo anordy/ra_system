@@ -41,9 +41,9 @@ class DebtReport extends Component
     protected function rules()
     {
         return [
-            'report_type' => 'required',
-            'year' => 'required',
-            'period' => 'required',
+            'report_type' => 'required|strip_tag',
+            'year' => 'required|strip_tag',
+            'period' => 'required|strip_tag',
             'period' => $this->year != 'all' ? 'required' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',
             'quater' => $this->period == 'Quarterly' ? 'required' : '',

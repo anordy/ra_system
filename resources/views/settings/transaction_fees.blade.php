@@ -6,15 +6,15 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Transaction Fees</h5>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            Transaction Fees
             <div class="card-tools">
                 @can('setting-transaction-fees-add')
                     @if(approvalLevel(Auth::user()->level_id, 'Maker'))
-                    <button class="btn btn-info btn-sm"
+                    <button class="btn btn-primary btn-sm"
                     onclick="Livewire.emit('showModal', 'transaction-fees-add-modal')"><i
-                        class="fa fa-plus-circle"></i>
-                    Add</button>
+                        class="bi bi-plus-circle-fill pr-1"></i>
+                    Add Fee</button>
                     @endif
                 @endcan
             </div>

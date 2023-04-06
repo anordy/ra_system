@@ -54,7 +54,7 @@ class UploadInspectionReport extends Component
         return [
             'inspection_report'=>'required|mimes:pdf',
             'inspection_date'=>'required|date|before_or_equal:today',
-            'mileage'=>'required|Numeric',
+            'mileage'=>'required|numeric',
         ];
     }
 
@@ -94,7 +94,7 @@ class UploadInspectionReport extends Component
             if (Storage::disk('local')->exists($this->inspection_report_path)) Storage::disk('local')->delete($this->inspection_report_path);
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help: '.$e->getMessage());
+            $this->alert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

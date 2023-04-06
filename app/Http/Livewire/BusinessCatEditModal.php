@@ -19,14 +19,17 @@ class BusinessCatEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:business_categories,name,'.$this->businessCategory->id.',id',
+            'name' => 'required|strip_tag|unique:business_categories,name,'.$this->businessCategory->id.',id',
         ];
     }
 
     public function mount($id)
     {
         $id = decrypt($id);
-        $data = BusinessCategory::findorFail($id);
+        $data = BusinessCategory::find($id);
+        if(is_null($data)){
+            abort(404);
+        }
         $this->businessCategory = $data;
         $this->name = $data->name;
     }

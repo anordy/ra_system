@@ -59,6 +59,10 @@ class User extends Authenticatable implements PayloadInterface, Auditable
         return $this->belongsTo(ApprovalLevel::class);
     }
 
+    public function approvalLevel(){
+        return $this->belongsTo(UserApprovalLevel::class);
+    }
+
     public function otp()
     {
         return $this->morphOne(UserOtp::class, 'user');

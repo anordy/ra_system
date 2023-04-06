@@ -27,8 +27,6 @@ class SecurityHeader
             $response->headers->set('Access-Control-Allow-Origin', 'localhost,uat.ubx.co.tz');
             $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-            $response->headers->set('X-Content-Type-Options', 'nosniff');
-            $response->headers->set('X-Frame-Options', 'DENY');
             $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
             $response->headers->set('Permissions-Policy', 'autoplay=(self), camera=(), encrypted-media=(self), fullscreen=(), geolocation=(self), gyroscope=(self), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=(self), usb=()');
         }

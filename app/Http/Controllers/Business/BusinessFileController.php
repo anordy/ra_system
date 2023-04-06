@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BusinessFile;
 use App\Models\BusinessLocation;
 use App\Models\BusinessTaxType;
+use App\Models\SystemSetting;
 use App\Models\Taxpayer;
 use App\Models\TaxType;
 use Endroid\QrCode\Builder\Builder;
@@ -37,7 +38,7 @@ class BusinessFileController extends Controller
 
         // Check who can access the file
         if ($file){
-            return Storage::response($file->location);
+            return Storage::disk('local')->response($file->location);
         }
 
         // If they dont meet requirements, abort
@@ -53,7 +54,7 @@ class BusinessFileController extends Controller
         $taxpayer = Taxpayer::findOrFail(decrypt($taxpayerId));
 
         if ($taxpayer->tin_location){
-            return Storage::response($taxpayer->tin_location);
+            return Storage::disk('local')->response($taxpayer->tin_location);
         }
 
         return abort(404);
@@ -84,7 +85,7 @@ class BusinessFileController extends Controller
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(207)
             ->margin(0)
-            ->logoPath(public_path('/images/logo.jpg'))
+            ->logoPath(public_path('/images/logo.png'))
             ->logoResizeToHeight(36)
             ->logoResizeToWidth(36)
             ->labelText('')
@@ -94,10 +95,13 @@ class BusinessFileController extends Controller
         header('Content-Type: ' . $result->getMimeType());
 
         $dataUri = $result->getDataUri();
+
+        $signaturePath = SystemSetting::certificatePath();
+        $commissinerFullName = SystemSetting::commissinerFullName();
         
-        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber'));
+        $pdf = PDF::loadView('business.certificate', compact('location', 'tax', 'dataUri', 'taxType', 'certificateNumber', 'signaturePath', 'commissinerFullName'));
         $pdf->setPaper('a4', 'portrait');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
         return $pdf->stream();
 

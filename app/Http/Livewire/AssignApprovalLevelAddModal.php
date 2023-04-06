@@ -27,9 +27,7 @@ class AssignApprovalLevelAddModal extends Component
     {
         $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
         $this->user = User::find(decrypt($user_id));
-        if (empty($this->user))
-        {
-            Log::error('No result is found, Invalid id');
+        if(is_null($this->user)){
             abort(404);
         }
     }
@@ -43,10 +41,6 @@ class AssignApprovalLevelAddModal extends Component
 
     public function submit()
     {
-//        if (!Gate::allows('setting-role-assign-approval-level'))
-//        {
-//            abort(403);
-//        }
         $this->validate();
         if ($this->user->is_approved != 1) {
             $this->alert('error', 'The selected user is not approved');
@@ -56,16 +50,20 @@ class AssignApprovalLevelAddModal extends Component
             $this->alert('error', 'This level of approval is only allowed for Administrator role only');
             return;
         }
-        $payload = [
-            'role_id' => $this->user->role_id,
-            'user_id' => $this->user->id,
-            'approval_level_id' => $this->level,
-            'created_by' => Auth::id(),
-        ];
+        if (Auth::id() == $this->user->id){
+            $this->alert('error', 'You can not change your own approval level.');
+            return;
+        }
         DB::beginTransaction();
         try {
-
-            UserApprovalLevel::create($payload);
+            UserApprovalLevel::updateOrCreate([
+                'user_id' => $this->user->id
+            ], [
+                'role_id' => $this->user->role_id,
+                'user_id' => $this->user->id,
+                'approval_level_id' => $this->level,
+                'created_by' => Auth::id(),
+            ]);
             $this->user->update(['level_id'=>$this->level]);
             DB::commit();
             $this->alert('success', 'Record saved successfully');

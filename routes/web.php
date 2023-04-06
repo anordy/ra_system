@@ -11,6 +11,7 @@
 |
  */
 
+use App\Http\Controllers\Reports\Department\DepartmentalReportController;
 use App\Http\Controllers\Setting\ApiUserController;
 use App\Http\Controllers\StreetController;
 use App\Http\Controllers\Reports\Payments\PaymentReportController;
@@ -136,12 +137,12 @@ use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
 use App\Http\Controllers\KYC\KycAmendmentRequestController;
 
-Auth::routes();
+Auth::routes(['register'=>false]);
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload');
-Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get');
+Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload')->middleware('throttle:captcha');
+Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get')->name('captcha.get')->middleware('throttle:captcha');
 
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');
@@ -182,6 +183,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/tax-regions', TaxRegionController::class);
         Route::resource('/penalty-rates', PenaltyRateController::class);
         Route::resource('/zrb-bank-accounts', ZrbBankAccountController::class);
+        Route::get('/subvat/taxtypes', [TaxTypeController::class, 'vat'])->name('subvat.taxtypes');
         Route::get('/setting-system-categories/view', [SystemSettingsController::class, 'setting_categories'])->name('setting-system-categories.view');
         Route::get('/system-settings/view', [SystemSettingsController::class, 'system_settings'])->name('system-settings.view');
         Route::get('financial-years', [FinancialYearsController::class, 'index'])->name('financial-years');
@@ -458,6 +460,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/payments/returns-preview/{data}', [PaymentReportController::class, 'returnsPreview'])->name('payments.returns-preview');
         Route::get('/payments/consultants-preview/{data}', [PaymentReportController::class, 'consultantsPreview'])->name('payments.consultants-preview');
         Route::get('/payments/download-report-pdf/{data}', [PaymentReportController::class, 'exportPaymentReportPdf'])->name('payments.download.pdf');
+
+        Route::get('/departmental', [DepartmentalReportController::class, 'index'])->name('departmental');
     });
 
     Route::name('claims.')->prefix('/tax-claims')->group(function () {
@@ -565,6 +569,8 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::get('/recon-reports/index', [PaymentsController::class, 'reconReport'])->name('recon-reports.index');
         Route::get('/daily-payments/index', [PaymentsController::class, 'dailyPayments'])->name('daily-payments.index');
         Route::get('/daily-payments/{taxTypeId}', [PaymentsController::class, 'dailyPaymentsPerTaxType'])->name('daily-payments.tax-type');
+        Route::get('/ega-charges/index', [PaymentsController::class, 'egaCharges'])->name('ega-charges.index');
+        Route::get('/departmental-reports/index', [PaymentsController::class, 'departmentalReports'])->name('departmental-reports.index');
         Route::get('/{paymentId}', [PaymentsController::class, 'show'])->name('show');
     });
 

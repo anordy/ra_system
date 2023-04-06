@@ -110,6 +110,9 @@ class TaxInvestigationInitiateTable extends DataTableComponent
         try {
             $data = (object) $value['data'];
             $investigation = TaxInvestigation::find($data->id);
+            if(is_null($investigation)){
+                abort(404);
+            }
             $this->registerWorkflow(get_class($investigation), $investigation->id);
             $this->doTransition('start', []);
             $investigation->status = TaxVerificationStatus::PENDING;
@@ -143,7 +146,12 @@ class TaxInvestigationInitiateTable extends DataTableComponent
     {
         try {
             $data = (object) $value['data'];
-            TaxInvestigation::find($data->id)->delete();
+            $investigation = TaxInvestigation::find($data->id);
+            if(is_null($investigation)){
+                abort(404);
+            }
+            $investigation->delete();
+
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

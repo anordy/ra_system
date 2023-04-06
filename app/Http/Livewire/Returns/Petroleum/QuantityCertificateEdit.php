@@ -35,9 +35,9 @@ class QuantityCertificateEdit extends Component
     protected function rules()
     {
         return [
-            'ship' => 'required',
-            'port' => 'required',
-            'voyage_no' => 'nullable',
+            'ship' => 'required|strip_tag',
+            'port' => 'required|strip_tag',
+            'voyage_no' => 'nullable|strip_tag',
             'ascertained' => 'required|date',
             'location' => [
                 'required',
@@ -65,8 +65,9 @@ class QuantityCertificateEdit extends Component
     {
         $id = decrypt($id);
         $this->certificate = QuantityCertificate::with('location', 'products')->find($id);
-
-
+        if(is_null($this->certificate)){
+            abort(404);
+        }
         $this->ascertained = $this->certificate->ascertained;
         $this->ship = $this->certificate->ship;
         $this->port = $this->certificate->port;

@@ -7,6 +7,9 @@
 
 @section('content')
     <div class="card">
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            Return Tax Types
+        </div>
         <div class="card-body">
             <livewire:returns.return-tax-types-table/>
         </div>

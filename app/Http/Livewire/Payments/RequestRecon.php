@@ -25,9 +25,10 @@ class RequestRecon extends Component
 
     protected function rules(){
         return [
-            'recon_type' => 'required',
+            'recon_type' => 'required|strip_tag',
             'transaction_date' => [
                 'required',
+                'strip_tag',
                 function ($attribute, $value, $fail) {
                     $yesterday = Carbon::now()->subDay();
                     $transaction_date = Carbon::parse($value);

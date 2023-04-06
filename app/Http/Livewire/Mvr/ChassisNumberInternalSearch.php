@@ -22,8 +22,8 @@ class ChassisNumberInternalSearch extends Component
     protected function rules()
     {
         return [
-            'number' => 'required',
-            'type' => 'required',
+            'number' => 'required|strip_tag',
+            'type' => 'required|strip_tag',
         ];
     }
 

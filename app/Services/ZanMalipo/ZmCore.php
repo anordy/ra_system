@@ -5,6 +5,7 @@ namespace App\Services\ZanMalipo;
 
 use App\Models\ZmBill;
 use App\Models\ZmBillItem;
+use App\Models\ZmEgaCharge;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -67,7 +68,12 @@ class ZmCore
     ): ZmBill {
         DB::beginTransaction();
         try {
-            $bill_items = ZmFeeHelper::addTransactionFee($bill_items, $currency, $exchange_rate);
+            if (config('modulesconfig.charges_inclusive')){
+                $bill_items = ZmFeeHelper::addTransactionFee($bill_items, $currency, $exchange_rate);
+            }
+
+            $egaCharges = ZmFeeHelper::getTransactionFee($bill_items,$currency,$exchange_rate);
+
             $bill_amount = 0;
             foreach ($bill_items as $item) {
                 if (!isset($item['amount']) || !isset($item['gfs_code'])) {
@@ -102,6 +108,13 @@ class ZmCore
             ]);
 
             $zm_bill->save();
+
+            ZmEgaCharge::create([
+                'zm_bill_id' => $zm_bill->id,
+                'currency' => $zm_bill->currency,
+                'amount' => $egaCharges['amount'],
+                'ega_charges_included' => config('modulesconfig.charges_inclusive'),
+            ]);
 
             foreach ($bill_items as $item) {
                 $zm_item = new ZmBillItem([
@@ -166,7 +179,7 @@ class ZmCore
      * @return ZmResponse
      * @throws \DOMException
      */
-    public static function sendBill($bill, $generated_by = 'ZRB', $approved_by = 'ZRB'): ZmResponse
+    public static function sendBill($bill, $generated_by = 'ZRA', $approved_by = 'ZRA'): ZmResponse
     {
         if (is_numeric($bill)) {
             $zm_bill = ZmBill::query()->find($bill);

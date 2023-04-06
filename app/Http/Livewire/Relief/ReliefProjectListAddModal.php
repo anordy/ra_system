@@ -29,7 +29,6 @@ class ReliefProjectListAddModal extends Component
 
     public function mount($id)
     {
-//        todo: encrypt id
         $this->project_id = decrypt($id);
 
         $this->ministries = ReliefMinistry::all();
@@ -39,11 +38,11 @@ class ReliefProjectListAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required',
-            'description' => 'nullable',
-            'ministry_id' => 'nullable',
-            'relief_sponsor_id' => 'nullable',
-            'rate' => 'required|numeric|min:0|max:100',
+            'name' => 'required|strip_tag',
+            'description' => 'nullable|strip_tag',
+            'ministry_id' => 'nullable|strip_tag',
+            'relief_sponsor_id' => 'nullable|strip_tag',
+            'rate' => 'required|numeric|min:0|max:100|strip_tag',
             'government_notice_path' => 'nullable|mimes:pdf',
         ];
     }

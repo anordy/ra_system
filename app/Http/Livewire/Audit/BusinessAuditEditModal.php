@@ -33,11 +33,11 @@ class BusinessAuditEditModal extends Component
     protected function rules()
     {
         return [
-            'business_id' => 'required',
-            'location_id' => 'required',
+            'business_id' => 'required|numeric|exists:businesses,id',
+            'location_id' => 'required|numeric|exists:business_locations,id',
             'tax_type_id' => 'required',
-            'intension' => 'required',
-            'scope' => 'required',
+            'intension' => 'required|strip_tag',
+            'scope' => 'required|strip_tag',
             'period_from' => 'required|date',
             'period_to' => 'required|date|after:period_from',
         ];
@@ -51,7 +51,7 @@ class BusinessAuditEditModal extends Component
     public function businessChange($id)
     {
         if ($this->business_id) {
-            $this->selectedBusiness = Business::with('locations')->find(decrypt($id));
+            $this->selectedBusiness = Business::with('locations')->findOrFail($id);
             $this->taxTypes         = $this->selectedBusiness->taxTypes;
             $this->locations        = $this->selectedBusiness->locations;
         } else {
@@ -65,7 +65,7 @@ class BusinessAuditEditModal extends Component
         $this->validate();
         try {
             TaxAudit::create([
-                'business_id' => decrypt($this->business_id),
+                'business_id' => $this->business_id,
                 'location_id' => $this->location_id,
                 'tax_type_id' => $this->tax_type_id,
                 'intension' => $this->intension,

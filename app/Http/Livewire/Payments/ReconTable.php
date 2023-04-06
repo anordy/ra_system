@@ -15,7 +15,7 @@ class ReconTable extends DataTableComponent
 
     public function mount($recon_id)
     {
-        $this->recon_id = $recon_id;
+        $this->recon_id = decrypt($recon_id);
     }
 
     public function builder(): Builder

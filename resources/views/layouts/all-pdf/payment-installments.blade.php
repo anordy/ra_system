@@ -147,7 +147,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="{{ public_path() }}/images/logo.jpg" alt="">
+            <img src="{{ public_path() }}/images/logo.png" alt="">
         </div>
         <div>
             <h3>AGREEMENT ON PAYMENT OF TAX BY INSTALLMENTS </h3>
@@ -158,7 +158,7 @@
         <div class="row">
             <div class="head-section">
                 <div class="flex-container ">
-                    <div class="zrb-no">ZRB NO.
+                    <div class="zrb-no">ZRA NO.
                         <table class="table-bordered">
                             <tr>
                                 <td class="table-width">Z</td>
@@ -281,7 +281,7 @@
             <div class="body-section">
                 <P>
                     Please take note that the taxes not under this agreement shall be fully paid by due dates. In case
-                    of default the Zanzibar Revenue Board will undertake to recover the total amount due without notice.
+                    of default the Zanzibar Revenue Authority will undertake to recover the total amount due without notice.
                 </P> <br>
                 <P>
                     This agreement is made this ……………………………....... Day of …………… 20 ………...
@@ -296,7 +296,7 @@
                 </p><br>
 
                 <div class="header">AND</div><br>
-                <p> For the ZRB</p><br>
+                <p> For the ZRA</p><br>
                 <P>
                     Name:...................................................................
                     Designation: ...........................................................

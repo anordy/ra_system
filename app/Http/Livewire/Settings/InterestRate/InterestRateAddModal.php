@@ -23,8 +23,8 @@ class InterestRateAddModal extends Component
     protected function rules()
     {
         return [
-            'year' => 'required|unique:interest_rates,year',
-            'rate' => 'required',
+            'year' => 'required|unique:interest_rates,year|strip_tag',
+            'rate' => 'required|strip_tag',
         ];
     }
 

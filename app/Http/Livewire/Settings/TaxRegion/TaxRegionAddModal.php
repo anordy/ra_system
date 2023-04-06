@@ -14,12 +14,14 @@ class TaxRegionAddModal extends Component
 
     public $prefix;
     public $name;
+    public $location;
 
     protected function rules()
     {
         return [
-            'prefix' => 'required|unique:tax_regions,prefix|digits:2',
-            'name' => 'required|unique:tax_regions,name',
+            'prefix' => 'required|unique:tax_regions,prefix|digits:2|strip_tag',
+            'name' => 'required|unique:tax_regions,name|strip_tag',
+            'location' => 'required|strip_tag',
         ];
     }
 
@@ -30,7 +32,8 @@ class TaxRegionAddModal extends Component
             TaxRegion::create([
                 'prefix' => $this->prefix,
                 'name' => $this->name,
-                'code' => str_replace(' ', '-', strtolower($this->name))
+                'code' => str_replace(' ', '-', strtolower($this->name)),
+                'location' => $this->location
             ]);
             $this->flash('success', 'Tax region saved.', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

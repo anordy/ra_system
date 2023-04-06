@@ -103,7 +103,7 @@ class EncryptEnvValues extends Command
                 ));
         } else {
             $contents = file_get_contents(App::environmentFile());
-            $contents .= "\nCONFIGKEY=.$key";
+            $contents .= "\nCONFIGKEY=$key";
             file_put_contents(App::environmentFile(), $contents);
         }
     }

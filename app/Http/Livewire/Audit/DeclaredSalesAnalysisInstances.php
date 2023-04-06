@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Audit;
 
+use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxAudit\TaxAuditLocation;
 use App\Models\TaxAudit\TaxAuditTaxType;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -15,9 +16,13 @@ class DeclaredSalesAnalysisInstances extends Component
     public $locations;
     public $taxTypes;
 
-    public function mount($audit)
+    public function mount($auditId)
     {
 
+        $audit = TaxAudit::find(decrypt($auditId));
+        if (is_null($audit)){
+            abort(404);
+        }
         $this->audit = $audit;
         $this->locations = $audit->businessLocations;
         $this->taxTypes = $audit->taxTypes;

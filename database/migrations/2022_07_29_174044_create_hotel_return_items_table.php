@@ -16,8 +16,8 @@ class CreateHotelReturnItemsTable extends Migration
         Schema::create('hotel_return_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('config_id');
-            $table->string('value');
-            $table->string('vat');
+            $table->decimal('value',38, 2);
+            $table->decimal('vat',38, 2);
             $table->unsignedBigInteger('return_id');
             $table->timestamps();
 

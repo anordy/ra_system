@@ -19,8 +19,8 @@ class ApiUserTableSeeder extends Seeder
 
                 'app_name' => 'Test',
                 'app_url' => 'localhost',
-                'username' => 'immigration',
-                'password' => Hash::make('password'),
+                'username' => 'ZIDRASAPI',
+                'password' => Hash::make('Z1dras@API'),
                 'status' => true,
             ],
         ];

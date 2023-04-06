@@ -26,6 +26,9 @@ class AirbnbCardOne extends Component
     {
         $returnTable   = HotelReturn::getTableName();
         $taxType       = TaxType::where('code', TaxType::AIRBNB)->first();
+        if (!$taxType) {
+            abort(404);
+        }
         $hotel         = (new HotelReturn())->newQuery();
         $filter        = $hotel->where('tax_type_id', $taxType->id);
         $filter        = $this->dataFilter($filter, $this->data, $returnTable);

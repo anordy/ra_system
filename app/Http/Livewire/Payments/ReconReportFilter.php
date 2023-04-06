@@ -26,8 +26,8 @@ class ReconReportFilter extends Component
 
     protected function rules(){
         return [
-            'range_start' => 'required',
-            'range_end' =>   'required',
+            'range_start' => 'required|strip_tag',
+            'range_end' =>   'required|strip_tag',
         ];
     }
 

@@ -6,6 +6,7 @@ use App\Exports\ReturnReportExport;
 use App\Models\District;
 use App\Models\FinancialYear;
 use App\Models\Region;
+use App\Models\Returns\Vat\SubVat;
 use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Models\Ward;
@@ -27,7 +28,7 @@ class ReturnReport extends Component
     public $optionPaymentTypes;
     public $showPreviewTable = false;
     public $activateButtons = false;
-    public $optionVatTypes;
+    public $subVatOptions = [];
 
     public $tax_type_id = 'all';
     public $tax_type_code = 'all';
@@ -79,7 +80,6 @@ class ReturnReport extends Component
         $this->optionReportTypes = ['Filing', 'Payment'];
         $this->optionFilingTypes = ['All-Filings', 'On-Time-Filings', 'Late-Filings', 'Tax-Claims', 'Nill-Returns'];
         $this->optionPaymentTypes = ['All-Paid-Returns', 'On-Time-Paid-Returns', 'Late-Paid-Returns', 'Unpaid-Returns'];
-        $this->optionVatTypes = ['All-VAT-Returns', 'Hotel-VAT-Returns', 'Electricity-VAT-Returns', 'Local-VAT-Returns'];
 
         //extra filters
         $this->optionTaxRegions = TaxRegion::pluck('name', 'id')->toArray();
@@ -103,7 +103,11 @@ class ReturnReport extends Component
     {
         if ($propertyName == 'tax_type_id') {
             if($this->tax_type_id != 'all'){
-                $this->tax_type_code = TaxType::find($this->tax_type_id)->code;
+                $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
+
+                if($this->tax_type_code == TaxType::VAT) {
+                    $this->subVatOptions = SubVat::select('id', 'name')->get();
+                }
             }else{
                 $this->tax_type_code = 'all';
             }
@@ -142,7 +146,6 @@ class ReturnReport extends Component
             return;
         };
         $this->parameters = $this->getParameters();
-        // dd($this->parameters);
         $this->previewReport($this->parameters);
     }
 
@@ -167,8 +170,8 @@ class ReturnReport extends Component
     {
         return [
             'tax_type_id' => $this->tax_type_id ?? 'all',
-            'tax_type_code' => $this->tax_type_id == 'all' ? 'all' : TaxType::find($this->tax_type_id)->code,
-            'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns' : TaxType::find($this->tax_type_id)->name,
+            'tax_type_code' => $this->tax_type_id == 'all' ? 'all' : TaxType::findOrFail($this->tax_type_id)->code,
+            'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns' : TaxType::findOrFail($this->tax_type_id)->name,
             'vat_type' => $this->vat_type,
             'type' => $this->type,
             'filing_report_type' => $this->filing_report_type,

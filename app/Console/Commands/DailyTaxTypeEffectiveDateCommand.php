@@ -63,10 +63,15 @@ class DailyTaxTypeEffectiveDateCommand extends Command
                     ->where('tax_type_id', $tax_change->from_tax_type_id)
                     ->firstOrFail();
 
-                $current_tax_type->update([
-                    'tax_type_id' => $tax_change->to_tax_type_id,
-                    'currency' => $tax_change->to_tax_type_currency,
-                ]);
+                $current_tax_type->tax_type_id = $tax_change->to_tax_type_id;
+                $current_tax_type->currency = $tax_change->to_tax_type_currency;
+
+                // Check if sub vat exist
+                if ($tax_change->subvat) {
+                    $current_tax_type->sub_vat_id = $tax_change->to_sub_vat_id;
+                }
+                
+                $current_tax_type->save();
 
                 $tax_change->update([
                     'status' => 'effective'

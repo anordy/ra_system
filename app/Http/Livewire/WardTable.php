@@ -91,16 +91,16 @@ class WardTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-                    $id = "'" . encrypt($value) . "'";
+                    $value = "'".encrypt($value)."'";
                     if ($row->is_approved == 1) {
-                        if (Gate::allows('setting-ward-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
+                        if (Gate::allows('setting-ward-edit')  && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-edit-modal',$id)"><i class="fa fa-edit"></i> </button>
+                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'ward-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                             HTML;
                         }
                         if (Gate::allows('setting-ward-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete = <<<HTML
-                                <button class="btn btn-danger btn-sm" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
+                                <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                             HTML;
                         }
                     }
@@ -112,6 +112,7 @@ class WardTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-ward-delete')) {
             abort(403);
         }
@@ -136,11 +137,9 @@ class WardTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $ward = Ward::find(decrypt($data->id));
-            if (empty($ward))
-            {
-                $this->alert('error', 'The selected ward is not found');
-                return;
+            $ward = Ward::find($data->id);
+            if (is_null($ward)) {
+                abort(404);
             }
             if ($ward->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);

@@ -37,21 +37,18 @@ class TransactionFeesEditModal extends Component
     public function mount($id)
     {
         $data = TransactionFee::find(decrypt($id));
-        if (!empty($data)) {
-            $this->min_amount = $data->minimum_amount;
-            $this->max_amount = $data->maximum_amount ?? null;
-            $this->fee = $data->fee;
-            $this->data = $data;
-            $this->old_values = [
-                'minimum_amount' => $this->min_amount,
-                'maximum_amount' => $this->max_amount,
-                'fee' => $this->fee,
-            ];
-        }
-        else{
-            Log::error('No result is found, Invalid id');
+        if(is_null($data)){
             abort(404);
         }
+        $this->min_amount = $data->minimum_amount;
+        $this->max_amount = $data->maximum_amount ?? null;
+        $this->fee = $data->fee;
+        $this->data = $data;
+        $this->old_values = [
+            'minimum_amount' => $this->min_amount,
+            'maximum_amount' => $this->max_amount,
+            'fee' => $this->fee,
+        ];
     }
 
     public function submit()

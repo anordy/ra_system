@@ -56,6 +56,18 @@
             padding-right: 70px;
             left: 30px;
         }
+        .commissioner-name {
+            top: 95.5%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 20px;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            margin-left: 55px;
+            left: 30px;
+        }
         .qr-code {
             top: 86%;
             padding-left: 70px;
@@ -90,7 +102,10 @@
                 {{\Carbon\Carbon::create($taxClearanceRequest->expire_on)->format('d-M-Y')}}
         </span>
         <span class="commissioner-signature">
-                    <img src="{{ public_path()}}/sign/commissioner.png">
+            <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+        </span>
+        <span class="commissioner-name">
+            {{$commissinerFullName}}
         </span>
     </body>
 </html>

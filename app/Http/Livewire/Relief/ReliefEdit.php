@@ -58,17 +58,36 @@ class ReliefEdit extends Component
     public function mount($enc_id)
     {
         $this->relief = Relief::find(decrypt($enc_id));
+        if (is_null($this->relief)){
+            abort(404);
+        }
         $this->supplier = $this->relief->business_id;
         $this->optionSuppliers = Business::where('status', BusinessStatus::APPROVED)->get();
         $this->supplierLocation = $this->relief->location_id;
-        $this->optionSupplierLocations = Business::find($this->supplier)->locations;
-
-        $this->projectSection = ReliefProject::find($this->relief->project_id)->id;
+        $optionSupplierLocations = Business::find($this->supplier);
+        if (is_null($optionSupplierLocations)){
+            abort(404);
+        }
+        $this->optionSupplierLocations = $optionSupplierLocations->locations;
+        $projectSection = ReliefProject::find($this->relief->project_id);
+        if (is_null($projectSection)){
+            abort(404);
+        }
+        $this->projectSection = $projectSection->id;
         $this->optionProjectSections = ReliefProject::all();
 
-        $this->project = ReliefProjectList::find($this->relief->project_list_id)->id;
+        $projectList = ReliefProjectList::find($this->relief->project_list_id);
+        if (is_null($projectList)){
+            abort(404);
+        }
+        $this->project = $projectList->id;
         $this->optionProjects = ReliefProjectList::where('project_id', $this->projectSection)->get();
-        $this->rate = ReliefProjectList::find($this->relief->project_list_id)->rate;
+
+        $reliefProjectRate = ReliefProjectList::find($this->relief->project_list_id);
+        if (is_null($reliefProjectRate)){
+            abort(404);
+        }
+        $this->rate = $reliefProjectRate->rate;
 
         foreach ($this->relief->reliefItems as $item) {
             $this->items[] = [
@@ -102,10 +121,10 @@ class ReliefEdit extends Component
     protected function rules()
     {
         return [
-            'supplier' => 'required',
-            'supplierLocation' => 'required',
-            'projectSection' => 'required',
-            'project' => 'required',
+            'supplier' => 'required|strip_tag',
+            'supplierLocation' => 'required|strip_tag',
+            'projectSection' => 'required|strip_tag',
+            'project' => 'required|strip_tag',
             'items.*.name' => 'required',
             'items.*.quantity' => 'required|numeric',
             'items.*.costPerItem' => 'required|numeric',
@@ -161,7 +180,11 @@ class ReliefEdit extends Component
                     }
                 }
                 if($removeAttachment){
-                    ReliefAttachment::find($savedAttachment->id)->delete();
+                    $reliefAttachment = ReliefAttachment::find($savedAttachment->id);
+                    if(is_null($reliefAttachment)){
+                        abort(404);
+                    }
+                    $reliefAttachment->delete();
                     Storage::disk('local')->delete($savedAttachment->file_path);
                 }
             }
@@ -215,8 +238,16 @@ class ReliefEdit extends Component
             if ($this->supplier == "") {
                 $this->optionSupplierLocations = null;
             } else {
-                $this->optionSupplierLocations = Business::find($this->supplier)->locations;
-                $this->supplierLocation = $this->optionSupplierLocations->first()->id;
+                $optionSupplierLocations = Business::find($this->supplier);
+                if (is_null($optionSupplierLocations)){
+                    abort(404);
+                }
+                $this->optionProjectSections = $optionSupplierLocations->locations;
+                $supplierLocation = $this->optionSupplierLocations->firstOrFail();
+                if (is_null($supplierLocation)){
+                    abort(404);
+                }
+                $this->supplierLocation = $supplierLocation->id;
             }
         }
 
@@ -226,8 +257,16 @@ class ReliefEdit extends Component
                 $this->rate = null;
             } else {
                 $this->optionProjects = ReliefProjectList::where('project_id', $this->projectSection)->get();
-                $this->project = $this->optionProjects->first()->id;
-                $this->rate = $this->optionProjects->first()->rate;
+                $project = $this->optionProjects->firstOrFail();
+                if (is_null($project)){
+                    abort(404);
+                }
+                $this->project = $project->id;
+                $projectRate = $this->optionProjects->firstOrFail();
+                if (is_null($projectRate)){
+                    abort(404);
+                }
+                $this->rate = $projectRate->rate;
             }
             $this->calculateTotal();
         }
@@ -236,7 +275,7 @@ class ReliefEdit extends Component
             if ($this->project == '') {
                 $this->rate = null;
             } else {
-                $this->rate = ReliefProjectList::find($this->project)->rate;
+                $this->rate = ReliefProjectList::findOrFail($this->project)->rate;
             }
             $this->calculateTotal();
         }
@@ -300,8 +339,6 @@ class ReliefEdit extends Component
 
     public function removePreviousAttachment($id)
     {
-        // $attachment = ReliefAttachment::find($id);
-        // $attachment->delete();
         foreach ($this->previousAttachments as $key => $attachment) {
             if ($attachment['id'] == $id) {
                 unset($this->previousAttachments[$key]);

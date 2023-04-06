@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Workflow;
 
+use App\Jobs\Workflow\WorkflowUpdateActors;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Workflow;
@@ -28,6 +29,9 @@ class WorkflowPlaceUpdateModal extends Component
     public function mount($workflow, $placeName)
     {
         $this->workflow = Workflow::find($workflow);
+        if (is_null($this->workflow)){
+            abort(404, 'Workflow not found');
+        }
         $places = json_decode($this->workflow->places, true);
         $this->place = $places[$placeName];
         $this->name = $placeName;
@@ -48,9 +52,9 @@ class WorkflowPlaceUpdateModal extends Component
     protected function rules()
     {
         return [
-            'operator_type' => 'in:user,role',
-            'role_id' => 'nullable',
-            'user_id' => 'nullable',
+            'operator_type' => 'in:user,role|strip_tag',
+            'role_id.*' => 'nullable|numeric',
+            'user_id' => 'nullable|numeric',
         ];
     }
 
@@ -75,6 +79,7 @@ class WorkflowPlaceUpdateModal extends Component
         try {
             $this->workflow->places = json_encode($workflowPlaces);
             $this->workflow->save();
+            dispatch( new WorkflowUpdateActors($this->workflow->id, $this->name));
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);

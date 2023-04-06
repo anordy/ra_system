@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Activities for dual control</h5>
+        <div class="card-header font-weight-bold bg-white">
+            Activities for dual control
         </div>
 
         <div class="card-body">
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ($result->action_detail === 'editing user role')
+                    @if (str_contains($result->action_detail, 'editing user role'))
                         @include('dual-control-activities.details.user-role')
                     @elseif ($result->controllable_type === \App\Models\DualControl::USER)
                         @include('dual-control-activities.details.user')
@@ -106,6 +106,8 @@
                         @include('dual-control-activities.details.education-level')
                     @elseif ($result->controllable_type === \App\Models\DualControl::API_USER)
                         @include('dual-control-activities.details.api-users')
+                    @elseif ($result->controllable_type === \App\Models\DualControl::VAT_TAX_TYPE || $result->controllable_type === \App\Models\DualControl::TAXTYPE)
+                        @include('dual-control-activities.details.tax-type')
                     @endif
 
                     <div class="d-flex justify-content-end">

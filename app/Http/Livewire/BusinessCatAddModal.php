@@ -20,7 +20,7 @@ class BusinessCatAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:business_categories',
+            'name' => 'required|strip_tag|unique:business_categories',
         ];
     }
 

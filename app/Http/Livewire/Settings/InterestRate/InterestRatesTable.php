@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Settings\InterestRate;
 
 use App\Models\DualControl;
-use App\Models\Role;
 use App\Traits\DualControlActivityTrait;
 use Exception;
 use App\Models\InterestRate;
@@ -55,7 +54,10 @@ class InterestRatesTable extends DataTableComponent
                 ->searchable(),
             Column::make('Rate', 'rate')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return number_format($value, 4);
+                }),
             Column::make('Approval Status', 'is_approved')
                 ->format(function ($value, $row) {
                     if ($value == 0) {
@@ -89,10 +91,11 @@ class InterestRatesTable extends DataTableComponent
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
                     $button = '';
+                    $value = "'".encrypt($value)."'";
                     if ($row->is_approved == 1) {
                         if (approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $button = <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'settings.interest-rate.interest-rate-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                     <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                                 HTML;
                         }
@@ -106,6 +109,7 @@ class InterestRatesTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-interest-rate-delete')) {
             abort(403);
         }
@@ -130,6 +134,9 @@ class InterestRatesTable extends DataTableComponent
         try {
             $data = (object)$value['data'];
             $rate = InterestRate::find($data->id);
+            if(is_null($rate)){
+                abort(404);
+            }
             $this->triggerDualControl(get_class($rate), $rate->id, DualControl::DELETE, 'deleting interest rate');
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;

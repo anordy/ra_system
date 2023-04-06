@@ -117,7 +117,10 @@ class PaymentReport extends Component
     {
         if ($propertyName == 'tax_type_id') {
             if ($this->tax_type_id != 'all') {
-                $this->tax_type_code = TaxType::find($this->tax_type_id)->code;
+                $this->tax_type_code = TaxType::findOrFail($this->tax_type_id)->code;
+                if(is_null($this->tax_type_code)){
+                    abort(404);
+                }
             } else {
                 $this->tax_type_code = 'all';
             }
@@ -199,8 +202,8 @@ class PaymentReport extends Component
         return [
             'payment_category' => $this->payment_category,
             'tax_type_id' => $this->tax_type_id ?? 'all',
-            'tax_type_code' => $this->tax_type_id == 'all' ? 'all' : TaxType::find($this->tax_type_id)->code,
-            'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns' : TaxType::find($this->tax_type_id)->name,
+            'tax_type_code' => $this->tax_type_id == 'all' ? 'all' : TaxType::find($this->tax_type_id)->code ?? 'N/A',
+            'tax_type_name' => $this->tax_type_id == 'all' ? 'All Tax Types Returns' : TaxType::find($this->tax_type_id)->name ?? 'N/A',
             'vat_type' => $this->vat_type,
             'status' => $this->status,
             'year' => $this->year,

@@ -26,7 +26,7 @@ class DebtRollbackController extends Controller
         }   
         $return_id = decrypt($tax_return_id);
         $tax_return = TaxReturn::findOrFail($return_id);
-        $tax_return->return->penalties = $tax_return->return->penalties->merge($tax_return->penalties)->sortBy('penalty_amount');
+        $tax_return->return->penalties = $tax_return->return->penalties->concat($tax_return->penalties)->sortBy('penalty_amount');
         return view('debts.rollback.return', compact('tax_return'));
     }
 

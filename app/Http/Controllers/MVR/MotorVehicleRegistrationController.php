@@ -11,6 +11,7 @@ use App\Models\MvrPlateNumberStatus;
 use App\Models\MvrRegistrationStatus;
 use App\Models\MvrRegistrationType;
 use App\Models\MvrRequestStatus;
+use App\Models\SystemSetting;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
@@ -111,8 +112,11 @@ class MotorVehicleRegistrationController extends Controller
 
         header('Content-Type: application/pdf' );
 
-        $pdf = PDF::loadView('mvr.pdfs.certificate-of-worth', compact('motor_vehicle' ));
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $signaturePath = SystemSetting::certificatePath();
+        $commissinerFullName = SystemSetting::commissinerFullName();
+
+        $pdf = PDF::loadView('mvr.pdfs.certificate-of-worth', compact('motor_vehicle', 'signaturePath', 'commissinerFullName' ));
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
         return $pdf->stream();
     }
 

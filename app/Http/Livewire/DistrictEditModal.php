@@ -29,7 +29,7 @@ class DistrictEditModal extends Component
     {
         return [
             'region_id' => 'required|exists:regions,id',
-            'name' => 'required|min:2|unique:regions,name,' . $this->district->id . ',id',
+            'name' => 'required|strip_tag|min:2|unique:regions,name,' . $this->district->id . ',id',
         ];
     }
 
@@ -68,7 +68,10 @@ class DistrictEditModal extends Component
 
         $id = decrypt($id);
         $this->regions = Region::all();
-        $this->district = District::findOrFail($id);
+        $this->district = District::find($id);
+        if(is_null($this->district)){
+            abort(404);
+        }
         $this->name = $this->district->name;
         $this->region_id = $this->district->region_id;
         $this->old_values = [

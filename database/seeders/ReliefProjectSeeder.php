@@ -14,7 +14,6 @@ class ReliefProjectSeeder extends Seeder
      */
     public function run()
     {
-        //
         ReliefProject::create([
             "name"=>"NGOs",
             "description"=>"Non-Governmental Organization",

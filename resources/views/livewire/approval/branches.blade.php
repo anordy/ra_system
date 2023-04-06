@@ -24,6 +24,19 @@
                         @enderror
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="effectiveDate">Effective Date</label>
+                        <input id="effectiveDate" type="date" class="form-control @error('effectiveDate') is-invalid @enderror"
+                               wire:model="effectiveDate" required />
+                        @error('effectiveDate')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
             </div>
         @endif
         <div class="row mt-2">
@@ -31,7 +44,6 @@
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Comments</label>
                     <textarea class="form-control @error('comments') is-invalid @enderror" wire:model.defer='comments' rows="3"></textarea>
-
                     @error('comments')
                         <div class="invalid-feedback">
                             {{ $message }}

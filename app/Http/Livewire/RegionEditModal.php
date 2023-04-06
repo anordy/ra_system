@@ -27,8 +27,8 @@ class RegionEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:regions,name,' . $this->region->id . ',id',
-            'location' => 'required'
+            'name' => 'required|strip_tag|min:2|unique:regions,name,' . $this->region->id . ',id',
+            'location' => 'required|strip_tag'
         ];
     }
 
@@ -65,7 +65,10 @@ class RegionEditModal extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $this->region = Region::findOrFail($id);
+        $this->region = Region::find($id);
+        if(is_null($this->region)){
+            abort(404);
+        }
         $this->name = $this->region->name;
         $this->location = $this->region->location;
         $this->old_values = [

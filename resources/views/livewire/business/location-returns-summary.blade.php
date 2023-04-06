@@ -6,11 +6,11 @@
         </div>
         <div class="col-md-3 mb-2">
             <span class="font-weight-bold text-uppercase">Total Outstanding Amount</span>
-            <p class="my-1">{{ number_format($outstanding, 2) }}</p>
+            <p class="my-1">{{ number_format($outstanding, 2) }} <b>TZS</b></p>
         </div>
         <div class="col-md-3 mb-2">
             <span class="font-weight-bold text-uppercase">Total Paid Amount</span>
-            <p class="my-1">{{ number_format($total - $outstanding, 2) }}</p>
+            <p class="my-1">{{ number_format($total - $outstanding, 2) }} <b>TZS</b></p>
         </div>
     </div>
     @if($hasUSD)

@@ -29,6 +29,6 @@ class FinancialMonth extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.configurations.financial_month')->subject("ZRB - ZIDRAS Financial Month Is Not configured");
+        return $this->markdown('emails.configurations.financial_month')->subject("ZRA - ZIDRAS Financial Month Is Not configured");
     }
 }

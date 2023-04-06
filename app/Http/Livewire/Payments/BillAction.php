@@ -24,10 +24,10 @@ class BillAction extends Component
     ];
 
     protected $rules = [
-        'action' => 'required',
+        'action' => 'required|strip_tag',
         'control_number' => 'required|numeric',
-        'cancellation_reason' => 'exclude_if:action,update|required_if:action,cancel',
-        'new_expiration_date' => 'exclude_if:action,cancel|required_if:action,update'
+        'cancellation_reason' => 'exclude_if:action,update|required_if:action,cancel|strip_tag',
+        'new_expiration_date' => 'exclude_if:action,cancel|required_if:action,update|strip_tag'
     ];
 
     public function mount()
@@ -58,7 +58,7 @@ class BillAction extends Component
     public function refresh()
     {
         // $this->bill = ZmBill::where('control_number', $this->control_number)->latest()->first();
-        $this->bill_change = ZmBillChange::where('zm_bill_id', $this->bill->id)->latest()->first();
+        $this->bill_change = ZmBillChange::where('zm_bill_id', $this->bill->id)->latest()->firstOrFail();
     }
 
 

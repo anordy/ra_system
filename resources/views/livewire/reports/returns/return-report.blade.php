@@ -31,8 +31,9 @@
             <select name="vat_type" id="vat_type" wire:model="vat_type"
                 class="form-control {{ $errors->has('vat_type') ? 'is-invalid' : '' }}">
                 <option value="">Select VAT Type</option>
-                @foreach ($optionVatTypes as $vatType)
-                <option value={{ $vatType }}>{{ $vatType }}</option>
+                <option value="All">All</option>
+                @foreach ($subVatOptions as $vatType)
+                    <option value="{{ $vatType->id }}">{{ $vatType->name }}</option>
                 @endforeach
             </select>
             @error('vat_type')

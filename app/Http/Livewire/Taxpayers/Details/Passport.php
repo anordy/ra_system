@@ -18,6 +18,7 @@ class Passport extends Component
     use LivewireAlert;
 
     public $kyc;
+    public $is_verified_triggered = false;
     public $passport;
     public $matchesText = 'Match';
     public $notValidText = 'Mismatch';
@@ -36,6 +37,7 @@ class Passport extends Component
     {
         $immigration_controller = new ImmigrationController;
         try {
+            $this->is_verified_triggered = true;
             $this->passport = $immigration_controller->getPassportData($this->kyc->passport_no, $this->kyc->permit_number);
         } catch (Exception $e) {
             Log::error($e);
@@ -92,9 +94,9 @@ class Passport extends Component
     {
         try {
             $this->kyc->update([
-                'first_name' =>  $this->convertStringToCamelCase($this->passport['FirstName']),
-                'middle_name' => $this->convertStringToCamelCase($this->passport['MiddleName']),
-                'last_name' => $this->convertStringToCamelCase($this->passport['SurName']),
+                'first_name' =>  $this->convertStringToCamelCase($this->passport['data']['FirstName']),
+                'middle_name' => $this->convertStringToCamelCase($this->passport['data']['MiddleName']),
+                'last_name' => $this->convertStringToCamelCase($this->passport['data']['SurName']),
                 'passport_verified_at' => Carbon::now()->toDateTimeString(),
             ]);
             $this->alert('success', 'Taxpayers details has been approved successful!');

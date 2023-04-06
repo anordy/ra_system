@@ -16,15 +16,10 @@ use Livewire\Component;
 
 class UserRoleEditModal extends Component
 {
-
+    
     use LivewireAlert, DualControlActivityTrait;
 
     public $roles = [];
-    // public $fname;
-    // public $lname;
-    // public $phone;
-    // public $gender = '';
-    // public $email;
     public $role = '';
     public $user;
     public $old_values;
@@ -32,23 +27,18 @@ class UserRoleEditModal extends Component
     public function mount($id)
     {
         $this->roles = Role::all();
-        $user = User::find(decrypt($id));
-        if (!empty($user)) {
-            $this->user = $user;
-            $this->role = $user->role_id;
-            $this->old_values = [
-                'role_id' => $this->role,
-                'fname' => $this->user->fname,
-                'lname' => $this->user->lname,
-                'email' => $this->user->email,
-                'phone' => $this->user->phone,
-            ];
+        $this->user = User::find(decrypt($id));
+        if (is_null($this->user)){
+            abort(404, 'User not found');
         }
-        else
-        {
-            Log::error('No result is found, Invalid id');
-            abort(404);
-        }
+        $this->role = $this->user->role_id;
+        $this->old_values = [
+            'role_id' => $this->role,
+            'fname' => $this->user->fname,
+            'lname' => $this->user->lname,
+            'email' => $this->user->email,
+            'phone' => $this->user->phone,
+        ];
     }
 
     protected function rules()
@@ -79,13 +69,13 @@ class UserRoleEditModal extends Component
                 'email' => $this->user->email,
                 'phone' => $this->user->phone,
             ];
-
+            
             if ($this->role == $this->old_values['role_id']) {
                 $this->alert('error', 'You have selected the same role. Please try again with different one.');
                 return;
             }
 
-            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user role ' . $this->user->fname . ' ' . $this->user->lname . '', json_encode($this->old_values), json_encode($payload));
+            $this->triggerDualControl(get_class($this->user), $this->user->id, DualControl::EDIT, 'editing user role '.$this->user->fname.' '.$this->user->lname.'', json_encode($this->old_values), json_encode($payload));
             DB::commit();
             $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.users.index');

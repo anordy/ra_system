@@ -43,7 +43,9 @@ class ClosureApprovalProcessing extends Component
 
                 if ($this->subject->closure_type == 'all') {
                     $business = Business::find($this->subject->business_id);
-
+                    if(is_null($business)){
+                        abort(404);
+                    }
                     $business->update([
                         'status' => BusinessStatus::TEMP_CLOSED
                     ]);
@@ -81,7 +83,7 @@ class ClosureApprovalProcessing extends Component
     public function reject($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['comments' => 'required']);
+        $this->validate(['comments' => 'required|strip_tag']);
 
         try {
 

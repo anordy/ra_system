@@ -6,14 +6,14 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h5 class="text-uppercase">Roles Management</h5>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            Roles Management
             <div class="card-tools">
                 @can('setting-role-add')
                     @if(approvalLevel(Auth::user()->level_id, 'Maker'))
-                        <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-add-modal')"><i
-                                    class="fa fa-plus-circle"></i>
-                            Add
+                        <button class="btn btn-primary btn-sm px-3" onclick="Livewire.emit('showModal', 'role-add-modal')">
+                            <i class="bi bi-plus-circle-fill pr-2"></i>
+                            Add new role
                         </button>
                     @endif
                 @endcan

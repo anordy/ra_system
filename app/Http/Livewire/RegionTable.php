@@ -102,7 +102,7 @@ class RegionTable extends DataTableComponent
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-region-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit = <<<HTML
-                                <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="bi bi-pencil-fill mr-1"></i> Edit</button>
+                                <button class="btn btn-info btn-sm mr-1" onclick="Livewire.emit('showModal', 'region-edit-modal',$value)"><i class="bi bi-pencil-fill mr-1"></i> Edit</button>
                             HTML;
                         }
 
@@ -145,7 +145,10 @@ class RegionTable extends DataTableComponent
         DB::beginTransaction();
         try {
             $data = (object) $value['data'];
-            $region = Region::findOrFail($data->id);
+            $region = Region::find($data->id);
+            if(is_null($region)){
+                abort(404);
+            }
             if ($region->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;

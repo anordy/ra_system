@@ -29,7 +29,10 @@ class ShowChanges extends Component
 
     public function mount($updateId)
     {
-        $this->business_update = BusinessUpdate::findOrFail(decrypt($updateId));
+        $this->business_update = BusinessUpdate::find(decrypt($updateId));
+        if(is_null($this->business_update)){
+            abort(404);
+        }
         $this->old_values = json_decode($this->business_update->old_values);
         $this->business_id = $this->business_update->business_id;
         $this->new_values = json_decode($this->business_update->new_values);
@@ -39,32 +42,32 @@ class ShowChanges extends Component
     public function getNameById($type, $id)
     {
         if ($type == 'business_activities_type_id') {
-            return BusinessActivity::findOrFail($id)->name;
+            return BusinessActivity::find($id)->name ?? 'N/A';
         } else if ($type == 'currency_id') {
-            return Currency::findOrFail($id)->name;
+            return Currency::find($id)->name ?? 'N/A';
         } else if ($type == 'region_id') {
-            return Region::findOrFail($id)->name;
+            return Region::find($id)->name ?? 'N/A';
         } else if ($type == 'district_id') {
-            return District::findOrFail($id)->name;
+            return District::find($id)->name ?? 'N/A';
         } else if ($type == 'ward_id') {
-            return Ward::findOrFail($id)->name;
+            return Ward::find($id)->name ?? 'N/A';
         } else if ($type == 'bank_id') {
-            return Bank::findOrFail($id)->name;
+            return Bank::find($id)->name ?? 'N/A';
         } else if ($type == 'account_type_id') {
-            return AccountType::findOrFail($id)->name;
+            return AccountType::find($id)->name ?? 'N/A';
         } else if ($type == 'street_id') {
-            return Street::findOrFail($id)->name;
+            return Street::find($id)->name ?? 'N/A';
         }
     }
 
     public function getResponsiblePersonNameById($id)
     {
-        return Taxpayer::findOrFail($id)->fullname();
+        return Taxpayer::find($id)->fullname() ?? 'N/A';
     }
 
     public function getResponsiblePersonNameByReferenceNo($refNo)
     {
-        return Taxpayer::where('reference_no', $refNo)->first()->fullname();
+        return Taxpayer::where('reference_no', $refNo)->first()->fullname() ?? 'N/A';
     }
 
     public function render()

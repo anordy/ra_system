@@ -14,6 +14,8 @@ class RepostReturnSignature implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, VerificationTrait;
 
+    public $tries = 1;
+    public $backoff = 10;
     public $return;
 
     /**
@@ -34,6 +36,7 @@ class RepostReturnSignature implements ShouldQueue
     public function handle()
     {
         if (!$this->sign($this->return)){
+            $this->fail();
             dispatch(new RepostReturnSignature($this->return));
         }
     }

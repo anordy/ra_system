@@ -3,7 +3,7 @@
     <thead>
     <tr>
         <th style="text-align:center;" colspan="13" height="70px">
-            <strong>ZANZIBAR REVENUE BOARD</strong><br>
+            <strong>ZANZIBAR Revenue Authority</strong><br>
 
             <strong>{{ $title }}</strong><br>
 

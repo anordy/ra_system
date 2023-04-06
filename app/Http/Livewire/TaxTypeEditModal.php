@@ -24,27 +24,24 @@ class TaxTypeEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:tax_types,name,'.$this->taxType->id.',id',
-            'gfs_code' => 'required'
+            'name' => 'required|strip_tag|unique:tax_types,name,'.$this->taxType->id.',id',
+            'gfs_code' => 'required|numeric'
         ];
     }
 
     public function mount($id)
     {
         $this->taxType = TaxType::find(decrypt($id));
-        if (!empty($this->taxType))
-        {
-            $this->name =  $this->taxType->name;
-            $this->gfs_code =  $this->taxType->gfs_code;
-
-            $this->old_values = [
-                'name' => $this->name,
-                'gfs_code' => $this->gfs_code
-            ];
+        if (is_null($this->taxType)){
+            abort(404, 'Taxtype not found.');
         }
-        Log::error('No result is found, Invalid id');
-        abort(404);
+        $this->name =  $this->taxType->name;
+        $this->gfs_code =  $this->taxType->gfs_code;
 
+        $this->old_values = [
+            'name' => $this->name,
+            'gfs_code' => $this->gfs_code
+        ];
     }
 
     public function submit()

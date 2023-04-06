@@ -42,8 +42,8 @@ class ClaimsReport extends Component
     protected function rules()
     {
         return [
-            'status' => 'required',
-            'duration' => 'required',
+            'status' => 'required|strip_tag',
+            'duration' => 'required|strip_tag',
             'year' => $this->duration == 'yearly' ? 'required' : '',
             'from' => $this->duration == 'date_range' ? 'required|date' : '',
             'to' => $this->duration == 'date_range' ? 'required|date|after:from' : '',

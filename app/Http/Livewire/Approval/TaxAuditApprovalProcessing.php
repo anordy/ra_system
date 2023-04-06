@@ -125,10 +125,10 @@ class TaxAuditApprovalProcessing extends Component
             $this->validate(
                 [
                     'periodFrom' => 'required|date',
-                    'periodTo' => 'required|after:periodFrom',
-                    'auditingDate' => 'required|after:today',
-                    'intension' => 'required',
-                    'scope' => 'required',
+                    'periodTo' => 'required|date|after:periodFrom',
+                    'auditingDate' => 'required|date|after:today',
+                    'intension' => 'required|strip_tag',
+                    'scope' => 'required|strip_tag',
                     'teamLeader' => ['required',  new NotIn([$this->teamMember])],
                     'teamMember' => ['required',  new NotIn([$this->teamLeader])],
                 ],
@@ -311,17 +311,21 @@ class TaxAuditApprovalProcessing extends Component
 
                 if ($deregister) {
                     $auditManagerRole = Role::where('name', 'Audit Manager')->get()->first();
-                    $auditManager = User::where('role_id', $auditManagerRole->id)->get()->first();
 
-                    if ($auditManager) {
-                        $auditManager->notify(new DatabaseNotification(
-                            $subject = "{$deregister->business->name} audit has been completed",
-                            $message = "{$deregister->business->name} audit for deregistration has been completed",
-                            $href = 'business.viewDeregistration',
-                            $hrefText = 'View',
-                            $hrefParameters = $deregister->id
-                        ));
+                    if ($auditManagerRole) {
+                        $auditManager = User::where('role_id', $auditManagerRole->id)->get()->first();
+
+                        if ($auditManager) {
+                            $auditManager->notify(new DatabaseNotification(
+                                $subject = "{$deregister->business->name} audit has been completed",
+                                $message = "{$deregister->business->name} audit for deregistration has been completed",
+                                $href = 'business.viewDeregistration',
+                                $hrefText = 'View',
+                                $hrefParameters = $deregister->id
+                            ));
+                        }
                     }
+
                 }
             }
 
@@ -364,8 +368,14 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->subject->tax_type_id == 0) {
             if ($this->subject->assessment->assessment_type == TaxAudit::class ) {
                 $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxAuditTaxTypeNames();
+                if(is_null($taxType)){
+                    abort(404);
+                }
             } else if ($this->subject->assessment->assessment_type == TaxInvestigation::class ) {
                 $taxType = $this->subject->assessment->assessment_type::find($this->subject->assessment->assessment_id)->taxInvestigationTaxTypeNames();
+                if(is_null($taxType)){
+                    abort(404);
+                }
             }    
         } else {
             $taxType = $this->subject->taxType;
@@ -381,8 +391,8 @@ class TaxAuditApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->principalAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'audit')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'audit')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'audit')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'audit')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
@@ -390,8 +400,8 @@ class TaxAuditApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->interestAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'interest')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'interest')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'interest')->firstOrFail()->id
                 ],
                 [
                     'billable_id' => $assessment->id,
@@ -399,8 +409,8 @@ class TaxAuditApprovalProcessing extends Component
                     'use_item_ref_on_pay' => 'N',
                     'amount' => $this->penaltyAmount,
                     'currency' => 'TZS',
-                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->first()->gfs_code,
-                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->first()->id
+                    'gfs_code' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->gfs_code,
+                    'tax_type_id' => $this->taxTypes->where('code', 'penalty')->firstOrFail()->id
                 ]
             ];
 
@@ -477,7 +487,7 @@ class TaxAuditApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         try {

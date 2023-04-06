@@ -24,8 +24,8 @@ class ISIC4EditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|unique:isic4s,code,'.$this->isic4->id.',id',
-            'description' => 'required',
+            'code' => 'required|strip_tag|unique:isic4s,code,'.$this->isic4->id.',id',
+            'description' => 'required|strip_tag',
             'isic3_id' => 'required',
         ];
     }
@@ -34,7 +34,10 @@ class ISIC4EditModal extends Component
     {
         $id = decrypt($id);
         $this->isic3s = ISIC3::all();
-        $data = ISIC4::findOrFail($id);
+        $data = ISIC4::find($id);
+        if(is_null($data)){
+            abort(404);                    
+        }
         $this->isic4 = $data;
         $this->code = $data->code;
         $this->description = $data->description;

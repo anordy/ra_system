@@ -24,8 +24,8 @@ class ISIC3EditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|unique:isic3s,code,'.$this->isic3->id.',id',
-            'description' => 'required',
+            'code' => 'required|strip_tag|unique:isic3s,code,'.$this->isic3->id.',id',
+            'description' => 'required|strip_tag',
             'isic2_id' => 'required',
         ];
     }
@@ -33,12 +33,15 @@ class ISIC3EditModal extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $this->isic2s = ISIC2::all();
-        $data = ISIC3::findOrFail($id);
+        $data = ISIC3::find($id);
+        if(is_null($data)){
+            abort(404);
+        }
         $this->isic3 = $data;
         $this->code = $data->code;
         $this->description = $data->description;
         $this->isic2_id = $data->isic2_id;
+        $this->isic2s = ISIC2::all();
     }
 
 

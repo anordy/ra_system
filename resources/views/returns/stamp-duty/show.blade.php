@@ -73,7 +73,7 @@
                         @foreach ($return->items as $item)
                             <tr>
                                 <td>{{ $item->config->name }}</td>
-                                <td>{{ number_format($item->value) }}</td>
+                                <td>{{ number_format($item->value, 2) }}</td>
                                 @if($item->config->rate_applicable)
                                     <td>
                                         {{ $item->config->rate ?? $item->config->rate_usd }}
@@ -82,7 +82,7 @@
                                 @else
                                     <td class="bg-secondary"></td>
                                 @endif
-                                <td>{{ number_format($item->vat) }}</td>
+                                <td>{{ number_format($item->vat, 2) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -106,7 +106,7 @@
                             <th>Late Payment Amount</th>
                             <th>Interest Rate</th>
                             <th>Interest Amount</th>
-                            <th>Penalty Amount</th>
+                            <th>Payable Amount</th>
                         </tr>
                         </thead>
 
@@ -118,7 +118,7 @@
                                     <td>{{ number_format($penalty['tax_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
                                     <td>{{ number_format($penalty['late_filing'], 2) }} <strong>{{ $return->currency}}</strong></td>
                                     <td>{{ number_format($penalty['late_payment'], 2) }} <strong>{{ $return->currency}}</strong></td>
-                                    <td>{{ number_format($penalty['rate_percentage'], 2) }} <strong>%</strong></td>
+                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}</td>
                                     <td>{{ number_format($penalty['rate_amount'], 2) }} <strong>{{ $return->currency}}</strong></td>
                                     <td>{{ number_format($penalty['penalty_amount'], 2)}} <strong>{{ $return->currency}}</strong></td>
                                 </tr>

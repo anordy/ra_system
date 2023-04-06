@@ -42,6 +42,12 @@ class TaxRegionsTable extends DataTableComponent
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
+            Column::make('Location', 'location')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value){
+                    return ucfirst($value);
+                }),
             Column::make('Prefix', 'prefix')
                 ->sortable()
                 ->searchable(),

@@ -148,7 +148,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="{{ public_path() }}/images/logo.jpg" alt="">
+            <img src="{{ public_path() }}/images/logo.png" alt="">
         </div>
         <div>
             <p>Revenue and Debt Managment Unit</p>
@@ -161,7 +161,7 @@
         <div class="row">
             <div class="head-section">
                 <div class="flex-container ">
-                    <div class="zrb-no">ZRB NO.
+                    <div class="zrb-no">ZRA NO.
                         <table class="table-bordered">
                             <tr>
                                 <td class="table-width">Z</td>

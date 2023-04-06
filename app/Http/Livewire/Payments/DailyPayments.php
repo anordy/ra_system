@@ -13,8 +13,7 @@ use PDF;
 
 class DailyPayments extends Component
 {
-    use LivewireAlert;
-    use DailyPaymentTrait;
+    use LivewireAlert, DailyPaymentTrait;
 
     public $today;
     public $range_start;
@@ -26,8 +25,8 @@ class DailyPayments extends Component
     public $vars;
 
     protected $rules =[
-        'range_start'=>'required',
-        'range_end' => 'required',
+        'range_start'=>'required|strip_tag',
+        'range_end' => 'required|strip_tag',
     ];
 
     public function mount()
@@ -36,6 +35,10 @@ class DailyPayments extends Component
         $this->range_start = date('Y-m-d');
         $this->range_end = date('Y-m-d');
         $this->getData();
+    }
+
+    public function updated($propertyName){
+        $this->search();
     }
 
     public function search()

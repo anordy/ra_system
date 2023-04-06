@@ -36,11 +36,11 @@ class BusinessInvestigationAddModal extends Component
     protected function rules()
     {
         return [
-            'business_id' => 'required',
-            'location_ids' => 'required',
-            'tax_type_ids' => 'required',
-            'intension' => 'required',
-            'scope' => 'required',
+            'business_id' => 'required|numeric|exists:businesses,id',
+            'location_ids.*' => 'required|numeric',
+            'tax_type_ids.*' => 'required|numeric',
+            'intension' => 'required|strip_tag',
+            'scope' => 'required|strip_tag',
             'period_from' => 'required|date',
             'period_to' => 'required|date|after:period_from',
         ];
@@ -55,6 +55,9 @@ class BusinessInvestigationAddModal extends Component
     {
         if ($this->business_id) {
             $this->selectedBusiness = Business::with('locations')->find($id);
+            if (is_null($this->selectedBusiness)) {
+                abort(404);
+            }
             $this->taxTypes         = $this->selectedBusiness->taxTypes;
             $this->locations        = $this->selectedBusiness->locations;
         } else {
@@ -65,9 +68,18 @@ class BusinessInvestigationAddModal extends Component
 
     public function submit()
     {
+
+        $this->validate();
+        $location_ids = $this->location_ids;
+        $tax_type_ids = $this->tax_type_ids;
+
         $check = TaxInvestigation::where('business_id', $this->business_id)
-            ->where('location_id', $this->location_ids)
-            ->where('tax_type_id', $this->tax_type_ids)
+            ->whereHas('taxInvestigationLocations', function ($query) use ($location_ids) {
+                $query->whereIn('business_location_id', $location_ids);
+            })
+            ->orWhereHas('taxInvestigationTaxTypes', function ($query) use ($tax_type_ids) {
+                $query->whereIn('business_tax_type_id', $tax_type_ids);
+            })
             ->whereIn('status', ['draft', 'pending'])
             ->first();
 
@@ -77,8 +89,6 @@ class BusinessInvestigationAddModal extends Component
                 ['business_id.email' => 'Business with the given tax type is already on investigationing']
             );
         }
-
-        $this->validate();
         DB::beginTransaction();
         try {
             $taxInvestigation = TaxInvestigation::create([
@@ -96,7 +106,7 @@ class BusinessInvestigationAddModal extends Component
             ]);
 
             foreach ($this->location_ids as $location_id) {
-                
+
                 TaxInvestigationLocation::create([
                     'tax_investigation_id' => $taxInvestigation->id,
                     'business_location_id' => $location_id
@@ -104,7 +114,7 @@ class BusinessInvestigationAddModal extends Component
             }
 
             foreach ($this->tax_type_ids as $tax_type_id) {
-                
+
                 TaxInvestigationTaxType::create([
                     'tax_investigation_id' => $taxInvestigation->id,
                     'business_tax_type_id' => $tax_type_id

@@ -59,7 +59,6 @@
                         @endif
                     @endif
                 </tr>
-
                 </tbody>
             </table>
         </div>

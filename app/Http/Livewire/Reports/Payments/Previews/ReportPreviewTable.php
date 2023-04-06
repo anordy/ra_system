@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Reports\Payments\Previews;
 
 use App\Models\Returns\LumpSum\LumpSumReturn;
-use App\Models\TaxType;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -16,12 +15,10 @@ class ReportPreviewTable extends DataTableComponent
     use LivewireAlert, ReturnReportTrait;
 
     public $parameters;
-    public $lumpsump;
 
     public function mount($parameters)
     {
         $this->parameters = $parameters;
-        $this->lumpsump = TaxType::where('code', TaxType::LUMPSUM_PAYMENT)->first();
     }
 
     public function builder(): Builder

@@ -142,7 +142,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="{{ public_path() }}/images/logo.jpg" alt="">
+            <img src="{{ public_path() }}/images/logo.png" alt="">
         </div>
         <div>
             <P>Revenue and Debt Managment Unit</P>
@@ -162,7 +162,7 @@
                     </div>
                 </div><br><br><br>
                 <div class="flex-container">
-                    <div class="zrb-no">ZRB NO.
+                    <div class="zrb-no">ZRA NO.
                         <table class="table-bordered">
                             <tr>
                                 <td class="table-width">Z</td>
@@ -198,7 +198,7 @@
             <div class="body-section">
                 <P>
                     I hereby give you notice that I, …………………………………...... of ………………………………...... Dully appointed
-                    officer of ZRB acting under warrant of the commissioner assisted by a certified Bailiff
+                    officer of ZRA acting under warrant of the commissioner assisted by a certified Bailiff
                     distrained/create a charge on various goods and chattels described in the schedules hereto in
                     satisfaction of unpaid tax, penalties, fines, interest and costs of distress amounting to <br><br>
                     TZS…………………………………………………………………

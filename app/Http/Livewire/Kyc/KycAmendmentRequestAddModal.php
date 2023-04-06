@@ -2,22 +2,23 @@
 
 namespace App\Http\Livewire\Kyc;
 
-use App\Events\SendMail;
-use App\Events\SendSms;
-use App\Models\Country;
-use App\Models\District;
-use App\Models\DualControl;
-use App\Models\IDType;
+use Exception;
 use App\Models\KYC;
-use App\Models\KycAmendmentRequest;
+use App\Models\Ward;
+use App\Models\IDType;
 use App\Models\Region;
 use App\Models\Street;
-use App\Models\Ward;
-use App\Traits\WorkflowProcesssingTrait;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Events\SendSms;
+use App\Models\Country;
 use Livewire\Component;
+use App\Events\SendMail;
+use App\Models\District;
+use App\Models\DualControl;
+use Illuminate\Support\Facades\DB;
+use App\Models\KycAmendmentRequest;
+use Illuminate\Support\Facades\Log;
+use App\Traits\WorkflowProcesssingTrait;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class KycAmendmentRequestAddModal extends Component
 {
@@ -48,7 +49,10 @@ class KycAmendmentRequestAddModal extends Component
 
     public function mount($id)
     {
-        $this->kyc = KYC::find($id);
+        $this->kyc = KYC::find(decrypt($id));
+        if(is_null($this->kyc)){
+            abort(404);
+        }
         $this->kyc_id = $this->kyc->id;
         $this->first_name = $this->kyc->first_name;
         $this->middle_name = $this->kyc->middle_name;
@@ -68,7 +72,7 @@ class KycAmendmentRequestAddModal extends Component
         $this->ward = $this->kyc->ward_id;
         $this->street = $this->kyc->street_id;
         $this->id_type = $this->kyc->id_type;
-        $this->countries = Country::select('id', 'nationality')->where('name', '!=', 'Tanzania')->where('is_approved', DualControl::APPROVE)->get();
+        $this->countries = Country::select('id', 'nationality')->where('name', '!=', Country::TANZANIA)->where('is_approved', DualControl::APPROVE)->get();
         $this->regions = Region::where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
         $this->districts = District::where('region_id', $this->region)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
         $this->wards = Ward::where('district_id', $this->district)->where('is_approved', DualControl::APPROVE)->select('id', 'name')->get();
@@ -123,26 +127,33 @@ class KycAmendmentRequestAddModal extends Component
     protected function rules()
     {
         return  [
-            'first_name' => 'required',
-            'middle_name' => 'nullable',
-            'last_name' => 'required',
+            'first_name' => 'required|strip_tag',
+            'middle_name' => 'nullable|strip_tag',
+            'last_name' => 'required|strip_tag',
             'email' => 'nullable:email|unique:kycs,email,' . $this->kyc->id . ',id',
             'mobile' => 'required|unique:kycs,mobile,'. $this->kyc->id . ',id|size:10',
             'alt_mobile' => 'nullable|size:10',
             'physical_address' => 'required',
-            'region' => 'required',
-            'district' => 'required',
-            'ward' => 'required',
-            'street' => 'required',
+            'region' => 'required|numeric|exists:regions,id',
+            'district' => 'required|numeric|exists:districts,id',
+            'ward' => 'required|numeric|exists:wards,id',
+            'street' => 'required|numeric|exists:streets,id',
             'nida' => 'exclude_if:is_citizen,0|required_without:zanid|nullable|digits:20|unique:kycs,nida_no,' . $this->kyc->id . ',id|unique:taxpayers,nida_no',
             'zanid' => 'exclude_if:is_citizen,0|required_without:nida|nullable|digits:9|unique:kycs,zanid_no,' . $this->kyc->id . ',id|unique:taxpayers,zanid_no',
             'nationality' => 'required_if:is_citizen,0',
             'passportNo' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:kycs,passport_no,' . $this->kyc->id . ',id|unique:taxpayers,passport_no|digits_between:8,15',
             'permitNumber' => 'nullable|required_if:is_citizen,0|exclude_if:is_citizen,1|unique:taxpayers,permit_number,' . $this->kyc->id . ',id|string|min:10|max:20',
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
             'nida.required_without' => 'Please provide your NIDA number',
             'zanid.required_without' => 'Please provide your ZANID number',
         ];
     }
+
     public function submit()
     {
         $this->validate();
@@ -171,26 +182,26 @@ class KycAmendmentRequestAddModal extends Component
 
             if ($this->is_citizen) {
                 if ($this->nida && $this->zanid) {
-                    $idType = IDType::where('name', IDType::NIDA_ZANID)->first()->id;
+                    $idType = IDType::where('name', IDType::NIDA_ZANID)->firstOrFail()->id;
                     $new_values['zanid_no'] = $this->zanid;
                     $new_values['nida_no'] = $this->nida;
                 }
 
                 if ($this->nida && !$this->zanid) {
-                    $idType = IDType::where('name', IDType::NIDA)->first()->id;
+                    $idType = IDType::where('name', IDType::NIDA)->firstOrFail()->id;
                     $new_values['nida_no'] = $this->nida;
                 }
 
                 if (!$this->nida && $this->zanid) {
-                    $idType = IDType::where('name', IDType::ZANID)->first()->id;
+                    $idType = IDType::where('name', IDType::ZANID)->firstOrFail()->id;
                     $new_values['zanid_no'] = $this->zanid;
                 }
 
-                $countryId = Country::where('nationality', 'Tanzanian')->first()->id;
+                $countryId = Country::where('nationality', 'Tanzanian')->firstOrFail()->id;
                 $new_values['id_type'] = $idType;
                 $new_values['country_id'] = $countryId;
             } else {
-                $idType = IDType::where('name', IDType::PASSPORT)->first()->id;
+                $idType = IDType::where('name', IDType::PASSPORT)->firstOrFail()->id;
                 $new_values['id_type'] = $idType; // Get Tanzania ID
                 $new_values['passport_no'] = $this->passportNo;
                 $new_values['permit_number'] = $this->permitNumber;

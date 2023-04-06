@@ -73,13 +73,13 @@ trait UpgradeTaxTypeTrait
     public function currentFinancialMonth()
     {
         $month = date("F", strtotime(date('Y-m-d')));
-        $currentFinancialMonth = FinancialMonth::query()->where('name', $month)->where('financial_year_id', $this->currentFinancialYear()->id)->first();
+        $currentFinancialMonth = FinancialMonth::query()->where('name', $month)->where('financial_year_id', $this->currentFinancialYear()->id)->firstOrFail();
         return $currentFinancialMonth;
     }
 
     public function currentFinancialYear()
     {
-        $year = FinancialYear::query()->select('id')->where('code', date('Y'))->first();
+        $year = FinancialYear::query()->select('id')->where('code', date('Y'))->firstOrFail();
         return $year;
     }
 }

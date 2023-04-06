@@ -14,7 +14,7 @@ trait WorkflowProcesssingTrait
 
     public function registerWorkflow($modelName, $modelId)
     {
-        $this->subject = $modelName::find($modelId);
+        $this->subject = $modelName::findOrFail($modelId);
         $workflow = Workflow::where('supports', $modelName)->latest()->first();
 
         if ($workflow == null) {

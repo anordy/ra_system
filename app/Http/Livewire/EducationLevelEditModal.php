@@ -24,14 +24,17 @@ class EducationLevelEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:education_levels,name,'.$this->level->id.',id',
+            'name' => 'required|strip_tag|unique:education_levels,name,'.$this->level->id.',id',
         ];
     }
 
     public function mount($id)
     {
         $id = decrypt($id);
-        $this->level = EducationLevel::findOrFail($id);
+        $this->level = EducationLevel::find($id);
+        if(is_null($this->level)){
+            abort(404);
+        }
         $this->name = $this->level->name;
         $this->old_values = [
             'name' => $this->name,

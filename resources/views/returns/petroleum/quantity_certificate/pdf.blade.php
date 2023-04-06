@@ -121,14 +121,14 @@
 
 <body>
     <div id="watermark">
-        <img src="{{ public_path('/images/logo.jpg') }}" height="100%" width="100%" />
+        <img src="{{ public_path('/images/logo.png') }}" height="100%" width="100%" />
     </div>
 
     <div class="text-center">
         <table class="no-border">
             <td align="left" style="width: 30%">
                 <div style="font-size: 12px">
-                    Zanzibar Revenue Board, <br>
+                    Zanzibar Revenue Authority, <br>
                     Head Office, <br>
                     P.O.Box 2072 <br>
                     Tel: 255 24 2230639/233041 <br>
@@ -138,12 +138,12 @@
                 </div>
             </td>
             <td align="center" class="header-title">
-                <img class="header-nembo" src="{{ public_path('/images/logo.jpg') }}" alt="ZRB Logo">
+                <img class="header-nembo" src="{{ public_path('/images/logo.png') }}" alt="ZRA Logo">
                 <div style="font-size: 12px">www.zrbrevenue.org</div>
             </td>
             <td align="right" style="width: 30%">
                 <div style="text-align: left; font-size: 12px;">
-                    Zanzibar Revenue Board, <br>
+                    Zanzibar Revenue Authority, <br>
                     Head Office, <br>
                     P.O.Box 2072 <br>
                     Tel: 255 24 2230639/233041 <br>
@@ -203,7 +203,7 @@
             <tr>
                 <td>
                     <div class="text-center">...........................................</div> <br>
-                    <div class="text-center">ZRB Residence Officer</div>
+                    <div class="text-center">ZRA Residence Officer</div>
                 </td>
                 <td>
                     <div class="text-center">...........................................</div> <br>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Settings\InterestRate;
 
-use App\Models\Bank;
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\DB;
@@ -24,16 +23,19 @@ class InterestRateEditModal extends Component
     protected function rules()
     {
         return [
-            'rate' => 'required',
+            'rate' => 'required|strip_tag',
             'year' => 'required|unique:interest_rates,year,' . $this->interestRate->id,
         ];
     }
 
     public function mount($id)
     {
-        $data = InterestRate::find($id);
+        $data = InterestRate::find(decrypt($id));
+        if(is_null($data)){
+            abort(404);
+        }
         $this->interestRate = $data;
-        $this->rate = $data->rate;
+        $this->rate = number_format($data->rate, 4);
         $this->year = $data->year;
         $this->old_values = [
             'rate' => $this->rate,

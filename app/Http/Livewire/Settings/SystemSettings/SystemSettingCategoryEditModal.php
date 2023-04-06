@@ -23,8 +23,8 @@ class SystemSettingCategoryEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required',
-            'description' => 'required',
+            'name' => 'required|strip_tag',
+            'description' => 'required|strip_tag',
         ];
     }
 

@@ -15,21 +15,27 @@ class BankEditModal extends Component
     use LivewireAlert;
 
     public $name;
+    public $full_name;
     public $bank;
 
     protected function rules()
     {
         return [
-            'name' => 'required|unique:banks,name,'.$this->bank->id.',id',
+            'name' => 'required|strip_tag|unique:banks,name,'.$this->bank->id.',id',
+            'full_name' => 'required|strip_tag|unique:banks,full_name,'.$this->bank->id.',id',
         ];
     }
 
     public function mount($id)
     {
         $id = decrypt($id);
-        $data = Bank::findOrFail($id);
+        $data = Bank::find($id);
+        if(is_null($data)){
+            abort(404);
+        }
         $this->bank = $data;
         $this->name = $data->name;
+        $this->full_name = $data->full_name;
     }
 
     public function submit()
@@ -42,6 +48,7 @@ class BankEditModal extends Component
         try {
             $this->bank->update([
                 'name' => $this->name,
+                'full_name' => $this->full_name,
             ]);
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {

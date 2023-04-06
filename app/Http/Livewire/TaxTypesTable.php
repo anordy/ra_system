@@ -2,12 +2,9 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\DualControl;
 use App\Models\TaxType;
-use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -15,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxTypesTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use LivewireAlert;
 
     protected $model = TaxType::class;
     public function configure(): void
@@ -85,17 +82,18 @@ class TaxTypesTable extends DataTableComponent
                 ->format(function ($value, $row) {
                     $edit = '';
                     $delete = '';
-                    $id = "'" . encrypt($value) . "'";
+                    $value = "'".encrypt($value)."'";
+
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-tax-type-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $edit =  <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'tax-type-edit-modal',$id)"><i class="fa fa-edit"></i> </button>
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'tax-type-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
                         }
 
                         if (Gate::allows('setting-tax-type-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
                             $delete =  <<< HTML
-                                    <button class="btn btn-danger btn-sm" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
+                                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                                 HTML;
                         }
                     }
@@ -111,7 +109,7 @@ class TaxTypesTable extends DataTableComponent
         if (!Gate::allows('setting-tax-type-delete')) {
             abort(403);
         }
-
+        $id = decrypt($id);
         $this->alert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
@@ -130,28 +128,13 @@ class TaxTypesTable extends DataTableComponent
 
     public function confirmed($value)
     {
-
-        $data = (object) $value['data'];
-        $tax_type = TaxType::find(decrypt($data->id));
-        if (empty($tax_type))
-        {
-            $this->alert('error', 'The selected tax type is not found');
-            return;
-        }
-        if ($tax_type->is_approved == DualControl::NOT_APPROVED) {
-            $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
-            return;
-        }
-        DB::beginTransaction();
         try {
-            $this->triggerDualControl(get_class($tax_type), $tax_type->id, DualControl::DELETE, 'deleting tax type');
-            DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
-            return;
+            $data = (object) $value['data'];
+            TaxType::findOrFail($data->id)->delete();
+            $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
-            DB::rollBack();
             report($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

@@ -22,14 +22,17 @@ class ReliefSponsorsEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_ministries,name,'.$this->reliefSponsor->id.',id',
-            'acronym' => 'required',
+            'name' => 'required|unique:relief_ministries,name,'.$this->reliefSponsor->id.',id|strip_tag',
+            'acronym' => 'required|strip_tag',
         ];
     }
 
     public function mount($id)
     {
         $data = ReliefSponsor::find($id);
+        if (is_null($data)){
+            abort(404, 'Sponsor not found');
+        }
         $this->reliefSponsor = $data;
         $this->name = $data->name;
         $this->acronym = $data->acronym;

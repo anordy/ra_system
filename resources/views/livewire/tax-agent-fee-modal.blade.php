@@ -25,8 +25,8 @@
                             <label class="control-label">Category</label>
                             <select wire:model.defer="category" name="category" id="category" class="form-control">
                                 <option  value="">select category</option>
-                                <option value="Registration">Registration</option>
-                                <option value="Renewal">Renewal</option>
+                                <option value="Registration Fee">Registration</option>
+                                <option value="Renewal Fee">Renewal</option>
 
                             </select>
                             @error('category')
@@ -39,7 +39,7 @@
                             <select wire:model.defer="duration" class="form-control">
                                 <option value="">select duration</option>
                                 @for($x=1; $x <= 5; $x++)
-                                <option value="{{ $x }}">{{ $x }} @if($x == 1) year @else years @endif</option>
+                                    <option value="{{ $x }}">{{ $x }} @if($x == 1) year @else years @endif</option>
                                 @endfor
                             </select>
                             @error('duration')

@@ -64,7 +64,9 @@ class DeregisterApprovalProcessing extends Component
 
                 if ($this->subject->deregistration_type == 'all') {
                     $business = Business::find($this->subject->business_id);
-
+                    if(is_null($business)){
+                        abort(404);
+                    }
                     $business->update([
                         'status' => BusinessStatus::DEREGISTERED
                     ]);
@@ -111,7 +113,7 @@ class DeregisterApprovalProcessing extends Component
     public function reject($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['comments' => 'required']);
+        $this->validate(['comments' => 'required|strip_tag']);
         try {
             if ($this->checkTransition('application_filled_incorrect')) {
                 $this->subject->status = BusinessStatus::CORRECTION;

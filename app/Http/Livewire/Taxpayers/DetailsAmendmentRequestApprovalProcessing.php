@@ -72,7 +72,7 @@ class DetailsAmendmentRequestApprovalProcessing extends Component
     public function reject($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['comments' => 'required']);
+        $this->validate(['comments' => 'required|strip_tag']);
         $taxpayer = Taxpayer::findOrFail($this->taxpayer_id);
 
         try {

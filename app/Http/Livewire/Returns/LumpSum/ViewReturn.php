@@ -12,7 +12,7 @@ class ViewReturn extends Component
     public function mount($return)
     {
         $this->return    = $return;
-        $penalties = $return->penalties->merge($return->tax_return->penalties);
+        $penalties = $return->penalties->concat($return->tax_return->penalties);
         $this->penalties =$penalties->toArray();
     }
 

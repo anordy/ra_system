@@ -100,7 +100,10 @@
         <br>
        <div style="text-align: center">
             <span class="commissioner-signature">
-            <img src="{{ public_path()}}/sign/commissioner.png">
+                <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+            </span>
+           <span class="commissioner-name">
+                {{$commissinerFullName}}
             </span>
            <br>
            <em>This certificate is valid for the period of three(3) months only</em>

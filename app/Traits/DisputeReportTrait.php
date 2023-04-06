@@ -11,7 +11,7 @@ trait DisputeReportTrait
         if ($parameters['tax_type_id'] == 'all') {
             $model = Dispute::query();
         } else {
-            $tax_type = TaxType::find($parameters['tax_type_id']);
+            $tax_type = TaxType::findOrFail($parameters['tax_type_id']);
             $model = Dispute::query()->where('category', $tax_type->name);
         }
 

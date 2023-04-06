@@ -38,10 +38,9 @@
         "symfony/security-core": "^5.4",
         "torann/geoip": "^3.0",
         "yajra/laravel-datatables": "^1.5",
-        "yajra/laravel-oci8": "^8.6.2"
+        "yajra/laravel-oci8": "8.6.2"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.7",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",

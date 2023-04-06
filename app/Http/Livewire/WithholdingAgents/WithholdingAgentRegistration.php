@@ -39,21 +39,21 @@ class WithholdingAgentRegistration extends Component
 
     protected $rules = [
         'tin' => 'required|numeric|digits:9',
-        'institution_name' => 'required',
-        'institution_place' => 'required',
+        'institution_name' => 'required|strip_tag',
+        'institution_place' => 'required|strip_tag',
         'email' => 'required|email|unique:withholding_agents,email',
         'mobile' => 'required|unique:withholding_agents,mobile|digits_between:10,10',
         'alt_mobile' => 'nullable|unique:withholding_agents,alt_mobile|digits_between:10,10',
-        'fax' => 'nullable',
-        'address' => 'required',
-        'responsible_person_id' => 'required',
-        'region_id' => 'required',
-        'district_id' => 'required',
-        'ward_id' => 'required',
-        'street_id' => 'required',
-        'title' => 'required',
-        'position' => 'required',
-        'date_of_commencing' => 'required',
+        'fax' => 'nullable|strip_tag',
+        'address' => 'required|strip_tag',
+        'responsible_person_id' => 'required|numeric',
+        'region_id' => 'required|numeric|exists:regions,id',
+        'district_id' => 'required|exists:districts,id',
+        'ward_id' => 'required|exists:wards,id',
+        'street_id' => 'required|exists:streets,id',
+        'title' => 'required|strip_tag',
+        'position' => 'required|strip_tag',
+        'date_of_commencing' => 'required|strip_tag',
     ];
 
     public function mount()
@@ -131,7 +131,7 @@ class WithholdingAgentRegistration extends Component
 
     public function searchResponsibleDetails()
     {
-        $this->validate(['ztnNumber' => 'nullable', 'reference_no' => 'required']);
+        $this->validate(['ztnNumber' => 'nullable|strip_tag', 'reference_no' => 'required|strip_tag']);
 
         $taxpayer = Taxpayer::where(['reference_no' => $this->reference_no])->first();
 

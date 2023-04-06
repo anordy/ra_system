@@ -28,7 +28,7 @@ class BusinessRegByTaxTypeReportExport implements FromView, WithEvents, ShouldAu
      */
     function __construct($tax_type_id)
     {
-        $this->taxType = TaxType::find($tax_type_id);
+        $this->taxType = TaxType::findOrFail($tax_type_id);
     }
 
     /**

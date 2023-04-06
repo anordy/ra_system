@@ -116,7 +116,7 @@
 
     <div class="header">
         <div class="logo">
-            <img src="{{ public_path() }}/images/logo.jpg" alt="">
+            <img src="{{ public_path() }}/images/logo.png" alt="">
         </div>
         <div>
             <h3>UNDERTAKING TO KEEP THE GOODS AND CHATTELS DISTAINED </h3>
@@ -127,7 +127,7 @@
         <div class="row">
             <div class="head-section">
                 <div class="flex-container ">
-                    <div class="zrb-no">ZRB NO.
+                    <div class="zrb-no">ZRA NO.
                         <table class="table-bordered">
                             <tr>
                                 <td class="table-width">Z</td>
@@ -198,7 +198,7 @@
                 <p>This form must be completed in triplicate</p><br>
             </div>
             <div class="copies">
-                <p>Original: ZRB</p><br>
+                <p>Original: ZRA</p><br>
                 <P>1 <sup>st </sup> Copy: Distraint Agent</P><br>
                 <p>2 <sup>nd </sup> Copy: Taxpayer</p>
             </div>

@@ -5,7 +5,7 @@
 <title>{{ config('app.name', 'ZIDRAS') }} | @yield('title')</title>
 
 <link href="{{ asset('plugins/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet" />
-<link href="{{ asset('plugins/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
 
 <link href="{{ asset('plugins/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet" />
 <link href="{{ asset('plugins/sweetalert/sweetalert2.min.css') }}" rel="stylesheet" />

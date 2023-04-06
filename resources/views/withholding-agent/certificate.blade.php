@@ -5,7 +5,7 @@
     <title></title>
     <style>
         body {
-            background-image: url("{{ public_path() }}/images/certificate/withholding_agent.png");
+            background-image: url("{{ public_path() }}/images/certificate/withholding_agent.jpg");
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -59,6 +59,18 @@
             padding-right: 70px;
             left: 30px;
         }
+        .commissioner-name {
+            top: 93%;
+            position: absolute;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 20px;
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 70px;
+            margin-left: 55px;
+            left: 30px;
+        }
     </style>
 </head>
 
@@ -70,7 +82,10 @@
     <span class="embed startDate">{{ $whagent->latestResponsiblePerson->created_at->toFormattedDateString() ?? '' }}</span>
     <span class="embed dateGiven">{{ date('M d, Y') }}</span>
     <span class="commissioner-signature">
-        <img src="{{ public_path()}}/sign/commissioner.png">
+        <img src="{{ $signaturePath == '/sign/commissioner.png' ? public_path() . '/sign/commissioner.png': storage_path().'/app/'. $signaturePath}}">
+    </span>
+    <span class="commissioner-name">
+        {{$commissinerFullName}}
     </span>
     <div style="overflow: hidden; position:absolute; top: 83%; left: 44%; background: white; border-radius: 5px; height: 180px; width: 180px; padding: 5px">
         <img class="img-fluid" src="{{ $dataUri }}" style="height: 189px">

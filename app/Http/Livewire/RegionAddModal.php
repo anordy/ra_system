@@ -25,8 +25,8 @@ class RegionAddModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|min:2|unique:regions',
-            'location' => 'required',
+            'name' => 'required|strip_tag|min:2|unique:regions',
+            'location' => 'required|strip_tag',
         ];
     }
 

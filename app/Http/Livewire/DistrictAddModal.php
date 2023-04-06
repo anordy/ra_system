@@ -28,13 +28,13 @@ class DistrictAddModal extends Component
     {
         return [
             'region_id' => 'required|exists:regions,id',
-            'name' => 'required|min:2|unique:districts',
+            'name' => 'required|strip_tag|min:2|unique:districts',
         ];
     }
 
     public function mount()
     {
-        $this->regions = Region::where('is_approved',1)->get();
+        $this->regions = Region::where('is_approved', DualControl::APPROVE)->get();
     }
 
 

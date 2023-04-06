@@ -25,7 +25,7 @@ class LandLeasePayment extends Component
 
     public function refresh(){
         $landLease = get_class($this->landLease)::find($this->landLease->id);
-        if (!$landLease){
+        if (is_null($landLease)){
             session()->flash('error', 'Land Lease not found.');
             return redirect()->route('land-lease.taxpayer.list');
         }
@@ -45,6 +45,9 @@ class LandLeasePayment extends Component
         if ($response){
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             $this->leasePayment = get_class($this->leasePayment)::find($this->leasePayment->id);
+            if(is_null($this->leasePayment)){
+                abort(404);
+            }
         } else {
             $this->alert('error', 'Control number could not be generated, please try again later.');
         }
@@ -55,14 +58,15 @@ class LandLeasePayment extends Component
         if(!Gate::allows('land-lease-generate-control-number')){
             abort(403);
         }
+        $taxType = TaxType::where('code',TaxType::LAND_LEASE)->firstOrFail();
         $billItems[] = [
             'billable_id' => $this->leasePayment->id,
             'billable_type' => get_class($this->leasePayment),
             'use_item_ref_on_pay' => 'N',
             'amount' => $this->leasePayment->total_amount_with_penalties,
             'currency' => 'USD',
-            'gfs_code' => TaxType::where('code','land-lease')->first()->gfs_code,
-            'tax_type_id' => TaxType::where('code','land-lease')->first()->id
+            'gfs_code' => $taxType->gfs_code,
+            'tax_type_id' => $taxType->id
         ];
 
         $this->landLeaseGenerateControlNo($this->leasePayment, $billItems);

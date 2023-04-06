@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Region;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +19,7 @@ class CreateTaxRegionsTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('prefix');
+            $table->enum('location', [Region::PEMBA, Region::UNGUJA]);
             $table->unsignedInteger('registration_count')->default(0);
             $table->softDeletes();
             $table->timestamps();

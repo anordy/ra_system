@@ -25,9 +25,9 @@ class ExchangeRateEditModal extends Component
     protected function rules()
     {
         return [
-            'mean' => 'required',
-            'spot_buying' => 'required',
-            'spot_selling' => 'required',
+            'mean' => 'required|numeric',
+            'spot_buying' => 'required|numeric',
+            'spot_selling' => 'required|numeric',
             'exchange_date' => 'required|date',
         ];
     }
@@ -62,7 +62,10 @@ class ExchangeRateEditModal extends Component
     public function mount($id)
     {
         $id = decrypt($id);
-        $this->exchange_rate = ExchangeRate::findOrFail($id);
+        $this->exchange_rate = ExchangeRate::find($id);
+        if(is_null($this->exchange_rate)){
+            abort(404);
+        }
         $this->spot_buying = $this->exchange_rate->spot_buying;
         $this->spot_selling = $this->exchange_rate->spot_selling;
         $this->mean = $this->exchange_rate->mean;

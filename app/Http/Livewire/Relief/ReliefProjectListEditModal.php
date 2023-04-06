@@ -28,18 +28,20 @@ class ReliefProjectListEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_project_lists,name,'.$this->project->id.',id',
-            'description' => 'required',
-            'rate' => 'required|numeric|min:0|max:100',
+            'name' => 'required|unique:relief_project_lists,name,'.$this->project->id.',id|strip_tag',
+            'description' => 'required|strip_tag',
+            'rate' => 'required|numeric|min:0|max:100|strip_tag',
         ];
     }
 
     public function mount($id)
     {
-//        todo: encrypt id
         $this->ministries = ReliefMinistry::all();
         $this->sponsors = ReliefSponsor::all();
         $data = ReliefProjectList::find(decrypt($id));
+        if (is_null($data)){
+            abort(404, 'Relief Project List not found');
+        }
         $this->project = $data;
         $this->name = $data->name;
         $this->description = $data->description;

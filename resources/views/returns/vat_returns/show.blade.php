@@ -152,7 +152,7 @@
                                                 @if($return->business->business_type =='hotel')
                                                     <tr>
                                                         <td>{{ $item->config->name }}</td>
-                                                        <td class="text-right">{{ number_format($item->value) }} <strong>(No.
+                                                        <td class="text-right">{{ number_format($item->value, 2) }} <strong>(No.
                                                                 of bed nights)</strong></td>
                                                         <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
                                                             @if($item->config->rate_type =='percentage')
@@ -169,7 +169,7 @@
                                                 @if($return->business->business_type =='electricity')
                                                     <tr>
                                                         <td>{{ $item->config->name }}</td>
-                                                        <td class="text-right">{{ number_format($item->value) }}
+                                                        <td class="text-right">{{ number_format($item->value, 2) }}
                                                             <strong>(Electricity Units)</strong></td>
                                                         <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate }}
                                                             @if($item->config->rate_type =='percentage')
@@ -186,7 +186,7 @@
                                             @elseif($item->config->code != 'TIT' && $item->config->code != 'TITM1')
                                                 <tr>
                                                     <td>{{ $item->config->name }}</td>
-                                                    <td class="text-right">{{ number_format($item->value) }}
+                                                    <td class="text-right">{{ number_format($item->value, 2) }}
                                                         <strong>  {{ $item->config->currency}}</strong></td>
                                                     <td>{{ $item->config->rate_type === 'percentage' ? $item->config->rate : $item->config->rate_usd }}
                                                         @if($item->config->rate_type =='percentage')
@@ -375,7 +375,7 @@
                                             <th>Late Payment Amount</th>
                                             <th>Interest Rate</th>
                                             <th>Interest Amount</th>
-                                            <th>Penalty Amount</th>
+                                            <th>Payable Amount</th>
                                         </tr>
                                         </thead>
 
@@ -391,8 +391,7 @@
                                                         <strong>{{ $return->currency }}</strong></td>
                                                     <td>{{ number_format($penalty['late_payment'], 2) }}
                                                         <strong>{{ $return->currency }}</strong></td>
-                                                    <td>{{ number_format($penalty['rate_percentage'], 2) }}
-                                                        <strong>%</strong>
+                                                    <td>{{ number_format($penalty['rate_percentage'], 4) }}
                                                     </td>
                                                     <td>{{ number_format($penalty['rate_amount'], 2) }}
                                                         <strong>{{ $return->currency }}</strong></td>

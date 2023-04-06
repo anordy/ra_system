@@ -110,7 +110,7 @@
                             </div>
                             @if ($investigation->investigation_report)
                                 <div class="col-md-4">
-                                    <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
                                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                         <a target="_blank"
@@ -124,7 +124,7 @@
                             @endif
                             @if ($investigation->working_report)
                                 <div class="col-md-4">
-                                    <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                                    <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
                                         class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                         <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                         <a target="_blank"
@@ -147,9 +147,9 @@
         </div>
         <div class="tab-pane fade card p-2" id="return-infos" role="tabpanel" aria-labelledby="return-infos-tab">
             @if ($investigation->location_id != 0 && $investigation->tax_type_id != 0)
-                @livewire('investigation.declared-sales-analysis', ['investigation' => $investigation, 'tax_type_id' => $investigation->tax_type_id, 'location_id' => $investigation->location_id])
+                @livewire('investigation.declared-sales-analysis', ['investigationId' => encrypt($investigation->id), 'tax_type_id' => encrypt($investigation->tax_type_id), 'location_id' => encrypt($investigation->location_id)])
             @else
-                @livewire('investigation.declared-sales-analysis-instances', ['investigation' => $investigation])
+                @livewire('investigation.declared-sales-analysis-instances', ['investigationId' => encrypt($investigation->id)])
             @endif
         </div>
         <div class="tab-pane fade card p-2" id="contact" role="tabpanel" aria-labelledby="contact-tab">

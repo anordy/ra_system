@@ -4,22 +4,14 @@ namespace App\Traits;
 
 use App\Events\SendMail;
 use App\Events\SendSms;
+use App\Jobs\Workflow\UserUpdateActors;
 use App\Models\DualControl;
 use App\Models\DualControlHistory;
-use App\Models\Role;
-use App\Models\TaPaymentConfiguration;
-use App\Models\TransactionFee;
-use App\Models\User;
-use Exception;
-use Carbon\Carbon;
-use App\Models\Audit;
-use App\Models\SystemSetting;
-use App\Models\SystemSettingCategory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 trait DualControlActivityTrait
 {
+    use VerificationTrait;
     public function triggerDualControl($model, $modelId, $action, $action_detail, $old_values = null, $edited_values = null)
     {
         $payload = [
@@ -40,7 +32,7 @@ trait DualControlActivityTrait
         if ($action == DualControl::EDIT || $action == DualControl::DELETE) {
             $data->update(['is_updated' => DualControl::NOT_APPROVED]);
             if ($model == DualControl::USER) {
-                $message = 'We are writing to inform you that some of your ZRB staff personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                $message = 'We are writing to inform you that some of your ZRA staff personal information has been requested to be changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                 $this->sendEmailToUser($data, $message);
             }
         }
@@ -88,7 +80,7 @@ trait DualControlActivityTrait
                 break;
 
             case DualControl::ZRBBANKACCOUNT:
-                return 'Zrb Bank Account';
+                return 'ZRA Bank Account';
                 break;
             case DualControl::EXCHANGE_RATE:
                 return 'Exchange Rate';
@@ -121,6 +113,9 @@ trait DualControlActivityTrait
                 break;
             case DualControl::API_USER:
                 return 'API User';
+                break;
+            case DualControl::VAT_TAX_TYPE:
+                return 'VAT Tax Type';
                 break;
 
             default:
@@ -180,9 +175,14 @@ trait DualControlActivityTrait
                 
                 $payload = array_merge($payload, ['is_updated' => DualControl::APPROVE]);
                 $update->update($payload);
-                if ($data->controllable_type == DUalControl::USER) {
-                    $message = 'We are writing to inform you that some of your ZRB staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
+                if ($data->controllable_type == DualControl::USER) {
+                    $this->sign($update);
+                    $message = 'We are writing to inform you that some of your ZRA staff personal information has been changed in our records. If you did not request these changes or if you have any concerns, please contact us immediately.';
                     $this->sendEmailToUser($update, $message);
+                }
+
+                if(str_contains($data->action_detail, 'editing user role')){
+                    dispatch(new UserUpdateActors($data->controllable_type_id));
                 }
 
             } else {

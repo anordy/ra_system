@@ -36,7 +36,7 @@ class SendDebtWaiverRejectedSMS implements ShouldQueue
         $sms_controller = new SMSController;
         $send_to = $this->payload['debt']->business->taxpayer->mobile;
         $source = config('modulesconfig.smsheader');
-        $customer_message = "ZRB inform you that {$this->payload['debt']->taxtype->name} debt waiver for {$this->payload['debt']->business->name} at {$this->payload['debt']->location->name} debt has been rejected.";
+        $customer_message = "ZRA inform you that {$this->payload['debt']->taxtype->name} debt waiver for {$this->payload['debt']->business->name} at {$this->payload['debt']->location->name} debt has been rejected.";
         $sms_controller->sendSMS($send_to, $source, $customer_message);
     }
 }

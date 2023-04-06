@@ -4,39 +4,28 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between">
-                <h6 class="text-capitalize">Details for {{$agent->taxpayer->first_name.' '.$agent->taxpayer->middle_name.' '.$agent->taxpayer->last_name}} as Tax Consultant</h6>
-                <a class="btn btn-info" href="{{ route('taxagents.active') }}">
+        <div class="card-header bg-white text-uppercase font-weight-bold py-2">
+            <div class="d-flex justify-content-between align-items-center">
+                Details for {{$agent->taxpayer->first_name.' '.$agent->taxpayer->middle_name.' '.$agent->taxpayer->last_name}} as Tax Consultant
+                <a class="btn btn-primary btn-sm" href="{{ route('taxagents.active') }}">
                     <i class="bi bi-arrow-return-left mr-2"></i>
                     Back
                 </a>
             </div>
         </div>
 
-{{--        <div class="card-body">--}}
-{{--            <div class="d-flex justify-content-between p-2">--}}
-{{--                <div>--}}
-{{--                    <a href="{{ route('taxagents.consultant-renew-requests', encrypt($agent->id)) }}" class="btn btn-info">View Renew Requests</a>--}}
-{{--                </div>--}}
-{{--                @if ($agent->status == \App\Models\TaxAgentStatus::APPROVED && $agent->bill->status == \App\Models\PaymentStatus::PAID)--}}
-{{--                    <div class="d-flex justify-content-end">--}}
-{{--                        <a style="background: #f5f9fa; color: #3c5f86;" class="file-item" target="_blank"--}}
-{{--                           href="{{ route('taxagents.certificate', [\Illuminate\Support\Facades\Crypt::encrypt($agent->id)]) }}">--}}
-{{--                            <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>--}}
-{{--                            <div style="font-weight: 500;" class="ml-1">--}}
-{{--                                Download Certificate--}}
-{{--                            </div>--}}
-{{--                        </a>--}}
-
-{{--                    </div>--}}
-{{--                @endif--}}
-{{--            </div>--}}
-{{--            @include('taxagents.includes.show')--}}
-
-{{--        </div>--}}
-
         <div class="card-body">
+            <div class="d-flex justify-content-end">
+                @if ($agent->status == \App\Models\TaxAgentStatus::APPROVED)
+                    <a style="background: #f5f9fa; color: #3c5f86;" class="file-item" target="_blank"
+                       href="{{ route('taxagents.certificate', [\Illuminate\Support\Facades\Crypt::encrypt($agent->id)]) }}">
+                        <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
+                        <div style="font-weight: 500;" class="ml-1">
+                            Download Certificate
+                        </div>
+                    </a>
+                @endif
+            </div>
             <div class="card p-0 m-0">
                 <div class="card-body mt-0 p-2">
                     <nav class="nav nav-tabs mt-0 border-top-0">

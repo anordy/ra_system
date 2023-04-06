@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\SendSms;
+use App\Jobs\SendKYCRegistrationSMS;
+use App\Models\KYC;
 use App\Models\UserOtp;
 use App\Jobs\SendOTPSMS;
 use App\Models\Business;
@@ -68,25 +70,49 @@ class SendSmsFired
         }
         if ($event->service == 'otp') {
             $token = UserOtp::find($event->tokenId);
+            if(is_null($token)){
+                abort(404);
+            }
             SendOTPSMS::dispatch($event->extra['code'], $token->user->fullname(), $token->user->phone);
         } else if ($event->service == 'withholding_agent_registration') {
-            /** TokenId is withholding agent id id */
+            /** TokenId is withholding agent id */
             $withholding_agent = WaResponsiblePerson::find($event->tokenId);
+            if(is_null($withholding_agent)){
+                abort(404);
+            }
             SendWithholdingAgentRegistrationSMS::dispatch($withholding_agent->taxpayer->fullname(), $withholding_agent->withholdingAgent->institution_name, $withholding_agent->taxpayer->mobile);
         } else if ($event->service === 'taxpayer-registration') {
             // Token ID is $taxpayerId
             $taxpayer = Taxpayer::find($event->tokenId);
+            if(is_null($taxpayer)){
+                abort(404);
+            }
             SendRegistrationSMS::dispatch($taxpayer->mobile, $taxpayer->reference_no, $event->extra['code']);
-        } else if ($event->service === 'business-registration-approved') {
+        }
+        else if ($event->service == 'kyc-registration'){
+            // token is kyc id
+            $kyc = KYC::find($event->tokenId);
+            SendKYCRegistrationSMS::dispatch($kyc);
+        }
+        else if ($event->service === 'business-registration-approved') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
+            if(is_null($business)){
+                abort(404);
+            }
             SendBusinessApprovedSMS::dispatch($business);
         } else if ($event->service === 'business-registration-correction') {
             // Token ID is $businessId
             $business = Business::find($event->tokenId);
+            if(is_null($business)){
+                abort(404);
+            }
             SendBusinessCorrectionSMS::dispatch($business, $event->extra['message']);
         } else if ($event->service == 'tax-agent-registration-approval') {
             $taxpayer = Taxpayer::find($event->tokenId);
+            if(is_null($taxpayer)){
+                abort(404);
+            }
             SendTaxAgentApprovalSMS::dispatch($taxpayer);
         } else if ($event->service === 'business-closure-approval') {
             // Token ID is closure data

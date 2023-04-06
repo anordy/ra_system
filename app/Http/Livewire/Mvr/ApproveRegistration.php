@@ -38,9 +38,9 @@ class ApproveRegistration extends Component
     protected function rules()
     {
         return [
-            'registration_type_id' => 'required',
-            'plate_number_size_id' => 'required',
-            'plate_number' => 'nullable|unique:mvr_motor_vehicle_registration,plate_number',
+            'registration_type_id' => 'required|strip_tag',
+            'plate_number_size_id' => 'required|strip_tag',
+            'plate_number' => 'nullable|unique:mvr_motor_vehicle_registration,plate_number|strip_tag',
         ];
     }
 

@@ -10,12 +10,12 @@
         </a>
     </div>
     <div class="card">
-        <div class="card-header ">
-            <h6 class="text-capitalize">{{$code}} return configurations</h6>
+        <div class="card-header bg-white text-uppercase font-weight-bold">
+            {{$code}} return configurations
         </div>
         <div class="card-body">
 
-            <livewire:returns.add-return-config code="{{$code}}" taxtype_id="{{$taxtype_id}}"/>
+            <livewire:returns.add-return-config code="{{$code}}" taxtype_id="{{ encrypt($taxtype_id) }}"/>
         </div>
     </div>
 @endsection

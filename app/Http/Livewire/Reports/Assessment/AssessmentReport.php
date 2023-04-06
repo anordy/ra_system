@@ -40,7 +40,7 @@ class AssessmentReport extends Component
     {
         return [
             'tax_type_id' => 'required',
-            'year' => 'required',
+            'year' => 'required|strip_tag',
             'period' => 'required',
             'period' => $this->year != 'all' ? 'required' : '',
             'month' => $this->period == 'Monthly' ? 'required' : '',
@@ -82,7 +82,7 @@ class AssessmentReport extends Component
         if ($parameters['tax_type_id'] == 'all') {
             $tax_type = 'All';
         } else {
-            $tax_type = TaxType::find($parameters['tax_type_id']);
+            $tax_type = TaxType::findOrFail($parameters['tax_type_id']);
         }
 
         if ($parameters['year'] == 'all') {

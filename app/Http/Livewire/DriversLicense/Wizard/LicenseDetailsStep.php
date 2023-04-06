@@ -25,8 +25,8 @@ class LicenseDetailsStep extends StepComponent
     public $restrictions;
 
     protected $rules = [
-        'restrictions' => 'required|min:1',
-        'license_class_ids' => 'required',
+        'restrictions' => 'required|min:1|strip_tag',
+        'license_class_ids' => 'required|strip_tag',
         'duration_id' => 'required|numeric',
     ];
 

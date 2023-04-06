@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th style="text-align:center; border-collapse:collapse;border: 1px solid black;" colspan="3" height="70px">
-                <strong>ZANZIBAR REVENUE BOARD</strong><br>
+                <strong>ZANZIBAR Revenue Authority</strong><br>
                 <strong>
                     @if ($vars['range_start'] == date('Y-m-d'))
                     Collections on <span> {{ date('d-M-Y') }} </span>
@@ -21,8 +21,8 @@
     <thead>
         <tr>
             <th style="border-collapse:collapse;border: 1px solid black;"><strong>Source</strong></th>
-            <th style="border-collapse:collapse;border: 1px solid black;text-align:right"><strong>Shilings</strong></th>
-            <th style="border-collapse:collapse;border: 1px solid black;text-align:right"><strong>Dollars</strong></th>
+            <th style="border-collapse:collapse;border: 1px solid black;text-align:right"><strong>TZS</strong></th>
+            <th style="border-collapse:collapse;border: 1px solid black;text-align:right"><strong>USD</strong></th>
         </tr>
     </thead>
     <tbody>

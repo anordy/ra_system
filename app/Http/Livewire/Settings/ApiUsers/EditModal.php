@@ -28,7 +28,10 @@ class EditModal extends Component
 
     public function mount($id)
     {
-        $this->user = ApiUser::find($id);
+        $this->user = ApiUser::find(decrypt($id));
+        if(is_null($this->user)){
+            abort(404);
+        }
         $this->app_name = $this->user->app_name;
         $this->app_url = $this->user->app_url;
         $this->username = $this->user->username;
@@ -42,7 +45,7 @@ class EditModal extends Component
     protected function rules()
     {
         return [
-            'app_name' => 'required|max:50|min:2',
+            'app_name' => 'required|max:50|min:2|strip_tag',
             'app_url' => 'required|max:100|min:2',
             'username' => 'required|string',
         ];

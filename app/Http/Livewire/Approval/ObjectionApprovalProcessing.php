@@ -39,13 +39,22 @@ class ObjectionApprovalProcessing extends Component
     public function mount($modelName, $modelId)
     {
         $this->modelName = $modelName;
-        $this->modelId = decrypt($modelId); // todo: encrypt id
+        $this->modelId = decrypt($modelId);
         $this->dispute = Dispute::find($this->modelId);
+        if (is_null($this->dispute)) {
+            abort(404);
+        }
         $this->principal = $this->dispute->tax_in_dispute;
         $this->assessment = TaxAssessment::find($this->dispute->assesment_id);
+        if(is_null($this->assessment)){
+            abort(404);
+        }
         $this->penalty = $this->assessment->penalty_amount;
         $this->interest = $this->assessment->interest_amount;
         $this->taxTypes = TaxType::where('code', 'disputes')->first();
+        if(!$this->taxTypes){
+            abort(404);
+        }
         $this->principal_amount_due = $this->assessment->principal_amount - $this->dispute->tax_deposit;
         $this->total = ($this->penalty + $this->interest + $this->principal) - ($this->dispute->tax_deposit);
 
@@ -122,7 +131,9 @@ class ObjectionApprovalProcessing extends Component
             }
 
             $dispute = Dispute::find($this->modelId);
-
+            if(is_null($dispute)){
+                abort(404);
+            }
             DB::beginTransaction();
             try {
 
@@ -199,7 +210,7 @@ class ObjectionApprovalProcessing extends Component
                 $zmBill = ZmCore::createBill(
                     $billableId,
                     $billableType,
-                    $this->taxTypes->where('code', 'verification')->first()->id,
+                    $this->taxTypes->where('code', 'verification')->firstOrFail()->id,
                     $payer_id,
                     $payer_type,
                     $payer_name,
@@ -266,7 +277,7 @@ class ObjectionApprovalProcessing extends Component
         $transition = $transition['data']['transition'];
 
         $this->validate([
-            'comments' => 'required|string',
+            'comments' => 'required|string|strip_tag',
         ]);
 
         DB::beginTransaction();
@@ -311,7 +322,7 @@ class ObjectionApprovalProcessing extends Component
                 $zmBill = ZmCore::createBill(
                     $billableId,
                     $billableType,
-                    $this->taxTypes->where('code', 'verification')->first()->id,
+                    $this->taxTypes->where('code', 'verification')->firstOrFail()->id,
                     $payer_id,
                     $payer_type,
                     $payer_name,

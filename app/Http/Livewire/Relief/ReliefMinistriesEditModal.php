@@ -22,14 +22,13 @@ class ReliefMinistriesEditModal extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|unique:relief_ministries,name,'.$this->reliefProjectSection->id.',id',
-            'type' => 'required',
+            'name' => 'required|unique:relief_ministries,name,'.$this->reliefProjectSection->id.',id|strip_tag',
+            'type' => 'required|strip_tag',
         ];
     }
 
     public function mount($id)
     {
-//        todo: encrypt id
         $data = ReliefMinistry::findorFail(decrypt($id));
         $this->reliefProjectSection = $data;
         $this->name = $data->name;

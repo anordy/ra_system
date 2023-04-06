@@ -40,11 +40,25 @@ class UserAddModal extends Component
     public $levels;
     public $level_id;
     public $isAdmin = false;
+    public $accessLevel = false;
+    public $adminCheck;
 
     public function mount()
     {
         $this->roles = Role::where('is_approved',1)->get();
         $this->levels = ApprovalLevel::select('id', 'name')->orderByDesc('id')->get();
+        $this->adminCheck = Role::where('name', Role::ADMINISTRATOR)->value('id');
+    }
+
+    public function updated($property){
+        if ($property == 'role'){
+            if ($this->role == $this->adminCheck){
+                $this->accessLevel = true;
+            } else{
+                $this->accessLevel = false;
+                $this->level_id = null;
+            }
+        }
     }
 
     protected function rules()
@@ -52,11 +66,10 @@ class UserAddModal extends Component
         return [
             'fname' => 'required|min:2|alpha',
             'lname' => 'required|min:2|alpha',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email|ends_with:zanrevenue.org,egaz.go.tz,ubx.co.tz',
             'gender' => 'required|in:M,F',
             'role' => 'required|exists:roles,id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'level_id' => 'required',
         ];
     }
 
@@ -72,7 +85,6 @@ class UserAddModal extends Component
         }
 
         $this->validate();
-
         //check if the application environment is local or production
         if (config('app.env') == 'local') {
             $this->password = 'password';
@@ -107,7 +119,7 @@ class UserAddModal extends Component
             foreach ($admins as $admin) {
                 $admin->notify(new DatabaseNotification(
                     $subject = 'NEW USER CREATED',
-                    $message = 'New ' . Role::find($this->role)->name . ' ' . $user->fullname() . ' created by ' . auth()->user()->fname . ' ' . auth()->user()->lname,
+                    $message = 'New ' . Role::find($this->role)->name ?? 'N/A' . ' ' . $user->fullname() . ' created by ' . auth()->user()->fname . ' ' . auth()->user()->lname,
                     $href = 'settings.users.index',
                 ));
             }

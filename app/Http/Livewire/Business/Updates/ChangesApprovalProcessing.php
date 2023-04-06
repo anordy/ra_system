@@ -84,14 +84,14 @@ class ChangesApprovalProcessing extends Component
                             $this->consultant = BusinessConsultant::create([
                                 'business_id' => $business->id,
                                 'contract' => $this->business_update_data->agent_contract ?? null,
-                                'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
+                                'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->firstOrFail()->taxpayer_id
                             ]);
                         // If consultant does not exist add new consultant
                         } else {
                             $this->consultant = BusinessConsultant::create([
                                 'business_id' => $business->id,
                                 'contract' => $this->business_update_data->agent_contract ?? null,
-                                'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->first()->taxpayer_id
+                                'taxpayer_id' => TaxAgent::where('reference_no', $new_values['tax_consultant_reference_no'])->firstOrFail()->taxpayer_id
                             ]);
                         }
                     // If I am removing a consultant from my business ie. remove consultant from business
@@ -137,7 +137,7 @@ class ChangesApprovalProcessing extends Component
     public function reject($transition)
     {
         $transition = $transition['data']['transition'];
-        $this->validate(['comments' => 'required']);
+        $this->validate(['comments' => 'required|strip_tag']);
         $business = Business::findOrFail($this->business_id);
 
         try {

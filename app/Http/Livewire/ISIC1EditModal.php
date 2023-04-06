@@ -20,15 +20,18 @@ class ISIC1EditModal extends Component
     protected function rules()
     {
         return [
-            'code' => 'required|unique:isic1s,code,'.$this->isic1->id.',id',
-            'description' => 'required'
+            'code' => 'required|strip_tag|unique:isic1s,code,'.$this->isic1->id.',id',
+            'description' => 'required|strip_tag'
         ];
     }
 
     public function mount($id)
     {
         $id = decrypt($id);
-        $data = ISIC1::findOrFail($id);
+        $data = ISIC1::find($id);
+        if(is_null($data)){
+            abort(404);
+        }
         $this->isic1 = $data;
         $this->code = $data->code;
         $this->description = $data->description;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TaxAgents;
 use App\Http\Controllers\Controller;
 use App\Models\DualControl;
 use App\Models\RenewTaxAgentRequest;
+use App\Models\SystemSetting;
 use App\Models\TaPaymentConfiguration;
 use App\Models\TaxAgent;
 use Carbon\Carbon;
@@ -42,12 +43,11 @@ class TaxAgentController extends Controller
         if (!Gate::allows('active-tax-consultant-view')) {
             abort(403);
         }
-        $id = Crypt::decrypt($id); // todo: suggestion: unless you want the value, better pass encrypted
-        $agent = TaxAgent::findOrFail($id); // todo: handle exception 404-customize to have action fallback
+        $id = Crypt::decrypt($id);
+        $agent = TaxAgent::findOrFail($id);
         return view('taxagents.active-agent-show', compact('agent', 'id'));
     }
 
-//    todo: all finds should check for nullable
     public function certificate($id)
     {
         if (!Gate::allows('active-tax-consultant-view')) {
@@ -81,7 +81,7 @@ class TaxAgentController extends Controller
             'Period: ' . $diff . ' ' . $word .
             'From: ' . "{$start_date}" . ", " .
             'To: ' . "{$end_date}" . ", " .
-            'https://uat.ubx.co.tz:8888/zrb_client/public/login';
+            'https://portalzidras.zanrevenue.org';
 
         $result = Builder::create()
             ->writer(new PngWriter())
@@ -91,7 +91,7 @@ class TaxAgentController extends Controller
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(207)
             ->margin(0)
-            ->logoPath(public_path('/images/logo.jpg'))
+            ->logoPath(public_path('/images/logo.png'))
             ->logoResizeToHeight(36)
             ->logoResizeToWidth(36)
             ->labelText('')
@@ -102,9 +102,12 @@ class TaxAgentController extends Controller
 
         $dataUri = $result->getDataUri();
 
-        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'start_date', 'end_date', 'superStart', 'superEnd', 'diff', 'word', 'dataUri'));
+        $signaturePath = SystemSetting::certificatePath();
+        $commissinerFullName = SystemSetting::commissinerFullName();
+
+        $pdf = PDF::loadView('taxagents.certificate', compact('taxagent', 'start_date', 'end_date', 'superStart', 'superEnd', 'diff', 'word', 'dataUri', 'signaturePath', 'commissinerFullName'));
         $pdf->setPaper('a4', 'portrait');
-        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf->setOption(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);
 
         return $pdf->stream();
 
@@ -130,7 +133,7 @@ class TaxAgentController extends Controller
         $agent = TaxAgent::findOrFail($id); // todo: handle exception
         //checking for null for the query below has been handled on UI
         $duration = TaPaymentConfiguration::select('id', 'duration', 'category', 'is_citizen')
-            ->where('category', 'Registration')
+            ->where('category', 'Registration Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->first();
@@ -155,7 +158,7 @@ class TaxAgentController extends Controller
         $agent = $renew->tax_agent;
         //checking for null for the query below has been handled on UI
         $duration = TaPaymentConfiguration::select('id', 'category', 'is_citizen')
-            ->where('category', 'Renewal')
+            ->where('category', 'Renewal Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->firstOrFail();

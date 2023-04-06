@@ -31,6 +31,9 @@ class RestaurantCardTwo extends Component
         $penaltyTable  = HotelReturnPenalty::getTableName();
         $returnTable   = HotelReturn::getTableName();
         $taxType       = TaxType::where('code', TaxType::RESTAURANT)->first();
+        if (!$taxType) {
+            abort(404);
+        }
         $restaurant    = (new HotelReturn())->newQuery();
         $filter        = $restaurant->where('tax_type_id', $taxType->id);
 

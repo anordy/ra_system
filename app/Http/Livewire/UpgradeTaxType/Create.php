@@ -67,14 +67,18 @@ class Create extends Component
             $data = $value['data'];
 
             if ($this->return->taxtype->code === TaxType::HOTEL or $this->return->taxtype->code === TaxType::STAMP_DUTY) {
-                $this->tax_type = TaxType::query()
-                    ->where('code', TaxType::VAT)->first();
+                $this->tax_type = TaxType::query()->where('code', TaxType::VAT)->first();
+                if (is_null($this->tax_type)){
+                    abort(404);
+                }
                 $this->new_tax_type_id = $this->tax_type->id;
             }
 
             if ($this->return->taxtype->code === TaxType::LUMPSUM_PAYMENT) {
-                $this->tax_type = TaxType::query()
-                    ->where('code', TaxType::STAMP_DUTY)->first();
+                $this->tax_type = TaxType::query()->where('code', TaxType::STAMP_DUTY)->first();
+                if (is_null($this->tax_type)){
+                    abort(404);
+                }
                 $this->new_tax_type_id = $this->tax_type->id;
             }
             $payload = [

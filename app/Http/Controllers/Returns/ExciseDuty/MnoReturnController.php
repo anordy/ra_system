@@ -3,17 +3,9 @@
 namespace App\Http\Controllers\Returns\ExciseDuty;
 
 use App\Http\Controllers\Controller;
-use App\Models\Business;
-use App\Models\BusinessStatus;
-use App\Models\BusinessTaxType;
-use App\Models\Returns\ExciseDuty\MnoPenalty;
 use App\Models\Returns\ExciseDuty\MnoReturn;
-use App\Models\TaxType;
 use App\Traits\ReturnCardReport;
 use App\Traits\ReturnSummaryCardTrait;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class MnoReturnController extends Controller
 {
@@ -31,7 +23,7 @@ class MnoReturnController extends Controller
     public function show($id)
     {
         $return = MnoReturn::findOrFail(decrypt($id));
-        $return->penalties = $return->penalties->merge($return->tax_return->penalties)->sortBy('tax_amount');
+        $return->penalties = $return->penalties->concat($return->tax_return->penalties)->sortBy('tax_amount');
         return view('returns.excise-duty.mno.show', compact('return'));
     }
 }

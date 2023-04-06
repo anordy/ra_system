@@ -182,7 +182,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="reference_no">Responsible person ZRB Reference No. *</label>
+                        <label for="reference_no">Responsible person ZRA Reference No. *</label>
                         <input type="text" wire:model.defer="reference_no" name="reference_no" id="reference_no"
                             class="form-control {{ $errors->has('reference_no') ? 'is-invalid' : '' }}">
                         @error('reference_no')
@@ -320,7 +320,7 @@
                     </div>
                 </div>
             @elseif ($search_triggered && empty($taxpayer))
-                <span class="pt-2 text-danger text-center">ZRB Reference Number provided is invalid
+                <span class="pt-2 text-danger text-center">ZRA Reference Number provided is invalid
                 </span>
             @endif
 

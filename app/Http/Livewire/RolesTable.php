@@ -18,7 +18,6 @@ class RolesTable extends DataTableComponent
     use LivewireAlert, DualControlActivityTrait;
 
     protected $model = Role::class;
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -46,14 +45,15 @@ class RolesTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make('Report', 'report_to')
-                ->label(fn($row) => $row->reportTo->name ?? '')
+                ->label(fn ($row) => $row->reportTo->name ?? '')
                 ->sortable()
                 ->searchable(),
             Column::make('Configuration')
                 ->label(function ($row) {
+                    $value = encrypt($row->id);
                     if (Gate::allows('setting-role-assign-permission')) {
-                        return <<< HTML
-                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal',$row->id)"><i class="fas fa-cog"></i>Configure Permission </button>
+                        return  <<< HTML
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal', '$value')"><i class="fas fa-cog"></i>Configure Permission </button>
                         HTML;
                     }
                 })->html(true),
@@ -67,7 +67,8 @@ class RolesTable extends DataTableComponent
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-success p-2" >Approved</span>
                         HTML;
-                    } elseif ($value == 2) {
+                    }
+                    elseif ($value == 2) {
                         return <<< HTML
                             <span style="border-radius: 0 !important;" class="badge badge-danger p-2" >Rejected</span>
                         HTML;
@@ -93,18 +94,18 @@ class RolesTable extends DataTableComponent
                 ->html(),
             Column::make('Action', 'id')
                 ->format(function ($value, $row) {
+                    $value = "'".encrypt($value)."'";
                     $edit = '';
                     $delete = '';
-                    $id = "'" . encrypt($value) . "'";
                     if ($row->is_approved == 1) {
                         if (Gate::allows('setting-role-edit') && approvalLevel(Auth::user()->level_id, 'Maker')) {
-                            $edit = <<< HTML
-                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal', $id)"><i class="fa fa-edit"></i> </button>
+                            $edit =  <<< HTML
+                                    <button class="btn btn-info btn-sm" onclick="Livewire.emit('showModal', 'role-edit-modal',$value)"><i class="fa fa-edit"></i> </button>
                                 HTML;
                         }
                         if (Gate::allows('setting-role-delete') && approvalLevel(Auth::user()->level_id, 'Maker')) {
-                            $delete = <<< HTML
-                                    <button class="btn btn-danger btn-sm" wire:click="delete($id)"><i class="fa fa-trash"></i> </button>
+                            $delete =  <<< HTML
+                                    <button class="btn btn-danger btn-sm" wire:click="delete($value)"><i class="fa fa-trash"></i> </button>
                                 HTML;
                         }
                     }
@@ -117,6 +118,7 @@ class RolesTable extends DataTableComponent
 
     public function delete($id)
     {
+        $id = decrypt($id);
         if (!Gate::allows('setting-role-delete')) {
             abort(403);
         }
@@ -140,22 +142,19 @@ class RolesTable extends DataTableComponent
     public function confirmed($value)
     {
         try {
-            $data = (object)$value['data'];
-            $role = Role::find(decrypt($data->id));
-            if (empty($role)) {
-                $this->alert('error', 'The selected role is not found', ['timer' => 4000]);
-                return;
-            }
+            $data = (object) $value['data'];
+            $role = Role::findOrFail($data->id);
             if ($role->is_approved == DualControl::NOT_APPROVED) {
                 $this->alert('error', 'The updated module has not been approved already');
                 return;
             }
-            if (!$this->checkRelation($role, $role->id)) {
-                $this->alert('error', DualControl::RELATION_MESSAGE, ['timer' => 4000]);
+            if (!$this->checkRelation($role, $role->id))
+            {
+                $this->alert('error', DualControl::RELATION_MESSAGE,  ['timer'=>4000]);
                 return;
             }
             $this->triggerDualControl(get_class($role), $role->id, DualControl::DELETE, 'deleting role');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);

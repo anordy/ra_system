@@ -20,7 +20,13 @@ class DeregisterApprove extends Component
     public function mount()
     {
         $this->deregister = BusinessDeregistration::find((int) decrypt(Route::current()->parameter('id')));
+        if(is_null($this->deregister)){
+            abort(404);
+        }
         $this->business = Business::find($this->deregister->business_id);
+        if(is_null($this->business)){
+            abort(404);
+        }
     }
 
     public function render()

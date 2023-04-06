@@ -28,7 +28,7 @@ class ApplicationDetailsStep extends StepComponent
     public $loss_report_path = null;
 
     protected $rules = [
-        'cert_number' => 'required|min:1',
+        'cert_number' => 'required|min:1|strip_tag',
         'conf_number' => 'required|numeric|min:1',
         'dob' => 'required|date',
         'blood_group_id' => 'required|numeric',

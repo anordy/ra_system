@@ -52,6 +52,9 @@ class CapturePassportModal extends Component
             DB::beginTransaction();
             $this->photo_path = $this->photo->storeAs('dl_passport', "dl-passport-{$this->application_id}-".date('YmdHis').'-'.random_int(10000,99999).'.'.$this->photo->extension());
             $dla =  DlLicenseApplication::query()->find($this->application_id);
+            if(is_null($dla)){
+                abort(404);
+            }
             $dla->update([
                 'photo_path'=>$this->photo_path,
                 'dl_application_status_id'=>DlApplicationStatus::query()->firstOrCreate(['name'=>DlApplicationStatus::STATUS_LICENSE_PRINTING])->id,
@@ -62,8 +65,8 @@ class CapturePassportModal extends Component
         }catch(Exception $e){
             DB::rollBack();
             Log::error($e);
-            if (Storage::exists($this->photo_path)) Storage::delete($this->photo_path);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help: '.$e->getMessage());
+            if (Storage::disk('local')->exists($this->photo_path)) Storage::disk('local')->delete($this->photo_path);
+            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
 

@@ -36,13 +36,13 @@ class BusinessAuditAddModal extends Component
     protected function rules()
     {
         return [
-            'business_id' => 'required',
-            'location_ids' => 'required',
-            'tax_type_ids' => 'required',
-            'intension' => 'required',
-            'scope' => 'required',
+            'business_id' => 'required|numeric|exists:businesses,id',
+            'location_ids.*' => 'required|numeric',
+            'tax_type_ids.*' => 'required|numeric',
+            'intension' => 'required|strip_tag',
+            'scope' => 'required|strip_tag',
             'period_from' => 'required|date',
-            'period_to' => 'required|after:period_from',
+            'period_to' => 'required|date|after:period_from',
         ];
     }
 
@@ -54,13 +54,12 @@ class BusinessAuditAddModal extends Component
     public function businessChange($id)
     {
         if ($this->business_id) {
-            $this->selectedBusiness = Business::with('locations')->find(decrypt($id));
-            if (!empty($this->selectedBusiness))
-            {
-                $this->taxTypes         = $this->selectedBusiness->taxTypes;
-                $this->locations        = $this->selectedBusiness->locations;
+            $this->selectedBusiness = Business::with('locations')->find($id);
+            if (is_null($this->selectedBusiness)) {
+                abort(404);
             }
-
+            $this->taxTypes         = $this->selectedBusiness->taxTypes;
+            $this->locations        = $this->selectedBusiness->locations;
         } else {
             $this->reset('taxTypes', 'locations');
         }
@@ -69,16 +68,19 @@ class BusinessAuditAddModal extends Component
 
     public function submit()
     {
-        $check = TaxAudit::where('business_id', decrypt($this->business_id))
-            ->where('location_id', $this->location_ids)
-            ->where('tax_type_id', $this->tax_type_ids)
+        $this->validate();
+        $location_ids = $this->location_ids;
+        $tax_type_ids = $this->tax_type_ids;
+
+        $check = TaxAudit::where('business_id', $this->business_id)
+            ->whereHas('taxAuditLocations', function ($query) use ($location_ids) {
+                $query->whereIn('business_location_id', $location_ids);
+            })
+            ->orWhereHas('taxAuditTaxTypes', function ($query) use ($tax_type_ids) {
+                $query->whereIn('business_tax_type_id', $tax_type_ids);
+            })
             ->whereIn('status', ['draft', 'pending'])
             ->first();
-
-//        if (empty($check))
-//        {
-//            $this->alert('error', 'The ');
-//        }
 
         if ($check) {
             $this->validate(
@@ -86,11 +88,11 @@ class BusinessAuditAddModal extends Component
                 ['business_id.email' => 'Business with the given tax type is already on auditing']
             );
         }
-        $this->validate();
+
         DB::beginTransaction();
         try {
             $taxAudit = TaxAudit::create([
-                'business_id' => decrypt($this->business_id),
+                'business_id' => $this->business_id,
                 'location_id' => count($this->location_ids) <= 1 ? $this->location_ids[0] : 0,
                 'tax_type_id' => count($this->tax_type_ids) <= 1 ? $this->tax_type_ids[0] : 0,
                 'intension' => $this->intension,
@@ -104,7 +106,7 @@ class BusinessAuditAddModal extends Component
             ]);
 
             foreach ($this->location_ids as $location_id) {
-                
+
                 TaxAuditLocation::create([
                     'tax_audit_id' => $taxAudit->id,
                     'business_location_id' => $location_id
@@ -112,7 +114,7 @@ class BusinessAuditAddModal extends Component
             }
 
             foreach ($this->tax_type_ids as $tax_type_id) {
-                
+
                 TaxAuditTaxType::create([
                     'tax_audit_id' => $taxAudit->id,
                     'business_tax_type_id' => $tax_type_id

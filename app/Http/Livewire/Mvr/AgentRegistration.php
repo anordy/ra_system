@@ -40,7 +40,7 @@ class AgentRegistration extends Component
     protected function rules()
     {
         return [
-            'zin' => 'required',
+            'zin' => 'required|strip_tag',
         ];
     }
 

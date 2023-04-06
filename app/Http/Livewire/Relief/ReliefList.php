@@ -79,7 +79,7 @@ class ReliefList extends DataTableComponent
 
     public function deleteRelief($id)
     {
-        $relief = Relief::find($id);
+        $relief = Relief::findOrFail($id);
         $relief->reliefAttachments()->delete();
         $relief->reliefItems()->delete();
         $relief->delete();

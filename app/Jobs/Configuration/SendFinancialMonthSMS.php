@@ -37,16 +37,19 @@ class SendFinancialMonthSMS implements ShouldQueue
 
         // Send email to administrators
         $admin_role = Role::where('name', 'Administrator')->get()->first();
-        $administrators = User::where('role_id', $admin_role->id)->get();
 
-        $source = config('modulesconfig.smsheader');
-        $customer_message = "Financial months {$this->payload['currentMonth']} for the year {$this->payload['currentYear']} have not been configured. Please log into the system and perform configurations.";
+        if ($admin_role) {
+            $administrators = User::where('role_id', $admin_role->id)->get();
 
-        if (count($administrators) > 0) {
-            foreach ($administrators as $admin) {
-                if ($admin->phone) {
-                    $send_to = $admin->phone;
-                    $sms_controller->sendSMS($send_to, $source, $customer_message);
+            $source = config('modulesconfig.smsheader');
+            $customer_message = "Financial months {$this->payload['currentMonth']} for the year {$this->payload['currentYear']} have not been configured. Please log into the system and perform configurations.";
+    
+            if (count($administrators) > 0) {
+                foreach ($administrators as $admin) {
+                    if ($admin->phone) {
+                        $send_to = $admin->phone;
+                        $sms_controller->sendSMS($send_to, $source, $customer_message);
+                    }
                 }
             }
         }

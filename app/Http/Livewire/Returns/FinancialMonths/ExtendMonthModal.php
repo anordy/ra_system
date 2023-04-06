@@ -26,8 +26,11 @@ class ExtendMonthModal extends Component
     public function mount($value)
     {
         $this->years = FinancialYear::query()->where('active', 0)->orderByDesc('code')->get();
-        $this->value = $value;
+        $this->value = decrypt($value);
         $this->month = FinancialMonth::query()->select('id', 'financial_year_id', 'due_date', 'number')->where('id', $this->value)->first();
+        if (is_null($this->month)){
+            abort(404);
+        }
         $this->number = $this->month->number;
         $this->year = $this->month->financial_year_id;
         $this->min = Carbon::create($this->month->due_date)->addDay(1);

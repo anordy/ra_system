@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th style="text-align:center;" colspan="18" height="50">
-                <strong>ZANZIBAR REVENUE BOARD</strong><br>
+                <strong>ZANZIBAR Revenue Authority</strong><br>
                 <strong>Land Lease Payments Report</strong><br>
                 <strong>From {{ $startDate }} To {{ $endDate }} </strong>
             </th>
@@ -35,7 +35,7 @@
                 <strong>Applicant Category</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
-                <strong>ZRB No/ Zin No.</strong>
+                <strong>ZRA No/ Zin No.</strong>
             </th>
             <th style="text-align:center;border-collapse:collapse;border: 1px solid black;">
                 <strong>Status</strong>

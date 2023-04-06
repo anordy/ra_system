@@ -27,15 +27,15 @@ class AddResponsiblePersonModal extends Component
     protected function rules()
     {
         return [
-            'responsible_person_id' => 'required',
-            'title' => 'required',
-            'position' => 'required'
+            'responsible_person_id' => 'required|strip_tag',
+            'title' => 'required|strip_tag',
+            'position' => 'required|strip_tag'
         ];
     }
 
     public function mount($id)
     {   
-        $this->withholding_agent_id = decrypt($id); // todo: encrypt id
+        $this->withholding_agent_id = decrypt($id);
         $waasigned = WaResponsiblePerson::distinct()->pluck('responsible_person_id');
         $this->responsible_persons = Taxpayer::whereNotIn('id', $waasigned)->get();
     }
@@ -65,7 +65,6 @@ class AddResponsiblePersonModal extends Component
     {
         $this->search_triggered = true;
 
-//        todo: select only the columns you need
         $taxpayer = Taxpayer::query()->where(['reference_no' => $this->reference_no])->first();
 
         if (!empty($taxpayer)) {
