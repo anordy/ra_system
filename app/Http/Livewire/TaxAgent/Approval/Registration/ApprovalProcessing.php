@@ -32,7 +32,6 @@ class ApprovalProcessing extends Component
     public $modelName;
     public $comments;
     public $taxTypes;
-    public $isBusinessLTO = false;
     public $shares;
     public $agent;
 
@@ -53,67 +52,31 @@ class ApprovalProcessing extends Component
             $this->alert('error', 'Tax Consultant does not exist');
             return;
         }
-        $feeType = 'Registration Fee';
-        // todo: check if queried objects exist
-        $fee = TaPaymentConfiguration::select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
-            ->where('category', $feeType)->where('is_citizen', $this->agent->taxpayer->is_citizen)->first();
-        if ($fee == null) {
-            $this->alert('error', 'The fee does not exist');
+
+        $type = 'Registration';
+//        // todo: check if queried objects exist
+        $duration = TaPaymentConfiguration::select('id', 'category', 'duration', 'is_citizen')
+            ->where('category', $type)->where('is_citizen', $this->agent->taxpayer->is_citizen)->first();
+        if ($duration == null) {
+            $this->alert('error', 'The duration for consultant registration does not exist');
             return;
         }
 
         $transition = $transition['data']['transition'];
+        DB::beginTransaction();
         if ($this->checkTransition('registration_officer_review')) {
-            // registration officer verifying request
-            $amount = $fee->amount;
-            $used_currency = $fee->currency;
-            $tax_type = TaxType::where('code', TaxType::TAX_CONSULTANT)->first();
-            if ($tax_type == null) {
-                $this->alert('error', 'The tax type does not exist');
-                return;
-            }
-            $billitems = [
-                [
-                    'billable_id' => $this->agent->id,
-                    'billable_type' => get_class($this->agent),
-                    'fee_id' => $fee->id,
-                    'fee_type' => get_class($fee),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => $amount,
-                    'currency' => $used_currency,
-                    'gfs_code' => $tax_type->gfs_code,
-                    'tax_type_id' => $tax_type->id
-                ]
-            ];
-
-            if ($amount > 0) {
-                $this->generateTaxAgentRegControlNo($this->agent, $billitems, $used_currency);
-            } else {
-                $this->alert('error', 'Bill amount can not be zero');
-            }
-
-            $this->agent->taxpayer->notify(new DatabaseNotification(
-                $subject = 'TAX CONSULTANT VERIFICATION',
-                $message = 'Your application has been verified. Please check control number to pay',
-                $href = 'taxagent.apply',
-                $hrefText = 'view'
-            ));
-        }
-
-        if ($this->checkTransition('registration_manager_review')) {
-            //registration manager approving request
             $this->agent->status = TaxAgentStatus::APPROVED;
             $this->agent->app_first_date = Carbon::now();
-            $this->agent->app_expire_date = Carbon::now()->addYear($fee->duration)->toDateTimeString();
+            $this->agent->app_expire_date = Carbon::now()->addYear($duration->duration)->toDateTimeString();
             $this->agent->save();
 
             $this->agent->generateReferenceNo();
-
             $taxpayer = Taxpayer::find($this->agent->taxpayer_id);// todo: check if object exists
             if (empty($taxpayer)) {
                 $this->alert('error', 'This taxpayer does not exist');
                 return;
             }
+
             $taxpayer->notify(new DatabaseNotification(
                 $subject = 'TAX-CONSULTANT APPROVAL',
                 $message = 'Your application has been approved',
@@ -126,14 +89,18 @@ class ApprovalProcessing extends Component
                 event(new SendSms('tax-agent-registration-approval', $taxpayer->id));
             }
 
-            $this->subject->verified_at = Carbon::now()->toDateTimeString();
+            $this->subject->approved_at = Carbon::now()->toDateTimeString();
             $this->subject->status = TaxAgentStatus::APPROVED;
+
         }
 
         try {
-            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
-            $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
+            $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]) ;
+            DB::commit();
+            $this->alert('success', 'Approved successfully');
+            return redirect()->route('taxagents.active-show', encrypt($this->subject->id));
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e);
             $this->alert('error', 'Something went wrong');
             return;

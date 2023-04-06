@@ -7,7 +7,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <div class="text-uppercase font-weight-bold">Fee Configuration</div>
+            <div class="text-uppercase font-weight-bold">Duration Configuration</div>
             <div class="card-tools">
                 @can('tax-consultant-fee-configuration-add')
                     <button class="btn btn-info btn-sm"

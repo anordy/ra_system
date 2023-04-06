@@ -129,12 +129,12 @@ class TaxAgentController extends Controller
         $id = Crypt::decrypt($id);
         $agent = TaxAgent::findOrFail($id); // todo: handle exception
         //checking for null for the query below has been handled on UI
-        $fee = TaPaymentConfiguration::select('id', 'amount', 'category', 'is_citizen')
-            ->where('category', 'Registration Fee')
+        $duration = TaPaymentConfiguration::select('id', 'duration', 'category', 'is_citizen')
+            ->where('category', 'Registration')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
-            ->firstOrFail();
-        return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'fee'));
+            ->first();
+        return view('taxagents.verification-request-agent-show', compact('agent', 'id', 'duration'));
     }
 
     public function renewal()
@@ -154,13 +154,13 @@ class TaxAgentController extends Controller
         $renew = RenewTaxAgentRequest::findOrFail($id);
         $agent = $renew->tax_agent;
         //checking for null for the query below has been handled on UI
-        $fee = TaPaymentConfiguration::select('id', 'amount', 'category', 'is_citizen')
-            ->where('category', 'Renewal Fee')
+        $duration = TaPaymentConfiguration::select('id', 'category', 'is_citizen')
+            ->where('category', 'Renewal')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->firstOrFail();
 
-        return view('taxagents.renew.show', compact('renew', 'fee'));
+        return view('taxagents.renew.show', compact('renew', 'agent', 'duration'));
     }
 
     public function viewConsultantRenewRequests($id)
@@ -173,7 +173,7 @@ class TaxAgentController extends Controller
         return view('taxagents.consultant-renew-requests.index', compact('requests', 'consultant', 'id'));
     }
 
-    public function fee()
+    public function duration()
     {
         if (!Gate::allows('tax-consultant-fee-configuration-view')) {
             abort(403);

@@ -22,18 +22,11 @@ class TaxAgentFeeModal extends Component
 {
     use LivewireAlert, DualControlActivityTrait, VerificationTrait;
 
-    public $category, $duration, $amount, $currency, $nationality, $old_values, $new_values;
-
-    public function updated($property)
-    {
-        if ($this->nationality == '1') {
-            $this->currency = 'TZS';
-        } elseif ($this->nationality == '0') {
-            $this->currency = 'USD';
-        } else {
-            $this->currency = '';
-        }
-    }
+    public $category;
+    public $duration;
+    public $nationality;
+    public $old_values;
+    public $new_values;
 
     public function submit()
     {
@@ -43,22 +36,17 @@ class TaxAgentFeeModal extends Component
 
         $validate = $this->validate([
             'category' => 'required',
-            'amount' => 'required|regex:/^[\d\s,]*$/',
             'duration' => 'required',
             'nationality' => 'required',
-            'currency' => 'required'
         ],
             [
                 'nationality.required' => 'This field is required',
-                'amount.regex' => 'The amount must be an integer',
             ]
         );
 
         DB::beginTransaction();
         try {
-            $this->amount = (int)str_replace(',', '', $this->amount);
-
-            $fee = TaPaymentConfiguration::query()
+            $duration = TaPaymentConfiguration::query()
                 ->where('category', '=', $this->category)
                 ->where('is_citizen', $this->nationality)
                 ->first();
@@ -67,53 +55,49 @@ class TaxAgentFeeModal extends Component
                 'category' => $this->category,
                 'duration' => $this->duration,
                 'is_citizen' => $this->nationality,
-                'amount' => $this->amount,
-                'currency' => $this->currency,
                 'created_by' => Auth::id(),
             ];
-            if ($fee == null) {
-                $agent_fee = TaPaymentConfiguration::query()->create($this->new_values);
+            if ($duration == null) {
+                $agent_duration = TaPaymentConfiguration::query()->create($this->new_values);
                 // Get ci_payload
-                if (!$this->sign($agent_fee)) {
-                    throw new Exception('Failed to verify consultant fee.');
+                if (!$this->sign($agent_duration)) {
+                    throw new Exception('Failed to verify consultant duration.');
                 }
-                $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::ADD, 'adding tax consultant fee for '.$this->category);
+                $this->triggerDualControl(get_class($agent_duration), $agent_duration->id, DualControl::ADD, 'adding tax consultant duration for '.$this->category);
 
             } else {
 
                 $this->old_values = [
-                    'tapc_id' => $fee->id,
-                    'category' => $fee->category,
-                    'duration' => $fee->duration,
-                    'is_citizen' => $fee->is_citizen,
-                    'amount' => $fee->amount,
-                    'currency' => $fee->currency,
-                    'created_by' => $fee->created_by,
+                    'tapc_id' => $duration->id,
+                    'category' => $duration->category,
+                    'duration' => $duration->duration,
+                    'is_citizen' => $duration->is_citizen,
+                    'created_by' => $duration->created_by,
                 ];
 
-                if (!$this->verify($fee)) {
-                    throw new Exception('Failed to verify consultant fee.');
+                if (!$this->verify($duration)) {
+                    throw new Exception('Failed to verify consultant duration.');
                 }
                 TaPaymentConfigurationHistory::query()->create($this->old_values);
 
-                $fee->delete();
+                $duration->delete();
 
-                $agent_fee = TaPaymentConfiguration::query()->create($this->new_values);
+                $agent_duration = TaPaymentConfiguration::query()->create($this->new_values);
                 // Get ci_payload
-                if (!$this->sign($agent_fee)) {
-                    throw new Exception('Failed to verify consultant fee.');
+                if (!$this->sign($agent_duration)) {
+                    throw new Exception('Failed to verify consultant duration.');
                 }
 
-                $this->triggerDualControl(get_class($agent_fee), $agent_fee->id, DualControl::EDIT, 'editing tax consultant fee', json_encode($this->old_values), json_encode($this->new_values));
+                $this->triggerDualControl(get_class($agent_duration), $agent_duration->id, DualControl::EDIT, 'editing tax consultant duration', json_encode($this->old_values), json_encode($this->new_values));
             }
 
             DB::commit();
             $this->alert('success', 'Saved successfully');
-            return redirect()->route('settings.tax-consultant-fee');
+            return redirect()->route('settings.tax-consultant-duration');
         } catch (\Throwable $exception) {
             Log::error($exception);
             $this->alert('warning', 'Something went wrong, Please contact an admin');
-            return redirect()->route('settings.tax-consultant-fee');
+            return redirect()->route('settings.tax-consultant-duration');
 
         }
     }

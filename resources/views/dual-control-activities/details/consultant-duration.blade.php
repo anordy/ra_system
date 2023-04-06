@@ -60,49 +60,6 @@
                     @endif
                 </tr>
 
-                <tr>
-                    <th>Amount</th>
-                    <td>
-                        <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->amount : $old_values->amount }}
-                        </p>
-                    </td>
-                    @if ($new_values)
-                        <td>
-                            {{ $new_values->amount ?? '' }}
-                        </td>
-
-                        @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->amount : $old_values->amount, $new_values->amount))
-                            <td class="table-success">NOT CHANGED</td>
-                        @else
-                            <td class="table-danger">CHANGED</td>
-                        @endif
-                    @endif
-                </tr>
-
-                <tr>
-                    <th>Currency</th>
-                    <td>
-                        <p class="my-1">
-                            {{ $result->action != \App\Models\DualControl::EDIT ? $data->currency : $old_values->currency }}
-                        </p>
-                    </td>
-                    @if ($new_values)
-                        <td>
-                            {{ $new_values->currency ?? '' }}
-                        </td>
-
-                        @if (compareDualControlValues(
-                            $result->action != \App\Models\DualControl::EDIT ? $data->currency : $old_values->currency, $new_values->currency))
-                            <td class="table-success">NOT CHANGED</td>
-                        @else
-                            <td class="table-danger">CHANGED</td>
-                        @endif
-                    @endif
-                </tr>
-
-
                 </tbody>
             </table>
         </div>

@@ -38,11 +38,7 @@ class WorkflowRenewTaxConsultantSeeder extends Seeder
                 'operator_type' => 'role',
                 'operators' => [1, 3]
             ],
-            'registration_manager' => [
-                'owner' => 'staff',
-                'operator_type' => 'role',
-                'operators' => [1, 2]
-            ],
+
             'completed' => [
                 'owner' => 'staff',
                 'operator_type' => 'role',
@@ -57,7 +53,7 @@ class WorkflowRenewTaxConsultantSeeder extends Seeder
             ],
             'registration_officer_review' => [
                 'from' => 'registration_officer',
-                'to'   => 'registration_manager',
+                'to'   => 'completed',
                 'condition' => '',
             ],
             'application_filled_incorrect' => [
@@ -70,16 +66,7 @@ class WorkflowRenewTaxConsultantSeeder extends Seeder
                 'to'   => 'registration_officer',
                 'condition' => '',
             ],
-            'registration_manager_review' => [
-                'from' => 'registration_manager',
-                'to'   => 'completed',
-                'condition' => '',
-            ],
-            'registration_manager_reject' => [
-                'from' => 'registration_manager',
-                'to'   => 'registration_officer',
-                'condition' => '',
-            ],
+
         ];
 
         Workflow::updateOrCreate([

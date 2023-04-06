@@ -37,6 +37,7 @@ class ApprovalProcessing extends Component
         $this->modelId = decrypt($modelId);
         $this->registerWorkflow($modelName, $this->modelId);
         $this->renew = RenewTaxAgentRequest::findOrFail($this->subject->id);
+        dd($this->renew);
     }
 
 
@@ -46,44 +47,18 @@ class ApprovalProcessing extends Component
             $this->alert('error', 'Tax Consultant does not exist');
             return;
         }
-        $feeType = 'Renewal Fee';
+        $type = 'Renewal';
         // TODO: check if queried objects exist
-        $fee = TaPaymentConfiguration::query()->select('id', 'amount', 'category', 'duration', 'is_citizen', 'currency')
-            ->where('category', $feeType)->where('is_citizen', $this->renew->tax_agent->taxpayer->is_citizen)->first();
-        if ($fee == null) {
-            $this->alert('error', 'The fee does not exist');
+        $duration = TaPaymentConfiguration::query()->select('id', 'category', 'duration', 'is_citizen' )
+            ->where('category', $type)->where('is_citizen', $this->renew->tax_agent->taxpayer->is_citizen)->first();
+        if ($duration == null) {
+            $this->alert('error', 'The duration for consultant renew does not exist');
             return;
         }
 
         $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
             // registration officer verifying request
-            $amount = $fee->amount;
-            $used_currency = $fee->currency;
-            $tax_type = TaxType::query()->where('code', TaxType::TAX_CONSULTANT)->first();
-            if ($tax_type == null) {
-                $this->alert('error', 'The tax type does not exist');
-                return;
-            }
-            $billitems = [
-                [
-                    'billable_id' => $this->renew->id,
-                    'billable_type' => get_class($this->renew),
-                    'fee_id' => $fee->id,
-                    'fee_type' => get_class($fee),
-                    'use_item_ref_on_pay' => 'N',
-                    'amount' => $amount,
-                    'currency' => $used_currency,
-                    'gfs_code' => $tax_type->gfs_code,
-                    'tax_type_id' => $tax_type->id
-                ]
-            ];
-
-            if ($amount > 0) {
-                $this->generateTaxAgentRenewControlNo($this->renew, $billitems, $used_currency);
-            } else {
-                $this->alert('error', 'Bill amount can not be zero');
-            }
 
             $this->renew->tax_agent->taxpayer->notify(new DatabaseNotification(
                 $subject = 'RENEW TAX CONSULTANT VERIFICATION',
@@ -97,7 +72,7 @@ class ApprovalProcessing extends Component
             //registration manager approving request
             $this->renew->status = TaxAgentStatus::APPROVED;
             $this->renew->renew_first_date = Carbon::now();
-            $this->renew->renew_expire_date = Carbon::now()->addYear($fee->duration)->toDateTimeString();
+            $this->renew->renew_expire_date = Carbon::now()->addYear($duration->duration)->toDateTimeString();
             $this->renew->save();
 
             $this->renew->tax_agent->taxpayer->notify(new DatabaseNotification(

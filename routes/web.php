@@ -199,7 +199,7 @@ Route::middleware(['2fa', 'auth'])->group(function () {
             Route::get('/edit/{id}/{code}/{config_id}', [ReturnController::class, 'edit'])->name('edit');
         });
 
-        Route::get('/tax-consultant-fee', [TaxAgentController::class, 'fee'])->name('tax-consultant-fee');
+        Route::get('/tax-consultant-duration', [TaxAgentController::class, 'duration'])->name('tax-consultant-duration');
 
         Route::get('vat-configuration/create', [VatReturnController::class, 'configCreate'])->name('vat-configuration-create');
         Route::resource('/transaction-fees', TransactionFeeController::class);

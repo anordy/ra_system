@@ -27,20 +27,20 @@
                     <div class="tab-content px-2 border border-top-0 pt-3 pb-2">
                         <div id="tab1" class="tab-pane fade active show">
                             @include('taxagents.includes.show')
-                            @if(empty($fee))
+                            @if(empty($duration))
                                 <div class="mx-3 p-2">
                                     <div class="row py-2 alert alert-danger rounded-0 shadow-sm border-danger">
                                         <div class="col-md-6">
                                             <span class="font-weight-bold text-uppercase">Notice</span>
-                                            <p class="my-1">Please kindly add registration fee before approving any
+                                            <p class="my-1">Please kindly add duration for consultant registration before approving any
                                                 request</p>
                                         </div>
                                         <div class="col-md-6">
                                             <span class="font-weight-bold text-uppercase">Action</span>
                                             <p class="my-1">
-                                                <a class="btn btn-primary" href="{{ route('settings.tax-consultant-fee') }}">
+                                                <a class="btn btn-primary" href="{{ route('settings.tax-consultant-duration') }}">
                                                     <i class="bi bi-plus-square-fill mr-2"></i>
-                                                    Add Fee
+                                                    Add Duration
                                                 </a>
                                             </p>
                                         </div>
@@ -93,24 +93,6 @@
                                                                 <span class="badge badge-danger py-1 px-2"
                                                                       style="border-radius: 1rem; background: #dc354559; color: #cf1c2d; font-size: 85%"><i
                                                                             class="bi bi-x-circle-fill mr-1"></i>Rejected</span>
-                                                            @endif
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="col-md-3 mb-2">
-                                                        <span class="font-weight-bold text-uppercase">Renew Payment</span>
-                                                        <p>
-                                                            @if ($request->bill != null)
-                                                                @if ($request->bill->status == 'paid')
-                                                                    <span style=" background: #72DC3559; color: #319e0a; font-size: 85%"
-                                                                          class="badge badge-success p-2">Paid</span>
-                                                                @else
-                                                                    <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
-                                                                          class="badge badge-danger p-2">Not Paid</span>
-                                                                @endif
-                                                            @else
-                                                                <span style=" background: #dc354559; color: #cf1c2d; font-size: 85%"
-                                                                      class="badge badge-danger p-2">Not Paid</span>
                                                             @endif
                                                         </p>
                                                     </div>

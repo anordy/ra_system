@@ -925,8 +925,8 @@
                     @endcan
 
                     @can('tax-consultant-fee-configuration-view')
-                        <li class="{{ request()->is('settings/tax-consultant-fee*') ? 'active' : '' }}">
-                            <a href="{{ route('settings.tax-consultant-fee') }}">Tax Consultant Fees</a>
+                        <li class="{{ request()->is('settings/tax-consultant-duration*') ? 'active' : '' }}">
+                            <a href="{{ route('settings.tax-consultant-duration') }}">Tax Consultant Duration</a>
                         </li>
                     @endcan
 

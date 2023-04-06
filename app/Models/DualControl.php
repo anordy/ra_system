@@ -28,7 +28,7 @@ class DualControl extends Model implements Auditable
     //Models
     public const USER = User::class;
     public const ROLE = Role::class;
-    public const CONSULTANT_FEE = TaPaymentConfiguration::class;
+    public const CONSULTANT_DURATION = TaPaymentConfiguration::class;
     public const SYSTEM_SETTING_CATEGORY = SystemSettingCategory::class;
     public const SYSTEM_SETTING_CONFIG = SystemSetting::class;
     public const INTEREST_RATE = InterestRate::class;
