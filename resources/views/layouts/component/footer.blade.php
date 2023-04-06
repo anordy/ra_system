@@ -29,4 +29,36 @@
             );
         })
     }
+
+    document.addEventListener('livewire:load', function () {
+    Livewire.on('alert', function (alert) {
+        // create the alert HTML
+        var html = '<div class="alert alert-' + alert.type + '">';
+
+        // add the message
+        html += '<p>' + alert.message + '</p>';
+
+        // add the close button
+        if (alert.options.showCloseButton) {
+            html += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+            html += '<span aria-hidden="true">&times;</span>';
+            html += '</button>';
+        }
+
+        // close the alert when the close button is clicked
+        if (alert.options.showCloseButton) {
+            html += '<script>';
+            html += 'document.querySelector(".alert .close").addEventListener("click", function() {';
+            html += 'this.closest(".alert").remove();';
+            html += '});';
+            html += '</script>';
+        }
+
+        html += '</div>';
+
+        // add the alert HTML to the page
+        document.body.insertAdjacentHTML('beforeend', html);
+    });
+});
+
 </script>
