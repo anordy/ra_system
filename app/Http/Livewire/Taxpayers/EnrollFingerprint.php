@@ -150,8 +150,7 @@ class EnrollFingerprint extends Component
                 'alt_mobile' => $data['alt_mobile'],
                 'region_id' => $data['region_id'],
                 'is_citizen' => $data['is_citizen'],
-                'country_id' => $data['country_id'],
-                'extra_id_number' => $data['extra_id_number'],
+                'country_id' => $data['country_id']
             ]);
 
             $taxpayer->generateReferenceNo();

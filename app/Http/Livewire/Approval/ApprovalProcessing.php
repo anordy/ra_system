@@ -51,7 +51,6 @@ class ApprovalProcessing extends Component
     public $subVatOptions = [];
 
     public $showLumpsumOptions = false;
-    public $showSubVatOptions = false;
 
     public $Ids, $exceptionOne, $exceptionTwo;
 
@@ -59,6 +58,7 @@ class ApprovalProcessing extends Component
     public $shareholders;
     public $shares;
     public $sub_vat_id;
+    public $vat_id;
 
     public function mount($modelName, $modelId)
     {
@@ -98,6 +98,7 @@ class ApprovalProcessing extends Component
             $this->selectedTaxTypes[] = [
                 'tax_type_id' => '',
                 'currency'    => '',
+                'sub_vat_id'  => ''
             ];
         }
 
@@ -168,11 +169,10 @@ class ApprovalProcessing extends Component
                 $this->showLumpsumOptions = false;
             }
 
+            $this->vat_id = $vatId;
+
             if (in_array($vatId, $this->Ids)) {
                 $this->subVatOptions  = SubVat::select('id', 'name')->where('is_approved', 1)->get();
-                $this->showSubVatOptions = true;
-            } else {
-                $this->showSubVatOptions = false;
             }
         }
     }
@@ -182,6 +182,7 @@ class ApprovalProcessing extends Component
         $this->selectedTaxTypes[] = [
             'tax_type_id' => '',
             'currency'    => '',
+            'sub_vat_id'  => ''
         ];
     }
 
@@ -260,17 +261,11 @@ class ApprovalProcessing extends Component
                     ]);
                 }
 
-                if ($this->showSubVatOptions == true) {
-                    $this->validate([
-                        'sub_vat_id' => 'required'
-                    ]);
-                }
-
                 foreach ($this->selectedTaxTypes as $type) {
                     DB::table('business_tax_type')->insert([
                         'business_id' => $business->id,
                         'tax_type_id' => $type['tax_type_id'],
-                        'sub_vat_id' => $this->sub_vat_id ?? null,
+                        'sub_vat_id' => $type['sub_vat_id'] ?? null,
                         'currency' => $type['currency'],
                         'created_at' => Carbon::now(),
                         'status' => 'current-used'
