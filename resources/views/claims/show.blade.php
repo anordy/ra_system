@@ -143,7 +143,7 @@
                 <div class="row">
                     @if ($claim->assessment->report_path)
                         <div class="col-md-4">
-                            <div style="background: #faf5f5; color: #863d3c; border: .5px solid #863d3c24;"
+                            <div style="background: #faf5f5; color: #036a9e; border: .5px solid #036a9e24;"
                                  class="p-2 mb-3 d-flex rounded-sm align-items-center">
                                 <i class="bi bi-file-earmark-pdf-fill px-2" style="font-size: x-large"></i>
                                 <a target="_blank"

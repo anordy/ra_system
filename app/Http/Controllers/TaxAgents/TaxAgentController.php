@@ -133,7 +133,7 @@ class TaxAgentController extends Controller
         $agent = TaxAgent::findOrFail($id); // todo: handle exception
         //checking for null for the query below has been handled on UI
         $duration = TaPaymentConfiguration::select('id', 'duration', 'category', 'is_citizen')
-            ->where('category', 'Registration')
+            ->where('category', 'Registration Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->first();
@@ -158,7 +158,7 @@ class TaxAgentController extends Controller
         $agent = $renew->tax_agent;
         //checking for null for the query below has been handled on UI
         $duration = TaPaymentConfiguration::select('id', 'category', 'is_citizen')
-            ->where('category', 'Renewal')
+            ->where('category', 'Renewal Fee')
             ->where('is_citizen', $agent->taxpayer->is_citizen)
             ->where('is_approved', DualControl::APPROVE)
             ->firstOrFail();
