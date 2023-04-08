@@ -51,7 +51,6 @@ class ApprovalProcessing extends Component
     public $subVatOptions = [];
 
     public $showLumpsumOptions = false;
-    public $showSubVatOptions = false;
 
     public $Ids, $exceptionOne, $exceptionTwo;
 
@@ -59,6 +58,7 @@ class ApprovalProcessing extends Component
     public $shareholders;
     public $shares;
     public $sub_vat_id;
+    public $vat_id;
 
     public function mount($modelName, $modelId)
     {
@@ -86,18 +86,26 @@ class ApprovalProcessing extends Component
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
         $this->taxRegions = TaxRegion::all();
+        $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
         foreach ($this->subject->taxTypes as $value) {
+            $this->vat_id = $value->id == TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
+            $subVat = $value->pivot->sub_vat_id ? SubVat::where('id', $value->pivot->sub_vat_id)->where('is_approved', 1)->firstOrFail('name'): null;
             $this->selectedTaxTypes[] = [
                 'currency'    => $value->pivot->currency ?? '',
                 'tax_type_id' => $value->id,
+                'sub_vat_id' => $value->pivot->sub_vat_id,
+                'sub_vat_name' => $value->pivot->sub_vat_id ? $subVat['name'] : null,
+                'show_hide_options'=> false,
             ];
         }
-
         if (count($this->selectedTaxTypes) < 1) {
             $this->selectedTaxTypes[] = [
                 'tax_type_id' => '',
                 'currency'    => '',
+                'sub_vat_id'  => '',
+                'sub_vat_name'  => '',
+                'show_hide_options' => true
             ];
         }
 
@@ -132,6 +140,7 @@ class ApprovalProcessing extends Component
 
     public function updated($property)
     {
+
         $property = explode('.', $property);
 
         if (end($property) === 'tax_type_id') {
@@ -170,9 +179,6 @@ class ApprovalProcessing extends Component
 
             if (in_array($vatId, $this->Ids)) {
                 $this->subVatOptions  = SubVat::select('id', 'name')->where('is_approved', 1)->get();
-                $this->showSubVatOptions = true;
-            } else {
-                $this->showSubVatOptions = false;
             }
         }
     }
@@ -182,7 +188,22 @@ class ApprovalProcessing extends Component
         $this->selectedTaxTypes[] = [
             'tax_type_id' => '',
             'currency'    => '',
+            'sub_vat_id'  => '',
+            'sub_vat_name'  => '',
+            'show_hide_options' => true
         ];
+    }
+
+    public function subCategorySearchUpdate($key, $value){
+        $this->selectedTaxTypes[$key]['show_hide_options'] = true;
+        $this->subVatOptions  = SubVat::select('id', 'name')->where('name', 'like', '%'.$value.'%')->where('is_approved', 1)->get();
+    }
+
+    public function selectSubVat($key, $subVat){
+        $this->selectedTaxTypes[$key]['sub_vat_id'] = $subVat['id'];
+        $this->selectedTaxTypes[$key]['sub_vat_name'] = $subVat['name'];
+        $this->selectedTaxTypes[$key]['show_hide_options'] = false;
+
     }
 
     public function removeTaxType($index)
@@ -260,17 +281,11 @@ class ApprovalProcessing extends Component
                     ]);
                 }
 
-                if ($this->showSubVatOptions == true) {
-                    $this->validate([
-                        'sub_vat_id' => 'required'
-                    ]);
-                }
-
                 foreach ($this->selectedTaxTypes as $type) {
                     DB::table('business_tax_type')->insert([
                         'business_id' => $business->id,
                         'tax_type_id' => $type['tax_type_id'],
-                        'sub_vat_id' => $this->sub_vat_id ?? null,
+                        'sub_vat_id' => $type['sub_vat_id'] ?? null,
                         'currency' => $type['currency'],
                         'created_at' => Carbon::now(),
                         'status' => 'current-used'

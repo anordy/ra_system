@@ -50,10 +50,10 @@ class RolesTable extends DataTableComponent
                 ->searchable(),
             Column::make('Configuration')
                 ->label(function ($row) {
-                    $value = encrypt($row->id);
+                    $value = "'".encrypt($row->id)."'";
                     if (Gate::allows('setting-role-assign-permission')) {
                         return  <<< HTML
-                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal', '$value')"><i class="fas fa-cog"></i>Configure Permission </button>
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal', $value)"><i class="fas fa-cog"></i>Configure Permission </button>
                         HTML;
                     }
                 })->html(true),

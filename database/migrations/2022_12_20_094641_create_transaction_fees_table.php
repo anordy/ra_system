@@ -11,6 +11,7 @@ class CreateTransactionFeesTable extends Migration
      *
      * @return void
      */
+
     public function up()
     {
         Schema::create('transaction_fees', function (Blueprint $table) {

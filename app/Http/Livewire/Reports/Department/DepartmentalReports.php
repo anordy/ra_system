@@ -190,11 +190,11 @@ class DepartmentalReports extends Component
 
         $queryDTD = ZmBill::query()
             ->rightJoin('zm_bill_items', 'zm_bills.id', 'zm_bill_items.zm_bill_id')
+            ->leftJoin('tax_returns', 'zm_bills.billable_id', 'tax_returns.id')
             ->select(['zm_bills.tax_type_id as tax_type_id', DB::raw('sum(zm_bill_items.amount) as item_amount')])
             ->groupBy(['zm_bills.tax_type_id'])
             ->whereNotNull(['zm_bill_items.billable_id', 'zm_bill_items.billable_id'])
             ->whereIn('zm_bills.tax_type_id', $this->domesticTaxTypes->pluck('id'))
-            //     columns
             ->whereHas('billable', function ($query) use ($taxRegionsIds, $filteringForLto, $currency){
                 $query->whereIn('location_id', $taxRegionsIds);
 
@@ -218,6 +218,7 @@ class DepartmentalReports extends Component
 
         $queryNTR = ZmBill::query()
             ->rightJoin('zm_bill_items', 'zm_bills.id', 'zm_bill_items.zm_bill_id')
+            ->leftJoin('tax_returns', 'zm_bills.billable_id', 'tax_returns.id')
             ->select(['zm_bill_items.tax_type_id as tax_type_id', DB::raw('sum(zm_bill_items.amount) as item_amount')])
             ->groupBy(['zm_bill_items.tax_type_id'])
             ->whereNotNull(['zm_bill_items.billable_id', 'zm_bill_items.billable_id'])

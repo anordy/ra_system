@@ -15,7 +15,7 @@
 <x-livewire-alert::scripts />
 
 @yield('scripts')
-
+@stack('scripts')
 <script>
     window.onload = function() {
         Livewire.hook('message.sent', () => {

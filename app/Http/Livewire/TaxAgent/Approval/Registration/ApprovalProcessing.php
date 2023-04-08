@@ -53,7 +53,7 @@ class ApprovalProcessing extends Component
             return;
         }
 
-        $type = 'Registration';
+        $type = 'Registration Fee';
 //        // todo: check if queried objects exist
         $duration = TaPaymentConfiguration::select('id', 'category', 'duration', 'is_citizen')
             ->where('category', $type)->where('is_citizen', $this->agent->taxpayer->is_citizen)->first();
