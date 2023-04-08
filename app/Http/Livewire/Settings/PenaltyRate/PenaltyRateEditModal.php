@@ -8,11 +8,11 @@ use Livewire\Component;
 use App\Models\PenaltyRate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class PenaltyRateEditModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $penaltyRate;
     public $rate;
@@ -58,11 +58,11 @@ class PenaltyRateEditModal extends Component
                 'rate' => $this->rate,
             ];
             $this->triggerDualControl(get_class($this->penaltyRate), $this->penaltyRate->id, DualControl::EDIT, 'editing penalty rate', json_encode($this->old_values), json_encode($payload));
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.penalty-rates.index');
         } catch (\Exception $e) {
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.penalty-rates.index');
         }
     }

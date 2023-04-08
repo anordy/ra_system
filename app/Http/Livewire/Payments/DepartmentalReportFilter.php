@@ -10,12 +10,12 @@ use App\Models\TaxType;
 use App\Models\Ward;
 use App\Traits\DepartmentalReportTrait;
 use App\Traits\PaymentReportTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class DepartmentalReportFilter extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
     use DepartmentalReportTrait;
 
     public $optionTaxTypes;
@@ -202,7 +202,7 @@ class DepartmentalReportFilter extends Component
             }
         }
         if (!$taxRegionSeletected) {
-            $this->alert('error', 'Select Atleast one Tax Region');
+            $this->customAlert('error', 'Select Atleast one Tax Region');
             return false;
         }
 

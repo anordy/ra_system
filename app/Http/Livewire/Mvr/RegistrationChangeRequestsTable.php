@@ -10,14 +10,14 @@ use App\Models\MvrRegistrationType;
 use App\Models\TaxAgentStatus;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\TaxAgent;
 
 class RegistrationChangeRequestsTable extends DataTableComponent
 {
-	use LivewireAlert;
+	use CustomAlert;
 
 	public function builder(): Builder
 	{

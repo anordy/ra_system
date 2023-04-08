@@ -9,14 +9,14 @@ use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class SystemSettingEditModal extends Component
 {
 
-    use LivewireAlert, DualControlActivityTrait, WithFileUploads;
+    use CustomAlert, DualControlActivityTrait, WithFileUploads;
 
     public $systemSetting;
     public $name;
@@ -102,7 +102,7 @@ class SystemSettingEditModal extends Component
             
             $this->triggerDualControl(get_class($this->systemSetting), $this->systemSetting->id, DualControl::EDIT, 'edit system setting entry', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 10000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 10000]);
             $this->flash(
                 'success',
                 DualControl::SUCCESS_MESSAGE,
@@ -114,7 +114,7 @@ class SystemSettingEditModal extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

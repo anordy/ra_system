@@ -22,13 +22,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\NotIn;
 use Illuminate\Validation\Rules\RequiredIf;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class TaxInvestigationApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -278,7 +278,7 @@ class TaxInvestigationApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
 
             return;
         }
@@ -388,7 +388,7 @@ class TaxInvestigationApprovalProcessing extends Component
                 $zmBill->zan_status = 'pending';
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
-                $this->alert('success', 'A control number for this verification has been generated successfully');
+                $this->customAlert('success', 'A control number for this verification has been generated successfully');
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -423,7 +423,7 @@ class TaxInvestigationApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

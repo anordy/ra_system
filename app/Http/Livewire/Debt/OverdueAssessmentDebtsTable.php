@@ -6,14 +6,14 @@ use Carbon\Carbon;
 use App\Enum\ReturnCategory;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\TaxAssessments\TaxAssessment;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class OverdueAssessmentDebtsTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public function builder(): Builder
     {

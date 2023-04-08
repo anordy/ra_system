@@ -4,13 +4,13 @@ namespace App\Http\Livewire\Business;
 
 use App\Models\Returns\TaxReturn;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LocationReturnsTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $locationId;
 

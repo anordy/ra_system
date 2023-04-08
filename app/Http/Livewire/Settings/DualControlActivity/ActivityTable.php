@@ -4,14 +4,14 @@ namespace App\Http\Livewire\Settings\DualControlActivity;
 
 use App\Traits\DualControlActivityTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\DualControl;
 
 class ActivityTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
     public $status;
 
     protected $model = DualControl::class;

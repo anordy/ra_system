@@ -12,11 +12,11 @@ use App\Models\BusinessStatus;
 use App\Models\BusinessLocation;
 use Illuminate\Support\Facades\Log;
 use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class DeregisterApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, CustomAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -40,7 +40,7 @@ class DeregisterApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -106,7 +106,7 @@ class DeregisterApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -137,7 +137,7 @@ class DeregisterApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

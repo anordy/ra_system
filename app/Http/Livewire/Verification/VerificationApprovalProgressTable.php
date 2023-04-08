@@ -7,13 +7,13 @@ use App\Models\WorkflowTask;
 use App\Traits\ReturnFilterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerificationApprovalProgressTable extends DataTableComponent
 {
-    use LivewireAlert, ReturnFilterTrait;
+    use CustomAlert, ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
 

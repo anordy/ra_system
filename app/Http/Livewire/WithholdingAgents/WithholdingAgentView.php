@@ -3,13 +3,13 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 use App\Models\WithholdingAgent;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 
 class WithholdingAgentView extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $withholding_agent;
 

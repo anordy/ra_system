@@ -26,13 +26,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\NotIn;
 use Illuminate\Validation\Rules\RequiredIf;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class TaxAuditApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait;
     public $modelId;
     public $modelName;
     public $comments;
@@ -344,7 +344,7 @@ class TaxAuditApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
 
         if ($this->subject->status == TaxAuditStatus::APPROVED && $this->subject->assessment()->exists()) {
@@ -464,7 +464,7 @@ class TaxAuditApprovalProcessing extends Component
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
 
-                $this->alert('success', 'A control number for this verification has been generated successfully');
+                $this->customAlert('success', 'A control number for this verification has been generated successfully');
             }
             DB::commit();
         } catch (Exception $e) {
@@ -514,7 +514,7 @@ class TaxAuditApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class ReliefRegistrations extends Component
 {
 
-    use LivewireAlert, WithFileUploads;
+    use CustomAlert, WithFileUploads;
 
     //input fields
     public $supplier;
@@ -153,7 +153,7 @@ class ReliefRegistrations extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

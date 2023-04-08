@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Reports\Claims\Previews;
 
 use App\Traits\ClaimReportTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -12,7 +12,7 @@ use App\Traits\ReturnReportTrait;
 
 class ReportPreviewTable extends DataTableComponent
 {
-    use LivewireAlert, ClaimReportTrait;
+    use CustomAlert, ClaimReportTrait;
 
     public $parameters;
 

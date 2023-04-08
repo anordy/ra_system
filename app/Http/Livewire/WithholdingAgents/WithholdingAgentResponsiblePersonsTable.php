@@ -8,13 +8,13 @@ use App\Models\WaResponsiblePerson;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
     public $withholding_agent_id;
 
     public function mount($id)
@@ -101,7 +101,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
         }
         $responsible_person = WaResponsiblePerson::select('status')->findOrFail(decrypt($id));
         $status = $responsible_person->status == WaResponsiblePerson::ACTIVE ? 'Deactivate' : 'Activate';
-        $this->alert('warning', "Are you sure you want to {$status} ?", [
+        $this->customAlert('warning', "Are you sure you want to {$status} ?", [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -135,7 +135,7 @@ class WithholdingAgentResponsiblePersonsTable extends DataTableComponent
             $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

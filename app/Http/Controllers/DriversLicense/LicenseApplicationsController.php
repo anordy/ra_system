@@ -22,11 +22,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class LicenseApplicationsController extends Controller
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, CustomAlert;
 
     public function index()
     {

@@ -25,13 +25,13 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class RegisterCreate extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $plate_number;
     public $lin;
@@ -45,16 +45,16 @@ class RegisterCreate extends Component
     public function submit()
     {
         if (empty($this->mvr)){
-            $this->alert('error', 'Not provided a valid plate number');
+            $this->customAlert('error', 'Not provided a valid plate number');
             return;
         }else if (empty($this->license)){
-            $this->alert('error', 'Not provided a valid license number');
+            $this->customAlert('error', 'Not provided a valid license number');
             return;
         }else if (empty($this->offences)){
-            $this->alert('error', 'Offenses not selected');
+            $this->customAlert('error', 'Offenses not selected');
             return;
         }else if (empty($this->block_type)){
-            $this->alert('error', 'Select Restriction Type');
+            $this->customAlert('error', 'Select Restriction Type');
             return;
         }
 
@@ -79,7 +79,7 @@ class RegisterCreate extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

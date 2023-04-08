@@ -23,12 +23,12 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, CustomAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -281,7 +281,7 @@ class ApprovalProcessing extends Component
             } catch (Exception $exception){
                 DB::rollBack();
                 Log::error($exception);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
         }
@@ -304,11 +304,11 @@ class ApprovalProcessing extends Component
                 if ($location->ztnGeneration()) {
 
                     if (!$location->generateZ()) {
-                        $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+                        $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
                         return;
                     }
                 } else {
-                    $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+                    $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
                     return;
                 }
 
@@ -327,7 +327,7 @@ class ApprovalProcessing extends Component
             } catch (Exception $exception){
                 DB::rollBack();
                 Log::error($exception);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
         }
@@ -339,7 +339,7 @@ class ApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
 
@@ -360,7 +360,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -372,7 +372,7 @@ class ApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

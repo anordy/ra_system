@@ -20,11 +20,11 @@ use App\Models\Returns\ReturnStatus;
 use App\Enum\InstallmentRequestStatus;
 use App\Models\Installment\Installment;
 use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class InstallmentRequestApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads, PaymentsTrait;
 
     public $modelId;
     public $modelName;
@@ -113,7 +113,7 @@ class InstallmentRequestApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact support for assistance.');
+            $this->customAlert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
 
@@ -139,7 +139,7 @@ class InstallmentRequestApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -152,7 +152,7 @@ class InstallmentRequestApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

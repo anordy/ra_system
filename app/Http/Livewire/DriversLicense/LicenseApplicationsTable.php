@@ -8,13 +8,13 @@ use App\Models\Taxpayer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LicenseApplicationsTable extends DataTableComponent
 {
-	use LivewireAlert;
+	use CustomAlert;
 
     public $status_id;
 

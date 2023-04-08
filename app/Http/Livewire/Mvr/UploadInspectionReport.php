@@ -23,7 +23,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -31,7 +31,7 @@ use Livewire\WithFileUploads;
 class UploadInspectionReport extends Component
 {
 
-    use LivewireAlert,WithFileUploads;
+    use CustomAlert,WithFileUploads;
 
 
     public string $chassis;
@@ -69,13 +69,13 @@ class UploadInspectionReport extends Component
             if (empty($taxpayer)){
                 Storage::disk('local')->delete($this->inspection_report_path);
                 DB::rollBack();
-                $this->alert('error', "Could not find owner/taxpayer with Z number {$data['owner']['z_number']}");
+                $this->customAlert('error', "Could not find owner/taxpayer with Z number {$data['owner']['z_number']}");
                 return;
             }
 
             $taxpayer_agent = Taxpayer::query()->where(['reference_no'=>$data['agent']['z_number']])->first();
             if (empty($taxpayer_agent->transport_agent)){
-                $this->alert('error', "Could not find agent/taxpayer with Z number {$data['agent']['z_number']}");
+                $this->customAlert('error', "Could not find agent/taxpayer with Z number {$data['agent']['z_number']}");
                 Storage::disk('local')->delete($this->inspection_report_path);
                 DB::rollBack();
                 return;
@@ -94,7 +94,7 @@ class UploadInspectionReport extends Component
             if (Storage::disk('local')->exists($this->inspection_report_path)) Storage::disk('local')->delete($this->inspection_report_path);
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

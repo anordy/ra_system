@@ -6,13 +6,13 @@ use App\Models\Bank;
 use App\Services\TRA\ServiceRequest;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ChassisNumberSearch extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $chassis_number;
     public $result_route;
@@ -38,7 +38,7 @@ class ChassisNumberSearch extends Component
             return redirect()->to(route($this->result_route,$this->chassis_number));
         }catch(Exception $e){
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

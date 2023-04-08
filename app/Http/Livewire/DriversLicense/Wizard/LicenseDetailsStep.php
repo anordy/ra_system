@@ -14,11 +14,11 @@ use App\Services\LivewireWizard\Components\StepComponent;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
 use Illuminate\Support\Facades\DB;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class LicenseDetailsStep extends StepComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $license_class_ids = [];
     public $duration_id;
@@ -72,7 +72,7 @@ class LicenseDetailsStep extends StepComponent
         $init = $this->state()->all()['drivers-license.wizard.application-initial-step'];
         $applicant = $this->state()->all()['drivers-license.wizard.application-details-step'];
         if (empty($this->license_class_ids)){
-            $this->alert('error', 'License classes cannot be empty!');
+            $this->customAlert('error', 'License classes cannot be empty!');
             return;
         }
         try{
@@ -117,7 +117,7 @@ class LicenseDetailsStep extends StepComponent
         }catch (\Exception $e){
             DB::rollBack();
             report($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

@@ -121,13 +121,13 @@ trait DepartmentalReportTrait
     {
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
 
         $fileName = $parameters['department_type'] . '.xlsx';
         $title    = $parameters['department_type'];
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new DepartmentalReportExport($records, $title, $parameters), $fileName);
     }
 }

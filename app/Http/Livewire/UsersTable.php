@@ -17,13 +17,13 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersTable extends DataTableComponent
 {
-    use LivewireAlert, AuditTrait, ThrottlesLogins, DualControlActivityTrait;
+    use CustomAlert, AuditTrait, ThrottlesLogins, DualControlActivityTrait;
 
     protected $model = User::class;
     public function configure(): void
@@ -180,7 +180,7 @@ class UsersTable extends DataTableComponent
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -198,7 +198,7 @@ class UsersTable extends DataTableComponent
 
     public function resendCredential($id)
     {
-        $this->alert('warning', 'Are you sure you want to re-send new user credentials ?', [
+        $this->customAlert('warning', 'Are you sure you want to re-send new user credentials ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -220,7 +220,7 @@ class UsersTable extends DataTableComponent
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to change user status ?', [
+        $this->customAlert('warning', 'Are you sure you want to change user status ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -246,7 +246,7 @@ class UsersTable extends DataTableComponent
                 abort(404);
             }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
-                $this->alert('error', 'The updated module has not been approved already');
+                $this->customAlert('error', 'The updated module has not been approved already');
                 return;
             }
             if ($user->status == 1) {
@@ -257,12 +257,12 @@ class UsersTable extends DataTableComponent
                 $this->triggerDualControl(get_class($user), $user->id, DualControl::ACTIVATE, 'activating user', json_encode(['status' => 0]), json_encode(['status' => 1, 'auth_attempt' => 0]));
             }
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
@@ -289,15 +289,15 @@ class UsersTable extends DataTableComponent
                 abort(404);
             }
             if ($user->is_approved == DualControl::NOT_APPROVED) {
-                $this->alert('error', 'The updated module has not been approved already');
+                $this->customAlert('error', 'The updated module has not been approved already');
                 return;
             }
             $this->triggerDualControl(get_class($user), $user->id, DualControl::DELETE, 'deleting user');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             report($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

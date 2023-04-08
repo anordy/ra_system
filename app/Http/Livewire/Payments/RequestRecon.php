@@ -9,12 +9,12 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use App\Services\Api\ZanMalipoInternalService;
 
 class RequestRecon extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $today;
     public $transaction_date, $recon_type;
@@ -56,11 +56,11 @@ class RequestRecon extends Component
         $doesReconDateExists = ZmRecon::where('TnxDt', $this->transaction_date)->where('ReconcOpt', $this->recon_type)->get();
 
         if (count($doesReconDateExists) > 0) {
-            $this->alert('warning', "Reconciliation with transaction date {$this->transaction_date} exists!");
+            $this->customAlert('warning', "Reconciliation with transaction date {$this->transaction_date} exists!");
             return true;
         }
 
-        $this->alert('warning', "Are you sure you want to request reconcilliation ?", [
+        $this->customAlert('warning', "Are you sure you want to request reconcilliation ?", [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -85,13 +85,13 @@ class RequestRecon extends Component
             
             // If response returns error rollback recon request
             if (array_key_exists('error', $enquireRecon)) {
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return true;
             }
             return redirect()->route('payments.recons', encrypt($recon->id));
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

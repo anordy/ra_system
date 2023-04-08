@@ -6,14 +6,14 @@ use App\Models\RenewTaxAgentRequest;
 use App\Models\TaxAgentStatus;
 use App\Models\WorkflowTask;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ProgressTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
 //    protected $model = RenewTaxAgentRequest::class;
 

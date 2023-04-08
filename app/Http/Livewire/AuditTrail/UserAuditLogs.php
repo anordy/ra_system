@@ -6,13 +6,13 @@ use Carbon\Carbon;
 use App\Models\Audit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class UserAuditLogs extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $userId;
 

@@ -9,12 +9,12 @@ use App\Traits\DualControlActivityTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class EditReturnTaxType extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
     public $taxtype_id;
     public $tax_type;
     public $name;
@@ -57,7 +57,7 @@ class EditReturnTaxType extends Component
             ];
             $this->triggerDualControl(get_class($this->tax_type), $this->tax_type->id, DualControl::EDIT, 'editing tax type', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE);
             redirect()->route('settings.return-config.index');
         } catch (\Throwable $exception) {
             DB::rollBack();

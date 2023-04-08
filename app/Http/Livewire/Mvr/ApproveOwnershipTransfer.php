@@ -20,13 +20,13 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ApproveOwnershipTransfer extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $transfer_category_id;
     public $request_id;
@@ -55,7 +55,7 @@ class ApproveOwnershipTransfer extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

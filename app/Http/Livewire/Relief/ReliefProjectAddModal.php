@@ -6,14 +6,14 @@ use App\Models\Bank;
 use App\Models\Relief\ReliefProject;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
 
 class ReliefProjectAddModal extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $name;
     public $description;
@@ -43,7 +43,7 @@ class ReliefProjectAddModal extends Component
             $this->flash('success', 'Record added successfully', [], redirect()->back()->getTargetUrl());
         }catch(Exception $e){
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

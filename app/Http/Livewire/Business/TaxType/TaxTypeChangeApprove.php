@@ -5,12 +5,12 @@ namespace App\Http\Livewire\Business\TaxType;
 use App\Models\BusinessTaxTypeChange;
 use App\Models\TaxType;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class TaxTypeChangeApprove extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $taxchange;
 

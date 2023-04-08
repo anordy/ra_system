@@ -13,12 +13,12 @@ use App\Models\Region;
 use App\Models\Street;
 use App\Models\Taxpayer;
 use App\Models\Ward;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class ShowChanges extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $business;
     public $business_update;

@@ -13,7 +13,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -21,7 +21,7 @@ use Livewire\WithFileUploads;
 class CapturePassportModal extends Component
 {
 
-    use LivewireAlert,WithFileUploads,WorkflowProcesssingTrait;
+    use CustomAlert,WithFileUploads,WorkflowProcesssingTrait;
 
 
     public string $application_id;
@@ -66,7 +66,7 @@ class CapturePassportModal extends Component
             DB::rollBack();
             Log::error($e);
             if (Storage::disk('local')->exists($this->photo_path)) Storage::disk('local')->delete($this->photo_path);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
 

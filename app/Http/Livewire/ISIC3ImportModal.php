@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Imports\ISIC3Import;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Validators\ValidationException;
 class ISIC3ImportModal extends Component
 {
     use WithFileUploads;
-    use LivewireAlert;
+    use CustomAlert;
 
     public $file;
 
@@ -41,14 +41,14 @@ class ISIC3ImportModal extends Component
             if(count($e->failures()) > 0){
                 $errorName = str_replace('.','',$e->failures()[0]->errors()[0]);
                 $errorRowNo  = $e->failures()[0]->row();
-                $this->alert('error', $errorName.' on row '.$errorRowNo.' on your excel');
+                $this->customAlert('error', $errorName.' on row '.$errorRowNo.' on your excel');
             }else{
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
             
         }catch(Exception $e){
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
         
     }

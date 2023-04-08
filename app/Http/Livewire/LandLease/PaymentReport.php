@@ -6,7 +6,7 @@ use App\Models\FinancialYear;
 use Livewire\Component;
 use App\Exports\LeasePaymentExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use App\Models\LandLease;
 use App\Models\LeasePayment;
 use App\Models\Taxpayer;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Gate;
 class PaymentReport extends Component
 {
 
-    use LivewireAlert, LeasePaymentReportTrait;
+    use CustomAlert, LeasePaymentReportTrait;
     //values for selects
     public $year;
     public $period;
@@ -106,10 +106,10 @@ class PaymentReport extends Component
                 $exists = LeasePayment::where('lease_payments.taxpayer_id', $this->taxpayer_id)->exists();
             }
             if($exists){
-                $this->alert('success', 'Downloading file');
+                $this->customAlert('success', 'Downloading file');
                 return Excel::download(new LeasePaymentExport($dates['startDate'], $dates['endDate'], $this->status, $this->date_type, $this->taxpayer_id), 'Land Leases Payment All Records.xlsx');
             }else{
-                $this->alert('error', "No data found.");
+                $this->customAlert('error', "No data found.");
             } 
         }
 
@@ -144,10 +144,10 @@ class PaymentReport extends Component
 
         $exists = $leasePayment->exists();
         if ($exists) {
-            $this->alert('success', 'Downloading file');
+            $this->customAlert('success', 'Downloading file');
             return Excel::download(new LeasePaymentExport($dates['startDate'], $dates['endDate'], $this->status, $this->date_type, $this->taxpayer_id), 'Land Leases Payment FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
         } else {
-            $this->alert('error', "No data found for the selected period.");
+            $this->customAlert('error', "No data found for the selected period.");
         }
     }
 
@@ -173,10 +173,10 @@ class PaymentReport extends Component
             $exists = $query->exists();
 
             if($exists){
-                $this->alert('success', 'Exporting Pdf File');
+                $this->customAlert('success', 'Exporting Pdf File');
                 return redirect()->route('land-lease.payment.download.report.pdf', encrypt(json_encode($this->getParameters())));
             }else{
-                $this->alert('error', "No data found.");
+                $this->customAlert('error', "No data found.");
             } 
         }
 
@@ -210,10 +210,10 @@ class PaymentReport extends Component
         $exists = $leasePayment->exists();
         
         if ($exists) {
-            $this->alert('success', 'Exporting Pdf File');
+            $this->customAlert('success', 'Exporting Pdf File');
             return redirect()->route('land-lease.payment.download.report.pdf', encrypt(json_encode($this->getParameters())));
         } else {
-            $this->alert('error', "No data found for the selected period.");
+            $this->customAlert('error', "No data found for the selected period.");
         }
     }
 

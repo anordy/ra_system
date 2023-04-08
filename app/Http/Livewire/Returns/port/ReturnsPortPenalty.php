@@ -4,12 +4,12 @@ namespace App\Http\Livewire\Returns\Port;
 
 use App\Models\BusinessTaxType;
 use App\Traits\PenaltyTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ReturnsPortPenalty extends Component
 {
-    use PenaltyTrait, LivewireAlert;
+    use PenaltyTrait, CustomAlert;
     public $businessLocationId;
     public $modelName;
     public $financialMonth;

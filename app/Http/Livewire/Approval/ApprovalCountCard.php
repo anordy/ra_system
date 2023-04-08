@@ -8,12 +8,12 @@ use App\Models\Investigation\TaxInvestigation;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\Verification\TaxVerification;
 use App\Models\WorkflowTask;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ApprovalCountCard extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $pending = 0;
     public $rejected = 0;

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits;
+
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 trait CustomAlert
@@ -10,11 +11,13 @@ trait CustomAlert
     public function customAlert(string $type = 'success', string $message = '', array $options = [])
     {
         $options = array_merge([
-            'showCloseButton' => true, 
+            'showCloseButton' => true,
         ], $options);
-        
-        $options['timer']=30000; //30 seconds
 
-        $this->alert($type,$message,$options);
+        if ($type != 'success') {
+            $options['timer'] = 60000; //60 seconds
+        }
+
+        $this->alert($type, $message, $options);
     }
 }

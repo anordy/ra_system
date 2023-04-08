@@ -6,14 +6,14 @@ use App\Exports\DailyPaymentExport;
 use App\Traits\DailyPaymentTrait;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 
 class DailyPayments extends Component
 {
-    use LivewireAlert, DailyPaymentTrait;
+    use CustomAlert, DailyPaymentTrait;
 
     public $today;
     public $range_start;
@@ -59,7 +59,7 @@ class DailyPayments extends Component
                 fn () => print($pdf->output()), $fileName
             );
         }catch(Exception $e){
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             Log::error($e);
         }
     }
@@ -68,7 +68,7 @@ class DailyPayments extends Component
     {
         $fileName = 'daily_payments_' . now()->format('d-m-Y') . '.xlsx';
         $title = 'Daily Receipts Provisional';
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new DailyPaymentExport($this->vars,$this->taxTypes,$title), $fileName);
     }
 

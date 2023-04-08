@@ -8,13 +8,13 @@ use App\Models\Extension\ExtensionRequest;
 use App\Models\Installment\InstallmentRequest;
 use App\Models\WorkflowTask;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ExtensionApprovalTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function configure(): void
     {

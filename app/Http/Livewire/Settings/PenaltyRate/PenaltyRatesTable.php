@@ -9,13 +9,13 @@ use Exception;
 use App\Models\PenaltyRate;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class PenaltyRatesTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -106,7 +106,7 @@ class PenaltyRatesTable extends DataTableComponent
         if (!Gate::allows('setting-penalty-rate-delete')) {
             abort(403);
         }
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -131,11 +131,11 @@ class PenaltyRatesTable extends DataTableComponent
                 abort(404);
             }
             $this->triggerDualControl(get_class($rate), $rate->id, DualControl::DELETE, 'deleting penalty rate');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             return;
         } catch (Exception $e) {
             report($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

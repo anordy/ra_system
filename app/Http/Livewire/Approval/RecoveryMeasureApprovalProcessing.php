@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Debts\RecoveryMeasureCategory;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Collection;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class RecoveryMeasureApprovalProcessing extends Component
 {
 
-    use LivewireAlert, WorkflowProcesssingTrait;
+    use CustomAlert, WorkflowProcesssingTrait;
 
     public $recovery_measure_categories = [];
     public $debtId;
@@ -129,7 +129,7 @@ class RecoveryMeasureApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollback();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -150,7 +150,7 @@ class RecoveryMeasureApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollback();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -160,7 +160,7 @@ class RecoveryMeasureApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

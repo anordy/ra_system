@@ -6,13 +6,13 @@ use App\Models\CaseAppeal;
 use App\Models\CaseProceeding;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ProceedingsTable extends DataTableComponent
 {
-	use LivewireAlert;
+	use CustomAlert;
 
     /**
      * @var mixed
