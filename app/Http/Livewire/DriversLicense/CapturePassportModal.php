@@ -40,7 +40,7 @@ class CapturePassportModal extends Component
     protected function rules()
     {
         return [
-            'photo'=>'required|mimes:png,jpg,jpeg'
+            'photo'=>'required|mimes:png,jpg,jpeg|max:1024'
         ];
     }
 

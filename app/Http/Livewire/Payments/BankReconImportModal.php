@@ -22,7 +22,7 @@ class BankReconImportModal extends Component
 
     protected function rules(){
         return [
-            'reconFile' => 'required|file', // Accept .txt since php confuses .txt for csv sometimes
+            'reconFile' => 'required|file|max:1024', // Accept .txt since php confuses .txt for csv sometimes
             'currency' => ['required', new In(['USD', 'TZS'])],
         ];
     }

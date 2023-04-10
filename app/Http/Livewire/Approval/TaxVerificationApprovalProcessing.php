@@ -98,7 +98,7 @@ class TaxVerificationApprovalProcessing extends Component
                     'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
                     'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
                     'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'numeric'],
-                    'assessmentReport' => 'required',
+                    'assessmentReport' => 'required|max:1024',
                 ]
             );
 

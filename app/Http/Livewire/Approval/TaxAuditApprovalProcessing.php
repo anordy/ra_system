@@ -142,8 +142,8 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('conduct_audit')) {
             $this->validate(
                 [
-                    'preliminaryReport' => 'required',
-                    'workingReport' => 'required',
+                    'preliminaryReport' => 'required|max:1024',
+                    'workingReport' => 'required|max:1024',
                 ]
             );
 
@@ -162,7 +162,7 @@ class TaxAuditApprovalProcessing extends Component
         if ($this->checkTransition('prepare_final_report')) {
             $this->validate(
                 [
-                    'finalReport' => 'required',
+                    'finalReport' => 'required|max:1024',
                     'exitMinutes' => 'required',
                     'hasAssessment' => ['required', 'boolean'],
                     'principalAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,?:d*.d{1,2}|d+]*$/'],

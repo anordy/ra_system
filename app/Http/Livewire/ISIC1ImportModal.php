@@ -22,7 +22,7 @@ class ISIC1ImportModal extends Component
     protected function rules()
     {
         return [
-            'file' => 'required',
+            'file' => 'required|max:1024', // 1 MB = 1024 KB
         ];
     }
 

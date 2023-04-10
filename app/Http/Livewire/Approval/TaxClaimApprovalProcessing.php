@@ -129,7 +129,7 @@ class TaxClaimApprovalProcessing extends Component
         if ($this->checkTransition('verification_results')) {
             $this->validate(
                 [
-                    'assessmentReport' => 'required|mimes:pdf',
+                    'assessmentReport' => 'required|mimes:pdf|max:1024',
                 ]
             );
 

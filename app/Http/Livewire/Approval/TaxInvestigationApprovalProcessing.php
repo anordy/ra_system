@@ -143,7 +143,7 @@ class TaxInvestigationApprovalProcessing extends Component
             $this->validate(
                 [
                     'hasAssessment' => ['required', 'boolean'],
-                    'investigationReport' => ['required'],
+                    'investigationReport' => ['required', 'max:1024'],
                     'workingsReport' => [new RequiredIf($this->hasAssessment == "1"), 'nullable'],
                     'interestAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
                     'penaltyAmount' => [new RequiredIf($this->hasAssessment == "1"), 'nullable', 'regex:/^[\d\s,]*$/'],
