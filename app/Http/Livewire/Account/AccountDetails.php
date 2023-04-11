@@ -8,11 +8,11 @@ use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class AccountDetails extends Component
 {
-    use LivewireAlert, VerificationTrait;
+    use CustomAlert, VerificationTrait;
 
     public $user, $first_name, $last_name, $email, $mobile;
 
@@ -49,7 +49,7 @@ class AccountDetails extends Component
             $this->redirect(route('account'));
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

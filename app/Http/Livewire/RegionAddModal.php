@@ -11,13 +11,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class RegionAddModal extends Component
 {
 
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $name, $location;
 
@@ -47,12 +47,12 @@ class RegionAddModal extends Component
             ]);
             $this->triggerDualControl(get_class($region), $region->id, DualControl::ADD, 'adding new region '.$this->name);
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.region.index');
         }catch(Exception $e){
             DB::rollBack();
             Log::error($e .', '. Auth::user());
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.region.index');
         }
     }

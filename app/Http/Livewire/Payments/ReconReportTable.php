@@ -6,13 +6,13 @@ use App\Enum\PaymentStatus;
 use App\Models\ZmBill;
 use App\Traits\ReconReportTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReconReportTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
     use ReconReportTrait;
 
     public $parameters=[];

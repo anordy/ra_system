@@ -5,14 +5,14 @@ namespace App\Http\Livewire\TaxAgent\Approval\Renew;
 use App\Models\WorkflowTask;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\TaxAgent;
 
 class ApprovalHistoryTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $model = WorkflowTask::class;
     public $modelId;

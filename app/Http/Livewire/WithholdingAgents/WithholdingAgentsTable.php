@@ -8,13 +8,13 @@ use Exception;
 use id;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WithholdingAgentsTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function configure(): void
     {
@@ -76,7 +76,7 @@ class WithholdingAgentsTable extends DataTableComponent
 //        todo: encrypt id && select only columns that's needed
         $withholding_agent = WithholdingAgent::select('id', 'status')->findOrFail(decrypt($id));
         $status = $withholding_agent->status == 'active' ? 'Deactivate' : 'Activate';
-        $this->alert('warning', "Are you sure you want to {$status} ?", [
+        $this->customAlert('warning', "Are you sure you want to {$status} ?", [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -111,7 +111,7 @@ class WithholdingAgentsTable extends DataTableComponent
             $this->flash('success', 'Status updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

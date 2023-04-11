@@ -21,13 +21,13 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class GenericSettingAddModal extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     private array $relations = [
         MvrModel::class=>[['title'=>'Motor vehicle Make','class'=>MvrMake::class,'field'=>'mvr_make_id']],
@@ -177,7 +177,7 @@ class GenericSettingAddModal extends Component
 
         }catch(Exception $e){
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

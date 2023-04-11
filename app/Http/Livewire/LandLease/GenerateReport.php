@@ -6,14 +6,14 @@ use App\Exports\LandLeaseExport;
 use App\Models\FinancialYear;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use App\Models\LandLease;
 use App\Models\Taxpayer;
 use Illuminate\Support\Facades\Gate;
 
 class GenerateReport extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
     //values for selects
     public $year;
     public $period;
@@ -108,10 +108,10 @@ class GenerateReport extends Component
             }
             
             if($exists){
-                $this->alert('success', 'Downloading file');
+                $this->customAlert('success', 'Downloading file');
                 return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate'], $this->taxpayer_id), 'Land Leases All Records.xlsx');
             }else{
-                $this->alert('error', "No data found.");
+                $this->customAlert('error', "No data found.");
             }
         }
 
@@ -120,10 +120,10 @@ class GenerateReport extends Component
             $exists =LandLease::whereBetween('created_at', [$dates['startDate'], $dates['endDate']])->where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
         }
         if ($exists) {
-            $this->alert('success', 'Downloading file');
+            $this->customAlert('success', 'Downloading file');
             return Excel::download(new LandLeaseExport($dates['startDate'], $dates['endDate'], $this->taxpayer_id), 'Land Leases FROM ' . $dates['from'] . ' TO ' . $dates['to'] . '.xlsx');
         } else {
-            $this->alert('error', "No data found for the selected period.");
+            $this->customAlert('error', "No data found for the selected period.");
         }
     }
 
@@ -139,10 +139,10 @@ class GenerateReport extends Component
                 $exists = LandLease::where('land_leases.taxpayer_id', $this->taxpayer_id)->exists();
             }
             if($exists){
-                $this->alert('success', 'Exporting Pdf File');
+                $this->customAlert('success', 'Exporting Pdf File');
                 return redirect()->route('land-lease.download.report.pdf', encrypt($this->getParameters()));
             }else{
-                $this->alert('error', "No data found.");
+                $this->customAlert('error', "No data found.");
             } 
         }
 
@@ -153,10 +153,10 @@ class GenerateReport extends Component
         }
 
         if ($exists) {
-            $this->alert('success', 'Exporting Pdf File');
+            $this->customAlert('success', 'Exporting Pdf File');
             return redirect()->route('land-lease.download.report.pdf', encrypt($this->getParameters()));
         } else {
-            $this->alert('error', "No data found for the selected period.");
+            $this->customAlert('error', "No data found for the selected period.");
         }
     }
 

@@ -7,13 +7,13 @@ use App\Models\FinancialYear;
 use App\Models\Taxpayer;
 use App\Traits\ClaimReportTrait;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ClaimsReport extends Component
 {
-    use LivewireAlert, ClaimReportTrait;
+    use CustomAlert, ClaimReportTrait;
 
     public $optionYears;
     public $optionPeriods;
@@ -98,7 +98,7 @@ class ClaimsReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
         return redirect()->route('reports.claims.preview', encrypt(json_encode($this->getParameters())));
@@ -113,10 +113,10 @@ class ClaimsReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
-        $this->alert('success', 'Exporting Pdf File');
+        $this->customAlert('success', 'Exporting Pdf File');
         return redirect()->route('reports.claim.download.pdf', encrypt(json_encode($parameters)));
     }
 
@@ -129,7 +129,7 @@ class ClaimsReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
 
@@ -156,7 +156,7 @@ class ClaimsReport extends Component
             }
         }
 
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new ClaimsReportExport($records, $title, $parameters), $fileName);
     }
 

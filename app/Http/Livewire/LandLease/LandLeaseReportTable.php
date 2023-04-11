@@ -6,13 +6,13 @@ use App\Models\BusinessLocation;
 use App\Models\LandLease;
 use App\Models\Taxpayer;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LandLeaseReportTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $dates = [];
     public $taxpayer_id;

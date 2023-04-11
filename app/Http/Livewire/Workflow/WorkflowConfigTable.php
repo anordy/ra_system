@@ -5,13 +5,13 @@ namespace App\Http\Livewire\Workflow;
 use App\Models\Workflow;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class WorkflowConfigTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function builder(): Builder
     {

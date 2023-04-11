@@ -8,14 +8,14 @@ use App\Models\Installment\Installment;
 use App\Models\Installment\InstallmentRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class InstallmentsTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $active;
     public $cancelled;

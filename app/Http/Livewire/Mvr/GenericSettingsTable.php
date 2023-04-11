@@ -12,13 +12,13 @@ use App\Models\MvrModel;
 use App\Models\MvrTransferFee;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class GenericSettingsTable extends DataTableComponent
 {
-	use LivewireAlert;
+	use CustomAlert;
     public $model;
     public $setting_title = '';
 
@@ -78,7 +78,7 @@ class GenericSettingsTable extends DataTableComponent
 
     public function delete($id)
     {
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -102,7 +102,7 @@ class GenericSettingsTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

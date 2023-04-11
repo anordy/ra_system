@@ -8,14 +8,14 @@ use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxAuditInitiateTable extends DataTableComponent
 {
 
-    use LivewireAlert, WorkflowProcesssingTrait;
+    use CustomAlert, WorkflowProcesssingTrait;
 
     public $model = TaxAudit::class;
 
@@ -87,7 +87,7 @@ class TaxAuditInitiateTable extends DataTableComponent
 
     public function approve($id)
     {
-        $this->alert('warning', 'Are you sure you want to initiate Approvals ?', [
+        $this->customAlert('warning', 'Are you sure you want to initiate Approvals ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -115,13 +115,13 @@ class TaxAuditInitiateTable extends DataTableComponent
             $this->flash('success', 'Approval initiated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 
     public function delete($id)
     {
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -145,7 +145,7 @@ class TaxAuditInitiateTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

@@ -22,13 +22,13 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class RegistrationChangeRequest extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $motor_vehicle_id;
     public $registration_type_id;
@@ -80,7 +80,7 @@ class RegistrationChangeRequest extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

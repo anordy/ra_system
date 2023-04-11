@@ -4,12 +4,12 @@ namespace App\Http\Livewire\Debt\RecoveryMeasure;
 
 use Livewire\Component;
 use App\Models\Returns\TaxReturn;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class AssignRecoveryMeasure extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $debt;
 

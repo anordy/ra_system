@@ -7,11 +7,11 @@ use Livewire\Component;
 use App\Models\Returns\TaxReturn;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\RollbackReturnPenaltyTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class RollbackReturn extends Component
 {
-    use RollbackReturnPenaltyTrait, LivewireAlert;
+    use RollbackReturnPenaltyTrait, CustomAlert;
 
     public $return_id;
 
@@ -31,20 +31,20 @@ class RollbackReturn extends Component
         $tax_return = TaxReturn::findOrFail($this->return_id);
 
         if ($tax_return->rollback) {
-            $this->alert('error', 'You cannot rollback more than once');
+            $this->customAlert('error', 'You cannot rollback more than once');
         } else {
             try {
                 $this->rollBackLatestReturnDebtPenalty($tax_return);
-                $this->alert('success', 'Penalty & Interest rolled back successful');
+                $this->customAlert('success', 'Penalty & Interest rolled back successful');
             } catch (Exception $e) {
-                $this->alert('warning', 'Something went wrong, please contact support for assistance.');
+                $this->customAlert('warning', 'Something went wrong, please contact support for assistance.');
             }
         }
     }
 
     public function confirmPopUpModal()
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

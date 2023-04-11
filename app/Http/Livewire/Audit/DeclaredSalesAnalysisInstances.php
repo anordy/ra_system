@@ -5,12 +5,12 @@ namespace App\Http\Livewire\Audit;
 use App\Models\TaxAudit\TaxAudit;
 use App\Models\TaxAudit\TaxAuditLocation;
 use App\Models\TaxAudit\TaxAuditTaxType;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class DeclaredSalesAnalysisInstances extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $audit;
     public $locations;

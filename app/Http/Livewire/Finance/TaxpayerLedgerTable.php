@@ -5,13 +5,13 @@ namespace App\Http\Livewire\Finance;
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxpayerLedgerTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function builder(): Builder
     {

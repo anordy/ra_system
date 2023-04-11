@@ -11,11 +11,11 @@ use App\Models\FinancialYear;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class PenaltyRateAddModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $financial_year_id;
     public $rate;
@@ -60,7 +60,7 @@ class PenaltyRateAddModal extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

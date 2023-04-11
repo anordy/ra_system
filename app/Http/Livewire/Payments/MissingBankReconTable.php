@@ -5,13 +5,13 @@ namespace App\Http\Livewire\Payments;
 use App\Models\MissingBankRecon;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class MissingBankReconTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $parameters = [];
 

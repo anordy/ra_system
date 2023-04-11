@@ -7,14 +7,14 @@ use App\Models\Business;
 use App\Models\Extension\ExtensionRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ExtensionsTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $rejected;
 

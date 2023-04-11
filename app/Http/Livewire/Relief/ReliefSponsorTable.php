@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Relief;
 use App\Models\Relief\ReliefSponsor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -13,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class ReliefSponsorTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public function builder(): Builder
     {
@@ -56,10 +56,10 @@ class ReliefSponsorTable extends DataTableComponent
         $sponsors = ReliefSponsor::findOrFail($id);
 
         if ($sponsors->projectLists()->count()>0) {
-            $this->alert('error', 'Cannot delete Sponsor. its used in one of created project.');
+            $this->customAlert('error', 'Cannot delete Sponsor. its used in one of created project.');
         } else {
             $sponsors->delete();
-            $this->alert('success', 'Sponor deleted successfully.');
+            $this->customAlert('success', 'Sponor deleted successfully.');
         }
     }
 

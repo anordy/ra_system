@@ -3,13 +3,13 @@
 namespace App\Http\Livewire\AuditTrail;
 
 use App\Models\User;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersAuditTrailTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     protected $model = User::class;
     public function configure(): void

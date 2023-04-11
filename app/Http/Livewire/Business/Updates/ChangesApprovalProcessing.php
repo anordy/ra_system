@@ -14,11 +14,11 @@ use App\Models\BusinessLocation;
 use App\Models\BusinessConsultant;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class ChangesApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, CustomAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -130,7 +130,7 @@ class ChangesApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -163,7 +163,7 @@ class ChangesApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -173,7 +173,7 @@ class ChangesApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

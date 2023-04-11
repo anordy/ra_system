@@ -4,12 +4,12 @@ namespace App\Http\Livewire\LandLease;
 
 use App\Models\LeasePayment;
 use App\Traits\PaymentsTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ViewLeasePayment extends Component
 {
-    use LivewireAlert, PaymentsTrait;
+    use CustomAlert, PaymentsTrait;
     public $landLease;
     public $leasePayment;
 

@@ -14,12 +14,12 @@ use App\Models\Taxpayer;
 use App\Models\WithholdingAgent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 
 class WithholdingAgentEditModal extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $regions = [];
     public $districts = [];
@@ -132,7 +132,7 @@ class WithholdingAgentEditModal extends Component
 
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

@@ -4,14 +4,14 @@ namespace App\Http\Livewire\TaxAgent;
 
 use App\Models\TaxAgentStatus;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\TaxAgent;
 
 class TaxAgentTable extends DataTableComponent
 {
-	use LivewireAlert;
+	use CustomAlert;
 
 	public function builder(): Builder
 	{

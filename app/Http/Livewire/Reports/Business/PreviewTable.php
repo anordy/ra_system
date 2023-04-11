@@ -5,13 +5,13 @@ namespace App\Http\Livewire\Reports\Business;
 use App\Models\Business;
 use App\Traits\RegistrationReportTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class PreviewTable extends DataTableComponent
 {
-    use LivewireAlert, RegistrationReportTrait;
+    use CustomAlert, RegistrationReportTrait;
 
     public $parameters;
 

@@ -25,7 +25,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -33,7 +33,7 @@ use Livewire\WithFileUploads;
 class UploadSaleAgreementModal extends Component
 {
 
-    use LivewireAlert,WithFileUploads;
+    use CustomAlert,WithFileUploads;
 
 
     public string $request_id;
@@ -52,7 +52,7 @@ class UploadSaleAgreementModal extends Component
     protected function rules()
     {
         return [
-            'agreement'=>'required|mimes:pdf'
+            'agreement'=>'required|mimes:pdf|max:1024'
         ];
     }
 
@@ -69,13 +69,13 @@ class UploadSaleAgreementModal extends Component
                 'mvr_request_status_id'=>MvrRequestStatus::query()->firstOrCreate(['name'=>MvrRequestStatus::STATUS_RC_PENDING_APPROVAL])->id,
             ]);
             DB::commit();
-            $this->alert('success', 'Document Uploaded');
+            $this->customAlert('success', 'Document Uploaded');
             return redirect()->route('mvr.transfer-ownership.show',encrypt($this->request_id));
         }catch(Exception $e){
             if (Storage::disk('local')->exists($this->agreement_path)) Storage::disk('local')->delete($this->agreement_path);
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

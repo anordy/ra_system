@@ -15,12 +15,12 @@ use App\Traits\WorkflowProcesssingTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class DetailsAmendmentRequestAddModal extends Component
 {
-    use LivewireAlert, WorkflowProcesssingTrait;
+    use CustomAlert, WorkflowProcesssingTrait;
 
     public $taxpayer;
     public $taxpayer_id;
@@ -159,7 +159,7 @@ class DetailsAmendmentRequestAddModal extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
         }
     }
 

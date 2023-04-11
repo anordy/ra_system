@@ -9,13 +9,13 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RolesTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     protected $model = Role::class;
     public function configure(): void
@@ -50,10 +50,10 @@ class RolesTable extends DataTableComponent
                 ->searchable(),
             Column::make('Configuration')
                 ->label(function ($row) {
-                    $value = encrypt($row->id);
+                    $value = "'".encrypt($row->id)."'";
                     if (Gate::allows('setting-role-assign-permission')) {
                         return  <<< HTML
-                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal', '$value')"><i class="fas fa-cog"></i>Configure Permission </button>
+                            <button class="btn btn-success btn-sm" onclick="Livewire.emit('showModal', 'role-assign-permission-modal', $value)"><i class="fas fa-cog"></i>Configure Permission </button>
                         HTML;
                     }
                 })->html(true),
@@ -123,7 +123,7 @@ class RolesTable extends DataTableComponent
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -145,20 +145,20 @@ class RolesTable extends DataTableComponent
             $data = (object) $value['data'];
             $role = Role::findOrFail($data->id);
             if ($role->is_approved == DualControl::NOT_APPROVED) {
-                $this->alert('error', 'The updated module has not been approved already');
+                $this->customAlert('error', 'The updated module has not been approved already');
                 return;
             }
             if (!$this->checkRelation($role, $role->id))
             {
-                $this->alert('error', DualControl::RELATION_MESSAGE,  ['timer'=>4000]);
+                $this->customAlert('error', DualControl::RELATION_MESSAGE,  ['timer'=>4000]);
                 return;
             }
             $this->triggerDualControl(get_class($role), $role->id, DualControl::DELETE, 'deleting role');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             $this->flash('success', DualControl::SUCCESS_MESSAGE, [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

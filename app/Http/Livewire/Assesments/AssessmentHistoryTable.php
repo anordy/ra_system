@@ -3,14 +3,14 @@
 namespace App\Http\Livewire\Assesments;
 
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class AssessmentHistoryTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
     public $modelName;
     public $modelId;
 

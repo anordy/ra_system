@@ -5,14 +5,14 @@ namespace App\Http\Livewire\Payments;
 use App\Exports\ReconReportExport;
 use App\Traits\ReconReportTrait;
 use Carbon\Carbon;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReconReportFilter extends Component
 {
     use ReconReportTrait;
-    use LivewireAlert;
+    use CustomAlert;
 
     public $range_start;
     public $range_end;
@@ -38,7 +38,7 @@ class ReconReportFilter extends Component
 
         if($this->getBillBuilder($this->parameters)->count() < 1){
             $this->hasData = false;
-            $this->alert('error','No record found');            
+            $this->customAlert('error','No record found');            
         }else{
             $this->hasData = true;
         }
@@ -52,7 +52,7 @@ class ReconReportFilter extends Component
         $fileName = 'recon-report-'.time().'.xlsx';
         $title    = 'For bills created between '.$this->parameters['range_start'].' and '.$this->parameters['range_end'];
         
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new ReconReportExport($records, $title), $fileName);          
     }
 

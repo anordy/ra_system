@@ -85,13 +85,13 @@ trait ReturnReportTrait
     {
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
 
         $fileName = $parameters['tax_type_name'] . '_' . $parameters['filing_report_type'] . ' - ' . '.xlsx';
         $title    = $parameters['filing_report_type'] . ' For' . $parameters['tax_type_name'];
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new ReturnReportExport($records, $title, $parameters), $fileName);
     }
 
@@ -99,11 +99,11 @@ trait ReturnReportTrait
     {
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
 
             return;
         }
-        $this->alert('success', 'Exporting Pdf File');
+        $this->customAlert('success', 'Exporting Pdf File');
 
         return redirect()->route('reports.returns.download.pdf', encrypt(json_encode($parameters)));
     }
@@ -113,7 +113,7 @@ trait ReturnReportTrait
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
             $this->hasData = false;
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }else{
             $this->hasData = true;

@@ -4,13 +4,13 @@ namespace App\Http\Livewire\DriversLicense\Wizard;
 
 use App\Models\DlDriversLicense;
 use App\Services\LivewireWizard\Components\StepComponent;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class ApplicationDetailsStep extends StepComponent
 {
-    use LivewireAlert, WithFileUploads;
+    use CustomAlert, WithFileUploads;
 
     public $blood_group_id;
     public $dob;
@@ -69,9 +69,9 @@ class ApplicationDetailsStep extends StepComponent
     public function nextStep()
     {
         if ($this->type=='duplicate' && empty($this->loss_report_path)){
-            $this->rules = array_merge(['loss_report'=>'required|mimes:pdf'],$this->rules);
+            $this->rules = array_merge(['loss_report'=>'required|mimes:pdf|max:1024'],$this->rules);
         }elseif($this->type=='fresh' && empty($this->certificate)){
-            $this->alert('error', 'Please upload certificate of competence!');
+            $this->customAlert('error', 'Please upload certificate of competence!');
             return;
         }
         $this->validate();

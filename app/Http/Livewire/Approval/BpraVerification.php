@@ -12,12 +12,12 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class BpraVerification extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $business;
     public $matchesText = 'Match';
@@ -44,16 +44,16 @@ class BpraVerification extends Component
                 $this->shareholders = $this->bpraResponse['shareHolders'];
                 $this->shares = $this->bpraResponse['listShareHolderShares'];
             } else if ($response['message'] == 'unsuccessful') {
-                $this->alert('error', 'BPRA Number does not exist!');
+                $this->customAlert('error', 'BPRA Number does not exist!');
             }else if ($response['message'] = 'unsuccessful') {
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
 
         } catch (Exception $e) {
             $this->requestSuccess = false;
             DB::rollBack();
             Log::error($e);
-            return $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -146,10 +146,10 @@ class BpraVerification extends Component
             }
 
             DB::commit();
-            $this->alert('success', 'Bpra Verification Completed.');
+            $this->customAlert('success', 'Bpra Verification Completed.');
         } catch (\Throwable $e) {
             Log::error($e .','. Auth::user());
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -161,10 +161,10 @@ class BpraVerification extends Component
             $this->business->save();
 
             DB::commit();
-            $this->alert('success', 'Continue with provided data successfully.');
+            $this->customAlert('success', 'Continue with provided data successfully.');
         } catch (\Throwable $e) {
             Log::error($e .','. Auth::user());
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

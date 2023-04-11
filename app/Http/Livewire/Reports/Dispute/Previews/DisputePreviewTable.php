@@ -7,13 +7,13 @@ use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
 use App\Traits\DisputeReportTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DisputePreviewTable extends DataTableComponent
 {
-    use LivewireAlert, DisputeReportTrait;
+    use CustomAlert, DisputeReportTrait;
 
     public $parameters;
 

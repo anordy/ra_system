@@ -19,13 +19,13 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class UserAddModal extends Component
 {
 
-    use LivewireAlert, VerificationTrait, DualControlActivityTrait;
+    use CustomAlert, VerificationTrait, DualControlActivityTrait;
 
     public $roles = [];
     public $fname;
@@ -133,7 +133,7 @@ class UserAddModal extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

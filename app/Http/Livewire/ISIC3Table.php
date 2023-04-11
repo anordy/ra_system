@@ -5,13 +5,13 @@ namespace App\Http\Livewire;
 use App\Models\ISIC3;
 use Exception;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ISIC3Table extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     protected $model = ISIC3::class;
     public function configure(): void
@@ -81,7 +81,7 @@ class ISIC3Table extends DataTableComponent
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -108,7 +108,7 @@ class ISIC3Table extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

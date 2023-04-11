@@ -8,13 +8,13 @@ use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ExchangeRateAddModal extends Component
 {
 
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $currency;
     public $mean;
@@ -55,7 +55,7 @@ class ExchangeRateAddModal extends Component
         }catch(Exception $e){
             Log::error($e);
 
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

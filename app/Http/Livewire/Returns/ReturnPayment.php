@@ -4,12 +4,12 @@ namespace App\Http\Livewire\Returns;
 
 use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ReturnPayment extends Component
 {
-    use LivewireAlert, PenaltyTrait, PaymentsTrait;
+    use CustomAlert, PenaltyTrait, PaymentsTrait;
 
     public $return;
 
@@ -30,7 +30,7 @@ class ReturnPayment extends Component
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect()->route('returns.stamp-duty.show', encrypt($this->return->id));
         }
-        $this->alert('error', 'Control number could not be generated, please try again later.');
+        $this->customAlert('error', 'Control number could not be generated, please try again later.');
     }
 
     public function render(){

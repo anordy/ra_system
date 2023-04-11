@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Enum\ExtensionRequestStatus;
 use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class ExtensionRequestApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait;
 
     public $modelId;
     public $modelName;
@@ -80,7 +80,7 @@ class ExtensionRequestApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
     }
@@ -104,7 +104,7 @@ class ExtensionRequestApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
     }

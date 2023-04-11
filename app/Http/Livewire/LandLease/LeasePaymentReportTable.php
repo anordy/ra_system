@@ -11,13 +11,13 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LeasePaymentReportTable extends DataTableComponent
 {
-    use LivewireAlert, LeasePaymentReportTrait;
+    use CustomAlert, LeasePaymentReportTrait;
 
     public $dates = [];
     public $status;

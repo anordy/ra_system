@@ -8,14 +8,14 @@ use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class SystemSettingTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -103,7 +103,7 @@ class SystemSettingTable extends DataTableComponent
         if (!Gate::allows('system-setting-delete')) {
             abort(403);
         }
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -125,7 +125,7 @@ class SystemSettingTable extends DataTableComponent
 
             $systemsetting = SystemSetting::findOrFail(decrypt($data->id));
             $this->triggerDualControl(get_class($systemsetting), $systemsetting->id, DualControl::DELETE, 'deleting system setting entry');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             $this->flash(
                 'success',
                 DualControl::SUCCESS_MESSAGE,
@@ -136,7 +136,7 @@ class SystemSettingTable extends DataTableComponent
             );
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

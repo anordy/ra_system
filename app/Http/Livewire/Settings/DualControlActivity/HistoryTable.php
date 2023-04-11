@@ -5,14 +5,14 @@ namespace App\Http\Livewire\Settings\DualControlActivity;
 use App\Models\DualControlHistory;
 use App\Traits\DualControlActivityTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\DualControl;
 
 class HistoryTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
     public $Id;
 
     protected $model = DualControlHistory::class;

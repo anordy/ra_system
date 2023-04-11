@@ -5,12 +5,12 @@ namespace App\Http\Livewire\Investigation;
 use App\Models\Investigation\TaxInvestigation;
 use App\Models\Investigation\TaxInvestigationLocation;
 use App\Models\Investigation\TaxInvestigationTaxType;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class DeclaredSalesAnalysisInstances extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $investigation;
     public $locations;

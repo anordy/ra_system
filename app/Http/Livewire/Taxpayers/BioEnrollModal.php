@@ -4,12 +4,12 @@ namespace App\Http\Livewire\Taxpayers;
 
 use App\Models\Biometric;
 use App\Models\KYC;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class BioEnrollModal extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $finger;
     public $hand;
@@ -50,7 +50,7 @@ class BioEnrollModal extends Component
             ->where('reference_no', $this->kyc->reference_no)->first();
 
         if($check){
-            $this->alert('error', 'Bio already enrolled');
+            $this->customAlert('error', 'Bio already enrolled');
         }else{
             Biometric::create([
                 'reference_no' => $this->kyc->reference_no,

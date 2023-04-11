@@ -3,12 +3,12 @@
 namespace App\Http\Livewire\Debt;
 
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class DebtPenalties extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $penalties = [];
 

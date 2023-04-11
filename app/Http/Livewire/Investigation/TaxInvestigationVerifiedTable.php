@@ -6,14 +6,14 @@ use App\Enum\TaxInvestigationStatus;
 use App\Models\Investigation\TaxInvestigation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxInvestigationVerifiedTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $model = TaxInvestigation::class;
 

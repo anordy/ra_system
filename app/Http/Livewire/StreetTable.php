@@ -8,7 +8,7 @@ use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 class StreetTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     protected $model = Street::class;
 
@@ -119,7 +119,7 @@ class StreetTable extends DataTableComponent
             abort(403);
         }
         $id = decrypt($id);
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -141,17 +141,17 @@ class StreetTable extends DataTableComponent
             $data = (object) $value['data'];
             $street = Street::find($data->id);
             if ($street->is_approved == DualControl::NOT_APPROVED) {
-                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                $this->customAlert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;
             }
             $this->triggerDualControl(get_class($street), $street->id, DualControl::DELETE, 'deleting ward');
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

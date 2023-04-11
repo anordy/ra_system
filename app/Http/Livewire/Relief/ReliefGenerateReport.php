@@ -11,14 +11,14 @@ use App\Models\Relief\ReliefProjectList;
 use App\Models\Relief\ReliefSponsor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReliefGenerateReport extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
     //values for period selects
     public $year;
     public $period;
@@ -162,7 +162,7 @@ class ReliefGenerateReport extends Component
             $fileName = 'Relief Ceiling Report FROM ' . $payload['dates']['from'] . ' TO ' . $payload['dates']['to']; 
         }
         if($payload!=false){
-            $this->alert('success', 'Exporting Excel file');
+            $this->customAlert('success', 'Exporting Excel file');
             return Excel::download(new \App\Exports\ReliefExport($payload), $fileName.'.xlsx');
         }
     }
@@ -310,7 +310,7 @@ class ReliefGenerateReport extends Component
         }
         $payload = $this->hasRecords();
         if($payload!=false){
-            $this->alert('success', 'Exporting Excel file');
+            $this->customAlert('success', 'Exporting Excel file');
             return redirect()->route('reliefs.download.report.pdf', [encrypt(json_encode($payload))]);
         }
     }
@@ -441,7 +441,7 @@ class ReliefGenerateReport extends Component
         }
 
         if($relief->count()<1){
-            $this->alert('error','No Records found in selected criteria');
+            $this->customAlert('error','No Records found in selected criteria');
             return false;
         }
 

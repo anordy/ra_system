@@ -7,13 +7,13 @@ use App\Models\TaxType;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class SubVatTaxTypesTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     protected $model = SubVat::class;
     public function configure(): void
@@ -111,7 +111,7 @@ class SubVatTaxTypesTable extends DataTableComponent
             abort(403);
         }
         $id = decrypt($id);
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -135,7 +135,7 @@ class SubVatTaxTypesTable extends DataTableComponent
             $this->flash('success', 'Record deleted successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

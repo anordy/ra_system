@@ -7,14 +7,14 @@ use App\Models\Region;
 use App\Models\Street;
 use App\Models\TaxpayerAmendmentRequest;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DetailsAmendmentRequestTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
 
     protected $listeners = [

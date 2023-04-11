@@ -5,13 +5,13 @@ namespace App\Http\Livewire\Business\Updates;
 use App\Models\BusinessStatus;
 use App\Models\BusinessUpdate;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ChangesRequestTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
 
     protected $listeners = [

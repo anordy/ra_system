@@ -16,12 +16,12 @@ use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait;
 
     public $modelId;
     public $modelName;
@@ -43,7 +43,7 @@ class ApprovalProcessing extends Component
     public function approve($transition)
     {
         if ($this->renew == null) {
-            $this->alert('error', 'Tax Consultant does not exist');
+            $this->customAlert('error', 'Tax Consultant does not exist');
             return;
         }
         $type = 'Renewal Fee';
@@ -51,7 +51,7 @@ class ApprovalProcessing extends Component
         $duration = TaPaymentConfiguration::query()->select('id', 'category', 'duration', 'is_citizen' )
             ->where('category', $type)->where('is_citizen', $this->renew->tax_agent->taxpayer->is_citizen)->first();
         if ($duration == null) {
-            $this->alert('error', 'The duration for consultant renew does not exist');
+            $this->customAlert('error', 'The duration for consultant renew does not exist');
             return;
         }
 
@@ -95,7 +95,7 @@ class ApprovalProcessing extends Component
             $this->flash('success', 'Approved successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
             return;
         }
 
@@ -116,7 +116,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -128,7 +128,7 @@ class ApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

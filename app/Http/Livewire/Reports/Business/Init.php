@@ -17,13 +17,13 @@ use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Models\Ward;
 use App\Traits\RegistrationReportTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class Init extends Component
 {
-    use RegistrationReportTrait, LivewireAlert;
+    use RegistrationReportTrait, CustomAlert;
 
     //main filters
     public $optionReportTypes;
@@ -158,7 +158,7 @@ class Init extends Component
         $records = $this->getBusinessBuilder($this->parameters);
         if($records->get()->count()<1){
             $this->hasData = false;
-            $this->alert('error','No Data Found for selected options');
+            $this->customAlert('error','No Data Found for selected options');
             return;
         }else{
             $this->hasData = true;
@@ -224,7 +224,7 @@ class Init extends Component
         $records = $this->getBusinessBuilder($this->parameters);
         if($records->get()->count()<1){
             $this->hasData = false;
-            $this->alert('error','No Data Found for selected options');
+            $this->customAlert('error','No Data Found for selected options');
             return;
         }else{
             $this->hasData = true;
@@ -246,10 +246,10 @@ class Init extends Component
 
         $records = $this->getBusinessBuilder($this->parameters);
         if($records->get()->count()<1){
-            $this->alert('error','No Data Found for selected options');
+            $this->customAlert('error','No Data Found for selected options');
             return;
         }else{
-            $this->alert('success','Exporting Excel File');
+            $this->customAlert('success','Exporting Excel File');
         }
         return Excel::download(new BusinessReportExport($this->getBusinessBuilder($this->parameters)), 'Business.xlsx');
     }
@@ -266,10 +266,10 @@ class Init extends Component
 
         $records = $this->getBusinessBuilder($this->parameters);
         if($records->get()->count()<1){
-            $this->alert('error','No Data Found for selected options');
+            $this->customAlert('error','No Data Found for selected options');
             return;
         }else{
-            $this->alert('success','Exporting Pdf File');
+            $this->customAlert('success','Exporting Pdf File');
         }
         return redirect()->route('reports.business.download.pdf',encrypt(json_encode($this->parameters)));
     }
@@ -286,7 +286,7 @@ class Init extends Component
             }
         }
         if (!$taxRegionSeletected) {
-            $this->alert('error', 'Select Atleast one Tax Region');
+            $this->customAlert('error', 'Select Atleast one Tax Region');
             return false;
         }
 
@@ -300,7 +300,7 @@ class Init extends Component
             }
         }
         if (!$businessCategoriesSeletected) {
-            $this->alert('error', 'Select Atleast one Business Category');
+            $this->customAlert('error', 'Select Atleast one Business Category');
             return false;
         }
 
@@ -314,7 +314,7 @@ class Init extends Component
             }
         }
         if(!$businessActivitiesSeletected){
-            $this->alert('error', 'Select Atleast one Business Activity Type');
+            $this->customAlert('error', 'Select Atleast one Business Activity Type');
             return false;
         }
 
@@ -328,7 +328,7 @@ class Init extends Component
             }
         }
         if (!$businessConsultantsSeletected) {
-            $this->alert('error', 'Select Atleast one Business Consultant Type');
+            $this->customAlert('error', 'Select Atleast one Business Consultant Type');
             return false;
         }
 

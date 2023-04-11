@@ -4,13 +4,13 @@ namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefProjectList;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReliefProjectListTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $projectSectionId;
 
@@ -79,10 +79,10 @@ class ReliefProjectListTable extends DataTableComponent
         $projectList = ReliefProjectList::findOrFail($id);
         //check if ministry has been used in relief project list and if so, prevent deletion
         if ($projectList->reliefs()->count()>0) {
-            $this->alert('error', 'Cannot delete project. Project is used in Relief.');
+            $this->customAlert('error', 'Cannot delete project. Project is used in Relief.');
         } else {
             $projectList->delete();
-            $this->alert('success', 'Project deleted successfully.');
+            $this->customAlert('success', 'Project deleted successfully.');
         }
     }
 }

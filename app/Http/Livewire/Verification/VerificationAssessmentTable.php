@@ -9,13 +9,13 @@ use App\Models\Verification\TaxVerification;
 use App\Traits\ReturnFilterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerificationAssessmentTable extends DataTableComponent
 {
-    use LivewireAlert, ReturnFilterTrait;
+    use CustomAlert, ReturnFilterTrait;
 
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     

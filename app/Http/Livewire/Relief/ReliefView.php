@@ -5,12 +5,12 @@ namespace App\Http\Livewire\Relief;
 use Livewire\Component;
 use App\Models\Relief\Relief;
 
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 
 class ReliefView extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $relief;
 

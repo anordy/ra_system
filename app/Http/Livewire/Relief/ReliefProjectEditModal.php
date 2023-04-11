@@ -6,13 +6,13 @@ use App\Models\Relief\ReliefProject;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ReliefProjectEditModal extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $name;
     public $description;
@@ -51,7 +51,7 @@ class ReliefProjectEditModal extends Component
             $this->flash('success', 'Record updated successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class AssignApprovalLevelAddModal extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $levels;
     public $level;
@@ -43,15 +43,15 @@ class AssignApprovalLevelAddModal extends Component
     {
         $this->validate();
         if ($this->user->is_approved != 1) {
-            $this->alert('error', 'The selected user is not approved');
+            $this->customAlert('error', 'The selected user is not approved');
             return;
         }
         if ($this->user->role->name != 'Administrator') {
-            $this->alert('error', 'This level of approval is only allowed for Administrator role only');
+            $this->customAlert('error', 'This level of approval is only allowed for Administrator role only');
             return;
         }
         if (Auth::id() == $this->user->id){
-            $this->alert('error', 'You can not change your own approval level.');
+            $this->customAlert('error', 'You can not change your own approval level.');
             return;
         }
         DB::beginTransaction();
@@ -66,12 +66,12 @@ class AssignApprovalLevelAddModal extends Component
             ]);
             $this->user->update(['level_id'=>$this->level]);
             DB::commit();
-            $this->alert('success', 'Record saved successfully');
+            $this->customAlert('success', 'Record saved successfully');
             return redirect()->route('settings.users.index');
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
         }
     }
 

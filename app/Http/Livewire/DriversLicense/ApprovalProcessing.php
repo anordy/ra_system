@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class ApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, CustomAlert;
 
     public $modelId;
     public $modelName;
@@ -40,7 +40,7 @@ class ApprovalProcessing extends Component
             $fee = DlFee::query()->where(['type' => $this->subject->type, 'dl_license_duration_id'=>$this->subject->dl_license_duration_id])->first();
 
             if (empty($fee)) {
-                $this->alert('error', "Fee for Drivers license application ({$this->subject->type}) is not configured");
+                $this->customAlert('error', "Fee for Drivers license application ({$this->subject->type}) is not configured");
                 return;
             }
             $this->subject->dl_application_status_id = DlApplicationStatus::query()->firstOrCreate(['name' => DlApplicationStatus::STATUS_PENDING_PAYMENT])->id;
@@ -68,7 +68,7 @@ class ApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -86,7 +86,7 @@ class ApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

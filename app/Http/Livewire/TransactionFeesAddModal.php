@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class TransactionFeesAddModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
     public $min_amount;
     public $max_amount;
     public $fee;
@@ -49,12 +49,12 @@ class TransactionFeesAddModal extends Component
             $this->triggerDualControl(get_class($transaction_fee), $transaction_fee->id, DualControl::ADD, 'adding transaction fee');
 
             DB::commit();
-            $this->alert('success', 'Fee added successfully');
+            $this->customAlert('success', 'Fee added successfully');
             return redirect()->route('settings.transaction-fees.index');
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
             return redirect()->route('settings.transaction-fees.index');
         }
     }

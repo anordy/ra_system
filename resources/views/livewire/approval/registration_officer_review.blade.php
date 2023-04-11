@@ -75,7 +75,7 @@
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Tax Region</label>
                         <select class="form-control @error('selectedTaxRegion') is-invalid @enderror"
-                            wire:model="selectedTaxRegion">
+                            wire:model.defer="selectedTaxRegion">
                             <option value="null" disabled selected>Select</option>
                             @foreach ($taxRegions as $region)
                                 <option value="{{ $region->id }}">{{ $region->name }}</option>
@@ -149,7 +149,7 @@
             <div class="card-body">
                     @foreach ($selectedTaxTypes as $key => $value)
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-label">Tax Type</label>
                                 <select
@@ -165,7 +165,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-label">Currency</label>
                                 <select
@@ -182,20 +182,42 @@
                         </div>
 
                         @if (!empty($selectedTaxTypes[$key]['tax_type_id']) && $selectedTaxTypes[$key]['tax_type_id'] == $vat_id)
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">VAT Category Type</label>
-                                    <select
-                                    class="form-control @error("selectedTaxTypes.{$key}.sub_vat_id") is-invalid @enderror"
-                                    wire:model="selectedTaxTypes.{{ $key }}.sub_vat_id">
-                                        <option value="" selected disabled>--Select---</option>
-                                        @foreach ($subVatOptions as $sub)
-                                            <option value="{{ $sub->id }}">{{ $sub->name }}</option>
-                                        @endforeach
-                                    </select>
-                                @error("selectedTaxTypes.{{ $key }}.sub_vat_id")
+                                    <div class="position-relative">
+                                        <input type="hidden" wire:model="selectedTaxTypes.{{ $key }}.sub_vat_id">
+                                        <input type="text" class="form-control" placeholder="Search..." wire:model="selectedTaxTypes.{{ $key }}.sub_vat_name" wire:keyup="subCategorySearchUpdate({{$key}}, $event.target.value)">
+                                        @if($selectedTaxTypes[$key]['show_hide_options'])
+                                            <div class="position-absolute" style="z-index: 1" wire:loading wire:target="subCategorySearchUpdate">
+                                                Loading....
+                                            </div>
+                                            <div wire:loading.remove>
+                                                @if(count($subVatOptions) > 0)
+                                                    <div class="position-absolute border-bottom rounded" style="overflow: hidden;z-index: 1;">
+                                                        <ul class="custom-dropdown-menu pb-2">
+                                                            @foreach($subVatOptions as $sub)
+                                                                <li>
+                                                                    <a type="button" wire:click="selectSubVat({{$key}}, {{$sub}})">
+                                                                        <small>{{ $sub->name }}</small>
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @else
+                                                    <ul class="custom-dropdown-menu pb-2">
+                                                        <li>
+                                                            <small class="font-italic text-center">No record match!</small>
+                                                        </li>
+                                                    </ul>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    </div>
+                                    @error("selectedTaxTypes.{{ $key }}.sub_vat_id")
                                     <span class="text-danger error">{{ $message }}</span>
-                                @enderror
+                                    @enderror
                                 </div>
                             </div>
                         @endif
@@ -241,14 +263,20 @@
                             </div>
                         @endif
 
-                        <div class="d-flex align-items-center">
-                            @if ($key > 0)
-                                <button class="btn btn-danger btn-sm"
-                                    wire:click.prevent="removeTaxType({{ $key }})">
-                                    Remove
-                                </button>
-                            @endif
-                        </div>
+                        @if ($key > 0)
+                            <div class="d-flex align-items-center">
+                                <div class="form-group">
+                                    <label class="form-label">Action</label>
+                                    <div>
+                                        <button class="btn btn-danger btn-sm"
+                                                wire:click.prevent="removeTaxType({{ $key }})">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                     @endforeach
             </div>

@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Log;
 use App\Models\BusinessTaxTypeChange;
 use App\Models\Returns\Vat\SubVat;
 use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 
 class TaxTypeChangeApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, CustomAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -81,7 +81,7 @@ class TaxTypeChangeApprovalProcessing extends Component
         ]);
 
         if ($this->to_tax_type_id == $this->from_tax_type_id) {
-            $this->alert('warning', 'You cannot change to an existing tax type');
+            $this->customAlert('warning', 'You cannot change to an existing tax type');
             return;
         }
 
@@ -115,7 +115,7 @@ class TaxTypeChangeApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollback();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -131,7 +131,7 @@ class TaxTypeChangeApprovalProcessing extends Component
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 
@@ -141,7 +141,7 @@ class TaxTypeChangeApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

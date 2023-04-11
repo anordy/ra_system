@@ -6,7 +6,7 @@ use App\Models\Returns\LumpSum\LumpSumReturn;
 use App\Models\TaxType;
 use App\Traits\DepartmentalReportTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
@@ -14,7 +14,7 @@ use App\Traits\ReturnReportTrait;
 
 class DepartmentReportsTable extends DataTableComponent
 {
-    use LivewireAlert, DepartmentalReportTrait;
+    use CustomAlert, DepartmentalReportTrait;
 
     public $parameters, $lumpsump;
 

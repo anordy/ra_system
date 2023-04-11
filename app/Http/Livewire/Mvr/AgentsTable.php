@@ -9,13 +9,13 @@ use App\Models\MvrRegistrationStatus;
 use App\Models\Taxpayer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class AgentsTable extends DataTableComponent
 {
-	use LivewireAlert;
+	use CustomAlert;
 
     public function builder(): Builder
 	{
@@ -76,7 +76,7 @@ class AgentsTable extends DataTableComponent
 
     public function changeStatus($id, $status)
     {
-        $this->alert('warning', 'Are you sure you want to change AGENT status ?', [
+        $this->customAlert('warning', 'Are you sure you want to change AGENT status ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -102,7 +102,7 @@ class AgentsTable extends DataTableComponent
             return redirect()->to(route('mvr.agent'));
         } catch (\Exception $e) {
             report($e);
-            $this->alert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something went wrong, please contact the administrator for help!!!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 

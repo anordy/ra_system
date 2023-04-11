@@ -10,12 +10,12 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class EducationLevelEditModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $name;
     public $level;
@@ -56,12 +56,12 @@ class EducationLevelEditModal extends Component
             ];
             $this->triggerDualControl(get_class($this->level), $this->level->id, DualControl::EDIT, 'editing education level', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             return redirect()->route('settings.education-level.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             return redirect()->route('settings.education-level.index');
         }
     }

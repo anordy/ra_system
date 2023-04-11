@@ -64,5 +64,33 @@ class UserSeeder extends Seeder
             'is_approved' => 1,
         ]);
 
+        User::updateOrCreate([
+            'fname' => "Peter",
+            'lname' => "Joseph",
+            'email' => "petergaty360@icloud.com",
+            'phone' => '0769824511',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 1,
+            'status' => true,
+            'is_first_login' => false,
+            'is_approved' => 1,
+        ]);
+
+        User::updateOrCreate([
+            'fname' => "David",
+            'lname' => "Mabula",
+            'email' => "davidmabux@gmail.com",
+            'phone' => '0621749596',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+            'role_id' => 1,
+            'status' => true,
+            'is_first_login' => false,
+            'is_approved' => 1,
+        ]);
+
     }
 }

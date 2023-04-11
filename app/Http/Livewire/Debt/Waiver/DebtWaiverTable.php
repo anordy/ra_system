@@ -5,13 +5,13 @@ namespace App\Http\Livewire\Debt\Waiver;
 use App\Models\WaiverStatus;
 use App\Models\Debts\DebtWaiver;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class DebtWaiverTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function mount()
     {

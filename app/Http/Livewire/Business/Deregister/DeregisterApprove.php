@@ -6,12 +6,12 @@ use Livewire\Component;
 use App\Models\Business;
 use Illuminate\Support\Facades\Route;
 use App\Models\BusinessDeregistration;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class DeregisterApprove extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $deregister;
     public $business_id;

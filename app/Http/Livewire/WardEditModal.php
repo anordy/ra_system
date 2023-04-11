@@ -11,13 +11,13 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class WardEditModal extends Component
 {
 
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $regions = [];
     public $districts = [];
@@ -67,7 +67,7 @@ class WardEditModal extends Component
 
         $this->validate();
         if ($this->ward->is_approved == DualControl::NOT_APPROVED) {
-            $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+            $this->customAlert('error', DualControl::UPDATE_ERROR_MESSAGE);
             return;
         }
         DB::beginTransaction();
@@ -78,12 +78,12 @@ class WardEditModal extends Component
             ];
             $this->triggerDualControl(get_class($this->ward), $this->ward->id, DualControl::EDIT, 'editing ward '.$this->ward->name.'', json_encode($this->old_values), json_encode($payload));
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return redirect()->route('settings.ward.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer' => 2000]);
             return redirect()->route('settings.ward.index');
         }
     }

@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use App\Models\ZmBill;
 use App\Models\ZmBillChange;
 use App\Services\ZanMalipo\GepgResponse;
@@ -15,7 +15,7 @@ use App\Traits\PaymentsTrait;
 
 class BillAction extends Component
 {
-    use LivewireAlert, PaymentsTrait, GepgResponse;
+    use CustomAlert, PaymentsTrait, GepgResponse;
     public $today;
     public $bill, $bill_change, $control_number, $cancellation_reason, $new_expiration_date, $action;
 
@@ -43,7 +43,7 @@ class BillAction extends Component
             abort(403);
         }
 
-        $this->alert('warning', "Are you sure you want to {$this->action} bill with control number {$this->control_number} ?", [
+        $this->customAlert('warning', "Are you sure you want to {$this->action} bill with control number {$this->control_number} ?", [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -67,7 +67,7 @@ class BillAction extends Component
         $this->bill = ZmBill::where('control_number', $this->control_number)->latest()->first();
 
         if (!$this->bill) {
-            $this->alert('error', 'Control number not found');
+            $this->customAlert('error', 'Control number not found');
             return true;
         }
 
@@ -75,10 +75,10 @@ class BillAction extends Component
             try {
                 $this->cancelBill($this->bill, $this->cancellation_reason);
                 $this->refresh();
-                $this->alert('success', 'Bill cancellation request has been sent');
+                $this->customAlert('success', 'Bill cancellation request has been sent');
             } catch (Exception $e) {
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         } else if ($this->action == 'update') {
             try {
@@ -86,10 +86,10 @@ class BillAction extends Component
                 $this->new_expiration_date->addHours(6)->addMinute();
                 $this->updateBill($this->bill, $this->new_expiration_date);
                 $this->refresh();
-                $this->alert('success', 'Bill update request has been sent');
+                $this->customAlert('success', 'Bill update request has been sent');
             } catch (Exception $e) {
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
     }
