@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Reports\Business;
 
 use App\Models\Business;
 use App\Traits\RegistrationReportTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -11,7 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class PreviewTable extends DataTableComponent
 {
-    use CustomAlert, RegistrationReportTrait;
+    use CustomAlert, RegistrationReportTrait, WithSearch;
 
     public $parameters;
 

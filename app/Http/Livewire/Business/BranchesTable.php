@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Business;
 
 use App\Models\BranchStatus;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -10,6 +11,8 @@ use App\Models\BusinessLocation;
 
 class BranchesTable extends DataTableComponent
 {
+    use WithSearch;
+
     protected $model = BusinessLocation::class;
     public $status;
 

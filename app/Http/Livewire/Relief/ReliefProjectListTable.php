@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Relief;
 
 use App\Models\Relief\ReliefProjectList;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -10,7 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ReliefProjectListTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     public $projectSectionId;
 

@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\DualControl;
 use App\Models\Role;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RolesTable extends DataTableComponent
 {
-    use CustomAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait, WithSearch;
 
     protected $model = Role::class;
     public function configure(): void

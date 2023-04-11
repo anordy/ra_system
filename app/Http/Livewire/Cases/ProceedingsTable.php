@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Cases;
 
 use App\Models\CaseAppeal;
 use App\Models\CaseProceeding;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
@@ -12,7 +13,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ProceedingsTable extends DataTableComponent
 {
-	use CustomAlert;
+	use CustomAlert, WithSearch;
 
     /**
      * @var mixed

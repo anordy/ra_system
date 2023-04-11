@@ -5,12 +5,14 @@ namespace App\Http\Livewire\LandLease;
 use App\Models\BusinessLocation;
 use App\Models\LandLease;
 use App\Models\Taxpayer;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class LandLeaseList extends DataTableComponent
 {
+    use WithSearch;
     //create builder function
     public function builder(): builder
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\Vat;
 
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -9,6 +10,7 @@ use App\Models\Returns\Vat\VatReturn;
 
 class VatDebtReturnTable extends DataTableComponent
 {
+    use WithSearch;
     protected $model = VatReturn::class;
 
     public function configure(): void

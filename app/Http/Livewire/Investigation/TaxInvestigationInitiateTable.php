@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Investigation;
 use App\Enum\TaxInvestigationStatus;
 use App\Enum\TaxVerificationStatus;
 use App\Models\Investigation\TaxInvestigation;
+use App\Traits\WithSearch;
 use App\Traits\WorkflowProcesssingTrait;
 use Carbon\Carbon;
 use Exception;
@@ -16,7 +17,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class TaxInvestigationInitiateTable extends DataTableComponent
 {
 
-    use CustomAlert, WorkflowProcesssingTrait;
+    use CustomAlert, WorkflowProcesssingTrait, WithSearch;
 
     public $model = TaxInvestigation::class;
 

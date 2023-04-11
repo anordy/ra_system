@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\WithholdingAgents;
 
 use App\Models\WithholdingAgent;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Exception;
 use id;
@@ -14,7 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class WithholdingAgentsTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
     public function configure(): void
     {

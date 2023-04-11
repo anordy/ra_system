@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Returns\ExciseDuty;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Gate;
 
 class MobileMoneyTransferTable extends DataTableComponent
 {
-    use  ReturnFilterTrait;
+    use  ReturnFilterTrait, WithSearch;
     
     protected $listeners = ['filterData' => 'filterData', '$refresh'];
     public $data         = [];

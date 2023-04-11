@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Notifications\DatabaseNotification;
 use App\Services\ZanMalipo\ZmCore;
 use App\Services\ZanMalipo\ZmResponse;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
 class ApprovedTable extends DataTableComponent
 {
-    use CustomAlert;
+    use CustomAlert, WithSearch;
 
 //    protected $model = RenewTaxAgentRequest::class;
 

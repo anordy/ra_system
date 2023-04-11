@@ -82,6 +82,8 @@ class ApprovalProcessing extends Component
         if ($this->isiic_iii) {
             $this->isiiciiiChange($this->isiic_iii);
         }
+        $this->effectiveDate = $this->subject->headquarter->effective_date->format('Y-m-d') ?? null;
+        $this->selectedTaxRegion = $this->subject->headquarter->tax_region_id;
 
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 

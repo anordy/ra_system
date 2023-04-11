@@ -6,6 +6,7 @@ use App\Models\TaxAssessments\TaxAssessment;
 use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
 use App\Traits\DisputeReportTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -13,7 +14,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DisputePreviewTable extends DataTableComponent
 {
-    use CustomAlert, DisputeReportTrait;
+    use CustomAlert, DisputeReportTrait, WithSearch;
 
     public $parameters;
 
