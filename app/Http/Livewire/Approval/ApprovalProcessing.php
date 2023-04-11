@@ -196,7 +196,7 @@ class ApprovalProcessing extends Component
 
     public function subCategorySearchUpdate($key, $value){
         $this->selectedTaxTypes[$key]['show_hide_options'] = true;
-        $this->subVatOptions  = SubVat::select('id', 'name')->where('name', 'like', '%'.$value.'%')->where('is_approved', 1)->get();
+        $this->subVatOptions  = SubVat::select('id', 'name')->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($value) . '%')->where('is_approved', 1)->get();
     }
 
     public function selectSubVat($key, $subVat){

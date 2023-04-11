@@ -29,14 +29,13 @@ trait DebtReportTrait
 
     public function getSelectedRecords($model,$parameters)
     {
-        $dates = $parameters['dates'];
-        if ($dates == []) {
+        if ($parameters['range_start'] == [] || $parameters['range_end'] == []) {
             return $model->orderBy("created_at", 'asc');
         }
-        if ($dates['startDate'] == null || $dates['endDate'] == null) {
+        if ($parameters['range_start'] == null || $parameters['range_end'] == null) {
             return $model->orderBy("created_at", 'asc');
         }
 
-        return $model->whereBetween("created_at", [$dates['startDate'], $dates['endDate']])->orderBy("created_at", 'asc');
+        return $model->whereBetween("created_at", [$parameters['range_start'], $parameters['range_end']])->orderBy("created_at", 'asc');
     }
 }
