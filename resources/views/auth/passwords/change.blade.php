@@ -32,7 +32,7 @@
                                     <input x-model="password" type="password" name="password"
                                         class="form-control @error('password') is-invalid @enderror">
                                     @error('password')
-                                    <span class="invalid-feedback" role="alert">
+                                    <span class="invalid-feedback text-wrap overflow-auto" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
@@ -48,7 +48,7 @@
                                         x-model="password_confirm"
                                         class="form-control @error('password_confirmation') is-invalid @enderror">
                                     @error('password_confirmation')
-                                    <span class="invalid-feedback" role="alert">
+                                    <span class="invalid-feedback text-wrap overflow-auto" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror

@@ -24,7 +24,7 @@ Forgot Password
                                         <input type="email" id="email"
                                             class="form-control @error('email') is-invalid @enderror" name="email"
                                             value="{{ old('email') }}" required autocomplete="off" />
-                                        <div class="invalid-feedback">
+                                        <div class="invalid-feedback text-wrap overflow-auto">
                                             @error('email')
                                                 {{ $message }}
                                             @enderror
