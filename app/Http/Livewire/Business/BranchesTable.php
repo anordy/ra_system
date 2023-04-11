@@ -54,7 +54,7 @@ class BranchesTable extends DataTableComponent
             Column::make("Z Number", "zin")
                 ->sortable(),
             Column::make("Business Name", "business.name")
-                ->sortable(),
+                ->sortable()->searchable(),
             Column::make("Branch Name", "name")
                 ->format(function ($value, $row) {
                    return $row->is_headquarter === 1 ? "Head Quarters" :"{$row->name}";

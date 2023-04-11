@@ -33,7 +33,7 @@ class BranchesApprovalProgressTable extends DataTableComponent
     {
         return [
             Column::make("Business Name", "pinstance.business_id")
-                ->label(fn ($row) => $row->pinstance->business->name ?? ''),
+                ->label(fn ($row) => $row->pinstance->business->name ?? '')->searchable(),
             Column::make("Business Type", "pinstance.business.business_type")
                 ->label(fn ($row) => strtoupper($row->pinstance->business->business_type ?? '')),
             Column::make("Branch Name", "pinstance.is_headquarter")
