@@ -19,11 +19,11 @@ use Illuminate\Support\Facades\Log;
 use App\Jobs\Debt\GenerateControlNo;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class ReturnDebtWaiverApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, LivewireAlert, VerificationTrait;
+    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, CustomAlert, VerificationTrait;
     public $modelId;
     public $debt;
     public $modelName;
@@ -134,7 +134,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
                 } catch (Exception $e) {
                     DB::rollBack();
                     Log::error($e);
-                    $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                    $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                     return;
                 }
 
@@ -191,7 +191,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
 
@@ -214,7 +214,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
 
@@ -263,7 +263,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
@@ -292,7 +292,7 @@ class ReturnDebtWaiverApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

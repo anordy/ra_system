@@ -23,12 +23,12 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, CustomAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -83,22 +83,32 @@ class ApprovalProcessing extends Component
             $this->isiiciiiChange($this->isiic_iii);
         }
 
+        $this->effectiveDate = $this->subject->headquarter->effective_date ? $this->subject->headquarter->effective_date->format('Y-m-d') : null;
+        $this->selectedTaxRegion = $this->subject->headquarter->tax_region_id;
+
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
 
         $this->taxRegions = TaxRegion::all();
+        $this->vat_id = TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
 
         foreach ($this->subject->taxTypes as $value) {
+            $this->vat_id = $value->id == TaxType::query()->select('id')->where('code', TaxType::VAT)->firstOrFail()->id;
+            $subVat = $value->pivot->sub_vat_id ? SubVat::where('id', $value->pivot->sub_vat_id)->where('is_approved', 1)->firstOrFail('name'): null;
             $this->selectedTaxTypes[] = [
                 'currency'    => $value->pivot->currency ?? '',
                 'tax_type_id' => $value->id,
+                'sub_vat_id' => $value->pivot->sub_vat_id,
+                'sub_vat_name' => $value->pivot->sub_vat_id ? $subVat['name'] : null,
+                'show_hide_options'=> false,
             ];
         }
-
         if (count($this->selectedTaxTypes) < 1) {
             $this->selectedTaxTypes[] = [
                 'tax_type_id' => '',
                 'currency'    => '',
-                'sub_vat_id'  => ''
+                'sub_vat_id'  => '',
+                'sub_vat_name'  => '',
+                'show_hide_options' => true
             ];
         }
 
@@ -133,6 +143,7 @@ class ApprovalProcessing extends Component
 
     public function updated($property)
     {
+
         $property = explode('.', $property);
 
         if (end($property) === 'tax_type_id') {
@@ -169,8 +180,6 @@ class ApprovalProcessing extends Component
                 $this->showLumpsumOptions = false;
             }
 
-            $this->vat_id = $vatId;
-
             if (in_array($vatId, $this->Ids)) {
                 $this->subVatOptions  = SubVat::select('id', 'name')->where('is_approved', 1)->get();
             }
@@ -182,8 +191,22 @@ class ApprovalProcessing extends Component
         $this->selectedTaxTypes[] = [
             'tax_type_id' => '',
             'currency'    => '',
-            'sub_vat_id'  => ''
+            'sub_vat_id'  => '',
+            'sub_vat_name'  => '',
+            'show_hide_options' => true
         ];
+    }
+
+    public function subCategorySearchUpdate($key, $value){
+        $this->selectedTaxTypes[$key]['show_hide_options'] = true;
+        $this->subVatOptions  = SubVat::select('id', 'name')->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($value) . '%')->where('is_approved', 1)->get();
+    }
+
+    public function selectSubVat($key, $subVat){
+        $this->selectedTaxTypes[$key]['sub_vat_id'] = $subVat['id'];
+        $this->selectedTaxTypes[$key]['sub_vat_name'] = $subVat['name'];
+        $this->selectedTaxTypes[$key]['show_hide_options'] = false;
+
     }
 
     public function removeTaxType($index)
@@ -195,27 +218,28 @@ class ApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
+
+            $this->validate([
+                'isiic_i' => 'required|numeric|exists:isic1s,id',
+                'isiic_ii' => 'required|numeric|exists:isic2s,id',
+                'isiic_iii' => 'required|numeric|exists:isic3s,id',
+                'isiic_iv' => 'required|numeric|exists:isic4s,id',
+                'selectedTaxTypes' => 'required',
+                'selectedTaxTypes.*.currency' => 'required',
+                'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
+                'selectedTaxRegion' => 'required|exists:tax_regions,id',
+                'effectiveDate' => 'required|strip_tag'
+            ], [
+                'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
+                'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is required',
+                'selectedTaxTypes.*.currency.required' => 'Currency is required',
+            ]);
+
             try {
                 $this->subject->isiic_i = $this->isiic_i ?? null;
                 $this->subject->isiic_ii = $this->isiic_ii ?? null;
                 $this->subject->isiic_iii = $this->isiic_iii ?? null;
                 $this->subject->isiic_iv = $this->isiic_iv ?? null;
-
-                $this->validate([
-                    'isiic_i' => 'required|numeric|exists:isic1s,id',
-                    'isiic_ii' => 'required|numeric|exists:isic2s,id',
-                    'isiic_iii' => 'required|numeric|exists:isic3s,id',
-                    'isiic_iv' => 'required|numeric|exists:isic4s,id',
-                    'selectedTaxTypes' => 'required',
-                    'selectedTaxTypes.*.currency' => 'required',
-                    'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
-                    'selectedTaxRegion' => 'required|exists:tax_regions,id',
-                    'effectiveDate' => 'required|strip_tag'
-                ], [
-                    'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
-                    'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is required',
-                    'selectedTaxTypes.*.currency.required' => 'Currency is required',
-                ]);
 
                 $business = Business::findOrFail($this->subject->id);
 
@@ -276,7 +300,7 @@ class ApprovalProcessing extends Component
             } catch (Exception $exception){
                 DB::rollBack();
                 Log::error($exception);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
         }
@@ -299,11 +323,11 @@ class ApprovalProcessing extends Component
                 if ($location->ztnGeneration()) {
 
                     if (!$location->generateZ()) {
-                        $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+                        $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
                         return;
                     }
                 } else {
-                    $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+                    $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
                     return;
                 }
 
@@ -322,7 +346,7 @@ class ApprovalProcessing extends Component
             } catch (Exception $exception){
                 DB::rollBack();
                 Log::error($exception);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
         }
@@ -334,7 +358,7 @@ class ApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
 
@@ -355,7 +379,7 @@ class ApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
@@ -367,7 +391,7 @@ class ApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

@@ -5,17 +5,18 @@ namespace App\Http\Livewire;
 use App\Models\District;
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DistrictTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait, WithSearch;
 
     protected $model = District::class;
     public function configure(): void
@@ -115,7 +116,7 @@ class DistrictTable extends DataTableComponent
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -140,17 +141,17 @@ class DistrictTable extends DataTableComponent
                 abort(404);
             }
             if ($district->is_approved == DualControl::NOT_APPROVED) {
-                $this->alert('error', DualControl::UPDATE_ERROR_MESSAGE);
+                $this->customAlert('error', DualControl::UPDATE_ERROR_MESSAGE);
                 return;
             }
             $this->triggerDualControl(get_class($district), $district->id, DualControl::DELETE, 'deleting district');
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             return;
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

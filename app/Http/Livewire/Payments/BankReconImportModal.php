@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\In;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,13 +16,13 @@ use Maatwebsite\Excel\Validators\ValidationException;
 class BankReconImportModal extends Component
 {
 
-    use LivewireAlert, WithFileUploads;
+    use CustomAlert, WithFileUploads;
 
     public $reconFile, $path, $currency;
 
     protected function rules(){
         return [
-            'reconFile' => 'required|file', // Accept .txt since php confuses .txt for csv sometimes
+            'reconFile' => 'required|file|max:1024', // Accept .txt since php confuses .txt for csv sometimes
             'currency' => ['required', new In(['USD', 'TZS'])],
         ];
     }
@@ -60,21 +60,21 @@ class BankReconImportModal extends Component
 
             dispatch(new FinalizeBankRecon());
 
-            $this->alert('success', 'Importing complete.');
+            $this->customAlert('success', 'Importing complete.');
 
             return redirect(request()->header('Referer'));
 
         } catch (ValidationException $exception){
             DB::rollBack();
             foreach ($exception->failures() as $error) {
-                $this->alert('error', 'Error at row ' . $error->row() . '. ' . $error->errors()[0], ['timer' => 12000]);
+                $this->customAlert('error', 'Error at row ' . $error->row() . '. ' . $error->errors()[0], ['timer' => 12000]);
             }
             Log::error($exception->failures());
         }
         catch (\Exception $exception){
             DB::rollBack();
             Log::error($exception);
-            $this->alert('error', 'Something went wrong, please contact support for assistance.');
+            $this->customAlert('error', 'Something went wrong, please contact support for assistance.');
         }
     }
 

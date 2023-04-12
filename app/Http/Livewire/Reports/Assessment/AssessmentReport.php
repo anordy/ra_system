@@ -6,13 +6,13 @@ use App\Exports\AssessmentReportExport;
 use App\Models\FinancialYear;
 use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AssessmentReport extends Component
 {
-    use LivewireAlert, AssessmentReportTrait;
+    use CustomAlert, AssessmentReportTrait;
 
     public $optionYears;
     public $optionPeriods;
@@ -75,7 +75,7 @@ class AssessmentReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
 
@@ -103,7 +103,7 @@ class AssessmentReport extends Component
                 $title = 'Assessments' . ' For ' . $tax_type->name . '-' . $parameters['year'];
             }
         }
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new AssessmentReportExport($records, $title, $parameters), $fileName);
     }
 
@@ -113,10 +113,10 @@ class AssessmentReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
-        $this->alert('success', 'Exporting Pdf File');
+        $this->customAlert('success', 'Exporting Pdf File');
         return redirect()->route('reports.assessments.download.pdf', encrypt(json_encode($parameters)));
     }
 
@@ -126,7 +126,7 @@ class AssessmentReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters)->get();
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
         return redirect()->route('reports.assessments.preview', encrypt(json_encode($this->getParameters())));

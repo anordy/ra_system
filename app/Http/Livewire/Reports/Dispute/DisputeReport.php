@@ -8,13 +8,13 @@ use App\Models\FinancialYear;
 use App\Models\TaxType;
 use App\Traits\AssessmentReportTrait;
 use App\Traits\DisputeReportTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DisputeReport extends Component
 {
-    use LivewireAlert, DisputeReportTrait;
+    use CustomAlert, DisputeReportTrait;
 
     public $optionYears;
     public $optionPeriods;
@@ -77,7 +77,7 @@ class DisputeReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
 
@@ -94,7 +94,7 @@ class DisputeReport extends Component
             $fileName = $tax_type_name . '_' . 'Dispute' . ' - ' . $parameters['year'] . '.xlsx';
             $title = 'Dispute' . ' For ' . $tax_type_name . '-' . $parameters['year'];
         }
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new DisputeReportExport($records, $title, $parameters), $fileName);
     }
 
@@ -104,10 +104,10 @@ class DisputeReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
-        $this->alert('success', 'Exporting Pdf File');
+        $this->customAlert('success', 'Exporting Pdf File');
         return redirect()->route('reports.disputes.download.pdf', encrypt(json_encode($parameters)));
     }
 
@@ -117,7 +117,7 @@ class DisputeReport extends Component
         $parameters = $this->getParameters();
         $records = $this->getRecords($parameters)->get();
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
         return redirect()->route('reports.disputes.preview', encrypt(json_encode($this->getParameters())));

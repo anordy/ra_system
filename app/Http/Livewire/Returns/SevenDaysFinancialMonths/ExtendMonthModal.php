@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use App\TaxAgentFee;
 
 class ExtendMonthModal extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $years, $year, $month, $number, $value, $due_date, $min;
 

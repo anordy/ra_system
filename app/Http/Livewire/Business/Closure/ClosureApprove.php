@@ -6,12 +6,12 @@ use Livewire\Component;
 use App\Models\Business;
 use App\Models\BusinessTempClosure;
 use Illuminate\Support\Facades\Route;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class ClosureApprove extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $temp_closure;
     public $business_id;

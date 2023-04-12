@@ -5,14 +5,15 @@ namespace App\Http\Livewire\Business;
 use App\Models\Business;
 use App\Models\BusinessStatus;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
+use App\Traits\WithSearch;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class RegistrationsTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public $rejected = false;
     public $pending = false;

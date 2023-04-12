@@ -3,16 +3,17 @@
 namespace App\Http\Livewire\Business\Closure;
 
 use App\Models\BranchStatus;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use App\Models\BusinessTempClosure;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ApprovedClosuresTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
 
     protected $listeners = [

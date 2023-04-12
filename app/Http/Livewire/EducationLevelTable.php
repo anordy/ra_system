@@ -5,9 +5,10 @@ namespace App\Http\Livewire;
 use App\Models\Bank;
 use App\Models\DualControl;
 use App\Traits\DualControlActivityTrait;
+use App\Traits\WithSearch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\EducationLevel;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Gate;
 
 class EducationLevelTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait, WithSearch;
 
     protected $model = EducationLevel::class;
     public function configure(): void
@@ -121,7 +122,7 @@ class EducationLevelTable extends DataTableComponent
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -148,12 +149,12 @@ class EducationLevelTable extends DataTableComponent
             }
             $this->triggerDualControl(get_class($education), $education->id, DualControl::DELETE, 'deleting education level');
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             return redirect()->route('settings.education-level.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE,  ['timer'=>8000]);
             return redirect()->route('settings.education-level.index');
         }
     }

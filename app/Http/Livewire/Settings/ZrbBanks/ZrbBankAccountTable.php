@@ -8,14 +8,14 @@ use App\Traits\DualControlActivityTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ZrbBankAccountTable extends DataTableComponent
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public function builder(): Builder
     {
@@ -118,7 +118,7 @@ class ZrbBankAccountTable extends DataTableComponent
         if (!Gate::allows('zrb-bank-account-delete')) {
             abort(403);
         }
-        $this->alert('warning', 'Are you sure you want to delete ?', [
+        $this->customAlert('warning', 'Are you sure you want to delete ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -139,7 +139,7 @@ class ZrbBankAccountTable extends DataTableComponent
             $data = (object) $value['data'];
             $zrbBankAccount = ZrbBankAccount::findOrFail(decrypt($data->id));
             $this->triggerDualControl(get_class($zrbBankAccount), $zrbBankAccount->id, DualControl::DELETE, 'deleting ZRA bank account');
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer' => 8000]);
             $this->flash(
                 'success',
                 DualControl::SUCCESS_MESSAGE,
@@ -150,7 +150,7 @@ class ZrbBankAccountTable extends DataTableComponent
             );
         } catch (Exception $e) {
             report($e);
-            $this->alert('warning', 'Something whent wrong!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
+            $this->customAlert('warning', 'Something whent wrong!', ['onConfirmed' => 'confirmed', 'timer' => 2000]);
         }
     }
 }

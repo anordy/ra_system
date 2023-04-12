@@ -11,14 +11,20 @@ trait TaxVerificationTrait
 {
     use WorkflowProcesssingTrait;
 
-    /**
-     * Trigger audit.
-     *
-     * @param $taxReturn
-     * @param $authenticatedUser
-     * @return array
-     * @throws Exception
-     */
+    public function initiateVerificationApproval($return){
+        if ($return->verification && !$return->verification->marking){
+            $verification = $return->verification;
+            try {
+                $this->registerWorkflow(get_class($verification), $verification->id);
+                $this->doTransition('start', []);
+                $verification->status = TaxVerificationStatus::PENDING;
+                $verification->save();
+            } catch (Exception $e) {
+                Log::error($e);
+            }
+        }
+    }
+
     public function triggerTaxVerifications($taxReturn, $authenticatedUser)
     {
         if ($taxReturn == null || $authenticatedUser == null) {
@@ -38,24 +44,7 @@ trait TaxVerificationTrait
 
             try {
                 $verification = TaxVerification::create($data);
-                $this->registerWorkflow(get_class($verification), $verification->id);
-                $this->doTransition('start', []);
-                $verification->status = TaxVerificationStatus::PENDING;
-                $verification->save();
-            } catch (Exception $e) {
-                Log::error($e);
-            }
-        }
-    }
 
-    public function initiateVerificationApproval($return){
-        if ($return->verification && !$return->verification->marking){
-            $verification = $return->verification;
-            try {
-                $this->registerWorkflow(get_class($verification), $verification->id);
-                $this->doTransition('start', []);
-                $verification->status = TaxVerificationStatus::PENDING;
-                $verification->save();
             } catch (Exception $e) {
                 Log::error($e);
             }

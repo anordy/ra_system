@@ -3,13 +3,13 @@
 namespace App\Http\Livewire\Payments;
 
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use App\Models\ZmRecon;
 use App\Services\ZanMalipo\GepgResponse;
 
 class ReconStatus extends Component
 {
-    use LivewireAlert, GepgResponse;
+    use CustomAlert, GepgResponse;
 
     public $recon;
     public function mount($recon)

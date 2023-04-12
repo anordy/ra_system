@@ -8,12 +8,12 @@ use App\Models\TaxType;
 use App\Traits\ReturnConfigurationTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class AddReturnConfig extends Component
 {
-    use LivewireAlert, ReturnConfigurationTrait;
+    use CustomAlert, ReturnConfigurationTrait;
 
     public $taxtype_id, $code, $model, $currencies, $year;
     public $service_code;

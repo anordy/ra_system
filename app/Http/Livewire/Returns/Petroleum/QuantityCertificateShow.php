@@ -6,13 +6,13 @@ use App\Models\Business;
 use App\Models\Returns\Petroleum\PetroleumConfig;
 use App\Models\Returns\Petroleum\QuantityCertificate;
 use Illuminate\Support\Collection;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 
 class QuantityCertificateShow extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
 
    

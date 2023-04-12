@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\KycAmendmentRequest;
 use Illuminate\Support\Facades\Log;
 use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class KycAmendmentRequestAddModal extends Component
 {
-    use LivewireAlert, WorkflowProcesssingTrait;
+    use CustomAlert, WorkflowProcesssingTrait;
 
     public $kyc;
     public $kyc_id;
@@ -233,7 +233,7 @@ class KycAmendmentRequestAddModal extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong');
+            $this->customAlert('error', 'Something went wrong');
         }
     }
 

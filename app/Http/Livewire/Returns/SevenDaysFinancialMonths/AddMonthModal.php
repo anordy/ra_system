@@ -11,12 +11,12 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class AddMonthModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait;
+    use CustomAlert, DualControlActivityTrait;
 
     public $years;
     public $year;
@@ -71,12 +71,12 @@ class AddMonthModal extends Component
             ]
         );
         if ($this->day > 8) {
-            $this->alert('error', 'The day field must be less than or equal to seven days');
+            $this->customAlert('error', 'The day field must be less than or equal to seven days');
             return;
         }
         $yr = FinancialYear::query()->findOrFail($this->year);
         if (Carbon::create($yr['code'], $this->month_number, $this->day)->isWeekend()) {
-            $this->alert('error', 'The selected day is weekend. Please choose another day');
+            $this->customAlert('error', 'The selected day is weekend. Please choose another day');
             return;
         }
         $this->month = date('F', mktime(0, 0, 0, $this->month_number));
@@ -90,13 +90,13 @@ class AddMonthModal extends Component
             ]);
             $this->triggerDualControl(get_class($seven_days), $seven_days->id, DualControl::ADD, 'adding seven days financial month '.$this->month.' '.$yr['code']);
             DB::commit();
-            $this->alert('success', DualControl::SUCCESS_MESSAGE, ['timer'=>8000]);
+            $this->customAlert('success', DualControl::SUCCESS_MESSAGE, ['timer'=>8000]);
             return redirect()->route('settings.financial-months');
 
         } catch (\Throwable $exception) {
             DB::rollBack();
             Log::error($exception);
-            $this->alert('error', DualControl::ERROR_MESSAGE, ['timer'=>2000]);
+            $this->customAlert('error', DualControl::ERROR_MESSAGE, ['timer'=>2000]);
             return redirect()->route('settings.financial-months');
 
         }

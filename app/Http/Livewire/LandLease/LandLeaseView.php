@@ -11,14 +11,14 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use App\Traits\PaymentsTrait;
 use Illuminate\Support\Facades\Gate;
 
 class LandLeaseView extends Component
 {
-    use LivewireAlert, PaymentsTrait;
+    use CustomAlert, PaymentsTrait;
     public $landLease;
     public $taxType;
     public $leasePayment;
@@ -105,11 +105,11 @@ class LandLeaseView extends Component
                 if ($response->status === ZmResponse::SUCCESS) {
                     $this->landLease->status = 'control-number-generating';
                     $this->landLease->save();
-                    $this->alert('success', 'Request sent successfully.');
+                    $this->customAlert('success', 'Request sent successfully.');
                 } else {
                     $this->landLease->status = 'control-number-generating-failed';
                     $this->landLease->save();
-                    $this->alert('error', 'Failed to Generate Control Number');
+                    $this->customAlert('error', 'Failed to Generate Control Number');
                 }
             } else {
                 // We are local
@@ -122,13 +122,13 @@ class LandLeaseView extends Component
                 $zmBill->control_number = rand(2000070001000, 2000070009999);
                 $zmBill->save();
 
-                $this->alert('success', 'Control Number generated successfully.');
+                $this->customAlert('success', 'Control Number generated successfully.');
             }
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
 
@@ -141,6 +141,6 @@ class LandLeaseView extends Component
             session()->flash('success', 'Your request was submitted, you will receive your payment information shortly.');
             return redirect()->back()->getTargetUrl();
         }
-        $this->alert('error', 'Control number could not be generated, please try again later.');
+        $this->customAlert('error', 'Control number could not be generated, please try again later.');
     }
 }

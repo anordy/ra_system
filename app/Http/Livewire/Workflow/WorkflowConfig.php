@@ -5,12 +5,12 @@ namespace App\Http\Livewire\Workflow;
 use App\Models\Workflow;
 use Exception;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class WorkflowConfig extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $places;
     public $transitions;

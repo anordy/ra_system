@@ -82,7 +82,7 @@ trait PaymentReportTrait
     {
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
 
@@ -93,7 +93,7 @@ trait PaymentReportTrait
             $fileName = $parameters['status'] . ' ' . $parameters['payment_category'] . ' - ' . $parameters['year'] . '.xlsx';
             $title = $parameters['status'] . ' ' . $parameters['payment_category'] . ' ' . $parameters['year'];
         }
-        $this->alert('success', 'Exporting Excel File');
+        $this->customAlert('success', 'Exporting Excel File');
         return Excel::download(new PaymentReportExport($records, $title, $parameters), $fileName);
     }
 
@@ -101,11 +101,11 @@ trait PaymentReportTrait
     {
         $records = $this->getRecords($parameters);
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
 
             return;
         }
-        $this->alert('success', 'Exporting Pdf File');
+        $this->customAlert('success', 'Exporting Pdf File');
 
         return redirect()->route('reports.payments.download.pdf', encrypt(json_encode($parameters)));
     }

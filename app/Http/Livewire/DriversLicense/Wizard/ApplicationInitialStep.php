@@ -6,11 +6,11 @@ use App\Models\BusinessLocation;
 use App\Models\DlDriversLicense;
 use App\Models\Taxpayer;
 use App\Services\LivewireWizard\Components\StepComponent;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class ApplicationInitialStep extends StepComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
     // Form Fields
     public $lookup_fired = false;
     public $number;
@@ -51,7 +51,7 @@ class ApplicationInitialStep extends StepComponent
     public function nextStep()
     {
         if (empty($this->type) || empty($this->taxpayer_id)){
-            $this->alert('error', 'Ensure your have provided all the details in this step!');
+            $this->customAlert('error', 'Ensure your have provided all the details in this step!');
             return;
         }
         parent::nextStep();

@@ -5,13 +5,13 @@ namespace App\Http\Livewire\Payments;
 use App\Enum\PaymentStatus;
 use App\Models\TaxType;
 use App\Models\ZmBill;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use PDF;
 
 class PaymentFilter extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $tableName;
     public $data;
@@ -77,7 +77,7 @@ class PaymentFilter extends Component
         $records  = $filter->where('status', PaymentStatus::PENDING)->orderBy('created_at', 'DESC')->get();
 
         if ($records->count() < 1) {
-            $this->alert('error', 'No Data Found for selected options');
+            $this->customAlert('error', 'No Data Found for selected options');
             return;
         }
 

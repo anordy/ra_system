@@ -4,12 +4,12 @@ namespace App\Http\Livewire\Claims;
 
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxCredit;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ClaimsApproval extends Component {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $paymentType;
     public $installmentCount;

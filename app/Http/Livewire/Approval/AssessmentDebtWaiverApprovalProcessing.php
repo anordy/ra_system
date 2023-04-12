@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use App\Jobs\Debt\GenerateAssessmentDebtControlNo;
 
 class AssessmentDebtWaiverApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, PaymentsTrait, CustomAlert;
     public $modelId;
     public $debt;
     public $modelName;
@@ -125,7 +125,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
                 } catch (Exception $e) {
                     DB::rollBack();
                     Log::error($e);
-                    $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                    $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                     return;
                 }
 
@@ -181,7 +181,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 return;
             }
 
@@ -205,7 +205,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
         } catch (Exception $e) {
             Log::error($e);
             DB::rollBack();
-            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
         }
     }
 
@@ -252,7 +252,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
         $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
     }
@@ -281,7 +281,7 @@ class AssessmentDebtWaiverApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

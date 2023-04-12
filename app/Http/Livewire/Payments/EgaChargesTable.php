@@ -4,13 +4,13 @@ namespace App\Http\Livewire\Payments;
 
 use App\Traits\PaymentReportTrait;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class EgaChargesTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
     use PaymentReportTrait;
 
     public $range_start;

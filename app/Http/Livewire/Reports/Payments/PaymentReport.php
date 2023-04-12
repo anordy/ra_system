@@ -11,7 +11,7 @@ use App\Models\TaxType;
 use App\Models\Ward;
 use App\Traits\PaymentReportTrait;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 use App\Traits\ReturnReportTrait;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,7 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class PaymentReport extends Component
 {
 
-    use LivewireAlert, PaymentReportTrait;
+    use CustomAlert, PaymentReportTrait;
 
     public $optionYears;
     public $optionPeriods;
@@ -168,7 +168,7 @@ class PaymentReport extends Component
         $this->parameters = $this->getParameters();
         $records = $this->getRecords($this->parameters)->limit(5)->get();
         if ($records->count() < 1) {
-            $this->alert('error', 'No Records Found in the selected criteria');
+            $this->customAlert('error', 'No Records Found in the selected criteria');
             return;
         }
         if ($this->parameters['payment_category'] == 'returns') {
@@ -301,7 +301,7 @@ class PaymentReport extends Component
             }
         }
         if (!$taxRegionSeletected) {
-            $this->alert('error', 'Select Atleast one Tax Region');
+            $this->customAlert('error', 'Select Atleast one Tax Region');
             return false;
         }
 

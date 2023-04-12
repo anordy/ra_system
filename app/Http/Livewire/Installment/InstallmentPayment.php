@@ -12,13 +12,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 
 class InstallmentPayment extends Component
 {
-    use LivewireAlert, PaymentsTrait, ExchangeRateTrait;
+    use CustomAlert, PaymentsTrait, ExchangeRateTrait;
 
     public $installment;
     public $bill;
@@ -48,7 +48,7 @@ class InstallmentPayment extends Component
 
     public function generateItem(){
         if ($this->activeItem){
-            $this->alert('error', 'Control no. already exists!');
+            $this->customAlert('error', 'Control no. already exists!');
         }
         
         $installmentRequest = $this->installment->request;
@@ -119,7 +119,7 @@ class InstallmentPayment extends Component
         } catch (\Exception $e){
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

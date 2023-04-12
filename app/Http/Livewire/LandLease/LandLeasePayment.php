@@ -7,13 +7,13 @@ use App\Models\TaxType;
 use App\Services\ZanMalipo\GepgResponse;
 use App\Traits\PaymentsTrait;
 use App\Traits\PenaltyTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
 
 class LandLeasePayment extends Component
 {
-    use LivewireAlert, PenaltyTrait, PaymentsTrait, GepgResponse;
+    use CustomAlert, PenaltyTrait, PaymentsTrait, GepgResponse;
 
     public $landLease;
     public $leasePayment;
@@ -49,7 +49,7 @@ class LandLeasePayment extends Component
                 abort(404);
             }
         } else {
-            $this->alert('error', 'Control number could not be generated, please try again later.');
+            $this->customAlert('error', 'Control number could not be generated, please try again later.');
         }
     }
 

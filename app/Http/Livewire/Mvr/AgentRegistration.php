@@ -23,13 +23,13 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class AgentRegistration extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
 
     public $zin;
@@ -49,11 +49,11 @@ class AgentRegistration extends Component
     {
         $this->validate();
         if (empty($this->taxpayer)){
-            $this->alert('error', 'Please provide valid Z-Number and confirm details by doing lookup');
+            $this->customAlert('error', 'Please provide valid Z-Number and confirm details by doing lookup');
             return;
         }
         if (!empty($this->taxpayer->transport_agent)){
-            $this->alert('error', 'This taxpayer has already been registered as Transport Agent');
+            $this->customAlert('error', 'This taxpayer has already been registered as Transport Agent');
             return;
         }
         try {
@@ -82,7 +82,7 @@ class AgentRegistration extends Component
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

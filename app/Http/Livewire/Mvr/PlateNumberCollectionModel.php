@@ -17,14 +17,14 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class PlateNumberCollectionModel extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $mvr_registration_id;
     public $collection_date;
@@ -81,7 +81,7 @@ class PlateNumberCollectionModel extends Component
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

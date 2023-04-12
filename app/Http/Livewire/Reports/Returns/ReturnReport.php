@@ -11,7 +11,7 @@ use App\Models\TaxRegion;
 use App\Models\TaxType;
 use App\Models\Ward;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 use App\Traits\ReturnReportTrait;
 use Carbon\Carbon;
@@ -20,7 +20,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReturnReport extends Component
 {
 
-    use LivewireAlert, ReturnReportTrait;
+    use CustomAlert, ReturnReportTrait;
 
     public $optionTaxTypes;
     public $optionReportTypes;
@@ -197,7 +197,7 @@ class ReturnReport extends Component
             }
         }
         if (!$taxRegionSeletected) {
-            $this->alert('error', 'Select Atleast one Tax Region');
+            $this->customAlert('error', 'Select Atleast one Tax Region');
             return false;
         }
 

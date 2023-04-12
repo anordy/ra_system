@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use App\TaxAgentFee;
 use Illuminate\Support\Facades\Gate;
 
 class TaxAgentFeeModal extends Component
 {
-    use LivewireAlert, DualControlActivityTrait, VerificationTrait;
+    use CustomAlert, DualControlActivityTrait, VerificationTrait;
 
     public $category;
     public $duration;
@@ -91,11 +91,11 @@ class TaxAgentFeeModal extends Component
             }
 
             DB::commit();
-            $this->alert('success', 'Saved successfully');
+            $this->customAlert('success', 'Saved successfully');
             return redirect()->route('settings.tax-consultant-duration');
         } catch (\Throwable $exception) {
             Log::error($exception);
-            $this->alert('warning', 'Something went wrong, Please contact an admin');
+            $this->customAlert('warning', 'Something went wrong, Please contact an admin');
             return redirect()->route('settings.tax-consultant-duration');
 
         }

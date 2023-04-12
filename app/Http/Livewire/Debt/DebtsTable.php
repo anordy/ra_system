@@ -6,13 +6,13 @@ use App\Models\Debts\Debt;
 use App\Models\Returns\ReturnStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class DebtsTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function builder(): Builder
     {

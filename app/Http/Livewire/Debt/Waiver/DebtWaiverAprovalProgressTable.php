@@ -6,14 +6,14 @@ use App\Models\Debts\DebtWaiver;
 use App\Models\WaiverStatus;
 use App\Models\WorkflowTask;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class DebtWaiverAprovalProgressTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public function mount()
     {

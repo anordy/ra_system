@@ -7,12 +7,12 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ChangePassword extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $current_password, $new_password, $confirm_password;
 
@@ -57,7 +57,7 @@ class ChangePassword extends Component
             $this->redirect(route('account'));
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

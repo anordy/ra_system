@@ -10,12 +10,12 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class Zanid extends Component
 {
-    use LivewireAlert;
+    use CustomAlert;
 
     public $kyc;
     public $is_verified_triggered = false;
@@ -54,7 +54,7 @@ class Zanid extends Component
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to approve taxpayers details ?', [
+        $this->customAlert('warning', 'Are you sure you want to approve taxpayers details ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -72,7 +72,7 @@ class Zanid extends Component
             abort(403);
         }
 
-        $this->alert('warning', 'Are you sure you want to reject this KYC ?', [
+        $this->customAlert('warning', 'Are you sure you want to reject this KYC ?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
@@ -94,11 +94,11 @@ class Zanid extends Component
                 'last_name' => $this->convertStringToCamelCase($this->zanid_data['data']['PRSN_LAST_NAME']),
                 'zanid_verified_at' => Carbon::now()->toDateTimeString(),
             ]);
-            $this->alert('success', 'Taxpayer details have been approved!');
+            $this->customAlert('success', 'Taxpayer details have been approved!');
             return redirect()->route('taxpayers.enroll-fingerprint', [encrypt($this->kyc->id)]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help!');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
 
     }
@@ -119,12 +119,12 @@ class Zanid extends Component
             DB::commit();
             event(new SendMail('kyc-reject', $kyc));
             event(new SendSms('kyc-reject', $kyc));
-            $this->alert('success', 'KYC has been rejected!');
+            $this->customAlert('success', 'KYC has been rejected!');
             return redirect()->route('taxpayers.registrations.index');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help!');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help!');
         }
     }
 

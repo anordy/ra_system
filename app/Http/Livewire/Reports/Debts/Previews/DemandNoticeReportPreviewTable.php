@@ -3,15 +3,16 @@
 namespace App\Http\Livewire\Reports\Debts\Previews;
 
 use App\Traits\DebtReportTrait;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 
 class DemandNoticeReportPreviewTable extends DataTableComponent
 {
-    use LivewireAlert, DebtReportTrait;
+    use CustomAlert, DebtReportTrait, WithSearch;
 
     public $parameters;
 

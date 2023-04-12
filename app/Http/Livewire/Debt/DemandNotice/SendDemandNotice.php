@@ -9,12 +9,12 @@ use App\Models\Debts\Debt;
 use App\Models\Debts\DemandNotice;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class SendDemandNotice extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $debt;
 
@@ -35,7 +35,7 @@ class SendDemandNotice extends Component
         } catch (Exception $e) {
             DB::rollback();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
 
     }

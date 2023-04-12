@@ -4,16 +4,17 @@ namespace App\Http\Livewire\Investigation;
 
 use App\Enum\TaxInvestigationStatus;
 use App\Models\Investigation\TaxInvestigation;
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxInvestigationAssessmentTable extends DataTableComponent
 {
 
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
     public $model = TaxInvestigation::class;
 

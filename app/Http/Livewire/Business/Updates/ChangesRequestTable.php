@@ -4,15 +4,15 @@ namespace App\Http\Livewire\Business\Updates;
 
 use App\Models\BusinessStatus;
 use App\Models\BusinessUpdate;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class ChangesRequestTable extends DataTableComponent
 {
-    use LivewireAlert;
-
+    use CustomAlert, WithSearch;
 
     protected $listeners = [
         'confirmed',

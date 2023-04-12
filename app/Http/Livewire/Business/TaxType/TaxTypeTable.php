@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Business\TaxType;
 
+use App\Traits\WithSearch;
 use Carbon\Carbon;
 use App\Models\TaxType;
 use App\Models\BranchStatus;
@@ -12,6 +13,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 
 class TaxTypeTable extends DataTableComponent
 {
+    use WithSearch;
     protected $model = BusinessTaxTypeChange::class;
     public $status;
 

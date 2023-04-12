@@ -25,14 +25,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
 
 class AgentRegistration extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
 
     public $taxpayerRefNo;
@@ -58,7 +58,7 @@ class AgentRegistration extends Component
             abort(403);
         }
         if(LandLeaseAgent::where('taxpayer_id',$this->taxpayer->id)->exists()){
-            $this->alert('error', 'Taxpayer already registered as Agent');
+            $this->customAlert('error', 'Taxpayer already registered as Agent');
             return; 
         }
         try {
@@ -85,12 +85,12 @@ class AgentRegistration extends Component
                 ]
             );
             DB::commit();
-            $this->alert('success', 'Agent Registered Succesfully');
+            $this->customAlert('success', 'Agent Registered Succesfully');
             return redirect()->route('land-lease.agents');
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

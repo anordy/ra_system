@@ -21,7 +21,7 @@
                         <div class="form-group">
                             <label>Installment Phases (Months)</label>
                             <input min="1" max="12" type="number" class="form-control @error('installmentPhases') is-invalid @enderror"
-                                   wire:model="installmentPhases" />
+                                   wire:model.defer="installmentPhases" />
                             @error('installmentPhases')
                                 <div class="invalid-feedback">
                                     {{ $message }}

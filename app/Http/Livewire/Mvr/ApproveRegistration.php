@@ -20,13 +20,13 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class ApproveRegistration extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $motor_vehicle_id;
     public $registration_type_id;
@@ -100,7 +100,7 @@ class ApproveRegistration extends Component
             ])->first();
 
             if (empty($fee)) {
-                $this->alert('error', "Registration fee for selected registration type is not configured");
+                $this->customAlert('error', "Registration fee for selected registration type is not configured");
                 DB::rollBack();
                 Log::error($fee);
                 return;
@@ -159,7 +159,7 @@ class ApproveRegistration extends Component
         } catch (Exception $e) {
             DB::rollBack();
             report($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

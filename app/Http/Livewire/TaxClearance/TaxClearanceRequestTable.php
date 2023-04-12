@@ -4,6 +4,7 @@ namespace App\Http\Livewire\TaxClearance;
 
 use App\Enum\TaxClearanceStatus;
 use App\Models\TaxClearanceRequest;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -11,6 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxClearanceRequestTable extends DataTableComponent
 {
+    use WithSearch;
     public $requested = false;
     public $rejected = false;
     public $approved = false;

@@ -6,6 +6,7 @@ use App\Enum\TaxClearanceStatus;
 use App\Models\Business;
 use App\Models\BusinessLocation;
 use App\Models\TaxClearanceRequest;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
@@ -14,6 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class TaxClearanceRequestApprovalTable extends DataTableComponent
 {
+    use WithSearch;
     public function mount()
     {
         if (!Gate::allows('tax-clearance-view')) {

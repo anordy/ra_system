@@ -4,14 +4,15 @@ namespace App\Http\Livewire\TaxAgent\Renew;
 
 use App\Models\RenewTaxAgentRequest;
 use App\Models\TaxAgentStatus;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class VerifiedTable extends DataTableComponent
 {
-    use LivewireAlert;
+    use CustomAlert, WithSearch;
 
 //    protected $model = RenewTaxAgentRequest::class;
 

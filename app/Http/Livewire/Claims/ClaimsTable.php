@@ -5,12 +5,15 @@ namespace App\Http\Livewire\Claims;
 use App\Enum\TaxClaimStatus;
 use App\Models\Claims\TaxClaim;
 use App\Models\WorkflowTask;
+use App\Traits\WithSearch;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class ClaimsTable extends DataTableComponent
 {
+    use WithSearch;
+
     public $pending;
     public $rejected;
 

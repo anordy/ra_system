@@ -2,22 +2,26 @@
 
 namespace App\Http\Livewire\Approval;
 
-use Exception;
-use Carbon\Carbon;
-use Livewire\Component;
-use App\Models\Debts\Debt;
+use App\Enum\ExtensionRequestStatus;
+use App\Events\SendMail;
+use App\Events\SendSms;
 use App\Jobs\Bill\UpdateBill;
+use App\Jobs\Extension\SendExtensionApprovedMail;
+use App\Jobs\Extension\SendExtensionApprovedSMS;
+use App\Jobs\Extension\SendExtensionRejectedMail;
+use App\Jobs\Extension\SendExtensionRejectedSMS;
+use App\Traits\CustomAlert;
 use App\Traits\PaymentsTrait;
-use App\Models\Returns\TaxReturn;
+use App\Traits\WorkflowProcesssingTrait;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Enum\ExtensionRequestStatus;
-use App\Traits\WorkflowProcesssingTrait;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Livewire\Component;
 
 class ExtensionRequestApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, PaymentsTrait;
+    use WorkflowProcesssingTrait, CustomAlert, PaymentsTrait;
 
     public $modelId;
     public $modelName;
@@ -72,6 +76,11 @@ class ExtensionRequestApprovalProcessing extends Component
                     UpdateBill::dispatch($extensible->bill, $this->subject->extend_to)->delay($now->addSeconds(2));
                 }
                 $this->subject->save();
+
+
+                // Dispatch notification via email and mobile phone
+                event(new SendSms(SendExtensionApprovedSMS::SERVICE, $this->subject));
+                event(new SendMail(SendExtensionApprovedMail::SERVICE, $this->subject));
             }
 
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments]);
@@ -80,7 +89,7 @@ class ExtensionRequestApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
     }
@@ -98,13 +107,17 @@ class ExtensionRequestApprovalProcessing extends Component
                 $this->subject->save();
             }
 
+            // Dispatch notification via email and mobile phone
+            event(new SendSms(SendExtensionRejectedSMS::SERVICE, $this->subject));
+            event(new SendMail(SendExtensionRejectedMail::SERVICE, $this->subject));
+
             $this->doTransition($transition, ['status' => 'reject', 'comment' => $this->comments]);
             DB::commit();
             $this->flash('success', 'Rejected successfully', [], redirect()->back()->getTargetUrl());
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             return;
         }
     }

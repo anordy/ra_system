@@ -22,11 +22,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\NotIn;
 use App\Traits\WorkflowProcesssingTrait;
 use Illuminate\Support\Facades\Auth;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class TaxClaimApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, LivewireAlert, WithFileUploads;
+    use WorkflowProcesssingTrait, CustomAlert, WithFileUploads;
 
     public $modelId;
     public $modelName;
@@ -82,7 +82,7 @@ class TaxClaimApprovalProcessing extends Component
                 return $this->subject->amount / (int)$this->installmentCount;
             } catch (Exception $exception) {
                 Log::error($exception .', '. Auth::user());
-                return $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                return $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
        }
         
@@ -129,7 +129,7 @@ class TaxClaimApprovalProcessing extends Component
         if ($this->checkTransition('verification_results')) {
             $this->validate(
                 [
-                    'assessmentReport' => 'required|mimes:pdf',
+                    'assessmentReport' => 'required|mimes:pdf|max:1024',
                 ]
             );
 
@@ -147,7 +147,7 @@ class TaxClaimApprovalProcessing extends Component
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
         }
 
@@ -215,7 +215,7 @@ class TaxClaimApprovalProcessing extends Component
             $this->doTransition($transition, ['status' => 'agree', 'comment' => $this->comments, 'operators' => $operators]);
         } catch (Exception $e) {
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact support for assistance.');
+            $this->customAlert('error', 'Something went wrong, please contact support for assistance.');
             return;
         }
 
@@ -274,7 +274,7 @@ class TaxClaimApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,

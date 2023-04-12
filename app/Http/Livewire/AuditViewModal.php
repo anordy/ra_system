@@ -4,12 +4,12 @@ namespace App\Http\Livewire;
 
 use App\Models\Audit;
 use Livewire\Component;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class AuditViewModal extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $old_values;
     public $new_values;

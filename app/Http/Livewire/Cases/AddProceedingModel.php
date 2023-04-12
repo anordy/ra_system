@@ -7,13 +7,13 @@ use App\Models\LegalCase;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 use Livewire\Component;
 
 class AddProceedingModel extends Component
 {
 
-    use LivewireAlert;
+    use CustomAlert;
 
     public $case_id;
     public $date;
@@ -60,7 +60,7 @@ class AddProceedingModel extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
         }
     }
 

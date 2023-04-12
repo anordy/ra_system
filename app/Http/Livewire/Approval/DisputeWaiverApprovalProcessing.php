@@ -21,11 +21,11 @@ use App\Services\ZanMalipo\ZmResponse;
 use App\Traits\WorkflowProcesssingTrait;
 use App\Traits\TaxAssessmentDisputeTrait;
 use App\Models\TaxAssessments\TaxAssessment;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Traits\CustomAlert;
 
 class DisputeWaiverApprovalProcessing extends Component
 {
-    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait, PaymentsTrait, LivewireAlert;
+    use WorkflowProcesssingTrait, WithFileUploads, TaxAssessmentDisputeTrait, PaymentsTrait, CustomAlert;
     public $modelId;
     public $modelName;
     public $comments;
@@ -92,7 +92,7 @@ class DisputeWaiverApprovalProcessing extends Component
 
             $this->validate(
                 [
-                    'disputeReport' => 'required|mimes:pdf',
+                    'disputeReport' => 'required|mimes:pdf|max:1024',
                 ]
             );
 
@@ -114,7 +114,7 @@ class DisputeWaiverApprovalProcessing extends Component
             } catch (\Exception $e) {
                 DB::rollBack();
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             }
 
         }
@@ -167,7 +167,7 @@ class DisputeWaiverApprovalProcessing extends Component
                 $approveNotification = 'Approved and control number has been generated successful';
             } catch (Exception $e) {
                 Log::error($e);
-                $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
             }
 
         }
@@ -178,7 +178,7 @@ class DisputeWaiverApprovalProcessing extends Component
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
-            $this->alert('error', 'Something went wrong, please contact the administrator for help.');
+            $this->customAlert('error', 'Something went wrong, please contact the administrator for help.');
             return;
         }
     }
@@ -210,7 +210,7 @@ class DisputeWaiverApprovalProcessing extends Component
                 } catch (Exception $e) {
                     DB::rollBack();
                     Log::error($e);
-                    $this->alert('error', 'Something went wrong, please contact the administrator for help');
+                    $this->customAlert('error', 'Something went wrong, please contact the administrator for help');
                 }
 
             }
@@ -229,7 +229,7 @@ class DisputeWaiverApprovalProcessing extends Component
 
     public function confirmPopUpModal($action, $transition)
     {
-        $this->alert('warning', 'Are you sure you want to complete this action?', [
+        $this->customAlert('warning', 'Are you sure you want to complete this action?', [
             'position' => 'center',
             'toast' => false,
             'showConfirmButton' => true,
