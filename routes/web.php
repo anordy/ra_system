@@ -136,6 +136,7 @@ use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
 use App\Http\Controllers\KYC\KycAmendmentRequestController;
+use App\Http\Controllers\QRCodeCheckController;
 
 Auth::routes(['register'=>false]);
 
@@ -143,6 +144,15 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('checkCaptcha', [CaptchaController::class, 'reload'])->name('captcha.reload')->middleware('throttle:captcha');
 Route::get('captcha/{config?}', [CaptchaController::class, 'getCaptcha'])->name('captcha.get')->name('captcha.get')->middleware('throttle:captcha');
+
+//QRcode urls
+Route::name('qrcode-check.')->prefix('qrcode-check')->group(function () {
+    Route::get('/withholding-agent-certificate/{id}', [QRCodeCheckController::class, 'withholdingAgentCertificate'])->name('withholding-agent.certificate');
+    Route::get('/business-certificate/{locationId,taxTypeId}', [QRCodeCheckController::class, 'businessCertificate'])->name('business.certificate');
+    Route::get('/tax-change-certificate/{id}', [QRCodeCheckController::class, 'taxChangeCertificate'])->name('tax-change.certificate');
+    Route::get('/taxagents-certificate/{id}', [QRCodeCheckController::class, 'taxAgentsCertificate'])->name('taxagents.certificate');
+    Route::get('/route/{id}', [QRCodeCheckController::class, 'route'])->name('route');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/twoFactorAuth', [TwoFactorAuthController::class, 'index'])->name('twoFactorAuth.index');

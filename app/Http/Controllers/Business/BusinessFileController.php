@@ -64,6 +64,9 @@ class BusinessFileController extends Controller
         if (!Gate::allows('business-certificate-view')) {
             abort(403);
         }
+
+        $url = route('qrcode-check.business.certificate', $locationId, $taxTypeId);
+
         $locationId = decrypt($locationId);
         $taxTypeId = decrypt($taxTypeId);
         $location = BusinessLocation::with('business', 'business.taxpayer')->findOrFail($locationId);
@@ -72,15 +75,11 @@ class BusinessFileController extends Controller
 
         $certificateNumber = $this->generateCertificateNumber($location, $tax->prefix);
 
-        $code = 'ZIN: ' . $location->zin . ", " .
-            'Business Name: ' . $location->business->name . ", " .
-            'Tax Type: ' . $tax->name . ", " .
-            'Location: ' . "{$location->street->name}, {$location->district->name}, {$location->region->name}";
         
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
-            ->data($code)
+            ->data($url)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(207)

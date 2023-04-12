@@ -63,6 +63,8 @@ class ChangeTaxType extends Mailable
                     'Tax Type: ' . $tax->name . ", " .
                     'Location: ' . "{$location->street->name}, {$location->district->name}, {$location->region->name}";
 
+                    // $url = route('qrcode-check.tax-change.certificate', $id);
+
                     $result = Builder::create()
                         ->writer(new PngWriter())
                         ->writerOptions([SvgWriter::WRITER_OPTION_EXCLUDE_XML_DECLARATION => false])
