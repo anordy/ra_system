@@ -136,6 +136,7 @@ use App\Http\Controllers\Returns\FinancialMonths\FinancialMonthsController;
 use App\Http\Controllers\Investigation\TaxInvestigationAssessmentController;
 use App\Http\Controllers\Taxpayers\AmendmentRequestController;
 use App\Http\Controllers\KYC\KycAmendmentRequestController;
+use App\Http\Controllers\Vetting\TaxReturnVettingController;
 
 Auth::routes(['register'=>false]);
 
@@ -416,6 +417,13 @@ Route::middleware(['2fa', 'auth'])->group(function () {
         Route::resource('/assessments', TaxVerificationAssessmentController::class);
         Route::resource('/verified', TaxVerificationVerifiedController::class);
         Route::resource('/files', TaxVerificationFilesController::class);
+    });
+
+    Route::name('tax_vettings.')->prefix('tax_vettings')->group(function () {
+        Route::get('/approvals', [TaxReturnVettingController::class, 'index'])->name('approvals');
+        Route::get('/view/{return_id}', [TaxReturnVettingController::class, 'show'])->name('show');
+        // Route::resource('/assessments', TaxReturnVettingController::class);
+        // Route::resource('/vetted', TaxReturnVettingController::class);
     });
 
     Route::name('tax_auditing.')->prefix('tax_auditing')->group(function () {

@@ -721,4 +721,66 @@ trait PaymentsTrait
 
         return $billItems;
     }
+
+    public function generateReturnControlNumber($return) {
+        $taxpayer = $return->taxpayer;
+        $tax_type = BusinessTaxType::where('tax_type_id', $return->tax_type_id)->where('business_id', $return->business_id)->firstOrFail();
+        $exchange_rate = $this->getExchangeRate($return->currency);
+
+        // Generate return control no.
+        $payer_type = get_class($taxpayer);
+        $payer_name = implode(' ', [$taxpayer->first_name, $taxpayer->last_name]);
+        $payer_email = $taxpayer->email;
+        $payer_phone = $taxpayer->mobile;
+        if ($return->table == 'lump_sum_returns') {
+            $description = "Lump Sum Payments for {$return->business->name}  {$this->fillingMonth['name']} ";
+        } else {
+            $description = "Return payment for {$return->business->name} - {$return->financialMonth->name} {$return->financialMonth->year->code}";
+        }
+        $payment_option = ZmCore::PAYMENT_OPTION_FULL;
+        $currency = $return->currency;
+        $createdby_type = get_class(Auth::user());
+        $createdby_id = Auth::id();
+        $payer_id = $taxpayer->id;
+        $expire_date = $return->curr_payment_due_date;
+        $billableId = $return->id;
+        $billableType = get_class($return);
+
+        $billItems = $this->generateReturnBillItems($return);
+
+        $bill = ZmCore::createBill(
+            $billableId,
+            $billableType,
+            $tax_type->tax_type_id,
+            $payer_id,
+            $payer_type,
+            $payer_name,
+            $payer_email,
+            $payer_phone,
+            $expire_date,
+            $description,
+            $payment_option,
+            $currency,
+            $exchange_rate,
+            $createdby_id,
+            $createdby_type,
+            $billItems
+        );
+
+        if (config('app.env') != 'local') {
+            $sendBill = (new ZanMalipoInternalService)->createBill($bill);
+        } else {
+            // We are local
+            $return->payment_status = ReturnStatus::CN_GENERATED;
+            $return->return->status = ReturnStatus::CN_GENERATED;
+            $return->return->save();
+            $return->save();
+
+            // Simulate successful control no generation
+            $bill->zan_trx_sts_code = ZmResponse::SUCCESS;
+            $bill->zan_status = 'pending';
+            $bill->control_number = rand(2000070001000, 2000070009999);
+            $bill->save();
+        }
+    }
 }
