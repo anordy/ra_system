@@ -82,7 +82,8 @@ class ApprovalProcessing extends Component
         if ($this->isiic_iii) {
             $this->isiiciiiChange($this->isiic_iii);
         }
-        $this->effectiveDate = $this->subject->headquarter->effective_date->format('Y-m-d') ?? null;
+
+        $this->effectiveDate = $this->subject->headquarter->effective_date ? $this->subject->headquarter->effective_date->format('Y-m-d') : null;
         $this->selectedTaxRegion = $this->subject->headquarter->tax_region_id;
 
         $this->isiic_iv = $this->subject->isiic_iv ?? null;
@@ -217,27 +218,28 @@ class ApprovalProcessing extends Component
     {
         $transition = $transition['data']['transition'];
         if ($this->checkTransition('registration_officer_review')) {
+
+            $this->validate([
+                'isiic_i' => 'required|numeric|exists:isic1s,id',
+                'isiic_ii' => 'required|numeric|exists:isic2s,id',
+                'isiic_iii' => 'required|numeric|exists:isic3s,id',
+                'isiic_iv' => 'required|numeric|exists:isic4s,id',
+                'selectedTaxTypes' => 'required',
+                'selectedTaxTypes.*.currency' => 'required',
+                'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
+                'selectedTaxRegion' => 'required|exists:tax_regions,id',
+                'effectiveDate' => 'required|strip_tag'
+            ], [
+                'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
+                'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is required',
+                'selectedTaxTypes.*.currency.required' => 'Currency is required',
+            ]);
+
             try {
                 $this->subject->isiic_i = $this->isiic_i ?? null;
                 $this->subject->isiic_ii = $this->isiic_ii ?? null;
                 $this->subject->isiic_iii = $this->isiic_iii ?? null;
                 $this->subject->isiic_iv = $this->isiic_iv ?? null;
-
-                $this->validate([
-                    'isiic_i' => 'required|numeric|exists:isic1s,id',
-                    'isiic_ii' => 'required|numeric|exists:isic2s,id',
-                    'isiic_iii' => 'required|numeric|exists:isic3s,id',
-                    'isiic_iv' => 'required|numeric|exists:isic4s,id',
-                    'selectedTaxTypes' => 'required',
-                    'selectedTaxTypes.*.currency' => 'required',
-                    'selectedTaxTypes.*.tax_type_id' => 'required|distinct',
-                    'selectedTaxRegion' => 'required|exists:tax_regions,id',
-                    'effectiveDate' => 'required|strip_tag'
-                ], [
-                    'selectedTaxTypes.*.tax_type_id.distinct' => 'Duplicate value',
-                    'selectedTaxTypes.*.tax_type_id.required' => 'Tax type is required',
-                    'selectedTaxTypes.*.currency.required' => 'Currency is required',
-                ]);
 
                 $business = Business::findOrFail($this->subject->id);
 
